@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
-import { Sun, Droplets, Star, Camera, ImageIcon, Search, Loader2, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart } from 'lucide-react'
+import { Sun, Droplets, Star, Camera, ImageIcon, Search, Loader2, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost } from 'lucide-react'
 import { fetchWikimediaImage } from '../utils/plantImage'
 import { resizeImage } from '../utils/imageResize'
 import { useLongPress } from '../hooks/useLongPress'
@@ -159,7 +159,7 @@ export default function PlantCard({ plant, section, onTap, onImageFetch, cardBg 
           }`} />
 
           {/* Right-side badge column — stacks below status dot */}
-          {(showDashboardBadge || plant.pirkinys) && (
+          {(showDashboardBadge || plant.pirkinys || section === 'istorija') && (
             <div className="absolute top-6 right-1.5 flex flex-col gap-1">
               {showDashboardBadge && (
                 <div className="bg-sage-500/90 backdrop-blur-sm rounded-md p-0.5">
@@ -169,6 +169,11 @@ export default function PlantCard({ plant, section, onTap, onImageFetch, cardBg 
               {plant.pirkinys && (
                 <div className="bg-orange-500/90 backdrop-blur-sm rounded-md p-0.5">
                   <ShoppingCart size={10} className="text-white" />
+                </div>
+              )}
+              {section === 'istorija' && (
+                <div className="bg-black/50 backdrop-blur-sm rounded-md p-0.5">
+                  <Ghost size={10} className="text-white" />
                 </div>
               )}
             </div>
@@ -181,12 +186,6 @@ export default function PlantCard({ plant, section, onTap, onImageFetch, cardBg 
             </div>
           )}
 
-          {/* Section badges */}
-          {section === 'istorija' && !plant.toksiskas && (
-            <div className="absolute top-2 left-2 bg-black/35 backdrop-blur-sm rounded-md px-1.5 py-0.5">
-              <span className="text-[9px] text-white font-semibold">RIP</span>
-            </div>
-          )}
 
           {/* Fertilizing overdue badge */}
           {fertOverdue && (
