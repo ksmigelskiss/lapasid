@@ -362,9 +362,9 @@ function InfoRow({ icon, label, value }) {
 
 // ── Profile tab content ────────────────────────────────────────
 
-function ProfileContent({ plant, section, onAction, onClose }) {
+export function ProfileContent({ plant, section, onAction, onClose, className }) {
   return (
-    <div className="px-5 pt-5 pb-10 space-y-6">
+    <div className={className ?? "px-5 pt-5 pb-10 space-y-6"}>
 
       {/* ── Watering overdue reminder ── */}
       <WateringCard plant={plant} section={section} />

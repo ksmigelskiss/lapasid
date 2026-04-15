@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Search, X, Camera, Sun, Droplets, Thermometer, Wind, MapPin, Leaf, Snowflake, Skull, Flower2, RefreshCw } from 'lucide-react'
+import { ArrowLeft, Search, X, Camera } from 'lucide-react'
 import Anthropic from '@anthropic-ai/sdk'
 import { fetchPlantPhotos } from '../utils/plantImage'
 import { fetchPlantNames } from '../utils/plantNames'
 import { resizeImage } from '../utils/imageResize'
+import { fromAIResult } from '../hooks/usePlants'
+import { ProfileContent } from './PlantDetail'
 
 const client = new Anthropic({
   apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
@@ -121,47 +123,6 @@ PPFD (μmol/m²/s) ir taskai gairės:
 
 Jei augalas nerastas: {"error": "Augalas nerastas"}`
 
-function DotScore({ value, max = 3, color }) {
-  return (
-    <div className="flex gap-0.5">
-      {Array.from({ length: max }).map((_, i) => (
-        <div key={i} className={`w-2 h-2 rounded-full ${i < value ? color : 'bg-gray-200'}`} />
-      ))}
-    </div>
-  )
-}
-
-function Stars({ value, max = 5 }) {
-  return (
-    <div className="flex gap-0.5">
-      {Array.from({ length: max }).map((_, i) => (
-        <span key={i} className={`text-sm ${i < value ? 'text-amber-400' : 'text-gray-300'}`}>★</span>
-      ))}
-    </div>
-  )
-}
-
-function Section({ title, children }) {
-  return (
-    <div className="space-y-2">
-      <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest">{title}</p>
-      {children}
-    </div>
-  )
-}
-
-function InfoRow({ icon, label, value }) {
-  if (!value) return null
-  return (
-    <div className="flex gap-3 py-2.5 border-b border-gray-50 last:border-0">
-      <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400">{icon}</div>
-      <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">{label}</p>
-        <p className="text-sm text-gray-700 mt-0.5 leading-snug">{value}</p>
-      </div>
-    </div>
-  )
-}
 
 async function parseAndEnrich(fullText) {
   const jsonMatch = fullText.match(/\{[\s\S]*\}/)
@@ -379,14 +340,13 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
         {/* Result */}
         {result && !loading && (
           <motion.div
-            className="space-y-4"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
           >
             {/* Hero */}
             {result.image ? (
-              <div className="rounded-3xl overflow-hidden h-52 relative -mx-4">
+              <div className="rounded-3xl overflow-hidden h-52 relative -mx-4 mb-0">
                 <img src={result.image} alt={result.name} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
@@ -408,7 +368,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                 </div>
               </div>
             ) : (
-              <div className="bg-sage-50 rounded-3xl p-4 flex items-center gap-4">
+              <div className="bg-sage-50 rounded-3xl p-4 flex items-center gap-4 mb-0">
                 <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-4xl shadow-ios flex-shrink-0">
                   {result.emoji}
                 </div>
@@ -427,166 +387,8 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
               </div>
             )}
 
-            {/* Toxicity warning */}
-            {result.toksiskas && (
-              <div className="bg-red-50 border border-red-100 rounded-2xl p-3.5 flex gap-3">
-                <Skull size={22} className="flex-shrink-0 text-red-500 mt-0.5" />
-                <div>
-                  <p className="text-sm font-bold text-red-600">Toksiška augalas!</p>
-                  <p className="text-xs text-red-500 mt-0.5 leading-snug">{result.toksiskumo_info}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Quick stats */}
-            <div className="bg-surface rounded-2xl p-4 space-y-3">
-              {result.kilme && (
-                <div className="flex items-start gap-2">
-                  <span className="flex items-center gap-1 text-xs font-semibold text-gray-700 w-20 flex-shrink-0"><MapPin size={12} className="text-gray-400" /> Kilmė</span>
-                  <span className="text-xs text-gray-700 leading-snug">{result.kilme}</span>
-                </div>
-              )}
-              {result.tipas && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-gray-700 w-20 flex-shrink-0">Tipas</span>
-                  <span className="text-xs text-gray-700">{result.tipas}</span>
-                </div>
-              )}
-              {result.augimo_greitis && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-gray-700 w-20 flex-shrink-0">Augimas</span>
-                  <span className="text-xs text-gray-700">{result.augimo_greitis}</span>
-                </div>
-              )}
-              {result.sunkumas != null && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-gray-700 w-20 flex-shrink-0">Sunkumas</span>
-                  <Stars value={result.sunkumas} />
-                </div>
-              )}
-              {result.sviesa?.taskai != null && (
-                <div className="flex items-center gap-2">
-                  <span className="flex items-center gap-1 text-xs font-semibold text-gray-700 w-20 flex-shrink-0"><Sun size={12} className="text-gray-400" /> Šviesa</span>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <DotScore value={result.sviesa.taskai} color="bg-amber-400" />
-                    <span className="text-xs text-gray-500">{result.sviesa.lygis}</span>
-                    {result.sviesa.ppfd?.min != null && (
-                      <span className="text-[10px] font-medium text-amber-600 bg-amber-50 border border-amber-100 rounded-md px-1.5 py-0.5 leading-none">
-                        {result.sviesa.ppfd.min}–{result.sviesa.ppfd.max} μmol/m²/s
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-              {result.vanduo?.taskai != null && (
-                <div className="flex items-center gap-2">
-                  <span className="flex items-center gap-1 text-xs font-semibold text-gray-700 w-20 flex-shrink-0"><Droplets size={12} className="text-gray-400" /> Vanduo</span>
-                  <div className="flex items-center gap-2">
-                    <DotScore value={result.vanduo.taskai} color="bg-blue-400" />
-                    <span className="text-xs text-gray-500">{result.vanduo.lygis}</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Description */}
-            {result.aprasymas && (
-              <Section title="Apie augalą">
-                <p className="text-sm text-gray-600 leading-relaxed">{result.aprasymas}</p>
-                <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
-                  {(() => {
-                    const genus = (result.latinName ?? '').split(' ')[0]
-                    return [
-                      { label: 'Wikipedia LT', href: `https://lt.wikipedia.org/w/index.php?search=${encodeURIComponent(genus)}` },
-                      { label: 'Wikipedia EN', href: `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(genus)}` },
-                      { label: 'iNaturalist',  href: `https://www.inaturalist.org/search?q=${encodeURIComponent(result.latinName)}` },
-                    ].map(({ label, href }) => (
-                      <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                        className="text-xs text-sage-500 hover:text-sage-700 underline underline-offset-2 transition-colors">
-                        {label}
-                      </a>
-                    ))
-                  })()}
-                </div>
-              </Section>
-            )}
-
-            {/* Priežiūra */}
-            {result.prieziura && (
-              <Section title="Priežiūra">
-                <div className="bg-surface rounded-2xl divide-y divide-gray-100">
-                  <InfoRow icon={<Sun size={15} />}         label="Šviesa"      value={result.prieziura.sviesa} />
-                  <InfoRow icon={<Droplets size={15} />}    label="Laistymas"   value={result.prieziura.laistymas} />
-                  <InfoRow icon={<Thermometer size={15} />} label="Temperatūra" value={result.prieziura.temperatura} />
-                  <InfoRow icon={<Wind size={15} />}        label="Drėgmė"      value={result.prieziura.dregme} />
-                </div>
-              </Section>
-            )}
-
-            {/* Substratas */}
-            {(result.substratas || result.persodinimas || result.ziemojimas) && (
-              <Section title="Substratas ir sezoniškumas">
-                <div className="bg-surface rounded-2xl divide-y divide-gray-100">
-                  <InfoRow icon={<Flower2 size={15} />}   label="Substratas"   value={result.substratas} />
-                  <InfoRow icon={<RefreshCw size={15} />} label="Persodinimas" value={result.persodinimas} />
-                  <InfoRow icon={<Snowflake size={15} />}             label="Žiemojimas"   value={result.ziemojimas} />
-                </div>
-              </Section>
-            )}
-
-            {/* Dauginimas */}
-            {result.dauginimas?.length > 0 && (
-              <Section title="Dauginimas">
-                <div className="space-y-1.5">
-                  {result.dauginimas.map((d, i) => (
-                    <div key={i} className="flex items-start gap-2.5 bg-sage-50 rounded-xl px-3 py-2.5">
-                      <span className="text-sage-400 font-bold text-sm mt-0.5 flex-shrink-0">·</span>
-                      <p className="text-sm text-gray-700">{d}</p>
-                    </div>
-                  ))}
-                </div>
-              </Section>
-            )}
-
-            {/* Problemos */}
-            {result.problemos?.length > 0 && (
-              <Section title="Problemų diagnostika">
-                <div className="space-y-2">
-                  {result.problemos.map((p, i) => (
-                    <div key={i} className="bg-red-50/60 rounded-2xl overflow-hidden border border-red-100/60">
-                      <div className="px-3 py-2 bg-red-50 border-b border-red-100/60">
-                        <p className="text-xs font-bold text-red-500 uppercase tracking-wide">Simptomas</p>
-                        <p className="text-sm font-semibold text-red-700 mt-0.5">{p.simptomas}</p>
-                      </div>
-                      <div className="px-3 py-2 grid grid-cols-2 gap-3">
-                        <div>
-                          <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wide">Priežastis</p>
-                          <p className="text-xs text-gray-600 mt-0.5 leading-snug">{p.priezastis}</p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wide">Sprendimas</p>
-                          <p className="text-xs text-gray-600 mt-0.5 leading-snug">{p.sprendimas}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Section>
-            )}
-
-            {/* Įdomybės */}
-            {result.idomybes?.length > 0 && (
-              <Section title="Įdomybės">
-                <div className="space-y-2">
-                  {result.idomybes.map((fact, i) => (
-                    <div key={i} className="flex items-start gap-3 bg-amber-50 rounded-xl px-3 py-2.5">
-                      <Leaf size={15} className="text-amber-400 flex-shrink-0 mt-0.5" />
-                      <p className="text-sm text-amber-800 leading-snug">{fact}</p>
-                    </div>
-                  ))}
-                </div>
-              </Section>
-            )}
+            {/* Profile content — same component as PlantDetail, no extra padding */}
+            <ProfileContent plant={fromAIResult(result)} section="nori" onAction={() => {}} onClose={onClose} className="pt-5 pb-2 space-y-6" />
 
             {/* Actions */}
             <div className="space-y-3 pt-1 pb-4">
