@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Star, SlidersHorizontal } from 'lucide-react'
+import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
 import CollectionChat from '../components/CollectionChat'
 import { buildLibrarySystemPrompt } from '../utils/collectionChatContext'
@@ -196,14 +196,16 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
       <div className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
         {visible.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
-            <div className="text-5xl">
-              {query ? '🔍' : filter === 'nori' ? '✨' : filter === 'mirei' ? '💀' : filter === 'pirkti' ? '🛒' : '📚'}
+            <div className="text-gray-300">
+              {query          ? <Search size={48} />
+              : filter === 'mirei'  ? <Ghost size={48} />
+              : filter === 'pirkti' ? <ShoppingCart size={48} />
+              :                       <BookOpen size={48} />}
             </div>
             <p className="text-sm font-semibold text-gray-600">
               {query
                 ? `„${query}" nerasta bibliotekoje`
                 : filter === 'pirkti' ? 'Pirkinių sąrašas tuščias'
-                : filter === 'nori'   ? 'Norų sąrašas tuščias'
                 : filter === 'mirei'  ? 'Mirę augalai neregistruoti'
                 : 'Biblioteka tuščia'}
             </p>
@@ -212,7 +214,7 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
                 onClick={launchFullSearch}
                 className="mt-1 px-6 py-3 bg-gray-800 text-white rounded-2xl text-sm font-medium"
               >
-                🔎 Ieškoti „{query}" naujų augalų
+                Ieškoti „{query}" naujų augalų
               </button>
             ) : filter !== 'pirkti' && (
               <button
