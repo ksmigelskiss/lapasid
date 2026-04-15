@@ -140,6 +140,10 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const handleKeyDown = e => {
+    if (e.key === 'Enter' && query.trim() && !loading) searchByText(query.trim())
+  }
+
   // ── Text search ──────────────────────────────────────────────
   const searchByText = async (q) => {
     abortRef.current?.abort()
@@ -201,14 +205,6 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     }
   }
 
-  // ── Debounced text search ────────────────────────────────────
-  useEffect(() => {
-    const q = query.trim()
-    if (q.length < 2) { setResult(null); setError(null); setLoading(false); abortRef.current?.abort(); return }
-    const timer = setTimeout(() => searchByText(q), 700)
-    return () => clearTimeout(timer)
-  }, [query])
-
   const clear = () => {
     abortRef.current?.abort()
     setQuery(''); setResult(null); setError(null); setLoading(false); setPreview(null)
@@ -221,8 +217,9 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     : null
 
   return (
+    <div className="fixed inset-0 z-50 flex justify-center">
     <motion.div
-      className="fixed inset-0 z-50 flex flex-col bg-app"
+      className="w-full max-w-[430px] flex flex-col bg-app"
       initial={{ x: '100%' }}
       animate={{ x: 0 }}
       exit={{ x: '100%' }}
@@ -244,15 +241,14 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
         {/* Search input + photo button */}
         <div className="flex gap-2">
           <div className="flex-1 flex items-center bg-white border border-gray-200 rounded-2xl px-4 gap-2">
-            {loading
-              ? <Loader2 size={18} className="animate-spin text-gray-400 flex-shrink-0" />
-              : <Search size={18} className="text-gray-400 flex-shrink-0" />}
+            <Search size={18} className="text-gray-400 flex-shrink-0" />
             <input
               ref={inputRef}
               type="text"
               placeholder="Pvz. Monstera, Ficus, Alavijas..."
               value={query}
-              onChange={e => { setPreview(null); setQuery(e.target.value) }}
+              onChange={e => { setPreview(null); setQuery(e.target.value); setResult(null); setError(null) }}
+              onKeyDown={handleKeyDown}
               className="flex-1 bg-transparent py-3.5 text-sm text-gray-800 placeholder-gray-500 outline-none"
               autoFocus
             />
@@ -261,8 +257,19 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             )}
           </div>
           <button
+            onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
+            disabled={!query.trim() || loading}
+            className="flex-shrink-0 bg-sage-500 disabled:opacity-40 hover:bg-sage-600 transition-colors rounded-2xl flex items-center justify-center text-white"
+            style={{ width: 52, height: 52 }}
+          >
+            {loading
+              ? <img src="/plant_pot.png" className="w-7 h-7 object-contain animate-spin" alt="" />
+              : <Search size={18} />
+            }
+          </button>
+          <button
             onClick={() => fileRef.current?.click()}
-            className="w-13 h-13 flex-shrink-0 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl flex items-center justify-center text-gray-600"
+            className="flex-shrink-0 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl flex items-center justify-center text-gray-600"
             style={{ width: 52, height: 52 }}
           >
             <Camera size={22} />
@@ -278,13 +285,12 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
           <div className="flex flex-col items-center gap-3 py-8 text-center">
             {previewUrl
               ? <img src={previewUrl} alt="" className="w-28 h-28 object-cover rounded-2xl opacity-70" />
-              : <div className="text-4xl">🌿</div>
-
+              : <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />
             }
             <p className="text-sm text-gray-500">
               {previewUrl ? `Identifikuojama${dots}` : `Ieškoma${dots}`}
             </p>
-            {!previewUrl && <p className="text-xs text-gray-500 italic">{query}</p>}
+            {!previewUrl && <p className="text-xs text-gray-400 italic">{query}</p>}
           </div>
         )}
 
@@ -436,13 +442,14 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
         {/* Empty state */}
         {!result && !loading && !error && (
           <div className="text-center py-16 space-y-3">
-            <div className="text-5xl">🌱</div>
-            <p className="text-sm text-gray-500">Pradėkite rašyti augalo pavadinimą</p>
-            <p className="text-xs text-gray-400">arba nufotografuokite augalą / etiketę 📷</p>
+            <img src="/plant_pot.png" className="w-16 h-16 object-contain mx-auto animate-idle-float" alt="" />
+            <p className="text-sm text-gray-500">Įveskite augalo pavadinimą ir spauskite Enter</p>
+            <p className="text-xs text-gray-400">arba nufotografuokite augalą / etiketę</p>
           </div>
         )}
       </div>
     </motion.div>
+    </div>
   )
 }
 
