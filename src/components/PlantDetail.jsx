@@ -787,7 +787,7 @@ function NotesContent({ plant, onUzrasaiSave, onSaveToZinynas, onChatAbout }) {
 
 // ── Tab bar ────────────────────────────────────────────────────
 
-function TabBar({ active, onChange }) {
+function TabBar({ active, onChange, noteCount = 0 }) {
   return (
     <div className="flex border-b border-warm-border px-5 flex-shrink-0 bg-app">
       {[
@@ -798,11 +798,18 @@ function TabBar({ active, onChange }) {
         <button
           key={tab.key}
           onClick={() => onChange(tab.key)}
-          className={`relative py-3 mr-5 text-sm font-semibold transition-colors ${
+          className={`relative py-3 mr-5 text-sm font-semibold transition-colors flex items-center gap-1.5 ${
             active === tab.key ? 'text-sage-600' : 'text-gray-500'
           }`}
         >
           {tab.label}
+          {tab.key === 'uzrasai' && noteCount > 0 && (
+            <span className={`text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none ${
+              active === tab.key ? 'bg-sage-100 text-sage-600' : 'bg-gray-100 text-gray-400'
+            }`}>
+              {noteCount}
+            </span>
+          )}
           {active === tab.key && (
             <motion.div
               layoutId="tab-underline"
@@ -1309,7 +1316,7 @@ export default function PlantDetail({
         )}
 
         {/* Tab bar */}
-        <TabBar active={activeTab} onChange={setActiveTab} />
+        <TabBar active={activeTab} onChange={setActiveTab} noteCount={loadNotes(plant).length} />
 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto scrollbar-none relative">

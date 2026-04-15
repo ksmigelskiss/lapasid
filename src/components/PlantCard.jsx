@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
-import { Sun, Droplets, Star, Camera, ImageIcon, Search, Loader2, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost } from 'lucide-react'
+import { Sun, Droplets, Star, Camera, ImageIcon, Search, Loader2, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost, FileText } from 'lucide-react'
 import { fetchWikimediaImage } from '../utils/plantImage'
 import { resizeImage } from '../utils/imageResize'
 import { useLongPress } from '../hooks/useLongPress'
@@ -119,6 +119,7 @@ export default function PlantCard({ plant, section, onTap, onImageFetch, cardBg 
   const { wasFired, ...longPressProps } = useLongPress(() => setShowPhotoSheet(true))
   const status    = plant.status ?? 'healthy'
   const hasImage  = plant.image && !imgError
+  const noteCount = plant.uzrasai?.length ?? (plant.komentaras?.trim() ? 1 : 0)
   const fertFC      = section === 'auginama' ? getFertilizingForecast(plant) : null
   const fertOverdue = fertFC?.isOverdue ?? false
   const dormFC      = section === 'auginama' ? getDormancyForecast(plant) : null
@@ -159,8 +160,8 @@ export default function PlantCard({ plant, section, onTap, onImageFetch, cardBg 
           }`} />
 
           {/* Right-side badge column — stacks below status dot */}
-          {(showDashboardBadge || plant.pirkinys || section === 'istorija') && (
-            <div className="absolute top-6 right-1.5 flex flex-col gap-1">
+          {(showDashboardBadge || plant.pirkinys || section === 'istorija' || noteCount > 0) && (
+            <div className="absolute top-6 right-1.5 flex flex-col gap-1 items-center">
               {showDashboardBadge && (
                 <div className="bg-sage-500/90 backdrop-blur-sm rounded-md p-0.5">
                   <House size={10} className="text-white" />
@@ -174,6 +175,12 @@ export default function PlantCard({ plant, section, onTap, onImageFetch, cardBg 
               {section === 'istorija' && (
                 <div className="bg-black/50 backdrop-blur-sm rounded-md p-0.5">
                   <Ghost size={10} className="text-white" />
+                </div>
+              )}
+              {noteCount > 0 && (
+                <div className="bg-gray-500/80 backdrop-blur-sm rounded-md px-1 py-0.5 flex items-center gap-0.5">
+                  <FileText size={8} className="text-white" />
+                  <span className="text-[8px] text-white font-bold leading-none">{noteCount}</span>
                 </div>
               )}
             </div>
