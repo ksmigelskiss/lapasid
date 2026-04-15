@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-white text-gray-900;
+    overscroll-behavior: none;
+  }
+
+  #root {
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100dvh;
+    @apply bg-white relative overflow-hidden;
+  }
+}
+
+@keyframes idle-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes idle-float-gardener {
+  0%, 100% { transform: translateY(42%); }
+  50%       { transform: translateY(calc(42% - 6px)); }
+}
+
+@layer utilities {
+  .animate-idle-float {
+    animation: idle-float 3s ease-in-out infinite;
+  }
+  .animate-idle-float-gardener {
+    animation: idle-float-gardener 3s ease-in-out infinite;
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(sudo npm:*)",
+      "Bash(chmod -R u+w /Users/kestutissmigelskis/.npm)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(node:*)",
+      "Bash(npx vite:*)",
+      "Bash(curl -s http://localhost:5173/src/index.css)",
+      "Bash(sed -i '' 's/text-xs text-gray-400\">AI asistentas/text-xs text-gray-500\">AI asistentas/g' src/components/CollectionChat.jsx src/components/PlantChat.jsx)",
+      "Bash(sed -i '' 's/text-sm text-gray-400\">Pakalbink/text-sm text-gray-500\">Pakalbink/g' src/components/PlantChat.jsx)",
+      "Bash(sed -i '' 's/text-sm text-gray-400\">Paklausk/text-sm text-gray-500\">Paklausk/g' src/components/ZinynasChat.jsx)",
+      "Bash(sed -i '' 's/text-sm text-gray-400\">Užduok/text-sm text-gray-500\">Užduok/g' src/components/CollectionChat.jsx)",
+      "Bash(sed -i '' 's/text-xs font-semibold text-gray-400 uppercase tracking-wide/text-xs font-semibold text-gray-600 uppercase tracking-wide/g' src/components/PlantChat.jsx)",
+      "Bash(sudo chown:*)",
+      "Bash(cp /Users/kestutissmigelskis/Downloads/plant_pot.png /Users/kestutissmigelskis/geliu-db/public/plant_pot.png)",
+      "Bash(cp /Users/kestutissmigelskis/Downloads/gardener.png /Users/kestutissmigelskis/geliu-db/public/gardener.png)"
+    ]
+  }
+}

@@ -1,0 +1,943 @@
+{
+  "zinynas": [],
+  "plants": [
+    {
+      "id": "p1",
+      "lotyniskas": "Brighamia insignis",
+      "lietuviškas": "Havajų palmė",
+      "emoji": "🌺",
+      "tipas": "Sultingas rozečių krūmas",
+      "sviesa": {
+        "lygis": "ryški",
+        "taskai": 3,
+        "ppfd": {
+          "min": 400,
+          "max": 800
+        }
+      },
+      "vanduo": {
+        "lygis": "vidutiniškai",
+        "taskai": 2
+      },
+      "augimo_greitis": "Lėtas",
+      "sunkumas": 4,
+      "toksiskas": false,
+      "toksiskumo_info": "Nenustatytas – laikyti atsargiai",
+      "aprasymas": "Kritiškai nykstantis Havajų endeminis augalas su butelio formos stiemu, kaupiančiu vandenį. Viršūnėje žydi balti, aromatingi žiedai, kuriuos laukinėje gamtoje apdulkindavo dabar išnykusi kandis Manduca blackburni. Visi pasaulio egzemplioriai kilę tik iš kelių išlikusių laukinių augalų.",
+      "kilme": "Havajų salos – Kauai ir Molokai salų stačių pakrančių uolos",
+      "prieziura": {
+        "sviesa": "Pietų arba vakarų langas, tiesioginė saulė 3–4 val. per dieną",
+        "laistymas": "Vasarą kas 10–14 dienų, žiemą kas 4–6 savaites",
+        "temperatura": "18–24 °C",
+        "dregme": "40–60 %, nepurkšti ant stiebo"
+      },
+      "substratas": "Kaktusų žemė 55 % + perlitas 30 % + pumeksas 15 %",
+      "persodinimas": "Kas 2–3 metus pavasarį, vazonėlis tik šiek tiek didesnis",
+      "ziemojimas": "Ramybės periodas 16–18 °C – laistyti kas 4–6 savaites",
+      "dauginimas": [
+        "Iš sėklų (sudėtinga)",
+        "Šoniniai ūgliai (labai reti)"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Stiebas minkštas, tamsėja iš apačios",
+          "priezastis": "Šaknų puvinys",
+          "sprendimas": "Ištraukti, pašalinti puvusias šaknis, apdoroti fungicidu, džiovinti 3–5 d."
+        },
+        {
+          "simptomas": "Lapai gelsta ir krenta",
+          "priezastis": "Per mažai šviesos arba per žema temperatūra",
+          "sprendimas": "Perkelti į šviesesnę vietą, temperatūra ne žemiau 16 °C"
+        },
+        {
+          "simptomas": "Viršūnė išdžiūvusi",
+          "priezastis": "Per sausa aplinka arba per didelis laistymas žiemą",
+          "sprendimas": "Apkarpyti iki sveiko audinio, patikrinti laistymo režimą"
+        }
+      ],
+      "idomybes": [
+        "IUCN Raudonajame sąraše – kritiškai nykstanti rūšis (CR)",
+        "Laukinėje gamtoje apdulkinosi tik išnykusi kandis Manduca blackburni",
+        "Botanikai dabar rankiniu būdu apdulkina augalus, kad išsaugotų rūšį",
+        "Visi kultūroje augantys egzemplioriai kilę tik iš kelių likusių laukinių augalų"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-01-01",
+      "image": "https://static.inaturalist.org/photos/157804980/medium.jpeg",
+      "status": "healthy",
+      "timeline": [
+        {
+          "id": "tl13",
+          "type": "watering",
+          "date": "2026-04-08",
+          "note": "Žemė jau buvo gerokai išdžiūvusi",
+          "amount": "150ml"
+        },
+        {
+          "id": "tl12",
+          "type": "photo",
+          "date": "2026-04-01",
+          "note": "Pavasario augimas — 2 nauji lapai!",
+          "imageUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/258096890/medium.jpg"
+        },
+        {
+          "id": "tl11",
+          "type": "watering",
+          "date": "2026-03-24",
+          "note": "",
+          "amount": "150ml"
+        },
+        {
+          "id": "tl10",
+          "type": "fertilizing",
+          "date": "2026-03-15",
+          "note": "Pavasarinis tręšimas — aktyvaus augimo sezonas prasidėjo",
+          "fertilizer": "NPK 20-20-20",
+          "amount": "100ml"
+        },
+        {
+          "id": "tl09",
+          "type": "watering",
+          "date": "2026-03-10",
+          "note": "",
+          "amount": "130ml"
+        },
+        {
+          "id": "tl08",
+          "type": "repotting",
+          "date": "2026-02-28",
+          "note": "Šaknys jau išlindo iš drenažo skylučių. Substratas: kokoso durpės + perlitas 3:1",
+          "potSize": "16cm vazonas"
+        },
+        {
+          "id": "tl07",
+          "type": "photo",
+          "date": "2026-02-28",
+          "note": "Po persodinimo — matosi šaknų sistema",
+          "imageUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/258097038/medium.jpg"
+        },
+        {
+          "id": "tl06",
+          "type": "watering",
+          "date": "2026-02-14",
+          "note": "Valentino diena 💚",
+          "amount": "100ml"
+        },
+        {
+          "id": "tl05",
+          "type": "watering",
+          "date": "2026-01-22",
+          "note": "",
+          "amount": "80ml"
+        },
+        {
+          "id": "tl04",
+          "type": "fertilizing",
+          "date": "2026-01-10",
+          "note": "Žieminis tręšimas — pusė dozės, augalas pailsi",
+          "fertilizer": "NPK 5-5-5",
+          "amount": "50ml"
+        },
+        {
+          "id": "tl03",
+          "type": "photo",
+          "date": "2025-12-15",
+          "note": "Po mėnesio — atrodo gerai, prisitaikė prie namų sąlygų",
+          "imageUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/258097035/medium.jpg"
+        },
+        {
+          "id": "tl02",
+          "type": "watering",
+          "date": "2025-12-10",
+          "note": "Žiemą laistau rečiau — kas 3 savaites",
+          "amount": "80ml"
+        },
+        {
+          "id": "tl01",
+          "type": "photo",
+          "date": "2025-11-12",
+          "note": "Pirma diena namuose! Nupirkta iš specializuoto darželio.",
+          "imageUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/258097004/medium.jpg"
+        },
+        {
+          "id": "tl00",
+          "type": "note",
+          "date": "2025-11-12",
+          "note": "Nupirkta iš \"Žaliosios oazės\" darželio. Kaina 35€. Aukštis ~25cm, stiebo gumbas ~4cm skersmens."
+        }
+      ]
+    },
+    {
+      "id": "p2",
+      "lotyniskas": "Jatropha podagrica",
+      "lietuviškas": "Podagrinė jatrofa",
+      "emoji": "🪴",
+      "tipas": "Sultingas krūmas su patinusiu kamienu",
+      "sviesa": {
+        "lygis": "ryški",
+        "taskai": 3,
+        "ppfd": {
+          "min": 500,
+          "max": 1000
+        }
+      },
+      "vanduo": {
+        "lygis": "mažai",
+        "taskai": 1
+      },
+      "augimo_greitis": "Lėtas",
+      "sunkumas": 3,
+      "toksiskas": true,
+      "toksiskumo_info": "Labai toksiškas – visi augalo dalys nuodingi, lateksas dirgina odą ir gleivinę",
+      "aprasymas": "Išskirtinis sultingas su patinusiu butelio formos kamienu (kaudeksu), kaupiančiu vandenį. Vasarą žydi ryškiai koraliniais raudonais žiedais. Žiemą paprastai meta lapus ir ilsisi. Lateksas nuodingas – dirbant su augalu naudoti pirštines.",
+      "kilme": "Centrinė Amerika – Gvatemala, Nikaragva, sausos tropinės miškų pakraščių zonos",
+      "prieziura": {
+        "sviesa": "Tiesioginė saulė min. 4–6 val. per dieną, pietų langas",
+        "laistymas": "Vasarą kas 2–3 savaites, žiemą beveik nelaistyti – kas 6–8 savaites",
+        "temperatura": "18–30 °C, žiemą ne žemiau 12 °C",
+        "dregme": "30–50 % – gerai toleruoja sausą orą"
+      },
+      "substratas": "Kaktusų žemė 60 % + stambaus smėlio 20 % + perlitas 20 %",
+      "persodinimas": "Kas 2–4 metus pavasarį, vazonas nedidelis – mėgsta ankštumą",
+      "ziemojimas": "Pilnas ramybės periodas – laistyti 1–2 kartus per žiemą, temperatūra 12–16 °C",
+      "dauginimas": [
+        "Iš sėklų (greitai dygsta)",
+        "Stiebų auginiais (prieš sodinant 1–2 d. džiovinti)"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Kaudeksas raukšlėjasi",
+          "priezastis": "Trūksta vandens arba šaknys pažeistos",
+          "sprendimas": "Patikrinti šaknis – jei sveikos, palaistyti; jei pažeistos, gydyti nuo puvinio"
+        },
+        {
+          "simptomas": "Lapai krenta žiemą",
+          "priezastis": "Natūralus ramybės periodas",
+          "sprendimas": "Normalu – tęskite retą laistymą, pavasarį sulapos"
+        },
+        {
+          "simptomas": "Voratinkliai ant lapų",
+          "priezastis": "Voratinkliniai erkučiai (sausa aplinka)",
+          "sprendimas": "Nupurkšti akaricidu, padidinti oro drėgmę"
+        }
+      ],
+      "idomybes": [
+        "Kaudeksas gali kaupti tiek vandens, kad augalas išgyvena kelių mėnesių sausrą",
+        "Koraliniai žiedai tropinėse šalyse pritraukia kolibrius ir drugelius",
+        "Lotyniškas epitetas podagrica – dėl patinusio pagrindo, primenančio podagros pabrinkimą"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-01-15",
+      "image": "https://inaturalist-open-data.s3.amazonaws.com/photos/34602256/medium.jpeg",
+      "status": "healthy"
+    },
+    {
+      "id": "p3",
+      "lotyniskas": "Aglaonema 'Orange Star'",
+      "lietuviškas": "Aglonema Orange Star",
+      "emoji": "🍊",
+      "tipas": "Daugiametė žolinė augalas",
+      "sviesa": {
+        "lygis": "vidutinė",
+        "taskai": 2,
+        "ppfd": {
+          "min": 100,
+          "max": 250
+        }
+      },
+      "vanduo": {
+        "lygis": "vidutiniškai",
+        "taskai": 2
+      },
+      "augimo_greitis": "Vidutinis",
+      "sunkumas": 2,
+      "toksiskas": false,
+      "toksiskumo_info": "Toksiškas žmonėms ir gyvūnams – kalcio oksalato kristalai sukelia burnos ir gerklės dirginimą",
+      "aprasymas": "Ryški kinų evergreen veislė su oranžiniais ir raudonais lapais, kurių intensyvumas priklauso nuo šviesos kiekio. Kuo daugiau šviesos – tuo sodresnė spalva. Viena paprasčiausių kambarinių augalų priežiūroje, atlaidi ir pradininkams.",
+      "kilme": "Hibridas, veistas Tailande ir Olandijoje; kilmės augalai iš Pietryčių Azijos",
+      "prieziura": {
+        "sviesa": "Ryški netiesioginė šviesa sustiprina spalvą; toleruoja vidutinę, bet spalvos bals",
+        "laistymas": "Kai viršutinis 2–3 cm žemės sluoksnis išdžiūsta, kas 7–10 dienų",
+        "temperatura": "18–28 °C, saugoti nuo skersvėjų",
+        "dregme": "50–70 %, periodiškai purkšti arba naudoti drėkintuvą"
+      },
+      "substratas": "Universali žemė 60 % + perlitas 30 % + kokosų pluoštas 10 %",
+      "persodinimas": "Kas 1–2 metus pavasarį",
+      "ziemojimas": "Nėra ramybės periodo – laistyti rečiau, ne žemiau 16 °C",
+      "dauginimas": [
+        "Stiebų auginiais",
+        "Šoniniai ūgliai",
+        "Dalijimas"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Lapų kraštai rudėja",
+          "priezastis": "Per sausa aplinka arba per daug tiesioginės saulės",
+          "sprendimas": "Padidinti drėgmę, perkelti iš tiesioginės saulės"
+        },
+        {
+          "simptomas": "Lapai gelsta, minkštėja",
+          "priezastis": "Per daug vandens arba šaknų puvinys",
+          "sprendimas": "Patikrinti žemę ir šaknis, sumažinti laistymą"
+        },
+        {
+          "simptomas": "Spalva blunka, tampa žalia",
+          "priezastis": "Per mažai šviesos",
+          "sprendimas": "Perkelti arčiau lango arba naudoti augimo lempą"
+        }
+      ],
+      "idomybes": [
+        "NASA tyrimai parodė, kad aglonemos valo orą nuo formaldehido ir benzeno",
+        "Gali gyventi 20+ metų – viena ilgaamžiškiausių kambarinių augalų",
+        "Tailande ir Filipinuose laikoma laimę nešančiu augalu"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-02-01",
+      "image": "https://static.inaturalist.org/photos/168360554/medium.jpeg",
+      "status": "healthy"
+    },
+    {
+      "id": "p4",
+      "lotyniskas": "Oxalis vulcanicola 'Crazy Plum'",
+      "lietuviškas": "Ugnikalnio dobilėlis",
+      "emoji": "🍇",
+      "tipas": "Gumbuotasis dobilinis augalas",
+      "sviesa": {
+        "lygis": "ryški",
+        "taskai": 3,
+        "ppfd": {
+          "min": 400,
+          "max": 800
+        }
+      },
+      "vanduo": {
+        "lygis": "vidutiniškai",
+        "taskai": 2
+      },
+      "augimo_greitis": "Greitas",
+      "sunkumas": 2,
+      "toksiskas": false,
+      "toksiskumo_info": "Silpnai toksiškas – oksalo rūgštis gali sukelti virškinimo sutrikimus jei suvalgoma dideliais kiekiais",
+      "aprasymas": "Spalvingas dobilinis augalas su tamsiai purpuriniais, beveik juodais lapeliais ir geltonais žiedeliais. Aktyvus dieną – lapai atsidaro saulei, naktį ir debesuotu oru užsidaro. Dėl šio nyktotropizmo efekto puikiai tinka stebėti augalų elgesį.",
+      "kilme": "Kolumbija ir Venesuela – ugnikalnių regionai, vidutinio aukščio miško pakraščiai",
+      "prieziura": {
+        "sviesa": "Tiesioginė ryški šviesa sustiprina purpurinę spalvą; pietų arba rytų langas",
+        "laistymas": "Kai viršutinis žemės sluoksnis išdžiūsta, kas 5–10 dienų; ramybės periodu – nelaistyti",
+        "temperatura": "15–25 °C, nelaikyti žemiau 10 °C",
+        "dregme": "40–60 %, gerai toleruoja normalią kambario drėgmę"
+      },
+      "substratas": "Universali žemė 50 % + perlitas 30 % + smėlis 20 %",
+      "persodinimas": "Kas 1–2 metus, gumbus galima atskirti ir persodinti",
+      "ziemojimas": "Ramybės periodas žiemą – lapai nubyra, laikyti gumbus sausoje žemėje 8–12 °C",
+      "dauginimas": [
+        "Gumbų dalijimas (pavasarį)",
+        "Sėklos"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Lapai užsidaro ir nesidaro dieną",
+          "priezastis": "Per mažai šviesos",
+          "sprendimas": "Perkelti į šviesesnę vietą – augalas atsivers"
+        },
+        {
+          "simptomas": "Spalva bąlsta, tampa žalsvai ruda",
+          "priezastis": "Per mažai tiesioginės šviesos",
+          "sprendimas": "Perkelti arčiau pietų arba vakarų lango"
+        },
+        {
+          "simptomas": "Augalas visas nunyksta",
+          "priezastis": "Natūralus žiemos ramybės periodas",
+          "sprendimas": "Normalu – laikyti gumbus sausai, pavasarį pradės dygti iš naujo"
+        }
+      ],
+      "idomybes": [
+        "Lapai reaguoja į šviesą – atsidaro dieną, užsidaro naktį ir audros metu (nyktotropizmas)",
+        "Ugnikalnio regionuose auga ant pelenų turtingo dirvožemio – toleruoja gerai drenuojamą žemę",
+        "Nors atrodo kaip dobilas – priklauso visiškai kitai rūšiai ir šeimai"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-02-10",
+      "image": "https://inaturalist-open-data.s3.amazonaws.com/photos/12307006/medium.jpg",
+      "status": "healthy"
+    },
+    {
+      "id": "p5",
+      "lotyniskas": "Biophytum sensitivum",
+      "lietuviškas": "Jautrusis biofitumas",
+      "emoji": "🌿",
+      "tipas": "Jautrioji žolinė daugiametė",
+      "sviesa": {
+        "lygis": "vidutinė",
+        "taskai": 2,
+        "ppfd": {
+          "min": 150,
+          "max": 350
+        }
+      },
+      "vanduo": {
+        "lygis": "vidutiniškai",
+        "taskai": 2
+      },
+      "augimo_greitis": "Lėtas",
+      "sunkumas": 3,
+      "toksiskas": false,
+      "toksiskumo_info": "Nenuodinga",
+      "aprasymas": "Fascinuojantis miniatiūrinis augalas, sureaguojantis į prisilietimą, vibracijas ar stiprią šviesą – sudaro lapus kaip Mimosa pudica. Palmiai panašios išvaizdos, tačiau priklauso rūgtinių šeimai. Tradicinėje Ajurvedinėje medicinoje naudojamas kaip vaistinis augalas.",
+      "kilme": "Pietryčių Azija, Tropinė Afrika – atogrąžų miškų pakraščiai ir atvirosios pievos",
+      "prieziura": {
+        "sviesa": "Ryški netiesioginė šviesa; tiesioginė saulė kenkia – lapai nudega",
+        "laistymas": "Reguliariai – žemė visada šiek tiek drėgna, bet neužtvindyta",
+        "temperatura": "18–28 °C, labai jautrus šalčiui",
+        "dregme": "60–80 %, rekomenduojama drėkintuvas arba žvyrų padėklas su vandeniu"
+      },
+      "substratas": "Durpių žemė 50 % + perlitas 25 % + smulkus smėlis 25 %",
+      "persodinimas": "Kasmet pavasarį (trumpaamžis – gyvena 1–3 metus)",
+      "ziemojimas": "Nėra ramybės periodo; žiemą laikyti šilčiau ir drėgmiau",
+      "dauginimas": [
+        "Sėklos – pagrindinis būdas, augalas žydi ir pats subrandina"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Augalas nebereaguoja į prisilietimą",
+          "priezastis": "Mechanizmas pavargo po daug stimulų",
+          "sprendimas": "Normalu – palikite ramybėje 20–30 min., gebėjimas atsinaujins"
+        },
+        {
+          "simptomas": "Lapų galai rudėja",
+          "priezastis": "Per žema drėgmė arba vanduo su fluoru",
+          "sprendimas": "Naudoti filtrą arba atstatytą vandenį, padidinti drėgmę"
+        },
+        {
+          "simptomas": "Augalas suvysta ir nunyksta",
+          "priezastis": "Natūrali mirtis po žydėjimo (dažnai vienametis)",
+          "sprendimas": "Surinkti sėklas ir pasėti iš naujo"
+        }
+      ],
+      "idomybes": [
+        "Sureaguoja į prisilietimą, vibracijas ir net 5 Hz dažnio garso bangas",
+        "Mechanizmas pagrįstas staigiu osmosinio spaudimo pokyčiu lapų pamatinėse ląstelėse",
+        "Palmės forma apgauna – iš tikrųjų priklauso rūgtinių šeimai (Oxalidaceae)"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-02-20",
+      "image": "https://inaturalist-open-data.s3.amazonaws.com/photos/554094189/medium.jpg",
+      "status": "healthy"
+    },
+    {
+      "id": "p6",
+      "lotyniskas": "Aglaonema 'White Joy'",
+      "lietuviškas": "Aglonema White Joy",
+      "emoji": "🤍",
+      "tipas": "Daugiametė žolinė augalas",
+      "sviesa": {
+        "lygis": "žema",
+        "taskai": 1,
+        "ppfd": {
+          "min": 50,
+          "max": 200
+        }
+      },
+      "vanduo": {
+        "lygis": "vidutiniškai",
+        "taskai": 2
+      },
+      "augimo_greitis": "Lėtas",
+      "sunkumas": 1,
+      "toksiskas": false,
+      "toksiskumo_info": "Toksiškas žmonėms ir gyvūnams – kalcio oksalato kristalai dirgina gleivinę",
+      "aprasymas": "Viena tamsiausias vietas toleruojančių kambarinių augalų. Margi, balti su žaliais lapai suteikia lengvumo bet kokiam kambariui. Idealus pradedantiesiems – atleidžia retesnį laistymą ir prastesnes sąlygas. Puikiai tinka ofisams.",
+      "kilme": "Hibridas; kilmės augalai – Pietryčių Azija, atogrąžų miškų paunksnės",
+      "prieziura": {
+        "sviesa": "Toleruoja labai žemą šviesą; šviesesnėje vietoje baltoji spalva intensyvesnė",
+        "laistymas": "Kai viršutinis 3–4 cm žemės sluoksnis išdžiūsta, kas 10–14 dienų",
+        "temperatura": "16–28 °C, vengti skersvėjų",
+        "dregme": "40–60 %, toleruoja ir žemesnę"
+      },
+      "substratas": "Universali žemė 65 % + perlitas 25 % + kokosų pluoštas 10 %",
+      "persodinimas": "Kas 2 metus pavasarį",
+      "ziemojimas": "Nėra ramybės periodo – laistyti rečiau, ne žemiau 15 °C",
+      "dauginimas": [
+        "Stiebų auginiais",
+        "Šoniniai ūgliai",
+        "Dalijimas persodinus"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Baltos vietos tamsėja, rudėja",
+          "priezastis": "Tiesioginė saulė degina baltuosius audinius",
+          "sprendimas": "Perkelti iš tiesioginės saulės"
+        },
+        {
+          "simptomas": "Lapų kraštai gelsti",
+          "priezastis": "Per daug mineralų vandenyje arba persišaknijimas",
+          "sprendimas": "Naudoti filtruotą vandenį arba persodinti"
+        }
+      ],
+      "idomybes": [
+        "Viena nedaugelio augalų, augančių ir žydinčių be natūralios šviesos",
+        "Genties pavadinimas Aglaonema graikiškai reiškia 'spindinčios gijos'",
+        "Tailande laikoma laimę nešančiu augalu – tradiciškai dovanojama persikrausčius"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-03-01",
+      "image": "https://static.inaturalist.org/photos/168360554/medium.jpeg",
+      "status": "healthy"
+    },
+    {
+      "id": "p7",
+      "lotyniskas": "Peperomia caperata 'Rosso'",
+      "lietuviškas": "Raukšlėtoji peperomija Rosso",
+      "emoji": "🌱",
+      "tipas": "Pusiau sultingas daugiametis",
+      "sviesa": {
+        "lygis": "vidutinė",
+        "taskai": 2,
+        "ppfd": {
+          "min": 150,
+          "max": 400
+        }
+      },
+      "vanduo": {
+        "lygis": "mažai",
+        "taskai": 1
+      },
+      "augimo_greitis": "Lėtas",
+      "sunkumas": 2,
+      "toksiskas": false,
+      "toksiskumo_info": "Nenuodinga – saugu vaikams ir gyvūnams",
+      "aprasymas": "Kompaktiškas augalas su giliai raukšlėtais tamsiai žaliais lapais ir ryškiai raudonomis apatinėmis pusėmis. Žydi plonomis žvakutę primenančiomis baltomis žiedynomis. Kaupia vandenį lapuose – atlaiko trumpą sausrą. Puikus tinklas pailsėti augintojui.",
+      "kilme": "Brazilija – Atlanto atogrąžų miškų paunksnės",
+      "prieziura": {
+        "sviesa": "Ryški netiesioginė šviesa; toleruoja vidutinę",
+        "laistymas": "Kai žemė visiškai išdžiūsta – labai jautrus perlaistymo, kas 10–14 dienų",
+        "temperatura": "18–26 °C",
+        "dregme": "40–60 %; lapų nepurkšti – gali atsirasti dėmės"
+      },
+      "substratas": "Perlitas 50 % + universali žemė 30 % + kokosų pluoštas 20 %",
+      "persodinimas": "Kas 2–3 metus – lėtai auga, mėgsta ankštą vazoną",
+      "ziemojimas": "Nėra ramybės periodo, tačiau žiemą laistyti dar rečiau",
+      "dauginimas": [
+        "Lapų auginiais (labai lengva)",
+        "Stiebų auginiais"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Lapai minkšti, putlūs, geltonuoja",
+          "priezastis": "Perlaistymas",
+          "sprendimas": "Leisti žemei visiškai išdžiūti; patikrinti šaknis, jei puvusios – gydyti"
+        },
+        {
+          "simptomas": "Lapai susiraukšlėja, sušvelnėja",
+          "priezastis": "Trūksta vandens",
+          "sprendimas": "Palaistyti – augalas greitai atgis"
+        },
+        {
+          "simptomas": "Raudona spalva bąlsta",
+          "priezastis": "Per mažai šviesos",
+          "sprendimas": "Perkelti arčiau lango"
+        }
+      ],
+      "idomybes": [
+        "Lapuose esantys rezervai leidžia augalui 2–3 savaites apsieiti be laistymo",
+        "Žvakutės formos žiedai neturi žiedlapių – tai sutankėję stiebeliai su mažytėmis gėlytėmis",
+        "Peperomia gentyje yra virš 1 000 rūšių – viena didžiausių kambarinių augalų genčių"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-03-10",
+      "image": "https://inaturalist-open-data.s3.amazonaws.com/photos/7318759/medium.jpg",
+      "status": "healthy"
+    },
+    {
+      "id": "p8",
+      "lotyniskas": "Monstera adansonii",
+      "lietuviškas": "Beždžionių lapų monstėra",
+      "emoji": "🌿",
+      "tipas": "Vijoklinė tropinė liana",
+      "sviesa": {
+        "lygis": "vidutinė",
+        "taskai": 2,
+        "ppfd": {
+          "min": 200,
+          "max": 500
+        }
+      },
+      "vanduo": {
+        "lygis": "vidutiniškai",
+        "taskai": 2
+      },
+      "augimo_greitis": "Greitas",
+      "sunkumas": 2,
+      "toksiskas": false,
+      "toksiskumo_info": "Toksiškas žmonėms ir gyvūnams – kalcio oksalato kristalai sukelia burnos dirginimą",
+      "aprasymas": "Žavioji mažoji monstėros rūšis su daugybe skylučių lapuose (fenestracija), auganti daug greičiau nei M. deliciosa. Puiki kabančiam vazonui arba auginama su atrama. Skylės lapuose – evoliucinis prisitaikymas atlaikyti stiprius atogrąžų vėjus.",
+      "kilme": "Centrinė ir Pietų Amerika – drėgni atogrąžų miškai nuo Meksikos iki Argentinos",
+      "prieziura": {
+        "sviesa": "Ryški netiesioginė šviesa; tiesioginė saulė degina lapus",
+        "laistymas": "Kai viršutinis 3–4 cm sluoksnis išdžiūsta, kas 7–10 dienų",
+        "temperatura": "18–27 °C",
+        "dregme": "60–80 %; reguliariai purkšti arba naudoti drėkintuvą"
+      },
+      "substratas": "Universali žemė 50 % + perlitas 30 % + orchidėjų žievė 20 %",
+      "persodinimas": "Kasmet arba kas 2 metus pavasarį",
+      "ziemojimas": "Nėra ramybės periodo – laistyti rečiau, ne žemiau 16 °C",
+      "dauginimas": [
+        "Stiebų auginiai vandenyje su mazgu",
+        "Oro auginiai"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Lapai gelsti tolygiai",
+          "priezastis": "Per daug vandens arba šaknų puvinys",
+          "sprendimas": "Patikrinti šaknis, sumažinti laistymą"
+        },
+        {
+          "simptomas": "Lapai be skylių",
+          "priezastis": "Per mažai šviesos arba jaunas augalas",
+          "sprendimas": "Perkelti į šviesesnę vietą; skylės atsiranda augalui bręstant"
+        },
+        {
+          "simptomas": "Lapų kraštai rudėja",
+          "priezastis": "Per žema drėgmė arba per daug mineralų vandenyje",
+          "sprendimas": "Padidinti drėgmę, naudoti filtrą arba lietaus vandenį"
+        }
+      ],
+      "idomybes": [
+        "Fenestracija (skylės lapuose) – evoliucinis prisitaikymas atlaikyti stiprius vėjus ir pašviesti lapams apačioje",
+        "Per sezoną gali pailgėti 50–100 cm – viena greičiausiai augančių monstėrų",
+        "Laukiniai lianų stiebai pasiekia medžių viršūnes ir gali svirti 20+ metrų"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-03-15",
+      "image": "https://inaturalist-open-data.s3.amazonaws.com/photos/451925925/medium.jpeg",
+      "status": "healthy"
+    },
+    {
+      "id": "p9",
+      "lotyniskas": "Doryopteris pedata",
+      "lietuviškas": "Pėdų formos papartis",
+      "emoji": "🌿",
+      "tipas": "Žeminis tropinis papartis",
+      "sviesa": {
+        "lygis": "vidutinė",
+        "taskai": 2,
+        "ppfd": {
+          "min": 100,
+          "max": 250
+        }
+      },
+      "vanduo": {
+        "lygis": "daug",
+        "taskai": 3
+      },
+      "augimo_greitis": "Lėtas",
+      "sunkumas": 3,
+      "toksiskas": false,
+      "toksiskumo_info": "Nenuodinga",
+      "aprasymas": "Elegantiškas ir retas papartis, kurio lapai primena paukščio pėdą arba žmogaus plaštaką. Natūraliai auga ant akmenų ir medžių žievės Karibų atogrąžose. Lėtai auga, bet išgyvena ilgai. Vienas dekoratyviausių ir rečiausių paparčių kultūroje.",
+      "kilme": "Karibų salos, Centrinė ir Pietų Amerika – drėgnos uolinės buveinės",
+      "prieziura": {
+        "sviesa": "Vidutinė netiesioginė šviesa; tiesioginė saulė nudegina lapus",
+        "laistymas": "Žemė nuolat šiek tiek drėgna, bet ne permirkusi – kas 5–7 dienų",
+        "temperatura": "18–26 °C; nemėgsta staigių pokyčių",
+        "dregme": "70–90 %; labai jautrus sausai orai – naudoti drėkintuvą"
+      },
+      "substratas": "Durpių žemė 40 % + kokosų pluoštas 30 % + perlitas 20 % + sfagnų samanos 10 %",
+      "persodinimas": "Kas 2 metus pavasarį, nedidelis vazonas",
+      "ziemojimas": "Nėra ramybės periodo – palaikyti aukštą drėgmę ir šilumą",
+      "dauginimas": [
+        "Lapų briaunų pumpurai – mažyčiai augaliukai ant lapų kraštų",
+        "Sporos (sunku namuose)"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Lapai rudėja nuo kraštų",
+          "priezastis": "Per žema oro drėgmė",
+          "sprendimas": "Drėkintuvas, laikyti grupėje su kitais augalais arba ant drėgnų žvirgždų padėklo"
+        },
+        {
+          "simptomas": "Lapai gelsta tolygiai",
+          "priezastis": "Per daug saulės arba šaknų puvinys",
+          "sprendimas": "Patikrinti drėgmę, perkelti iš tiesioginės šviesos"
+        }
+      ],
+      "idomybes": [
+        "Ant lapų briaunų gali formuotis mažyčiai jaunikščiai – unikalus vegetatyvinis dauginimasis",
+        "Lapų forma – prisitaikymas prie skirtingų apšvietimo sąlygų miškų aukštuose",
+        "Labai retas kultūroje – dažniausiai randamas tik kolekcijose ir botanikos soduose"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-03-20",
+      "image": "https://inaturalist-open-data.s3.amazonaws.com/photos/35708382/medium.jpg",
+      "status": "healthy"
+    },
+    {
+      "id": "p10",
+      "lotyniskas": "Begonia maculata",
+      "lietuviškas": "Dėmėtoji begonija",
+      "emoji": "🌸",
+      "tipas": "Bambukinio tipo stiebuota begonija",
+      "sviesa": {
+        "lygis": "ryški",
+        "taskai": 3,
+        "ppfd": {
+          "min": 400,
+          "max": 700
+        }
+      },
+      "vanduo": {
+        "lygis": "vidutiniškai",
+        "taskai": 2
+      },
+      "augimo_greitis": "Greitas",
+      "sunkumas": 3,
+      "toksiskas": false,
+      "toksiskumo_info": "Silpnai toksiškas – gumbuose yra kalcio oksalato; venkite vartoti burnoje",
+      "aprasymas": "Spektakuliari begonija su sidabriniais baltais taškais ant tamsiai žalių lapų ir ryškiai raudonomis apatinėmis pusėmis. Gali užaugti iki 150 cm. Žydi baltomis arba rausvomis gėlėmis. Greitai auga, bet reikalauja dėmesio – lapų nepurkšti.",
+      "kilme": "Brazilija – Espírito Santo ir Rio de Janeiro valstijų tropiniai miškai",
+      "prieziura": {
+        "sviesa": "Ryški netiesioginė šviesa; rytų arba vakarų langas; vidurdienio saulė degina",
+        "laistymas": "Kai viršutinis 2–3 cm sluoksnis išdžiūsta, kas 7 dienų vasarą",
+        "temperatura": "18–26 °C; vengt vėsos žemiau 12 °C",
+        "dregme": "50–60 %; lapų nepurkšti – dėmėjasi ir pūva"
+      },
+      "substratas": "Universali žemė 50 % + perlitas 30 % + kokosų pluoštas 20 %",
+      "persodinimas": "Kasmet pavasarį – greitai auga ir užpildo vazoną",
+      "ziemojimas": "Nėra ramybės periodo; laistyti rečiau, ne žemiau 15 °C",
+      "dauginimas": [
+        "Stiebų auginiai vandenyje (labai lengva)",
+        "Lapų auginiai"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Miltelinis pilkas apnašas ant lapų",
+          "priezastis": "Miltelingasis pelėsis – per didelė drėgmė + prasta ventiliacija",
+          "sprendimas": "Apdoroti fungicidu, pagerinti ventiliaciją, lapų nepurkšti"
+        },
+        {
+          "simptomas": "Stiebas drėbsta, tamsėja iš apačios",
+          "priezastis": "Stiebo puvinys",
+          "sprendimas": "Nupjauti virš puvimo, iš auginio auginti naują augalą"
+        },
+        {
+          "simptomas": "Sidabriniai taškai blunka",
+          "priezastis": "Per mažai šviesos",
+          "sprendimas": "Perkelti arčiau rytų arba vakaro saulės"
+        }
+      ],
+      "idomybes": [
+        "Sidabrinės dėmės veikia kaip šviesos reguliatoriai – padeda nepersisotinti fotosintezes giliau esantiems lapams",
+        "2010-aisiais tapo globaliu hitu per socialinę žiniasklaidą – vienas labiausiai fotografuojamų augalų",
+        "Rūšis atrasta ir aprašyta tik 1982 m. – palyginti nauja mokslo pasauliui"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-04-01",
+      "image": "https://inaturalist-open-data.s3.amazonaws.com/photos/176033720/medium.jpeg",
+      "status": "healthy"
+    },
+    {
+      "id": "p11",
+      "lotyniskas": "Platycerium bifurcatum",
+      "lietuviškas": "Stirnaragė platicerija",
+      "emoji": "🦌",
+      "tipas": "Epifitinis papartis",
+      "sviesa": {
+        "lygis": "vidutinė",
+        "taskai": 2,
+        "ppfd": {
+          "min": 200,
+          "max": 500
+        }
+      },
+      "vanduo": {
+        "lygis": "vidutiniškai",
+        "taskai": 2
+      },
+      "augimo_greitis": "Lėtas",
+      "sunkumas": 3,
+      "toksiskas": false,
+      "toksiskumo_info": "Nenuodinga",
+      "aprasymas": "Unikalus epifitinis papartis su dviejų tipų lapais: plokščiais skydlapiais, pritvirtinančiais prie medžio, ir stirno ragus primenančiais sporofiliniais lapais. Natūraliai auga ant medžių. Geriausia auginti prikabintą prie medžio lentelės – kaip meno kūrinys ant sienos.",
+      "kilme": "Rytų Australija – drėgni subtropiniai miškai",
+      "prieziura": {
+        "sviesa": "Ryški netiesioginė šviesa; toleruoja vidutinę, bet lėčiau auga",
+        "laistymas": "Mirkymo metodas: vazoną ar lentutę mirkyti 15–20 min. kas 1–2 savaites; žiemą rečiau",
+        "temperatura": "15–24 °C; šalnų netoleruoja",
+        "dregme": "50–70 %; mėgsta drėgną orą"
+      },
+      "substratas": "Sfagnų samanos + orchidėjų žievė (montuojant ant lentelės); arba orchidėjų žemė vazono atveju",
+      "persodinimas": "Kas 2–3 metus arba kai skydlapiai perauga vazoną; geriau montuoti ant medžio",
+      "ziemojimas": "Laistyti rečiau, ne žemiau 12 °C",
+      "dauginimas": [
+        "Šoniniai ūgliai (pups)",
+        "Sporos (sudėtinga)"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Sporofiliniai lapai gelsvėja, smunka",
+          "priezastis": "Per mažai vandens arba šviesos",
+          "sprendimas": "Padažninti mirkymo laistymą, perkelti į šviesesnę vietą"
+        },
+        {
+          "simptomas": "Skydlapiai pajuoduoja",
+          "priezastis": "Natūralus procesas – sensta ir keičiasi",
+          "sprendimas": "Normalu – nekirpti, jie sudaro humuso guolį šaknims"
+        },
+        {
+          "simptomas": "Baltas miltelinis sluoksnis ant lapų",
+          "priezastis": "Natūralus vaškingas apsauginis sluoksnis (ne liga)",
+          "sprendimas": "Nevalyti – tai normalu ir naudinga augalui"
+        }
+      ],
+      "idomybes": [
+        "Baltas miltelinis sluoksnis ant lapų apsaugo nuo per didelio vandens praradimo",
+        "Skydlapiai kaupia lapų kraiką ir formuoja humuso guolį šaknims – augalas pats susikuria dirvą",
+        "Australijoje laukiniai egzemplioriai gali sverti daugiau nei 100 kg"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-04-05",
+      "image": "https://inaturalist-open-data.s3.amazonaws.com/photos/322960815/medium.jpeg",
+      "status": "healthy"
+    },
+    {
+      "id": "p12",
+      "lotyniskas": "Aphelandra squarrosa",
+      "lietuviškas": "Zebrinė afelandrija",
+      "emoji": "🦓",
+      "tipas": "Krūminis daugiametis žolinė augalas",
+      "sviesa": {
+        "lygis": "ryški",
+        "taskai": 3,
+        "ppfd": {
+          "min": 400,
+          "max": 700
+        }
+      },
+      "vanduo": {
+        "lygis": "vidutiniškai",
+        "taskai": 2
+      },
+      "augimo_greitis": "Vidutinis",
+      "sunkumas": 4,
+      "toksiskas": false,
+      "toksiskumo_info": "Nenuodinga",
+      "aprasymas": "Efektingas augalas, žinomas dėl ryškiai baltų gyslų tamsiai žaliuose lapuose ir auksinių geltonų žiedynų. Žiedai trunka 4–6 savaites, bet lapija dekoratyvi ištisus metus. Kaprizingas – nemėgsta skersvėjų, staigių pokyčių ir sausos aplinkos.",
+      "kilme": "Brazilija – Atlanto pakrantės atogrąžų miškai",
+      "prieziura": {
+        "sviesa": "Ryški netiesioginė šviesa; pietų arba rytų langas be vidurdienio saulės",
+        "laistymas": "Kai viršutinis 1–2 cm sluoksnis išdžiūsta; mėgsta minkštą vandenį",
+        "temperatura": "18–25 °C; labai jautrus šalčiui ir skersvėjams",
+        "dregme": "60–80 %; labai svarbi – naudoti drėkintuvą"
+      },
+      "substratas": "Universali žemė 55 % + perlitas 25 % + kokosų pluoštas 20 %",
+      "persodinimas": "Kasmet pavasarį po žydėjimo",
+      "ziemojimas": "Po žydėjimo nukirpti iki pusės – skatina naują augimą; laistyti rečiau",
+      "dauginimas": [
+        "Stiebų auginiai pavasarį (22–25 °C reikalinga)",
+        "Sėklos (sudėtinga)"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Lapai krenta masiškai",
+          "priezastis": "Skersvėjas, per žema temperatūra arba staigus aplinkos pokytis",
+          "sprendimas": "Stabili aplinka be skersvėjų, ne žemiau 16 °C"
+        },
+        {
+          "simptomas": "Lapų kraštai rudėja",
+          "priezastis": "Per žema drėgmė",
+          "sprendimas": "Naudoti drėkintuvą; laikyti ant drėgnų žvirgždų padėklo"
+        },
+        {
+          "simptomas": "Augalas nežydi",
+          "priezastis": "Per mažai šviesos arba per daug azoto trąšų",
+          "sprendimas": "Daugiau šviesos; pavasarį naudoti fosforo trąšas"
+        }
+      ],
+      "idomybes": [
+        "Genties pavadinimas Aphelandra graikiškai reiškia 'paprastas vyras' – dėl vienos vakuolės dulkininkų",
+        "Spalvingiausia augalo dalis – žiedų speneliai (braktėjos), o ne patys žiedlapiai",
+        "Viktorijos laikų Europoje laikyta egzotiniu statuso simboliu – auginta tik turtinguosiuose namuose"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-04-10",
+      "image": "https://inaturalist-open-data.s3.amazonaws.com/photos/268879537/medium.jpg",
+      "status": "healthy"
+    },
+    {
+      "id": "p13",
+      "lotyniskas": "Adenium obesum",
+      "lietuviškas": "Dykumos rožė",
+      "emoji": "🌹",
+      "tipas": "Sultingas medžio formos kaudeksinis augalas",
+      "sviesa": {
+        "lygis": "ryški",
+        "taskai": 3,
+        "ppfd": {
+          "min": 600,
+          "max": 1500
+        }
+      },
+      "vanduo": {
+        "lygis": "mažai",
+        "taskai": 1
+      },
+      "augimo_greitis": "Lėtas",
+      "sunkumas": 3,
+      "toksiskas": true,
+      "toksiskumo_info": "Labai toksiškas – visi augalo dalys turi širdies glikozidų; lateksas dirgina odą; po kontakto plauti rankas",
+      "aprasymas": "Žavingasis sultingas su patinusiu kamienu (kaudeksu) ir gausiais rausvais, baltais ar raudonais žiedais. Afrikoje vadinamas Dykumos roze. Populiariausias bonsai augalas Tailande. Žiemą meta lapus ir ilsisi – tai normalu.",
+      "kilme": "Subsaharo Afrika, Arabijos pusiasalis – sausos uolinės ir smėlingos buveinės",
+      "prieziura": {
+        "sviesa": "Tiesioginė saulė min. 6 val. per dieną; pietų langas arba balkonas",
+        "laistymas": "Vasarą kas 2–3 savaites; žiemą visiškai nelaistyti",
+        "temperatura": "Vasarą 25–35 °C; žiemą 10–15 °C ramybei",
+        "dregme": "30–50 %; puikiai toleruoja sausą orą"
+      },
+      "substratas": "Kaktusų žemė 60 % + stambaus perlito 25 % + pumeksas 15 %",
+      "persodinimas": "Kas 2–3 metus pavasarį; vazonas su gera drenaža",
+      "ziemojimas": "Pilnas ramybės periodas – lapai nukrenta, nelaistyti nuo spalio iki kovo, 10–15 °C",
+      "dauginimas": [
+        "Sėklos (įspūdingas rezultatas – per 2 savaites)",
+        "Stiebų auginiai (džiovinti 1–2 savaites prieš sodinant)"
+      ],
+      "problemos": [
+        {
+          "simptomas": "Kaudeksas minkštėja, raukšlėjasi",
+          "priezastis": "Šaknų puvinys arba sausra",
+          "sprendimas": "Patikrinti šaknis – jei puvusios, gydyti; jei sveikos ir sausa – palaistyti"
+        },
+        {
+          "simptomas": "Lapai nukrenta žiemą",
+          "priezastis": "Natūralus ramybės periodas",
+          "sprendimas": "Normalu – sulapos pavasarį; nutraukti laistymą"
+        },
+        {
+          "simptomas": "Augalas nežydi",
+          "priezastis": "Per mažai saulės arba nebuvo žiemos ramybės",
+          "sprendimas": "Daugiau tiesioginės saulės; leisti žiemoti vėsioje, tamsioje vietoje"
+        }
+      ],
+      "idomybes": [
+        "Kaudeksas kaupia tiek vandens, kad augalas išgyvena metus be lietaus",
+        "Tradicinėje Afrikos medicinoje lateksas naudotas kaip rodenticidas – labai pavojingas",
+        "Populiariausias bonsai kūrimo augalas Tailande – kasmet rengiamos tarptautinės parodos"
+      ],
+      "kategorija": "auginama",
+      "komentaras": "",
+      "data_prideta": "2025-04-12",
+      "image": "https://inaturalist-open-data.s3.amazonaws.com/photos/369479493/medium.jpeg",
+      "status": "healthy"
+    }
+  ]
+}

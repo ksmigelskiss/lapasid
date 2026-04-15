@@ -1,0 +1,1019 @@
+import React, { useState, useRef } from 'react'
+import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
+import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, X } from 'lucide-react'
+import { resizeImage } from '../utils/imageResize'
+
+// ── Helpers ────────────────────────────────────────────────────
+
+function makeId() {
+  return Math.random().toString(36).slice(2, 10)
+}
+
+function today() {
+  return new Date().toISOString().slice(0, 10)
+}
+
+function formatDate(iso) {
+  const d = new Date(iso + 'T00:00:00')
+  return d.toLocaleDateString('lt-LT', { month: 'long', day: 'numeric' })
+}
+
+function formatDateShort(iso) {
+  const d = new Date(iso + 'T00:00:00')
+  return d.toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
+}
+
+function daysBetween(newerIso, olderIso) {
+  const a = new Date(newerIso + 'T00:00:00')
+  const b = new Date(olderIso + 'T00:00:00')
+  return Math.round((a - b) / (1000 * 60 * 60 * 24))
+}
+
+function formatDays(n) {
+  // po 1 dienos / po 2 dienų (Lithuanian genitive)
+  const form = (n % 10 === 1 && n % 100 !== 11) ? 'dienos' : 'dienų'
+  return `po ${n} ${form}`
+}
+
+function formatDaysRelative(daysFromNow) {
+  if (daysFromNow === 0)  return { label: 'šiandien',                     overdue: false }
+  if (daysFromNow === 1)  return { label: 'rytoj',                        overdue: false }
+  if (daysFromNow === -1) return { label: 'vėluoja 1 dieną',              overdue: true  }
+  if (daysFromNow > 1)    return { label: formatDays(daysFromNow),        overdue: false }
+  return { label: `vėluoja ${formatDays(-daysFromNow).replace('po ', '')}`, overdue: true }
+}
+
+function addDays(iso, n) {
+  const d = new Date(iso + 'T00:00:00')
+  d.setDate(d.getDate() + n)
+  return d.toISOString().slice(0, 10)
+}
+
+// Returns predictions for types with ≥ 2 events
+function computePredictions(events) {
+  const PREDICTABLE = ['watering', 'fertilizing', 'repotting']
+  const byType = {}
+
+  for (const e of events) {
+    if (!PREDICTABLE.includes(e.type)) continue
+    ;(byType[e.type] = byType[e.type] ?? []).push(e)
+  }
+
+  const todayIso = today()
+  const predictions = []
+
+  for (const [type, list] of Object.entries(byType)) {
+    if (list.length < 2) continue
+
+    // Average interval (list is newest-first)
+    const gaps = []
+    for (let i = 0; i < list.length - 1; i++) {
+      gaps.push(daysBetween(list[i].date, list[i + 1].date))
+    }
+    const avgInterval = Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length)
+    if (avgInterval === 0) continue
+    const predictedDate = addDays(list[0].date, avgInterval)
+    const daysFromNow = daysBetween(predictedDate, todayIso)
+
+    predictions.push({ type, predictedDate, daysFromNow, avgInterval })
+  }
+
+  // Overdue first, then soonest future
+  return predictions.sort((a, b) => a.daysFromNow - b.daysFromNow)
+}
+
+// For each event (newest-first array), find gap in days from previous same-type event
+function computeGaps(events) {
+  const gaps = {}
+  for (let i = 0; i < events.length; i++) {
+    for (let j = i + 1; j < events.length; j++) {
+      if (events[j].type === events[i].type) {
+        gaps[events[i].id] = daysBetween(events[i].date, events[j].date)
+        break
+      }
+    }
+  }
+  return gaps
+}
+
+const EVENT_META = {
+  watering:     { icon: '💧', label: 'Laistymas',    color: 'bg-blue-50',   border: 'border-blue-100',   text: 'text-blue-600' },
+  fertilizing:  { icon: '🧪', label: 'Trąšos',       color: 'bg-purple-50', border: 'border-purple-100', text: 'text-purple-600' },
+  repotting:    { icon: '🪴', label: 'Persodinimas',  color: 'bg-amber-50',  border: 'border-amber-100',  text: 'text-amber-700' },
+  treatment:    { icon: '💊', label: 'Gydymas',       color: 'bg-red-50',    border: 'border-red-100',    text: 'text-red-600' },
+  note:         { icon: '📝', label: 'Pastaba',       color: 'bg-surface',   border: 'border-warm-border',   text: 'text-gray-600' },
+  photo:        { icon: '📸', label: 'Nuotrauka',     color: 'bg-sage-50',   border: 'border-sage-100',   text: 'text-sage-600' },
+  statusChange: { icon: '🔄', label: 'Būsena',        color: 'bg-surface',   border: 'border-warm-border',   text: 'text-gray-500' },
+}
+
+const STATUS_PERIOD_META = {
+  sick:       { line: 'bg-orange-300', bg: 'bg-orange-50/50', border: 'border-orange-200' },
+  quarantine: { line: 'bg-red-300',    bg: 'bg-red-50/50',    border: 'border-red-200' },
+}
+
+const STATUS_CHANGE_META = {
+  healthy:         { icon: '🌿', label: 'Pasveiko',          bg: 'bg-green-50',  border: 'border-green-200',  text: 'text-green-700',  line: 'bg-green-300' },
+  sick:            { icon: '🤒', label: 'Serga',              bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', line: 'bg-orange-300' },
+  quarantine:      { icon: '🔴', label: 'Karantinas',         bg: 'bg-red-50',    border: 'border-red-200',    text: 'text-red-700',    line: 'bg-red-300' },
+}
+
+// Compute period status for each event (newest-first array)
+// Returns map: eventId → status that was active at that point in time
+function computeEventPeriods(events) {
+  // events is newest→oldest; iterate oldest→newest so we know the active
+  // status before each event is added, not after
+  const isSickOrQ = s => s === 'sick' || s === 'quarantine'
+  const periods = {}
+  let currentStatus = 'healthy'
+  for (let i = events.length - 1; i >= 0; i--) {
+    const e = events[i]
+    if (e.type === 'statusChange') {
+      // Transition OUT of sick/quarantine → assign to fromStatus so the
+      // "Pasveiko" / "Sveika" banner stays inside the colored block
+      if (isSickOrQ(e.fromStatus) && !isSickOrQ(e.toStatus)) {
+        periods[e.id] = e.fromStatus
+      } else {
+        periods[e.id] = e.toStatus
+      }
+      currentStatus = e.toStatus
+    } else {
+      periods[e.id] = currentStatus
+    }
+  }
+  return periods
+}
+
+// ── Ghost event (prediction) ──────────────────────────────────
+
+function GhostEvent({ prediction }) {
+  const meta = EVENT_META[prediction.type]
+  const { label: timeLabel, overdue } = formatDaysRelative(prediction.daysFromNow)
+
+  return (
+    <motion.div
+      className="relative pl-10 mb-3"
+      initial={{ opacity: 0, x: -8 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
+    >
+      {/* Pulsing ghost node */}
+      <div className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-7 h-7 rounded-full border-2 border-dashed flex items-center justify-center text-sm
+        animate-pulse ${overdue ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-white'}`}
+      >
+        {meta.icon}
+      </div>
+
+      {/* Ghost pill */}
+      <div className={`flex items-center gap-2 border border-dashed rounded-xl px-3 py-2 opacity-70
+        ${overdue
+          ? 'bg-red-50/60 border-red-200'
+          : 'bg-surface/60 border-gray-200'
+        }`}
+      >
+        <span className={`text-xs font-semibold ${overdue ? 'text-red-500' : 'text-gray-400'}`}>
+          {meta.label}
+        </span>
+        <span className={`text-xs ${overdue ? 'text-red-400' : 'text-gray-400'}`}>
+          · {timeLabel}
+        </span>
+        <span className="text-[10px] text-gray-400 ml-auto">
+          ~kas {prediction.avgInterval} d.
+        </span>
+      </div>
+    </motion.div>
+  )
+}
+
+// ── Status change banner ──────────────────────────────────────
+
+function StatusChangeEvent({ event, index, inPeriod }) {
+  const meta = STATUS_CHANGE_META[event.toStatus] ?? STATUS_CHANGE_META.healthy
+  const fromMeta = STATUS_CHANGE_META[event.fromStatus]
+
+  return (
+    <motion.div
+      className="relative pl-10 mb-3"
+      initial={{ opacity: 0, x: -12 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.04, duration: 0.3, ease: 'easeOut' }}
+    >
+      {/* Node */}
+      <div className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-7 h-7 rounded-full flex items-center justify-center text-sm border-2 border-white shadow-sm z-10 ${meta.bg}`}>
+        {meta.icon}
+      </div>
+      {/* Banner — no own bg when inside a period wrapper */}
+      <div className={inPeriod ? 'px-3 py-2' : `${meta.bg} border ${meta.border} rounded-xl px-3 py-2`}>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold text-gray-800">{meta.label}</span>
+          {fromMeta && <span className="text-[10px] text-gray-400">← {fromMeta.label}</span>}
+          <span className="text-[10px] text-gray-400 ml-auto">{formatDateShort(event.date)}</span>
+        </div>
+        {(event.disease || event.issue) && (
+          <p className="text-[11px] text-gray-600 mt-0.5">{event.disease || event.issue}</p>
+        )}
+        {event.isolated != null && (
+          <p className="text-[10px] text-gray-400 mt-0.5">{event.isolated ? '✓ Izoliuotas' : '✗ Neizoliuotas'}</p>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
+// ── Death event banner ────────────────────────────────────────
+
+function DeathEvent({ event, index }) {
+  return (
+    <motion.div
+      className="relative pl-10 mb-4"
+      initial={{ opacity: 0, x: -12 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.04, duration: 0.3, ease: 'easeOut' }}
+    >
+      {/* Node */}
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm border-2 border-white shadow-sm z-10">
+        💀
+      </div>
+      {/* Wide banner */}
+      <div className="bg-gray-900 rounded-2xl px-4 py-3.5">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-sm font-bold text-white">Augalas numirė</span>
+          <span className="text-[10px] text-gray-400">{formatDateShort(event.date)}</span>
+        </div>
+        {event.deathReason && (
+          <p className="text-xs text-gray-400 leading-snug">
+            <span className="text-gray-500">Priežastis: </span>{event.deathReason}
+          </p>
+        )}
+        {event.lesson && (
+          <p className="text-xs text-gray-400 mt-1 leading-snug">
+            <span className="text-gray-500">Pamoka: </span>{event.lesson}
+          </p>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
+// ── Tooltip (Apple Maps style) ─────────────────────────────────
+
+function Tooltip({ event, onDelete }) {
+  const meta = EVENT_META[event.type] ?? EVENT_META.note
+  return (
+    <motion.div
+      className="w-52"
+      initial={{ opacity: 0, scale: 0.88, y: -6 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.88, y: -6 }}
+      transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+      style={{ originY: 0, originX: 0 }}
+    >
+      {/* Arrow pointing UP toward the node */}
+      <div className="flex justify-start pl-2.5 -mb-px">
+        <div className={`w-3 h-3 rotate-45 ${meta.color} border-t border-l ${meta.border}`} />
+      </div>
+      <div className={`${meta.color} border ${meta.border} rounded-2xl px-3 py-2.5 shadow-lg`}>
+        <div className="flex items-center justify-between gap-2 mb-1">
+          <span className={`text-[11px] font-bold uppercase tracking-wide ${meta.text}`}>
+            {meta.icon} {meta.label}
+          </span>
+          <button
+            onClick={onDelete}
+            className="text-gray-400 hover:text-red-400 transition-colors text-xs"
+          >
+            🗑
+          </button>
+        </div>
+        <p className="text-xs text-gray-500">{formatDate(event.date)}</p>
+        {event.note && <p className="text-xs text-gray-700 mt-1 leading-snug">{event.note}</p>}
+        {event.amount && <p className="text-xs text-gray-600 mt-0.5">💧 {event.amount}</p>}
+        {event.fertilizer && <p className="text-xs text-gray-600 mt-0.5">🧪 {event.fertilizer}</p>}
+        {event.potSize && <p className="text-xs text-gray-600 mt-0.5">📏 {event.potSize}</p>}
+        {event.preparatas && <p className="text-xs text-gray-600 mt-0.5">💊 {event.preparatas}</p>}
+        {event.tikslas && <p className="text-xs text-gray-600 mt-0.5">🎯 {event.tikslas}</p>}
+        {event.metodas && <p className="text-xs text-gray-600 mt-0.5">🔧 {event.metodas}</p>}
+        {event.disease && <p className="text-xs text-gray-600 mt-0.5">🦠 {event.disease}</p>}
+        {event.issue && <p className="text-xs text-gray-600 mt-0.5">⚠️ {event.issue}</p>}
+        {event.isolated != null && (
+          <p className="text-xs text-gray-600 mt-0.5">{event.isolated ? '✓ Izoliuotas' : '✗ Neizoliuotas'}</p>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
+// ── Timeline event nodes ───────────────────────────────────────
+
+function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, inPeriod }) {
+  const [imgError, setImgError] = useState(false)
+
+  return (
+    <motion.div
+      className="relative pl-10 mb-4"
+      initial={{ opacity: 0, x: -12 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.04, duration: 0.3, ease: 'easeOut' }}
+    >
+      {/* Node on the line */}
+      <button
+        onClick={onToggle}
+        className="absolute left-0 top-4 w-7 h-7 bg-white border-2 border-sage-300 rounded-full flex items-center justify-center text-sm shadow-sm z-10 -translate-x-3"
+      >
+        📸
+      </button>
+
+      {/* Tooltip — vertically centered on the card */}
+      <AnimatePresence>
+        {showTooltip && (
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 mt-0 z-20">
+            <Tooltip
+              event={event}
+              onDelete={() => { onDelete(event.id); onToggle() }}
+            />
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Photo card */}
+      {event.imageUrl && !imgError ? (
+        <div
+          className="rounded-2xl overflow-hidden shadow-sm border border-warm-border aspect-[4/3] cursor-pointer relative"
+          onClick={onToggle}
+        >
+          <img
+            src={event.imageUrl}
+            alt="augalo nuotrauka"
+            className="w-full h-full object-cover"
+            onError={() => setImgError(true)}
+          />
+          {daysSince != null && (
+            <div className="absolute bottom-2 left-2 bg-black/40 backdrop-blur-sm rounded-lg px-2 py-0.5">
+              <span className="text-[11px] text-white/90 font-medium">📸 {formatDays(daysSince)}</span>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div
+          className="bg-sage-50 border border-sage-100 rounded-2xl px-4 py-3 cursor-pointer"
+          onClick={onToggle}
+        >
+          <p className="text-sm text-sage-600 font-medium">
+            📸 Nuotrauka{daysSince != null && <span className="text-sage-400 font-normal"> ({formatDays(daysSince)})</span>}
+          </p>
+          {event.note && <p className="text-xs text-gray-500 mt-0.5">{event.note}</p>}
+        </div>
+      )}
+    </motion.div>
+  )
+}
+
+function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, inPeriod }) {
+  const meta = EVENT_META[event.type] ?? EVENT_META.note
+
+  return (
+    <motion.div
+      className="relative pl-10 mb-3"
+      initial={{ opacity: 0, x: -12 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.04, duration: 0.3, ease: 'easeOut' }}
+    >
+      {/* Node */}
+      <button
+        onClick={onToggle}
+        className="absolute left-0 top-1/2 -translate-y-1/2 w-7 h-7 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center text-sm shadow-sm z-10 -translate-x-3 active:scale-90 transition-transform"
+      >
+        {meta.icon}
+      </button>
+
+      {/* Tooltip — vertically centered on the pill */}
+      <AnimatePresence>
+        {showTooltip && (
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 z-20">
+            <Tooltip
+              event={event}
+              onDelete={() => { onDelete(event.id); onToggle() }}
+            />
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Pill */}
+      <div
+        className={`flex items-center gap-2 rounded-xl px-3 py-2 cursor-pointer active:opacity-70 transition-opacity ${inPeriod ? 'bg-transparent' : 'bg-white border border-warm-border'}`}
+        onClick={onToggle}
+      >
+        <span className="text-xs font-semibold text-gray-700">
+          {meta.icon} {meta.label}
+          {daysSince != null && (
+            <span className="font-normal ml-1 text-gray-400">({formatDays(daysSince)})</span>
+          )}
+        </span>
+        {event.amount && <span className="text-xs text-gray-400">· {event.amount}</span>}
+        {event.fertilizer && <span className="text-xs text-gray-400">· {event.fertilizer}</span>}
+        {event.potSize && <span className="text-xs text-gray-400">· {event.potSize}</span>}
+        {event.preparatas && <span className="text-xs text-gray-400">· {event.preparatas}</span>}
+        {event.tikslas && !event.preparatas && <span className="text-xs text-gray-400">· {event.tikslas}</span>}
+        {event.note && !event.amount && !event.fertilizer && !event.potSize && !event.preparatas && (
+          <span className="text-xs text-gray-400 truncate max-w-[120px]">· {event.note}</span>
+        )}
+      </div>
+    </motion.div>
+  )
+}
+
+// ── Add Event Bottom Sheet ─────────────────────────────────────
+
+export function AddEventSheet({ type, onSave, onClose }) {
+  const meta = EVENT_META[type] ?? EVENT_META.note
+  const [note, setNote]             = useState('')
+  const [amount, setAmount]         = useState('')
+  const [fertilizer, setFert]       = useState('')
+  const [potSize, setPotSize]       = useState('')
+  const [preparatas, setPreparatas] = useState('')
+  const [tikslas, setTikslas]       = useState('')
+  const [metodas, setMetodas]       = useState('')
+  const [imageUrl, setImageUrl]     = useState(null)
+  const fileRef                     = useRef()
+
+  const dragControls = useDragControls()
+  const y = useMotionValue(0)
+
+  const handleDragEnd = (_, info) => {
+    if (info.velocity.y > 400 || info.offset.y > 100) onClose()
+    else animate(y, 0, { type: 'spring', stiffness: 400, damping: 30 })
+  }
+
+  const handleFile = async (file) => {
+    if (!file) return
+    try {
+      const url = await resizeImage(file)
+      setImageUrl(url)
+    } catch {}
+  }
+
+  const handleSave = () => {
+    onSave({
+      id: makeId(),
+      type,
+      date: today(),
+      note: note.trim(),
+      ...(type === 'watering'    && { amount: amount.trim() }),
+      ...(type === 'fertilizing' && { fertilizer: fertilizer.trim(), amount: amount.trim() }),
+      ...(type === 'repotting'   && { potSize: potSize.trim() }),
+      ...(type === 'treatment'   && { preparatas: preparatas.trim(), tikslas: tikslas.trim(), metodas: metodas.trim() }),
+      ...(type === 'photo'       && { imageUrl }),
+    })
+    onClose()
+  }
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-end justify-center">
+      <motion.div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        onClick={onClose}
+      />
+      <motion.div
+        className="relative w-full max-w-[430px] bg-white rounded-t-4xl px-5 pb-8 pt-3 space-y-4"
+        style={{ y }}
+        drag="y"
+        dragControls={dragControls}
+        dragListener={false}
+        dragConstraints={{ top: 0 }}
+        dragElastic={{ top: 0, bottom: 0.25 }}
+        onDragEnd={handleDragEnd}
+        initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+        transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+      >
+        {/* Handle */}
+        <div
+          onPointerDown={e => dragControls.start(e)}
+          className="flex justify-center pb-1 cursor-grab active:cursor-grabbing select-none"
+          style={{ touchAction: 'none' }}
+        >
+          <div className="w-10 h-1 bg-gray-200 rounded-full" />
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">{meta.icon}</span>
+          <h3 className="text-base font-bold text-gray-900">{meta.label}</h3>
+        </div>
+
+        {/* Type-specific fields */}
+        {type === 'watering' && (
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Kiekis (ml)</label>
+            <input
+              type="number" inputMode="numeric" placeholder="pvz. 200"
+              value={amount} onChange={e => setAmount(e.target.value)}
+              className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none border border-transparent focus:border-blue-200"
+            />
+          </div>
+        )}
+
+        {type === 'fertilizing' && (
+          <div className="space-y-2">
+            <div>
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Trąšų pavadinimas</label>
+              <input
+                type="text" placeholder="pvz. NPK 5-5-5"
+                value={fertilizer} onChange={e => setFert(e.target.value)}
+                className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none border border-transparent focus:border-purple-200"
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Kiekis</label>
+              <input
+                type="text" placeholder="pvz. 100ml"
+                value={amount} onChange={e => setAmount(e.target.value)}
+                className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none border border-transparent focus:border-purple-200"
+              />
+            </div>
+          </div>
+        )}
+
+        {type === 'repotting' && (
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Naujo vazonėlio dydis</label>
+            <input
+              type="text" placeholder="pvz. 14cm"
+              value={potSize} onChange={e => setPotSize(e.target.value)}
+              className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none border border-transparent focus:border-amber-200"
+              autoFocus
+            />
+          </div>
+        )}
+
+        {type === 'treatment' && (
+          <div className="space-y-2">
+            <div>
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Preparatas</label>
+              <input
+                type="text" placeholder="pvz. Aktara, Neem aliejus"
+                value={preparatas} onChange={e => setPreparatas(e.target.value)}
+                className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none border border-transparent focus:border-red-200"
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Problema / tikslas</label>
+              <input
+                type="text" placeholder="pvz. erkutės, šaknų puvinys"
+                value={tikslas} onChange={e => setTikslas(e.target.value)}
+                className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none border border-transparent focus:border-red-200"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Metodas</label>
+              <input
+                type="text" placeholder="pvz. purškimas, mirkymas"
+                value={metodas} onChange={e => setMetodas(e.target.value)}
+                className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none border border-transparent focus:border-red-200"
+              />
+            </div>
+          </div>
+        )}
+
+        {type === 'photo' && (
+          <div>
+            {imageUrl ? (
+              <div className="relative rounded-2xl overflow-hidden aspect-[4/3]">
+                <img src={imageUrl} alt="" className="w-full h-full object-cover" />
+                <button
+                  onClick={() => setImageUrl(null)}
+                  className="absolute top-2 right-2 w-7 h-7 bg-black/40 rounded-full flex items-center justify-center text-white text-xs"
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="w-full aspect-[4/3] bg-surface border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center gap-2"
+              >
+                <span className="text-3xl">📷</span>
+                <span className="text-sm text-gray-400">Pasirinkti nuotrauką</span>
+              </button>
+            )}
+            <input
+              ref={fileRef} type="file" accept="image/*" className="hidden"
+              onChange={e => { handleFile(e.target.files[0]); e.target.value = '' }}
+            />
+          </div>
+        )}
+
+        {/* Note (always visible) */}
+        <div>
+          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Pastaba (nebūtina)</label>
+          <textarea
+            placeholder="Papildoma informacija..."
+            value={note} onChange={e => setNote(e.target.value)}
+            rows={2}
+            className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none resize-none border border-transparent focus:border-sage-200"
+            autoFocus={type === 'note'}
+          />
+        </div>
+
+        <div className="flex gap-3 pt-1">
+          <button onClick={onClose} className="flex-1 py-3.5 rounded-2xl text-sm font-medium text-gray-500 bg-surface-2">
+            Atšaukti
+          </button>
+          <button
+            onClick={handleSave}
+            className="flex-1 py-3.5 rounded-2xl text-sm font-medium text-white bg-sage-500"
+          >
+            Išsaugoti
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
+// ── FAB ───────────────────────────────────────────────────────
+
+const FAB_ACTIONS = [
+  { type: 'photo',       Icon: Camera,        label: 'Nuotrauka' },
+  { type: 'watering',    Icon: Droplets,      label: 'Laistymas' },
+  { type: 'fertilizing', Icon: FlaskConical,  label: 'Trąšos' },
+  { type: 'repotting',   Icon: Sprout,        label: 'Persodinimas' },
+  { type: 'treatment',   Icon: Stethoscope,   label: 'Gydymas' },
+  { type: 'note',        Icon: FileText,      label: 'Pastaba' },
+]
+
+export function FAB({ onSelect }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="absolute bottom-5 right-4 z-20 flex flex-col items-end gap-2">
+      {/* Action items */}
+      <AnimatePresence>
+        {open && FAB_ACTIONS.map((action, i) => (
+          <motion.button
+            key={action.type}
+            onClick={() => { onSelect(action.type); setOpen(false) }}
+            className="flex items-center gap-2 bg-white rounded-2xl px-3 py-2.5 shadow-lg border border-warm-border"
+            initial={{ opacity: 0, y: 12, scale: 0.85 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.85 }}
+            transition={{ type: 'spring', damping: 22, stiffness: 300, delay: i * 0.04 }}
+          >
+            <action.Icon size={18} className="text-gray-500 flex-shrink-0" />
+            <span className="text-sm font-medium text-gray-700">{action.label}</span>
+          </motion.button>
+        ))}
+      </AnimatePresence>
+
+      {/* Main FAB button */}
+      <motion.button
+        onClick={() => setOpen(v => !v)}
+        className="w-13 h-13 bg-sage-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl"
+        style={{ width: 52, height: 52 }}
+        animate={{ rotate: open ? 45 : 0 }}
+        transition={{ type: 'spring', damping: 18, stiffness: 280 }}
+        whileTap={{ scale: 0.9 }}
+      >
+        +
+      </motion.button>
+    </div>
+  )
+}
+
+// ── Watering run grouping ─────────────────────────────────────
+// Groups consecutive watering-only events (same period, separated only by
+// date separators) into a collapsible wateringRun meta-item.
+
+function groupWaterings(rendered, eventPeriods) {
+  const result = []
+  let runItems = null   // items in current run (seps + event items interleaved)
+  let runPeriod = null
+  let pendingSeps = []  // seps buffered between events
+
+  const flushRun = () => {
+    if (!runItems) return
+    const evItems = runItems.filter(i => i.kind === 'event')
+    if (evItems.length >= 2) {
+      result.push({
+        kind: 'wateringRun',
+        items: runItems,
+        period: runPeriod,
+        key: 'wrun-' + evItems[0].key,
+        dateNewest: evItems[0].event.date,
+        dateOldest: evItems[evItems.length - 1].event.date,
+        count: evItems.length,
+      })
+    } else {
+      // Single watering — emit its buffered seps + the event normally
+      runItems.forEach(i => result.push(i))
+    }
+    runItems = null
+    runPeriod = null
+  }
+
+  for (const item of rendered) {
+    if (item.kind === 'separator') {
+      pendingSeps.push(item)
+      continue
+    }
+    const period = eventPeriods[item.event.id] ?? 'healthy'
+    if (item.event.type === 'watering') {
+      if (runItems && runPeriod === period) {
+        // Continue existing run — absorb buffered seps
+        pendingSeps.forEach(s => runItems.push(s))
+        pendingSeps = []
+        runItems.push(item)
+      } else {
+        // Different period or no run yet — flush and start fresh
+        flushRun()
+        pendingSeps.forEach(s => result.push(s))
+        pendingSeps = []
+        runItems = []
+        runPeriod = period
+        runItems.push(item)
+      }
+    } else {
+      // Non-watering event breaks the run
+      flushRun()
+      pendingSeps.forEach(s => result.push(s))
+      pendingSeps = []
+      result.push(item)
+    }
+  }
+  flushRun()
+  pendingSeps.forEach(s => result.push(s))
+  return result
+}
+
+// ── WateringRun component ─────────────────────────────────────
+
+function WateringRun({ run, expanded, onToggle, gaps, activeTooltip, onTooltipToggle, onDeleteEvent, inPeriod }) {
+  const pill = (content) => (
+    <div className={`flex items-center gap-2 rounded-xl px-3 py-2 ${inPeriod ? 'bg-transparent' : 'bg-white border border-warm-border'}`}>
+      {content}
+    </div>
+  )
+
+  if (!expanded) {
+    return (
+      <motion.div
+        className="relative pl-10 mb-3"
+        initial={{ opacity: 0, x: -12 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.25 }}
+      >
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-7 h-7 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center text-sm shadow-sm z-10">
+          💧
+        </div>
+        <button className="w-full text-left" onClick={onToggle}>
+          {pill(
+            <>
+              <span className="text-xs font-semibold text-gray-700">
+                💧 Laistymas
+                <span className="font-normal text-gray-400 ml-1">
+                  · {formatDateShort(run.dateOldest)} – {formatDateShort(run.dateNewest)} · {run.count}×
+                </span>
+              </span>
+              <span className="ml-auto text-gray-400 text-xs">▾</span>
+            </>
+          )}
+        </button>
+      </motion.div>
+    )
+  }
+
+  // Expanded — render all individual items + a collapse link
+  return (
+    <div>
+      {run.items.map(item => {
+        if (item.kind === 'separator') {
+          return (
+            <motion.div key={item.key} className="relative pl-10 mb-2 mt-4"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
+              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                {formatDateShort(item.date)}
+              </span>
+            </motion.div>
+          )
+        }
+        return (
+          <ActionEvent
+            key={item.key}
+            event={item.event}
+            index={item.index}
+            daysSince={gaps[item.event.id]}
+            showTooltip={activeTooltip === item.event.id}
+            onToggle={() => onTooltipToggle(item.event.id)}
+            onDelete={onDeleteEvent}
+            inPeriod={inPeriod}
+          />
+        )
+      })}
+      <div className="relative pl-10 mb-3">
+        <button onClick={onToggle} className="text-[11px] text-gray-400 hover:text-gray-600 transition-colors">
+          ▴ Sutraukti
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── Main timeline component ────────────────────────────────────
+
+export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent }) {
+  const [activeTooltip, setActiveTooltip] = useState(null) // one at a time
+  const [runExpanded, setRunExpanded]     = useState({})   // runKey → bool override
+  const events = plant.timeline ?? []
+  const gaps = computeGaps(events)
+  const predictions = computePredictions(events)
+  const eventPeriods = computeEventPeriods(events)
+
+  const toggleTooltip = (id) =>
+    setActiveTooltip(prev => (prev === id ? null : id))
+
+  // Group events by date for separators
+  const rendered = []
+  let lastDate = null
+
+  events.forEach((event, i) => {
+    if (event.date !== lastDate) {
+      rendered.push({ kind: 'separator', date: event.date, key: `sep-${event.date}-${i}` })
+      lastDate = event.date
+    }
+    rendered.push({ kind: 'event', event, key: event.id, index: i })
+  })
+
+  return (
+    <div className="relative min-h-full flex flex-col">
+      {events.length === 0 ? (
+        /* Empty state */
+        <div className="flex-1 flex flex-col items-center justify-center py-16 px-8 text-center gap-3">
+          <div className="text-5xl">🌱</div>
+          <div>
+            <p className="text-base font-semibold text-gray-700">Istorija tuščia</p>
+            <p className="text-sm text-gray-400 mt-1 leading-snug">
+              Pradėkite nuo persodinimo — paspauskite <span className="font-semibold text-sage-500">+</span> apačioje
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="flex-1 px-5 pt-5 pb-6 relative">
+          {/* Vertical timeline line */}
+          <div className="absolute left-8 top-0 bottom-0 w-px bg-sage-100" />
+
+          {/* ── Ghost events (predictions) ── */}
+          {predictions.length > 0 && (
+            <>
+              <div className="relative pl-10 mb-2">
+                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                  ✦ Prognozė
+                </span>
+              </div>
+              {predictions.map(p => (
+                <GhostEvent key={p.type} prediction={p} />
+              ))}
+              {/* "Today" divider */}
+              <div className="relative pl-10 mt-3 mb-4 flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-sage-400 absolute left-0 -translate-x-[3px]" />
+                <span className="text-[11px] font-bold text-sage-400 uppercase tracking-widest">
+                  Šiandien
+                </span>
+                <div className="flex-1 h-px bg-sage-100" />
+              </div>
+            </>
+          )}
+
+          {(() => {
+            // Pre-group consecutive watering events into collapsible runs,
+            // then buffer separators inside period groups for visual continuity.
+            const grouped = groupWaterings(rendered, eventPeriods)
+
+            const segments = []
+            let currentGroup = null  // { period, items[] }
+            let pendingSep   = null  // buffered separator waiting for next event
+
+            const flushGroup = () => {
+              if (currentGroup) {
+                segments.push({ kind: 'group', period: currentGroup.period, items: currentGroup.items })
+                currentGroup = null
+              }
+            }
+
+            for (const item of grouped) {
+              if (item.kind === 'separator') {
+                pendingSep = item
+                continue
+              }
+
+              // wateringRun items carry their own .period; event items use eventPeriods map
+              const period = item.kind === 'wateringRun'
+                ? item.period
+                : (eventPeriods[item.event.id] ?? 'healthy')
+
+              if (currentGroup && currentGroup.period === period) {
+                if (pendingSep) { currentGroup.items.push(pendingSep); pendingSep = null }
+                currentGroup.items.push(item)
+              } else {
+                flushGroup()
+                currentGroup = { period, items: [] }
+                if (pendingSep) { currentGroup.items.push(pendingSep); pendingSep = null }
+                currentGroup.items.push(item)
+              }
+            }
+            if (pendingSep && currentGroup) currentGroup.items.push(pendingSep)
+            flushGroup()
+
+            // Find first (most-recent) wateringRun key — it defaults to expanded
+            let firstRunKey = null
+            outer: for (const seg of segments) {
+              for (const item of seg.items) {
+                if (item.kind === 'wateringRun') { firstRunKey = item.key; break outer }
+              }
+            }
+
+            const PERIOD_WRAP = {
+              sick:       'bg-orange-50 border border-orange-100 rounded-2xl -mx-1 px-1 pt-3 mb-3',
+              quarantine: 'bg-red-50 border border-red-100 rounded-2xl -mx-1 px-1 pt-3 mb-3',
+            }
+
+            const renderSeparator = (sep) => (
+              <motion.div
+                key={sep.key}
+                className="relative pl-10 mb-2 mt-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.25 }}
+              >
+                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                  {formatDateShort(sep.date)}
+                </span>
+              </motion.div>
+            )
+
+            return segments.map((seg, si) => {
+              const { period, items } = seg
+              const wrapClass = PERIOD_WRAP[period]
+              const inPeriod = !!wrapClass
+
+              const nodes = items.map(item => {
+                if (item.kind === 'separator') return renderSeparator(item)
+
+                if (item.kind === 'wateringRun') {
+                  const isFirst = item.key === firstRunKey
+                  const expanded = runExpanded[item.key] !== undefined ? runExpanded[item.key] : isFirst
+                  return (
+                    <WateringRun
+                      key={item.key}
+                      run={item}
+                      expanded={expanded}
+                      onToggle={() => setRunExpanded(prev => ({ ...prev, [item.key]: !expanded }))}
+                      gaps={gaps}
+                      activeTooltip={activeTooltip}
+                      onTooltipToggle={toggleTooltip}
+                      onDeleteEvent={onDeleteEvent}
+                      inPeriod={inPeriod}
+                    />
+                  )
+                }
+
+                const { event, index } = item
+                if (event.type === 'death') {
+                  return <DeathEvent key={item.key} event={event} index={index} />
+                }
+                if (event.type === 'statusChange') {
+                  return <StatusChangeEvent key={item.key} event={event} index={index} inPeriod={inPeriod} />
+                }
+                if (event.type === 'photo') {
+                  return (
+                    <PhotoEvent key={item.key} event={event} index={index}
+                      daysSince={gaps[event.id]}
+                      showTooltip={activeTooltip === event.id}
+                      onToggle={() => toggleTooltip(event.id)}
+                      onDelete={onDeleteEvent}
+                      inPeriod={inPeriod}
+                    />
+                  )
+                }
+                return (
+                  <ActionEvent key={item.key} event={event} index={index}
+                    daysSince={gaps[event.id]}
+                    showTooltip={activeTooltip === event.id}
+                    onToggle={() => toggleTooltip(event.id)}
+                    onDelete={onDeleteEvent}
+                    inPeriod={inPeriod}
+                  />
+                )
+              })
+
+              if (wrapClass) {
+                return <div key={`group-${si}`} className={wrapClass}>{nodes}</div>
+              }
+              return <React.Fragment key={`group-${si}`}>{nodes}</React.Fragment>
+            })
+          })()}
+        </div>
+      )}
+
+    </div>
+  )
+}

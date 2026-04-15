@@ -1,0 +1,17 @@
+{
+  "name": "Gėlių žinynas",
+  "short_name": "Gėlės",
+  "description": "Asmeninis augalų žinynas",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#748962",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/plant.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
