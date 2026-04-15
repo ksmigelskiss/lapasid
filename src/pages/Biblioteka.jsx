@@ -15,9 +15,9 @@ const SORT_OPTIONS = [
 ]
 
 const TAGS = [
-  { key: 'pirkti',  Icon: ShoppingCart, activeClass: 'text-orange-500 bg-orange-50', label: 'Įsigyti' },
-  { key: 'mirei',   Icon: Ghost,        activeClass: 'text-gray-700 bg-gray-100',    label: 'Mirę' },
-  { key: 'uzrasai', Icon: FileText,     activeClass: 'text-blue-500 bg-blue-50',     label: 'Su užrašais' },
+  { key: 'pirkti',  Icon: ShoppingCart, label: 'Įsigyti' },
+  { key: 'mirei',   Icon: Ghost,        label: 'Mirę' },
+  { key: 'uzrasai', Icon: FileText,     label: 'Su užrašais' },
 ]
 
 function sortPlants(plants, key) {
@@ -191,7 +191,7 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
             <div className="w-px h-9 bg-gray-200 flex-shrink-0" />
 
             {/* Icon tags */}
-            {TAGS.map(({ key, Icon, activeClass, label }) => {
+            {TAGS.map(({ key, Icon, label }) => {
               const isActive = activeTags.has(key)
               return (
                 <button
@@ -201,11 +201,9 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
                   className="flex-shrink-0 flex flex-col items-center gap-0.5"
                 >
                   <span className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
-                    isVisi
-                      ? 'text-gray-400 bg-white border border-gray-200'
-                      : isActive
-                        ? `${activeClass} border border-transparent`
-                        : 'text-gray-400 bg-white border border-gray-200'
+                    isActive
+                      ? 'bg-sage-500 text-white'
+                      : 'text-gray-400 bg-white border border-gray-200'
                   }`}>
                     <Icon size={17} />
                   </span>
