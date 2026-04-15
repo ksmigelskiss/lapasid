@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Search, X, Camera, Sun, Droplets, Thermometer, Wind, MapPin, Leaf, Snowflake } from 'lucide-react'
+import { ArrowLeft, Search, X, Camera, Sun, Droplets, Thermometer, Wind, MapPin, Leaf, Snowflake, Skull, Flower2, RefreshCw } from 'lucide-react'
 import Anthropic from '@anthropic-ai/sdk'
 import { fetchPlantPhotos } from '../utils/plantImage'
 import { fetchPlantNames } from '../utils/plantNames'
@@ -430,7 +430,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             {/* Toxicity warning */}
             {result.toksiskas && (
               <div className="bg-red-50 border border-red-100 rounded-2xl p-3.5 flex gap-3">
-                <span className="text-red-500 flex-shrink-0 mt-0.5">☠️</span>
+                <Skull size={22} className="flex-shrink-0 text-red-500 mt-0.5" />
                 <div>
                   <p className="text-sm font-bold text-red-600">Toksiška augalas!</p>
                   <p className="text-xs text-red-500 mt-0.5 leading-snug">{result.toksiskumo_info}</p>
@@ -439,61 +439,51 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             )}
 
             {/* Quick stats */}
-            <div className="bg-surface rounded-2xl p-4 space-y-0">
-              {result.kilme && <InfoRow icon={<MapPin size={13} />} label="Kilmė" value={result.kilme} />}
+            <div className="bg-surface rounded-2xl p-4 space-y-3">
+              {result.kilme && (
+                <div className="flex items-start gap-2">
+                  <span className="flex items-center gap-1 text-xs font-semibold text-gray-700 w-20 flex-shrink-0"><MapPin size={12} className="text-gray-400" /> Kilmė</span>
+                  <span className="text-xs text-gray-700 leading-snug">{result.kilme}</span>
+                </div>
+              )}
               {result.tipas && (
-                <div className="flex gap-3 py-2.5 border-b border-gray-50">
-                  <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400"><span className="text-[11px]">🌿</span></div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Tipas</p>
-                    <p className="text-sm text-gray-700 mt-0.5">{result.tipas}</p>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-gray-700 w-20 flex-shrink-0">Tipas</span>
+                  <span className="text-xs text-gray-700">{result.tipas}</span>
                 </div>
               )}
               {result.augimo_greitis && (
-                <div className="flex gap-3 py-2.5 border-b border-gray-50">
-                  <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400"><span className="text-[11px]">📈</span></div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Augimas</p>
-                    <p className="text-sm text-gray-700 mt-0.5">{result.augimo_greitis}</p>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-gray-700 w-20 flex-shrink-0">Augimas</span>
+                  <span className="text-xs text-gray-700">{result.augimo_greitis}</span>
                 </div>
               )}
               {result.sunkumas != null && (
-                <div className="flex gap-3 py-2.5 border-b border-gray-50">
-                  <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400"><span className="text-[11px]">⚡</span></div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Sunkumas</p>
-                    <Stars value={result.sunkumas} />
-                  </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-gray-700 w-20 flex-shrink-0">Sunkumas</span>
+                  <Stars value={result.sunkumas} />
                 </div>
               )}
               {result.sviesa?.taskai != null && (
-                <div className="flex gap-3 py-2.5 border-b border-gray-50">
-                  <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400"><Sun size={13} /></div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Šviesa</p>
-                    <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                      <DotScore value={result.sviesa.taskai} color="bg-amber-400" />
-                      <span className="text-xs text-gray-500">{result.sviesa.lygis}</span>
-                      {result.sviesa.ppfd?.min != null && (
-                        <span className="text-[10px] font-medium text-amber-600 bg-amber-50 border border-amber-100 rounded px-1.5 py-0.5">
-                          {result.sviesa.ppfd.min}–{result.sviesa.ppfd.max} μmol/m²/s
-                        </span>
-                      )}
-                    </div>
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center gap-1 text-xs font-semibold text-gray-700 w-20 flex-shrink-0"><Sun size={12} className="text-gray-400" /> Šviesa</span>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <DotScore value={result.sviesa.taskai} color="bg-amber-400" />
+                    <span className="text-xs text-gray-500">{result.sviesa.lygis}</span>
+                    {result.sviesa.ppfd?.min != null && (
+                      <span className="text-[10px] font-medium text-amber-600 bg-amber-50 border border-amber-100 rounded-md px-1.5 py-0.5 leading-none">
+                        {result.sviesa.ppfd.min}–{result.sviesa.ppfd.max} μmol/m²/s
+                      </span>
+                    )}
                   </div>
                 </div>
               )}
               {result.vanduo?.taskai != null && (
-                <div className="flex gap-3 py-2.5 last:border-0">
-                  <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400"><Droplets size={13} /></div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Vanduo</p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <DotScore value={result.vanduo.taskai} color="bg-blue-400" />
-                      <span className="text-xs text-gray-500">{result.vanduo.lygis}</span>
-                    </div>
+                <div className="flex items-center gap-2">
+                  <span className="flex items-center gap-1 text-xs font-semibold text-gray-700 w-20 flex-shrink-0"><Droplets size={12} className="text-gray-400" /> Vanduo</span>
+                  <div className="flex items-center gap-2">
+                    <DotScore value={result.vanduo.taskai} color="bg-blue-400" />
+                    <span className="text-xs text-gray-500">{result.vanduo.lygis}</span>
                   </div>
                 </div>
               )}
@@ -504,9 +494,19 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
               <Section title="Apie augalą">
                 <p className="text-sm text-gray-600 leading-relaxed">{result.aprasymas}</p>
                 <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
-                  <a href={`https://lt.wikipedia.org/w/index.php?search=${encodeURIComponent(result.latinName)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-sage-500 hover:text-sage-700 underline underline-offset-2">Wikipedia LT</a>
-                  <a href={`https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(result.latinName)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-sage-500 hover:text-sage-700 underline underline-offset-2">Wikipedia EN</a>
-                  <a href={`https://www.inaturalist.org/search?q=${encodeURIComponent(result.latinName)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-sage-500 hover:text-sage-700 underline underline-offset-2">iNaturalist</a>
+                  {(() => {
+                    const genus = (result.latinName ?? '').split(' ')[0]
+                    return [
+                      { label: 'Wikipedia LT', href: `https://lt.wikipedia.org/w/index.php?search=${encodeURIComponent(genus)}` },
+                      { label: 'Wikipedia EN', href: `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(genus)}` },
+                      { label: 'iNaturalist',  href: `https://www.inaturalist.org/search?q=${encodeURIComponent(result.latinName)}` },
+                    ].map(({ label, href }) => (
+                      <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+                        className="text-xs text-sage-500 hover:text-sage-700 underline underline-offset-2 transition-colors">
+                        {label}
+                      </a>
+                    ))
+                  })()}
                 </div>
               </Section>
             )}
@@ -527,8 +527,8 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             {(result.substratas || result.persodinimas || result.ziemojimas) && (
               <Section title="Substratas ir sezoniškumas">
                 <div className="bg-surface rounded-2xl divide-y divide-gray-100">
-                  <InfoRow icon={<span className="text-sm">🪨</span>} label="Substratas"   value={result.substratas} />
-                  <InfoRow icon={<span className="text-sm">🔄</span>} label="Persodinimas" value={result.persodinimas} />
+                  <InfoRow icon={<Flower2 size={15} />}   label="Substratas"   value={result.substratas} />
+                  <InfoRow icon={<RefreshCw size={15} />} label="Persodinimas" value={result.persodinimas} />
                   <InfoRow icon={<Snowflake size={15} />}             label="Žiemojimas"   value={result.ziemojimas} />
                 </div>
               </Section>
