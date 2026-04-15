@@ -301,6 +301,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       animate={{ x: 0 }}
       exit={{ x: '100%' }}
       transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+      style={{ touchAction: 'pan-y' }}
     >
       {/* Header */}
       <div className="safe-top" />
