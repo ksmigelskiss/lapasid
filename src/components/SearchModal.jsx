@@ -13,8 +13,109 @@ const client = new Anthropic({
   dangerouslyAllowBrowser: true,
 })
 
-// Shared JSON prompt template
-const PLANT_JSON_PROMPT = `Atsakyk TIKTAI JSON formatu (be jokio kito teksto):
+// ── Tool definition — Claude is FORCED to return this exact schema ────────────
+const PLANT_TOOL = {
+  name: 'plant_info',
+  description: 'Pateik augalo informaciją.',
+  input_schema: {
+    type: 'object',
+    properties: {
+      name:           { type: 'string',  description: 'Tikras lietuviškas pavadinimas. NIEKADA angliškas ar lotyniškas.' },
+      latinName:      { type: 'string',  description: 'Tikslus lotyniškas pavadinimas' },
+      emoji:          { type: 'string',  description: 'Vienas emoji reprezentuojantis augalą' },
+      tipas:          { type: 'string',  description: 'Augalo tipas (pvz. Sultingas, Tropinis daugiametis, Papartis, Orchidėja...)' },
+      augimo_greitis: { type: 'string',  enum: ['lėtas', 'vidutinis', 'greitas'] },
+      sunkumas:       { type: 'integer', minimum: 1, maximum: 5, description: '1=labai lengvas, 5=ekspertams' },
+      toksiskas:      { type: 'boolean' },
+      toksiskumo_info:{ type: ['string', 'null'] },
+      aprasymas:      { type: 'string',  description: '4-6 sakinių aprašymas lietuviškai — kilmė, išvaizda, įdomybės, kodėl populiarus' },
+      kilme:          { type: 'string',  description: 'Iš kur kilęs, buveinė' },
+      sviesa: {
+        type: 'object',
+        properties: {
+          taskai: { type: 'integer', minimum: 1, maximum: 3 },
+          lygis:  { type: 'string', enum: ['žema', 'vidutinė', 'ryški'] },
+          ppfd:   { type: 'object', properties: { min: { type: 'integer' }, max: { type: 'integer' } }, required: ['min', 'max'] },
+        },
+        required: ['taskai', 'lygis', 'ppfd'],
+      },
+      vanduo: {
+        type: 'object',
+        properties: {
+          taskai: { type: 'integer', minimum: 1, maximum: 3 },
+          lygis:  { type: 'string', enum: ['mažai', 'vidutiniškai', 'daug'] },
+        },
+        required: ['taskai', 'lygis'],
+      },
+      laistymasIntervalas: {
+        type: 'object',
+        properties: {
+          vasara:  { type: 'integer' },
+          ziema:   { type: ['integer', 'null'] },
+          metodas: { type: 'string' },
+        },
+        required: ['vasara', 'ziema', 'metodas'],
+      },
+      tresimas: {
+        type: 'object',
+        properties: {
+          intervalVasara: { type: 'integer' },
+          intervalZiema:  { type: ['integer', 'null'] },
+          tipas:          { type: 'string' },
+        },
+        required: ['intervalVasara', 'intervalZiema', 'tipas'],
+      },
+      dormancyInfo: {
+        type: 'object',
+        properties: {
+          reikia: { type: 'boolean' },
+          tipas:  { type: ['string', 'null'] },
+        },
+        required: ['reikia', 'tipas'],
+      },
+      prieziura: {
+        type: 'object',
+        properties: {
+          sviesa:      { type: 'string' },
+          laistymas:   { type: 'string' },
+          temperatura: { type: 'string' },
+          dregme:      { type: 'string' },
+        },
+        required: ['sviesa', 'laistymas', 'temperatura', 'dregme'],
+      },
+      substratas:   { type: 'string' },
+      persodinimas: { type: 'string' },
+      ziemojimas:   { type: 'string' },
+      dauginimas:   { type: 'array', items: { type: 'string' } },
+      problemos: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            simptomas:  { type: 'string' },
+            priezastis: { type: 'string' },
+            sprendimas: { type: 'string' },
+          },
+          required: ['simptomas', 'priezastis', 'sprendimas'],
+        },
+      },
+      idomybes: { type: 'array', items: { type: 'string' } },
+    },
+    required: ['name', 'latinName', 'emoji', 'tipas', 'augimo_greitis', 'sunkumas', 'toksiskas',
+               'aprasymas', 'kilme', 'sviesa', 'vanduo', 'laistymasIntervalas', 'tresimas',
+               'dormancyInfo', 'prieziura', 'substratas', 'persodinimas', 'ziemojimas',
+               'dauginimas', 'problemos', 'idomybes'],
+  },
+}
+
+const PLANT_SYSTEM = `Esi augalų ekspertas. Kai paprašoma augalo informacijos, visada ieškok tiksliai to augalo ir pateik pilną informaciją. Jei augalas tikrai nerastas ar neegzistuoja — neatsakyk nieko (tool nenaudok). Šviesos, vandens, laistymo gairės:
+- sviesa taskai 1 (žema): 50–150 μmol/m²/s; taskai 2 (vidutinė): 150–400; taskai 3 (ryški): 400–2000
+- vanduo taskai 1 (mažai): sultingi; taskai 2 (vidutiniškai): tropiniai; taskai 3 (daug): paparčiai
+- laistymas vasara (dienomis): sultingi 14–21, vidutiniai 7–14, paparčiai 3–7
+- tresimas vasara: sultingi 28d, vidutiniai 21d, greiti 14d`
+
+// (legacy prompt removed — both searches now use tool_use)
+const _UNUSED = `
 {
   "name": "Tikras lietuviškas pavadinimas",
   "latinName": "Tikslus lotyniškas pavadinimas",
@@ -130,32 +231,20 @@ PPFD (μmol/m²/s) ir taskai gairės:
 Jei augalas nerastas: {"error": "Augalas nerastas"}`
 
 
-function safeParseJSON(text) {
-  // First try as-is
-  try { return JSON.parse(text) } catch {}
-  // Strip any markdown code fences
-  const stripped = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim()
-  try { return JSON.parse(stripped) } catch (e) { throw e }
-}
-
-async function parseAndEnrich(fullText) {
-  const jsonMatch = fullText.match(/\{[\s\S]*\}/)
-  if (!jsonMatch) throw new Error('Netinkamas atsakymas')
-  const parsed = safeParseJSON(jsonMatch[0])
-  if (parsed.error) return { error: parsed.error }
-
+async function enrich(parsed) {
   const [photos, namesData] = await Promise.all([
     fetchPlantPhotos(parsed.latinName),
     fetchPlantNames(parsed.latinName),
   ])
   return {
     ...parsed,
-    image: photos[0] ?? null,
+    image:        photos[0] ?? null,
     inatLtName:   namesData?.inatLtName   ?? null,
     sinonimai:    namesData?.sinonimai    ?? [],
     englishNames: namesData?.englishNames ?? [],
   }
 }
+
 
 export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose, plants = [], onViewPlant, onPromote, initialQuery = '' }) {
   const [query, setQuery]         = useState(initialQuery)
@@ -185,7 +274,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     if (e.key === 'Enter' && query.trim() && !loading) searchByText(query.trim())
   }
 
-  // ── Text search ──────────────────────────────────────────────
+  // ── Text search (tool_use — guaranteed valid JSON) ───────────
   const searchByText = async (q) => {
     abortRef.current?.abort()
     const controller = new AbortController()
@@ -194,25 +283,23 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     setStatusMsg('Ieškau augalo...')
 
     try {
-      let fullText = ''
-      let gotFirstToken = false
-      const stream = await client.messages.stream({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 4096,
-        messages: [{ role: 'user', content: `Rask informaciją apie augalą: "${q}".\n\n${PLANT_JSON_PROMPT}` }],
+      const response = await client.messages.create({
+        model:       'claude-sonnet-4-6',
+        max_tokens:  4096,
+        system:      PLANT_SYSTEM,
+        tools:       [PLANT_TOOL],
+        tool_choice: { type: 'tool', name: 'plant_info' },
+        messages:    [{ role: 'user', content: `Rask informaciją apie augalą: "${q}"` }],
       })
-      for await (const chunk of stream) {
-        if (controller.signal.aborted) return
-        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-          if (!gotFirstToken) { gotFirstToken = true; setStatusMsg('Radau, renkuoju duomenis...') }
-          fullText += chunk.delta.text
-        }
-      }
+
       if (controller.signal.aborted) return
+
+      const toolBlock = response.content.find(b => b.type === 'tool_use' && b.name === 'plant_info')
+      if (!toolBlock) { setError('Augalas nerastas'); return }
+
       setStatusMsg('Žiūriu kur gyvena, kaip laistyti...')
-      const data = await parseAndEnrich(fullText)
-      if (data.error) setError(data.error)
-      else setResult(data)
+      const data = await enrich(toolBlock.input)
+      if (!controller.signal.aborted) setResult(data)
     } catch (e) {
       if (e.name === 'AbortError' || controller.signal.aborted) return
       console.error('[SearchModal] error:', e)
@@ -222,34 +309,39 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     }
   }
 
-  // ── Photo search ─────────────────────────────────────────────
+  // ── Photo search (tool_use) ───────────────────────────────────
   const searchByPhoto = async (file) => {
     setLoading(true); setResult(null); setError(null); setQuery('')
     setStatusMsg('Žiūriu į nuotrauką...')
     try {
-      const dataUrl  = await resizeImage(file, 1200, 0.9)
-      const base64   = dataUrl.split(',')[1]
+      const dataUrl = await resizeImage(file, 1200, 0.9)
+      const base64  = dataUrl.split(',')[1]
       setPreview(dataUrl)
       setStatusMsg('Identifikuoju augalą...')
 
       const response = await client.messages.create({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 4096,
+        model:       'claude-sonnet-4-6',
+        max_tokens:  4096,
+        system:      PLANT_SYSTEM,
+        tools:       [PLANT_TOOL],
+        tool_choice: { type: 'tool', name: 'plant_info' },
         messages: [{
           role: 'user',
           content: [
             { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
-            { type: 'text', text: `Identifikuok augalą šioje nuotraukoje (arba ant etiketės).\n\n${PLANT_JSON_PROMPT}` },
+            { type: 'text',  text: 'Identifikuok augalą šioje nuotraukoje (arba ant etiketės) ir pateik jo informaciją.' },
           ],
         }],
       })
 
-      const fullText = response.content[0]?.text ?? ''
+      const toolBlock = response.content.find(b => b.type === 'tool_use' && b.name === 'plant_info')
+      if (!toolBlock) { setError('Nepavyko identifikuoti augalo.'); return }
+
       setStatusMsg('Žiūriu kur gyvena, kaip laistyti...')
-      const data = await parseAndEnrich(fullText)
-      if (data.error) setError(data.error)
-      else setResult(data)
+      const data = await enrich(toolBlock.input)
+      setResult(data)
     } catch (e) {
+      console.error('[SearchModal photo] error:', e)
       setError('Nepavyko identifikuoti augalo. Bandykite aiškesnę nuotrauką.')
     } finally {
       setLoading(false); setStatusMsg('')
