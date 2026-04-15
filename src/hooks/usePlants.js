@@ -95,19 +95,37 @@ export function fromAIResult(aiResult) {
 export function usePlants() {
   const [data, setData] = useState(loadLocal)
 
-  // On mount: wait for auth then pull from Firestore
-  useEffect(() => {
+  // Fetch from Firestore and update state
+  const syncFromRemote = useCallback(() => {
     authReady.then(() => getDoc(DATA_DOC)).then(snap => {
       if (snap.exists()) {
         const remote = snap.data()
         setData(remote)
         saveLocal(remote)
       } else {
-        // First sync — upload local data to Firestore
         saveRemote(loadLocal())
       }
     }).catch(e => console.warn('[firestore] load failed:', e))
   }, [])
+
+  // On mount: initial sync
+  useEffect(() => { syncFromRemote() }, [syncFromRemote])
+
+  // On visibility change: re-sync when app returns from background (iOS PWA)
+  useEffect(() => {
+    let hiddenAt = null
+    const handle = () => {
+      if (document.visibilityState === 'hidden') {
+        hiddenAt = Date.now()
+      } else if (document.visibilityState === 'visible') {
+        const away = hiddenAt ? Date.now() - hiddenAt : Infinity
+        hiddenAt = null
+        if (away > 60_000) syncFromRemote() // re-sync if away > 60s
+      }
+    }
+    document.addEventListener('visibilitychange', handle)
+    return () => document.removeEventListener('visibilitychange', handle)
+  }, [syncFromRemote])
 
   const update = useCallback((updater) => {
     setData(prev => {
