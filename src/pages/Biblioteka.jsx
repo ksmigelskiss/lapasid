@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen, RefreshCw, House, FileText } from 'lucide-react'
+import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen, RefreshCw, FileText, Sparkles } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import CollectionChat from '../components/CollectionChat'
@@ -15,10 +15,10 @@ const SORT_OPTIONS = [
 ]
 
 const TAGS = [
-  { key: 'auginama', Icon: House,        activeClass: 'text-sage-500 bg-sage-50' },
-  { key: 'mirei',    Icon: Ghost,        activeClass: 'text-gray-700 bg-gray-100' },
-  { key: 'pirkti',   Icon: ShoppingCart, activeClass: 'text-orange-500 bg-orange-50' },
-  { key: 'uzrasai',  Icon: FileText,     activeClass: 'text-blue-500 bg-blue-50' },
+  { key: 'nauji',   Icon: Sparkles,     activeClass: 'text-violet-500 bg-violet-50', label: 'Nauji' },
+  { key: 'pirkti',  Icon: ShoppingCart, activeClass: 'text-orange-500 bg-orange-50', label: 'Įsigyti' },
+  { key: 'mirei',   Icon: Ghost,        activeClass: 'text-gray-700 bg-gray-100',    label: 'Mirę' },
+  { key: 'uzrasai', Icon: FileText,     activeClass: 'text-blue-500 bg-blue-50',     label: 'Su užrašais' },
 ]
 
 function sortPlants(plants, key) {
@@ -41,10 +41,10 @@ function matchesQuery(plant, q) {
 
 function matchesTags(plant, tags) {
   if (tags.size === 0) return true
-  if (tags.has('auginama') && plant.kategorija !== 'auginama')  return false
-  if (tags.has('mirei')    && plant.kategorija !== 'istorija')  return false
-  if (tags.has('pirkti')   && !plant.pirkinys)                  return false
-  if (tags.has('uzrasai')  && !(plant.uzrasai?.length > 0 || plant.komentaras?.trim())) return false
+  if (tags.has('nauji')   && plant.kategorija !== 'nori')       return false
+  if (tags.has('mirei')   && plant.kategorija !== 'istorija')   return false
+  if (tags.has('pirkti')  && !plant.pirkinys)                   return false
+  if (tags.has('uzrasai') && !(plant.uzrasai?.length > 0 || plant.komentaras?.trim())) return false
   return true
 }
 
@@ -141,7 +141,7 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
           <button
             onClick={() => setShowSort(v => !v)}
             className={`flex-shrink-0 w-11 rounded-2xl flex items-center justify-center transition-colors ${
-              showSort || sortKey !== 'added'
+              showSort || sortKey !== 'added' || !isVisi
                 ? 'bg-gray-800 text-white'
                 : 'bg-white border border-gray-200 text-gray-600'
             }`}
@@ -151,61 +151,70 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
         )}
       </div>
 
-      {/* Sort options */}
+      {/* Collapsible: sort + tag filters */}
       {showSort && !searching && (
-        <div className="flex gap-2 overflow-x-auto scrollbar-none px-5 mb-3">
-          {SORT_OPTIONS.map(opt => (
-            <button
-              key={opt.key}
-              onClick={() => setSortKey(opt.key)}
-              className={`flex-shrink-0 text-xs font-medium rounded-xl px-3 py-1.5 transition-colors ${
-                sortKey === opt.key
-                  ? 'bg-sage-500 text-white'
-                  : 'bg-white border border-gray-200 text-gray-600 hover:bg-surface'
-              }`}
-            >
-              {opt.icon && <opt.icon size={11} className="inline-block mr-1 -mt-0.5" />}{opt.label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Tag filter bar */}
-      {!searching && (
-        <div className="flex items-center gap-2 px-5 mb-3">
-          {/* Visi pill */}
-          <button
-            onClick={() => setActiveTags(new Set())}
-            className={`flex-shrink-0 text-xs font-semibold rounded-xl px-3 py-1.5 transition-colors ${
-              isVisi
-                ? 'bg-gray-800 text-white'
-                : 'bg-white border border-gray-200 text-gray-400 hover:text-gray-600'
-            }`}
-          >
-            Visi
-          </button>
-
-          <div className="w-px h-5 bg-gray-200 flex-shrink-0" />
-
-          {/* Icon tags */}
-          {TAGS.map(({ key, Icon, activeClass }) => {
-            const isActive = activeTags.has(key)
-            return (
+        <div className="space-y-3 mb-3">
+          {/* Sort row */}
+          <div className="flex gap-2 overflow-x-auto scrollbar-none px-5">
+            {SORT_OPTIONS.map(opt => (
               <button
-                key={key}
-                onClick={() => toggleTag(key)}
-                className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
-                  isVisi
-                    ? 'text-gray-300 bg-white border border-gray-100'
-                    : isActive
-                      ? `${activeClass} border border-transparent`
-                      : 'text-gray-300 bg-white border border-gray-100'
+                key={opt.key}
+                onClick={() => setSortKey(opt.key)}
+                className={`flex-shrink-0 text-xs font-medium rounded-xl px-3 py-1.5 transition-colors ${
+                  sortKey === opt.key
+                    ? 'bg-sage-500 text-white'
+                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-surface'
                 }`}
               >
-                <Icon size={17} />
+                {opt.icon && <opt.icon size={11} className="inline-block mr-1 -mt-0.5" />}{opt.label}
               </button>
-            )
-          })}
+            ))}
+          </div>
+
+          {/* Tag filter row */}
+          <div className="flex items-center gap-2 px-5">
+            {/* Visi pill */}
+            <button
+              onClick={() => setActiveTags(new Set())}
+              className={`flex-shrink-0 text-xs font-semibold rounded-xl px-3 py-1.5 transition-colors ${
+                isVisi
+                  ? 'bg-gray-800 text-white'
+                  : 'bg-white border border-gray-200 text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              Visi
+            </button>
+
+            <div className="w-px h-5 bg-gray-200 flex-shrink-0" />
+
+            {/* Icon tags with labels */}
+            {TAGS.map(({ key, Icon, activeClass, label }) => {
+              const isActive = activeTags.has(key)
+              return (
+                <button
+                  key={key}
+                  title={label}
+                  onClick={() => toggleTag(key)}
+                  className={`flex-shrink-0 flex flex-col items-center gap-0.5 transition-colors`}
+                >
+                  <span className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
+                    isVisi
+                      ? 'text-gray-300 bg-white border border-gray-100'
+                      : isActive
+                        ? `${activeClass} border border-transparent`
+                        : 'text-gray-300 bg-white border border-gray-100'
+                  }`}>
+                    <Icon size={17} />
+                  </span>
+                  <span className={`text-[9px] font-medium leading-none transition-colors ${
+                    isActive ? 'text-gray-700' : 'text-gray-300'
+                  }`}>
+                    {label}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
         </div>
       )}
 
