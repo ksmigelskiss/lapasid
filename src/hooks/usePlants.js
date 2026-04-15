@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { getDoc, setDoc } from 'firebase/firestore'
-import { DATA_DOC } from '../utils/firebase'
+import { DATA_DOC, authReady } from '../utils/firebase'
 import initialData from '../data/plants.json'
 
 // v5 – PPFD values added to sviesa
@@ -20,9 +20,10 @@ function saveLocal(data) {
   } catch {}
 }
 
-// Write to Firestore — fire and forget, never blocks UI
+// Write to Firestore — waits for auth, fire and forget, never blocks UI
 function saveRemote(data) {
-  setDoc(DATA_DOC, data).catch(e => console.warn('[firestore] save failed:', e))
+  authReady.then(() => setDoc(DATA_DOC, data))
+    .catch(e => console.warn('[firestore] save failed:', e))
 }
 
 function makeId() {
@@ -94,9 +95,9 @@ export function fromAIResult(aiResult) {
 export function usePlants() {
   const [data, setData] = useState(loadLocal)
 
-  // On mount: pull from Firestore — remote wins over local cache
+  // On mount: wait for auth then pull from Firestore
   useEffect(() => {
-    getDoc(DATA_DOC).then(snap => {
+    authReady.then(() => getDoc(DATA_DOC)).then(snap => {
       if (snap.exists()) {
         const remote = snap.data()
         setData(remote)
