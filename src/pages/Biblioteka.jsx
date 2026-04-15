@@ -177,19 +177,13 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
                   className="flex-shrink-0 flex flex-col items-center gap-0.5"
                 >
                   <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-[11px] font-bold transition-colors ${
-                    isVisi
-                      ? 'text-gray-300 bg-white border border-gray-100'
-                      : isActive
-                        ? 'text-violet-600 bg-violet-50 border border-transparent'
-                        : 'text-gray-300 bg-white border border-gray-100'
+                    isActive
+                      ? 'bg-gray-800 text-white'
+                      : 'text-gray-400 bg-white border border-gray-200'
                   }`}>
                     Nauji
                   </span>
-                  <span className={`text-[9px] font-medium leading-none transition-colors ${
-                    isActive ? 'text-gray-700' : 'text-gray-300'
-                  }`}>
-                    Nauji
-                  </span>
+                  <span className="text-[9px] font-medium leading-none text-transparent select-none">·</span>
                 </button>
               )
             })()}
@@ -208,15 +202,15 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
                 >
                   <span className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
                     isVisi
-                      ? 'text-gray-300 bg-white border border-gray-100'
+                      ? 'text-gray-400 bg-white border border-gray-200'
                       : isActive
                         ? `${activeClass} border border-transparent`
-                        : 'text-gray-300 bg-white border border-gray-100'
+                        : 'text-gray-400 bg-white border border-gray-200'
                   }`}>
                     <Icon size={17} />
                   </span>
                   <span className={`text-[9px] font-medium leading-none transition-colors ${
-                    isActive ? 'text-gray-700' : 'text-gray-300'
+                    isActive ? 'text-gray-700' : 'text-gray-400'
                   }`}>
                     {label}
                   </span>
