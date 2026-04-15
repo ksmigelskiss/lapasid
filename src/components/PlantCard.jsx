@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
-import { Sun, Droplets, Star, Camera, ImageIcon, Search, Loader2, Leaf, Moon, Sprout, Snowflake, Skull, House } from 'lucide-react'
+import { Sun, Droplets, Star, Camera, ImageIcon, Search, Loader2, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart } from 'lucide-react'
 import { fetchWikimediaImage } from '../utils/plantImage'
 import { resizeImage } from '../utils/imageResize'
 import { useLongPress } from '../hooks/useLongPress'
@@ -178,14 +178,9 @@ export default function PlantCard({ plant, section, onTap, onImageFetch, cardBg 
               <span className="text-[9px] text-white font-semibold">RIP</span>
             </div>
           )}
-          {section === 'nori' && !plant.toksiskas && !showDashboardBadge && (
-            <div className="absolute top-2 left-2 bg-black/35 backdrop-blur-sm rounded-md px-1.5 py-0.5">
-              <span className="text-[9px] text-white">✨</span>
-            </div>
-          )}
-          {plant.pirkinys && (
-            <div className="absolute top-2 right-2 bg-orange-500/90 backdrop-blur-sm rounded-lg px-1.5 py-0.5">
-              <span className="text-[9px] text-white font-bold">🛒</span>
+          {plant.pirkinys && !plant.toksiskas && (
+            <div className="absolute top-2 left-2 bg-orange-500/90 backdrop-blur-sm rounded-lg px-1.5 py-0.5">
+              <ShoppingCart size={9} className="text-white" />
             </div>
           )}
 
