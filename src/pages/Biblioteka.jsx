@@ -234,6 +234,7 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
                   onTap={() => onTap(plant)}
                   onImageFetch={onImageFetch}
                   cardBg="bg-white"
+                  showDashboardBadge={plant.kategorija === 'auginama'}
                 />
               ))}
             </div>
