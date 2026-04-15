@@ -47,7 +47,7 @@ function sortPlants(plants, key) {
   }
 }
 
-export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFetchAllImages, fetchingAll, onSaveToZinynas }) {
+export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant }) {
   const quarantinePlants = plants.filter(p => p.status === 'quarantine')
   const sickPlants       = plants.filter(p => p.status === 'sick')
   const mainPlants       = plants.filter(p => p.status !== 'quarantine' && p.status !== 'sick')
@@ -332,6 +332,8 @@ export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFet
             systemPrompt={buildDashboardSystemPrompt(plants)}
             onClose={() => setShowChat(false)}
             onSaveToZinynas={onSaveToZinynas}
+            plants={plants}
+            onViewPlant={onViewPlant}
           />
         )}
       </AnimatePresence>

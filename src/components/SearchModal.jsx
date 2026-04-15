@@ -13,23 +13,23 @@ const client = new Anthropic({
   dangerouslyAllowBrowser: true,
 })
 
-// ── Tool definition — Claude is FORCED to return this exact schema ────────────
-const PLANT_TOOL = {
-  name: 'plant_info',
-  description: 'Pateik augalo informaciją.',
+// ── Phase 1: fast preview (name, stats, description, facts) ──────
+const TOOL_PREVIEW = {
+  name: 'plant_preview',
+  description: 'Pateik pagrindinę augalo informaciją greitai.',
   input_schema: {
     type: 'object',
     properties: {
-      name:           { type: 'string',  description: 'Tikras lietuviškas pavadinimas. NIEKADA angliškas ar lotyniškas.' },
-      latinName:      { type: 'string',  description: 'Tikslus lotyniškas pavadinimas' },
-      emoji:          { type: 'string',  description: 'Vienas emoji reprezentuojantis augalą' },
-      tipas:          { type: 'string',  description: 'Augalo tipas (pvz. Sultingas, Tropinis daugiametis, Papartis, Orchidėja...)' },
-      augimo_greitis: { type: 'string',  enum: ['lėtas', 'vidutinis', 'greitas'] },
-      sunkumas:       { type: 'integer', minimum: 1, maximum: 5, description: '1=labai lengvas, 5=ekspertams' },
-      toksiskas:      { type: 'boolean' },
-      toksiskumo_info:{ type: ['string', 'null'] },
-      aprasymas:      { type: 'string',  description: '4-6 sakinių aprašymas lietuviškai — kilmė, išvaizda, įdomybės, kodėl populiarus' },
-      kilme:          { type: 'string',  description: 'Iš kur kilęs, buveinė' },
+      name:            { type: 'string',  description: 'Tikras lietuviškas pavadinimas. NIEKADA angliškas ar lotyniškas.' },
+      latinName:       { type: 'string',  description: 'Tikslus lotyniškas pavadinimas' },
+      emoji:           { type: 'string',  description: 'Vienas emoji' },
+      tipas:           { type: 'string',  description: 'Augalo tipas (pvz. Sultingas, Tropinis daugiametis...)' },
+      augimo_greitis:  { type: 'string',  enum: ['lėtas', 'vidutinis', 'greitas'] },
+      sunkumas:        { type: 'integer', minimum: 1, maximum: 5 },
+      toksiskas:       { type: 'boolean' },
+      toksiskumo_info: { type: ['string', 'null'] },
+      aprasymas:       { type: 'string',  description: '4-6 sakinių aprašymas — kilmė, išvaizda, kodėl populiarus' },
+      kilme:           { type: 'string' },
       sviesa: {
         type: 'object',
         properties: {
@@ -47,6 +47,20 @@ const PLANT_TOOL = {
         },
         required: ['taskai', 'lygis'],
       },
+      idomybes: { type: 'array', items: { type: 'string' }, description: '2-3 įdomūs faktai' },
+    },
+    required: ['name', 'latinName', 'emoji', 'tipas', 'augimo_greitis', 'sunkumas',
+               'toksiskas', 'aprasymas', 'kilme', 'sviesa', 'vanduo', 'idomybes'],
+  },
+}
+
+// ── Phase 2: full details (care, watering, problems, etc.) ────────
+const TOOL_DETAILS = {
+  name: 'plant_details',
+  description: 'Pateik išsamią augalo priežiūros informaciją.',
+  input_schema: {
+    type: 'object',
+    properties: {
       laistymasIntervalas: {
         type: 'object',
         properties: {
@@ -69,7 +83,7 @@ const PLANT_TOOL = {
         type: 'object',
         properties: {
           reikia: { type: 'boolean' },
-          tipas:  { type: ['string', 'null'] },
+          tipas:  { enum: ['full', 'partial', null] },
         },
         required: ['reikia', 'tipas'],
       },
@@ -99,148 +113,48 @@ const PLANT_TOOL = {
           required: ['simptomas', 'priezastis', 'sprendimas'],
         },
       },
-      idomybes: { type: 'array', items: { type: 'string' } },
     },
-    required: ['name', 'latinName', 'emoji', 'tipas', 'augimo_greitis', 'sunkumas', 'toksiskas',
-               'aprasymas', 'kilme', 'sviesa', 'vanduo', 'laistymasIntervalas', 'tresimas',
-               'dormancyInfo', 'prieziura', 'substratas', 'persodinimas', 'ziemojimas',
-               'dauginimas', 'problemos', 'idomybes'],
+    required: ['laistymasIntervalas', 'tresimas', 'dormancyInfo', 'prieziura',
+               'substratas', 'persodinimas', 'ziemojimas', 'dauginimas', 'problemos'],
   },
 }
 
-const PLANT_SYSTEM = `Esi augalų ekspertas. Kai paprašoma augalo informacijos, visada ieškok tiksliai to augalo ir pateik pilną informaciją. Jei augalas tikrai nerastas ar neegzistuoja — neatsakyk nieko (tool nenaudok). Šviesos, vandens, laistymo gairės:
-- sviesa taskai 1 (žema): 50–150 μmol/m²/s; taskai 2 (vidutinė): 150–400; taskai 3 (ryški): 400–2000
-- vanduo taskai 1 (mažai): sultingi; taskai 2 (vidutiniškai): tropiniai; taskai 3 (daug): paparčiai
-- laistymas vasara (dienomis): sultingi 14–21, vidutiniai 7–14, paparčiai 3–7
-- tresimas vasara: sultingi 28d, vidutiniai 21d, greiti 14d`
+const PLANT_SYSTEM = `Esi augalų ekspertas. Visada ieškok tiksliai nurodyto augalo.
 
-// (legacy prompt removed — both searches now use tool_use)
-const _UNUSED = `
-{
-  "name": "Tikras lietuviškas pavadinimas",
-  "latinName": "Tikslus lotyniškas pavadinimas",
-  "emoji": "vienas emoji reprezentuojantis augalą",
-  "tipas": "augalo tipas (pvz. Sultingas, Tropinis daugiametis, Papartis, Orchidėja...)",
-  "augimo_greitis": "lėtas|vidutinis|greitas",
-  "sunkumas": 2,
-  "toksiskas": false,
-  "toksiskumo_info": null,
-  "aprasymas": "4-6 sakinių aprašymas lietuviškai — kilmė, išvaizda, įdomybės, kodėl populiarus",
-  "kilme": "Iš kur kilęs, buveinė",
-  "sviesa": {
-    "taskai": 2,
-    "lygis": "žema|vidutinė|ryški",
-    "ppfd": { "min": 0, "max": 0 }
-  },
-  "vanduo": {
-    "taskai": 2,
-    "lygis": "mažai|vidutiniškai|daug"
-  },
-  "laistymasIntervalas": {
-    "vasara": 0,
-    "ziema": 0,
-    "metodas": "Kada ir kaip laistyti — požymiai, metodas"
-  },
-  "tresimas": {
-    "intervalVasara": 0,
-    "intervalZiema": 0,
-    "tipas": "Trąšų tipas, dozė, dažnis"
-  },
-  "dormancyInfo": {
-    "reikia": false,
-    "tipas": null
-  },
-  "prieziura": {
-    "sviesa": "Detalus apšvietimo aprašymas — lango kryptis, tiesioginė/netiesioginė",
-    "laistymas": "Detalus laistymo aprašymas — dažnis, metodas, vanduo",
-    "temperatura": "Temperatūros diapazonas vasarą ir žiemą",
-    "dregme": "Drėgmės poreikis %, metodai kaip palaikyti"
-  },
-  "substratas": "Žemės sudėtis ir proporcijos",
-  "persodinimas": "Kada ir kaip persodinti, vazono dydis",
-  "ziemojimas": "Žiemojimo sąlygos — temperatūra, laistymas, šviesa",
-  "dauginimas": [
-    "Metodas 1 su detalėmis (pvz. stiebų auginiai — džiovinti 1–2 savaites, sodinti į sausą substratą)",
-    "Metodas 2 su detalėmis"
-  ],
-  "problemos": [
-    { "simptomas": "...", "priezastis": "...", "sprendimas": "..." },
-    { "simptomas": "...", "priezastis": "...", "sprendimas": "..." },
-    { "simptomas": "...", "priezastis": "...", "sprendimas": "..." }
-  ],
-  "idomybes": [
-    "Įdomi faktas apie augalą",
-    "Dar vienas įdomus faktas"
-  ]
+SVARBU — laukas "name": PRIVALO būti tikras lietuviškas pavadinimas (žodynas/Vikipedija). NIEKADA lotyniškas ar angliškas. Hibridams be atskiro pavadinimo — naudok genties lietuvišką (pvz. Nepenthes → "Ąsotenė").
+
+Šviesa: taskai 1 (žema) 50–150 μmol/m²/s; 2 (vidutinė) 150–400; 3 (ryški) 400–2000
+Vanduo: 1 (mažai) sultingi; 2 (vidutiniškai) tropiniai; 3 (daug) paparčiai
+Laistymas (dienomis): sultingi vasara 14–21, vidutiniai 7–14, paparčiai 3–7`
+
+
+
+async function fetchDetails(latinName, name) {
+  const r = await client.messages.create({
+    model:       'claude-sonnet-4-6',
+    max_tokens:  2048,
+    system:      PLANT_SYSTEM,
+    tools:       [TOOL_DETAILS],
+    tool_choice: { type: 'tool', name: 'plant_details' },
+    messages:    [{ role: 'user', content: `Pateik išsamią priežiūros informaciją apie augalą "${latinName}" (${name}).` }],
+  })
+  const block = r.content.find(b => b.type === 'tool_use' && b.name === 'plant_details')
+  return block?.input ?? {}
 }
-
-── ŠVIESA ──────────────────────────────────────────────────────
-PPFD (μmol/m²/s) ir taskai gairės:
-  taskai 1 (žema):     50–150   šešėlis, toli nuo lango
-  taskai 2 (vidutinė): 150–400  ryški netiesioginė, rytų langas
-  taskai 3 (ryški):    400–2000 pietų langas, tiesioginė saulė
-
-── VANDUO ──────────────────────────────────────────────────────
-  taskai 1 (mažai):          sultingi, kaudeksiniai
-  taskai 2 (vidutiniškai):   vidutiniai tropiniai
-  taskai 3 (daug):           paparčiai, epifitai
-
-── LAISTYMAS (intervalai dienomis) ────────────────────────────
-  Sultingi / kaudeksiniai:    vasara 14–21d,  žiema 28–60d arba null
-  Paparčiai / epifitai:       vasara 3–7d,    žiema 7–14d
-  Greitai augantys tropiniai: vasara 5–10d,   žiema 10–21d
-  Vidutiniai tropiniai:       vasara 7–14d,   žiema 14–28d
-  ziema = null jei augalas žiemoja be laistymo
-
-── TRĘŠIMAS (intervalai dienomis) ─────────────────────────────
-  Sultingi / kaudeksiniai:   vasara 28d,  žiema null
-  Greitai augantys:          vasara 14d,  žiema 42d
-  Vidutiniai:                vasara 21d,  žiema 56d
-
-── SUNKUMAS (1–5) ──────────────────────────────────────────────
-  1: Labai lengvas (kaktusai, sukulentai)
-  2: Lengvas (monstera, potosas)
-  3: Vidutinis (fikusai, orchidėjos)
-  4: Sudėtingas (paparčiai, kaladijumai)
-  5: Ekspertams (nepentas, orchidėjos retos)
-
-── ŽIEMOS MIEGAS ───────────────────────────────────────────────
-  dormancyInfo.reikia = true tik jei meta lapus žiemą arba turi kaudeksą
-  tipas: "full" (nelaistyti) | "partial" (rečiau laistyti) | null
-
-── PROBLEMOS ───────────────────────────────────────────────────
-  Pateik 3–5 dažniausias problemas su konkrečiais simptomais ir sprendimais.
-
-── PRIVALOMA SAVIKONTROLĖ ─────────────────────────────────────
-  1. sviesa.taskai + ppfd atitinka gaires?
-  2. vanduo.taskai atitinka augalo tipą?
-  3. laistymasIntervalas atitinka augalo tipą?
-  4. dormancyInfo nuoseklus su laistymu?
-  5. problemos — bent 3 konkrečios?
-  6. idomybes — bent 2 tikros ir įdomios?
-
-── PAVADINIMAS ─────────────────────────────────────────────────
-  "name": tikras lietuviškas pavadinimas. NIEKADA angliškas ar lotyniškas.
-
-── JSON TAISYKLĖS ──────────────────────────────────────────────
-  KRITIŠKAI SVARBU: grąžink TIKTAI validų JSON.
-  NIEKADA nenaudok kabučių (") teksto viduje — vietoj jų naudok apostrofą (').
-  Pvz. BLOGAI: "aprasymas": "Augalas vadinamas "sultys""
-       GERAI:  "aprasymas": "Augalas vadinamas 'sultys'"
-
-Jei augalas nerastas: {"error": "Augalas nerastas"}`
-
 
 async function enrich(parsed) {
   const [photos, namesData] = await Promise.all([
     fetchPlantPhotos(parsed.latinName),
     fetchPlantNames(parsed.latinName),
   ])
-  console.log('[enrich] photos:', photos, 'names:', namesData)
+  const inatLtName = namesData?.inatLtName ?? null
   return {
     ...parsed,
+    // iNaturalist Lithuanian names are curated — use as primary name if available
+    name:         inatLtName ?? parsed.name,
     image:        photos[0] ?? null,
-    inatLtName:   namesData?.inatLtName   ?? null,
+    inatLtName,
+    inatTaxonId:  namesData?.inatTaxonId  ?? null,
     sinonimai:    namesData?.sinonimai    ?? [],
     englishNames: namesData?.englishNames ?? [],
   }
@@ -265,14 +179,14 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     return () => clearInterval(t)
   }, [loading])
 
-  // Cycle status messages while waiting for tool_use (no streaming)
+  // Cycle status messages during Phase 1 loading
   useEffect(() => {
     if (!loading) return
     const steps = [
-      [3000,  'Renkuoju informaciją...'],
-      [7000,  'Tikrinu kilmę ir priežiūrą...'],
-      [11000, 'Žiūriu laistymo ir šviesos poreikius...'],
-      [15000, 'Rašau įdomybes ir problemas...'],
+      [1200, 'Renkuoju informaciją...'],
+      [3000, 'Tikrinu kilmę ir pavadinimą...'],
+      [5500, 'Žiūriu šviesos ir vandens poreikius...'],
+      [8000, 'Identifikuoju augalą...'],
     ]
     const timers = steps.map(([delay, msg]) => setTimeout(() => setStatusMsg(msg), delay))
     return () => timers.forEach(clearTimeout)
@@ -288,7 +202,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     if (e.key === 'Enter' && query.trim() && !loading) searchByText(query.trim())
   }
 
-  // ── Text search (tool_use — guaranteed valid JSON) ───────────
+  // ── Text search — Phase 1 (preview) + Phase 2 (details) ────────
   const searchByText = async (q) => {
     abortRef.current?.abort()
     const controller = new AbortController()
@@ -297,32 +211,36 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     setStatusMsg('Ieškau augalo...')
 
     try {
-      const response = await client.messages.create({
+      // ── Phase 1: fast preview ──────────────────────────────────
+      const r1 = await client.messages.create({
         model:       'claude-sonnet-4-6',
-        max_tokens:  4096,
+        max_tokens:  1024,
         system:      PLANT_SYSTEM,
-        tools:       [PLANT_TOOL],
-        tool_choice: { type: 'tool', name: 'plant_info' },
+        tools:       [TOOL_PREVIEW],
+        tool_choice: { type: 'tool', name: 'plant_preview' },
         messages:    [{ role: 'user', content: `Rask informaciją apie augalą: "${q}"` }],
       })
-
       if (controller.signal.aborted) return
 
-      const toolBlock = response.content.find(b => b.type === 'tool_use' && b.name === 'plant_info')
-      if (!toolBlock) { setError('Augalas nerastas'); return }
+      const previewBlock = r1.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')
+      if (!previewBlock) { setError('Augalas nerastas'); setLoading(false); setStatusMsg(''); return }
 
-      const data = await enrich(toolBlock.input)
-      if (!controller.signal.aborted) setResult(data)
+      const enriched = await enrich(previewBlock.input)
+      if (controller.signal.aborted) return
+
+      setResult(enriched)
+      setLoading(false)
+      setStatusMsg('')
     } catch (e) {
       if (e.name === 'AbortError' || controller.signal.aborted) return
       console.error('[SearchModal] error:', e)
       setError('Klaida ieškant augalo. Patikrinkite API raktą.')
-    } finally {
-      if (!controller.signal.aborted) { setLoading(false); setStatusMsg('') }
+      setLoading(false)
+      setStatusMsg('')
     }
   }
 
-  // ── Photo search (tool_use) ───────────────────────────────────
+  // ── Photo search — Phase 1 (preview) + Phase 2 (details) ───────
   const searchByPhoto = async (file) => {
     setLoading(true); setResult(null); setError(null); setQuery('')
     setStatusMsg('Žiūriu į nuotrauką...')
@@ -330,31 +248,37 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       const dataUrl = await resizeImage(file, 1200, 0.9)
       const base64  = dataUrl.split(',')[1]
       setPreview(dataUrl)
-      const response = await client.messages.create({
+
+      const userMsg = {
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
+          { type: 'text',  text: 'Identifikuok augalą šioje nuotraukoje (arba ant etiketės) ir pateik jo informaciją.' },
+        ],
+      }
+
+      // ── Phase 1: fast preview ──────────────────────────────────
+      const r1 = await client.messages.create({
         model:       'claude-sonnet-4-6',
-        max_tokens:  4096,
+        max_tokens:  1024,
         system:      PLANT_SYSTEM,
-        tools:       [PLANT_TOOL],
-        tool_choice: { type: 'tool', name: 'plant_info' },
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
-            { type: 'text',  text: 'Identifikuok augalą šioje nuotraukoje (arba ant etiketės) ir pateik jo informaciją.' },
-          ],
-        }],
+        tools:       [TOOL_PREVIEW],
+        tool_choice: { type: 'tool', name: 'plant_preview' },
+        messages:    [userMsg],
       })
 
-      const toolBlock = response.content.find(b => b.type === 'tool_use' && b.name === 'plant_info')
-      if (!toolBlock) { setError('Nepavyko identifikuoti augalo.'); return }
+      const previewBlock = r1.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')
+      if (!previewBlock) { setError('Nepavyko identifikuoti augalo.'); setLoading(false); setStatusMsg(''); return }
 
-      const data = await enrich(toolBlock.input)
-      setResult(data)
+      const enriched = await enrich(previewBlock.input)
+      setResult(enriched)
+      setLoading(false)
+      setStatusMsg('')
     } catch (e) {
       console.error('[SearchModal photo] error:', e)
       setError('Nepavyko identifikuoti augalo. Bandykite aiškesnę nuotrauką.')
-    } finally {
-      setLoading(false); setStatusMsg('')
+      setLoading(false)
+      setStatusMsg('')
     }
   }
 
@@ -517,21 +441,24 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                   onViewPlant={onViewPlant}
                   onPromote={onPromote}
                   onClose={onClose}
+                  fetchDetails={fetchDetails}
                 />
               ) : (
                 <>
-                  <button
-                    onClick={() => { onAddToDashboard(result); onClose() }}
-                    className="w-full py-4 rounded-3xl text-sm font-semibold text-white bg-sage-500 hover:bg-sage-600 transition-colors shadow-ios"
-                  >
-                    🛍️ Pirkau, turiu!
-                  </button>
-                  <button
-                    onClick={() => { onAddToWishlist(result); onClose() }}
-                    className="w-full py-4 rounded-3xl text-sm font-semibold text-blush-600 bg-blush-50 hover:bg-blush-100 transition-colors"
-                  >
-                    ✨ Pridėti į „Noriu"
-                  </button>
+                  <SaveButton
+                    label="🛍️ Pirkau, turiu!"
+                    result={result}
+                    className="w-full py-4 rounded-3xl text-sm font-semibold text-white bg-sage-500 hover:bg-sage-600 disabled:opacity-60 transition-colors shadow-ios"
+                    onSave={onAddToDashboard}
+                    onClose={onClose}
+                  />
+                  <SaveButton
+                    label="📚 Pridėti į biblioteką"
+                    result={result}
+                    className="w-full py-4 rounded-3xl text-sm font-semibold text-blush-600 bg-blush-50 hover:bg-blush-100 disabled:opacity-60 transition-colors"
+                    onSave={onAddToWishlist}
+                    onClose={onClose}
+                  />
                 </>
               )}
             </div>
@@ -552,6 +479,37 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   )
 }
 
+// ── Save button: fetches Phase 2 details on click, then saves ────
+function SaveButton({ label, result, className, onSave, onClose }) {
+  const [saving, setSaving] = useState(false)
+
+  const handleClick = async () => {
+    setSaving(true)
+    try {
+      const details = await fetchDetails(result.latinName, result.name)
+      onSave({ ...result, ...details })
+      onClose()
+    } catch (e) {
+      console.error('[SaveButton] Phase 2 error:', e)
+      // Fall back to saving Phase 1 data
+      onSave(result)
+      onClose()
+    }
+  }
+
+  return (
+    <button onClick={handleClick} disabled={saving} className={className}>
+      {saving
+        ? <span className="flex items-center justify-center gap-2">
+            <img src="/plant_pot.png" className="w-4 h-4 object-contain animate-spin" alt="" />
+            Kraunama...
+          </span>
+        : label
+      }
+    </button>
+  )
+}
+
 function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onPromote, onClose }) {
   const { kategorija } = duplicate
 
@@ -559,17 +517,17 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
     auginama: {
       bg: 'bg-sage-50', border: 'border-sage-200', text: 'text-sage-800',
       message: `${duplicate.emoji ?? '🌿'} Jau augini šį augalą`,
-      primary: { label: 'Pridėti dar vieną', action: () => { onAddToDashboard(result); onClose() } },
+      primary: { label: 'Pridėti dar vieną', onSave: onAddToDashboard },
     },
     nori: {
       bg: 'bg-blush-50', border: 'border-blush-200', text: 'text-blush-800',
       message: `${duplicate.emoji ?? '🌿'} Jau norų sąraše`,
-      primary: { label: '🛍️ Įsigijau!', action: () => { onPromote?.(duplicate.id); } },
+      primary: { label: '🛍️ Įsigijau!', action: () => { onPromote?.(duplicate.id) } },
     },
     istorija: {
       bg: 'bg-surface', border: 'border-gray-200', text: 'text-gray-700',
       message: `${duplicate.emoji ?? '🌿'} Šis augalas pas tave mirė...`,
-      primary: { label: '🌱 Bandyti dar kartą', action: () => { onAddToDashboard(result); onClose() } },
+      primary: { label: '🌱 Bandyti dar kartą', onSave: onAddToDashboard },
     },
   }
 
@@ -579,12 +537,22 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
     <div className={`${cfg.bg} border ${cfg.border} rounded-2xl p-4 space-y-3`}>
       <p className={`text-sm font-semibold ${cfg.text}`}>{cfg.message}</p>
       <div className="flex gap-2">
-        <button
-          onClick={cfg.primary.action}
-          className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white bg-gray-800 active:bg-gray-900 transition-colors"
-        >
-          {cfg.primary.label}
-        </button>
+        {cfg.primary.onSave ? (
+          <SaveButton
+            label={cfg.primary.label}
+            result={result}
+            className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white bg-gray-800 active:bg-gray-900 disabled:opacity-60 transition-colors"
+            onSave={cfg.primary.onSave}
+            onClose={onClose}
+          />
+        ) : (
+          <button
+            onClick={cfg.primary.action}
+            className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white bg-gray-800 active:bg-gray-900 transition-colors"
+          >
+            {cfg.primary.label}
+          </button>
+        )}
         <button
           onClick={() => { onViewPlant?.(duplicate) }}
           className="flex-1 py-3 rounded-2xl text-sm font-semibold text-gray-700 bg-white border border-gray-200 active:bg-surface transition-colors"

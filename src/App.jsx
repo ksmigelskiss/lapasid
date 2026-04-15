@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard'
 import Biblioteka from './pages/Biblioteka'
 import Zinynas from './pages/Zinynas'
 import { usePlants } from './hooks/usePlants'
+import PinGate from './components/PinGate'
 import { fetchWikimediaImage } from './utils/plantImage'
 
 export default function App() {
@@ -84,6 +85,7 @@ export default function App() {
         onFetchAllImages={fetchAllImages}
         fetchingAll={fetchingAll}
         onSaveToZinynas={addToZinynas}
+        onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
       />
     )},
     { key: 'biblioteka', page: (
@@ -93,6 +95,7 @@ export default function App() {
         onImageFetch={(id, url) => updateImage(id, url)}
         onSearch={q => { setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
         onSaveToZinynas={addToZinynas}
+        onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
       />
     )},
     { key: 'zinynas', page: (
@@ -107,6 +110,7 @@ export default function App() {
   ]
 
   return (
+    <PinGate>
     <div className="flex flex-col h-dvh overflow-hidden">
       <div className="flex-1 overflow-hidden relative">
         <AnimatePresence mode="wait" initial={false}>
@@ -178,5 +182,6 @@ export default function App() {
         )}
       </AnimatePresence>
     </div>
+    </PinGate>
   )
 }

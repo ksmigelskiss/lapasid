@@ -19,7 +19,9 @@
       "Bash(cp /Users/kestutissmigelskis/Downloads/plant_pot.png /Users/kestutissmigelskis/geliu-db/public/plant_pot.png)",
       "Bash(cp /Users/kestutissmigelskis/Downloads/gardener.png /Users/kestutissmigelskis/geliu-db/public/gardener.png)",
       "Bash(git remote:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

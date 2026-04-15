@@ -1,6 +1,11 @@
 import { shouldShowWateringAlert } from './wateringForecast'
 import { getFertilizingForecast } from './fertilizingForecast'
 
+// Primary display name: lietuviškas preferred, fallback to lotyniskas
+function primaryName(p) {
+  return p.lietuviškas || p.lotyniskas || '?'
+}
+
 function plantLine(p) {
   const flags = []
   if (shouldShowWateringAlert(p))              flags.push('laistymas vėluoja')
@@ -10,12 +15,15 @@ function plantLine(p) {
   const light  = p.sviesa?.lygis  ? `, šviesa: ${p.sviesa.lygis}`  : ''
   const water  = p.vanduo?.lygis  ? `, vanduo: ${p.vanduo.lygis}`  : ''
   const status = flags.length     ? ` [${flags.join(', ')}]`        : ''
-  return `- ${p.lietuviškas ?? p.lotyniskas}${status}${light}${water}`
+  return `- ${primaryName(p)}${status}${light}${water}`
 }
+
+const NAME_RULE = `SVARBU: Minėdamas augalus visada naudok tik jų lietuviškus pavadinimus (kaip nurodyta sąraše). Lotynišką pavadinimą rašyk tik tada, kai vartotojas jo klausia.`
 
 export function buildDashboardSystemPrompt(plants) {
   const n = plants.length
   return `Tu esi augalų kolekcijos asistentas. Atsakai lietuviškai, trumpai ir praktiškai.
+${NAME_RULE}
 
 Kolekcija (${n} augal${n === 1 ? 'as' : 'ai'}):
 ${plants.map(plantLine).join('\n') || '(kolekcija tuščia)'}
@@ -27,9 +35,10 @@ export function buildLibrarySystemPrompt(plants) {
   const active   = plants.filter(p => p.kategorija === 'auginama')
   const wishlist = plants.filter(p => p.kategorija === 'nori')
   const history  = plants.filter(p => p.kategorija === 'istorija')
-  const names    = arr => arr.map(p => `- ${p.lietuviškas ?? p.lotyniskas}`).join('\n') || '(nėra)'
+  const names    = arr => arr.map(p => `- ${primaryName(p)}`).join('\n') || '(nėra)'
 
   return `Tu esi augalų bibliotekos asistentas. Atsakai lietuviškai, trumpai ir praktiškai.
+${NAME_RULE}
 
 Auginama (${active.length}):
 ${names(active)}

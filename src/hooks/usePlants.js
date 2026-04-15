@@ -78,6 +78,7 @@ export function fromAIResult(aiResult) {
     image:        aiResult.image ?? null,
     status:       'healthy',
     inatLtName:   aiResult.inatLtName   ?? null,
+    inatTaxonId:  aiResult.inatTaxonId  ?? null,
     sinonimai:    aiResult.sinonimai    ?? [],
     englishNames: aiResult.englishNames ?? [],
   }

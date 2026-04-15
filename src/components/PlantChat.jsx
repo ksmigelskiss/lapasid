@@ -14,6 +14,8 @@ const client = new Anthropic({
 const MAX_STORED = 40   // messages kept in localStorage
 const MAX_API    = 12   // messages sent to API (older become context via system prompt)
 
+const DEFAULT_HEIGHT = '62dvh'
+
 export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSaveToZinynas, initialQuery }) {
   const [messages, setMessages]   = useState(() => plant.chat ?? [])
   const [input, setInput]         = useState(initialQuery ?? '')
@@ -21,6 +23,7 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
   const [streamText, setStreamText] = useState('')
   const [savingNote, setSavingNote] = useState(null) // text being saved as note
   const [noteText, setNoteText]   = useState('')
+  const [panelHeight, setPanelHeight] = useState(DEFAULT_HEIGHT)
   const abortRef  = useRef(null)
   const bottomRef = useRef(null)
   const inputRef  = useRef(null)
@@ -32,6 +35,18 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
 
   // Focus input on open
   useEffect(() => { inputRef.current?.focus() }, [])
+
+  // Expand to fill visible area when keyboard opens
+  useEffect(() => {
+    const vv = window.visualViewport
+    if (!vv) return
+    const update = () => {
+      const kbOpen = window.innerHeight - vv.height > 100
+      setPanelHeight(kbOpen ? `${vv.height}px` : DEFAULT_HEIGHT)
+    }
+    vv.addEventListener('resize', update)
+    return () => vv.removeEventListener('resize', update)
+  }, [])
 
   const send = async () => {
     const text = input.trim()
@@ -98,7 +113,7 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
 
       <motion.div
         className="relative w-full max-w-[430px] bg-app rounded-t-3xl flex flex-col shadow-2xl pointer-events-auto"
-        style={{ height: '62dvh' }}
+        style={{ height: panelHeight, transition: 'height 0.2s ease' }}
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
         exit={{ y: '100%' }}

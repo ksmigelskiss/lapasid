@@ -57,10 +57,11 @@ export function getDormancyForecast(plant) {
   if (!window) return null
 
   const type = getDormancyType(plant)
+  const actions = DORMANCY_ACTIONS[type] ?? DORMANCY_ACTIONS.partial
   return {
     window,                                    // 'approaching' | 'active' | 'waking'
     type,                                      // 'full' | 'partial'
-    action: DORMANCY_ACTIONS[type][window],
+    action: actions[window],
     ziemojimas: plant.ziemojimas,
     daysUntilDormancy: window === 'approaching' ? daysUntilOct1() : null,
   }

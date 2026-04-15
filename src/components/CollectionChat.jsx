@@ -10,16 +10,65 @@ const client = new Anthropic({
 
 const MAX_API = 12
 
-export default function CollectionChat({ systemPrompt, title, icon, iconLg, onClose, onSaveToZinynas }) {
+// Parses assistant message text and wraps matched plant names in clickable buttons
+function renderMessage(text, plants, onViewPlant) {
+  if (!plants?.length || !onViewPlant) return text
+
+  const nameMap = new Map()
+  for (const p of plants) {
+    if ((p.lietuviškas?.length ?? 0) >= 4) nameMap.set(p.lietuviškas.toLowerCase(), p)
+    if ((p.lotyniskas?.length  ?? 0) >= 4) nameMap.set(p.lotyniskas.toLowerCase(),  p)
+    if ((p.inatLtName?.length  ?? 0) >= 4) nameMap.set(p.inatLtName.toLowerCase(),  p)
+  }
+  if (!nameMap.size) return text
+
+  const escaped = [...nameMap.keys()]
+    .sort((a, b) => b.length - a.length) // longer names first — avoid partial matches
+    .map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+  const pattern = new RegExp(`(${escaped.join('|')})`, 'gi')
+
+  const parts = text.split(pattern)
+  if (parts.length === 1) return text
+
+  return parts.map((part, i) => {
+    const plant = nameMap.get(part.toLowerCase())
+    return plant ? (
+      <button
+        key={i}
+        onClick={() => onViewPlant(plant)}
+        className="text-sage-600 font-semibold underline decoration-dotted underline-offset-2 hover:text-sage-700 transition-colors"
+      >
+        {part}
+      </button>
+    ) : part
+  })
+}
+
+const DEFAULT_HEIGHT = '68dvh'
+
+export default function CollectionChat({ systemPrompt, title, icon, iconLg, onClose, onSaveToZinynas, plants, onViewPlant }) {
   const [messages, setMessages]   = useState([])
   const [input, setInput]         = useState('')
   const [streaming, setStreaming] = useState(false)
   const [streamText, setStreamText] = useState('')
   const [savingText, setSavingText] = useState(null)
   const [noteText, setNoteText]   = useState('')
+  const [panelHeight, setPanelHeight] = useState(DEFAULT_HEIGHT)
   const abortRef  = useRef(null)
   const bottomRef = useRef(null)
   const inputRef  = useRef(null)
+
+  // Expand to fill visible area when keyboard opens
+  useEffect(() => {
+    const vv = window.visualViewport
+    if (!vv) return
+    const update = () => {
+      const kbOpen = window.innerHeight - vv.height > 100
+      setPanelHeight(kbOpen ? `${vv.height}px` : DEFAULT_HEIGHT)
+    }
+    vv.addEventListener('resize', update)
+    return () => vv.removeEventListener('resize', update)
+  }, [])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -79,7 +128,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
 
       <motion.div
         className="relative w-full max-w-[430px] bg-app rounded-t-3xl flex flex-col shadow-2xl pointer-events-auto"
-        style={{ height: '68dvh' }}
+        style={{ height: panelHeight, transition: 'height 0.2s ease' }}
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
         exit={{ y: '100%' }}
@@ -128,7 +177,9 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
                     ? 'bg-sage-500 text-white rounded-br-sm'
                     : 'bg-surface-2 text-gray-800 rounded-bl-sm'
                 }`}>
-                  {m.content}
+                  {m.role === 'assistant'
+                    ? renderMessage(m.content, plants, onViewPlant)
+                    : m.content}
                 </div>
                 {m.role === 'assistant' && onSaveToZinynas && (
                   <button

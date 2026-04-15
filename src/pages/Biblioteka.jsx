@@ -1,15 +1,15 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Star } from 'lucide-react'
+import { Star, SlidersHorizontal } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
 import CollectionChat from '../components/CollectionChat'
 import { buildLibrarySystemPrompt } from '../utils/collectionChatContext'
 
 const SORT_OPTIONS = [
-  { key: 'added',      label: '🕐 Pridėta' },
+  { key: 'added',      label: 'Pridėta' },
   { key: 'name',       label: 'A–Z' },
-  { key: 'light',      label: '☀️ Šviesa' },
-  { key: 'water',      label: '💧 Vanduo' },
+  { key: 'light',      label: 'Šviesa' },
+  { key: 'water',      label: 'Vanduo' },
   { key: 'difficulty', label: 'Sunkumas', icon: Star },
 ]
 
@@ -38,12 +38,12 @@ function matchesQuery(plant, q) {
 
 const FILTERS = [
   { key: 'visi',    label: 'Visi' },
-  { key: 'nori',    label: '✨ Įdomu' },
-  { key: 'pirkti',  label: '🛒 Pirkti' },
-  { key: 'mirei',   label: '💀 Mirę' },
+  { key: 'nori',    label: 'Įdomu' },
+  { key: 'pirkti',  label: 'Pirkti' },
+  { key: 'mirei',   label: 'Mirę' },
 ]
 
-export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSaveToZinynas }) {
+export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSaveToZinynas, onViewPlant }) {
   const [filter, setFilter]           = useState('visi')
   const [sortKey, setSortKey]         = useState('added')
   const [showFilters, setShowFilters] = useState(false)
@@ -144,7 +144,7 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
                 : 'bg-white border border-gray-200 text-gray-600'
             }`}
           >
-            ⊞
+            <SlidersHorizontal size={18} />
           </button>
         )}
       </div>
@@ -270,6 +270,8 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
             systemPrompt={buildLibrarySystemPrompt(plants)}
             onClose={() => setShowChat(false)}
             onSaveToZinynas={onSaveToZinynas}
+            plants={plants}
+            onViewPlant={onViewPlant}
           />
         )}
       </AnimatePresence>

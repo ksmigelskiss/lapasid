@@ -236,7 +236,7 @@ function PhotoSheet({ plant, onClose, onSave }) {
   const hasNext = idx < photos.length - 1
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center">
+    <div className="fixed inset-0 z-[80] flex items-end justify-center">
       <motion.div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -845,7 +845,7 @@ function BottomSheet({ onClose, children }) {
     else animate(y, 0, { type: 'spring', stiffness: 400, damping: 30 })
   }
   return (
-    <div className="fixed inset-0 z-[70] flex items-end justify-center">
+    <div className="fixed inset-0 z-[85] flex items-end justify-center">
       <motion.div className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }} onClick={onClose} />
@@ -1038,6 +1038,8 @@ export default function PlantDetail({
   const [showStatusMenu, setStatusMenu]     = useState(false)
   const [pendingStatus, setPendingStatus]   = useState(null) // { newStatus, fromStatus }
   const [addingType, setAddingType]         = useState(null)
+  const [editingName, setEditingName]       = useState(false)
+  const [nameVal, setNameVal]               = useState('')
   const status                              = plant.status ?? 'healthy'
   const mood                            = getPlantMood(plant)
   const fetchedRef                      = useRef(false)
@@ -1075,7 +1077,7 @@ export default function PlantDetail({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 z-[70] flex items-end justify-center">
       {/* Backdrop */}
       <motion.div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -1138,7 +1140,21 @@ export default function PlantDetail({
             <div className="absolute bottom-0 left-0 right-0 p-4">
               <div className="flex items-end justify-between gap-2">
                 <div className="min-w-0">
-                  <h2 className="text-xl font-bold text-white leading-tight">{plant.lietuviškas}</h2>
+                  {editingName ? (
+                    <input
+                      autoFocus
+                      value={nameVal}
+                      onChange={e => setNameVal(e.target.value)}
+                      onBlur={() => { onUpdateNames?.(plant.id, { 'lietuviškas': nameVal.trim() || plant.lietuviškas }); setEditingName(false) }}
+                      onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditingName(false) }}
+                      className="text-xl font-bold leading-tight bg-white/20 text-white rounded-lg px-2 py-0.5 outline-none w-full"
+                    />
+                  ) : (
+                    <h2
+                      className="text-xl font-bold text-white leading-tight cursor-text"
+                      onClick={() => { setNameVal(plant.lietuviškas); setEditingName(true) }}
+                    >{plant.lietuviškas}</h2>
+                  )}
                   <p className="text-xs text-white/70 italic mt-0.5">{plant.lotyniskas}</p>
                   {(plant.inatLtName || plant.sinonimai?.length > 0 || plant.englishNames?.length > 0) && (
                     <div className="flex flex-wrap gap-1 mt-1.5">
@@ -1220,7 +1236,21 @@ export default function PlantDetail({
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <h2 className="text-lg font-bold text-gray-900 leading-tight">{plant.lietuviškas}</h2>
+                    {editingName ? (
+                      <input
+                        autoFocus
+                        value={nameVal}
+                        onChange={e => setNameVal(e.target.value)}
+                        onBlur={() => { onUpdateNames?.(plant.id, { 'lietuviškas': nameVal.trim() || plant.lietuviškas }); setEditingName(false) }}
+                        onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditingName(false) }}
+                        className="text-lg font-bold text-gray-900 leading-tight bg-surface-2 rounded-lg px-2 py-0.5 outline-none w-full"
+                      />
+                    ) : (
+                      <h2
+                        className="text-lg font-bold text-gray-900 leading-tight cursor-text"
+                        onClick={() => { setNameVal(plant.lietuviškas); setEditingName(true) }}
+                      >{plant.lietuviškas}</h2>
+                    )}
                     <p className="text-xs text-gray-500 italic mt-0.5">{plant.lotyniskas}</p>
                   </div>
                   {section !== 'istorija' && (
