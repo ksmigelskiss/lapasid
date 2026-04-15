@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, Leaf, Sprout, Moon, Snowflake, ShieldAlert, Thermometer } from 'lucide-react'
+import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, Leaf, ShieldAlert, Thermometer } from 'lucide-react'
 const GARDENER = '/gardener.png'
 import PlantCard from '../components/PlantCard'
 import CollectionChat from '../components/CollectionChat'
@@ -56,8 +56,7 @@ export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFet
   const missingCount     = plants.filter(p => !p.image).length
   const overdueList      = mainPlants.filter(p => getFertilizingForecast(p).isOverdue)
   const wateringList     = mainPlants.filter(p => shouldShowWateringAlert(p))
-  const dormancyList     = mainPlants.map(p => ({ plant: p, df: getDormancyForecast(p) })).filter(x => x.df)
-  const hasAlerts        = overdueList.length > 0 || wateringList.length > 0 || dormancyList.length > 0
+  const hasAlerts        = overdueList.length > 0 || wateringList.length > 0
   const [alertsOpen, setAlertsOpen]   = useState(false)
   const [sortKey, setSortKey]         = useState('added')
   const [showFilters, setShowFilters] = useState(false)
@@ -171,7 +170,7 @@ export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFet
               >
                 <AlertTriangle size={16} className="text-amber-500 flex-shrink-0" />
                 <p className="text-sm font-bold text-gray-800 flex-1 text-left">
-                  Priminimai ({wateringList.length + overdueList.length + dormancyList.length})
+                  Priminimai ({wateringList.length + overdueList.length})
                 </p>
                 <div className={`transition-transform duration-200 ${alertsOpen ? '' : 'rotate-180'}`}>
                   <ChevronUp size={14} className="text-gray-400" />
@@ -228,33 +227,7 @@ export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFet
                     </div>
                   )}
 
-                  {/* Dormancy section */}
-                  {dormancyList.length > 0 && (
-                    <div>
-                      <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wider mb-1.5">
-                        {dormancyList[0].df.window === 'waking'
-                          ? <span className="flex items-center gap-1"><Sprout size={11} /> Žadinimas</span>
-                          : dormancyList[0].df.window === 'active'
-                            ? <span className="flex items-center gap-1"><Moon size={11} /> Žiemos miegas</span>
-                            : <span className="flex items-center gap-1"><Snowflake size={11} /> Ruošimas miegui</span>
-                        }
-                      </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {dormancyList.map(({ plant: p, df }) => (
-                          <button
-                            key={p.id}
-                            onClick={() => onTap(p)}
-                            className="flex items-center gap-1 bg-blue-100 hover:bg-blue-200 active:bg-blue-200 transition-colors rounded-xl px-2.5 py-1"
-                          >
-                            <span className="text-[11px] font-medium text-blue-800 max-w-[100px] truncate">{p.lietuviškas}</span>
-                            <span className="text-[10px] text-blue-500 font-semibold ml-0.5">
-                              {df.type === 'full' ? 'pilnas' : 'dalinis'}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+
                 </div>
               )}
             </div>
