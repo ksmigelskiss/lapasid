@@ -184,7 +184,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       let gotFirstToken = false
       const stream = await client.messages.stream({
         model: 'claude-sonnet-4-6',
-        max_tokens: 2048,
+        max_tokens: 4096,
         messages: [{ role: 'user', content: `Rask informaciją apie augalą: "${q}".\n\n${PLANT_JSON_PROMPT}` }],
       })
       for await (const chunk of stream) {
@@ -220,7 +220,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
 
       const response = await client.messages.create({
         model: 'claude-sonnet-4-6',
-        max_tokens: 2048,
+        max_tokens: 4096,
         messages: [{
           role: 'user',
           content: [
