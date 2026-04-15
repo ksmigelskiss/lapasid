@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
-import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, X, Trash2 } from 'lucide-react'
+import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, X, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost } from 'lucide-react'
 import { resizeImage } from '../utils/imageResize'
 
 // ── Helpers ────────────────────────────────────────────────────
@@ -97,13 +97,13 @@ function computeGaps(events) {
 }
 
 const EVENT_META = {
-  watering:     { icon: '💧', label: 'Laistymas',    color: 'bg-blue-50',   border: 'border-blue-100',   text: 'text-blue-600' },
-  fertilizing:  { icon: '🧪', label: 'Trąšos',       color: 'bg-purple-50', border: 'border-purple-100', text: 'text-purple-600' },
-  repotting:    { icon: '🪴', label: 'Persodinimas',  color: 'bg-amber-50',  border: 'border-amber-100',  text: 'text-amber-700' },
-  treatment:    { icon: '💊', label: 'Gydymas',       color: 'bg-red-50',    border: 'border-red-100',    text: 'text-red-600' },
-  note:         { icon: '📝', label: 'Pastaba',       color: 'bg-surface',   border: 'border-warm-border',   text: 'text-gray-600' },
-  photo:        { icon: '📸', label: 'Nuotrauka',     color: 'bg-sage-50',   border: 'border-sage-100',   text: 'text-sage-600' },
-  statusChange: { icon: '🔄', label: 'Būsena',        color: 'bg-surface',   border: 'border-warm-border',   text: 'text-gray-500' },
+  watering:     { icon: <Droplets size={13} />,    label: 'Laistymas',    color: 'bg-blue-50',   border: 'border-blue-100',   text: 'text-blue-600' },
+  fertilizing:  { icon: <FlaskConical size={13} />, label: 'Trąšos',      color: 'bg-purple-50', border: 'border-purple-100', text: 'text-purple-600' },
+  repotting:    { icon: <Sprout size={13} />,      label: 'Persodinimas', color: 'bg-amber-50',  border: 'border-amber-100',  text: 'text-amber-700' },
+  treatment:    { icon: <Stethoscope size={13} />, label: 'Gydymas',      color: 'bg-red-50',    border: 'border-red-100',    text: 'text-red-600' },
+  note:         { icon: <FileText size={13} />,    label: 'Pastaba',      color: 'bg-surface',   border: 'border-warm-border',   text: 'text-gray-600' },
+  photo:        { icon: <Camera size={13} />,      label: 'Nuotrauka',    color: 'bg-sage-50',   border: 'border-sage-100',   text: 'text-sage-600' },
+  statusChange: { icon: <RefreshCw size={13} />,   label: 'Būsena',       color: 'bg-surface',   border: 'border-warm-border',   text: 'text-gray-500' },
 }
 
 const STATUS_PERIOD_META = {
@@ -112,9 +112,9 @@ const STATUS_PERIOD_META = {
 }
 
 const STATUS_CHANGE_META = {
-  healthy:         { icon: '🌿', label: 'Pasveiko',          bg: 'bg-green-50',  border: 'border-green-200',  text: 'text-green-700',  line: 'bg-green-300' },
-  sick:            { icon: '🤒', label: 'Serga',              bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', line: 'bg-orange-300' },
-  quarantine:      { icon: '🔴', label: 'Karantinas',         bg: 'bg-red-50',    border: 'border-red-200',    text: 'text-red-700',    line: 'bg-red-300' },
+  healthy:    { icon: <Leaf size={13} />,        label: 'Pasveiko',   bg: 'bg-green-50',  border: 'border-green-200',  text: 'text-green-700',  line: 'bg-green-300' },
+  sick:       { icon: <Thermometer size={13} />, label: 'Serga',      bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', line: 'bg-orange-300' },
+  quarantine: { icon: <ShieldAlert size={13} />, label: 'Karantinas', bg: 'bg-red-50',    border: 'border-red-200',    text: 'text-red-700',    line: 'bg-red-300' },
 }
 
 // Compute period status for each event (newest-first array)
@@ -230,8 +230,8 @@ function DeathEvent({ event, index }) {
       transition={{ delay: index * 0.04, duration: 0.3, ease: 'easeOut' }}
     >
       {/* Node */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-sm border-2 border-white shadow-sm z-10">
-        💀
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center border-2 border-white shadow-sm z-10 text-white">
+        <Ghost size={13} />
       </div>
       {/* Wide banner */}
       <div className="bg-gray-900 rounded-2xl px-4 py-3.5">
@@ -278,9 +278,9 @@ function Tooltip({ event, onDelete }) {
           </span>
           <button
             onClick={onDelete}
-            className="text-gray-400 hover:text-red-400 transition-colors text-xs"
+            className="text-gray-400 hover:text-red-400 transition-colors"
           >
-            🗑
+            <Trash2 size={13} />
           </button>
         </div>
         <p className="text-xs text-gray-500">{formatDate(event.date)}</p>
@@ -849,7 +849,7 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onClea
       {events.length === 0 ? (
         /* Empty state */
         <div className="flex-1 flex flex-col items-center justify-center py-16 px-8 text-center gap-3">
-          <div className="text-5xl">🌱</div>
+          <Sprout size={48} className="text-sage-300" />
           <div>
             <p className="text-base font-semibold text-gray-700">Istorija tuščia</p>
             <p className="text-sm text-gray-400 mt-1 leading-snug">

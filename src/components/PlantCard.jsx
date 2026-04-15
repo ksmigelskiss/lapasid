@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo } from 'react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { Sun, Droplets, Star, Camera, ImageIcon, Search, Loader2, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost, FileText } from 'lucide-react'
 import { fetchWikimediaImage } from '../utils/plantImage'
@@ -95,7 +95,7 @@ function PhotoActionSheet({ plant, onClose, onFileSelect, onWikimedia, fetching 
   )
 }
 
-export default function PlantCard({ plant, section, onTap, onImageFetch, cardBg = 'bg-white', showDashboardBadge = false }) {
+const PlantCard = memo(function PlantCard({ plant, section, onTap, onImageFetch, cardBg = 'bg-white', showDashboardBadge = false }) {
   const [imgError, setImgError]             = useState(false)
   const [showPhotoSheet, setShowPhotoSheet] = useState(false)
   const [fetchingWiki, setFetchingWiki]     = useState(false)
@@ -269,4 +269,6 @@ export default function PlantCard({ plant, section, onTap, onImageFetch, cardBg 
       </AnimatePresence>
     </>
   )
-}
+})
+
+export default PlantCard

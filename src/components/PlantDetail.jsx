@@ -43,7 +43,7 @@ const STATUS_OPTIONS = [
   { key: 'healthy',         dot: 'bg-green-400',  label: 'Sveika',     bg: 'bg-green-100',  text: 'text-green-700' },
   { key: 'sick',            dot: 'bg-orange-400', label: 'Serga',      bg: 'bg-orange-100', text: 'text-orange-700' },
   { key: 'quarantine',      dot: 'bg-red-400',    label: 'Karantinas', bg: 'bg-red-100',    text: 'text-red-700' },
-  { key: 'numire',          dot: 'bg-gray-400',   label: '💀 Numirė',  bg: 'bg-surface-2',   text: 'text-gray-600' },
+  { key: 'numire',          dot: 'bg-gray-400',   label: 'Numirė',     bg: 'bg-surface-2',   text: 'text-gray-600' },
 ]
 
 function statusDot(status) {
@@ -559,7 +559,7 @@ export function ProfileContent({ plant, section, onAction, onClose, className })
           <div className="space-y-2">
             {plant.deathReason && (
               <div className="bg-red-50 rounded-2xl p-3">
-                <p className="text-[10px] font-bold text-red-400 uppercase tracking-wider mb-1">💀 Priežastis</p>
+                <p className="text-[10px] font-bold text-red-400 uppercase tracking-wider mb-1">Priežastis</p>
                 <p className="text-sm text-red-700">{plant.deathReason}</p>
               </div>
             )}
@@ -580,7 +580,7 @@ export function ProfileContent({ plant, section, onAction, onClose, className })
           {section === 'nori' && (<>
             <button onClick={() => { onAction('buy', plant); onClose() }}
               className="w-full py-3.5 rounded-2xl text-sm font-medium text-white bg-sage-500 hover:bg-sage-600 transition-colors">
-              🛍️ Pirkau, turiu!
+              Pirkau, turiu!
             </button>
             <button onClick={() => onAction('pirkinys', plant)}
               className={`w-full py-3 rounded-2xl text-sm font-medium transition-colors ${
@@ -588,13 +588,13 @@ export function ProfileContent({ plant, section, onAction, onClose, className })
                   ? 'bg-orange-100 text-orange-600 hover:bg-orange-200'
                   : 'bg-surface-2 text-gray-500 hover:bg-surface-2'
               }`}>
-              {plant.pirkinys ? '🛒 Pirkimo sąraše ✓' : '🛒 Pridėti į pirkimo sąrašą'}
+              {plant.pirkinys ? 'Pirkimo sąraše ✓' : 'Pridėti į pirkimo sąrašą'}
             </button>
           </>)}
           {section === 'istorija' && (<>
             <button onClick={() => { onAction('tryAgain', plant); onClose() }}
               className="w-full py-3.5 rounded-2xl text-sm font-medium text-white bg-sage-500 hover:bg-sage-600 transition-colors">
-              🌱 Bandyti vėl
+              Bandyti vėl
             </button>
             <button onClick={() => onAction('pirkinys', plant)}
               className={`w-full py-3 rounded-2xl text-sm font-medium transition-colors ${
@@ -602,7 +602,7 @@ export function ProfileContent({ plant, section, onAction, onClose, className })
                   ? 'bg-orange-100 text-orange-600 hover:bg-orange-200'
                   : 'bg-surface-2 text-gray-500 hover:bg-surface-2'
               }`}>
-              {plant.pirkinys ? '🛒 Pirkimo sąraše ✓' : '🛒 Noriu nusipirkti vėl'}
+              {plant.pirkinys ? 'Pirkimo sąraše ✓' : 'Noriu nusipirkti vėl'}
             </button>
           </>)}
           {(section === 'auginama' || section === 'nori' || section === 'istorija') && (
@@ -926,7 +926,7 @@ function StatusTransitionSheet({ plant, newStatus, fromStatus, onConfirm, onQuar
           )}
           <button onClick={() => onConfirm({})}
             className="w-full py-3.5 rounded-2xl text-sm font-bold text-white bg-green-500">
-            Puiku! 🌿
+            Puiku!
           </button>
         </div>
       </BottomSheet>
@@ -939,11 +939,10 @@ function StatusTransitionSheet({ plant, newStatus, fromStatus, onConfirm, onQuar
       <BottomSheet onClose={onClose}>
         <div className="space-y-4">
           <div>
-            <h3 className="text-base font-bold text-gray-900">🔴 Karantinas</h3>
+            <h3 className="text-base font-bold text-gray-900">Karantinas</h3>
             <p className="text-xs text-gray-500 mt-0.5">Augalas bus perkeltas į Reanimaciją</p>
           </div>
           <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-2xl px-4 py-3">
-            <span className="text-xl flex-shrink-0">📦</span>
             <p className="text-sm text-red-700 leading-snug">
               Prieš tęsiant — patraukite augalą į atskirą vietą toli nuo kitų augalų.
             </p>
@@ -978,7 +977,7 @@ function StatusTransitionSheet({ plant, newStatus, fromStatus, onConfirm, onQuar
       <BottomSheet onClose={onClose}>
         <div className="space-y-4">
           <div>
-            <h3 className="text-base font-bold text-gray-900">🤒 Serga</h3>
+            <h3 className="text-base font-bold text-gray-900">Serga</h3>
             <p className="text-xs text-gray-500 mt-0.5">Augalas bus perkeltas į Ligonius</p>
           </div>
           <div>
@@ -993,7 +992,6 @@ function StatusTransitionSheet({ plant, newStatus, fromStatus, onConfirm, onQuar
           <button onClick={onQuarantine}
             className="w-full flex items-center justify-between px-4 py-3 bg-red-50 border border-red-200 rounded-2xl">
             <div className="flex items-center gap-2">
-              <span className="text-base">🔴</span>
               <div className="text-left">
                 <p className="text-xs font-bold text-red-700">Karantinuoti</p>
                 <p className="text-[10px] text-red-400">Reikia izoliuoti nuo kitų augalų</p>

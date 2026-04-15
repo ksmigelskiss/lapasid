@@ -304,7 +304,7 @@ export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFet
         {/* Plant grid */}
         {plants.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-            <div className="text-6xl">🪴</div>
+            <img src="/plant_pot.png" className="h-16 w-auto object-contain opacity-50" alt="" />
             <div>
               <p className="text-base font-semibold text-gray-700">Dar nėra augalų</p>
               <p className="text-sm text-gray-400 mt-1">Ieškokite augalo ir pridėkite į kolekciją</p>

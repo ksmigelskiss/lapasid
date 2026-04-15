@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Star } from 'lucide-react'
+import { Star, Search } from 'lucide-react'
 import ZinynasChat from '../components/ZinynasChat'
 
 function Highlight({ text, query }) {
@@ -79,7 +79,7 @@ function ZinynasCard({ entry, expanded, onToggle, onDelete, onToggleStar, onChat
               onClick={e => { e.stopPropagation(); onDelete() }}
               className="text-xs text-red-500 hover:text-red-700 font-medium transition-colors"
             >
-              🗑 Ištrinti
+              Ištrinti
             </button>
           </div>
         )}
@@ -120,7 +120,7 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, plants
       {/* Search */}
       <div className="px-5 pb-3 flex-shrink-0">
         <div className="relative">
-          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">🔍</span>
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             value={query}

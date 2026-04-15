@@ -447,14 +447,14 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
               ) : (
                 <>
                   <SaveButton
-                    label="🛍️ Pirkau, turiu!"
+                    label="Pirkau, turiu!"
                     result={result}
                     className="w-full py-4 rounded-3xl text-sm font-semibold text-white bg-sage-500 hover:bg-sage-600 disabled:opacity-60 transition-colors shadow-ios"
                     onSave={onAddToDashboard}
                     onClose={onClose}
                   />
                   <SaveButton
-                    label="📚 Pridėti į biblioteką"
+                    label="Pridėti į biblioteką"
                     result={result}
                     className="w-full py-4 rounded-3xl text-sm font-semibold text-blush-600 bg-blush-50 hover:bg-blush-100 disabled:opacity-60 transition-colors"
                     onSave={onAddToWishlist}
@@ -517,18 +517,18 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
   const configs = {
     auginama: {
       bg: 'bg-sage-50', border: 'border-sage-200', text: 'text-sage-800',
-      message: `${duplicate.emoji ?? '🌿'} Jau augini šį augalą`,
+      message: `Jau augini šį augalą`,
       primary: { label: 'Pridėti dar vieną', onSave: onAddToDashboard },
     },
     nori: {
       bg: 'bg-blush-50', border: 'border-blush-200', text: 'text-blush-800',
-      message: `${duplicate.emoji ?? '🌿'} Jau norų sąraše`,
-      primary: { label: '🛍️ Įsigijau!', action: () => { onPromote?.(duplicate.id) } },
+      message: `Jau norų sąraše`,
+      primary: { label: 'Įsigijau!', action: () => { onPromote?.(duplicate.id) } },
     },
     istorija: {
       bg: 'bg-surface', border: 'border-gray-200', text: 'text-gray-700',
-      message: `${duplicate.emoji ?? '🌿'} Šis augalas pas tave mirė...`,
-      primary: { label: '🌱 Bandyti dar kartą', onSave: onAddToDashboard },
+      message: `Šis augalas pas tave mirė...`,
+      primary: { label: 'Bandyti dar kartą', onSave: onAddToDashboard },
     },
   }
 

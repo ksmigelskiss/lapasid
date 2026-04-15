@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, useDragControls, useMotionValue, animate } from 'framer-motion'
+import { Ghost, Lightbulb } from 'lucide-react'
 
 export default function DeathModal({ plant, onConfirm, onClose }) {
   const [reason, setReason] = useState('')
@@ -53,15 +54,15 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
         <div className="text-center pt-2">
           <div className="text-4xl mb-2">{plant.emoji ?? '🌿'}</div>
           <h2 className="text-lg font-semibold text-gray-900">
-            {plant.lietuviškas ?? plant.name} numirė 😔
+            {plant.lietuviškas ?? plant.name} numirė
           </h2>
           <p className="text-sm text-gray-500 mt-1">Užfiksuokite priežastį ir pamoką ateičiai</p>
         </div>
 
         <div className="space-y-3">
           <div>
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5">
-              💀 Kodėl numirė?
+            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+              <Ghost size={13} /> Kodėl numirė?
             </label>
             <textarea
               className="w-full bg-surface rounded-2xl px-4 py-3 text-sm text-gray-800 placeholder-gray-400 outline-none resize-none border border-transparent focus:border-red-200 transition-colors"
@@ -73,8 +74,8 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
             />
           </div>
           <div>
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5">
-              💡 Pamoka ateičiai
+            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
+              <Lightbulb size={13} /> Pamoka ateičiai
             </label>
             <textarea
               className="w-full bg-surface rounded-2xl px-4 py-3 text-sm text-gray-800 placeholder-gray-400 outline-none resize-none border border-transparent focus:border-amber-200 transition-colors"
@@ -97,7 +98,7 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
             onClick={() => onConfirm(reason, lesson)}
             className="flex-1 py-3.5 rounded-2xl text-sm font-medium text-white bg-red-400 hover:bg-red-500 transition-colors"
           >
-            Patvirtinti 💀
+            Patvirtinti
           </button>
         </div>
       </motion.div>
