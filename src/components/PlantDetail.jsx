@@ -606,7 +606,7 @@ export function ProfileContent({ plant, section, onAction, onClose, className })
             </button>
           </>)}
           {(section === 'auginama' || section === 'nori' || section === 'istorija') && (
-            <button onClick={() => { onAction('delete', plant); onClose() }}
+            <button onClick={() => onAction('delete', plant)}
               className="w-full py-3 rounded-2xl text-sm font-medium text-gray-400 hover:text-red-400 transition-colors">
               Ištrinti
             </button>

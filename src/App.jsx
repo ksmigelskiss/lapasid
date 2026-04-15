@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Navigation from './components/Navigation'
 import SearchModal from './components/SearchModal'
 import DeathModal from './components/DeathModal'
+import DeleteModal from './components/DeleteModal'
 import PlantDetail from './components/PlantDetail'
 import Dashboard from './pages/Dashboard'
 import Biblioteka from './pages/Biblioteka'
@@ -15,8 +16,9 @@ export default function App() {
   const [tab, setTab]                 = useState('dashboard')
   const [showSearch, setShowSearch]   = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState('')
-  const [deathTarget, setDeathTarget] = useState(null)
-  const [detailPlant, setDetailPlant] = useState(null) // { plant, section }
+  const [deathTarget, setDeathTarget]   = useState(null)
+  const [deleteTarget, setDeleteTarget] = useState(null) // { plant, section }
+  const [detailPlant, setDetailPlant]   = useState(null) // { plant, section }
 
   const {
     syncFromRemote,
@@ -39,15 +41,32 @@ export default function App() {
   const closeDetail = () => setDetailPlant(null)
 
   const handleDashboardAction = (action, plant) => {
-    if (action === 'died')    setDeathTarget(plant)
-    if (action === 'delete')  deletePlant(plant.id)
+    if (action === 'died')   setDeathTarget(plant)
+    if (action === 'delete') setDeleteTarget({ plant, section: 'auginama' })
   }
 
   const handleLibraryAction = (action, plant) => {
     if (action === 'buy')     { moveToDashboard(plant.id); setTab('dashboard') }
     if (action === 'tryAgain'){ moveToDashboard(plant.id); setTab('dashboard') }
     if (action === 'pirkinys'){ togglePirkinys(plant.id) }
-    if (action === 'delete')  deletePlant(plant.id)
+    if (action === 'delete')  setDeleteTarget({ plant, section: 'library' })
+  }
+
+  const handleDeleteDied = () => {
+    setDeathTarget(deleteTarget.plant)
+    setDeleteTarget(null)
+  }
+
+  const handleDeleteMoveToLibrary = () => {
+    updatePlant(deleteTarget.plant.id, { kategorija: 'nori' })
+    setDeleteTarget(null)
+    closeDetail()
+  }
+
+  const handleDeleteForever = () => {
+    deletePlant(deleteTarget.plant.id)
+    setDeleteTarget(null)
+    closeDetail()
   }
 
   const handleDeathConfirm = (reason, lesson) => {
@@ -181,6 +200,20 @@ export default function App() {
             plant={deathTarget}
             onConfirm={handleDeathConfirm}
             onClose={() => setDeathTarget(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {deleteTarget && (
+          <DeleteModal
+            key="delete"
+            plant={deleteTarget.plant}
+            section={deleteTarget.section}
+            onDied={handleDeleteDied}
+            onMoveToLibrary={handleDeleteMoveToLibrary}
+            onDeleteForever={handleDeleteForever}
+            onClose={() => setDeleteTarget(null)}
           />
         )}
       </AnimatePresence>
