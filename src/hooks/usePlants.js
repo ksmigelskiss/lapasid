@@ -1,10 +1,12 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import { getDoc, setDoc } from 'firebase/firestore'
+import { DATA_DOC } from '../utils/firebase'
 import initialData from '../data/plants.json'
 
 // v5 – PPFD values added to sviesa
 const STORAGE_KEY = 'geliu-db-v5'
 
-function loadData() {
+function loadLocal() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) return JSON.parse(stored)
@@ -12,10 +14,15 @@ function loadData() {
   return initialData
 }
 
-function saveData(data) {
+function saveLocal(data) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
   } catch {}
+}
+
+// Write to Firestore — fire and forget, never blocks UI
+function saveRemote(data) {
+  setDoc(DATA_DOC, data).catch(e => console.warn('[firestore] save failed:', e))
 }
 
 function makeId() {
@@ -85,12 +92,27 @@ export function fromAIResult(aiResult) {
 }
 
 export function usePlants() {
-  const [data, setData] = useState(loadData)
+  const [data, setData] = useState(loadLocal)
+
+  // On mount: pull from Firestore — remote wins over local cache
+  useEffect(() => {
+    getDoc(DATA_DOC).then(snap => {
+      if (snap.exists()) {
+        const remote = snap.data()
+        setData(remote)
+        saveLocal(remote)
+      } else {
+        // First sync — upload local data to Firestore
+        saveRemote(loadLocal())
+      }
+    }).catch(e => console.warn('[firestore] load failed:', e))
+  }, [])
 
   const update = useCallback((updater) => {
     setData(prev => {
       const next = updater(prev)
-      saveData(next)
+      saveLocal(next)
+      saveRemote(next)
       return next
     })
   }, [])
