@@ -184,7 +184,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       let gotFirstToken = false
       const stream = await client.messages.stream({
         model: 'claude-sonnet-4-6',
-        max_tokens: 1024,
+        max_tokens: 2048,
         messages: [{ role: 'user', content: `Rask informaciją apie augalą: "${q}".\n\n${PLANT_JSON_PROMPT}` }],
       })
       for await (const chunk of stream) {
@@ -201,6 +201,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       else setResult(data)
     } catch (e) {
       if (e.name === 'AbortError' || controller.signal.aborted) return
+      console.error('[SearchModal] error:', e)
       setError('Klaida ieškant augalo. Patikrinkite API raktą.')
     } finally {
       if (!controller.signal.aborted) { setLoading(false); setStatusMsg('') }
@@ -219,7 +220,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
 
       const response = await client.messages.create({
         model: 'claude-sonnet-4-6',
-        max_tokens: 1024,
+        max_tokens: 2048,
         messages: [{
           role: 'user',
           content: [
