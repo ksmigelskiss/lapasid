@@ -11,6 +11,7 @@ import Zinynas from './pages/Zinynas'
 import { usePlants } from './hooks/usePlants'
 import PinGate from './components/PinGate'
 import { fetchWikimediaImage } from './utils/plantImage'
+import { uploadImage } from './utils/uploadImage'
 
 export default function App() {
   const [tab, setTab]                 = useState('dashboard')
@@ -100,7 +101,7 @@ export default function App() {
       <Dashboard
         plants={dashboard}
         onTap={p => openDetail(p, 'auginama')}
-        onImageFetch={(id, url) => updateImage(id, url)}
+        onImageFetch={async (id, url) => updateImage(id, await uploadImage(url, id))}
         onSearch={() => setShowSearch(true)}
         onFetchAllImages={fetchAllImages}
         fetchingAll={fetchingAll}
@@ -113,7 +114,7 @@ export default function App() {
       <Biblioteka
         plants={library}
         onTap={p => openDetail(p, p.kategorija)}
-        onImageFetch={(id, url) => updateImage(id, url)}
+        onImageFetch={async (id, url) => updateImage(id, await uploadImage(url, id))}
         onSearch={q => { setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
         onSaveToZinynas={addToZinynas}
         onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
@@ -165,7 +166,7 @@ export default function App() {
             onUzrasaiSave={(id, uzrasai) => updateUzrasai(id, uzrasai)}
             onStatusChange={(id, status, meta) => updateStatus(id, status, meta)}
             onUpdateNames={(id, patch) => updatePlant(id, patch)}
-            onImageSave={(id, url) => updateImage(id, url)}
+            onImageSave={async (id, url) => updateImage(id, await uploadImage(url, id))}
             onSaveChat={(id, msgs) => updateChat(id, msgs)}
             onSaveToZinynas={addToZinynas}
             onAddTimelineEvent={addTimelineEvent}
