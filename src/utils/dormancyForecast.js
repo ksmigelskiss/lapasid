@@ -1,7 +1,7 @@
 // Dormancy (žiemos miegas) forecast utility
 // Dormancy window: October 1 – March 31
 // Approaching warning: August 1 – September 30
-// Wake-up reminder: April 1 – April 15
+// Wake-up reminder: April 1 – April 30
 
 function hasDormancy(plant) {
   // Prefer AI-structured data when available
@@ -28,7 +28,7 @@ function getDormancyWindow() {
   const d = now.getDate()
   if (m === 8 || m === 9)          return 'approaching'
   if (m >= 10 || m <= 3)           return 'active'
-  if (m === 4 && d <= 15)          return 'waking'
+  if (m === 4)                      return 'waking'
   return null
 }
 
