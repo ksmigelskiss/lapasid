@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen, RefreshCw, FileText, Sparkles } from 'lucide-react'
+import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen, RefreshCw, FileText } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import CollectionChat from '../components/CollectionChat'
@@ -15,7 +15,6 @@ const SORT_OPTIONS = [
 ]
 
 const TAGS = [
-  { key: 'nauji',   Icon: Sparkles,     activeClass: 'text-violet-500 bg-violet-50', label: 'Nauji' },
   { key: 'pirkti',  Icon: ShoppingCart, activeClass: 'text-orange-500 bg-orange-50', label: 'Įsigyti' },
   { key: 'mirei',   Icon: Ghost,        activeClass: 'text-gray-700 bg-gray-100',    label: 'Mirę' },
   { key: 'uzrasai', Icon: FileText,     activeClass: 'text-blue-500 bg-blue-50',     label: 'Su užrašais' },
@@ -154,40 +153,50 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
       {/* Collapsible: sort + tag filters */}
       {showSort && !searching && (
         <div className="space-y-3 mb-3">
-          {/* Sort row */}
-          <div className="flex gap-2 overflow-x-auto scrollbar-none px-5">
-            {SORT_OPTIONS.map(opt => (
-              <button
-                key={opt.key}
-                onClick={() => setSortKey(opt.key)}
-                className={`flex-shrink-0 text-xs font-medium rounded-xl px-3 py-1.5 transition-colors ${
-                  sortKey === opt.key
-                    ? 'bg-sage-500 text-white'
-                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-surface'
-                }`}
-              >
-                {opt.icon && <opt.icon size={11} className="inline-block mr-1 -mt-0.5" />}{opt.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Tag filter row */}
-          <div className="flex items-center gap-2 px-5">
-            {/* Visi pill */}
+          {/* Tag filter row — above sort */}
+          <div className="flex items-end gap-2 px-5">
+            {/* Visi — square text button */}
             <button
               onClick={() => setActiveTags(new Set())}
-              className={`flex-shrink-0 text-xs font-semibold rounded-xl px-3 py-1.5 transition-colors ${
-                isVisi
-                  ? 'bg-gray-800 text-white'
-                  : 'bg-white border border-gray-200 text-gray-400 hover:text-gray-600'
-              }`}
+              className={`flex-shrink-0 flex flex-col items-center gap-0.5`}
             >
-              Visi
+              <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-[11px] font-bold transition-colors ${
+                isVisi ? 'bg-gray-800 text-white' : 'bg-white border border-gray-200 text-gray-400'
+              }`}>
+                Visi
+              </span>
+              <span className="text-[9px] font-medium leading-none text-transparent select-none">·</span>
             </button>
 
-            <div className="w-px h-5 bg-gray-200 flex-shrink-0" />
+            {/* Nauji — square text button */}
+            {(() => {
+              const isActive = activeTags.has('nauji')
+              return (
+                <button
+                  onClick={() => toggleTag('nauji')}
+                  className="flex-shrink-0 flex flex-col items-center gap-0.5"
+                >
+                  <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-[11px] font-bold transition-colors ${
+                    isVisi
+                      ? 'text-gray-300 bg-white border border-gray-100'
+                      : isActive
+                        ? 'text-violet-600 bg-violet-50 border border-transparent'
+                        : 'text-gray-300 bg-white border border-gray-100'
+                  }`}>
+                    Nauji
+                  </span>
+                  <span className={`text-[9px] font-medium leading-none transition-colors ${
+                    isActive ? 'text-gray-700' : 'text-gray-300'
+                  }`}>
+                    Nauji
+                  </span>
+                </button>
+              )
+            })()}
 
-            {/* Icon tags with labels */}
+            <div className="w-px h-9 bg-gray-200 flex-shrink-0" />
+
+            {/* Icon tags */}
             {TAGS.map(({ key, Icon, activeClass, label }) => {
               const isActive = activeTags.has(key)
               return (
@@ -195,7 +204,7 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
                   key={key}
                   title={label}
                   onClick={() => toggleTag(key)}
-                  className={`flex-shrink-0 flex flex-col items-center gap-0.5 transition-colors`}
+                  className="flex-shrink-0 flex flex-col items-center gap-0.5"
                 >
                   <span className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
                     isVisi
@@ -214,6 +223,23 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
                 </button>
               )
             })}
+          </div>
+
+          {/* Sort row */}
+          <div className="flex gap-2 overflow-x-auto scrollbar-none px-5">
+            {SORT_OPTIONS.map(opt => (
+              <button
+                key={opt.key}
+                onClick={() => setSortKey(opt.key)}
+                className={`flex-shrink-0 text-xs font-medium rounded-xl px-3 py-1.5 transition-colors ${
+                  sortKey === opt.key
+                    ? 'bg-sage-500 text-white'
+                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-surface'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
         </div>
       )}
