@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen, RefreshCw } from 'lucide-react'
+import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen, RefreshCw, House, FileText } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import CollectionChat from '../components/CollectionChat'
@@ -12,6 +12,13 @@ const SORT_OPTIONS = [
   { key: 'light',      label: 'Šviesa' },
   { key: 'water',      label: 'Vanduo' },
   { key: 'difficulty', label: 'Sunkumas', icon: Star },
+]
+
+const TAGS = [
+  { key: 'auginama', Icon: House,        activeClass: 'text-sage-500 bg-sage-50' },
+  { key: 'mirei',    Icon: Ghost,        activeClass: 'text-gray-700 bg-gray-100' },
+  { key: 'pirkti',   Icon: ShoppingCart, activeClass: 'text-orange-500 bg-orange-50' },
+  { key: 'uzrasai',  Icon: FileText,     activeClass: 'text-blue-500 bg-blue-50' },
 ]
 
 function sortPlants(plants, key) {
@@ -27,68 +34,64 @@ function sortPlants(plants, key) {
 
 function matchesQuery(plant, q) {
   const lower = q.toLowerCase()
-  const candidates = [
-    plant.lietuviškas,
-    plant.lotyniskas,
-    plant.inatLtName,
-    ...(plant.sinonimai    ?? []),
-    ...(plant.englishNames ?? []),
-  ]
-  return candidates.some(c => c && c.toLowerCase().includes(lower))
+  return [plant.lietuviškas, plant.lotyniskas, plant.inatLtName,
+    ...(plant.sinonimai ?? []), ...(plant.englishNames ?? [])]
+    .some(c => c && c.toLowerCase().includes(lower))
 }
 
-const FILTERS = [
-  { key: 'visi',    label: 'Visi' },
-  { key: 'nori',    label: 'Įdomu' },
-  { key: 'pirkti',  label: 'Pirkti' },
-  { key: 'mirei',   label: 'Mirę' },
-]
+function matchesTags(plant, tags) {
+  if (tags.size === 0) return true
+  if (tags.has('auginama') && plant.kategorija !== 'auginama')  return false
+  if (tags.has('mirei')    && plant.kategorija !== 'istorija')  return false
+  if (tags.has('pirkti')   && !plant.pirkinys)                  return false
+  if (tags.has('uzrasai')  && !(plant.uzrasai?.length > 0 || plant.komentaras?.trim())) return false
+  return true
+}
 
 export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSaveToZinynas, onViewPlant, onRefresh }) {
-  const [filter, setFilter]           = useState('visi')
-  const [sortKey, setSortKey]         = useState('added')
-  const [showFilters, setShowFilters] = useState(false)
-  const [showChat, setShowChat]       = useState(false)
-  const [searching, setSearching]     = useState(false)
-  const [query, setQuery]             = useState('')
+  const [activeTags, setActiveTags] = useState(new Set())
+  const [sortKey, setSortKey]       = useState('added')
+  const [showSort, setShowSort]     = useState(false)
+  const [showChat, setShowChat]     = useState(false)
+  const [searching, setSearching]   = useState(false)
+  const [query, setQuery]           = useState('')
   const inputRef  = useRef(null)
   const scrollRef = useRef(null)
   const { pullY, refreshing } = usePullToRefresh(scrollRef, onRefresh ?? (() => {}))
+
+  const isVisi = activeTags.size === 0
+
+  // Reset to Visi when app returns from background
+  useEffect(() => {
+    const handle = () => {
+      if (document.visibilityState === 'visible') setActiveTags(new Set())
+    }
+    document.addEventListener('visibilitychange', handle)
+    return () => document.removeEventListener('visibilitychange', handle)
+  }, [])
 
   useEffect(() => {
     if (searching) inputRef.current?.focus()
   }, [searching])
 
+  const toggleTag = useCallback((key) => {
+    setActiveTags(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }, [])
+
   const visible = useMemo(() => {
-    const filtered = (() => {
-      switch (filter) {
-        case 'nori':   return plants.filter(p => p.kategorija === 'nori')
-        case 'mirei':  return plants.filter(p => p.kategorija === 'istorija')
-        case 'pirkti': return plants.filter(p => p.pirkinys)
-        default:       return plants
-      }
-    })()
-    const sorted = sortPlants(filtered, sortKey)
+    const filtered = plants.filter(p => matchesTags(p, activeTags))
+    const sorted   = sortPlants(filtered, sortKey)
     if (!query.trim()) return sorted
     return sorted.filter(p => matchesQuery(p, query))
-  }, [plants, filter, sortKey, query])
+  }, [plants, activeTags, sortKey, query])
 
-  const counts = {
-    visi:   plants.length,
-    nori:   plants.filter(p => p.kategorija === 'nori').length,
-    pirkti: plants.filter(p => p.pirkinys).length,
-    mirei:  plants.filter(p => p.kategorija === 'istorija').length,
-  }
-
-  const closeSearch = () => {
-    setSearching(false)
-    setQuery('')
-  }
-
-  const launchFullSearch = () => {
-    onSearch(query)
-    closeSearch()
-  }
+  const closeSearch = () => { setSearching(false); setQuery('') }
+  const launchFullSearch = () => { onSearch(query); closeSearch() }
 
   return (
     <div className="flex flex-col h-full bg-lib">
@@ -110,7 +113,7 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
       <div className="px-5 mb-3 flex gap-2">
         {searching ? (
           <div className="flex-1 flex items-center gap-2 bg-white border border-gray-300 rounded-2xl px-4 py-3 focus-within:border-gray-400 transition-colors">
-            <span className="text-gray-400 text-sm">🔍</span>
+            <Search size={15} className="text-gray-400 flex-shrink-0" />
             <input
               ref={inputRef}
               type="text"
@@ -123,26 +126,22 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
               placeholder="Ieškoti bibliotekoje..."
               className="flex-1 text-sm text-gray-800 placeholder-gray-400 outline-none bg-transparent"
             />
-            {query ? (
-              <button onClick={() => setQuery('')} className="text-gray-400 text-xs">✕</button>
-            ) : (
-              <button onClick={closeSearch} className="text-gray-400 text-xs">✕</button>
-            )}
+            <button onClick={closeSearch} className="text-gray-400 text-xs">✕</button>
           </div>
         ) : (
           <button
             onClick={() => setSearching(true)}
             className="flex-1 flex items-center gap-3 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl px-4 py-3"
           >
-            <span className="text-gray-400">🔍</span>
+            <Search size={15} className="text-gray-400" />
             <span className="text-sm text-gray-500">Rasti augalą...</span>
           </button>
         )}
         {!searching && (
           <button
-            onClick={() => setShowFilters(v => !v)}
-            className={`flex-shrink-0 w-11 rounded-2xl flex items-center justify-center text-base transition-colors ${
-              showFilters || filter !== 'visi' || sortKey !== 'added'
+            onClick={() => setShowSort(v => !v)}
+            className={`flex-shrink-0 w-11 rounded-2xl flex items-center justify-center transition-colors ${
+              showSort || sortKey !== 'added'
                 ? 'bg-gray-800 text-white'
                 : 'bg-white border border-gray-200 text-gray-600'
             }`}
@@ -152,46 +151,61 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
         )}
       </div>
 
-      {/* Collapsible filters + sort */}
-      {showFilters && !searching && (
-        <div className="space-y-2 mb-4">
-          <div className="flex gap-2 overflow-x-auto scrollbar-none px-5">
-            {FILTERS.map(f => (
+      {/* Sort options */}
+      {showSort && !searching && (
+        <div className="flex gap-2 overflow-x-auto scrollbar-none px-5 mb-3">
+          {SORT_OPTIONS.map(opt => (
+            <button
+              key={opt.key}
+              onClick={() => setSortKey(opt.key)}
+              className={`flex-shrink-0 text-xs font-medium rounded-xl px-3 py-1.5 transition-colors ${
+                sortKey === opt.key
+                  ? 'bg-sage-500 text-white'
+                  : 'bg-white border border-gray-200 text-gray-600 hover:bg-surface'
+              }`}
+            >
+              {opt.icon && <opt.icon size={11} className="inline-block mr-1 -mt-0.5" />}{opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Tag filter bar */}
+      {!searching && (
+        <div className="flex items-center gap-2 px-5 mb-3">
+          {/* Visi pill */}
+          <button
+            onClick={() => setActiveTags(new Set())}
+            className={`flex-shrink-0 text-xs font-semibold rounded-xl px-3 py-1.5 transition-colors ${
+              isVisi
+                ? 'bg-gray-800 text-white'
+                : 'bg-white border border-gray-200 text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            Visi
+          </button>
+
+          <div className="w-px h-5 bg-gray-200 flex-shrink-0" />
+
+          {/* Icon tags */}
+          {TAGS.map(({ key, Icon, activeClass }) => {
+            const isActive = activeTags.has(key)
+            return (
               <button
-                key={f.key}
-                onClick={() => setFilter(f.key)}
-                className={`flex-shrink-0 flex items-center gap-1 text-xs font-medium rounded-xl px-3 py-1.5 transition-colors ${
-                  filter === f.key
-                    ? 'bg-gray-800 text-white'
-                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-surface'
+                key={key}
+                onClick={() => toggleTag(key)}
+                className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
+                  isVisi
+                    ? 'text-gray-300 bg-white border border-gray-100'
+                    : isActive
+                      ? `${activeClass} border border-transparent`
+                      : 'text-gray-300 bg-white border border-gray-100'
                 }`}
               >
-                {f.label}
-                {counts[f.key] > 0 && (
-                  <span className={`text-[10px] rounded-full px-1 ${
-                    filter === f.key ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-400'
-                  }`}>
-                    {counts[f.key]}
-                  </span>
-                )}
+                <Icon size={17} />
               </button>
-            ))}
-          </div>
-          <div className="flex gap-2 overflow-x-auto scrollbar-none px-5">
-            {SORT_OPTIONS.map(opt => (
-              <button
-                key={opt.key}
-                onClick={() => setSortKey(opt.key)}
-                className={`flex-shrink-0 text-xs font-medium rounded-xl px-3 py-1.5 transition-colors ${
-                  sortKey === opt.key
-                    ? 'bg-sage-500 text-white'
-                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-surface'
-                }`}
-              >
-                {opt.icon && <opt.icon size={11} className="inline-block mr-1 -mt-0.5" />}{opt.label}
-              </button>
-            ))}
-          </div>
+            )
+          })}
         </div>
       )}
 
@@ -215,17 +229,10 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
         {visible.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
             <div className="text-gray-300">
-              {query          ? <Search size={48} />
-              : filter === 'mirei'  ? <Ghost size={48} />
-              : filter === 'pirkti' ? <ShoppingCart size={48} />
-              :                       <BookOpen size={48} />}
+              {query ? <Search size={48} /> : <BookOpen size={48} />}
             </div>
             <p className="text-sm font-semibold text-gray-600">
-              {query
-                ? `„${query}" nerasta bibliotekoje`
-                : filter === 'pirkti' ? 'Pirkinių sąrašas tuščias'
-                : filter === 'mirei'  ? 'Mirę augalai neregistruoti'
-                : 'Biblioteka tuščia'}
+              {query ? `„${query}" nerasta bibliotekoje` : 'Nieko nerasta'}
             </p>
             {query ? (
               <button
@@ -234,7 +241,7 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
               >
                 Ieškoti „{query}" naujų augalų
               </button>
-            ) : filter !== 'pirkti' && (
+            ) : isVisi && (
               <button
                 onClick={() => setSearching(true)}
                 className="mt-1 px-6 py-3 bg-gray-800 text-white rounded-2xl text-sm font-medium"
@@ -258,13 +265,12 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
                 />
               ))}
             </div>
-            {/* "Search for new" nudge when actively searching */}
             {searching && query.trim() && (
               <button
                 onClick={launchFullSearch}
                 className="w-full mt-3 py-3 rounded-2xl text-sm text-gray-500 border border-dashed border-gray-300 hover:border-gray-400 hover:text-gray-700 transition-colors"
               >
-                🔎 Ieškoti „{query}" naujų augalų
+                Ieškoti „{query}" naujų augalų
               </button>
             )}
           </>
