@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Search, X, Camera, Loader2, Sun, Droplets, Wind, Thermometer } from 'lucide-react'
+import { ArrowLeft, Search, X, Camera, Sun, Droplets, Thermometer, Wind, MapPin, Leaf, Snowflake } from 'lucide-react'
 import Anthropic from '@anthropic-ai/sdk'
 import { fetchPlantPhotos } from '../utils/plantImage'
 import { fetchPlantNames } from '../utils/plantNames'
@@ -89,11 +89,25 @@ NIEKADA: angliškas ar lotyniškas pavadinimas lauke "name".
 
 Jei augalas nerastas arba nematomas nuotraukoje: {"error": "Augalas nerastas"}`
 
-function CareChip({ label, value }) {
+function DotScore({ value, max = 3, color }) {
   return (
-    <div className="flex flex-col gap-0.5 bg-surface rounded-2xl px-3 py-2 min-w-0">
-      <span className="text-[10px] font-medium text-gray-600 uppercase tracking-wider">{label}</span>
-      <span className="text-xs font-medium text-gray-700 leading-tight">{value}</span>
+    <div className="flex gap-0.5">
+      {Array.from({ length: max }).map((_, i) => (
+        <div key={i} className={`w-2 h-2 rounded-full ${i < value ? color : 'bg-gray-200'}`} />
+      ))}
+    </div>
+  )
+}
+
+function InfoRow({ icon, label, value }) {
+  if (!value) return null
+  return (
+    <div className="flex gap-3 py-2.5 border-b border-gray-50 last:border-0">
+      <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400">{icon}</div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">{label}</p>
+        <p className="text-sm text-gray-700 mt-0.5 leading-snug">{value}</p>
+      </div>
     </div>
   )
 }
@@ -319,104 +333,126 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
           >
-            {/* Hero or fallback */}
+            {/* Hero */}
             {result.image ? (
-              <div className="rounded-3xl overflow-hidden h-52 relative">
+              <div className="rounded-3xl overflow-hidden h-52 relative -mx-4">
                 <img src={result.image} alt={result.name} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <h3 className="text-xl font-bold text-white leading-tight">{result.name}</h3>
                   <p className="text-xs text-white/70 italic mt-0.5">{result.latinName}</p>
+                  {(result.inatLtName || result.sinonimai?.length > 0 || result.englishNames?.length > 0) && (
+                    <div className="flex flex-wrap gap-1 mt-1.5">
+                      {result.inatLtName && (
+                        <span className="text-[10px] text-white/80 bg-white/15 rounded px-1.5 py-0.5">{result.inatLtName}</span>
+                      )}
+                      {result.sinonimai?.filter(s => s !== result.inatLtName).map((s, i) => (
+                        <span key={i} className="text-[10px] text-white/80 bg-white/15 rounded px-1.5 py-0.5">{s}</span>
+                      ))}
+                      {result.englishNames?.map((n, i) => (
+                        <span key={i} className="text-[10px] text-white/60 bg-white/10 rounded px-1.5 py-0.5 italic">{n}</span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-4 bg-sage-50 rounded-3xl p-4">
-                <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-4xl shadow-ios">
+              <div className="bg-sage-50 rounded-3xl p-4 flex items-center gap-4">
+                <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-4xl shadow-ios flex-shrink-0">
                   {result.emoji}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-lg font-bold text-gray-900 leading-tight">{result.name}</h3>
                   <p className="text-xs text-sage-600 italic mt-0.5">{result.latinName}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Description */}
-            <div className="bg-surface rounded-3xl p-4">
-              <p className="text-sm text-gray-700 leading-relaxed">{result.aiDescription}</p>
-            </div>
-
-            {/* iNaturalist names */}
-            {(result.inatLtName || result.sinonimai?.length > 0 || result.englishNames?.length > 0) && (
-              <div className="bg-emerald-50 border border-emerald-100 rounded-3xl p-4 space-y-2.5">
-                <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">
-                  🌿 iNaturalist pavadinimai
-                </p>
-                {result.inatLtName && (
-                  <div className="flex items-start gap-2">
-                    <span className="text-[10px] font-semibold text-emerald-500 uppercase tracking-wide w-16 flex-shrink-0 pt-0.5">LT</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      <span className="text-xs font-semibold text-emerald-800 bg-emerald-100 rounded-lg px-2 py-0.5">{result.inatLtName}</span>
-                      {result.sinonimai?.map((s, i) => (
-                        <span key={i} className="text-xs text-emerald-700 bg-white border border-emerald-200 rounded-lg px-2 py-0.5">{s}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {!result.inatLtName && result.sinonimai?.length > 0 && (
-                  <div className="flex items-start gap-2">
-                    <span className="text-[10px] font-semibold text-emerald-500 uppercase tracking-wide w-16 flex-shrink-0 pt-0.5">LT</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {result.sinonimai.map((s, i) => (
-                        <span key={i} className="text-xs text-emerald-700 bg-white border border-emerald-200 rounded-lg px-2 py-0.5">{s}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {result.englishNames?.length > 0 && (
-                  <div className="flex items-start gap-2">
-                    <span className="text-[10px] font-semibold text-emerald-500 uppercase tracking-wide w-16 flex-shrink-0 pt-0.5">EN</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {result.englishNames.map((n, i) => (
-                        <span key={i} className="text-xs text-gray-600 bg-white border border-emerald-200 rounded-lg px-2 py-0.5">{n}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Care */}
-            <div className="space-y-2">
-              <p className="text-[11px] font-semibold text-gray-600 uppercase tracking-wider px-1">Priežiūra</p>
-              {result.ppfd?.min != null && result.ppfd?.max != null && (
-                <div className="flex items-center gap-2 bg-amber-50 border border-amber-100 rounded-2xl px-3 py-2">
-                  <Sun size={18} className="text-amber-500 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-wide">Šviesos intensyvumas (PPFD)</p>
-                    <p className="text-sm font-semibold text-amber-800">
-                      {result.ppfd.min}–{result.ppfd.max} <span className="text-xs font-normal text-amber-600">μmol/m²/s</span>
-                    </p>
-                  </div>
-                  {result.lightScore != null && (
-                    <div className="flex gap-0.5 flex-shrink-0">
-                      {[1,2,3].map(i => (
-                        <div key={i} className={`w-2 h-2 rounded-full ${i <= result.lightScore ? 'bg-amber-400' : 'bg-amber-100'}`} />
+                  {(result.inatLtName || result.sinonimai?.length > 0) && (
+                    <div className="flex flex-wrap gap-1 mt-1.5">
+                      {result.inatLtName && <span className="text-[10px] text-sage-700 bg-sage-100 rounded px-1.5 py-0.5">{result.inatLtName}</span>}
+                      {result.sinonimai?.filter(s => s !== result.inatLtName).map((s, i) => (
+                        <span key={i} className="text-[10px] text-sage-600 bg-white border border-sage-200 rounded px-1.5 py-0.5">{s}</span>
                       ))}
                     </div>
                   )}
                 </div>
-              )}
-              <div className="grid grid-cols-2 gap-2">
-                {result.care?.water       && <CareChip label="Laistymas"  value={result.care.water} />}
-                {result.care?.light       && <CareChip label="Šviesa"     value={result.care.light} />}
-                {result.care?.humidity    && <CareChip label="Drėgmė"     value={result.care.humidity} />}
-                {result.care?.temperature && <CareChip label="Temp."      value={result.care.temperature} />}
-                {result.care?.soil        && <CareChip label="Žemė"       value={result.care.soil} />}
               </div>
+            )}
+
+            {/* Quick stats */}
+            <div className="bg-surface rounded-2xl p-4 space-y-0">
+              {result.origin && (
+                <InfoRow
+                  icon={<MapPin size={13} />}
+                  label="Kilmė"
+                  value={result.origin}
+                />
+              )}
+              {result.lightScore != null && (
+                <div className="flex gap-3 py-2.5 border-b border-gray-50">
+                  <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400"><Sun size={13} /></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Šviesa</p>
+                    <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                      <DotScore value={result.lightScore} color="bg-amber-400" />
+                      <span className="text-xs text-gray-500">{result.lightLevel}</span>
+                      {result.ppfd?.min != null && (
+                        <span className="text-[10px] font-medium text-amber-600 bg-amber-50 border border-amber-100 rounded px-1.5 py-0.5">
+                          {result.ppfd.min}–{result.ppfd.max} μmol/m²/s
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+              {result.watering?.intervalVasara != null && (
+                <InfoRow
+                  icon={<Droplets size={13} />}
+                  label="Laistymas"
+                  value={[
+                    `Vasara kas ${result.watering.intervalVasara} d.`,
+                    result.watering.intervalZiema ? `žiema kas ${result.watering.intervalZiema} d.` : 'žiemą nelaistyti',
+                    result.watering.metodas,
+                  ].filter(Boolean).join(' · ')}
+                />
+              )}
+              {result.fertilizing?.intervalVasara != null && (
+                <InfoRow
+                  icon={<Leaf size={13} />}
+                  label="Tręšimas"
+                  value={[
+                    `Vasara kas ${result.fertilizing.intervalVasara} d.`,
+                    result.fertilizing.intervalZiema ? `žiema kas ${result.fertilizing.intervalZiema} d.` : 'žiemą netręšti',
+                    result.fertilizing.tipas,
+                  ].filter(Boolean).join(' · ')}
+                />
+              )}
+              {result.dormancy?.reikia && (
+                <InfoRow
+                  icon={<Snowflake size={13} />}
+                  label="Žiemos miegas"
+                  value={result.dormancy.tipas === 'full' ? 'Visiškas (nelaistyti)' : 'Dalinis (rečiau laistyti)'}
+                />
+              )}
+              {result.care?.humidity && (
+                <InfoRow icon={<Wind size={13} />} label="Drėgmė" value={result.care.humidity} />
+              )}
+              {result.care?.temperature && (
+                <InfoRow icon={<Thermometer size={13} />} label="Temperatūra" value={result.care.temperature} />
+              )}
+              {result.care?.soil && (
+                <InfoRow icon={<span className="text-[11px]">🪨</span>} label="Žemė" value={result.care.soil} />
+              )}
             </div>
 
-            {/* Actions — contextual if duplicate, standard otherwise */}
+            {/* Description */}
+            {result.aiDescription && (
+              <div className="space-y-2">
+                <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest px-1">Apie augalą</p>
+                <div className="bg-surface rounded-2xl p-4">
+                  <p className="text-sm text-gray-700 leading-relaxed">{result.aiDescription}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Actions */}
             <div className="space-y-3 pt-1 pb-4">
               {duplicate ? (
                 <DuplicateBanner
