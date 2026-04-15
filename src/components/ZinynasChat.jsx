@@ -63,7 +63,7 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
       const apiMessages = newMessages.slice(-MAX_API).map(m => ({ role: m.role, content: m.content }))
       let fullText = ''
       const stream = await client.messages.stream({
-        model:      'claude-haiku-4-5-20251001',
+        model:      'claude-sonnet-4-6',
         max_tokens: 400,
         system:     buildSystemPrompt(entry, allEntries, plants),
         messages:   apiMessages,
