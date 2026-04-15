@@ -121,13 +121,27 @@ PPFD (μmol/m²/s) ir taskai gairės:
 ── PAVADINIMAS ─────────────────────────────────────────────────
   "name": tikras lietuviškas pavadinimas. NIEKADA angliškas ar lotyniškas.
 
+── JSON TAISYKLĖS ──────────────────────────────────────────────
+  KRITIŠKAI SVARBU: grąžink TIKTAI validų JSON.
+  NIEKADA nenaudok kabučių (") teksto viduje — vietoj jų naudok apostrofą (').
+  Pvz. BLOGAI: "aprasymas": "Augalas vadinamas "sultys""
+       GERAI:  "aprasymas": "Augalas vadinamas 'sultys'"
+
 Jei augalas nerastas: {"error": "Augalas nerastas"}`
 
+
+function safeParseJSON(text) {
+  // First try as-is
+  try { return JSON.parse(text) } catch {}
+  // Strip any markdown code fences
+  const stripped = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim()
+  try { return JSON.parse(stripped) } catch (e) { throw e }
+}
 
 async function parseAndEnrich(fullText) {
   const jsonMatch = fullText.match(/\{[\s\S]*\}/)
   if (!jsonMatch) throw new Error('Netinkamas atsakymas')
-  const parsed = JSON.parse(jsonMatch[0])
+  const parsed = safeParseJSON(jsonMatch[0])
   if (parsed.error) return { error: parsed.error }
 
   const [photos, namesData] = await Promise.all([
