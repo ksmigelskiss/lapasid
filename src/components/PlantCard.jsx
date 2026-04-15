@@ -158,10 +158,19 @@ export default function PlantCard({ plant, section, onTap, onImageFetch, cardBg 
                                      'bg-green-400'
           }`} />
 
-          {/* Dashboard (auginama) badge — house icon below status dot */}
-          {showDashboardBadge && (
-            <div className="absolute top-6 right-1.5 bg-sage-500/90 backdrop-blur-sm rounded-md p-0.5">
-              <House size={10} className="text-white" />
+          {/* Right-side badge column — stacks below status dot */}
+          {(showDashboardBadge || plant.pirkinys) && (
+            <div className="absolute top-6 right-1.5 flex flex-col gap-1">
+              {showDashboardBadge && (
+                <div className="bg-sage-500/90 backdrop-blur-sm rounded-md p-0.5">
+                  <House size={10} className="text-white" />
+                </div>
+              )}
+              {plant.pirkinys && (
+                <div className="bg-orange-500/90 backdrop-blur-sm rounded-md p-0.5">
+                  <ShoppingCart size={10} className="text-white" />
+                </div>
+              )}
             </div>
           )}
 
@@ -176,11 +185,6 @@ export default function PlantCard({ plant, section, onTap, onImageFetch, cardBg 
           {section === 'istorija' && !plant.toksiskas && (
             <div className="absolute top-2 left-2 bg-black/35 backdrop-blur-sm rounded-md px-1.5 py-0.5">
               <span className="text-[9px] text-white font-semibold">RIP</span>
-            </div>
-          )}
-          {plant.pirkinys && !plant.toksiskas && (
-            <div className="absolute top-2 left-2 bg-orange-500/90 backdrop-blur-sm rounded-lg px-1.5 py-0.5">
-              <ShoppingCart size={9} className="text-white" />
             </div>
           )}
 
