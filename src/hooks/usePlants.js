@@ -186,7 +186,11 @@ export function usePlants() {
   }, [update])
 
   const moveToDashboard = useCallback((id) => {
-    updatePlant(id, { kategorija: 'auginama', data_prideta: today() })
+    updatePlant(id, { kategorija: 'auginama', data_prideta: today(), timeline: [] })
+  }, [updatePlant])
+
+  const clearTimeline = useCallback((id) => {
+    updatePlant(id, { timeline: [] })
   }, [updatePlant])
 
   const updateComment = useCallback((id, komentaras) => {
@@ -279,7 +283,7 @@ export function usePlants() {
     addToDashboard, addToWishlist,
     markAsDied, moveToDashboard,
     updateComment, updateImage, updateStatus, updatePlant, deletePlant,
-    addTimelineEvent, deleteTimelineEvent, updateChat,
+    addTimelineEvent, deleteTimelineEvent, clearTimeline, updateChat,
     library, togglePirkinys,
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred,
     updateUzrasai,

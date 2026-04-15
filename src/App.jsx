@@ -26,7 +26,7 @@ export default function App() {
     addToDashboard, addToWishlist,
     markAsDied, moveToDashboard,
     updateComment, updateImage, updateStatus, updatePlant, deletePlant,
-    addTimelineEvent, deleteTimelineEvent, updateChat, togglePirkinys,
+    addTimelineEvent, deleteTimelineEvent, clearTimeline, updateChat, togglePirkinys,
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred,
     updateUzrasai,
   } = usePlants()
@@ -170,6 +170,7 @@ export default function App() {
             onSaveToZinynas={addToZinynas}
             onAddTimelineEvent={addTimelineEvent}
             onDeleteTimelineEvent={deleteTimelineEvent}
+            onClearTimeline={id => clearTimeline(id)}
           />
         )}
       </AnimatePresence>

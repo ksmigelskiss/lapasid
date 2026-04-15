@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
-import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, X } from 'lucide-react'
+import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, X, Trash2 } from 'lucide-react'
 import { resizeImage } from '../utils/imageResize'
 
 // ── Helpers ────────────────────────────────────────────────────
@@ -820,9 +820,10 @@ function WateringRun({ run, expanded, onToggle, gaps, activeTooltip, onTooltipTo
 
 // ── Main timeline component ────────────────────────────────────
 
-export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent }) {
+export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onClearTimeline }) {
   const [activeTooltip, setActiveTooltip] = useState(null) // one at a time
   const [runExpanded, setRunExpanded]     = useState({})   // runKey → bool override
+  const [confirmClear, setConfirmClear]   = useState(false)
   const events = plant.timeline ?? []
   const gaps = computeGaps(events)
   const predictions = computePredictions(events)
@@ -1011,6 +1012,34 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent }) {
               return <React.Fragment key={`group-${si}`}>{nodes}</React.Fragment>
             })
           })()}
+          {/* Clear timeline button */}
+          {onClearTimeline && (
+            <div className="mt-6 pb-2">
+              {confirmClear ? (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => { onClearTimeline(); setConfirmClear(false) }}
+                    className="flex-1 py-2.5 rounded-2xl text-sm font-semibold text-white bg-red-500 active:bg-red-600 transition-colors"
+                  >
+                    Taip, valyti
+                  </button>
+                  <button
+                    onClick={() => setConfirmClear(false)}
+                    className="flex-1 py-2.5 rounded-2xl text-sm font-medium text-gray-500 bg-surface-2 transition-colors"
+                  >
+                    Atšaukti
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setConfirmClear(true)}
+                  className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-2xl text-sm font-medium text-gray-400 hover:text-red-400 transition-colors"
+                >
+                  <Trash2 size={14} /> Valyti istoriją
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
 

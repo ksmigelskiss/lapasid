@@ -1029,6 +1029,7 @@ export default function PlantDetail({
   onSaveToZinynas,
   onAddTimelineEvent,
   onDeleteTimelineEvent,
+  onClearTimeline,
 }) {
   const [activeTab, setActiveTab]           = useState('profile')
   const [heroError, setHeroError]           = useState(false)
@@ -1342,6 +1343,7 @@ export default function PlantDetail({
                   plant={plant}
                   onAddEvent={event => onAddTimelineEvent?.(plant.id, event)}
                   onDeleteEvent={eventId => onDeleteTimelineEvent?.(plant.id, eventId)}
+                  onClearTimeline={() => onClearTimeline?.(plant.id)}
                 />
               </motion.div>
             )}
