@@ -123,6 +123,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   const [result, setResult]       = useState(null)
   const [error, setError]         = useState(null)
   const [dots, setDots]           = useState('')
+  const [statusMsg, setStatusMsg] = useState('')
   const [previewUrl, setPreview]  = useState(null) // photo search preview
   const abortRef  = useRef(null)
   const inputRef  = useRef(null)
@@ -150,9 +151,11 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     const controller = new AbortController()
     abortRef.current = controller
     setLoading(true); setResult(null); setError(null); setPreview(null)
+    setStatusMsg('Ieškau augalo...')
 
     try {
       let fullText = ''
+      let gotFirstToken = false
       const stream = await client.messages.stream({
         model: 'claude-sonnet-4-6',
         max_tokens: 1024,
@@ -160,9 +163,13 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       })
       for await (const chunk of stream) {
         if (controller.signal.aborted) return
-        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') fullText += chunk.delta.text
+        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+          if (!gotFirstToken) { gotFirstToken = true; setStatusMsg('Radau, renkuoju duomenis...') }
+          fullText += chunk.delta.text
+        }
       }
       if (controller.signal.aborted) return
+      setStatusMsg('Žiūriu kur gyvena, kaip laistyti...')
       const data = await parseAndEnrich(fullText)
       if (data.error) setError(data.error)
       else setResult(data)
@@ -170,17 +177,19 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       if (e.name === 'AbortError' || controller.signal.aborted) return
       setError('Klaida ieškant augalo. Patikrinkite API raktą.')
     } finally {
-      if (!controller.signal.aborted) setLoading(false)
+      if (!controller.signal.aborted) { setLoading(false); setStatusMsg('') }
     }
   }
 
   // ── Photo search ─────────────────────────────────────────────
   const searchByPhoto = async (file) => {
     setLoading(true); setResult(null); setError(null); setQuery('')
+    setStatusMsg('Žiūriu į nuotrauką...')
     try {
       const dataUrl  = await resizeImage(file, 1200, 0.9)
       const base64   = dataUrl.split(',')[1]
       setPreview(dataUrl)
+      setStatusMsg('Identifikuoju augalą...')
 
       const response = await client.messages.create({
         model: 'claude-sonnet-4-6',
@@ -195,13 +204,14 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       })
 
       const fullText = response.content[0]?.text ?? ''
+      setStatusMsg('Žiūriu kur gyvena, kaip laistyti...')
       const data = await parseAndEnrich(fullText)
       if (data.error) setError(data.error)
       else setResult(data)
     } catch (e) {
       setError('Nepavyko identifikuoti augalo. Bandykite aiškesnę nuotrauką.')
     } finally {
-      setLoading(false)
+      setLoading(false); setStatusMsg('')
     }
   }
 
@@ -287,9 +297,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
               ? <img src={previewUrl} alt="" className="w-28 h-28 object-cover rounded-2xl opacity-70" />
               : <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />
             }
-            <p className="text-sm text-gray-500">
-              {previewUrl ? `Identifikuojama${dots}` : `Ieškoma${dots}`}
-            </p>
+            <p className="text-sm text-gray-600 font-medium">{statusMsg}{dots}</p>
             {!previewUrl && <p className="text-xs text-gray-400 italic">{query}</p>}
           </div>
         )}
