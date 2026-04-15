@@ -17,77 +17,109 @@ const PLANT_JSON_PROMPT = `Atsakyk TIKTAI JSON formatu (be jokio kito teksto):
   "name": "Tikras lietuviškas pavadinimas",
   "latinName": "Tikslus lotyniškas pavadinimas",
   "emoji": "vienas emoji reprezentuojantis augalą",
-  "aiDescription": "2-3 sakinių aprašymas lietuviškai",
-  "origin": "Trumpai iš kur kilęs, pvz. 'Pietų Amerika, tropiniai miškai'",
-  "lightLevel": "žema|vidutinė|ryški",
-  "lightScore": 1,
-  "ppfd": { "min": 0, "max": 0 },
-  "watering": {
+  "tipas": "augalo tipas (pvz. Sultingas, Tropinis daugiametis, Papartis, Orchidėja...)",
+  "augimo_greitis": "lėtas|vidutinis|greitas",
+  "sunkumas": 2,
+  "toksiskas": false,
+  "toksiskumo_info": null,
+  "aprasymas": "4-6 sakinių aprašymas lietuviškai — kilmė, išvaizda, įdomybės, kodėl populiarus",
+  "kilme": "Iš kur kilęs, buveinė",
+  "sviesa": {
+    "taskai": 2,
+    "lygis": "žema|vidutinė|ryški",
+    "ppfd": { "min": 0, "max": 0 }
+  },
+  "vanduo": {
+    "taskai": 2,
+    "lygis": "mažai|vidutiniškai|daug"
+  },
+  "laistymasIntervalas": {
+    "vasara": 0,
+    "ziema": 0,
+    "metodas": "Kada ir kaip laistyti — požymiai, metodas"
+  },
+  "tresimas": {
     "intervalVasara": 0,
     "intervalZiema": 0,
-    "metodas": "Trumpas aprašymas kada laistyti"
+    "tipas": "Trąšų tipas, dozė, dažnis"
   },
-  "fertilizing": {
-    "intervalVasara": 0,
-    "intervalZiema": 0,
-    "tipas": "Trąšų tipas ir dozė"
-  },
-  "dormancy": {
+  "dormancyInfo": {
     "reikia": false,
     "tipas": null
   },
-  "care": {
-    "water": "Laistymo aprašymas",
-    "light": "Apšvietimo poreikis",
-    "humidity": "Oro drėgmė %",
-    "temperature": "Temperatūros diapazonas",
-    "soil": "Žemės sudėtis"
-  }
+  "prieziura": {
+    "sviesa": "Detalus apšvietimo aprašymas — lango kryptis, tiesioginė/netiesioginė",
+    "laistymas": "Detalus laistymo aprašymas — dažnis, metodas, vanduo",
+    "temperatura": "Temperatūros diapazonas vasarą ir žiemą",
+    "dregme": "Drėgmės poreikis %, metodai kaip palaikyti"
+  },
+  "substratas": "Žemės sudėtis ir proporcijos",
+  "persodinimas": "Kada ir kaip persodinti, vazono dydis",
+  "ziemojimas": "Žiemojimo sąlygos — temperatūra, laistymas, šviesa",
+  "dauginimas": [
+    "Metodas 1 su detalėmis (pvz. stiebų auginiai — džiovinti 1–2 savaites, sodinti į sausą substratą)",
+    "Metodas 2 su detalėmis"
+  ],
+  "problemos": [
+    { "simptomas": "...", "priezastis": "...", "sprendimas": "..." },
+    { "simptomas": "...", "priezastis": "...", "sprendimas": "..." },
+    { "simptomas": "...", "priezastis": "...", "sprendimas": "..." }
+  ],
+  "idomybes": [
+    "Įdomi faktas apie augalą",
+    "Dar vienas įdomus faktas"
+  ]
 }
 
 ── ŠVIESA ──────────────────────────────────────────────────────
-PPFD (μmol/m²/s) gairės:
-  lightScore 1 (žema):     50–150   šešėlis, toli nuo lango
-  lightScore 2 (vidutinė): 150–400  ryški netiesioginė, rytų langas
-  lightScore 3 (ryški netiesioginė): 400–800   pietų langas be tiesioginės
-  lightScore 3 (ryški + ≤4h tiesioginė): 500–1000
-  lightScore 3 (pilna saulė >4h): 800–2000
+PPFD (μmol/m²/s) ir taskai gairės:
+  taskai 1 (žema):     50–150   šešėlis, toli nuo lango
+  taskai 2 (vidutinė): 150–400  ryški netiesioginė, rytų langas
+  taskai 3 (ryški):    400–2000 pietų langas, tiesioginė saulė
+
+── VANDUO ──────────────────────────────────────────────────────
+  taskai 1 (mažai):          sultingi, kaudeksiniai
+  taskai 2 (vidutiniškai):   vidutiniai tropiniai
+  taskai 3 (daug):           paparčiai, epifitai
 
 ── LAISTYMAS (intervalai dienomis) ────────────────────────────
-  Sultingi / kaudeksiniai:   vasara 14–21d,  žiema 28–60d
-  Paparčiai / epifitai:      vasara 3–7d,    žiema 7–14d
-  Greitai augantys tropiniai: vasara 5–10d,  žiema 10–21d
-  Vidutiniai tropiniai:      vasara 7–14d,   žiema 14–28d
-  intervalZiema = null jei augalas žiemoja be laistymo
+  Sultingi / kaudeksiniai:    vasara 14–21d,  žiema 28–60d arba null
+  Paparčiai / epifitai:       vasara 3–7d,    žiema 7–14d
+  Greitai augantys tropiniai: vasara 5–10d,   žiema 10–21d
+  Vidutiniai tropiniai:       vasara 7–14d,   žiema 14–28d
+  ziema = null jei augalas žiemoja be laistymo
 
 ── TRĘŠIMAS (intervalai dienomis) ─────────────────────────────
   Sultingi / kaudeksiniai:   vasara 28d,  žiema null
-  Paparčiai / epifitai:      vasara 28d,  žiema null
   Greitai augantys:          vasara 14d,  žiema 42d
   Vidutiniai:                vasara 21d,  žiema 56d
 
+── SUNKUMAS (1–5) ──────────────────────────────────────────────
+  1: Labai lengvas (kaktusai, sukulentai)
+  2: Lengvas (monstera, potosas)
+  3: Vidutinis (fikusai, orchidėjos)
+  4: Sudėtingas (paparčiai, kaladijumai)
+  5: Ekspertams (nepentas, orchidėjos retos)
+
 ── ŽIEMOS MIEGAS ───────────────────────────────────────────────
-  dormancy.reikia = true tik jei augalas:
-    • meta lapus žiemą, ARBA
-    • turi kaudeksą / gumbus ir žiemoja sausai, ARBA
-    • aiškiai nurodytas ramybės periodas botanikos šaltiniuose
-  dormancy.tipas: "full" (visiškas — nelaistyti) | "partial" (dalinis — retesnis laistymas) | null
+  dormancyInfo.reikia = true tik jei meta lapus žiemą arba turi kaudeksą
+  tipas: "full" (nelaistyti) | "partial" (rečiau laistyti) | null
+
+── PROBLEMOS ───────────────────────────────────────────────────
+  Pateik 3–5 dažniausias problemas su konkrečiais simptomais ir sprendimais.
 
 ── PRIVALOMA SAVIKONTROLĖ ─────────────────────────────────────
-Prieš grąžinant patikrink:
-1. Ar lightScore + ppfd min/max atitinka šviesos gaires?
-2. Ar watering intervalai atitinka augalo tipą?
-3. Ar fertilizing intervalai atitinka augalo tipą?
-4. Ar žiemos intervalai logiški (sultingiems — ilgesni arba null)?
-5. Ar dormancy.reikia atitinka augalo biologiją ir watering.intervalZiema?
-6. Ar visi parametrai tarpusavyje nuoseklūs?
-Jei neatitinka — pataisyk prieš grąžinant.
+  1. sviesa.taskai + ppfd atitinka gaires?
+  2. vanduo.taskai atitinka augalo tipą?
+  3. laistymasIntervalas atitinka augalo tipą?
+  4. dormancyInfo nuoseklus su laistymu?
+  5. problemos — bent 3 konkrečios?
+  6. idomybes — bent 2 tikros ir įdomios?
 
 ── PAVADINIMAS ─────────────────────────────────────────────────
-Lauke "name": tikras lietuviškas arba sulietuvintas genties pavadinimas.
-NIEKADA: angliškas ar lotyniškas pavadinimas lauke "name".
+  "name": tikras lietuviškas pavadinimas. NIEKADA angliškas ar lotyniškas.
 
-Jei augalas nerastas arba nematomas nuotraukoje: {"error": "Augalas nerastas"}`
+Jei augalas nerastas: {"error": "Augalas nerastas"}`
 
 function DotScore({ value, max = 3, color }) {
   return (
@@ -95,6 +127,25 @@ function DotScore({ value, max = 3, color }) {
       {Array.from({ length: max }).map((_, i) => (
         <div key={i} className={`w-2 h-2 rounded-full ${i < value ? color : 'bg-gray-200'}`} />
       ))}
+    </div>
+  )
+}
+
+function Stars({ value, max = 5 }) {
+  return (
+    <div className="flex gap-0.5">
+      {Array.from({ length: max }).map((_, i) => (
+        <span key={i} className={`text-sm ${i < value ? 'text-amber-400' : 'text-gray-300'}`}>★</span>
+      ))}
+    </div>
+  )
+}
+
+function Section({ title, children }) {
+  return (
+    <div className="space-y-2">
+      <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest">{title}</p>
+      {children}
     </div>
   )
 }
@@ -376,80 +427,165 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
               </div>
             )}
 
+            {/* Toxicity warning */}
+            {result.toksiskas && (
+              <div className="bg-red-50 border border-red-100 rounded-2xl p-3.5 flex gap-3">
+                <span className="text-red-500 flex-shrink-0 mt-0.5">☠️</span>
+                <div>
+                  <p className="text-sm font-bold text-red-600">Toksiška augalas!</p>
+                  <p className="text-xs text-red-500 mt-0.5 leading-snug">{result.toksiskumo_info}</p>
+                </div>
+              </div>
+            )}
+
             {/* Quick stats */}
             <div className="bg-surface rounded-2xl p-4 space-y-0">
-              {result.origin && (
-                <InfoRow
-                  icon={<MapPin size={13} />}
-                  label="Kilmė"
-                  value={result.origin}
-                />
+              {result.kilme && <InfoRow icon={<MapPin size={13} />} label="Kilmė" value={result.kilme} />}
+              {result.tipas && (
+                <div className="flex gap-3 py-2.5 border-b border-gray-50">
+                  <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400"><span className="text-[11px]">🌿</span></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Tipas</p>
+                    <p className="text-sm text-gray-700 mt-0.5">{result.tipas}</p>
+                  </div>
+                </div>
               )}
-              {result.lightScore != null && (
+              {result.augimo_greitis && (
+                <div className="flex gap-3 py-2.5 border-b border-gray-50">
+                  <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400"><span className="text-[11px]">📈</span></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Augimas</p>
+                    <p className="text-sm text-gray-700 mt-0.5">{result.augimo_greitis}</p>
+                  </div>
+                </div>
+              )}
+              {result.sunkumas != null && (
+                <div className="flex gap-3 py-2.5 border-b border-gray-50">
+                  <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400"><span className="text-[11px]">⚡</span></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Sunkumas</p>
+                    <Stars value={result.sunkumas} />
+                  </div>
+                </div>
+              )}
+              {result.sviesa?.taskai != null && (
                 <div className="flex gap-3 py-2.5 border-b border-gray-50">
                   <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400"><Sun size={13} /></div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Šviesa</p>
                     <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                      <DotScore value={result.lightScore} color="bg-amber-400" />
-                      <span className="text-xs text-gray-500">{result.lightLevel}</span>
-                      {result.ppfd?.min != null && (
+                      <DotScore value={result.sviesa.taskai} color="bg-amber-400" />
+                      <span className="text-xs text-gray-500">{result.sviesa.lygis}</span>
+                      {result.sviesa.ppfd?.min != null && (
                         <span className="text-[10px] font-medium text-amber-600 bg-amber-50 border border-amber-100 rounded px-1.5 py-0.5">
-                          {result.ppfd.min}–{result.ppfd.max} μmol/m²/s
+                          {result.sviesa.ppfd.min}–{result.sviesa.ppfd.max} μmol/m²/s
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
               )}
-              {result.watering?.intervalVasara != null && (
-                <InfoRow
-                  icon={<Droplets size={13} />}
-                  label="Laistymas"
-                  value={[
-                    `Vasara kas ${result.watering.intervalVasara} d.`,
-                    result.watering.intervalZiema ? `žiema kas ${result.watering.intervalZiema} d.` : 'žiemą nelaistyti',
-                    result.watering.metodas,
-                  ].filter(Boolean).join(' · ')}
-                />
-              )}
-              {result.fertilizing?.intervalVasara != null && (
-                <InfoRow
-                  icon={<Leaf size={13} />}
-                  label="Tręšimas"
-                  value={[
-                    `Vasara kas ${result.fertilizing.intervalVasara} d.`,
-                    result.fertilizing.intervalZiema ? `žiema kas ${result.fertilizing.intervalZiema} d.` : 'žiemą netręšti',
-                    result.fertilizing.tipas,
-                  ].filter(Boolean).join(' · ')}
-                />
-              )}
-              {result.dormancy?.reikia && (
-                <InfoRow
-                  icon={<Snowflake size={13} />}
-                  label="Žiemos miegas"
-                  value={result.dormancy.tipas === 'full' ? 'Visiškas (nelaistyti)' : 'Dalinis (rečiau laistyti)'}
-                />
-              )}
-              {result.care?.humidity && (
-                <InfoRow icon={<Wind size={13} />} label="Drėgmė" value={result.care.humidity} />
-              )}
-              {result.care?.temperature && (
-                <InfoRow icon={<Thermometer size={13} />} label="Temperatūra" value={result.care.temperature} />
-              )}
-              {result.care?.soil && (
-                <InfoRow icon={<span className="text-[11px]">🪨</span>} label="Žemė" value={result.care.soil} />
+              {result.vanduo?.taskai != null && (
+                <div className="flex gap-3 py-2.5 last:border-0">
+                  <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400"><Droplets size={13} /></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Vanduo</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <DotScore value={result.vanduo.taskai} color="bg-blue-400" />
+                      <span className="text-xs text-gray-500">{result.vanduo.lygis}</span>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
 
             {/* Description */}
-            {result.aiDescription && (
-              <div className="space-y-2">
-                <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest px-1">Apie augalą</p>
-                <div className="bg-surface rounded-2xl p-4">
-                  <p className="text-sm text-gray-700 leading-relaxed">{result.aiDescription}</p>
+            {result.aprasymas && (
+              <Section title="Apie augalą">
+                <p className="text-sm text-gray-600 leading-relaxed">{result.aprasymas}</p>
+                <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
+                  <a href={`https://lt.wikipedia.org/w/index.php?search=${encodeURIComponent(result.latinName)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-sage-500 hover:text-sage-700 underline underline-offset-2">Wikipedia LT</a>
+                  <a href={`https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(result.latinName)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-sage-500 hover:text-sage-700 underline underline-offset-2">Wikipedia EN</a>
+                  <a href={`https://www.inaturalist.org/search?q=${encodeURIComponent(result.latinName)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-sage-500 hover:text-sage-700 underline underline-offset-2">iNaturalist</a>
                 </div>
-              </div>
+              </Section>
+            )}
+
+            {/* Priežiūra */}
+            {result.prieziura && (
+              <Section title="Priežiūra">
+                <div className="bg-surface rounded-2xl divide-y divide-gray-100">
+                  <InfoRow icon={<Sun size={15} />}         label="Šviesa"      value={result.prieziura.sviesa} />
+                  <InfoRow icon={<Droplets size={15} />}    label="Laistymas"   value={result.prieziura.laistymas} />
+                  <InfoRow icon={<Thermometer size={15} />} label="Temperatūra" value={result.prieziura.temperatura} />
+                  <InfoRow icon={<Wind size={15} />}        label="Drėgmė"      value={result.prieziura.dregme} />
+                </div>
+              </Section>
+            )}
+
+            {/* Substratas */}
+            {(result.substratas || result.persodinimas || result.ziemojimas) && (
+              <Section title="Substratas ir sezoniškumas">
+                <div className="bg-surface rounded-2xl divide-y divide-gray-100">
+                  <InfoRow icon={<span className="text-sm">🪨</span>} label="Substratas"   value={result.substratas} />
+                  <InfoRow icon={<span className="text-sm">🔄</span>} label="Persodinimas" value={result.persodinimas} />
+                  <InfoRow icon={<Snowflake size={15} />}             label="Žiemojimas"   value={result.ziemojimas} />
+                </div>
+              </Section>
+            )}
+
+            {/* Dauginimas */}
+            {result.dauginimas?.length > 0 && (
+              <Section title="Dauginimas">
+                <div className="space-y-1.5">
+                  {result.dauginimas.map((d, i) => (
+                    <div key={i} className="flex items-start gap-2.5 bg-sage-50 rounded-xl px-3 py-2.5">
+                      <span className="text-sage-400 font-bold text-sm mt-0.5 flex-shrink-0">·</span>
+                      <p className="text-sm text-gray-700">{d}</p>
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            )}
+
+            {/* Problemos */}
+            {result.problemos?.length > 0 && (
+              <Section title="Problemų diagnostika">
+                <div className="space-y-2">
+                  {result.problemos.map((p, i) => (
+                    <div key={i} className="bg-red-50/60 rounded-2xl overflow-hidden border border-red-100/60">
+                      <div className="px-3 py-2 bg-red-50 border-b border-red-100/60">
+                        <p className="text-xs font-bold text-red-500 uppercase tracking-wide">Simptomas</p>
+                        <p className="text-sm font-semibold text-red-700 mt-0.5">{p.simptomas}</p>
+                      </div>
+                      <div className="px-3 py-2 grid grid-cols-2 gap-3">
+                        <div>
+                          <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wide">Priežastis</p>
+                          <p className="text-xs text-gray-600 mt-0.5 leading-snug">{p.priezastis}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wide">Sprendimas</p>
+                          <p className="text-xs text-gray-600 mt-0.5 leading-snug">{p.sprendimas}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            )}
+
+            {/* Įdomybės */}
+            {result.idomybes?.length > 0 && (
+              <Section title="Įdomybės">
+                <div className="space-y-2">
+                  {result.idomybes.map((fact, i) => (
+                    <div key={i} className="flex items-start gap-3 bg-amber-50 rounded-xl px-3 py-2.5">
+                      <Leaf size={15} className="text-amber-400 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm text-amber-800 leading-snug">{fact}</p>
+                    </div>
+                  ))}
+                </div>
+              </Section>
             )}
 
             {/* Actions */}
