@@ -19,6 +19,7 @@ export default function App() {
   const [detailPlant, setDetailPlant] = useState(null) // { plant, section }
 
   const {
+    syncFromRemote,
     dashboard, library,
     addToDashboard, addToWishlist,
     markAsDied, moveToDashboard,
@@ -86,6 +87,7 @@ export default function App() {
         fetchingAll={fetchingAll}
         onSaveToZinynas={addToZinynas}
         onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
+        onRefresh={syncFromRemote}
       />
     )},
     { key: 'biblioteka', page: (
@@ -96,6 +98,7 @@ export default function App() {
         onSearch={q => { setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
         onSaveToZinynas={addToZinynas}
         onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
+        onRefresh={syncFromRemote}
       />
     )},
     { key: 'zinynas', page: (

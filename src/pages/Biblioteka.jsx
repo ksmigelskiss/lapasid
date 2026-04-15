@@ -1,7 +1,8 @@
-import { useState, useMemo, useRef, useEffect } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen } from 'lucide-react'
+import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen, RefreshCw } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
+import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import CollectionChat from '../components/CollectionChat'
 import { buildLibrarySystemPrompt } from '../utils/collectionChatContext'
 
@@ -43,14 +44,16 @@ const FILTERS = [
   { key: 'mirei',   label: 'Mirę' },
 ]
 
-export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSaveToZinynas, onViewPlant }) {
+export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSaveToZinynas, onViewPlant, onRefresh }) {
   const [filter, setFilter]           = useState('visi')
   const [sortKey, setSortKey]         = useState('added')
   const [showFilters, setShowFilters] = useState(false)
   const [showChat, setShowChat]       = useState(false)
   const [searching, setSearching]     = useState(false)
   const [query, setQuery]             = useState('')
-  const inputRef = useRef(null)
+  const inputRef  = useRef(null)
+  const scrollRef = useRef(null)
+  const { pullY, refreshing } = usePullToRefresh(scrollRef, onRefresh ?? (() => {}))
 
   useEffect(() => {
     if (searching) inputRef.current?.focus()
@@ -192,8 +195,23 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
         </div>
       )}
 
+      {/* Pull-to-refresh indicator */}
+      <div
+        className="flex items-center justify-center overflow-hidden"
+        style={{
+          height: refreshing ? 48 : pullY,
+          transition: pullY > 0 ? 'none' : 'height 0.25s ease-out',
+        }}
+      >
+        <RefreshCw
+          size={20}
+          className={`text-sage-400 ${refreshing ? 'animate-spin' : ''}`}
+          style={{ opacity: refreshing ? 1 : pullY / 48, transform: refreshing ? undefined : `rotate(${pullY * 4}deg)` }}
+        />
+      </div>
+
       {/* Grid */}
-      <div className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
         {visible.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
             <div className="text-gray-300">

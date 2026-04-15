@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, Leaf, Sprout, Moon, Snowflake, ShieldAlert, Thermometer } from 'lucide-react'
 const GARDENER = '/gardener.png'
@@ -8,6 +8,8 @@ import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast, shouldShowWateringAlert } from '../utils/wateringForecast'
 import { buildDashboardSystemPrompt } from '../utils/collectionChatContext'
+import { usePullToRefresh } from '../hooks/usePullToRefresh'
+import { RefreshCw } from 'lucide-react'
 
 const SORT_OPTIONS = [
   { key: 'added',     label: 'Pridėta' },
@@ -47,7 +49,7 @@ function sortPlants(plants, key) {
   }
 }
 
-export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant }) {
+export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh }) {
   const quarantinePlants = plants.filter(p => p.status === 'quarantine')
   const sickPlants       = plants.filter(p => p.status === 'sick')
   const mainPlants       = plants.filter(p => p.status !== 'quarantine' && p.status !== 'sick')
@@ -60,6 +62,8 @@ export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFet
   const [sortKey, setSortKey]         = useState('added')
   const [showFilters, setShowFilters] = useState(false)
   const [showChat, setShowChat]       = useState(false)
+  const scrollRef = useRef(null)
+  const { pullY, refreshing } = usePullToRefresh(scrollRef, onRefresh ?? (() => {}))
 
   const sortedPlants = useMemo(() => sortPlants(mainPlants, sortKey), [mainPlants, sortKey])
 
@@ -138,8 +142,23 @@ export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFet
         </div>
       )}
 
+      {/* Pull-to-refresh indicator */}
+      <div
+        className="flex items-center justify-center overflow-hidden"
+        style={{
+          height: refreshing ? 48 : pullY,
+          transition: pullY > 0 ? 'none' : 'height 0.25s ease-out',
+        }}
+      >
+        <RefreshCw
+          size={20}
+          className={`text-sage-400 ${refreshing ? 'animate-spin' : ''}`}
+          style={{ opacity: refreshing ? 1 : pullY / 48, transform: refreshing ? undefined : `rotate(${pullY * 4}deg)` }}
+        />
+      </div>
+
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
 
         {/* Unified alerts widget */}
         {hasAlerts && (

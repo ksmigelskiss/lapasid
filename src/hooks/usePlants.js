@@ -274,6 +274,7 @@ export function usePlants() {
   }, [update])
 
   return {
+    syncFromRemote,
     dashboard, wishlist, history,
     addToDashboard, addToWishlist,
     markAsDied, moveToDashboard,
