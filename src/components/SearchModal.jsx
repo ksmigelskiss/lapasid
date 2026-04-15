@@ -236,6 +236,7 @@ async function enrich(parsed) {
     fetchPlantPhotos(parsed.latinName),
     fetchPlantNames(parsed.latinName),
   ])
+  console.log('[enrich] photos:', photos, 'names:', namesData)
   return {
     ...parsed,
     image:        photos[0] ?? null,
@@ -264,6 +265,24 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     return () => clearInterval(t)
   }, [loading])
 
+  // Cycle through status messages while loading (tool_use has no streaming)
+  const STATUS_STEPS = [
+    [0,    'Ieškau augalo...'],
+    [2500, 'Renkuoju informaciją...'],
+    [5000, 'Tikrinu kilmę ir priežiūrą...'],
+    [8000, 'Žiūriu laistymo ir šviesos poreikius...'],
+    [11000,'Rašau įdomybes ir problemas...'],
+    [14000,'Baigiu...'],
+  ]
+  useEffect(() => {
+    if (!loading) return
+    const timers = STATUS_STEPS.map(([delay, msg]) =>
+      setTimeout(() => setStatusMsg(msg), delay)
+    )
+    return () => timers.forEach(clearTimeout)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading])
+
   // Auto-search if launched with a pre-filled query
   useEffect(() => {
     if (initialQuery.trim()) searchByText(initialQuery.trim())
@@ -280,7 +299,6 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     const controller = new AbortController()
     abortRef.current = controller
     setLoading(true); setResult(null); setError(null); setPreview(null)
-    setStatusMsg('Ieškau augalo...')
 
     try {
       const response = await client.messages.create({
@@ -297,7 +315,6 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       const toolBlock = response.content.find(b => b.type === 'tool_use' && b.name === 'plant_info')
       if (!toolBlock) { setError('Augalas nerastas'); return }
 
-      setStatusMsg('Žiūriu kur gyvena, kaip laistyti...')
       const data = await enrich(toolBlock.input)
       if (!controller.signal.aborted) setResult(data)
     } catch (e) {
@@ -312,13 +329,10 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   // ── Photo search (tool_use) ───────────────────────────────────
   const searchByPhoto = async (file) => {
     setLoading(true); setResult(null); setError(null); setQuery('')
-    setStatusMsg('Žiūriu į nuotrauką...')
     try {
       const dataUrl = await resizeImage(file, 1200, 0.9)
       const base64  = dataUrl.split(',')[1]
       setPreview(dataUrl)
-      setStatusMsg('Identifikuoju augalą...')
-
       const response = await client.messages.create({
         model:       'claude-sonnet-4-6',
         max_tokens:  4096,
@@ -337,7 +351,6 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       const toolBlock = response.content.find(b => b.type === 'tool_use' && b.name === 'plant_info')
       if (!toolBlock) { setError('Nepavyko identifikuoti augalo.'); return }
 
-      setStatusMsg('Žiūriu kur gyvena, kaip laistyti...')
       const data = await enrich(toolBlock.input)
       setResult(data)
     } catch (e) {
@@ -495,7 +508,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             )}
 
             {/* Profile content — same component as PlantDetail, no extra padding */}
-            <ProfileContent plant={fromAIResult(result)} section="nori" onAction={() => {}} onClose={onClose} className="pt-5 pb-2 space-y-6" />
+            <ProfileContent plant={fromAIResult(result)} section="nori" onAction={null} onClose={onClose} className="pt-5 pb-2 space-y-6" />
 
             {/* Actions */}
             <div className="space-y-3 pt-1 pb-4">
