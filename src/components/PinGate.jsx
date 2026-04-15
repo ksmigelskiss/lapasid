@@ -168,7 +168,7 @@ function PinLayout({ title, subtitle, value, error, shake, onAppend, onDelete })
 // unlocked state: true = open, false = locked, 'setup' = setting PIN, 'offer' = first-time offer
 export default function PinGate({ children }) {
   const [unlocked, setUnlocked] = useState(() => {
-    if (!hasPin()) return 'offer'   // first time — offer PIN setup
+    if (!hasPin()) return true      // no PIN on this device — open normally
     if (isUnlocked()) return true   // remembered device
     return false                    // needs PIN entry
   })
