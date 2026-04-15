@@ -265,22 +265,17 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     return () => clearInterval(t)
   }, [loading])
 
-  // Cycle through status messages while loading (tool_use has no streaming)
-  const STATUS_STEPS = [
-    [0,    'Ieškau augalo...'],
-    [2500, 'Renkuoju informaciją...'],
-    [5000, 'Tikrinu kilmę ir priežiūrą...'],
-    [8000, 'Žiūriu laistymo ir šviesos poreikius...'],
-    [11000,'Rašau įdomybes ir problemas...'],
-    [14000,'Baigiu...'],
-  ]
+  // Cycle status messages while waiting for tool_use (no streaming)
   useEffect(() => {
     if (!loading) return
-    const timers = STATUS_STEPS.map(([delay, msg]) =>
-      setTimeout(() => setStatusMsg(msg), delay)
-    )
+    const steps = [
+      [3000,  'Renkuoju informaciją...'],
+      [7000,  'Tikrinu kilmę ir priežiūrą...'],
+      [11000, 'Žiūriu laistymo ir šviesos poreikius...'],
+      [15000, 'Rašau įdomybes ir problemas...'],
+    ]
+    const timers = steps.map(([delay, msg]) => setTimeout(() => setStatusMsg(msg), delay))
     return () => timers.forEach(clearTimeout)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
 
   // Auto-search if launched with a pre-filled query
@@ -299,6 +294,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     const controller = new AbortController()
     abortRef.current = controller
     setLoading(true); setResult(null); setError(null); setPreview(null)
+    setStatusMsg('Ieškau augalo...')
 
     try {
       const response = await client.messages.create({
@@ -329,6 +325,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   // ── Photo search (tool_use) ───────────────────────────────────
   const searchByPhoto = async (file) => {
     setLoading(true); setResult(null); setError(null); setQuery('')
+    setStatusMsg('Žiūriu į nuotrauką...')
     try {
       const dataUrl = await resizeImage(file, 1200, 0.9)
       const base64  = dataUrl.split(',')[1]

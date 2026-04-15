@@ -76,11 +76,24 @@ export async function fetchWikimediaImage(latinName) {
 // Multiple photos — used for cycling in PhotoSheet
 export async function fetchPlantPhotos(latinName) {
   const search = stripCultivarForImage(latinName)
+  const genus  = search.split(' ')[0]
+
   const [inatPhotos, wikiPhoto] = await Promise.all([
     fetchINaturalistPhotos(search),
     fetchWikipediaPhoto(search),
   ])
   const all = [...inatPhotos]
   if (wikiPhoto && !all.includes(wikiPhoto)) all.push(wikiPhoto)
+
+  // Fallback: try genus only if full name found nothing
+  if (all.length === 0 && genus !== search) {
+    const [genusInat, genusWiki] = await Promise.all([
+      fetchINaturalistPhotos(genus),
+      fetchWikipediaPhoto(genus),
+    ])
+    if (genusInat.length) return genusInat
+    if (genusWiki) return [genusWiki]
+  }
+
   return all
 }
