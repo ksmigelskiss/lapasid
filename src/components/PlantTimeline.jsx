@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
-import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, X, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost } from 'lucide-react'
+import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, X, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost, ImageIcon } from 'lucide-react'
 import { resizeImage } from '../utils/imageResize'
 
 // ── Helpers ────────────────────────────────────────────────────
@@ -303,8 +303,16 @@ function Tooltip({ event, onDelete }) {
 
 // ── Timeline event nodes ───────────────────────────────────────
 
-function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, inPeriod }) {
+function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, onSetAsProfile, inPeriod }) {
   const [imgError, setImgError] = useState(false)
+  const [setAsProfileDone, setSetAsProfileDone] = useState(false)
+
+  const handleSetAsProfile = (e) => {
+    e.stopPropagation()
+    onSetAsProfile?.(event.imageUrl)
+    setSetAsProfileDone(true)
+    setTimeout(() => setSetAsProfileDone(false), 2000)
+  }
 
   return (
     <motion.div
@@ -316,9 +324,9 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
       {/* Node on the line */}
       <button
         onClick={onToggle}
-        className="absolute left-0 top-4 w-7 h-7 bg-white border-2 border-sage-300 rounded-full flex items-center justify-center text-sm shadow-sm z-10 -translate-x-3"
+        className="absolute left-0 top-4 w-7 h-7 bg-white border-2 border-sage-300 rounded-full flex items-center justify-center shadow-sm z-10 -translate-x-3 text-sage-500"
       >
-        📸
+        <Camera size={13} />
       </button>
 
       {/* Tooltip — vertically centered on the card */}
@@ -345,11 +353,25 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
             className="w-full h-full object-cover"
             onError={() => setImgError(true)}
           />
-          {daysSince != null && (
-            <div className="absolute bottom-2 left-2 bg-black/40 backdrop-blur-sm rounded-lg px-2 py-0.5">
-              <span className="text-[11px] text-white/90 font-medium">📸 {formatDays(daysSince)}</span>
-            </div>
-          )}
+          {/* Bottom overlay row */}
+          <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-2 py-1.5 bg-gradient-to-t from-black/40 to-transparent">
+            {daysSince != null && (
+              <span className="text-[11px] text-white/90 font-medium">{formatDays(daysSince)}</span>
+            )}
+            {onSetAsProfile && (
+              <button
+                onClick={handleSetAsProfile}
+                className={`flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-semibold transition-colors ${
+                  setAsProfileDone
+                    ? 'bg-sage-500 text-white'
+                    : 'bg-black/40 text-white/90 active:bg-black/60'
+                }`}
+              >
+                <ImageIcon size={10} />
+                {setAsProfileDone ? 'Nustatyta!' : 'Profilis'}
+              </button>
+            )}
+          </div>
         </div>
       ) : (
         <div
@@ -357,7 +379,7 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
           onClick={onToggle}
         >
           <p className="text-sm text-sage-600 font-medium">
-            📸 Nuotrauka{daysSince != null && <span className="text-sage-400 font-normal"> ({formatDays(daysSince)})</span>}
+            Nuotrauka{daysSince != null && <span className="text-sage-400 font-normal"> ({formatDays(daysSince)})</span>}
           </p>
           {event.note && <p className="text-xs text-gray-500 mt-0.5">{event.note}</p>}
         </div>
@@ -820,11 +842,13 @@ function WateringRun({ run, expanded, onToggle, gaps, activeTooltip, onTooltipTo
 
 // ── Main timeline component ────────────────────────────────────
 
-export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onClearTimeline }) {
+export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onClearTimeline, onSetAsProfilePhoto }) {
   const [activeTooltip, setActiveTooltip] = useState(null) // one at a time
   const [runExpanded, setRunExpanded]     = useState({})   // runKey → bool override
   const [confirmClear, setConfirmClear]   = useState(false)
-  const events = plant.timeline ?? []
+  const [photosOnly, setPhotosOnly]       = useState(false)
+  const allEvents = plant.timeline ?? []
+  const events = photosOnly ? allEvents.filter(e => e.type === 'photo') : allEvents
   const gaps = computeGaps(events)
   const predictions = computePredictions(events)
   const eventPeriods = computeEventPeriods(events)
@@ -858,7 +882,22 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onClea
           </div>
         </div>
       ) : (
-        <div className="flex-1 px-5 pt-5 pb-6 relative">
+        <div className="flex-1 px-5 pt-4 pb-6 relative">
+          {/* Photo filter toggle */}
+          {allEvents.some(e => e.type === 'photo') && (
+            <div className="flex justify-end mb-3">
+              <button
+                onClick={() => setPhotosOnly(v => !v)}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  photosOnly ? 'bg-sage-500 text-white' : 'bg-surface-2 text-gray-500'
+                }`}
+              >
+                <Camera size={12} />
+                Tik nuotraukos
+              </button>
+            </div>
+          )}
+
           {/* Vertical timeline line */}
           <div className="absolute left-8 top-0 bottom-0 w-px bg-sage-100" />
 
@@ -991,6 +1030,7 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onClea
                       showTooltip={activeTooltip === event.id}
                       onToggle={() => toggleTooltip(event.id)}
                       onDelete={onDeleteEvent}
+                      onSetAsProfile={onSetAsProfilePhoto}
                       inPeriod={inPeriod}
                     />
                   )

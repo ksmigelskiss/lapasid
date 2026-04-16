@@ -1349,6 +1349,7 @@ export default function PlantDetail({
                   onAddEvent={event => onAddTimelineEvent?.(plant.id, event)}
                   onDeleteEvent={eventId => onDeleteTimelineEvent?.(plant.id, eventId)}
                   onClearTimeline={() => onClearTimeline?.(plant.id)}
+                  onSetAsProfilePhoto={url => onImageSave?.(plant.id, url)}
                 />
               </motion.div>
             )}
