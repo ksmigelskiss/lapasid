@@ -17,7 +17,8 @@ function DotScore({ value, max = 3, color }) {
   )
 }
 
-function PhotoActionSheet({ plant, onClose, onFileSelect, onWikimedia, fetching }) {
+function PhotoActionSheet({ plant, onClose, onFileSelect, onWikimedia, onFromHistory, fetching }) {
+  const historyPhotos = (plant.timeline ?? []).filter(e => e.type === 'photo' && e.imageUrl)
   const dragControls = useDragControls()
   const y = useMotionValue(0)
 
@@ -77,6 +78,22 @@ function PhotoActionSheet({ plant, onClose, onFileSelect, onWikimedia, fetching 
             <input type="file" accept="image/*" className="hidden"
               onChange={e => { onFileSelect(e.target.files[0]); e.target.value = '' }} />
           </label>
+          {historyPhotos.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-1 mb-2 mt-1">Iš istorijos</p>
+              <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
+                {historyPhotos.map(e => (
+                  <button
+                    key={e.id}
+                    onClick={() => onFromHistory(e.imageUrl)}
+                    className="flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 border-transparent active:border-sage-400 transition-all"
+                  >
+                    <img src={e.imageUrl} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           <button disabled={fetching}
             className="w-full flex items-center gap-4 bg-surface hover:bg-surface-2 rounded-2xl px-4 py-3.5 disabled:opacity-50"
             onClick={onWikimedia}>
@@ -114,6 +131,11 @@ const PlantCard = memo(function PlantCard({ plant, section, onTap, onImageFetch,
       const url = await fetchWikimediaImage(plant.lotyniskas)
       if (url) onImageFetch?.(plant.id, url)
     } finally { setFetchingWiki(false); setShowPhotoSheet(false) }
+  }
+
+  const handleFromHistory = (url) => {
+    onImageFetch?.(plant.id, url)
+    setShowPhotoSheet(false)
   }
 
   const { wasFired, ...longPressProps } = useLongPress(() => setShowPhotoSheet(true))
@@ -263,6 +285,7 @@ const PlantCard = memo(function PlantCard({ plant, section, onTap, onImageFetch,
             onClose={() => setShowPhotoSheet(false)}
             onFileSelect={handleFileSelect}
             onWikimedia={handleWikimedia}
+            onFromHistory={handleFromHistory}
             fetching={fetchingWiki}
           />
         )}

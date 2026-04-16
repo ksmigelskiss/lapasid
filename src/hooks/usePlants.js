@@ -235,10 +235,15 @@ export function usePlants() {
   const addTimelineEvent = useCallback((plantId, event) => {
     update(prev => ({
       ...prev,
-      plants: prev.plants.map(p => p.id === plantId
-        ? { ...p, timeline: [event, ...(p.timeline ?? [])] }
-        : p
-      ),
+      plants: prev.plants.map(p => {
+        if (p.id !== plantId) return p
+        const updated = { ...p, timeline: [event, ...(p.timeline ?? [])] }
+        // Auto-set profile photo if plant has none and a photo was just added
+        if (event.type === 'photo' && event.imageUrl && !p.image) {
+          updated.image = event.imageUrl
+        }
+        return updated
+      }),
     }))
   }, [update])
 

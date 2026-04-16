@@ -210,6 +210,7 @@ function DormancyCard({ plant, section }) {
 }
 
 function PhotoSheet({ plant, onClose, onSave }) {
+  const historyPhotos = (plant.timeline ?? []).filter(e => e.type === 'photo' && e.imageUrl)
   const [photos, setPhotos]     = useState([])   // online photos
   const [idx, setIdx]           = useState(0)
   const [loading, setLoading]   = useState(false)
@@ -312,6 +313,24 @@ function PhotoSheet({ plant, onClose, onSave }) {
               >
                 Naudoti šią nuotrauką
               </button>
+            </div>
+          )}
+
+          {/* From history */}
+          {historyPhotos.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-1 mb-2 mt-1">Iš istorijos</p>
+              <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
+                {historyPhotos.map(e => (
+                  <button
+                    key={e.id}
+                    onClick={() => { onSave(e.imageUrl); onClose() }}
+                    className="flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 border-transparent active:border-sage-400 transition-all"
+                  >
+                    <img src={e.imageUrl} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
