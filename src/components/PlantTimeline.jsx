@@ -285,7 +285,7 @@ function Tooltip({ event, onDelete }) {
         </div>
         <p className="text-xs text-gray-500">{formatDate(event.date)}</p>
         {event.note && <p className="text-xs text-gray-700 mt-1 leading-snug">{event.note}</p>}
-        {event.amount && <p className="text-xs text-gray-600 mt-0.5">💧 {event.amount}</p>}
+        {event.type !== 'watering' && event.amount && <p className="text-xs text-gray-600 mt-0.5">{event.amount}</p>}
         {event.fertilizer && <p className="text-xs text-gray-600 mt-0.5">🧪 {event.fertilizer}</p>}
         {event.potSize && <p className="text-xs text-gray-600 mt-0.5">📏 {event.potSize}</p>}
         {event.preparatas && <p className="text-xs text-gray-600 mt-0.5">💊 {event.preparatas}</p>}
@@ -478,7 +478,7 @@ export function AddEventSheet({ type, onSave, onClose }) {
       type,
       date: today(),
       note: note.trim(),
-      ...(type === 'watering'    && { amount: amount.trim() }),
+      ...(type === 'watering'    && {}),
       ...(type === 'fertilizing' && { fertilizer: fertilizer.trim(), amount: amount.trim() }),
       ...(type === 'repotting'   && { potSize: potSize.trim() }),
       ...(type === 'treatment'   && { preparatas: preparatas.trim(), tikslas: tikslas.trim(), metodas: metodas.trim() }),
@@ -522,16 +522,6 @@ export function AddEventSheet({ type, onSave, onClose }) {
         </div>
 
         {/* Type-specific fields */}
-        {type === 'watering' && (
-          <div>
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Kiekis (ml)</label>
-            <input
-              type="number" inputMode="numeric" placeholder="pvz. 200"
-              value={amount} onChange={e => setAmount(e.target.value)}
-              className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none border border-transparent focus:border-blue-200"
-            />
-          </div>
-        )}
 
         {type === 'fertilizing' && (
           <div className="space-y-2">
