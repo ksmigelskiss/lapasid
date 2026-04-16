@@ -48,16 +48,38 @@ export function getWateringForecast(plant) {
 
   const metodas = plant.laistymasIntervalas?.metodas ?? null
 
-  // Most recent watering event
+  // Watering events sorted newest → oldest
   const timeline = plant.timeline ?? []
-  const lastEvent = [...timeline]
+  const waterings = [...timeline]
     .filter(e => e.type === 'watering')
-    .sort((a, b) => new Date(b.date) - new Date(a.date))[0]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
 
-  const lastDate = lastEvent?.date ?? plant.data_prideta ?? today
-  const lastType = lastEvent ? 'watering' : 'repotting'
+  const lastEvent = waterings[0] ?? null
+  const lastDate  = lastEvent?.date ?? plant.data_prideta ?? today
+  const lastType  = lastEvent ? 'watering' : 'repotting'
 
-  if (!intervalDays) {
+  // Compute actual interval from last 3 events (min 2 gaps needed)
+  // Falls back to AI/default interval if not enough history
+  let resolvedInterval = intervalDays
+  if (waterings.length >= 3) {
+    const gaps = []
+    for (let i = 0; i < Math.min(waterings.length - 1, 3); i++) {
+      const gap = Math.round(
+        (new Date(waterings[i].date) - new Date(waterings[i + 1].date)) / 86400000
+      )
+      if (gap > 0) gaps.push(gap)
+    }
+    if (gaps.length >= 2) {
+      resolvedInterval = Math.round(gaps.reduce((s, g) => s + g, 0) / gaps.length)
+    }
+  } else if (waterings.length === 2) {
+    const gap = Math.round(
+      (new Date(waterings[0].date) - new Date(waterings[1].date)) / 86400000
+    )
+    if (gap > 0) resolvedInterval = gap
+  }
+
+  if (!resolvedInterval) {
     return {
       season, category, lastDate, lastType,
       intervalDays: null, nextDate: null, daysUntil: null,
@@ -72,12 +94,13 @@ export function getWateringForecast(plant) {
     if (lastDate < seasonStart) baseDate = seasonStart
   }
 
-  const nextDate  = addDays(baseDate, intervalDays)
+  const nextDate  = addDays(baseDate, resolvedInterval)
   const daysUntil = Math.round((new Date(nextDate) - new Date(today)) / 86400000)
 
   return {
     season, category, lastDate, lastType,
-    intervalDays, nextDate, daysUntil,
+    intervalDays: resolvedInterval,
+    nextDate, daysUntil,
     isOverdue: daysUntil < 0,
     skipSeason: false,
     metodas,
