@@ -49,7 +49,7 @@ function sortPlants(plants, key) {
   }
 }
 
-export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh }) {
+export default function Dashboard({ plants, onTap, onSearch, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh }) {
   const quarantinePlants = plants.filter(p => p.status === 'quarantine')
   const sickPlants       = plants.filter(p => p.status === 'sick')
   const mainPlants       = plants.filter(p => p.status !== 'quarantine' && p.status !== 'sick')
@@ -246,7 +246,7 @@ export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFet
                 <div className="grid grid-cols-2 gap-2">
                   {quarantinePlants.map(plant => (
                     <PlantCard key={plant.id} plant={plant} section="auginama"
-                      onTap={() => onTap(plant)} onImageFetch={onImageFetch} />
+                      onTap={() => onTap(plant)} />
                   ))}
                 </div>
               </div>
@@ -266,7 +266,7 @@ export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFet
                 <div className="grid grid-cols-2 gap-2">
                   {sickPlants.map(plant => (
                     <PlantCard key={plant.id} plant={plant} section="auginama"
-                      onTap={() => onTap(plant)} onImageFetch={onImageFetch} />
+                      onTap={() => onTap(plant)} />
                   ))}
                 </div>
               </div>
@@ -297,7 +297,6 @@ export default function Dashboard({ plants, onTap, onImageFetch, onSearch, onFet
                 plant={plant}
                 section="auginama"
                 onTap={() => onTap(plant)}
-                onImageFetch={onImageFetch}
               />
             ))}
           </div>

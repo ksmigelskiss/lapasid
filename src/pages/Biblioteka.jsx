@@ -47,7 +47,7 @@ function matchesTags(plant, tags) {
   return true
 }
 
-export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSaveToZinynas, onViewPlant, onRefresh }) {
+export default function Biblioteka({ plants, onTap, onSearch, onSaveToZinynas, onViewPlant, onRefresh }) {
   const [activeTags, setActiveTags] = useState(new Set())
   const [sortKey, setSortKey]       = useState('added')
   const [showSort, setShowSort]     = useState(false)
@@ -286,7 +286,7 @@ export default function Biblioteka({ plants, onTap, onImageFetch, onSearch, onSa
                   plant={plant}
                   section={plant.kategorija === 'istorija' ? 'istorija' : 'nori'}
                   onTap={() => onTap(plant)}
-                  onImageFetch={onImageFetch}
+                 
                   cardBg="bg-white"
                   showDashboardBadge={plant.kategorija === 'auginama'}
                 />

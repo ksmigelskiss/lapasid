@@ -101,7 +101,6 @@ export default function App() {
       <Dashboard
         plants={dashboard}
         onTap={p => openDetail(p, 'auginama')}
-        onImageFetch={async (id, url, fromHistory) => updateImage(id, await uploadImage(url, id), fromHistory)}
         onSearch={() => setShowSearch(true)}
         onFetchAllImages={fetchAllImages}
         fetchingAll={fetchingAll}
@@ -114,7 +113,6 @@ export default function App() {
       <Biblioteka
         plants={library}
         onTap={p => openDetail(p, p.kategorija)}
-        onImageFetch={async (id, url, fromHistory) => updateImage(id, await uploadImage(url, id), fromHistory)}
         onSearch={q => { setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
         onSaveToZinynas={addToZinynas}
         onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
