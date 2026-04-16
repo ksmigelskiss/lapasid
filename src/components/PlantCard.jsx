@@ -134,9 +134,10 @@ const PlantCard = memo(function PlantCard({ plant, section, onTap, onImageFetch,
   }
 
   const handleFromHistory = (url) => {
-    onImageFetch?.(plant.id, url)
+    onImageFetch?.(plant.id, url, true)
     setShowPhotoSheet(false)
   }
+
 
   const { wasFired, ...longPressProps } = useLongPress(() => setShowPhotoSheet(true))
   const status    = plant.status ?? 'healthy'
@@ -288,6 +289,7 @@ const PlantCard = memo(function PlantCard({ plant, section, onTap, onImageFetch,
             onFromHistory={handleFromHistory}
             fetching={fetchingWiki}
           />
+
         )}
       </AnimatePresence>
     </>

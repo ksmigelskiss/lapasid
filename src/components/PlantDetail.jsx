@@ -209,8 +209,9 @@ function DormancyCard({ plant, section }) {
   )
 }
 
-function PhotoSheet({ plant, onClose, onSave }) {
-  const historyPhotos = (plant.timeline ?? []).filter(e => e.type === 'photo' && e.imageUrl)
+function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
+  const historyPhotos   = (plant.timeline ?? []).filter(e => e.type === 'photo' && e.imageUrl)
+  const useHistory      = plant.useHistoryPhoto !== false
   const [photos, setPhotos]     = useState([])   // online photos
   const [idx, setIdx]           = useState(0)
   const [loading, setLoading]   = useState(false)
@@ -255,6 +256,29 @@ function PhotoSheet({ plant, onClose, onSave }) {
         <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider text-center mb-3">Pakeisti nuotrauką</p>
 
         <div className="space-y-2">
+          {/* History auto-sync toggle */}
+          {historyPhotos.length > 0 && (
+            <button
+              onClick={onToggleHistoryPhoto}
+              className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition-colors ${
+                useHistory ? 'bg-sage-500 text-white' : 'bg-surface-2 text-gray-600'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Camera size={20} className={useHistory ? 'text-white' : 'text-gray-400'} />
+                <div className="text-left">
+                  <p className="text-sm font-semibold">Naudoti iš istorijos</p>
+                  <p className={`text-xs mt-0.5 ${useHistory ? 'text-white/70' : 'text-gray-400'}`}>
+                    {useHistory ? 'Naujos istorijos nuotraukos → profilis' : 'Išjungta — profilis fiksuotas'}
+                  </p>
+                </div>
+              </div>
+              <div className={`w-10 h-6 rounded-full flex items-center transition-colors px-0.5 ${useHistory ? 'bg-white/30' : 'bg-gray-300'}`}>
+                <div className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${useHistory ? 'translate-x-4' : 'translate-x-0'}`} />
+              </div>
+            </button>
+          )}
+
           {/* Online photo browser */}
           {!searched && !loading && (
             <button
@@ -324,7 +348,7 @@ function PhotoSheet({ plant, onClose, onSave }) {
                 {historyPhotos.map(e => (
                   <button
                     key={e.id}
-                    onClick={() => { onSave(e.imageUrl); onClose() }}
+                    onClick={() => { onSave(e.imageUrl, true); onClose() }}
                     className="flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 border-transparent active:border-sage-400 transition-all"
                   >
                     <img src={e.imageUrl} alt="" className="w-full h-full object-cover" />
@@ -1427,7 +1451,8 @@ export default function PlantDetail({
             key="photo-sheet"
             plant={plant}
             onClose={() => setShowPhoto(false)}
-            onSave={url => { onImageSave?.(plant.id, url); setShowPhoto(false) }}
+            onSave={(url, fromHistory = false) => { onImageSave?.(plant.id, url, fromHistory); setShowPhoto(false) }}
+            onToggleHistoryPhoto={() => onUpdateNames?.(plant.id, { useHistoryPhoto: plant.useHistoryPhoto !== false ? false : true })}
           />
         )}
       </AnimatePresence>

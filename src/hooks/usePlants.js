@@ -208,8 +208,8 @@ export function usePlants() {
     }))
   }, [update])
 
-  const updateImage = useCallback((id, image) => {
-    updatePlant(id, { image })
+  const updateImage = useCallback((id, image, fromHistory = false) => {
+    updatePlant(id, { image, ...(fromHistory ? {} : { useHistoryPhoto: false }) })
   }, [updatePlant])
 
   const updateStatus = useCallback((id, newStatus, meta = {}) => {
@@ -238,8 +238,8 @@ export function usePlants() {
       plants: prev.plants.map(p => {
         if (p.id !== plantId) return p
         const updated = { ...p, timeline: [event, ...(p.timeline ?? [])] }
-        // Auto-set profile photo if plant has none and a photo was just added
-        if (event.type === 'photo' && event.imageUrl && !p.image) {
+        // Auto-set profile photo when useHistoryPhoto is on (default true) or plant has no image yet
+        if (event.type === 'photo' && event.imageUrl && (p.useHistoryPhoto !== false || !p.image)) {
           updated.image = event.imageUrl
         }
         return updated

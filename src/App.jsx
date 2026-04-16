@@ -101,7 +101,7 @@ export default function App() {
       <Dashboard
         plants={dashboard}
         onTap={p => openDetail(p, 'auginama')}
-        onImageFetch={async (id, url) => updateImage(id, await uploadImage(url, id))}
+        onImageFetch={async (id, url, fromHistory) => updateImage(id, await uploadImage(url, id), fromHistory)}
         onSearch={() => setShowSearch(true)}
         onFetchAllImages={fetchAllImages}
         fetchingAll={fetchingAll}
@@ -114,7 +114,7 @@ export default function App() {
       <Biblioteka
         plants={library}
         onTap={p => openDetail(p, p.kategorija)}
-        onImageFetch={async (id, url) => updateImage(id, await uploadImage(url, id))}
+        onImageFetch={async (id, url, fromHistory) => updateImage(id, await uploadImage(url, id), fromHistory)}
         onSearch={q => { setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
         onSaveToZinynas={addToZinynas}
         onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
@@ -166,7 +166,7 @@ export default function App() {
             onUzrasaiSave={(id, uzrasai) => updateUzrasai(id, uzrasai)}
             onStatusChange={(id, status, meta) => updateStatus(id, status, meta)}
             onUpdateNames={(id, patch) => updatePlant(id, patch)}
-            onImageSave={async (id, url) => updateImage(id, await uploadImage(url, id))}
+            onImageSave={async (id, url, fromHistory = false) => updateImage(id, await uploadImage(url, id), fromHistory)}
             onSaveChat={(id, msgs) => updateChat(id, msgs)}
             onSaveToZinynas={addToZinynas}
             onAddTimelineEvent={addTimelineEvent}
