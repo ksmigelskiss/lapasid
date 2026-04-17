@@ -314,7 +314,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
         <h2 className="text-base font-semibold text-gray-900">Rasti augalą</h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto scrollbar-none px-4 py-5 space-y-5">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-none px-4 py-5 space-y-5">
         {/* Search input + photo button */}
         <div className="flex gap-2">
           <div className="flex-1 flex items-center bg-white border border-gray-200 rounded-2xl px-4 gap-2">
