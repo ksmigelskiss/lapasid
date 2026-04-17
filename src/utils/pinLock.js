@@ -1,6 +1,6 @@
 const PIN          = '1957'
 const KEY_UNTIL    = 'pin-unlock-until'
-const REMEMBER_MS  = 30 * 86400_000   // 30 days
+const REMEMBER_MS  = 7 * 86400_000    // 7 days
 
 export function isUnlocked() {
   const until = localStorage.getItem(KEY_UNTIL)

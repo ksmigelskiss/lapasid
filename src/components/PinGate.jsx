@@ -39,7 +39,7 @@ function PinUnlock({ onUnlocked }) {
         <div className="text-center space-y-1">
           <img src="/plant_pot.png" className="w-14 h-14 object-contain mx-auto mb-3 opacity-80" alt="" />
           <h1 className="text-xl font-bold text-gray-900">Įveskite PIN</h1>
-          <p className="text-sm text-gray-500">Šis įrenginys bus prisimenamas 30 dienų</p>
+          <p className="text-sm text-gray-500">Šis įrenginys bus prisimenamas 7 dienas</p>
         </div>
 
         {/* Dots */}
