@@ -122,7 +122,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSaveToZinynas, o
                 if (e.key === 'Enter' && query.trim()) launchFullSearch()
                 if (e.key === 'Escape') closeSearch()
               }}
-              placeholder="Ieškoti bibliotekoje..."
+              placeholder="Ieškoti augalo..."
               className="flex-1 text-sm text-gray-800 placeholder-gray-400 outline-none bg-transparent"
             />
             <button onClick={closeSearch} className="text-gray-400 text-xs">✕</button>
@@ -133,7 +133,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSaveToZinynas, o
             className="flex-1 flex items-center gap-3 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl px-4 py-3"
           >
             <Search size={15} className="text-gray-400" />
-            <span className="text-sm text-gray-500">Rasti augalą...</span>
+            <span className="text-sm text-gray-500">Ieškoti augalo...</span>
           </button>
         )}
         {!searching && (

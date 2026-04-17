@@ -1,5 +1,5 @@
 import { useState, memo } from 'react'
-import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost, FileText } from 'lucide-react'
+import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost, FileText, MapPin } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 
@@ -13,7 +13,7 @@ function DotScore({ value, max = 3, color }) {
   )
 }
 
-const PlantCard = memo(function PlantCard({ plant, section, onTap, cardBg = 'bg-white', showDashboardBadge = false }) {
+const PlantCard = memo(function PlantCard({ plant, section, onTap, cardBg = 'bg-white', showDashboardBadge = false, zoneName }) {
   const [imgError, setImgError] = useState(false)
 
   const status    = plant.status ?? 'healthy'
@@ -45,11 +45,12 @@ const PlantCard = memo(function PlantCard({ plant, section, onTap, cardBg = 'bg-
         )}
 
         {/* Status dot */}
-        <div className={`absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 border-white shadow-sm ${
-          status === 'healthy'    ? 'bg-green-400'  :
-          status === 'sick'       ? 'bg-orange-400' :
-          status === 'quarantine' ? 'bg-red-500'    :
-                                   'bg-green-400'
+        <div className={`absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 shadow-sm ${
+          section !== 'auginama'
+            ? 'border-white/60 bg-transparent'
+            : status === 'sick'       ? 'border-white bg-orange-400'
+            : status === 'quarantine' ? 'border-white bg-red-500'
+            :                           'border-white bg-green-400'
         }`} />
 
         {/* Right-side badge column */}
@@ -93,20 +94,31 @@ const PlantCard = memo(function PlantCard({ plant, section, onTap, cardBg = 'bg-
           </div>
         )}
 
-        {/* Dormancy badge */}
-        {dormFC && (
-          <div className={`absolute bottom-2 left-2 backdrop-blur-sm rounded-lg px-1.5 py-0.5 ${
-            dormFC.window === 'active' ? 'bg-blue-500/90' :
-            dormFC.window === 'waking' ? 'bg-green-500/90' :
-                                         'bg-amber-500/90'
-          }`}>
-            <span className="flex items-center gap-0.5 text-[9px] text-white font-bold">
-              {dormFC.window === 'active'
-                ? <><Moon size={9} /> Miega</>
-                : dormFC.window === 'waking'
-                  ? <><Sprout size={9} /> Žadinti</>
-                  : <><Snowflake size={9} /> Ruoštis</>}
-            </span>
+        {/* Bottom-left badge column: zone + dormancy */}
+        {(zoneName || dormFC) && (
+          <div className="absolute bottom-2 left-2 flex flex-col gap-1 items-start">
+            {zoneName && (
+              <div className="bg-black/40 backdrop-blur-sm rounded-lg px-1.5 py-0.5">
+                <span className="flex items-center gap-0.5 text-[9px] text-white font-medium">
+                  <MapPin size={8} className="flex-shrink-0" />{zoneName}
+                </span>
+              </div>
+            )}
+            {dormFC && (
+              <div className={`backdrop-blur-sm rounded-lg px-1.5 py-0.5 ${
+                dormFC.window === 'active' ? 'bg-blue-500/90' :
+                dormFC.window === 'waking' ? 'bg-green-500/90' :
+                                             'bg-amber-500/90'
+              }`}>
+                <span className="flex items-center gap-0.5 text-[9px] text-white font-bold">
+                  {dormFC.window === 'active'
+                    ? <><Moon size={9} /> Miega</>
+                    : dormFC.window === 'waking'
+                      ? <><Sprout size={9} /> Žadinti</>
+                      : <><Snowflake size={9} /> Ruoštis</>}
+                </span>
+              </div>
+            )}
           </div>
         )}
       </div>

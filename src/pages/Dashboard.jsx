@@ -1,9 +1,10 @@
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, Leaf, ShieldAlert, Thermometer } from 'lucide-react'
+import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin } from 'lucide-react'
 const GARDENER = '/gardener.png'
 import PlantCard from '../components/PlantCard'
 import CollectionChat from '../components/CollectionChat'
+import WateringSession from '../components/WateringSession'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast, shouldShowWateringAlert } from '../utils/wateringForecast'
@@ -49,10 +50,95 @@ function sortPlants(plants, key) {
   }
 }
 
-export default function Dashboard({ plants, onTap, onSearch, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh }) {
+function QuarantineSection({ plants, zones, onTap }) {
+  const [open, setOpen] = useState(true)
+  return (
+    <div className="mb-3">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center gap-2 py-2"
+      >
+        <ShieldAlert size={13} className="text-red-400 flex-shrink-0" />
+        <span className="text-sm font-bold text-red-600 flex-1 text-left">Karantinas</span>
+        <span className="text-xs text-red-300 mr-1">{plants.length}</span>
+        {open ? <ChevronUp size={14} className="text-red-300" /> : <ChevronDown size={14} className="text-red-300" />}
+      </button>
+      {open && (
+        <div className="bg-red-50 rounded-2xl p-2.5">
+          <div className="grid grid-cols-2 gap-3">
+            {plants.map(plant => (
+              <PlantCard
+                key={plant.id}
+                plant={plant}
+                section="auginama"
+                onTap={() => onTap(plant)}
+                zoneName={zones.find(z => z.id === plant.zonaId)?.name}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ZoneSection({ zone, plants, onTap }) {
+  const [open, setOpen] = useState(true)
+  const sickPlants    = plants.filter(p => p.status === 'sick')
+  const healthyPlants = plants.filter(p => p.status !== 'sick')
+
+  return (
+    <div className="mb-3">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center gap-2 py-2"
+      >
+        <MapPin size={13} className="text-sage-400 flex-shrink-0" />
+        <span className="text-sm font-bold text-gray-700 flex-1 text-left truncate">{zone.name}</span>
+        <span className="text-xs text-gray-400 mr-1">{plants.length}</span>
+        {open ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
+      </button>
+      {open && (
+        <div className="space-y-3">
+          {/* Sick sub-group */}
+          {sickPlants.length > 0 && (
+            <div className="bg-amber-50 rounded-2xl p-2.5">
+              <div className="flex items-center gap-1.5 mb-2 px-1">
+                <Thermometer size={12} className="text-amber-500" />
+                <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wide">Dėmesio</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {sickPlants.map(plant => (
+                  <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} />
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Healthy plants */}
+          {healthyPlants.length > 0 && (
+            <div className="grid grid-cols-2 gap-3">
+              {healthyPlants.map(plant => (
+                <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function matchesQuery(plant, q) {
+  const lower = q.toLowerCase()
+  return [plant.lietuviškas, plant.lotyniskas, plant.inatLtName,
+    ...(plant.sinonimai ?? []), ...(plant.englishNames ?? [])]
+    .some(c => c && c.toLowerCase().includes(lower))
+}
+
+export default function Dashboard({ plants, allPlants = [], zones = [], onTap, onSearch, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones }) {
   const quarantinePlants = plants.filter(p => p.status === 'quarantine')
-  const sickPlants       = plants.filter(p => p.status === 'sick')
-  const mainPlants       = plants.filter(p => p.status !== 'quarantine' && p.status !== 'sick')
+  // sick plants stay in their zone (mainPlants includes them)
+  const mainPlants       = plants.filter(p => p.status !== 'quarantine')
   const missingCount     = plants.filter(p => !p.image).length
   const overdueList      = mainPlants.filter(p => getFertilizingForecast(p).isOverdue)
   const wateringList     = mainPlants.filter(p => shouldShowWateringAlert(p))
@@ -61,10 +147,32 @@ export default function Dashboard({ plants, onTap, onSearch, onFetchAllImages, f
   const [sortKey, setSortKey]         = useState('added')
   const [showFilters, setShowFilters] = useState(false)
   const [showChat, setShowChat]       = useState(false)
+  const [showWaterSession, setWaterSession] = useState(false)
+  const [searching, setSearching]     = useState(false)
+  const [query, setQuery]             = useState('')
+  const inputRef  = useRef(null)
   const scrollRef = useRef(null)
+
+  useEffect(() => { if (searching) inputRef.current?.focus() }, [searching])
+  const closeSearch = useCallback(() => { setSearching(false); setQuery('') }, [])
+  const launchFullSearch = useCallback(() => { onSearch(); closeSearch() }, [onSearch, closeSearch])
+
+  const searchResults = useMemo(() => {
+    if (!query.trim()) return []
+    return allPlants.filter(p => matchesQuery(p, query))
+  }, [allPlants, query])
   const { pullY, refreshing } = usePullToRefresh(scrollRef, onRefresh ?? (() => {}))
 
   const sortedPlants = useMemo(() => sortPlants(mainPlants, sortKey), [mainPlants, sortKey])
+
+  // Zone grouping: only active when zones exist
+  const hasZones = zones.length > 0
+  const zonedPlants = hasZones
+    ? zones.map(zone => ({ zone, plants: sortedPlants.filter(p => p.zonaId === zone.id) }))
+    : []
+  const unzonedPlants = hasZones
+    ? sortedPlants.filter(p => !p.zonaId)
+    : sortedPlants
 
   return (
     <div className="flex flex-col h-full">
@@ -76,24 +184,34 @@ export default function Dashboard({ plants, onTap, onSearch, onFetchAllImages, f
             <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight">Mano augalai</h1>
           </div>
           <div className="flex flex-col items-end gap-2">
-            <div className="bg-sage-50 rounded-2xl px-3.5 py-2 flex flex-col items-center">
-              <span className="text-2xl font-extrabold text-sage-600 leading-none">{plants.length}</span>
-              <span className="text-[10px] text-sage-400 font-medium mt-0.5">augal{plants.length === 1 ? 'as' : 'ai'}</span>
-            </div>
-            {missingCount > 0 && (
+            {/* Top row: laistymas + augalai */}
+            <div className="flex items-center gap-2">
               <button
-                onClick={onFetchAllImages}
-                disabled={fetchingAll}
-                className="flex items-center gap-1.5 bg-sage-50 hover:bg-sage-100 disabled:opacity-60 transition-colors rounded-xl px-2.5 py-1.5"
+                onClick={() => setWaterSession(true)}
+                className="bg-sky-50 active:bg-sky-100 transition-colors rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]"
               >
-                {fetchingAll
-                  ? <Loader2 size={14} className="animate-spin" />
-                  : <ImageIcon size={14} />
-                }
-                <span className="text-xs font-medium text-sage-600">
-                  {fetchingAll ? 'Kraunama...' : `+${missingCount} foto`}
-                </span>
+                <Droplets size={20} className="text-sky-400 leading-none" />
+                <span className="text-[10px] text-sky-400 font-medium mt-0.5">laistymas</span>
               </button>
+              <div className="bg-sage-50 rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]">
+                <span className="text-2xl font-extrabold text-sage-600 leading-none">{plants.length}</span>
+                <span className="text-[10px] text-sage-400 font-medium mt-0.5">augal{plants.length === 1 ? 'as' : 'ai'}</span>
+              </div>
+            </div>
+            {/* Secondary row: foto */}
+            {missingCount > 0 && (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={onFetchAllImages}
+                  disabled={fetchingAll}
+                  className="flex items-center gap-1.5 bg-sage-50 hover:bg-sage-100 disabled:opacity-60 transition-colors rounded-xl px-2.5 py-1.5"
+                >
+                  {fetchingAll ? <Loader2 size={14} className="animate-spin" /> : <ImageIcon size={14} />}
+                  <span className="text-xs font-medium text-sage-600">
+                    {fetchingAll ? 'Kraunama...' : `+${missingCount} foto`}
+                  </span>
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -101,14 +219,33 @@ export default function Dashboard({ plants, onTap, onSearch, onFetchAllImages, f
 
       {/* Search + filter toggle */}
       <div className="px-5 mb-3 flex gap-2">
-        <button
-          onClick={onSearch}
-          className="flex-1 flex items-center gap-3 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl px-4 py-3"
-        >
-          <Search size={16} className="text-gray-400 flex-shrink-0" />
-          <span className="text-sm text-gray-500">Ieškoti augalo...</span>
-        </button>
-        {plants.length > 1 && (
+        {searching ? (
+          <div className="flex-1 flex items-center gap-2 bg-white border border-gray-200 rounded-2xl px-4 py-3 focus-within:border-gray-400 transition-colors">
+            <Search size={15} className="text-gray-400 flex-shrink-0" />
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && query.trim()) launchFullSearch()
+                if (e.key === 'Escape') closeSearch()
+              }}
+              placeholder="Ieškoti augalo..."
+              className="flex-1 text-sm text-gray-800 placeholder-gray-400 outline-none bg-transparent"
+            />
+            <button onClick={closeSearch} className="text-gray-400 text-xs">✕</button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setSearching(true)}
+            className="flex-1 flex items-center gap-3 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl px-4 py-3"
+          >
+            <Search size={16} className="text-gray-400 flex-shrink-0" />
+            <span className="text-sm text-gray-500">Ieškoti augalo...</span>
+          </button>
+        )}
+        {!searching && plants.length > 1 && (
           <button
             onClick={() => setShowFilters(v => !v)}
             className={`flex-shrink-0 w-11 rounded-2xl flex items-center justify-center text-base transition-colors ${
@@ -141,8 +278,56 @@ export default function Dashboard({ plants, onTap, onSearch, onFetchAllImages, f
         </div>
       )}
 
-      {/* Pull-to-refresh indicator */}
-      <div
+      {/* Inline search results */}
+      {searching && (
+        <div className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
+          {query.trim() ? (
+            <>
+              {searchResults.length > 0 ? (
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  {searchResults.map(plant => (
+                    <PlantCard
+                      key={plant.id}
+                      plant={plant}
+                      section={plant.kategorija === 'auginama' ? 'auginama' : plant.kategorija === 'istorija' ? 'istorija' : 'nori'}
+                      onTap={() => { closeSearch(); onViewPlant(plant) }}
+                      showDashboardBadge={plant.kategorija === 'auginama'}
+                      zoneName={plant.kategorija === 'auginama' ? zones.find(z => z.id === plant.zonaId)?.name : undefined}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
+                  <Search size={40} className="text-gray-300" />
+                  <p className="text-sm font-semibold text-gray-600">„{query}" nerasta bibliotekoje</p>
+                  <button
+                    onClick={launchFullSearch}
+                    className="mt-1 px-6 py-3 bg-gray-800 text-white rounded-2xl text-sm font-medium"
+                  >
+                    Ieškoti „{query}" naujų augalų
+                  </button>
+                </div>
+              )}
+              {searchResults.length > 0 && (
+                <button
+                  onClick={launchFullSearch}
+                  className="w-full mt-3 py-3 rounded-2xl text-sm text-gray-500 border border-dashed border-gray-300 hover:border-gray-400 hover:text-gray-700 transition-colors"
+                >
+                  Ieškoti „{query}" naujų augalų
+                </button>
+              )}
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
+              <Search size={40} className="text-gray-300" />
+              <p className="text-sm text-gray-400">Įveskite augalo pavadinimą</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Pull-to-refresh indicator + main content — hidden while searching */}
+      {!searching && <div
         className="flex items-center justify-center overflow-hidden"
         style={{
           height: refreshing ? 48 : pullY,
@@ -154,10 +339,10 @@ export default function Dashboard({ plants, onTap, onSearch, onFetchAllImages, f
           className={`text-sage-400 ${refreshing ? 'animate-spin' : ''}`}
           style={{ opacity: refreshing ? 1 : pullY / 48, transform: refreshing ? undefined : `rotate(${pullY * 4}deg)` }}
         />
-      </div>
+      </div>}
 
       {/* Scrollable content */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
+      {!searching && <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
 
         {/* Unified alerts widget */}
         {hasAlerts && (
@@ -234,44 +419,9 @@ export default function Dashboard({ plants, onTap, onSearch, onFetchAllImages, f
           </div>
         )}
 
-        {/* Reanimacija zone */}
+        {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (
-          <div className="mb-4">
-            <div className="bg-red-50 rounded-2xl overflow-hidden shadow-ios-card">
-              <div className="flex items-center gap-2 px-4 py-3">
-                <ShieldAlert size={16} className="text-red-500 flex-shrink-0" />
-                <p className="text-sm font-bold text-red-700 flex-1">Karantinas ({quarantinePlants.length})</p>
-              </div>
-              <div className="px-4 pb-3">
-                <div className="grid grid-cols-2 gap-2">
-                  {quarantinePlants.map(plant => (
-                    <PlantCard key={plant.id} plant={plant} section="auginama"
-                      onTap={() => onTap(plant)} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Ligoniai zone */}
-        {sickPlants.length > 0 && (
-          <div className="mb-4">
-            <div className="bg-amber-50 rounded-2xl overflow-hidden shadow-ios-card">
-              <div className="flex items-center gap-2 px-4 py-3">
-                <Thermometer size={16} className="text-amber-500 flex-shrink-0" />
-                <p className="text-sm font-bold text-amber-700 flex-1">Serga ({sickPlants.length})</p>
-              </div>
-              <div className="px-4 pb-3">
-                <div className="grid grid-cols-2 gap-2">
-                  {sickPlants.map(plant => (
-                    <PlantCard key={plant.id} plant={plant} section="auginama"
-                      onTap={() => onTap(plant)} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <QuarantineSection plants={quarantinePlants} zones={zones} onTap={onTap} />
         )}
 
         {/* Plant grid */}
@@ -289,6 +439,39 @@ export default function Dashboard({ plants, onTap, onSearch, onFetchAllImages, f
               + Pridėti pirmą augalą
             </button>
           </div>
+        ) : hasZones ? (
+          <>
+            {zonedPlants.map(({ zone, plants: zp }) => zp.length > 0 && (
+              <ZoneSection key={zone.id} zone={zone} plants={zp} onTap={onTap} />
+            ))}
+            {unzonedPlants.length > 0 && (
+              <div className="mb-3">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide py-2">Nepriskirti</p>
+                <div className="space-y-3">
+                  {unzonedPlants.filter(p => p.status === 'sick').length > 0 && (
+                    <div className="bg-amber-50 rounded-2xl p-2.5">
+                      <div className="flex items-center gap-1.5 mb-2 px-1">
+                        <Thermometer size={12} className="text-amber-500" />
+                        <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wide">Dėmesio</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {unzonedPlants.filter(p => p.status === 'sick').map(plant => (
+                          <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {unzonedPlants.filter(p => p.status !== 'sick').length > 0 && (
+                    <div className="grid grid-cols-2 gap-3">
+                      {unzonedPlants.filter(p => p.status !== 'sick').map(plant => (
+                        <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
         ) : (
           <div className="grid grid-cols-2 gap-3">
             {sortedPlants.map(plant => (
@@ -301,7 +484,7 @@ export default function Dashboard({ plants, onTap, onSearch, onFetchAllImages, f
             ))}
           </div>
         )}
-      </div>
+      </div>}
 
       {/* Floating AI bubble */}
       {plants.length > 0 && (
@@ -312,6 +495,22 @@ export default function Dashboard({ plants, onTap, onSearch, onFetchAllImages, f
           <img src={GARDENER} className="h-[96px] w-auto object-contain drop-shadow opacity-90 animate-idle-float-gardener" alt="" />
         </button>
       )}
+
+      <AnimatePresence>
+        {showWaterSession && (
+          <WateringSession
+            key="water-session"
+            plants={plants}
+            zones={zones}
+            onAddTimelineEvent={onAddTimelineEvent}
+            onAddZone={onAddZone}
+            onUpdateZone={onUpdateZone}
+            onDeleteZone={onDeleteZone}
+            onReorderZones={onReorderZones}
+            onClose={() => setWaterSession(false)}
+          />
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {showChat && (

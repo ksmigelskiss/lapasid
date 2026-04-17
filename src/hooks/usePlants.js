@@ -148,7 +148,9 @@ export function usePlants() {
   const wishlist   = data.plants.filter(p => p.kategorija === 'nori')
   const history    = data.plants.filter(p => p.kategorija === 'istorija')
   const library    = data.plants
-  const zinynas    = data.zinynas ?? []
+  const zinynas    = data.zinynas  ?? []
+  const zones      = data.zones   ?? []
+  const settings   = data.settings ?? {}
 
   const addToDashboard = useCallback((aiResult) => {
     const plant = { ...fromAIResult(aiResult), kategorija: 'auginama' }
@@ -176,6 +178,7 @@ export function usePlants() {
         plants: prev.plants.map(p => p.id === id ? {
           ...p,
           kategorija: 'istorija',
+          status: 'healthy',
           diedDate: today(),
           deathReason: deathReason ?? '',
           lesson: lesson ?? '',
@@ -186,7 +189,17 @@ export function usePlants() {
   }, [update])
 
   const moveToDashboard = useCallback((id) => {
-    updatePlant(id, { kategorija: 'auginama', data_prideta: today(), timeline: [] })
+    updatePlant(id, {
+      kategorija: 'auginama',
+      data_prideta: today(),
+      status: 'healthy',
+      timeline: [],
+      diedDate: null,
+      deathReason: '',
+      lesson: '',
+      zonaId: null,
+      pirkinys: false,
+    })
   }, [updatePlant])
 
   const clearTimeline = useCallback((id) => {
@@ -272,6 +285,69 @@ export function usePlants() {
     }))
   }, [update])
 
+  const movePlantToZone = useCallback((plantId, newZoneId) => {
+    update(prev => {
+      const plant = prev.plants.find(p => p.id === plantId)
+      if (!plant) return prev
+      if (plant.zonaId === newZoneId) return prev
+      const moveEvent = {
+        id: makeId(),
+        type: 'move',
+        date: today(),
+        fromZoneId: plant.zonaId ?? null,
+        toZoneId: newZoneId ?? null,
+      }
+      return {
+        ...prev,
+        plants: prev.plants.map(p =>
+          p.id === plantId
+            ? { ...p, zonaId: newZoneId ?? null, timeline: [moveEvent, ...(p.timeline ?? [])] }
+            : p
+        ),
+      }
+    })
+  }, [update])
+
+  const addZone = useCallback((zone) => {
+    const id = makeId()
+    update(prev => ({
+      ...prev,
+      zones: [...(prev.zones ?? []), { ...zone, id }],
+    }))
+    return id
+  }, [update])
+
+  const updateZone = useCallback((id, patch) => {
+    update(prev => ({
+      ...prev,
+      zones: (prev.zones ?? []).map(z => z.id === id ? { ...z, ...patch } : z),
+    }))
+  }, [update])
+
+  const deleteZone = useCallback((id) => {
+    update(prev => ({
+      ...prev,
+      zones: (prev.zones ?? []).filter(z => z.id !== id),
+      plants: prev.plants.map(p => p.zonaId === id ? { ...p, zonaId: null } : p),
+    }))
+  }, [update])
+
+  const reorderZones = useCallback((id, direction) => {
+    update(prev => {
+      const arr = [...(prev.zones ?? [])]
+      const idx = arr.findIndex(z => z.id === id)
+      if (idx < 0) return prev
+      const swap = direction === 'up' ? idx - 1 : idx + 1
+      if (swap < 0 || swap >= arr.length) return prev
+      ;[arr[idx], arr[swap]] = [arr[swap], arr[idx]]
+      return { ...prev, zones: arr }
+    })
+  }, [update])
+
+  const updateSettings = useCallback((patch) => {
+    update(prev => ({ ...prev, settings: { ...(prev.settings ?? {}), ...patch } }))
+  }, [update])
+
   const deleteTimelineEvent = useCallback((plantId, eventId) => {
     update(prev => ({
       ...prev,
@@ -292,5 +368,7 @@ export function usePlants() {
     library, togglePirkinys,
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred,
     updateUzrasai,
+    zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
+    settings, updateSettings,
   }
 }

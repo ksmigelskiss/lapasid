@@ -18,8 +18,8 @@ export default function App() {
   const [showSearch, setShowSearch]   = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState('')
   const [deathTarget, setDeathTarget]   = useState(null)
-  const [deleteTarget, setDeleteTarget] = useState(null) // { plant, section }
-  const [detailPlant, setDetailPlant]   = useState(null) // { plant, section }
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [detailPlant, setDetailPlant]   = useState(null)
 
   const {
     syncFromRemote,
@@ -30,9 +30,9 @@ export default function App() {
     addTimelineEvent, deleteTimelineEvent, clearTimeline, updateChat, togglePirkinys,
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred,
     updateUzrasai,
+    zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
   } = usePlants()
 
-  // Keep detail modal in sync with live plant data
   const livePlant = detailPlant
     ? [...dashboard, ...library].find(p => p.id === detailPlant.plant.id)
       ?? detailPlant.plant
@@ -77,7 +77,6 @@ export default function App() {
     setTab('biblioteka')
   }
 
-  // Fetch images for all plants that don't have one
   const [fetchingAll, setFetchingAll] = useState(false)
   const fetchAllImages = useCallback(async () => {
     const allPlants = [...dashboard, ...library]
@@ -100,6 +99,8 @@ export default function App() {
     { key: 'dashboard', page: (
       <Dashboard
         plants={dashboard}
+        allPlants={library}
+        zones={zones}
         onTap={p => openDetail(p, 'auginama')}
         onSearch={() => setShowSearch(true)}
         onFetchAllImages={fetchAllImages}
@@ -107,6 +108,11 @@ export default function App() {
         onSaveToZinynas={addToZinynas}
         onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
         onRefresh={syncFromRemote}
+        onAddTimelineEvent={addTimelineEvent}
+        onAddZone={addZone}
+        onUpdateZone={updateZone}
+        onDeleteZone={deleteZone}
+        onReorderZones={reorderZones}
       />
     )},
     { key: 'biblioteka', page: (
@@ -170,6 +176,8 @@ export default function App() {
             onAddTimelineEvent={addTimelineEvent}
             onDeleteTimelineEvent={deleteTimelineEvent}
             onClearTimeline={id => clearTimeline(id)}
+            zones={zones}
+            onZoneChange={movePlantToZone}
           />
         )}
       </AnimatePresence>
@@ -217,6 +225,8 @@ export default function App() {
           />
         )}
       </AnimatePresence>
+
+
     </div>
     </PinGate>
   )

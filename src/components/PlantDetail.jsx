@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
-import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, ChevronDown, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, Moon, Sprout, MapPin } from 'lucide-react'
+import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, ChevronDown, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, Moon, Sprout, MapPin, ChevronRight } from 'lucide-react'
+import { ZonePicker } from './ZoneManager'
 import PlantTimeline, { FAB, AddEventSheet } from './PlantTimeline'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
@@ -40,10 +41,10 @@ function fmtDate(str) {
 }
 
 const STATUS_OPTIONS = [
-  { key: 'healthy',         dot: 'bg-green-400',  label: 'Sveika',     bg: 'bg-green-100',  text: 'text-green-700' },
-  { key: 'sick',            dot: 'bg-orange-400', label: 'Serga',      bg: 'bg-orange-100', text: 'text-orange-700' },
-  { key: 'quarantine',      dot: 'bg-red-400',    label: 'Karantinas', bg: 'bg-red-100',    text: 'text-red-700' },
-  { key: 'numire',          dot: 'bg-gray-400',   label: 'Numirė',     bg: 'bg-surface-2',   text: 'text-gray-600' },
+  { key: 'healthy',    dot: 'bg-green-400',  label: 'Sveikas',    bg: 'bg-green-100',  text: 'text-green-700' },
+  { key: 'sick',       dot: 'bg-orange-400', label: 'Dėmesio',    bg: 'bg-orange-100', text: 'text-orange-700' },
+  { key: 'quarantine', dot: 'bg-red-400',    label: 'Karantinas', bg: 'bg-red-100',    text: 'text-red-700' },
+  { key: 'numire',     dot: '',              label: 'Numirė',     bg: 'bg-gray-800',   text: 'text-white',   hideDot: true },
 ]
 
 function statusDot(status) {
@@ -406,6 +407,7 @@ function InfoRow({ icon, label, value }) {
 // ── Profile tab content ────────────────────────────────────────
 
 export function ProfileContent({ plant, section, onAction, onClose, className }) {
+
   return (
     <div className={className ?? "px-5 pt-5 pb-10 space-y-6"}>
 
@@ -417,6 +419,7 @@ export function ProfileContent({ plant, section, onAction, onClose, className })
 
       {/* ── Dormancy reminder ── */}
       <DormancyCard plant={plant} section={section} />
+
 
       {/* ── Toxicity warning ── */}
       {plant.toksiskas && (
@@ -1020,7 +1023,7 @@ function StatusTransitionSheet({ plant, newStatus, fromStatus, onConfirm, onQuar
       <BottomSheet onClose={onClose}>
         <div className="space-y-4">
           <div>
-            <h3 className="text-base font-bold text-gray-900">Serga</h3>
+            <h3 className="text-base font-bold text-gray-900">Dėmesio</h3>
             <p className="text-xs text-gray-500 mt-0.5">Augalas bus perkeltas į Ligonius</p>
           </div>
           <div>
@@ -1078,6 +1081,8 @@ export default function PlantDetail({
   onAddTimelineEvent,
   onDeleteTimelineEvent,
   onClearTimeline,
+  zones = [],
+  onZoneChange,
 }) {
   const [activeTab, setActiveTab]           = useState('profile')
   const [heroError, setHeroError]           = useState(false)
@@ -1089,7 +1094,9 @@ export default function PlantDetail({
   const [addingType, setAddingType]         = useState(null)
   const [editingName, setEditingName]       = useState(false)
   const [nameVal, setNameVal]               = useState('')
+  const [showZonePicker, setShowZonePicker] = useState(false)
   const status                              = plant.status ?? 'healthy'
+  const currentZone                         = zones.find(z => z.id === plant.zonaId) ?? null
   const mood                            = getPlantMood(plant)
   const fetchedRef                      = useRef(false)
 
@@ -1189,6 +1196,17 @@ export default function PlantDetail({
             <div className="absolute bottom-0 left-0 right-0 p-4">
               <div className="flex items-end justify-between gap-2">
                 <div className="min-w-0">
+                  {section === 'auginama' && zones.length > 0 && (
+                    <button
+                      onClick={() => setShowZonePicker(true)}
+                      className="inline-flex items-center gap-1 mb-1 px-2 py-0.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                    >
+                      <MapPin size={9} className="text-white/80" />
+                      <span className="text-[10px] text-white/90 font-medium">
+                        {currentZone ? currentZone.name : 'Nepriskirta'}
+                      </span>
+                    </button>
+                  )}
                   {editingName ? (
                     <input
                       autoFocus
@@ -1219,7 +1237,7 @@ export default function PlantDetail({
                     </div>
                   )}
                 </div>
-                {section !== 'istorija' && (
+                {section === 'auginama' && (
                   <div className="relative flex-shrink-0">
                     <button
                       onClick={() => setStatusMenu(v => !v)}
@@ -1242,10 +1260,11 @@ export default function PlantDetail({
   else setPendingStatus({ newStatus: opt.key, fromStatus: status })
 }}
                               className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                                opt.hideDot ? `${opt.bg} ${opt.text}` :
                                 status === opt.key ? `${opt.bg} ${opt.text}` : 'text-gray-600 hover:bg-surface'
                               }`}
                             >
-                              <span className={`w-2 h-2 rounded-full ${opt.dot}`} />
+                              <span className={`w-2 h-2 rounded-full flex-shrink-0 ${opt.hideDot ? 'invisible' : opt.dot}`} />
                               {opt.label}
                             </button>
                           ))}
@@ -1302,7 +1321,7 @@ export default function PlantDetail({
                     )}
                     <p className="text-xs text-gray-500 italic mt-0.5">{plant.lotyniskas}</p>
                   </div>
-                  {section !== 'istorija' && (
+                  {section === 'auginama' && (
                     <div className="relative flex-shrink-0">
                       <button
                         onClick={() => setStatusMenu(v => !v)}
@@ -1328,7 +1347,7 @@ export default function PlantDetail({
                                   status === opt.key ? `${opt.bg} ${opt.text}` : 'text-gray-600 hover:bg-surface'
                                 }`}
                               >
-                                <span className={`w-2 h-2 rounded-full ${opt.dot}`} />
+                                {!opt.hideDot && <span className={`w-2 h-2 rounded-full ${opt.dot}`} />}
                                 {opt.label}
                               </button>
                             ))}
@@ -1393,6 +1412,7 @@ export default function PlantDetail({
                   onDeleteEvent={eventId => onDeleteTimelineEvent?.(plant.id, eventId)}
                   onClearTimeline={() => onClearTimeline?.(plant.id)}
                   onSetAsProfilePhoto={url => onImageSave?.(plant.id, url)}
+                  zones={zones}
                 />
               </motion.div>
             )}
@@ -1470,6 +1490,18 @@ export default function PlantDetail({
               const existing = loadNotes(plant)
               onUzrasaiSave?.(plant.id, [newNote, ...existing])
             }}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showZonePicker && (
+          <ZonePicker
+            key="zone-picker"
+            zones={zones}
+            currentZoneId={plant.zonaId}
+            onSelect={zonaId => onZoneChange?.(plant.id, zonaId)}
+            onClose={() => setShowZonePicker(false)}
           />
         )}
       </AnimatePresence>

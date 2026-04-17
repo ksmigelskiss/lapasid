@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
-import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, X, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost, ImageIcon } from 'lucide-react'
+import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, X, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost, ImageIcon, MapPin } from 'lucide-react'
 import { resizeImage } from '../utils/imageResize'
 
 // ── Helpers ────────────────────────────────────────────────────
@@ -104,6 +104,7 @@ const EVENT_META = {
   note:         { icon: <FileText size={13} />,    label: 'Pastaba',      color: 'bg-surface',   border: 'border-warm-border',   text: 'text-gray-600' },
   photo:        { icon: <Camera size={13} />,      label: 'Nuotrauka',    color: 'bg-sage-50',   border: 'border-sage-100',   text: 'text-sage-600' },
   statusChange: { icon: <RefreshCw size={13} />,   label: 'Būsena',       color: 'bg-surface',   border: 'border-warm-border',   text: 'text-gray-500' },
+  move:         { icon: <MapPin size={13} />,      label: 'Perkėlimas',   color: 'bg-sage-50',   border: 'border-sage-100',   text: 'text-sage-600' },
 }
 
 const STATUS_PERIOD_META = {
@@ -113,7 +114,7 @@ const STATUS_PERIOD_META = {
 
 const STATUS_CHANGE_META = {
   healthy:    { icon: <Leaf size={13} />,        label: 'Pasveiko',   bg: 'bg-green-50',  border: 'border-green-200',  text: 'text-green-700',  line: 'bg-green-300' },
-  sick:       { icon: <Thermometer size={13} />, label: 'Serga',      bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', line: 'bg-orange-300' },
+  sick:       { icon: <Thermometer size={13} />, label: 'Dėmesio',   bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', line: 'bg-orange-300' },
   quarantine: { icon: <ShieldAlert size={13} />, label: 'Karantinas', bg: 'bg-red-50',    border: 'border-red-200',    text: 'text-red-700',    line: 'bg-red-300' },
 }
 
@@ -256,7 +257,7 @@ function DeathEvent({ event, index }) {
 
 // ── Tooltip (Apple Maps style) ─────────────────────────────────
 
-function Tooltip({ event, onDelete }) {
+function Tooltip({ event, onDelete, zones = [] }) {
   const meta = EVENT_META[event.type] ?? EVENT_META.note
   return (
     <motion.div
@@ -295,6 +296,13 @@ function Tooltip({ event, onDelete }) {
         {event.issue && <p className="text-xs text-gray-600 mt-0.5">⚠️ {event.issue}</p>}
         {event.isolated != null && (
           <p className="text-xs text-gray-600 mt-0.5">{event.isolated ? '✓ Izoliuotas' : '✗ Neizoliuotas'}</p>
+        )}
+        {event.type === 'move' && (
+          <p className="text-xs text-sage-700 mt-1">
+            {event.fromZoneId ? (zones.find(z => z.id === event.fromZoneId)?.name ?? '?') : 'Nepriskirta'}
+            {' → '}
+            {event.toZoneId ? (zones.find(z => z.id === event.toZoneId)?.name ?? '?') : 'Nepriskirta'}
+          </p>
         )}
       </div>
     </motion.div>
@@ -388,7 +396,7 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
   )
 }
 
-function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, inPeriod }) {
+function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, inPeriod, zones = [] }) {
   const meta = EVENT_META[event.type] ?? EVENT_META.note
 
   return (
@@ -413,6 +421,7 @@ function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete,
             <Tooltip
               event={event}
               onDelete={() => { onDelete(event.id); onToggle() }}
+              zones={zones}
             />
           </div>
         )}
@@ -434,7 +443,14 @@ function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete,
         {event.potSize && <span className="text-xs text-gray-400">· {event.potSize}</span>}
         {event.preparatas && <span className="text-xs text-gray-400">· {event.preparatas}</span>}
         {event.tikslas && !event.preparatas && <span className="text-xs text-gray-400">· {event.tikslas}</span>}
-        {event.note && !event.amount && !event.fertilizer && !event.potSize && !event.preparatas && (
+        {event.type === 'move' && (
+          <span className="text-xs text-gray-400 truncate max-w-[140px]">
+            · {event.fromZoneId ? (zones.find(z => z.id === event.fromZoneId)?.name ?? '?') : '—'}
+            {' → '}
+            {event.toZoneId ? (zones.find(z => z.id === event.toZoneId)?.name ?? '?') : '—'}
+          </span>
+        )}
+        {event.note && !event.amount && !event.fertilizer && !event.potSize && !event.preparatas && event.type !== 'move' && (
           <span className="text-xs text-gray-400 truncate max-w-[120px]">· {event.note}</span>
         )}
       </div>
@@ -832,7 +848,7 @@ function WateringRun({ run, expanded, onToggle, gaps, activeTooltip, onTooltipTo
 
 // ── Main timeline component ────────────────────────────────────
 
-export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onClearTimeline, onSetAsProfilePhoto }) {
+export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onClearTimeline, onSetAsProfilePhoto, zones = [] }) {
   const [activeTooltip, setActiveTooltip] = useState(null) // one at a time
   const [runExpanded, setRunExpanded]     = useState({})   // runKey → bool override
   const [confirmClear, setConfirmClear]   = useState(false)
@@ -1032,6 +1048,7 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onClea
                     onToggle={() => toggleTooltip(event.id)}
                     onDelete={onDeleteEvent}
                     inPeriod={inPeriod}
+                    zones={zones}
                   />
                 )
               })
