@@ -1,16 +1,17 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, lazy, Suspense } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Navigation from './components/Navigation'
-import SearchModal from './components/SearchModal'
 import DeathModal from './components/DeathModal'
 import DeleteModal from './components/DeleteModal'
-import PlantDetail from './components/PlantDetail'
 import Dashboard from './pages/Dashboard'
-import Biblioteka from './pages/Biblioteka'
-import Zinynas from './pages/Zinynas'
 import { usePlants } from './hooks/usePlants'
 import PinGate from './components/PinGate'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
+
+const SearchModal = lazy(() => import('./components/SearchModal'))
+const PlantDetail = lazy(() => import('./components/PlantDetail'))
+const Biblioteka  = lazy(() => import('./pages/Biblioteka'))
+const Zinynas     = lazy(() => import('./pages/Zinynas'))
 
 export default function App() {
   const [tab, setTab]                 = useState('dashboard')
@@ -115,23 +116,27 @@ export default function App() {
       />
     )},
     { key: 'biblioteka', page: (
-      <Biblioteka
-        plants={library}
-        onTap={p => openDetail(p, p.kategorija)}
-        onSearch={q => { setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
-        onSaveToZinynas={addToZinynas}
-        onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
-        onRefresh={syncFromRemote}
-      />
+      <Suspense fallback={null}>
+        <Biblioteka
+          plants={library}
+          onTap={p => openDetail(p, p.kategorija)}
+          onSearch={q => { setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
+          onSaveToZinynas={addToZinynas}
+          onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
+          onRefresh={syncFromRemote}
+        />
+      </Suspense>
     )},
     { key: 'zinynas', page: (
-      <Zinynas
-        entries={zinynas}
-        onAdd={addToZinynas}
-        onDelete={deleteFromZinynas}
-        onToggleStar={toggleZinynasStarred}
-        plants={dashboard}
-      />
+      <Suspense fallback={null}>
+        <Zinynas
+          entries={zinynas}
+          onAdd={addToZinynas}
+          onDelete={deleteFromZinynas}
+          onToggleStar={toggleZinynasStarred}
+          plants={dashboard}
+        />
+      </Suspense>
     )},
   ]
 
@@ -159,44 +164,48 @@ export default function App() {
 
       <AnimatePresence>
         {detailPlant && livePlant && (
-          <PlantDetail
-            key="detail"
-            plant={livePlant}
-            section={detailPlant.section}
-            onClose={closeDetail}
-            onAction={detailAction}
-            onCommentSave={(id, comment) => updateComment(id, comment)}
-            onUzrasaiSave={(id, uzrasai) => updateUzrasai(id, uzrasai)}
-            onStatusChange={(id, status, meta) => updateStatus(id, status, meta)}
-            onUpdateNames={(id, patch) => updatePlant(id, patch)}
-            onImageSave={async (id, url, fromHistory = false) => updateImage(id, await uploadImage(url, id), fromHistory)}
-            onSaveChat={(id, msgs) => updateChat(id, msgs)}
-            onSaveToZinynas={addToZinynas}
-            onAddTimelineEvent={addTimelineEvent}
-            onDeleteTimelineEvent={deleteTimelineEvent}
-            onClearTimeline={id => clearTimeline(id)}
-            zones={zones}
-            onZoneChange={movePlantToZone}
-          />
+          <Suspense fallback={null}>
+            <PlantDetail
+              key="detail"
+              plant={livePlant}
+              section={detailPlant.section}
+              onClose={closeDetail}
+              onAction={detailAction}
+              onCommentSave={(id, comment) => updateComment(id, comment)}
+              onUzrasaiSave={(id, uzrasai) => updateUzrasai(id, uzrasai)}
+              onStatusChange={(id, status, meta) => updateStatus(id, status, meta)}
+              onUpdateNames={(id, patch) => updatePlant(id, patch)}
+              onImageSave={async (id, url, fromHistory = false) => updateImage(id, await uploadImage(url, id), fromHistory)}
+              onSaveChat={(id, msgs) => updateChat(id, msgs)}
+              onSaveToZinynas={addToZinynas}
+              onAddTimelineEvent={addTimelineEvent}
+              onDeleteTimelineEvent={deleteTimelineEvent}
+              onClearTimeline={id => clearTimeline(id)}
+              zones={zones}
+              onZoneChange={movePlantToZone}
+            />
+          </Suspense>
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {showSearch && (
-          <SearchModal
-            key="search"
-            plants={library}
-            initialQuery={searchInitialQuery}
-            onAddToWishlist={plant => { addToWishlist(plant); setTab('biblioteka') }}
-            onAddToDashboard={plant => { addToDashboard(plant); setTab('dashboard') }}
-            onClose={() => { setShowSearch(false); setSearchInitialQuery('') }}
-            onViewPlant={plant => {
-              setShowSearch(false)
-              setSearchInitialQuery('')
-              openDetail(plant, plant.kategorija === 'istorija' ? 'istorija' : plant.kategorija === 'nori' ? 'nori' : 'auginama')
-            }}
-            onPromote={id => { moveToDashboard(id); setShowSearch(false); setSearchInitialQuery(''); setTab('dashboard') }}
-          />
+          <Suspense fallback={null}>
+            <SearchModal
+              key="search"
+              plants={library}
+              initialQuery={searchInitialQuery}
+              onAddToWishlist={plant => { addToWishlist(plant); setTab('biblioteka') }}
+              onAddToDashboard={plant => { addToDashboard(plant); setTab('dashboard') }}
+              onClose={() => { setShowSearch(false); setSearchInitialQuery('') }}
+              onViewPlant={plant => {
+                setShowSearch(false)
+                setSearchInitialQuery('')
+                openDetail(plant, plant.kategorija === 'istorija' ? 'istorija' : plant.kategorija === 'nori' ? 'nori' : 'auginama')
+              }}
+              onPromote={id => { moveToDashboard(id); setShowSearch(false); setSearchInitialQuery(''); setTab('dashboard') }}
+            />
+          </Suspense>
         )}
       </AnimatePresence>
 
