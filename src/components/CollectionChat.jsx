@@ -1,14 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { X, ArrowUp, Globe } from 'lucide-react'
-import Anthropic from '@anthropic-ai/sdk'
-
-const client = new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true,
-})
-
-const MAX_API = 12
+import { useChatStream } from '../hooks/useChatStream'
 
 // Parses assistant message text and wraps matched plant names in clickable buttons
 function renderMessage(text, plants, onViewPlant) {
@@ -47,14 +40,11 @@ function renderMessage(text, plants, onViewPlant) {
 const DEFAULT_HEIGHT = '68dvh'
 
 export default function CollectionChat({ systemPrompt, title, icon, iconLg, onClose, onSaveToZinynas, plants, onViewPlant }) {
-  const [messages, setMessages]   = useState([])
+  const { messages, streaming, streamText, send } = useChatStream({ maxTokens: 400 })
   const [input, setInput]         = useState('')
-  const [streaming, setStreaming] = useState(false)
-  const [streamText, setStreamText] = useState('')
   const [savingText, setSavingText] = useState(null)
   const [noteText, setNoteText]   = useState('')
   const [panelHeight, setPanelHeight] = useState(DEFAULT_HEIGHT)
-  const abortRef  = useRef(null)
   const bottomRef = useRef(null)
   const inputRef  = useRef(null)
 
@@ -76,50 +66,11 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
 
   useEffect(() => { inputRef.current?.focus() }, [])
 
-  const send = async () => {
+  const handleSend = () => {
     const text = input.trim()
-    if (!text || streaming) return
+    if (!text) return
     setInput('')
-
-    const userMsg    = { role: 'user', content: text }
-    const newMessages = [...messages, userMsg]
-    setMessages(newMessages)
-    setStreaming(true)
-    setStreamText('')
-
-    abortRef.current?.abort()
-    const controller = new AbortController()
-    abortRef.current = controller
-
-    try {
-      const apiMessages = newMessages.slice(-MAX_API).map(m => ({ role: m.role, content: m.content }))
-      let fullText = ''
-
-      const stream = await client.messages.stream({
-        model:      'claude-sonnet-4-6',
-        max_tokens: 400,
-        system:     systemPrompt,
-        messages:   apiMessages,
-      })
-
-      for await (const chunk of stream) {
-        if (controller.signal.aborted) return
-        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-          fullText += chunk.delta.text
-          setStreamText(fullText)
-        }
-      }
-
-      if (controller.signal.aborted) return
-      setMessages(prev => [...prev, { role: 'assistant', content: fullText }])
-      setStreamText('')
-    } catch (e) {
-      if (e.name !== 'AbortError' && !controller.signal.aborted) {
-        setMessages(m => [...m, { role: 'assistant', content: 'Klaida. Bandyk dar kartą.' }])
-      }
-    } finally {
-      if (!controller.signal.aborted) setStreaming(false)
-    }
+    send(text, systemPrompt)
   }
 
   return (
@@ -127,7 +78,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
       <div className="absolute inset-0 pointer-events-auto" onClick={onClose} />
 
       <motion.div
-        className="relative w-full max-w-[430px] bg-app rounded-t-3xl flex flex-col shadow-2xl pointer-events-auto"
+        className="relative w-full max-w-[430px] bg-app rounded-t-4xl flex flex-col shadow-2xl pointer-events-auto"
         style={{ height: panelHeight, transition: 'height 0.2s ease' }}
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
@@ -227,11 +178,11 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
             placeholder="Rašykite klausimą..."
             value={input}
             onChange={e => setInput(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
             className="flex-1 bg-white border border-gray-200 rounded-2xl px-4 py-2.5 text-sm outline-none text-gray-800 placeholder-gray-500"
           />
           <button
-            onClick={send}
+            onClick={handleSend}
             disabled={!input.trim() || streaming}
             className="w-9 h-9 bg-sage-500 disabled:opacity-40 rounded-full flex items-center justify-center text-white flex-shrink-0 transition-opacity"
           >
@@ -242,7 +193,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
         {/* Save-to-zinynas sheet */}
         {savingText !== null && (
           <motion.div
-            className="absolute inset-x-0 bottom-0 bg-app rounded-t-3xl px-5 pt-4 pb-6 shadow-2xl border-t border-warm-border z-10"
+            className="absolute inset-x-0 bottom-0 bg-app rounded-t-4xl px-5 pt-4 pb-6 shadow-2xl border-t border-warm-border z-10"
             initial={{ y: '100%' }} animate={{ y: 0 }}
             transition={{ type: 'spring', damping: 32, stiffness: 320 }}
           >

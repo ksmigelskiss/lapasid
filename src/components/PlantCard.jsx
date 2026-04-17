@@ -1,7 +1,13 @@
 import { useState, memo } from 'react'
-import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost, FileText, MapPin } from 'lucide-react'
+import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost, FileText, MapPin, FlaskConical } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
+import { getWateringForecast } from '../utils/wateringForecast'
+
+function daysSinceDate(iso) {
+  if (!iso) return null
+  return Math.floor((Date.now() - new Date(iso + 'T00:00:00')) / 86400000)
+}
 
 function DotScore({ value, max = 3, color }) {
   return (
@@ -22,6 +28,11 @@ const PlantCard = memo(function PlantCard({ plant, section, onTap, cardBg = 'bg-
   const fertFC      = section === 'auginama' ? getFertilizingForecast(plant) : null
   const fertOverdue = fertFC?.isOverdue ?? false
   const dormFC      = section === 'auginama' ? getDormancyForecast(plant) : null
+  const waterFC     = section === 'auginama' ? getWateringForecast(plant) : null
+  const waterOverdue = waterFC?.isOverdue ?? false
+  const waterDays   = waterFC?.lastDate ? daysSinceDate(waterFC.lastDate) : null
+  const fertLastDate = fertFC ? (plant.timeline ?? []).filter(e => e.type === 'fertilizing').sort((a,b) => new Date(b.date)-new Date(a.date))[0]?.date : null
+  const fertDays    = fertLastDate ? daysSinceDate(fertLastDate) : null
 
   const bgClass = section === 'history' ? 'bg-surface-2'
     : section === 'nori'    ? 'bg-blush-50'
@@ -44,18 +55,38 @@ const PlantCard = memo(function PlantCard({ plant, section, onTap, cardBg = 'bg-
           </div>
         )}
 
-        {/* Status dot */}
-        <div className={`absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 shadow-sm ${
-          section !== 'auginama'
-            ? 'border-white/60 bg-transparent'
-            : status === 'sick'       ? 'border-white bg-orange-400'
-            : status === 'quarantine' ? 'border-white bg-red-500'
-            :                           'border-white bg-green-400'
-        }`} />
+        {/* Status dot (non-auginama only) */}
+        {section !== 'auginama' && (
+          <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 border-white/60 bg-transparent shadow-sm" />
+        )}
+
+        {/* Forecast icons (auginama only) — top-right */}
+        {section === 'auginama' && (
+          <div className="absolute top-2 right-2 flex flex-col gap-0.5 items-end">
+            <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
+              <Droplets size={9} className={waterOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/50'} />
+              {waterDays != null && (
+                <span className={`text-[8px] font-semibold leading-none ${waterOverdue ? 'text-sky-200' : 'text-white/50'}`}>
+                  {waterDays}d
+                </span>
+              )}
+            </div>
+            {fertFC?.intervalDays != null && (
+              <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
+                <FlaskConical size={9} className={fertOverdue ? 'text-amber-300 fill-amber-300' : 'text-white/50'} />
+                {fertDays != null && (
+                  <span className={`text-[8px] font-semibold leading-none ${fertOverdue ? 'text-amber-200' : 'text-white/50'}`}>
+                    {fertDays}d
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Right-side badge column */}
         {(showDashboardBadge || plant.pirkinys || section === 'istorija' || noteCount > 0) && (
-          <div className="absolute top-6 right-1.5 flex flex-col gap-1 items-center">
+          <div className={`absolute ${section === 'auginama' ? 'top-12' : 'top-6'} right-1.5 flex flex-col gap-1 items-center`}>
             {showDashboardBadge && (
               <div className="bg-sage-500/90 backdrop-blur-sm rounded-md p-0.5">
                 <House size={10} className="text-white" />
@@ -84,13 +115,6 @@ const PlantCard = memo(function PlantCard({ plant, section, onTap, cardBg = 'bg-
         {plant.toksiskas && (
           <div className="absolute top-2 left-2 bg-red-500/90 backdrop-blur-sm rounded-lg px-1.5 py-0.5">
             <span className="flex items-center gap-0.5 text-[9px] text-white font-bold"><Skull size={9} /> TOKSIŠKA</span>
-          </div>
-        )}
-
-        {/* Fertilizing overdue badge */}
-        {fertOverdue && (
-          <div className="absolute bottom-2 right-2 bg-orange-500/90 backdrop-blur-sm rounded-lg px-1.5 py-0.5">
-            <span className="flex items-center gap-0.5 text-[9px] text-white font-bold"><Leaf size={9} /> +{Math.abs(fertFC.daysUntil)}d</span>
           </div>
         )}
 

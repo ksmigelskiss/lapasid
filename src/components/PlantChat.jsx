@@ -1,30 +1,26 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { X, ArrowUp, Bookmark, Globe } from 'lucide-react'
-import Anthropic from '@anthropic-ai/sdk'
 import { buildChatSystemPrompt } from '../utils/plantChatContext'
 import { getPlantMood } from '../utils/plantMood'
 import { PlantAvatar } from './icons/ChatIcons'
+import { useChatStream } from '../hooks/useChatStream'
 
-const client = new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true,
-})
-
-const MAX_STORED = 40   // messages kept in localStorage
-const MAX_API    = 12   // messages sent to API (older become context via system prompt)
+const MAX_STORED = 40
 
 const DEFAULT_HEIGHT = '62dvh'
 
 export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSaveToZinynas, initialQuery }) {
-  const [messages, setMessages]   = useState(() => plant.chat ?? [])
+  const { messages, streaming, streamText, send } = useChatStream({
+    initialMessages: plant.chat ?? [],
+    maxTokens:       300,
+    maxStored:       MAX_STORED,
+    onSuccess:       (finalMessages) => onSaveChat?.(plant.id, finalMessages),
+  })
   const [input, setInput]         = useState(initialQuery ?? '')
-  const [streaming, setStreaming] = useState(false)
-  const [streamText, setStreamText] = useState('')
-  const [savingNote, setSavingNote] = useState(null) // text being saved as note
+  const [savingNote, setSavingNote] = useState(null)
   const [noteText, setNoteText]   = useState('')
   const [panelHeight, setPanelHeight] = useState(DEFAULT_HEIGHT)
-  const abortRef  = useRef(null)
   const bottomRef = useRef(null)
   const inputRef  = useRef(null)
   const mood      = getPlantMood(plant)
@@ -48,59 +44,11 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
     return () => vv.removeEventListener('resize', update)
   }, [])
 
-  const send = async () => {
+  const handleSend = () => {
     const text = input.trim()
-    if (!text || streaming) return
+    if (!text) return
     setInput('')
-
-    const userMsg    = { role: 'user',      content: text }
-    const newMessages = [...messages, userMsg]
-    setMessages(newMessages)
-
-    setStreaming(true)
-    setStreamText('')
-
-    abortRef.current?.abort()
-    const controller = new AbortController()
-    abortRef.current = controller
-
-    try {
-      const systemPrompt = buildChatSystemPrompt(plant)
-      const apiMessages  = newMessages.slice(-MAX_API).map(m => ({
-        role: m.role, content: m.content,
-      }))
-
-      let fullText = ''
-      const stream = await client.messages.stream({
-        model:      'claude-sonnet-4-6',
-        max_tokens: 300,
-        system:     systemPrompt,
-        messages:   apiMessages,
-      })
-
-      for await (const chunk of stream) {
-        if (controller.signal.aborted) return
-        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-          fullText += chunk.delta.text
-          setStreamText(fullText)
-        }
-      }
-
-      if (controller.signal.aborted) return
-
-      const assistantMsg = { role: 'assistant', content: fullText }
-      const finalMessages = [...newMessages, assistantMsg].slice(-MAX_STORED)
-      setMessages(finalMessages)
-      setStreamText('')
-      onSaveChat?.(plant.id, finalMessages)
-    } catch (e) {
-      if (e.name !== 'AbortError' && !controller.signal.aborted) {
-        const errMsg = { role: 'assistant', content: '...' }
-        setMessages(m => [...m, errMsg])
-      }
-    } finally {
-      if (!controller.signal.aborted) setStreaming(false)
-    }
+    send(text, buildChatSystemPrompt(plant))
   }
 
   return (
@@ -112,7 +60,7 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
       />
 
       <motion.div
-        className="relative w-full max-w-[430px] bg-app rounded-t-3xl flex flex-col shadow-2xl pointer-events-auto"
+        className="relative w-full max-w-[430px] bg-app rounded-t-4xl flex flex-col shadow-2xl pointer-events-auto"
         style={{ height: panelHeight, transition: 'height 0.2s ease' }}
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
@@ -225,11 +173,11 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
             placeholder="Rašykite žinutę..."
             value={input}
             onChange={e => setInput(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
             className="flex-1 bg-white border border-gray-200 rounded-2xl px-4 py-2.5 text-sm outline-none text-gray-800 placeholder-gray-500"
           />
           <button
-            onClick={send}
+            onClick={handleSend}
             disabled={!input.trim() || streaming}
             className="w-9 h-9 bg-sage-500 disabled:opacity-40 rounded-full flex items-center justify-center text-white flex-shrink-0 transition-opacity"
           >
@@ -240,7 +188,7 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
         {/* Save-note sheet */}
         {savingNote !== null && (
           <motion.div
-            className="absolute inset-x-0 bottom-0 bg-app rounded-t-3xl px-5 pt-4 pb-6 shadow-2xl border-t border-warm-border z-10"
+            className="absolute inset-x-0 bottom-0 bg-app rounded-t-4xl px-5 pt-4 pb-6 shadow-2xl border-t border-warm-border z-10"
             initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 32, stiffness: 320 }}
           >

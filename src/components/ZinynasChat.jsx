@@ -1,14 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ArrowUp, BookOpen } from 'lucide-react'
-import Anthropic from '@anthropic-ai/sdk'
-
-const client = new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true,
-})
-
-const MAX_API = 12
+import { useChatStream } from '../hooks/useChatStream'
 
 function buildSystemPrompt(entry, allEntries, plants) {
   const plantList = (plants ?? [])
@@ -29,12 +22,12 @@ ${plantList ? `\nVARTOTOJO AUGINAMI AUGALAI:\n${plantList}\n` : ''}${zinynasCont
 Atsakinėk lietuviškai, glaustai ir praktiškai. Jei reikia, remkis vartotojo kolekcija ir kitais žinyno įrašais.`
 }
 
+const DEFAULT_HEIGHT = '65dvh'
+
 export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
-  const [messages, setMessages]     = useState([])
+  const { messages, streaming, streamText, send } = useChatStream({ maxTokens: 400 })
   const [input, setInput]           = useState('')
-  const [streaming, setStreaming]   = useState(false)
-  const [streamText, setStreamText] = useState('')
-  const abortRef  = useRef(null)
+  const [panelHeight, setPanelHeight] = useState(DEFAULT_HEIGHT)
   const bottomRef = useRef(null)
   const inputRef  = useRef(null)
 
@@ -44,49 +37,22 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
 
   useEffect(() => { inputRef.current?.focus() }, [])
 
-  const send = async () => {
-    const text = input.trim()
-    if (!text || streaming) return
-    setInput('')
-
-    const userMsg     = { role: 'user', content: text }
-    const newMessages = [...messages, userMsg]
-    setMessages(newMessages)
-    setStreaming(true)
-    setStreamText('')
-
-    abortRef.current?.abort()
-    const controller = new AbortController()
-    abortRef.current = controller
-
-    try {
-      const apiMessages = newMessages.slice(-MAX_API).map(m => ({ role: m.role, content: m.content }))
-      let fullText = ''
-      const stream = await client.messages.stream({
-        model:      'claude-sonnet-4-6',
-        max_tokens: 400,
-        system:     buildSystemPrompt(entry, allEntries, plants),
-        messages:   apiMessages,
-      })
-
-      for await (const chunk of stream) {
-        if (controller.signal.aborted) return
-        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-          fullText += chunk.delta.text
-          setStreamText(fullText)
-        }
-      }
-
-      if (controller.signal.aborted) return
-      setMessages([...newMessages, { role: 'assistant', content: fullText }])
-      setStreamText('')
-    } catch (e) {
-      if (e.name !== 'AbortError' && !controller.signal.aborted) {
-        setMessages(m => [...m, { role: 'assistant', content: '...' }])
-      }
-    } finally {
-      if (!controller.signal.aborted) setStreaming(false)
+  useEffect(() => {
+    const vv = window.visualViewport
+    if (!vv) return
+    const update = () => {
+      const kbOpen = window.innerHeight - vv.height > 100
+      setPanelHeight(kbOpen ? `${vv.height}px` : DEFAULT_HEIGHT)
     }
+    vv.addEventListener('resize', update)
+    return () => vv.removeEventListener('resize', update)
+  }, [])
+
+  const handleSend = () => {
+    const text = input.trim()
+    if (!text) return
+    setInput('')
+    send(text, buildSystemPrompt(entry, allEntries, plants))
   }
 
   return (
@@ -94,8 +60,8 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
       <div className="absolute inset-0 pointer-events-auto" onClick={onClose} />
 
       <motion.div
-        className="relative w-full max-w-[430px] bg-app rounded-t-3xl flex flex-col shadow-2xl pointer-events-auto"
-        style={{ height: '65dvh' }}
+        className="relative w-full max-w-[430px] bg-app rounded-t-4xl flex flex-col shadow-2xl pointer-events-auto"
+        style={{ height: panelHeight, transition: 'height 0.2s ease' }}
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onClick={e => e.stopPropagation()}
@@ -179,11 +145,11 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
             placeholder="Rašykite klausimą..."
             value={input}
             onChange={e => setInput(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
+            onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
             className="flex-1 bg-white border border-gray-200 rounded-2xl px-4 py-2.5 text-sm outline-none text-gray-800 placeholder-gray-500"
           />
           <button
-            onClick={send}
+            onClick={handleSend}
             disabled={!input.trim() || streaming}
             className="w-9 h-9 bg-sage-500 disabled:opacity-40 rounded-full flex items-center justify-center text-white flex-shrink-0 transition-opacity"
           >

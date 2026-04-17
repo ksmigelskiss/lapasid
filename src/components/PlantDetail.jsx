@@ -734,7 +734,7 @@ function BottomSheet({ onClose, children }) {
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }} onClick={onClose} />
       <motion.div
-        className="relative w-full max-w-[430px] bg-white rounded-t-4xl px-5 pb-8 pt-3"
+        className="relative w-full max-w-[430px] bg-app rounded-t-4xl px-5 pb-8 pt-3"
         style={{ y }}
         drag="y" dragControls={dragControls} dragListener={false}
         dragConstraints={{ top: 0 }} dragElastic={{ top: 0, bottom: 0.25 }}
@@ -967,7 +967,7 @@ export default function PlantDetail({
     <div className="fixed inset-0 z-[70] flex items-end justify-center">
       {/* Backdrop */}
       <motion.div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}

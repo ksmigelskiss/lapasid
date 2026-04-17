@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin } from 'lucide-react'
+import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout } from 'lucide-react'
 const GARDENER = '/gardener.png'
 import PlantCard from '../components/PlantCard'
 import CollectionChat from '../components/CollectionChat'
@@ -188,10 +188,10 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setWaterSession(true)}
-                className="bg-sky-50 active:bg-sky-100 transition-colors rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]"
+                className="bg-sage-50 active:bg-sage-100 transition-colors rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]"
               >
-                <Droplets size={20} className="text-sky-400 leading-none" />
-                <span className="text-[10px] text-sky-400 font-medium mt-0.5">laistymas</span>
+                <Sprout size={20} className="text-sage-500 leading-none" />
+                <span className="text-[10px] text-sage-500 font-medium mt-0.5">priežiūra</span>
               </button>
               <div className="bg-sage-50 rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]">
                 <span className="text-2xl font-extrabold text-sage-600 leading-none">{plants.length}</span>

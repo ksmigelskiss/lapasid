@@ -1,17 +1,25 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Droplets, CheckCircle2, MapPin, ShieldAlert, Settings2 } from 'lucide-react'
+import { X, Droplets, FlaskConical, CheckCircle2, MapPin, ShieldAlert, Settings2, Leaf } from 'lucide-react'
 import { getWateringForecast } from '../utils/wateringForecast'
+import { getFertilizingForecast } from '../utils/fertilizingForecast'
+import { makeId, today } from '../utils/plantTransform'
+
 import { ZoneManagerSheet } from './ZoneManager'
 
 function daysSince(dateStr) {
   if (!dateStr) return null
-  return Math.floor((new Date() - new Date(dateStr)) / 86400000)
+  return Math.floor((Date.now() - new Date(dateStr + 'T00:00:00')) / 86400000)
 }
 
 function PlantTile({ plant, checked, onToggle }) {
   const wc = getWateringForecast(plant)
-  const days = wc.lastDate ? daysSince(wc.lastDate) : null
+  const fc = getFertilizingForecast(plant)
+  const waterDays = wc.lastDate ? daysSince(wc.lastDate) : null
+  const fertLastDate = (plant.timeline ?? [])
+    .filter(e => e.type === 'fertilizing')
+    .sort((a, b) => new Date(b.date) - new Date(a.date))[0]?.date
+  const fertDays = fertLastDate ? daysSince(fertLastDate) : null
   const overdue = wc.isOverdue
 
   return (
@@ -34,24 +42,42 @@ function PlantTile({ plant, checked, onToggle }) {
         <p className="text-[13px] font-semibold text-white leading-tight">
           {plant.lietuviškas || plant.lotyniskas}
         </p>
-        <p className={`text-[11px] leading-tight mt-0.5 ${overdue ? 'text-orange-300 font-semibold' : 'text-white/70'}`}>
-          {days == null
-            ? '—'
-            : overdue
-              ? `+${Math.abs(wc.daysUntil)}d`
-              : days === 0 ? 'šiandien' : `${days}d`
-          }
-        </p>
+        {plant.lotyniskas && plant.lietuviškas && (
+          <p className="text-[10px] text-white/60 italic leading-tight mt-0.5 truncate">
+            {plant.lotyniskas}
+          </p>
+        )}
       </div>
 
-      {/* Watering indicator */}
-      <div className="absolute top-2 right-2">
+      {/* Top-right column: selection circle + forecast icons */}
+      <div className="absolute top-2 right-2 flex flex-col items-center gap-1">
         {checked
           ? <div className="w-6 h-6 rounded-full bg-sky-400 flex items-center justify-center shadow-md">
               <Droplets size={14} className="text-white" />
             </div>
           : <div className="w-6 h-6 rounded-full bg-black/30 border-2 border-white/80" />
         }
+        {/* Forecast icons */}
+        <div className="flex flex-col gap-0.5 items-center">
+          <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
+            <Droplets size={8} className={wc.isOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/50'} />
+            {waterDays != null && (
+              <span className={`text-[7px] font-semibold leading-none ${wc.isOverdue ? 'text-sky-200' : 'text-white/50'}`}>
+                {waterDays}d
+              </span>
+            )}
+          </div>
+          {fc?.intervalDays != null && (
+            <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
+              <FlaskConical size={8} className={fc.isOverdue ? 'text-amber-300 fill-amber-300' : 'text-white/50'} />
+              {fertDays != null && (
+                <span className={`text-[7px] font-semibold leading-none ${fc.isOverdue ? 'text-amber-200' : 'text-white/50'}`}>
+                  {fertDays}d
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </button>
   )
@@ -102,27 +128,36 @@ function ZoneGroup({ label, plants, checked, onToggle, quarantine = false }) {
 }
 
 export default function WateringSession({ plants, zones, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones, onClose }) {
-  const today = new Date().toISOString().slice(0, 10)
-  const makeId = () => Math.random().toString(36).slice(2, 10)
-
   const activePlants = plants.filter(p => p.kategorija === 'auginama')
 
   const [checked, setChecked] = useState(() =>
     Object.fromEntries(activePlants.map(p => [p.id, false]))
   )
-  const [done, setDone] = useState(false)
+  const [done, setDone] = useState(null) // null | 'watering' | 'fertilizing'
   const [showZones, setShowZones] = useState(false)
 
   const setOne = (id, val) => setChecked(prev => ({ ...prev, [id]: val }))
 
   const checkedCount = Object.values(checked).filter(Boolean).length
 
-  const handleConfirm = () => {
+  const handleWater = () => {
+    const todayStr = today()
     activePlants.forEach(p => {
       if (!checked[p.id]) return
-      onAddTimelineEvent(p.id, { id: makeId(), type: 'watering', date: today })
+      onAddTimelineEvent(p.id, { id: makeId(), type: 'watering', date: todayStr })
     })
-    setDone(true)
+    setDone('watering')
+    setTimeout(onClose, 1400)
+  }
+
+  const handleFertilize = () => {
+    const todayStr = today()
+    activePlants.forEach(p => {
+      if (!checked[p.id]) return
+      onAddTimelineEvent(p.id, { id: makeId(), type: 'watering',    date: todayStr })
+      onAddTimelineEvent(p.id, { id: makeId(), type: 'fertilizing', date: todayStr })
+    })
+    setDone('fertilizing')
     setTimeout(onClose, 1400)
   }
 
@@ -159,8 +194,8 @@ export default function WateringSession({ plants, zones, onAddTimelineEvent, onA
 
         <div className="flex items-center justify-between px-5 mb-4">
           <div className="flex items-center gap-2">
-            <Droplets size={18} className="text-sky-400" />
-            <h2 className="text-base font-bold text-gray-900">Laistymo seansas</h2>
+            <Leaf size={18} className="text-sage-500" />
+            <h2 className="text-base font-bold text-gray-900">Priežiūros seansas</h2>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -204,23 +239,34 @@ export default function WateringSession({ plants, zones, onAddTimelineEvent, onA
                 key="done"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="w-full py-4 rounded-2xl bg-sky-50 flex items-center justify-center gap-2"
+                className={`w-full py-4 rounded-2xl flex items-center justify-center gap-2 ${
+                  done === 'fertilizing' ? 'bg-amber-50' : 'bg-sky-50'
+                }`}
               >
-                <CheckCircle2 size={18} className="text-sky-400" />
-                <span className="text-sm font-semibold text-sky-600">
-                  Įrašyta {checkedCount} augal{checkedCount === 1 ? 'as' : 'ai'}!
+                <CheckCircle2 size={18} className={done === 'fertilizing' ? 'text-amber-500' : 'text-sky-400'} />
+                <span className={`text-sm font-semibold ${done === 'fertilizing' ? 'text-amber-700' : 'text-sky-600'}`}>
+                  {done === 'fertilizing' ? 'Laistymas + trąšos' : 'Laistymas'} — {checkedCount} augal{checkedCount === 1 ? 'as' : 'ai'}!
                 </span>
               </motion.div>
             ) : (
-              <motion.button
-                key="btn"
-                onClick={handleConfirm}
-                disabled={checkedCount === 0}
-                className="w-full py-4 rounded-2xl text-sm font-bold text-white bg-sky-400 disabled:opacity-40 flex items-center justify-center gap-2"
-              >
-                <Droplets size={16} />
-                Laistyti {checkedCount > 0 ? `${checkedCount} augal${checkedCount === 1 ? 'ą' : 'us'}` : ''}
-              </motion.button>
+              <motion.div key="btns" className="flex gap-2">
+                <button
+                  onClick={handleWater}
+                  disabled={checkedCount === 0}
+                  className="flex-1 py-4 rounded-2xl text-sm font-bold text-white bg-sky-400 disabled:opacity-40 flex items-center justify-center gap-2 active:bg-sky-500 transition-colors"
+                >
+                  <Droplets size={16} />
+                  Laistyti{checkedCount > 0 ? ` ${checkedCount}` : ''}
+                </button>
+                <button
+                  onClick={handleFertilize}
+                  disabled={checkedCount === 0}
+                  className="flex-1 py-4 rounded-2xl text-sm font-bold text-white bg-amber-500 disabled:opacity-40 flex items-center justify-center gap-2 active:bg-amber-600 transition-colors"
+                >
+                  <FlaskConical size={16} />
+                  Tręšti{checkedCount > 0 ? ` ${checkedCount}` : ''}
+                </button>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
