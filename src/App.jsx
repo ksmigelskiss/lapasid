@@ -119,10 +119,10 @@ export default function App() {
       <Suspense fallback={null}>
         <Biblioteka
           plants={library}
-          onTap={p => openDetail(p, p.kategorija)}
+          onTap={p => openDetail(p, p.kategorija === 'auginama' ? 'nori' : p.kategorija)}
           onSearch={q => { setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
           onSaveToZinynas={addToZinynas}
-          onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
+          onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'nori' : p.kategorija)}
           onRefresh={syncFromRemote}
         />
       </Suspense>
