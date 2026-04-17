@@ -224,7 +224,11 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             <Search size={15} className="text-gray-400 flex-shrink-0" />
             <input
               ref={inputRef}
-              type="text"
+              type="search"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="none"
+              inputMode="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => {
