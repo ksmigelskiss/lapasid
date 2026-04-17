@@ -155,7 +155,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
 
   useEffect(() => { if (searching) inputRef.current?.focus() }, [searching])
   const closeSearch = useCallback(() => { setSearching(false); setQuery('') }, [])
-  const launchFullSearch = useCallback(() => { onSearch(); closeSearch() }, [onSearch, closeSearch])
+  const launchFullSearch = useCallback(() => { onSearch(query); closeSearch() }, [onSearch, query, closeSearch])
 
   const searchResults = useMemo(() => {
     if (!query.trim()) return []

@@ -102,7 +102,7 @@ export default function App() {
         allPlants={library}
         zones={zones}
         onTap={p => openDetail(p, 'auginama')}
-        onSearch={() => setShowSearch(true)}
+        onSearch={q => { setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
         onFetchAllImages={fetchAllImages}
         fetchingAll={fetchingAll}
         onSaveToZinynas={addToZinynas}
