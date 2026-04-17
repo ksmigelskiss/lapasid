@@ -990,18 +990,20 @@ export default function PlantDetail({
         exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
       >
-        {/* Drag handle */}
-        <div
-          onPointerDown={e => dragControls.start(e)}
-          className="absolute top-0 left-0 right-0 z-20 flex justify-center pt-2.5 pb-2 cursor-grab active:cursor-grabbing select-none"
-          style={{ touchAction: 'none' }}
-        >
-          <div className="w-10 h-1 bg-black/15 rounded-full" />
+        {/* Drag handle — pointer-events only on the pill, not full width */}
+        <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pt-2.5 pb-2 pointer-events-none select-none">
+          <div
+            onPointerDown={e => dragControls.start(e)}
+            className="px-8 py-1 cursor-grab active:cursor-grabbing pointer-events-auto"
+            style={{ touchAction: 'none' }}
+          >
+            <div className="w-10 h-1 bg-black/15 rounded-full" />
+          </div>
         </div>
 
         {/* ── Hero ── */}
         {plant.image && !heroError ? (
-          <div className="relative h-52 flex-shrink-0">
+          <div className="relative h-52 flex-shrink-0 rounded-t-4xl overflow-hidden">
             <img
               src={plant.image} alt={plant.lietuviškas}
               className="w-full h-full object-cover"
@@ -1089,7 +1091,7 @@ export default function PlantDetail({
             </div>
           </div>
         ) : (
-          <div className={`flex-shrink-0 px-5 pt-7 pb-4 ${
+          <div className={`flex-shrink-0 px-5 pt-7 pb-4 rounded-t-4xl ${
             section === 'istorija' ? 'bg-surface-2' :
             section === 'nori'     ? 'bg-blush-50' : 'bg-sage-50'
           }`}>
