@@ -50,11 +50,13 @@ function PlantTile({ plant, checked, onToggle, onLongPress }) {
       }`}
     >
       {/* Photo */}
-      <div className="absolute inset-0 bg-surface-2">
-        {plant.image
-          ? <img src={plant.image} alt="" draggable={false} className="w-full h-full object-cover pointer-events-none" />
-          : <div className="w-full h-full flex items-center justify-center text-2xl">{plant.emoji ?? '🌿'}</div>
-        }
+      <div
+        className="absolute inset-0 bg-surface-2"
+        style={plant.image ? { backgroundImage: `url(${plant.image})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+      >
+        {!plant.image && (
+          <div className="w-full h-full flex items-center justify-center text-2xl">{plant.emoji ?? '🌿'}</div>
+        )}
       </div>
 
       {/* Bottom gradient + name */}
