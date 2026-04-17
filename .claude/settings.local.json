@@ -22,7 +22,16 @@
       "Bash(git add:*)",
       "Bash(git push:*)",
       "Bash(git commit:*)",
-      "Bash(grep -r \"VITE_ANTHROPIC_API_KEY\" /Users/kestutissmigelskis/geliu-db/.env*)"
+      "Bash(grep -r \"VITE_ANTHROPIC_API_KEY\" /Users/kestutissmigelskis/geliu-db/.env*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(find /Users/kestutissmigelskis/geliu-db/src -type f \\\\\\( -name \"*.jsx\" -o -name \"*.js\" -o -name \"*.tsx\" -o -name \"*.ts\" \\\\\\) -exec wc -l {} +)",
+      "Bash(ls /Users/kestutissmigelskis/geliu-db/*.md)",
+      "Bash(find src:*)",
+      "Bash(sort -k2)",
+      "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/components/*.jsx)",
+      "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/pages/*.jsx)",
+      "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/utils/*.js)",
+      "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/hooks/*.js)"
     ]
   }
 }
