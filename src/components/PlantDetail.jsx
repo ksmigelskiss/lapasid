@@ -1010,7 +1010,7 @@ export default function PlantDetail({
               onError={() => setHeroError(true)}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-            <div className="absolute top-4 left-0 right-0 flex items-center justify-between px-4">
+            <div className="absolute top-4 left-0 right-0 flex items-center justify-between px-4 z-30">
               <button
                 onClick={() => setShowPhoto(true)}
                 className="w-11 h-11 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
