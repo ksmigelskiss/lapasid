@@ -2,10 +2,10 @@
 // Uses plant-specific intervals (from AI) when available,
 // otherwise falls back to category-based defaults.
 
-import { getSeason, getSeasonStart } from './fertilizingForecast'
+import { getSeason, getSeasonStart, computeNextDate } from './forecastBase'
 
 function getCategory(plant) {
-  const tipas  = (plant.tipas  ?? '').toLowerCase()
+  const tipas   = (plant.tipas ?? '').toLowerCase()
   const greitis = (plant.augimo_greitis ?? '').toLowerCase()
   if ((tipas.includes('sulting') && !tipas.includes('pusiau')) || tipas.includes('kaudeks')) return 'sultingas'
   if (tipas.includes('papart') || tipas.includes('epifiti')) return 'papartis'
@@ -21,45 +21,32 @@ const DEFAULTS = {
   vidutinis: { vasara: 10, žiema: 21 },
 }
 
-function addDays(dateStr, days) {
-  const d = new Date(dateStr)
-  d.setDate(d.getDate() + days)
-  return d.toISOString().slice(0, 10)
-}
-
 export function getWateringForecast(plant) {
-  const today    = new Date().toISOString().slice(0, 10)
   const now      = new Date()
   const season   = getSeason(now)
   const category = getCategory(plant)
 
-  // Plant-specific intervals take priority
-  const specificV = plant.laistymasIntervalas?.vasara
-  const specificZ = plant.laistymasIntervalas?.ziema   // null = skip watering
+  const specificV   = plant.laistymasIntervalas?.vasara
+  const specificZ   = plant.laistymasIntervalas?.ziema   // null = skip watering
   const hasSpecific = specificV != null
 
   const intervalDays = hasSpecific
     ? (season === 'vasara' ? specificV : specificZ)
     : DEFAULTS[category][season]
 
-  const skipsWinter = hasSpecific
-    ? specificZ === null
-    : false   // all plant categories water at least rarely in winter
+  const skipsWinter = hasSpecific ? specificZ === null : false
+  const metodas     = plant.laistymasIntervalas?.metodas ?? null
 
-  const metodas = plant.laistymasIntervalas?.metodas ?? null
-
-  // Watering events sorted newest → oldest
-  const timeline = plant.timeline ?? []
+  const timeline  = plant.timeline ?? []
   const waterings = [...timeline]
     .filter(e => e.type === 'watering')
     .sort((a, b) => new Date(b.date) - new Date(a.date))
 
   const lastEvent = waterings[0] ?? null
-  const lastDate  = lastEvent?.date ?? plant.data_prideta ?? today
+  const lastDate  = lastEvent?.date ?? plant.data_prideta ?? now.toISOString().slice(0, 10)
   const lastType  = lastEvent ? 'watering' : 'repotting'
 
-  // Compute actual interval from history (min 2 events needed for 1 gap)
-  // Falls back to AI/default interval if not enough history
+  // Refine interval from history (min 3 events = 2 gaps)
   let resolvedInterval = intervalDays
   if (waterings.length >= 3) {
     const gaps = []
@@ -86,21 +73,14 @@ export function getWateringForecast(plant) {
     }
   }
 
-  // Season-reset for plants that explicitly skip winter watering
-  let baseDate = lastDate
-  if (skipsWinter) {
-    const seasonStart = getSeasonStart(now)
-    if (lastDate < seasonStart) baseDate = seasonStart
-  }
-
-  const nextDate  = addDays(baseDate, resolvedInterval)
-  const daysUntil = Math.round((new Date(nextDate) - new Date(today)) / 86400000)
+  const { nextDate, daysUntil, isOverdue } = computeNextDate({
+    lastDate, intervalDays: resolvedInterval, skipsWinter, now,
+  })
 
   return {
     season, category, lastDate, lastType,
     intervalDays: resolvedInterval,
-    nextDate, daysUntil,
-    isOverdue: daysUntil < 0,
+    nextDate, daysUntil, isOverdue,
     skipSeason: false,
     metodas,
   }

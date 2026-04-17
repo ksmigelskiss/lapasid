@@ -3,16 +3,23 @@ import { getDoc, setDoc } from 'firebase/firestore'
 import { DATA_DOC, authReady } from '../utils/firebase'
 import initialData from '../data/plants.json'
 import { fromAIResult, makeId as _makeId, today as _today } from '../utils/plantTransform'
+import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 
 export { fromAIResult }
 
-// v5 – PPFD values added to sviesa
-const STORAGE_KEY = 'geliu-db-v5'
+const STORAGE_KEY = 'geliu-db'
 
 function loadLocal() {
   try {
+    // Try current key first
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) return JSON.parse(stored)
+    if (stored) return migrate(JSON.parse(stored))
+
+    // Fall back to legacy versioned keys (existing installs)
+    for (const key of LEGACY_KEYS) {
+      const legacy = localStorage.getItem(key)
+      if (legacy) return migrate(JSON.parse(legacy))
+    }
   } catch {}
   return initialData
 }
