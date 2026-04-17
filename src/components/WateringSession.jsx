@@ -44,6 +44,7 @@ function PlantTile({ plant, checked, onToggle, onLongPress }) {
       onPointerUp={cancelPress}
       onPointerLeave={cancelPress}
       onContextMenu={e => e.preventDefault()}
+      style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none' }}
       className={`relative rounded-2xl overflow-hidden aspect-square w-full transition-opacity select-none ${
         checked ? 'opacity-100' : 'opacity-70'
       }`}
