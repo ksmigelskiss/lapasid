@@ -29,7 +29,7 @@ function PlantTile({ plant, checked, onToggle, onLongPress }) {
     timerRef.current = setTimeout(() => {
       didLongPress.current = true
       onLongPress(plant)
-    }, 400)
+    }, 250)
   }
   const cancelPress = () => clearTimeout(timerRef.current)
   const handleClick = () => {
@@ -44,7 +44,7 @@ function PlantTile({ plant, checked, onToggle, onLongPress }) {
       onPointerUp={cancelPress}
       onPointerLeave={cancelPress}
       onContextMenu={e => e.preventDefault()}
-      style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none' }}
+      style={{ WebkitTouchCallout: 'none', WebkitUserSelect: 'none', userSelect: 'none', touchAction: 'manipulation' }}
       className={`relative rounded-2xl overflow-hidden aspect-square w-full transition-opacity select-none ${
         checked ? 'opacity-100' : 'opacity-70'
       }`}
@@ -60,7 +60,7 @@ function PlantTile({ plant, checked, onToggle, onLongPress }) {
       </div>
 
       {/* Bottom gradient + name */}
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent px-2 pt-6 pb-2 text-center">
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent px-2 pt-6 pb-2 text-center pointer-events-none">
         <p className="text-[13px] font-semibold text-white leading-tight">
           {plant.lietuviškas || plant.lotyniskas}
         </p>
