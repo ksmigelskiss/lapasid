@@ -10,8 +10,7 @@ import Biblioteka from './pages/Biblioteka'
 import Zinynas from './pages/Zinynas'
 import { usePlants } from './hooks/usePlants'
 import PinGate from './components/PinGate'
-import { fetchWikimediaImage } from './utils/plantImage'
-import { uploadImage } from './utils/uploadImage'
+import { fetchBestPhoto, uploadImage } from './utils/imageService'
 
 export default function App() {
   const [tab, setTab]                 = useState('dashboard')
@@ -84,7 +83,7 @@ export default function App() {
     if (!missing.length) return
     setFetchingAll(true)
     for (const plant of missing) {
-      const url = await fetchWikimediaImage(plant.lotyniskas)
+      const url = await fetchBestPhoto(plant.lotyniskas)
       if (url) updateImage(plant.id, url)
     }
     setFetchingAll(false)

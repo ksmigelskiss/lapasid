@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, X, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost, ImageIcon, MapPin } from 'lucide-react'
-import { resizeImage } from '../utils/imageResize'
+import { resizeImage } from '../utils/imageService'
 
 // ── Helpers ────────────────────────────────────────────────────
 

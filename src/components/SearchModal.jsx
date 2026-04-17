@@ -2,9 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Search, X, Camera } from 'lucide-react'
 import Anthropic from '@anthropic-ai/sdk'
-import { fetchPlantPhotos } from '../utils/plantImage'
+import { fetchPhotos, resizeImage } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
-import { resizeImage } from '../utils/imageResize'
 import { fromAIResult } from '../hooks/usePlants'
 import { ProfileContent } from './PlantDetail'
 
@@ -144,7 +143,7 @@ async function fetchDetails(latinName, name) {
 
 async function enrich(parsed) {
   const [photos, namesData] = await Promise.all([
-    fetchPlantPhotos(parsed.latinName),
+    fetchPhotos(parsed.latinName),
     fetchPlantNames(parsed.latinName),
   ])
   const inatLtName = namesData?.inatLtName ?? null

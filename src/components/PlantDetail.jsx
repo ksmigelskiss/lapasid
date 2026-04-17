@@ -5,8 +5,7 @@ import { ZonePicker } from './ZoneManager'
 import PlantTimeline, { FAB, AddEventSheet } from './PlantTimeline'
 import { getWateringForecast } from '../utils/wateringForecast'
 import { fetchPlantNames } from '../utils/plantNames'
-import { fetchPlantPhotos } from '../utils/plantImage'
-import { resizeImage } from '../utils/imageResize'
+import { fetchPhotos, resizeImage } from '../utils/imageService'
 import { getPlantMood } from '../utils/plantMood'
 import PlantChat from './PlantChat'
 import { PlantAvatar } from './icons/ChatIcons'
@@ -59,7 +58,7 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
   const handleSearch = async () => {
     setLoading(true)
     setSearched(false)
-    const found = await fetchPlantPhotos(plant.lotyniskas)
+    const found = await fetchPhotos(plant.lotyniskas)
     setPhotos(found)
     setIdx(0)
     setLoading(false)
