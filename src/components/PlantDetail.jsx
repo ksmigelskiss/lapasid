@@ -840,7 +840,7 @@ function StatusTransitionSheet({ plant, newStatus, fromStatus, onConfirm, onQuar
             </button>
             <button onClick={() => onConfirm({ isolated: true, disease: disease.trim() })}
               className="flex-1 py-3.5 rounded-2xl text-sm font-bold text-white bg-red-500">
-              Patraukiau, karantinuoju
+              Karantinuoju
             </button>
           </div>
         </div>
