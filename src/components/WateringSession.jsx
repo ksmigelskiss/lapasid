@@ -22,26 +22,36 @@ function PlantTile({ plant, checked, onToggle, onLongPress }) {
   const fertDays = fertLastDate ? daysSince(fertLastDate) : null
 
   const timerRef = useRef(null)
+  const didLongPress = useRef(false)
 
-  const startPress = () => {
-    timerRef.current = setTimeout(() => onLongPress(plant), 400)
+  const startPress = (e) => {
+    didLongPress.current = false
+    timerRef.current = setTimeout(() => {
+      didLongPress.current = true
+      onLongPress(plant)
+    }, 400)
   }
   const cancelPress = () => clearTimeout(timerRef.current)
+  const handleClick = () => {
+    if (didLongPress.current) { didLongPress.current = false; return }
+    onToggle()
+  }
 
   return (
     <button
-      onClick={onToggle}
+      onClick={handleClick}
       onPointerDown={startPress}
       onPointerUp={cancelPress}
       onPointerLeave={cancelPress}
-      className={`relative rounded-2xl overflow-hidden aspect-square w-full transition-opacity ${
+      onContextMenu={e => e.preventDefault()}
+      className={`relative rounded-2xl overflow-hidden aspect-square w-full transition-opacity select-none ${
         checked ? 'opacity-100' : 'opacity-70'
       }`}
     >
       {/* Photo */}
       <div className="absolute inset-0 bg-surface-2">
         {plant.image
-          ? <img src={plant.image} alt="" className="w-full h-full object-cover" />
+          ? <img src={plant.image} alt="" draggable={false} className="w-full h-full object-cover pointer-events-none" />
           : <div className="w-full h-full flex items-center justify-center text-2xl">{plant.emoji ?? '🌿'}</div>
         }
       </div>
