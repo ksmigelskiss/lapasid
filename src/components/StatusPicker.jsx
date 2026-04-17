@@ -21,7 +21,7 @@ export function StatusMenu({ status, section, onSelect, onClose }) {
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      <div className="absolute right-0 top-full mt-1.5 bg-white rounded-2xl shadow-xl border border-warm-border p-1.5 z-[200] min-w-[140px]">
+      <div className="absolute right-0 bottom-full mb-1.5 bg-white rounded-2xl shadow-xl border border-warm-border p-1.5 z-[200] min-w-[140px]">
         {options.map(opt => (
           <button
             key={opt.key}
