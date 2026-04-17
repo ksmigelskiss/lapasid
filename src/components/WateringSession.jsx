@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Droplets, FlaskConical, CheckCircle2, MapPin, ShieldAlert, Settings2, Leaf } from 'lucide-react'
 import { getWateringForecast } from '../utils/wateringForecast'
@@ -12,7 +12,7 @@ function daysSince(dateStr) {
   return Math.floor((Date.now() - new Date(dateStr + 'T00:00:00')) / 86400000)
 }
 
-function PlantTile({ plant, checked, onToggle }) {
+function PlantTile({ plant, checked, onToggle, onLongPress }) {
   const wc = getWateringForecast(plant)
   const fc = getFertilizingForecast(plant)
   const waterDays = wc.lastDate ? daysSince(wc.lastDate) : null
@@ -20,16 +20,25 @@ function PlantTile({ plant, checked, onToggle }) {
     .filter(e => e.type === 'fertilizing')
     .sort((a, b) => new Date(b.date) - new Date(a.date))[0]?.date
   const fertDays = fertLastDate ? daysSince(fertLastDate) : null
-  const overdue = wc.isOverdue
+
+  const timerRef = useRef(null)
+
+  const startPress = () => {
+    timerRef.current = setTimeout(() => onLongPress(plant), 400)
+  }
+  const cancelPress = () => clearTimeout(timerRef.current)
 
   return (
     <button
       onClick={onToggle}
+      onPointerDown={startPress}
+      onPointerUp={cancelPress}
+      onPointerLeave={cancelPress}
       className={`relative rounded-2xl overflow-hidden aspect-square w-full transition-opacity ${
         checked ? 'opacity-100' : 'opacity-70'
       }`}
     >
-      {/* Photo fills entire card */}
+      {/* Photo */}
       <div className="absolute inset-0 bg-surface-2">
         {plant.image
           ? <img src={plant.image} alt="" className="w-full h-full object-cover" />
@@ -37,7 +46,7 @@ function PlantTile({ plant, checked, onToggle }) {
         }
       </div>
 
-      {/* Gradient overlay at bottom */}
+      {/* Bottom gradient + name */}
       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent px-2 pt-6 pb-2 text-center">
         <p className="text-[13px] font-semibold text-white leading-tight">
           {plant.lietuviškas || plant.lotyniskas}
@@ -61,19 +70,19 @@ function PlantTile({ plant, checked, onToggle }) {
 
       {/* Top-left: forecast icons */}
       <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
-        <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-lg px-1.5 py-1">
-          <Droplets size={13} className={wc.isOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/60'} />
+        <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
+          <Droplets size={9} className={wc.isOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/60'} />
           {waterDays != null && (
-            <span className={`text-[10px] font-semibold leading-none ${wc.isOverdue ? 'text-sky-200' : 'text-white/60'}`}>
+            <span className={`text-[8px] font-semibold leading-none ${wc.isOverdue ? 'text-sky-200' : 'text-white/60'}`}>
               {waterDays}d
             </span>
           )}
         </div>
         {fc?.intervalDays != null && (
-          <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-lg px-1.5 py-1">
-            <FlaskConical size={13} className={fc.isOverdue ? 'text-amber-300 fill-amber-300' : 'text-white/60'} />
+          <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
+            <FlaskConical size={9} className={fc.isOverdue ? 'text-amber-300 fill-amber-300' : 'text-white/60'} />
             {fertDays != null && (
-              <span className={`text-[10px] font-semibold leading-none ${fc.isOverdue ? 'text-amber-200' : 'text-white/60'}`}>
+              <span className={`text-[8px] font-semibold leading-none ${fc.isOverdue ? 'text-amber-200' : 'text-white/60'}`}>
                 {fertDays}d
               </span>
             )}
@@ -84,7 +93,36 @@ function PlantTile({ plant, checked, onToggle }) {
   )
 }
 
-function ZoneGroup({ label, plants, checked, onToggle, quarantine = false }) {
+function PlantPreview({ plant, onClose }) {
+  return (
+    <motion.div
+      className="fixed inset-0 z-[150] flex items-center justify-center p-8"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: 0.15 }}
+      onPointerUp={onClose}
+    >
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+      <motion.div
+        className="relative w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl"
+        initial={{ scale: 0.85 }} animate={{ scale: 1 }} exit={{ scale: 0.85 }}
+        transition={{ type: 'spring', damping: 22, stiffness: 300 }}
+      >
+        {plant.image
+          ? <img src={plant.image} alt="" className="w-full aspect-square object-cover" />
+          : <div className="w-full aspect-square bg-surface-2 flex items-center justify-center text-7xl">{plant.emoji ?? '🌿'}</div>
+        }
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-4 pt-10 pb-4">
+          <p className="text-base font-bold text-white">{plant.lietuviškas || plant.lotyniskas}</p>
+          {plant.lotyniskas && plant.lietuviškas && (
+            <p className="text-xs text-white/60 italic mt-0.5">{plant.lotyniskas}</p>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+function ZoneGroup({ label, plants, checked, onToggle, onLongPress, quarantine = false }) {
   const allOn = plants.every(p => checked[p.id])
   const toggleZone = () => {
     const next = !allOn
@@ -121,6 +159,7 @@ function ZoneGroup({ label, plants, checked, onToggle, quarantine = false }) {
             plant={plant}
             checked={!!checked[plant.id]}
             onToggle={() => onToggle(plant.id, !checked[plant.id])}
+            onLongPress={onLongPress}
           />
         ))}
       </div>
@@ -136,6 +175,7 @@ export default function WateringSession({ plants, zones, onAddTimelineEvent, onA
   )
   const [done, setDone] = useState(null) // null | 'watering' | 'fertilizing'
   const [showZones, setShowZones] = useState(false)
+  const [previewPlant, setPreviewPlant] = useState(null)
 
   const setOne = (id, val) => setChecked(prev => ({ ...prev, [id]: val }))
 
@@ -220,6 +260,7 @@ export default function WateringSession({ plants, zones, onAddTimelineEvent, onA
               plants={quarantinePlants}
               checked={checked}
               onToggle={setOne}
+              onLongPress={setPreviewPlant}
             />
           )}
           {groups.map(({ label, plants: gp }, gi) => (
@@ -229,6 +270,7 @@ export default function WateringSession({ plants, zones, onAddTimelineEvent, onA
               plants={gp}
               checked={checked}
               onToggle={setOne}
+              onLongPress={setPreviewPlant}
             />
           ))}
         </div>
@@ -284,6 +326,16 @@ export default function WateringSession({ plants, zones, onAddTimelineEvent, onA
             onDelete={onDeleteZone}
             onReorder={onReorderZones}
             onClose={() => setShowZones(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {previewPlant && (
+          <PlantPreview
+            key="preview"
+            plant={previewPlant}
+            onClose={() => setPreviewPlant(null)}
           />
         )}
       </AnimatePresence>
