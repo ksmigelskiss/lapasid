@@ -49,35 +49,36 @@ function PlantTile({ plant, checked, onToggle }) {
         )}
       </div>
 
-      {/* Top-right column: selection circle + forecast icons */}
-      <div className="absolute top-2 right-2 flex flex-col items-center gap-1">
+      {/* Top-right: selection circle */}
+      <div className="absolute top-2 right-2">
         {checked
           ? <div className="w-6 h-6 rounded-full bg-sky-400 flex items-center justify-center shadow-md">
               <Droplets size={14} className="text-white" />
             </div>
           : <div className="w-6 h-6 rounded-full bg-black/30 border-2 border-white/80" />
         }
-        {/* Forecast icons */}
-        <div className="flex flex-col gap-0.5 items-center">
-          <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
-            <Droplets size={8} className={wc.isOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/50'} />
-            {waterDays != null && (
-              <span className={`text-[7px] font-semibold leading-none ${wc.isOverdue ? 'text-sky-200' : 'text-white/50'}`}>
-                {waterDays}d
+      </div>
+
+      {/* Top-left: forecast icons */}
+      <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
+        <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-lg px-1.5 py-1">
+          <Droplets size={13} className={wc.isOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/60'} />
+          {waterDays != null && (
+            <span className={`text-[10px] font-semibold leading-none ${wc.isOverdue ? 'text-sky-200' : 'text-white/60'}`}>
+              {waterDays}d
+            </span>
+          )}
+        </div>
+        {fc?.intervalDays != null && (
+          <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm rounded-lg px-1.5 py-1">
+            <FlaskConical size={13} className={fc.isOverdue ? 'text-amber-300 fill-amber-300' : 'text-white/60'} />
+            {fertDays != null && (
+              <span className={`text-[10px] font-semibold leading-none ${fc.isOverdue ? 'text-amber-200' : 'text-white/60'}`}>
+                {fertDays}d
               </span>
             )}
           </div>
-          {fc?.intervalDays != null && (
-            <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
-              <FlaskConical size={8} className={fc.isOverdue ? 'text-amber-300 fill-amber-300' : 'text-white/50'} />
-              {fertDays != null && (
-                <span className={`text-[7px] font-semibold leading-none ${fc.isOverdue ? 'text-amber-200' : 'text-white/50'}`}>
-                  {fertDays}d
-                </span>
-              )}
-            </div>
-          )}
-        </div>
+        )}
       </div>
     </button>
   )
