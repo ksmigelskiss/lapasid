@@ -1013,16 +1013,16 @@ export default function PlantDetail({
             <div className="absolute top-4 left-0 right-0 flex items-center justify-between px-4">
               <button
                 onClick={() => setShowPhoto(true)}
-                className="w-8 h-8 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+                className="w-11 h-11 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
               >
                 <MoreHorizontal size={16} />
               </button>
               <div className="flex items-center gap-2">
                 <button
                   onClick={onClose}
-                  className="w-8 h-8 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+                  className="w-11 h-11 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
                 >
-                  <X size={14} />
+                  <X size={16} />
                 </button>
               </div>
             </div>
@@ -1098,16 +1098,16 @@ export default function PlantDetail({
             <div className="flex items-center justify-between mb-3">
               <button
                 onClick={() => setShowPhoto(true)}
-                className="w-8 h-8 bg-white/60 rounded-full flex items-center justify-center text-gray-500"
+                className="w-11 h-11 bg-white/60 rounded-full flex items-center justify-center text-gray-500"
               >
                 <MoreHorizontal size={16} />
               </button>
               <div className="flex items-center gap-2">
                 <button
                   onClick={onClose}
-                  className="w-8 h-8 bg-white/60 rounded-full flex items-center justify-center text-gray-600"
+                  className="w-11 h-11 bg-white/60 rounded-full flex items-center justify-center text-gray-600"
                 >
-                  <X size={14} />
+                  <X size={16} />
                 </button>
               </div>
             </div>
