@@ -1,5 +1,10 @@
 // Fertilizing forecast utility
 // Season: April–September = vasara (active growth), October–March = žiema (dormancy)
+//
+// Interval resolution priority:
+//   1. Same-season history (weighted blend with theoretical by confidence)
+//   2. AI-specific interval for current season
+//   3. Category default for current season
 
 import { getSeason, getSeasonStart, computeNextDate } from './forecastBase'
 export { getSeason, getSeasonStart }
@@ -44,7 +49,8 @@ export function getFertilizingForecast(plant) {
   const specificZ   = plant.tresimas?.intervalZiema  // may be null = skip
   const hasSpecific = specificV != null
 
-  const intervalDays = hasSpecific
+  // Theoretical interval for current season (AI or default)
+  const theoreticalInterval = hasSpecific
     ? (season === 'vasara' ? specificV : specificZ)
     : INTERVALS[category][season]
 
@@ -55,14 +61,15 @@ export function getFertilizingForecast(plant) {
   const fertilizerTip = plant.tresimas?.tipas || FERTILIZER_TIPS[category]
 
   const timeline = plant.timeline ?? []
-  const lastFertEvent = [...timeline]
+  const fertilizings = [...timeline]
     .filter(e => e.type === 'fertilizing')
-    .sort((a, b) => new Date(b.date) - new Date(a.date))[0]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
 
+  const lastFertEvent = fertilizings[0] ?? null
   const lastDate = lastFertEvent?.date ?? plant.data_prideta ?? now.toISOString().slice(0, 10)
   const lastType = lastFertEvent ? 'fertilizing' : 'repotting'
 
-  if (!intervalDays) {
+  if (!theoreticalInterval) {
     return {
       season, category, lastDate, lastType,
       intervalDays: null, nextDate: null, daysUntil: null,
@@ -71,11 +78,38 @@ export function getFertilizingForecast(plant) {
     }
   }
 
-  const { nextDate, daysUntil, isOverdue } = computeNextDate({ lastDate, intervalDays, skipsWinter, now })
+  // ── Same-season gap analysis ──────────────────────────────────
+  // Only count gaps where BOTH events are in the current season.
+  const sameSeasonGaps = []
+  for (let i = 0; i < Math.min(fertilizings.length - 1, 5); i++) {
+    const a = fertilizings[i].date
+    const b = fertilizings[i + 1].date
+    if (getSeason(new Date(a)) !== season) continue
+    if (getSeason(new Date(b)) !== season) continue
+    const gap = Math.round((new Date(a) - new Date(b)) / 86400000)
+    if (gap > 0) sameSeasonGaps.push(gap)
+  }
+
+  // Filter outlier gaps (> 3× theoretical = likely skipped / forgotten)
+  const outlierCap = theoreticalInterval * 3
+  const validGaps  = sameSeasonGaps.filter(g => g <= outlierCap)
+
+  // Weighted blend: confidence 0→1 as we accumulate 0→3 same-season gaps
+  let resolvedInterval = theoreticalInterval
+  if (validGaps.length > 0) {
+    const historicalAvg = Math.round(validGaps.reduce((s, g) => s + g, 0) / validGaps.length)
+    const confidence    = Math.min(validGaps.length / 3, 1)
+    resolvedInterval    = Math.round(historicalAvg * confidence + theoreticalInterval * (1 - confidence))
+  }
+
+  const { nextDate, daysUntil, isOverdue } = computeNextDate({
+    lastDate, intervalDays: resolvedInterval, skipsWinter, now,
+  })
 
   return {
     season, category, lastDate, lastType,
-    intervalDays, nextDate, daysUntil, isOverdue,
+    intervalDays: resolvedInterval,
+    nextDate, daysUntil, isOverdue,
     skipSeason: false,
     fertilizerTip,
   }
