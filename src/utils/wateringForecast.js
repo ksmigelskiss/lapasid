@@ -1,6 +1,11 @@
 // Watering forecast utility
 // Uses plant-specific intervals (from AI) when available,
 // otherwise falls back to category-based defaults.
+//
+// Interval resolution priority:
+//   1. Same-season history (weighted blend with theoretical by confidence)
+//   2. AI-specific interval for current season
+//   3. Category default for current season
 
 import { getSeason, getSeasonStart, computeNextDate } from './forecastBase'
 
@@ -30,7 +35,8 @@ export function getWateringForecast(plant) {
   const specificZ   = plant.laistymasIntervalas?.ziema   // null = skip watering
   const hasSpecific = specificV != null
 
-  const intervalDays = hasSpecific
+  // Theoretical interval for current season (AI or default)
+  const theoreticalInterval = hasSpecific
     ? (season === 'vasara' ? specificV : specificZ)
     : DEFAULTS[category][season]
 
@@ -46,23 +52,29 @@ export function getWateringForecast(plant) {
   const lastDate  = lastEvent?.date ?? plant.data_prideta ?? now.toISOString().slice(0, 10)
   const lastType  = lastEvent ? 'watering' : 'repotting'
 
-  // Refine interval from history (min 3 events = 2 gaps)
-  let resolvedInterval = intervalDays
-  if (waterings.length >= 3) {
-    const gaps = []
-    for (let i = 0; i < Math.min(waterings.length - 1, 3); i++) {
-      const gap = Math.round(
-        (new Date(waterings[i].date) - new Date(waterings[i + 1].date)) / 86400000
-      )
-      if (gap > 0) gaps.push(gap)
-    }
-    if (gaps.length >= 2)
-      resolvedInterval = Math.round(gaps.reduce((s, g) => s + g, 0) / gaps.length)
-  } else if (waterings.length === 2) {
-    const gap = Math.round(
-      (new Date(waterings[0].date) - new Date(waterings[1].date)) / 86400000
-    )
-    if (gap > 0) resolvedInterval = gap
+  // ── Same-season gap analysis ──────────────────────────────────
+  // Only count gaps where BOTH events are in the current season.
+  // Cross-season gaps (e.g. Sep→Nov) are ambiguous and discarded.
+  const sameSeasonGaps = []
+  for (let i = 0; i < Math.min(waterings.length - 1, 5); i++) {
+    const a = waterings[i].date
+    const b = waterings[i + 1].date
+    if (getSeason(new Date(a)) !== season) continue
+    if (getSeason(new Date(b)) !== season) continue
+    const gap = Math.round((new Date(a) - new Date(b)) / 86400000)
+    if (gap > 0) sameSeasonGaps.push(gap)
+  }
+
+  // Filter outlier gaps (> 3× theoretical = likely vacation / forgotten)
+  const outlierCap = theoreticalInterval ? theoreticalInterval * 3 : Infinity
+  const validGaps  = sameSeasonGaps.filter(g => g <= outlierCap)
+
+  // Weighted blend: confidence 0→1 as we accumulate 0→3 same-season gaps
+  let resolvedInterval = theoreticalInterval
+  if (validGaps.length > 0) {
+    const historicalAvg = Math.round(validGaps.reduce((s, g) => s + g, 0) / validGaps.length)
+    const confidence    = Math.min(validGaps.length / 3, 1)
+    resolvedInterval    = Math.round(historicalAvg * confidence + theoreticalInterval * (1 - confidence))
   }
 
   if (!resolvedInterval) {
