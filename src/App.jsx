@@ -1,4 +1,4 @@
-import { useState, useCallback, lazy, Suspense } from 'react'
+import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Navigation from './components/Navigation'
 import DeathModal from './components/DeathModal'
@@ -41,6 +41,42 @@ export default function App() {
 
   const openDetail      = (plant, section, scrollToCare = false) => setDetailPlant({ plant, section, scrollToCare })
   const closeDetail     = () => setDetailPlant(null)
+
+  // One-time background migration: upload any base64 images still in Firestore to Storage
+  const migratedRef = useRef(false)
+  useEffect(() => {
+    if (migratedRef.current || library.length === 0) return
+    migratedRef.current = true
+    ;(async () => {
+      for (const plant of library) {
+        let patch = {}
+
+        if (plant.image?.startsWith('data:')) {
+          const url = await uploadImage(plant.image, plant.id)
+          if (url) patch.image = url
+        }
+
+        const migratedTimeline = plant.timeline ? await Promise.all(
+          plant.timeline.map(async e => {
+            if (e.imageUrl?.startsWith('data:')) {
+              const url = await uploadImage(e.imageUrl, plant.id)
+              return url ? { ...e, imageUrl: url } : e
+            }
+            return e
+          })
+        ) : undefined
+
+        if (migratedTimeline && migratedTimeline.some((e, i) => e !== plant.timeline[i])) {
+          patch.timeline = migratedTimeline
+        }
+
+        if (Object.keys(patch).length > 0) {
+          updatePlant(plant.id, patch)
+          console.log('[migration] uploaded base64 images for:', plant.lietuviškas)
+        }
+      }
+    })()
+  }, [library.length > 0]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Upload timeline photo to Storage before saving (avoids Firestore 1MB doc limit)
   const addTimelineEventWithUpload = async (plantId, event) => {
