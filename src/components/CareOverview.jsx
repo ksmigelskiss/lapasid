@@ -125,7 +125,7 @@ export default function CareOverview({ plants, onTap, onSelectWatering, onSelect
             chipText="text-gray-800"
             badgeColor="text-gray-400"
             icon={<Sprout size={11} />}
-            label="Augalas bunda"
+            label="Palengva žadink"
             plants={wakingList}
             onTap={onTap}
           />
