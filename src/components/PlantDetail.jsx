@@ -920,6 +920,7 @@ export default function PlantDetail({
   onDeleteZone,
   onReorderZones,
   scrollToCare = false,
+  visible = true,
 }) {
   const [activeTab, setActiveTab]           = useState('profile')
   const [heroError, setHeroError]           = useState(false)
@@ -982,13 +983,12 @@ export default function PlantDetail({
   }
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-end justify-center">
+    <div className="fixed inset-0 z-[70] flex items-end justify-center" style={{ display: visible ? '' : 'none' }}>
       {/* Backdrop */}
       <motion.div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        animate={{ opacity: visible ? 1 : 0 }}
         transition={{ duration: 0.25 }}
         onClick={onClose}
       />
@@ -1004,8 +1004,7 @@ export default function PlantDetail({
         dragElastic={{ top: 0, bottom: 0.25 }}
         onDragEnd={handleDragEnd}
         initial={{ y: '100%' }}
-        animate={{ y: 0 }}
-        exit={{ y: '100%' }}
+        animate={{ y: visible ? 0 : '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
       >
         {/* Drag handle — pointer-events only on the pill, not full width */}

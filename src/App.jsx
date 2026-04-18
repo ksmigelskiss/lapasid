@@ -40,6 +40,11 @@ export default function App() {
       ?? detailPlant.plant
     : null
 
+  // Keep last plant in memory so PlantDetail stays mounted (eliminates remount lag)
+  const lastDetailRef = useRef(null)
+  if (livePlant) lastDetailRef.current = { plant: livePlant, section: detailPlant.section, scrollToCare: detailPlant.scrollToCare }
+  const detailForRender = lastDetailRef.current
+
   const setTabAndMount = (key) => {
     setMountedTabs(prev => new Set([...prev, key]))
     setTab(key)
@@ -213,37 +218,36 @@ export default function App() {
 
       <Navigation active={tab} onChange={setTabAndMount} dashboardCount={dashboard.length} />
 
-      <AnimatePresence>
-        {detailPlant && livePlant && (
-          <Suspense fallback={null}>
-            <PlantDetail
-              key="detail"
-              plant={livePlant}
-              section={detailPlant.section}
-              onClose={closeDetail}
-              onAction={detailAction}
-              onCommentSave={(id, comment) => updateComment(id, comment)}
-              onUzrasaiSave={(id, uzrasai) => updateUzrasai(id, uzrasai)}
-              onStatusChange={(id, status, meta) => updateStatus(id, status, meta)}
-              onUpdateNames={(id, patch) => updatePlant(id, patch)}
-              onImageSave={async (id, url, fromHistory = false) => updateImage(id, await uploadImage(url, id), fromHistory)}
-              onSaveChat={(id, msgs) => updateChat(id, msgs.map(({ imageUrl, ...m }) => m))}
-              onSaveToZinynas={addToZinynas}
-              onAddTimelineEvent={addTimelineEventWithUpload}
-              onDeleteTimelineEvent={deleteTimelineEvent}
-              onClearTimeline={id => clearTimeline(id)}
-              zones={zones}
-              plants={dashboard}
-              onZoneChange={movePlantToZone}
-              onAddZone={addZone}
-              onUpdateZone={updateZone}
-              onDeleteZone={deleteZone}
-              onReorderZones={reorderZones}
-              scrollToCare={detailPlant.scrollToCare ?? false}
-            />
-          </Suspense>
-        )}
-      </AnimatePresence>
+      {detailForRender && (
+        <Suspense fallback={null}>
+          <PlantDetail
+            key="detail"
+            plant={detailForRender.plant}
+            section={detailForRender.section}
+            onClose={closeDetail}
+            onAction={detailAction}
+            onCommentSave={(id, comment) => updateComment(id, comment)}
+            onUzrasaiSave={(id, uzrasai) => updateUzrasai(id, uzrasai)}
+            onStatusChange={(id, status, meta) => updateStatus(id, status, meta)}
+            onUpdateNames={(id, patch) => updatePlant(id, patch)}
+            onImageSave={async (id, url, fromHistory = false) => updateImage(id, await uploadImage(url, id), fromHistory)}
+            onSaveChat={(id, msgs) => updateChat(id, msgs.map(({ imageUrl, ...m }) => m))}
+            onSaveToZinynas={addToZinynas}
+            onAddTimelineEvent={addTimelineEventWithUpload}
+            onDeleteTimelineEvent={deleteTimelineEvent}
+            onClearTimeline={id => clearTimeline(id)}
+            zones={zones}
+            plants={dashboard}
+            onZoneChange={movePlantToZone}
+            onAddZone={addZone}
+            onUpdateZone={updateZone}
+            onDeleteZone={deleteZone}
+            onReorderZones={reorderZones}
+            scrollToCare={detailForRender.scrollToCare ?? false}
+            visible={!!(detailPlant && livePlant)}
+          />
+        </Suspense>
+      )}
 
       <AnimatePresence>
         {showSearch && (
