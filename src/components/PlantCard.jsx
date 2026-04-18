@@ -1,5 +1,5 @@
 import { useState, memo } from 'react'
-import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost, FileText, MapPin, FlaskConical } from 'lucide-react'
+import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost, FileText, MapPin, FlaskConical, Check } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
@@ -19,7 +19,23 @@ function DotScore({ value, max = 3, color }) {
   )
 }
 
-const PlantCard = memo(function PlantCard({ plant, section, onTap, cardBg = 'bg-white', showDashboardBadge = false, zoneName }) {
+function CareCircle({ checked, waterOverdue, fertOverdue }) {
+  const base = 'w-7 h-7 rounded-full flex items-center justify-center border-2 shadow-md'
+  if (checked) {
+    if (fertOverdue)  return <div className={`${base} bg-amber-400 border-amber-400`}><FlaskConical size={14} className="text-white" /></div>
+    if (waterOverdue) return <div className={`${base} bg-sky-400 border-sky-400`}><Droplets size={14} className="text-white" /></div>
+    return <div className={`${base} bg-sage-400 border-sage-400`}><Check size={13} className="text-white" /></div>
+  }
+  if (fertOverdue)  return <div className={`${base} border-amber-400 bg-amber-400/20`}><FlaskConical size={12} className="text-amber-400" /></div>
+  if (waterOverdue) return <div className={`${base} border-sky-400 bg-sky-400/20`}><Droplets size={12} className="text-sky-400" /></div>
+  return <div className={`${base} border-white/80 bg-black/30`} />
+}
+
+const PlantCard = memo(function PlantCard({
+  plant, section, onTap, cardBg = 'bg-white',
+  showDashboardBadge = false, zoneName,
+  careMode = false, checked = false, onToggle,
+}) {
   const [imgError, setImgError] = useState(false)
 
   const status    = plant.status ?? 'healthy'
@@ -38,10 +54,12 @@ const PlantCard = memo(function PlantCard({ plant, section, onTap, cardBg = 'bg-
     : section === 'nori'    ? 'bg-blush-50'
     : 'bg-sage-50'
 
+  const handleClick = careMode ? onToggle : onTap
+
   return (
     <div
       className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card active:scale-95 transition-transform duration-100 cursor-pointer`}
-      onClick={onTap}
+      onClick={handleClick}
     >
       {/* Image area */}
       <div className={`relative aspect-square overflow-hidden select-none ${!hasImage ? bgClass : ''}`}>
@@ -55,13 +73,20 @@ const PlantCard = memo(function PlantCard({ plant, section, onTap, cardBg = 'bg-
           </div>
         )}
 
-        {/* Status dot (non-auginama only) */}
-        {section !== 'auginama' && (
+        {/* Care mode: selection circle (top-right, replaces forecast icons) */}
+        {careMode && section === 'auginama' && (
+          <div className="absolute top-2 right-2">
+            <CareCircle checked={checked} waterOverdue={waterOverdue} fertOverdue={fertOverdue} />
+          </div>
+        )}
+
+        {/* Status dot (non-auginama, non-careMode only) */}
+        {!careMode && section !== 'auginama' && (
           <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 border-white/60 bg-transparent shadow-sm" />
         )}
 
-        {/* Forecast icons (auginama only) — top-right */}
-        {section === 'auginama' && (
+        {/* Forecast icons (auginama, non-careMode only) */}
+        {!careMode && section === 'auginama' && (
           <div className="absolute top-2 right-2 flex flex-col gap-0.5 items-end">
             <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
               <Droplets size={9} className={waterOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/50'} />

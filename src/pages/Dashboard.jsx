@@ -1,16 +1,16 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
-import { AnimatePresence } from 'framer-motion'
-import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X } from 'lucide-react'
 const GARDENER = '/gardener.png'
 import PlantCard from '../components/PlantCard'
 import CollectionChat from '../components/CollectionChat'
-import WateringSession from '../components/WateringSession'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast, shouldShowWateringAlert } from '../utils/wateringForecast'
 import { buildDashboardSystemPrompt } from '../utils/collectionChatContext'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { RefreshCw } from 'lucide-react'
+import { makeId, today } from '../utils/plantTransform'
 
 const SORT_OPTIONS = [
   { key: 'added',     label: 'Pridėta' },
@@ -50,19 +50,23 @@ function sortPlants(plants, key) {
   }
 }
 
-function QuarantineSection({ plants, zones, onTap }) {
+function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCareToggle, onSelectAll }) {
   const [open, setOpen] = useState(true)
   return (
     <div className="mb-3">
-      <button
-        onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center gap-2 py-2"
-      >
-        <ShieldAlert size={13} className="text-red-400 flex-shrink-0" />
-        <span className="text-sm font-bold text-red-600 flex-1 text-left">Karantinas</span>
-        <span className="text-xs text-red-300 mr-1">{plants.length}</span>
-        {open ? <ChevronUp size={14} className="text-red-300" /> : <ChevronDown size={14} className="text-red-300" />}
-      </button>
+      <div className="w-full flex items-center gap-2 py-2">
+        <button onClick={() => setOpen(v => !v)} className="flex items-center gap-2 flex-1 min-w-0">
+          <ShieldAlert size={13} className="text-red-400 flex-shrink-0" />
+          <span className="text-sm font-bold text-red-600 flex-1 text-left">Karantinas</span>
+          <span className="text-xs text-red-300 mr-1">{plants.length}</span>
+          {open ? <ChevronUp size={14} className="text-red-300" /> : <ChevronDown size={14} className="text-red-300" />}
+        </button>
+        {careMode && open && (
+          <button onClick={() => onSelectAll(plants)} className="text-[11px] font-semibold text-red-400 flex-shrink-0 px-1">
+            Žymėti visus
+          </button>
+        )}
+      </div>
       {open && (
         <div className="bg-red-50 rounded-2xl p-2.5">
           <div className="grid grid-cols-2 gap-3">
@@ -73,6 +77,9 @@ function QuarantineSection({ plants, zones, onTap }) {
                 section="auginama"
                 onTap={() => onTap(plant)}
                 zoneName={zones.find(z => z.id === plant.zonaId)?.name}
+                careMode={careMode}
+                checked={careChecked?.has(plant.id)}
+                onToggle={() => onCareToggle(plant.id)}
               />
             ))}
           </div>
@@ -82,25 +89,34 @@ function QuarantineSection({ plants, zones, onTap }) {
   )
 }
 
-function ZoneSection({ zone, plants, onTap }) {
+function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle, onSelectAll }) {
   const [open, setOpen] = useState(true)
   const sickPlants    = plants.filter(p => p.status === 'sick')
   const healthyPlants = plants.filter(p => p.status !== 'sick')
 
+  const carePropsFn = (plant) => careMode ? {
+    careMode: true,
+    checked: careChecked?.has(plant.id),
+    onToggle: () => onCareToggle(plant.id),
+  } : {}
+
   return (
     <div className="mb-3">
-      <button
-        onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center gap-2 py-2"
-      >
-        <MapPin size={13} className="text-sage-400 flex-shrink-0" />
-        <span className="text-sm font-bold text-gray-700 flex-1 text-left truncate">{zone.name}</span>
-        <span className="text-xs text-gray-400 mr-1">{plants.length}</span>
-        {open ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
-      </button>
+      <div className="w-full flex items-center gap-2 py-2">
+        <button onClick={() => setOpen(v => !v)} className="flex items-center gap-2 flex-1 min-w-0">
+          <MapPin size={13} className="text-sage-400 flex-shrink-0" />
+          <span className="text-sm font-bold text-gray-700 flex-1 text-left truncate">{zone.name}</span>
+          <span className="text-xs text-gray-400 mr-1">{plants.length}</span>
+          {open ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
+        </button>
+        {careMode && open && (
+          <button onClick={() => onSelectAll(plants)} className="text-[11px] font-semibold text-sage-500 flex-shrink-0 px-1">
+            Žymėti visus
+          </button>
+        )}
+      </div>
       {open && (
         <div className="space-y-3">
-          {/* Sick sub-group */}
           {sickPlants.length > 0 && (
             <div className="bg-amber-50 rounded-2xl p-2.5">
               <div className="flex items-center gap-1.5 mb-2 px-1">
@@ -109,16 +125,15 @@ function ZoneSection({ zone, plants, onTap }) {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {sickPlants.map(plant => (
-                  <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} />
+                  <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} {...carePropsFn(plant)} />
                 ))}
               </div>
             </div>
           )}
-          {/* Healthy plants */}
           {healthyPlants.length > 0 && (
             <div className="grid grid-cols-2 gap-3">
               {healthyPlants.map(plant => (
-                <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} />
+                <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} {...carePropsFn(plant)} />
               ))}
             </div>
           )}
@@ -147,11 +162,52 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const [sortKey, setSortKey]         = useState('added')
   const [showFilters, setShowFilters] = useState(false)
   const [showChat, setShowChat]       = useState(false)
-  const [showWaterSession, setWaterSession] = useState(false)
   const [searching, setSearching]     = useState(false)
   const [query, setQuery]             = useState('')
+  const [careMode, setCareMode]       = useState(false)
+  const [careChecked, setCareChecked] = useState(new Set())
   const inputRef  = useRef(null)
   const scrollRef = useRef(null)
+
+  const toggleCare = useCallback((id) => {
+    setCareChecked(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }, [])
+
+  const selectAll = useCallback((groupPlants) => {
+    setCareChecked(prev => {
+      const next = new Set(prev)
+      groupPlants.forEach(p => next.add(p.id))
+      return next
+    })
+  }, [])
+
+  const selectNeedsWatering = useCallback(() => {
+    const ids = mainPlants.filter(p => getWateringForecast(p).isOverdue).map(p => p.id)
+    setCareChecked(prev => new Set([...prev, ...ids]))
+  }, [mainPlants])
+
+  const selectNeedsFertilizing = useCallback(() => {
+    const ids = mainPlants.filter(p => getFertilizingForecast(p).isOverdue).map(p => p.id)
+    setCareChecked(prev => new Set([...prev, ...ids]))
+  }, [mainPlants])
+
+  const exitCareMode = useCallback(() => { setCareMode(false); setCareChecked(new Set()) }, [])
+
+  const handleCareAction = useCallback((type) => {
+    const t = today()
+    const comment = type === 'watering' ? 'Laistyta masiniu laistymu' : 'Trešta masiniu laistymu'
+    careChecked.forEach(plantId => {
+      onAddTimelineEvent(plantId, { id: makeId(), type: 'watering', date: t, komentaras: comment })
+      if (type === 'fertilizing') {
+        onAddTimelineEvent(plantId, { id: makeId(), type: 'fertilizing', date: t, komentaras: comment })
+      }
+    })
+    exitCareMode()
+  }, [careChecked, onAddTimelineEvent, exitCareMode])
 
   useEffect(() => { if (searching) inputRef.current?.focus() }, [searching])
   const closeSearch = useCallback(() => { setSearching(false); setQuery('') }, [])
@@ -187,11 +243,11 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             {/* Top row: laistymas + augalai */}
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setWaterSession(true)}
-                className="bg-sage-50 active:bg-sage-100 transition-colors rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]"
+                onClick={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
+                className={`active:bg-sage-100 transition-colors rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px] ${careMode ? 'bg-sage-500' : 'bg-sage-50'}`}
               >
-                <Sprout size={20} className="text-sage-500 leading-none" />
-                <span className="text-[10px] text-sage-500 font-medium mt-0.5">priežiūra</span>
+                <Sprout size={20} className={careMode ? 'text-white' : 'text-sage-500'} />
+                <span className={`text-[10px] font-medium mt-0.5 ${careMode ? 'text-white' : 'text-sage-500'}`}>priežiūra</span>
               </button>
               <div className="bg-sage-50 rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]">
                 <span className="text-2xl font-extrabold text-sage-600 leading-none">{plants.length}</span>
@@ -262,6 +318,26 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
           </button>
         )}
       </div>
+
+      {/* Care mode quick-select bar */}
+      {careMode && (
+        <div className="px-5 mb-3 flex gap-2">
+          <button
+            onClick={selectNeedsWatering}
+            className="flex-1 flex items-center justify-center gap-1.5 bg-sky-50 border border-sky-200 active:bg-sky-100 transition-colors rounded-2xl py-2.5"
+          >
+            <Droplets size={14} className="text-sky-500" />
+            <span className="text-[13px] font-semibold text-sky-600">Reikia laistyti</span>
+          </button>
+          <button
+            onClick={selectNeedsFertilizing}
+            className="flex-1 flex items-center justify-center gap-1.5 bg-amber-50 border border-amber-200 active:bg-amber-100 transition-colors rounded-2xl py-2.5"
+          >
+            <FlaskConical size={14} className="text-amber-500" />
+            <span className="text-[13px] font-semibold text-amber-600">Reikia tręšti</span>
+          </button>
+        </div>
+      )}
 
       {/* Collapsible sort */}
       {showFilters && plants.length > 1 && (
@@ -425,7 +501,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
 
         {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (
-          <QuarantineSection plants={quarantinePlants} zones={zones} onTap={onTap} />
+          <QuarantineSection plants={quarantinePlants} zones={zones} onTap={onTap}
+            careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onSelectAll={selectAll} />
         )}
 
         {/* Plant grid */}
@@ -446,11 +523,19 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         ) : hasZones ? (
           <>
             {zonedPlants.map(({ zone, plants: zp }) => zp.length > 0 && (
-              <ZoneSection key={zone.id} zone={zone} plants={zp} onTap={onTap} />
+              <ZoneSection key={zone.id} zone={zone} plants={zp} onTap={onTap}
+                careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onSelectAll={selectAll} />
             ))}
             {unzonedPlants.length > 0 && (
               <div className="mb-3">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide py-2">Nepriskirti</p>
+                <div className="flex items-center py-2">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-1">Nepriskirti</p>
+                  {careMode && (
+                    <button onClick={() => selectAll(unzonedPlants)} className="text-[11px] font-semibold text-sage-500 px-1">
+                      Žymėti visus
+                    </button>
+                  )}
+                </div>
                 <div className="space-y-3">
                   {unzonedPlants.filter(p => p.status === 'sick').length > 0 && (
                     <div className="bg-amber-50 rounded-2xl p-2.5">
@@ -460,7 +545,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                       </div>
                       <div className="grid grid-cols-2 gap-2">
                         {unzonedPlants.filter(p => p.status === 'sick').map(plant => (
-                          <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} />
+                          <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)}
+                            careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} />
                         ))}
                       </div>
                     </div>
@@ -468,7 +554,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                   {unzonedPlants.filter(p => p.status !== 'sick').length > 0 && (
                     <div className="grid grid-cols-2 gap-3">
                       {unzonedPlants.filter(p => p.status !== 'sick').map(plant => (
-                        <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} />
+                        <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)}
+                          careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} />
                       ))}
                     </div>
                   )}
@@ -477,21 +564,33 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             )}
           </>
         ) : (
-          <div className="grid grid-cols-2 gap-3">
-            {sortedPlants.map(plant => (
-              <PlantCard
-                key={plant.id}
-                plant={plant}
-                section="auginama"
-                onTap={() => onTap(plant)}
-              />
-            ))}
-          </div>
+          <>
+            {careMode && (
+              <div className="flex justify-end py-1 mb-1">
+                <button onClick={() => selectAll(sortedPlants)} className="text-[11px] font-semibold text-sage-500 px-1">
+                  Žymėti visus
+                </button>
+              </div>
+            )}
+            <div className="grid grid-cols-2 gap-3">
+              {sortedPlants.map(plant => (
+                <PlantCard
+                  key={plant.id}
+                  plant={plant}
+                  section="auginama"
+                  onTap={() => onTap(plant)}
+                  careMode={careMode}
+                  checked={careChecked.has(plant.id)}
+                  onToggle={() => toggleCare(plant.id)}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>}
 
-      {/* Floating AI bubble */}
-      {plants.length > 0 && (
+      {/* Floating AI bubble — hidden in care mode */}
+      {plants.length > 0 && !careMode && (
         <button
           onClick={() => setShowChat(true)}
           className="absolute bottom-24 right-4 active:scale-90 transition-transform z-10"
@@ -500,19 +599,46 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         </button>
       )}
 
+      {/* Care mode action bar */}
       <AnimatePresence>
-        {showWaterSession && (
-          <WateringSession
-            key="water-session"
-            plants={plants}
-            zones={zones}
-            onAddTimelineEvent={onAddTimelineEvent}
-            onAddZone={onAddZone}
-            onUpdateZone={onUpdateZone}
-            onDeleteZone={onDeleteZone}
-            onReorderZones={onReorderZones}
-            onClose={() => setWaterSession(false)}
-          />
+        {careMode && (
+          <motion.div
+            key="care-bar"
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+            className="fixed bottom-[68px] left-0 right-0 z-30 px-4 pb-2"
+          >
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3 flex gap-2 items-center">
+              <button
+                onClick={exitCareMode}
+                className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 active:bg-gray-200 flex-shrink-0"
+              >
+                <X size={18} className="text-gray-600" />
+              </button>
+              <button
+                onClick={() => handleCareAction('watering')}
+                disabled={careChecked.size === 0}
+                className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 disabled:opacity-40 active:bg-sky-600 transition-colors"
+              >
+                <Droplets size={16} className="text-white" />
+                <span className="text-sm font-bold text-white">
+                  Laistyta {careChecked.size > 0 ? `(${careChecked.size})` : ''}
+                </span>
+              </button>
+              <button
+                onClick={() => handleCareAction('fertilizing')}
+                disabled={careChecked.size === 0}
+                className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-amber-500 disabled:opacity-40 active:bg-amber-600 transition-colors"
+              >
+                <FlaskConical size={16} className="text-white" />
+                <span className="text-sm font-bold text-white">
+                  Trešta {careChecked.size > 0 ? `(${careChecked.size})` : ''}
+                </span>
+              </button>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
