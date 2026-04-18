@@ -46,7 +46,7 @@ const PlantCard = memo(function PlantCard({
   const dormFC      = section === 'auginama' ? getDormancyForecast(plant) : null
   const waterFC     = section === 'auginama' ? getWateringForecast(plant) : null
   const waterOverdue = waterFC?.isOverdue ?? false
-  const waterDays   = waterFC?.lastDate ? daysSinceDate(waterFC.lastDate) : null
+  const waterDays   = waterFC?.lastType === 'watering' ? daysSinceDate(waterFC.lastDate) : null
   const fertLastDate = fertFC ? (plant.timeline ?? []).filter(e => e.type === 'fertilizing').sort((a,b) => new Date(b.date)-new Date(a.date))[0]?.date : null
   const fertDays    = fertLastDate ? daysSinceDate(fertLastDate) : null
 
