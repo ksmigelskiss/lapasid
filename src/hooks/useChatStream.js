@@ -30,11 +30,11 @@ export function useChatStream({
   const [streamText, setStreamText] = useState('')
   const abortRef = useRef(null)
 
-  // send(text, systemPrompt) — each call site builds its own system prompt
-  const send = useCallback(async (text, systemPrompt) => {
-    if (!text || streaming) return
+  // send(text, systemPrompt, imageUrl?) — imageUrl is a data URL or null
+  const send = useCallback(async (text, systemPrompt, imageUrl = null) => {
+    if ((!text && !imageUrl) || streaming) return
 
-    const userMsg     = { role: 'user', content: text }
+    const userMsg     = { role: 'user', content: text, ...(imageUrl ? { imageUrl } : {}) }
     const newMessages = [...messages, userMsg]
     setMessages(newMessages)
     setStreaming(true)
@@ -45,7 +45,17 @@ export function useChatStream({
     abortRef.current = controller
 
     try {
-      const apiMessages = newMessages.slice(-MAX_API).map(m => ({ role: m.role, content: m.content }))
+      const apiMessages = newMessages.slice(-MAX_API).map(m => {
+        if (m.imageUrl) {
+          const [header, data] = m.imageUrl.split(',')
+          const mediaType = header.match(/data:([^;]+)/)?.[1] ?? 'image/jpeg'
+          const parts = [{ type: 'image', source: { type: 'base64', media_type: mediaType, data } }]
+          if (m.content) parts.push({ type: 'text', text: m.content })
+          return { role: m.role, content: parts }
+        }
+        return { role: m.role, content: m.content }
+      })
+
       let fullText = ''
 
       const stream = await client.messages.stream({

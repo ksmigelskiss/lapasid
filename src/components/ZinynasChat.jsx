@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, ArrowUp, BookOpen } from 'lucide-react'
+import { X, ArrowUp, BookOpen, Camera } from 'lucide-react'
 import { useChatStream } from '../hooks/useChatStream'
+import { resizeImage } from '../utils/imageService'
 
 function buildSystemPrompt(entry, allEntries, plants) {
   const plantList = (plants ?? [])
@@ -28,8 +29,10 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
   const { messages, streaming, streamText, send } = useChatStream({ maxTokens: 400 })
   const [input, setInput]           = useState('')
   const [panelHeight, setPanelHeight] = useState(DEFAULT_HEIGHT)
+  const [pendingImage, setPendingImage] = useState(null)
   const bottomRef = useRef(null)
   const inputRef  = useRef(null)
+  const fileRef   = useRef(null)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -50,9 +53,10 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
 
   const handleSend = () => {
     const text = input.trim()
-    if (!text) return
+    if (!text && !pendingImage) return
     setInput('')
-    send(text, buildSystemPrompt(entry, allEntries, plants))
+    setPendingImage(null)
+    send(text, buildSystemPrompt(entry, allEntries, plants), pendingImage)
   }
 
   return (
@@ -107,6 +111,7 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
                   ? 'bg-sage-500 text-white rounded-br-sm'
                   : 'bg-surface-2 text-gray-800 rounded-bl-sm'
               }`}>
+                {m.imageUrl && <img src={m.imageUrl} className="rounded-xl mb-1.5 max-h-48 w-full object-cover" alt="" />}
                 {m.content}
               </div>
             </div>
@@ -137,8 +142,31 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
           <div ref={bottomRef} />
         </div>
 
+        {/* Image preview */}
+        {pendingImage && (
+          <div className="px-4 pb-2 flex-shrink-0">
+            <div className="relative inline-block">
+              <img src={pendingImage} className="h-16 w-16 object-cover rounded-xl" alt="" />
+              <button
+                onClick={() => setPendingImage(null)}
+                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-700 text-white rounded-full flex items-center justify-center"
+              >
+                <X size={10} />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Input */}
         <div className="flex items-center gap-2 px-4 py-3 border-t border-warm-border flex-shrink-0">
+          <button
+            onClick={() => fileRef.current?.click()}
+            className="w-9 h-9 flex-shrink-0 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-500 active:bg-surface transition-colors"
+          >
+            <Camera size={16} />
+          </button>
+          <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden"
+            onChange={async e => { const f = e.target.files[0]; if (f) { setPendingImage(await resizeImage(f)); e.target.value = '' } }} />
           <input
             ref={inputRef}
             type="text"
@@ -150,7 +178,7 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
           />
           <button
             onClick={handleSend}
-            disabled={!input.trim() || streaming}
+            disabled={(!input.trim() && !pendingImage) || streaming}
             className="w-9 h-9 bg-sage-500 disabled:opacity-40 rounded-full flex items-center justify-center text-white flex-shrink-0 transition-opacity"
           >
             <ArrowUp size={16} strokeWidth={2.5} />

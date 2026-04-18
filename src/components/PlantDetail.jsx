@@ -213,9 +213,9 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
   )
 }
 
-function Section({ title, children }) {
+function Section({ title, children, id }) {
   return (
-    <div className="space-y-2">
+    <div id={id} className="space-y-2">
       <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest">{title}</p>
       {children}
     </div>
@@ -355,7 +355,7 @@ export function ProfileContent({ plant, section, onAction, onClose, className })
 
       {/* ── Care ── */}
       {plant.prieziura && (
-        <Section title="Priežiūra">
+        <Section title="Priežiūra" id="prieziura-section">
           <div className="bg-surface rounded-2xl divide-y divide-gray-100">
             <InfoRow icon={<Sun size={15} />}         label="Šviesa"      value={plant.prieziura.sviesa} />
             <InfoRow icon={<Droplets size={15} />}    label="Laistymas"   value={plant.prieziura.laistymas} />
@@ -919,6 +919,7 @@ export default function PlantDetail({
   onUpdateZone,
   onDeleteZone,
   onReorderZones,
+  scrollToCare = false,
 }) {
   const [activeTab, setActiveTab]           = useState('profile')
   const [heroError, setHeroError]           = useState(false)
@@ -935,6 +936,18 @@ export default function PlantDetail({
   const currentZone                         = zones.find(z => z.id === plant.zonaId) ?? null
   const mood                            = getPlantMood(plant)
   const fetchedRef                      = useRef(false)
+  const scrollContainerRef              = useRef(null)
+
+  useEffect(() => {
+    if (!scrollToCare) return
+    const t = setTimeout(() => {
+      const el = scrollContainerRef.current
+      if (!el) return
+      const target = el.querySelector('#prieziura-section')
+      if (target) el.scrollTo({ top: target.offsetTop - 12, behavior: 'smooth' })
+    }, 120)
+    return () => clearTimeout(t)
+  }, [scrollToCare, plant.id])
 
   // Fetch iNaturalist names if not yet fetched for this plant
   useEffect(() => {
@@ -1180,7 +1193,7 @@ export default function PlantDetail({
         <TabBar active={activeTab} onChange={setActiveTab} noteCount={loadNotes(plant).length} />
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto scrollbar-none relative">
+        <div className="flex-1 overflow-y-auto scrollbar-none relative" ref={scrollContainerRef}>
           <AnimatePresence mode="wait" initial={false}>
             {activeTab === 'profile' && (
               <motion.div
