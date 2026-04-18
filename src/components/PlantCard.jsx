@@ -66,7 +66,6 @@ const PlantCard = memo(function PlantCard({
         {hasImage ? (
           <img src={plant.image} alt={plant.lietuviškas}
             className="w-full h-full object-cover pointer-events-none"
-            loading="lazy"
             onError={() => setImgError(true)} />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-5xl">
