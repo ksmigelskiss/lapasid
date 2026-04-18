@@ -44,12 +44,14 @@ export function AddEventSheet({ type, onSave, onClose }) {
   }
 
   const handleSave = () => {
+    const autoNote = type === 'watering' ? 'Laistyta individualiai'
+      : type === 'fertilizing' ? 'Trešta individualiai'
+      : note.trim()
     onSave({
       id: makeId(),
       type,
       date: today(),
-      note: note.trim(),
-      ...(type === 'watering'    && {}),
+      note: autoNote,
       ...(type === 'fertilizing' && { fertilizer: fertilizer.trim(), amount: amount.trim() }),
       ...(type === 'repotting'   && { potSize: potSize.trim() }),
       ...(type === 'treatment'   && { preparatas: preparatas.trim(), tikslas: tikslas.trim(), metodas: metodas.trim() }),
@@ -186,17 +188,19 @@ export function AddEventSheet({ type, onSave, onClose }) {
           </div>
         )}
 
-        {/* Note (always visible) */}
-        <div>
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Pastaba (nebūtina)</label>
-          <textarea
-            placeholder="Papildoma informacija..."
-            value={note} onChange={e => setNote(e.target.value)}
-            rows={2}
-            className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none resize-none border border-transparent focus:border-sage-200"
-            autoFocus={type === 'note'}
-          />
-        </div>
+        {/* Note — hidden for watering/fertilizing (auto-comment added) */}
+        {type !== 'watering' && type !== 'fertilizing' && (
+          <div>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Pastaba (nebūtina)</label>
+            <textarea
+              placeholder="Papildoma informacija..."
+              value={note} onChange={e => setNote(e.target.value)}
+              rows={2}
+              className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none resize-none border border-transparent focus:border-sage-200"
+              autoFocus={type === 'note'}
+            />
+          </div>
+        )}
 
         <div className="flex gap-3 pt-1">
           <button onClick={onClose} className="flex-1 py-3.5 rounded-2xl text-sm font-medium text-gray-500 bg-surface-2">

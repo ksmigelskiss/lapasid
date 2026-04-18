@@ -31,7 +31,10 @@
       "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/components/*.jsx)",
       "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/pages/*.jsx)",
       "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/utils/*.js)",
-      "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/hooks/*.js)"
+      "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/hooks/*.js)",
+      "Bash(npm ls:*)",
+      "Bash(vercel ls:*)",
+      "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/components/*.jsx /Users/kestutissmigelskis/geliu-db/src/pages/*.jsx /Users/kestutissmigelskis/geliu-db/src/hooks/*.js /Users/kestutissmigelskis/geliu-db/src/utils/*.js)"
     ]
   }
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { X, ChevronUp, ChevronDown, Trash2, Plus } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { X, ChevronUp, ChevronDown, Trash2, Plus, Settings } from 'lucide-react'
 
 // ── Zone form (name only now) ──────────────────────────────────
 
@@ -38,12 +38,12 @@ function ZoneForm({ initial, onSave, onCancel, submitLabel = 'Išsaugoti' }) {
 
 // ── Zone manager sheet ─────────────────────────────────────────
 
-export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete, onReorder, onClose }) {
+export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete, onReorder, onClose, zIndex = 90 }) {
   const [creating, setCreating] = useState(false)
   const [editingId, setEditingId] = useState(null)
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-end justify-center">
+    <div className="fixed inset-0 flex items-end justify-center" style={{ zIndex }}>
       <motion.div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -134,7 +134,10 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
 
 // ── Zone + spot picker for PlantDetail ────────────────────────
 
-export function ZonePicker({ zones, currentZoneId, onSelect, onClose }) {
+export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClose, onAddZone, onUpdateZone, onDeleteZone, onReorderZones }) {
+  const [showManager, setShowManager] = useState(false)
+  const canManage = onAddZone && onUpdateZone && onDeleteZone && onReorderZones
+
   return (
     <div className="fixed inset-0 z-[95] flex items-end justify-center">
       <motion.div
@@ -176,8 +179,33 @@ export function ZonePicker({ zones, currentZoneId, onSelect, onClose }) {
               {currentZoneId === zone.id && <span className="text-sage-500 text-xs font-bold">✓</span>}
             </button>
           ))}
+          {canManage && (
+            <button
+              onClick={() => setShowManager(true)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-sm font-medium text-gray-500 bg-surface hover:bg-surface-2 transition-colors mt-2"
+            >
+              <Settings size={14} />
+              Tvarkyti zonas
+            </button>
+          )}
         </div>
       </motion.div>
+
+      <AnimatePresence>
+        {showManager && canManage && (
+          <ZoneManagerSheet
+            key="zone-manager-sheet"
+            zones={zones}
+            plants={plants}
+            onAdd={onAddZone}
+            onUpdate={onUpdateZone}
+            onDelete={onDeleteZone}
+            onReorder={onReorderZones}
+            onClose={() => setShowManager(false)}
+            zIndex={100}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

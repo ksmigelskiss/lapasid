@@ -182,7 +182,12 @@ export default function App() {
               onDeleteTimelineEvent={deleteTimelineEvent}
               onClearTimeline={id => clearTimeline(id)}
               zones={zones}
+              plants={dashboard}
               onZoneChange={movePlantToZone}
+              onAddZone={addZone}
+              onUpdateZone={updateZone}
+              onDeleteZone={deleteZone}
+              onReorderZones={reorderZones}
             />
           </Suspense>
         )}

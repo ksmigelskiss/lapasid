@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen, RefreshCw, FileText } from 'lucide-react'
+import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen, RefreshCw, FileText, Camera } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import CollectionChat from '../components/CollectionChat'
@@ -134,6 +134,14 @@ export default function Biblioteka({ plants, onTap, onSearch, onSaveToZinynas, o
           >
             <Search size={15} className="text-gray-400" />
             <span className="text-sm text-gray-500">Ieškoti augalo...</span>
+          </button>
+        )}
+        {!searching && (
+          <button
+            onClick={() => onSearch('')}
+            className="flex-shrink-0 w-11 rounded-2xl flex items-center justify-center bg-white border border-gray-200 text-gray-600 active:bg-surface transition-colors"
+          >
+            <Camera size={16} />
           </button>
         )}
         {!searching && (

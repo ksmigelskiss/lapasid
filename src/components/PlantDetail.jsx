@@ -914,6 +914,11 @@ export default function PlantDetail({
   onClearTimeline,
   zones = [],
   onZoneChange,
+  plants = [],
+  onAddZone,
+  onUpdateZone,
+  onDeleteZone,
+  onReorderZones,
 }) {
   const [activeTab, setActiveTab]           = useState('profile')
   const [heroError, setHeroError]           = useState(false)
@@ -1295,9 +1300,14 @@ export default function PlantDetail({
           <ZonePicker
             key="zone-picker"
             zones={zones}
+            plants={plants}
             currentZoneId={plant.zonaId}
             onSelect={zonaId => onZoneChange?.(plant.id, zonaId)}
             onClose={() => setShowZonePicker(false)}
+            onAddZone={onAddZone}
+            onUpdateZone={onUpdateZone}
+            onDeleteZone={onDeleteZone}
+            onReorderZones={onReorderZones}
           />
         )}
       </AnimatePresence>
