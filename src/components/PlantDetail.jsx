@@ -924,6 +924,7 @@ export default function PlantDetail({
 }) {
   const [activeTab, setActiveTab]           = useState('profile')
   const [heroError, setHeroError]           = useState(false)
+  const [heroLoaded, setHeroLoaded]         = useState(false)
   const [showPhotoSheet, setShowPhoto]      = useState(false)
   const [showChat, setShowChat]             = useState(false)
   const [chatInitialQuery, setChatQuery]    = useState('')
@@ -938,6 +939,8 @@ export default function PlantDetail({
   const mood                            = getPlantMood(plant)
   const fetchedRef                      = useRef(false)
   const scrollContainerRef              = useRef(null)
+
+  useEffect(() => { setHeroLoaded(false) }, [plant.image])
 
   useEffect(() => {
     if (!scrollToCare) return
@@ -1021,9 +1024,17 @@ export default function PlantDetail({
         {/* ── Hero ── */}
         {plant.image && !heroError ? (
           <div className="relative h-52 flex-shrink-0 rounded-t-4xl overflow-hidden">
+            {/* Placeholder shown while image loads */}
+            {!heroLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center bg-sage-50 text-6xl select-none">
+                {plant.emoji ?? '🌿'}
+              </div>
+            )}
             <img
               src={plant.image} alt={plant.lietuviškas}
               className="w-full h-full object-cover"
+              style={{ opacity: heroLoaded ? 1 : 0, transition: 'opacity 0.25s ease' }}
+              onLoad={() => setHeroLoaded(true)}
               onError={() => setHeroError(true)}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
