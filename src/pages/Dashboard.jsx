@@ -62,9 +62,17 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
           {open ? <ChevronUp size={14} className="text-red-300" /> : <ChevronDown size={14} className="text-red-300" />}
         </button>
         {careMode && open && (
-          <button onClick={() => onSelectAll(plants)} className="text-[11px] font-semibold text-red-400 flex-shrink-0 px-1">
-            Žymėti visus
-          </button>
+          <div className="flex items-center gap-1 flex-shrink-0">
+            <button onClick={() => onSelectAll(plants.filter(p => getWateringForecast(p).isOverdue))} className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-100 active:bg-sky-200">
+              <Droplets size={13} className="text-sky-500" />
+            </button>
+            <button onClick={() => onSelectAll(plants.filter(p => getFertilizingForecast(p).isOverdue))} className="w-7 h-7 flex items-center justify-center rounded-lg bg-amber-100 active:bg-amber-200">
+              <FlaskConical size={13} className="text-amber-500" />
+            </button>
+            <button onClick={() => onSelectAll(plants)} className="text-[11px] font-semibold text-red-400 px-1">
+              Žymėti visus
+            </button>
+          </div>
         )}
       </div>
       {open && (
@@ -110,9 +118,17 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
           {open ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
         </button>
         {careMode && open && (
-          <button onClick={() => onSelectAll(plants)} className="text-[11px] font-semibold text-sage-500 flex-shrink-0 px-1">
-            Žymėti visus
-          </button>
+          <div className="flex items-center gap-1 flex-shrink-0">
+            <button onClick={() => onSelectAll(plants.filter(p => getWateringForecast(p).isOverdue))} className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-100 active:bg-sky-200">
+              <Droplets size={13} className="text-sky-500" />
+            </button>
+            <button onClick={() => onSelectAll(plants.filter(p => getFertilizingForecast(p).isOverdue))} className="w-7 h-7 flex items-center justify-center rounded-lg bg-amber-100 active:bg-amber-200">
+              <FlaskConical size={13} className="text-amber-500" />
+            </button>
+            <button onClick={() => onSelectAll(plants)} className="text-[11px] font-semibold text-sage-500 px-1">
+              Žymėti visus
+            </button>
+          </div>
         )}
       </div>
       {open && (
@@ -531,9 +547,17 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 <div className="flex items-center py-2">
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-1">Nepriskirti</p>
                   {careMode && (
-                    <button onClick={() => selectAll(unzonedPlants)} className="text-[11px] font-semibold text-sage-500 px-1">
-                      Žymėti visus
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => selectAll(unzonedPlants.filter(p => getWateringForecast(p).isOverdue))} className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-100 active:bg-sky-200">
+                        <Droplets size={13} className="text-sky-500" />
+                      </button>
+                      <button onClick={() => selectAll(unzonedPlants.filter(p => getFertilizingForecast(p).isOverdue))} className="w-7 h-7 flex items-center justify-center rounded-lg bg-amber-100 active:bg-amber-200">
+                        <FlaskConical size={13} className="text-amber-500" />
+                      </button>
+                      <button onClick={() => selectAll(unzonedPlants)} className="text-[11px] font-semibold text-sage-500 px-1">
+                        Žymėti visus
+                      </button>
+                    </div>
                   )}
                 </div>
                 <div className="space-y-3">
@@ -566,7 +590,13 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         ) : (
           <>
             {careMode && (
-              <div className="flex justify-end py-1 mb-1">
+              <div className="flex justify-end items-center gap-1 py-1 mb-1">
+                <button onClick={() => selectAll(sortedPlants.filter(p => getWateringForecast(p).isOverdue))} className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-100 active:bg-sky-200">
+                  <Droplets size={13} className="text-sky-500" />
+                </button>
+                <button onClick={() => selectAll(sortedPlants.filter(p => getFertilizingForecast(p).isOverdue))} className="w-7 h-7 flex items-center justify-center rounded-lg bg-amber-100 active:bg-amber-200">
+                  <FlaskConical size={13} className="text-amber-500" />
+                </button>
                 <button onClick={() => selectAll(sortedPlants)} className="text-[11px] font-semibold text-sage-500 px-1">
                   Žymėti visus
                 </button>
