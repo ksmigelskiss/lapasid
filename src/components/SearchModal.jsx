@@ -330,12 +330,16 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             <Search size={18} className="text-gray-400 flex-shrink-0" />
             <input
               ref={inputRef}
-              type="text"
+              type="search"
               placeholder="Pvz. Monstera, Ficus, Alavijas..."
               value={query}
               onChange={e => { setPreview(null); setQuery(e.target.value); setResult(null); setError(null) }}
               onKeyDown={handleKeyDown}
               className="flex-1 bg-transparent py-3.5 text-sm text-gray-800 placeholder-gray-500 outline-none"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
               autoFocus
             />
             {(query || previewUrl) && (
