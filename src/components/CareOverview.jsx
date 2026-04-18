@@ -30,7 +30,7 @@ function Section({ bg, labelColor, chipBg, chipText, badgeColor, icon, label, pl
 }
 
 export default function CareOverview({ plants, onTap, onSelectWatering, onSelectFertilizing, onSelectAllWatering, onSelectAllFertilizing }) {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
 
   const wateringList = plants.filter(p => { const f = getWateringForecast(p); return f.isOverdue && f.lastType === 'watering' })
   const fertList     = plants.filter(p => getFertilizingForecast(p).isOverdue)
