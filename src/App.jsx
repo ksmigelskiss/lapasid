@@ -15,6 +15,7 @@ const Zinynas     = lazy(() => import('./pages/Zinynas'))
 
 export default function App() {
   const [tab, setTab]                 = useState('dashboard')
+  const [mountedTabs, setMountedTabs] = useState(() => new Set(['dashboard']))
   const [showSearch, setShowSearch]   = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState('')
   const [searchAutoCamera, setSearchAutoCamera] = useState(false)
@@ -38,6 +39,11 @@ export default function App() {
     ? [...dashboard, ...library].find(p => p.id === detailPlant.plant.id)
       ?? detailPlant.plant
     : null
+
+  const setTabAndMount = (key) => {
+    setMountedTabs(prev => new Set([...prev, key]))
+    setTab(key)
+  }
 
   const openDetail      = (plant, section, scrollToCare = false) => setDetailPlant({ plant, section, scrollToCare })
   const closeDetail     = () => setDetailPlant(null)
@@ -194,23 +200,18 @@ export default function App() {
     <PinGate>
     <div className="flex flex-col h-dvh overflow-hidden">
       <div className="flex-1 overflow-hidden relative">
-        <AnimatePresence mode="wait" initial={false}>
-          {tabs.map(({ key, page }) => tab === key && (
-            <motion.div
-              key={key}
-              className="absolute inset-0"
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.18, ease: 'easeInOut' }}
-            >
-              {page}
-            </motion.div>
-          ))}
-        </AnimatePresence>
+        {tabs.map(({ key, page }) => mountedTabs.has(key) && (
+          <div
+            key={key}
+            className="absolute inset-0"
+            style={{ display: tab === key ? 'flex' : 'none', flexDirection: 'column' }}
+          >
+            {page}
+          </div>
+        ))}
       </div>
 
-      <Navigation active={tab} onChange={setTab} dashboardCount={dashboard.length} />
+      <Navigation active={tab} onChange={setTabAndMount} dashboardCount={dashboard.length} />
 
       <AnimatePresence>
         {detailPlant && livePlant && (
