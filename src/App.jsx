@@ -50,7 +50,10 @@ export default function App() {
     setTab(key)
   }
 
-  const openDetail      = (plant, section, scrollToCare = false) => setDetailPlant({ plant, section, scrollToCare })
+  const openDetail      = (plant, section, scrollToCare = false) => {
+    if (plant.image) new Image().src = plant.image
+    setDetailPlant({ plant, section, scrollToCare })
+  }
   const closeDetail     = () => setDetailPlant(null)
 
   // One-time background migration: upload any base64 images still in Firestore to Storage

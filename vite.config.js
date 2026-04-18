@@ -43,7 +43,7 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /^https:\/\/(www\.inaturalist\.org|upload\.wikimedia\.org)\//,
+            urlPattern: /^https:\/\/(www\.inaturalist\.org|static\.inaturalist\.org|inaturalist-open-data\.s3\.amazonaws\.com|upload\.wikimedia\.org|commons\.wikimedia\.org)\//,
             handler: 'CacheFirst',
             options: {
               cacheName: 'plant-images',
