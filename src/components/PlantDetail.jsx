@@ -995,8 +995,8 @@ export default function PlantDetail({
 
       {/* Sheet */}
       <motion.div
-        className="relative w-full max-w-[430px] bg-app rounded-t-4xl flex flex-col"
-        style={{ height: '93dvh', y }}
+        className="relative w-full max-w-[430px] bg-app flex flex-col"
+        style={{ height: '100dvh', y }}
         drag="y"
         dragControls={dragControls}
         dragListener={false}
@@ -1008,7 +1008,7 @@ export default function PlantDetail({
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
       >
         {/* Drag handle — pointer-events only on the pill, not full width */}
-        <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pt-2.5 pb-2 pointer-events-none select-none">
+        <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pb-2 pointer-events-none select-none" style={{ paddingTop: 'max(0.625rem, env(safe-area-inset-top))' }}>
           <div
             onPointerDown={e => dragControls.start(e)}
             className="px-8 py-1 cursor-grab active:cursor-grabbing pointer-events-auto"
@@ -1020,14 +1020,14 @@ export default function PlantDetail({
 
         {/* ── Hero ── */}
         {plant.image && !heroError ? (
-          <div className="relative h-52 flex-shrink-0 rounded-t-4xl overflow-hidden">
+          <div className="relative flex-shrink-0 overflow-hidden" style={{ height: 'calc(17rem + env(safe-area-inset-top))' }}>
             <img
               src={plant.image} alt={plant.lietuviškas}
               className="w-full h-full object-cover"
               onError={() => setHeroError(true)}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-            <div className="absolute top-4 left-0 right-0 flex items-center justify-between px-4 z-30">
+            <div className="absolute left-0 right-0 flex items-center justify-between px-4 z-30" style={{ top: 'max(1rem, env(safe-area-inset-top))' }}>
               <button
                 onClick={() => setShowPhoto(true)}
                 className="w-11 h-11 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
@@ -1108,10 +1108,10 @@ export default function PlantDetail({
             </div>
           </div>
         ) : (
-          <div className={`flex-shrink-0 px-5 pt-7 pb-4 rounded-t-4xl ${
+          <div className={`flex-shrink-0 px-5 pb-4 ${
             section === 'istorija' ? 'bg-surface-2' :
             section === 'nori'     ? 'bg-blush-50' : 'bg-sage-50'
-          }`}>
+          }`} style={{ paddingTop: 'max(1.75rem, env(safe-area-inset-top))' }}>
             <div className="flex items-center justify-between mb-3">
               <button
                 onClick={() => setShowPhoto(true)}
