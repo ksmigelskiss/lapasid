@@ -60,12 +60,12 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
   return (
     <div ref={containerRef} className="mb-3">
       <div className="w-full flex items-center gap-2 py-2">
-        <button onClick={() => setOpen(v => !v)} className="flex items-center gap-2 flex-1 min-w-0">
+        <button onClick={() => setOpen(v => !v)} className="flex items-center gap-1.5 min-w-0">
           <ShieldAlert size={13} className="text-red-400 flex-shrink-0" />
-          <span className="text-sm font-bold text-red-600 flex-1 text-left">Karantinas</span>
-          <span className="text-xs text-red-300 mr-1">{plants.length}</span>
-          {open ? <ChevronUp size={14} className="text-red-300" /> : <ChevronDown size={14} className="text-red-300" />}
+          <span className="text-sm font-bold text-red-600">Karantinas</span>
+          <span className="text-xs text-red-300 flex-shrink-0">{plants.length}</span>
         </button>
+        <div className="flex-1" />
         {careMode && open && (
           <div className="flex items-center gap-1 flex-shrink-0">
             <button onClick={() => { onSelectAll(plants.filter(p => getWateringForecast(p).isOverdue)); scrollToTop() }} className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-100 active:bg-sky-200">
@@ -79,6 +79,9 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
             </button>
           </div>
         )}
+        <button onClick={() => setOpen(v => !v)} className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+          {open ? <ChevronUp size={14} className="text-red-300" /> : <ChevronDown size={14} className="text-red-300" />}
+        </button>
       </div>
       {open && (
         <div className="bg-red-50 rounded-2xl p-2.5">
@@ -121,12 +124,12 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
   return (
     <div ref={containerRef} className="mb-3">
       <div className="w-full flex items-center gap-2 py-2">
-        <button onClick={() => setOpen(v => !v)} className="flex items-center gap-2 flex-1 min-w-0">
+        <button onClick={() => setOpen(v => !v)} className="flex items-center gap-1.5 min-w-0">
           <MapPin size={13} className="text-sage-400 flex-shrink-0" />
-          <span className="text-sm font-bold text-gray-700 flex-1 text-left truncate">{zone.name}</span>
-          <span className="text-xs text-gray-400 mr-1">{plants.length}</span>
-          {open ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
+          <span className="text-sm font-bold text-gray-700 truncate">{zone.name}</span>
+          <span className="text-xs text-gray-400 flex-shrink-0">{plants.length}</span>
         </button>
+        <div className="flex-1" />
         {careMode && open && (
           <div className="flex items-center gap-1 flex-shrink-0">
             <button onClick={() => { onSelectAll(plants.filter(p => getWateringForecast(p).isOverdue)); scrollToTop() }} className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-100 active:bg-sky-200">
@@ -140,6 +143,9 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
             </button>
           </div>
         )}
+        <button onClick={() => setOpen(v => !v)} className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+          {open ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
+        </button>
       </div>
       {open && (
         <div className="space-y-3">
