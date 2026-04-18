@@ -194,7 +194,7 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
             <Camera size={16} />
           </button>
           <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden"
-            onChange={async e => { const f = e.target.files[0]; if (f) { setPendingImage(await resizeImage(f)); e.target.value = '' } }} />
+            onChange={async e => { const f = e.target.files[0]; if (f) { setPendingImage(await resizeImage(f, 800, 0.82)); e.target.value = '' } }} />
           <input
             ref={inputRef}
             type="text"

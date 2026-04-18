@@ -38,7 +38,7 @@ export function AddEventSheet({ type, onSave, onClose }) {
   const handleFile = async (file) => {
     if (!file) return
     try {
-      const url = await resizeImage(file)
+      const url = await resizeImage(file, 600, 0.80)
       setImageUrl(url)
     } catch {}
   }
