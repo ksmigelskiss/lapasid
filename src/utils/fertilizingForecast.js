@@ -22,8 +22,8 @@ function getCategory(plant) {
 const INTERVALS = {
   sultingas: { vasara: 28, žiema: null },
   papartis:  { vasara: 28, žiema: null },
-  greitas:   { vasara: 14, žiema: 42  },
-  vidutinis: { vasara: 21, žiema: 56  },
+  greitas:   { vasara: 14, žiema: null },
+  vidutinis: { vasara: 21, žiema: null },
 }
 
 export const CATEGORY_LABELS = {
