@@ -8,6 +8,7 @@ import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast, shouldShowWateringAlert } from '../utils/wateringForecast'
 import { buildDashboardSystemPrompt } from '../utils/collectionChatContext'
+import CareOverview from '../components/CareOverview'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { RefreshCw } from 'lucide-react'
 import { makeId, today } from '../utils/plantTransform'
@@ -101,14 +102,7 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
   )
 }
 
-function pinChecked(plants, careMode, careChecked) {
-  if (!careMode || !careChecked) return plants
-  return [...plants].sort((a, b) => {
-    const aSel = careChecked.has(a.id) ? 0 : 1
-    const bSel = careChecked.has(b.id) ? 0 : 1
-    return aSel - bSel
-  })
-}
+function pinChecked(plants) { return plants }
 
 function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle, onSelectAll, onDeselectAll, onScrollToGroup }) {
   const [open, setOpen] = useState(true)
@@ -182,7 +176,7 @@ function matchesQuery(plant, q) {
     .some(c => c && c.toLowerCase().includes(lower))
 }
 
-export default function Dashboard({ plants, allPlants = [], zones = [], onTap, onSearch, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones }) {
+export default function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, onSearch, onSearchByCamera, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones }) {
   const quarantinePlants = plants.filter(p => p.status === 'quarantine')
   // sick plants stay in their zone (mainPlants includes them)
   const mainPlants       = plants.filter(p => p.status !== 'quarantine')
@@ -243,6 +237,14 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const selectNeedsFertilizing = useCallback(() => {
     const ids = mainPlants.filter(p => getFertilizingForecast(p).isOverdue).map(p => p.id)
     setCareChecked(prev => new Set([...prev, ...ids]))
+  }, [mainPlants])
+
+  const selectAllWatering = useCallback(() => {
+    setCareChecked(prev => new Set([...prev, ...mainPlants.map(p => p.id)]))
+  }, [mainPlants])
+
+  const selectAllFertilizing = useCallback(() => {
+    setCareChecked(prev => new Set([...prev, ...mainPlants.map(p => p.id)]))
   }, [mainPlants])
 
   const exitCareMode = useCallback(() => { setCareMode(false); setCareChecked(new Set()) }, [])
@@ -357,7 +359,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         )}
         {!searching && (
           <button
-            onClick={() => onSearch('')}
+            onClick={() => onSearchByCamera ? onSearchByCamera() : onSearch('')}
             className="flex-shrink-0 w-11 rounded-2xl flex items-center justify-center bg-white border border-gray-200 text-gray-600 active:bg-surface transition-colors"
           >
             <Camera size={16} />
@@ -377,29 +379,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         )}
       </div>
 
-      {/* Care mode quick-select bar */}
-      {careMode && (() => {
-        const waterCount = mainPlants.filter(p => getWateringForecast(p).isOverdue).length
-        const fertCount  = mainPlants.filter(p => getFertilizingForecast(p).isOverdue).length
-        return (
-          <div className="px-5 mb-3 flex gap-2">
-            <button
-              onClick={selectNeedsWatering}
-              className="flex-1 flex items-center justify-center gap-1.5 bg-sky-50 border border-sky-200 active:bg-sky-100 transition-colors rounded-2xl py-2.5"
-            >
-              <Droplets size={14} className="text-sky-500" />
-              <span className="text-[13px] font-semibold text-sky-600">Laistyti{waterCount > 0 ? ` (${waterCount})` : ''}</span>
-            </button>
-            <button
-              onClick={selectNeedsFertilizing}
-              className="flex-1 flex items-center justify-center gap-1.5 bg-amber-50 border border-amber-200 active:bg-amber-100 transition-colors rounded-2xl py-2.5"
-            >
-              <FlaskConical size={14} className="text-amber-500" />
-              <span className="text-[13px] font-semibold text-amber-600">Tręšti{fertCount > 0 ? ` (${fertCount})` : ''}</span>
-            </button>
-          </div>
-        )
-      })()}
 
       {/* Collapsible sort */}
       {showFilters && plants.length > 1 && (
@@ -486,8 +465,11 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       {/* Scrollable content */}
       {!searching && <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
 
-        {/* Unified alerts widget */}
-        {hasAlerts && (
+        {/* Care overview — only in careMode */}
+        {careMode && <CareOverview plants={mainPlants} onTap={onTapFromCare ?? onTap} onSelectWatering={selectNeedsWatering} onSelectFertilizing={selectNeedsFertilizing} onSelectAllWatering={selectAllWatering} onSelectAllFertilizing={selectAllFertilizing} />}
+
+        {/* Unified alerts widget — only outside careMode */}
+        {!careMode && hasAlerts && (
           <div className="mb-4">
             <div className="bg-white rounded-2xl overflow-hidden shadow-ios-card">
               {/* Collapsible header */}

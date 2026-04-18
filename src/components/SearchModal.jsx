@@ -160,7 +160,7 @@ async function enrich(parsed) {
 }
 
 
-export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose, plants = [], onViewPlant, onPromote, initialQuery = '' }) {
+export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose, plants = [], onViewPlant, onPromote, initialQuery = '', autoCamera = false }) {
   const [query, setQuery]         = useState(initialQuery)
   const [loading, setLoading]     = useState(false)
   const [result, setResult]       = useState(null)
@@ -194,6 +194,15 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   // Auto-search if launched with a pre-filled query
   useEffect(() => {
     if (initialQuery.trim()) searchByText(initialQuery.trim())
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Auto-open camera picker if launched from camera button
+  useEffect(() => {
+    if (autoCamera) {
+      const t = setTimeout(() => fileRef.current?.click(), 100)
+      return () => clearTimeout(t)
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

@@ -47,7 +47,7 @@ function matchesTags(plant, tags) {
   return true
 }
 
-export default function Biblioteka({ plants, onTap, onSearch, onSaveToZinynas, onViewPlant, onRefresh }) {
+export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, onSaveToZinynas, onViewPlant, onRefresh }) {
   const [activeTags, setActiveTags] = useState(new Set())
   const [sortKey, setSortKey]       = useState('added')
   const [showSort, setShowSort]     = useState(false)
@@ -138,7 +138,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSaveToZinynas, o
         )}
         {!searching && (
           <button
-            onClick={() => onSearch('')}
+            onClick={() => onSearchByCamera ? onSearchByCamera() : onSearch('')}
             className="flex-shrink-0 w-11 rounded-2xl flex items-center justify-center bg-white border border-gray-200 text-gray-600 active:bg-surface transition-colors"
           >
             <Camera size={16} />

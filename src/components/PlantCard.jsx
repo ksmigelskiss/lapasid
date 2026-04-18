@@ -85,9 +85,9 @@ const PlantCard = memo(function PlantCard({
           <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 border-white/60 bg-transparent shadow-sm" />
         )}
 
-        {/* Forecast icons (auginama, non-careMode only) */}
-        {!careMode && section === 'auginama' && (
-          <div className="absolute top-2 right-2 flex flex-col gap-0.5 items-end">
+        {/* Forecast icons (auginama only) */}
+        {section === 'auginama' && (
+          <div className={`absolute ${careMode ? 'top-2 left-2' : 'top-2 right-2'} flex flex-col gap-0.5 items-end`}>
             <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
               <Droplets size={9} className={waterOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/50'} />
               {waterDays != null && (

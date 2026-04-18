@@ -17,6 +17,7 @@ export default function App() {
   const [tab, setTab]                 = useState('dashboard')
   const [showSearch, setShowSearch]   = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState('')
+  const [searchAutoCamera, setSearchAutoCamera] = useState(false)
   const [deathTarget, setDeathTarget]   = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [detailPlant, setDetailPlant]   = useState(null)
@@ -38,8 +39,8 @@ export default function App() {
       ?? detailPlant.plant
     : null
 
-  const openDetail  = (plant, section) => setDetailPlant({ plant, section })
-  const closeDetail = () => setDetailPlant(null)
+  const openDetail      = (plant, section, scrollToCare = false) => setDetailPlant({ plant, section, scrollToCare })
+  const closeDetail     = () => setDetailPlant(null)
 
   const handleDashboardAction = (action, plant) => {
     if (action === 'died')   setDeathTarget(plant)
@@ -102,7 +103,9 @@ export default function App() {
         allPlants={library}
         zones={zones}
         onTap={p => openDetail(p, 'auginama')}
-        onSearch={q => { setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
+        onTapFromCare={p => openDetail(p, 'auginama', true)}
+        onSearch={q => { setSearchAutoCamera(false); setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
+        onSearchByCamera={() => { setSearchAutoCamera(true); setSearchInitialQuery(''); setShowSearch(true) }}
         onFetchAllImages={fetchAllImages}
         fetchingAll={fetchingAll}
         onSaveToZinynas={addToZinynas}
@@ -120,7 +123,8 @@ export default function App() {
         <Biblioteka
           plants={library}
           onTap={p => openDetail(p, p.kategorija === 'auginama' ? 'nori' : p.kategorija)}
-          onSearch={q => { setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
+          onSearch={q => { setSearchAutoCamera(false); setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
+          onSearchByCamera={() => { setSearchAutoCamera(true); setSearchInitialQuery(''); setShowSearch(true) }}
           onSaveToZinynas={addToZinynas}
           onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'nori' : p.kategorija)}
           onRefresh={syncFromRemote}
@@ -188,6 +192,7 @@ export default function App() {
               onUpdateZone={updateZone}
               onDeleteZone={deleteZone}
               onReorderZones={reorderZones}
+              scrollToCare={detailPlant.scrollToCare ?? false}
             />
           </Suspense>
         )}
@@ -200,9 +205,10 @@ export default function App() {
               key="search"
               plants={library}
               initialQuery={searchInitialQuery}
+              autoCamera={searchAutoCamera}
               onAddToWishlist={plant => { addToWishlist(plant); setTab('biblioteka') }}
               onAddToDashboard={plant => { addToDashboard(plant); setTab('dashboard') }}
-              onClose={() => { setShowSearch(false); setSearchInitialQuery('') }}
+              onClose={() => { setShowSearch(false); setSearchInitialQuery(''); setSearchAutoCamera(false) }}
               onViewPlant={plant => {
                 setShowSearch(false)
                 setSearchInitialQuery('')
