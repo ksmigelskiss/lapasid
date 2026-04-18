@@ -42,6 +42,16 @@ export default function App() {
   const openDetail      = (plant, section, scrollToCare = false) => setDetailPlant({ plant, section, scrollToCare })
   const closeDetail     = () => setDetailPlant(null)
 
+  // Upload timeline photo to Storage before saving (avoids Firestore 1MB doc limit)
+  const addTimelineEventWithUpload = async (plantId, event) => {
+    if (event.imageUrl?.startsWith('data:')) {
+      const uploaded = await uploadImage(event.imageUrl, plantId)
+      addTimelineEvent(plantId, { ...event, imageUrl: uploaded ?? event.imageUrl })
+    } else {
+      addTimelineEvent(plantId, event)
+    }
+  }
+
   const handleDashboardAction = (action, plant) => {
     if (action === 'died')   setDeathTarget(plant)
     if (action === 'delete') setDeleteTarget({ plant, section: 'auginama' })
@@ -111,7 +121,7 @@ export default function App() {
         onSaveToZinynas={addToZinynas}
         onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'auginama' : p.kategorija === 'nori' ? 'nori' : 'istorija')}
         onRefresh={syncFromRemote}
-        onAddTimelineEvent={addTimelineEvent}
+        onAddTimelineEvent={addTimelineEventWithUpload}
         onAddZone={addZone}
         onUpdateZone={updateZone}
         onDeleteZone={deleteZone}
@@ -180,9 +190,9 @@ export default function App() {
               onStatusChange={(id, status, meta) => updateStatus(id, status, meta)}
               onUpdateNames={(id, patch) => updatePlant(id, patch)}
               onImageSave={async (id, url, fromHistory = false) => updateImage(id, await uploadImage(url, id), fromHistory)}
-              onSaveChat={(id, msgs) => updateChat(id, msgs)}
+              onSaveChat={(id, msgs) => updateChat(id, msgs.map(({ imageUrl, ...m }) => m))}
               onSaveToZinynas={addToZinynas}
-              onAddTimelineEvent={addTimelineEvent}
+              onAddTimelineEvent={addTimelineEventWithUpload}
               onDeleteTimelineEvent={deleteTimelineEvent}
               onClearTimeline={id => clearTimeline(id)}
               zones={zones}
