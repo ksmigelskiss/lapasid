@@ -911,7 +911,6 @@ export default function PlantDetail({
   onSaveToZinynas,
   onAddTimelineEvent,
   onDeleteTimelineEvent,
-  onClearTimeline,
   zones = [],
   onZoneChange,
   plants = [],
@@ -1223,7 +1222,6 @@ export default function PlantDetail({
                   plant={plant}
                   onAddEvent={event => onAddTimelineEvent?.(plant.id, event)}
                   onDeleteEvent={eventId => onDeleteTimelineEvent?.(plant.id, eventId)}
-                  onClearTimeline={() => onClearTimeline?.(plant.id)}
                   onSetAsProfilePhoto={url => onImageSave?.(plant.id, url)}
                   zones={zones}
                 />

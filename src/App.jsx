@@ -29,7 +29,7 @@ export default function App() {
     addToDashboard, addToWishlist,
     markAsDied, moveToDashboard,
     updateComment, updateImage, updateStatus, updatePlant, deletePlant,
-    addTimelineEvent, deleteTimelineEvent, clearTimeline, updateChat, togglePirkinys,
+    addTimelineEvent, deleteTimelineEvent, updateChat, togglePirkinys,
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred,
     updateUzrasai,
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
@@ -238,7 +238,6 @@ export default function App() {
             onSaveToZinynas={addToZinynas}
             onAddTimelineEvent={addTimelineEventWithUpload}
             onDeleteTimelineEvent={deleteTimelineEvent}
-            onClearTimeline={id => clearTimeline(id)}
             zones={zones}
             plants={dashboard}
             onZoneChange={movePlantToZone}
