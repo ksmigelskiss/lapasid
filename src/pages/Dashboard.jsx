@@ -326,12 +326,12 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             <div className="flex items-center gap-2">
               <button
                 onClick={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
-                className={`active:bg-sage-100 transition-colors rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px] ${careMode ? 'bg-sage-500' : 'bg-sage-50'}`}
+                className={`active:bg-sage-100 transition-colors rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px] ${careMode ? 'bg-sage-500' : 'bg-white'}`}
               >
                 <Sprout size={20} className={careMode ? 'text-white' : 'text-sage-500'} />
                 <span className={`text-[10px] font-medium mt-0.5 ${careMode ? 'text-white' : 'text-sage-500'}`}>priežiūra</span>
               </button>
-              <div className="bg-sage-50 rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]">
+              <div className="bg-white rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]">
                 <span className="text-2xl font-extrabold text-sage-600 leading-none">{plants.length}</span>
                 <span className="text-[10px] text-sage-400 font-medium mt-0.5">augal{plants.length === 1 ? 'as' : 'ai'}</span>
               </div>
@@ -342,7 +342,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 <button
                   onClick={onFetchAllImages}
                   disabled={fetchingAll}
-                  className="flex items-center gap-1.5 bg-sage-50 hover:bg-sage-100 disabled:opacity-60 transition-colors rounded-xl px-2.5 py-1.5"
+                  className="flex items-center gap-1.5 bg-white hover:bg-gray-50 disabled:opacity-60 transition-colors rounded-xl px-2.5 py-1.5"
                 >
                   {fetchingAll ? <Loader2 size={14} className="animate-spin" /> : <ImageIcon size={14} />}
                   <span className="text-xs font-medium text-sage-600">
