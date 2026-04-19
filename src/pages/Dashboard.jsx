@@ -753,7 +753,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             title="Kolekcijos asistentas"
             icon={<img src={GARDENER} className="h-14 w-auto object-contain" alt="" />}
             iconLg={<img src={GARDENER} className="h-[70px] w-auto object-contain" alt="" />}
-            systemPrompt={buildDashboardSystemPrompt(plants)}
+            systemPrompt={buildDashboardSystemPrompt(plants, zones)}
             onClose={() => setShowChat(false)}
             onSaveToZinynas={onSaveToZinynas}
             plants={plants}

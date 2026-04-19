@@ -6,29 +6,34 @@ function primaryName(p) {
   return p.lietuviškas || p.lotyniskas || '?'
 }
 
-function plantLine(p) {
+function plantLine(p, zones = []) {
   const flags = []
   if (shouldShowWateringAlert(p))              flags.push('laistymas vėluoja')
   if (getFertilizingForecast(p)?.isOverdue)    flags.push('tręšimas vėluoja')
   if (p.status === 'sick')                     flags.push('serga')
   if (p.status === 'quarantine')               flags.push('karantinas')
-  const light  = p.sviesa?.lygis  ? `, šviesa: ${p.sviesa.lygis}`  : ''
-  const water  = p.vanduo?.lygis  ? `, vanduo: ${p.vanduo.lygis}`  : ''
-  const status = flags.length     ? ` [${flags.join(', ')}]`        : ''
-  return `- ${primaryName(p)}${status}${light}${water}`
+  const zone   = zones.find(z => z.id === p.zonaId)
+  const zonePart = zone                ? `, zona: ${zone.name}`     : ''
+  const light  = p.sviesa?.lygis      ? `, šviesa: ${p.sviesa.lygis}`  : ''
+  const water  = p.vanduo?.lygis      ? `, vanduo: ${p.vanduo.lygis}`  : ''
+  const status = flags.length         ? ` [${flags.join(', ')}]`        : ''
+  return `- ${primaryName(p)}${status}${zonePart}${light}${water}`
 }
 
 const NAME_RULE = `SVARBU: Minėdamas augalus visada naudok tik jų lietuviškus pavadinimus (kaip nurodyta sąraše). Lotynišką pavadinimą rašyk tik tada, kai vartotojas jo klausia.`
 
-export function buildDashboardSystemPrompt(plants) {
+export function buildDashboardSystemPrompt(plants, zones = []) {
   const n = plants.length
+  const zoneList = zones.length
+    ? `\nZonos: ${zones.map(z => z.name).join(', ')}`
+    : ''
   return `Tu esi augalų kolekcijos asistentas. Atsakai lietuviškai, trumpai ir praktiškai.
 ${NAME_RULE}
-
+${zoneList}
 Kolekcija (${n} augal${n === 1 ? 'as' : 'ai'}):
-${plants.map(plantLine).join('\n') || '(kolekcija tuščia)'}
+${plants.map(p => plantLine(p, zones)).join('\n') || '(kolekcija tuščia)'}
 
-Gali padėti: patari ko trūksta kolekcijoje, kaip augalai papildo vienas kitą, kurie derinasi pagal šviesą ar drėgmę, primeni artėjančius priežiūros darbus, rekomenduoji naujus augalus pagal esamą stilių. Neatsakinėk į klausimus, nesusijusius su augalais.`
+Gali padėti: patari ko trūksta kolekcijoje, kaip augalai papildo vienas kitą, kurie derinasi pagal šviesą ar drėgmę, primeni artėjančius priežiūros darbus, rekomenduoji naujus augalus pagal esamą stilių, atsakai į klausimus apie konkrečias zonas. Neatsakinėk į klausimus, nesusijusius su augalais.`
 }
 
 export function buildLibrarySystemPrompt(plants) {
