@@ -313,7 +313,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     : sortedPlants
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-surface">
       {/* Header */}
       <div className="px-5 pt-14 pb-4">
         <div className="flex items-center justify-between">
@@ -493,7 +493,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       </div>}
 
       {/* Scrollable content */}
-      {!searching && <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28 bg-surface">
+      {!searching && <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
 
         {/* Care overview — only in careMode */}
         {careMode && <CareOverview plants={mainPlants} onTap={onTapFromCare ?? onTap} onSelectWatering={selectNeedsWatering} onSelectFertilizing={selectNeedsFertilizing} onSelectAllWatering={selectAllWatering} onSelectAllFertilizing={selectAllFertilizing} />}
