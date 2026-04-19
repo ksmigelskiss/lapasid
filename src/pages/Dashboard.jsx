@@ -331,7 +331,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 <Sprout size={20} className={careMode ? 'text-white' : 'text-sage-500'} />
                 <span className={`text-[10px] font-medium mt-0.5 ${careMode ? 'text-white' : 'text-sage-500'}`}>priežiūra</span>
               </button>
-              <div className="bg-white border border-gray-300 rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]">
+              <div className="border border-gray-300 rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]">
                 <span className="text-2xl font-extrabold text-gray-700 leading-none">{plants.length}</span>
                 <span className="text-[10px] text-gray-500 font-medium mt-0.5">augal{plants.length === 1 ? 'as' : 'ai'}</span>
               </div>
