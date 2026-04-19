@@ -196,11 +196,14 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const [showChat, setShowChat]       = useState(false)
   const [searching, setSearching]     = useState(false)
   const [query, setQuery]             = useState('')
-  const [careMode, setCareMode]       = useState(false)
-  const [careChecked, setCareChecked] = useState(new Set())
-  const inputRef       = useRef(null)
-  const scrollRef      = useRef(null)
-  const unzonedRef     = useRef(null)
+  const [careMode, setCareMode]         = useState(false)
+  const [careChecked, setCareChecked]   = useState(new Set())
+  const [confirmType, setConfirmType]   = useState(null)   // 'watering' | 'fertilizing' | null
+  const [countdown, setCountdown]       = useState(5)
+  const confirmTimerRef = useRef(null)
+  const inputRef        = useRef(null)
+  const scrollRef       = useRef(null)
+  const unzonedRef      = useRef(null)
 
   const scrollToGroup = useCallback((el) => {
     requestAnimationFrame(() => {
@@ -253,7 +256,28 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     setCareChecked(prev => new Set([...prev, ...mainPlants.map(p => p.id)]))
   }, [mainPlants])
 
-  const exitCareMode = useCallback(() => { setCareMode(false); setCareChecked(new Set()) }, [])
+  const resetConfirm = useCallback(() => {
+    clearInterval(confirmTimerRef.current)
+    setConfirmType(null)
+    setCountdown(5)
+  }, [])
+
+  const exitCareMode = useCallback(() => {
+    resetConfirm()
+    setCareMode(false)
+    setCareChecked(new Set())
+  }, [resetConfirm])
+
+  useEffect(() => {
+    if (!confirmType) return
+    confirmTimerRef.current = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) { clearInterval(confirmTimerRef.current); setConfirmType(null); return 5 }
+        return prev - 1
+      })
+    }, 1000)
+    return () => clearInterval(confirmTimerRef.current)
+  }, [confirmType])
 
   const handleCareAction = useCallback((type) => {
     const t = today()
@@ -682,23 +706,39 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 <X size={18} className="text-gray-600" />
               </button>
               <button
-                onClick={() => handleCareAction('watering')}
+                onClick={() => {
+                  if (careChecked.size === 0) return
+                  if (confirmType === 'watering') { handleCareAction('watering'); resetConfirm() }
+                  else { resetConfirm(); setConfirmType('watering'); setCountdown(5) }
+                }}
                 disabled={careChecked.size === 0}
-                className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 disabled:opacity-40 active:bg-sky-600 transition-colors"
+                className={`flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl disabled:opacity-40 transition-colors ${
+                  confirmType === 'watering' ? 'bg-sky-700 active:bg-sky-800' : 'bg-sky-500 active:bg-sky-600'
+                }`}
               >
                 <Droplets size={16} className="text-white" />
                 <span className="text-sm font-bold text-white">
-                  Laistyta {careChecked.size > 0 ? `(${careChecked.size})` : ''}
+                  {confirmType === 'watering'
+                    ? `Patvirtinti (${countdown})`
+                    : `Laistyti${careChecked.size > 0 ? ` (${careChecked.size})` : ''}`}
                 </span>
               </button>
               <button
-                onClick={() => handleCareAction('fertilizing')}
+                onClick={() => {
+                  if (careChecked.size === 0) return
+                  if (confirmType === 'fertilizing') { handleCareAction('fertilizing'); resetConfirm() }
+                  else { resetConfirm(); setConfirmType('fertilizing'); setCountdown(5) }
+                }}
                 disabled={careChecked.size === 0}
-                className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-amber-500 disabled:opacity-40 active:bg-amber-600 transition-colors"
+                className={`flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl disabled:opacity-40 transition-colors ${
+                  confirmType === 'fertilizing' ? 'bg-amber-700 active:bg-amber-800' : 'bg-amber-500 active:bg-amber-600'
+                }`}
               >
                 <FlaskConical size={16} className="text-white" />
                 <span className="text-sm font-bold text-white">
-                  Trešta {careChecked.size > 0 ? `(${careChecked.size})` : ''}
+                  {confirmType === 'fertilizing'
+                    ? `Patvirtinti (${countdown})`
+                    : `Tręšti${careChecked.size > 0 ? ` (${careChecked.size})` : ''}`}
                 </span>
               </button>
             </div>
