@@ -58,7 +58,7 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
   const orderedPlants = pinChecked(plants, careMode, careChecked)
   const allChecked    = careMode && plants.length > 0 && plants.every(p => careChecked?.has(p.id))
   return (
-    <div ref={containerRef} className="mb-3">
+    <div ref={containerRef} className="mb-3 bg-white rounded-2xl shadow-sm px-3 pb-3">
       <div className="w-full flex items-center gap-2 py-2">
         <button onClick={() => setOpen(v => !v)} className="flex items-center gap-1.5 min-w-0">
           <ShieldAlert size={13} className="text-red-400 flex-shrink-0" />
@@ -122,7 +122,7 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
   } : {}
 
   return (
-    <div ref={containerRef} className="mb-3">
+    <div ref={containerRef} className="mb-3 bg-white rounded-2xl shadow-sm px-3 pb-3">
       <div className="w-full flex items-center gap-2 py-2">
         <button onClick={() => setOpen(v => !v)} className="flex items-center gap-1.5 min-w-0">
           <MapPin size={13} className="text-sage-400 flex-shrink-0" />
@@ -601,7 +601,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onSelectAll={selectAll} onDeselectAll={deselectAll} onScrollToGroup={scrollToGroup} />
             ))}
             {unzonedPlants.length > 0 && (
-              <div ref={unzonedRef} className="mb-3">
+              <div ref={unzonedRef} className="mb-3 bg-white rounded-2xl shadow-sm px-3 pb-3">
                 <div className="flex items-center py-2">
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-1">Nepriskirti</p>
                   {careMode && (
