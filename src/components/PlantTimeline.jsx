@@ -378,6 +378,7 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
           onPointerUp={onPressEnd}
           onPointerCancel={onPressEnd}
           onContextMenu={e => e.preventDefault()}
+          style={NO_CALLOUT}
         >
           <img
             src={event.imageUrl}

@@ -98,6 +98,7 @@ const PlantCard = memo(function PlantCard({
       onPointerUp={careMode ? onPressEnd : undefined}
       onPointerCancel={careMode ? onPressEnd : undefined}
       onContextMenu={careMode ? e => e.preventDefault() : undefined}
+      style={careMode ? { WebkitTouchCallout: 'none', userSelect: 'none' } : undefined}
     >
       {/* Image area */}
       <div
