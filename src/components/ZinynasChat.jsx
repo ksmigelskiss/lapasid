@@ -14,13 +14,13 @@ function buildSystemPrompt(entry, allEntries, plants) {
     .map(e => `• ${e.text}`)
     .join('\n')
 
-  return `Esi sodininkystės ekspertas. Vartotojas nori aptarti šią išsaugotą mintį iš savo žinyno:
+  return `Esi sodininkystės ekspertas. Vartotojas aptaria šią išsaugotą mintį:
 
 ---
 ${entry.text}
 ---
 ${plantList ? `\nVARTOTOJO AUGINAMI AUGALAI:\n${plantList}\n` : ''}${zinynasContext ? `\nKITI ŽINYNO ĮRAŠAI (kontekstui):\n${zinynasContext}\n` : ''}
-Atsakinėk lietuviškai, glaustai ir praktiškai. Jei reikia, remkis vartotojo kolekcija ir kitais žinyno įrašais.`
+Aiškink esmingai: kodėl taip veikia, kas biologiškai lemia, ką reikia žinoti. Jei reikia, remkis vartotojo kolekcija ir kitais žinyno įrašais. Atsakyk lietuviškai — glaustai, bet pakankamai, kad vartotojas tikrai suprastų.`
 }
 
 const DEFAULT_HEIGHT = '65dvh'

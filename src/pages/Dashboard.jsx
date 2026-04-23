@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera } from 'lucide-react'
 const GARDENER = '/gardener.png'
@@ -51,7 +52,159 @@ function sortPlants(plants, key) {
   }
 }
 
-function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCareToggle, onSelectAll, onDeselectAll, onScrollToGroup }) {
+function CareWateringSheet({ plant, onClose }) {
+  const wc = getWateringForecast(plant)
+  const hasImg = !!plant.image
+  const intervals = plant.laistymasIntervalas
+  const desc = plant.prieziura?.laistymas
+
+  const fmtDate = iso => iso
+    ? new Date(iso + 'T00:00:00').toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
+    : null
+  const daysSince = iso => iso
+    ? Math.floor((Date.now() - new Date(iso + 'T00:00:00')) / 86400000)
+    : null
+
+  return createPortal(
+    <motion.div
+      className="fixed inset-0 z-[110] flex flex-col justify-end"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <motion.div
+        className="relative bg-white rounded-t-3xl overflow-hidden max-h-[84dvh] flex flex-col"
+        initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+        transition={{ type: 'spring', damping: 32, stiffness: 340 }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Photo header — handle overlaid on top */}
+        <div className="relative flex-shrink-0">
+          {hasImg ? (
+            <>
+              <img src={plant.image} alt="" className="w-full h-52 object-cover" />
+              {/* Handle on image */}
+              <div className="absolute top-3 inset-x-0 flex justify-center">
+                <div className="w-10 h-1 rounded-full bg-white/50" />
+              </div>
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent px-5 pb-4 pt-12">
+                <p className="text-white font-bold text-lg leading-tight">{plant.lietuviškas}</p>
+                {plant.lotyniskas && <p className="text-white/60 text-sm italic leading-tight">{plant.lotyniskas}</p>}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex justify-center pt-3 pb-1">
+                <div className="w-10 h-1 rounded-full bg-gray-200" />
+              </div>
+              <div className="w-full h-24 bg-sky-50 flex items-center justify-center">
+                <span className="text-6xl">{plant.emoji ?? '🌿'}</span>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Scrollable content */}
+        <div className="overflow-y-auto flex-1 px-5 pt-4 pb-8 space-y-4">
+          {!hasImg && (
+            <div>
+              <p className="text-lg font-bold text-gray-900">{plant.lietuviškas}</p>
+              {plant.lotyniskas && <p className="text-sm italic text-gray-500">{plant.lotyniskas}</p>}
+            </div>
+          )}
+
+          {/* Description */}
+          {desc ? (
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Droplets size={15} className="text-sky-500" />
+                <p className="text-sm font-bold text-gray-800">Laistymas</p>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">{desc}</p>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Droplets size={15} className="text-sky-500" />
+              <p className="text-sm font-bold text-gray-800">Laistymas</p>
+            </div>
+          )}
+
+          {/* Interval badges */}
+          {(intervals?.vasara != null || wc.intervalDays != null) && (
+            <div className="flex gap-2">
+              <div className="flex-1 bg-amber-50 rounded-2xl p-3 text-center">
+                <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wider mb-1">☀️ Vasara</p>
+                <p className="text-base font-bold text-amber-700">
+                  {intervals?.vasara != null
+                    ? `kas ${intervals.vasara} d.`
+                    : wc.intervalDays ? `kas ${wc.intervalDays} d.` : '–'}
+                </p>
+              </div>
+              <div className="flex-1 bg-sky-50 rounded-2xl p-3 text-center">
+                <p className="text-[10px] font-bold text-sky-600 uppercase tracking-wider mb-1">❄️ Žiema</p>
+                <p className="text-base font-bold text-sky-700">
+                  {intervals?.ziema === null
+                    ? 'Neskaistoma'
+                    : intervals?.ziema != null
+                      ? `kas ${intervals.ziema} d.`
+                      : '–'}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Method */}
+          {wc.metodas && (
+            <div className="bg-gray-50 rounded-2xl px-4 py-3">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Metodas</p>
+              <p className="text-sm text-gray-700">{wc.metodas}</p>
+            </div>
+          )}
+
+          {/* Current status */}
+          <div className={`rounded-2xl px-4 py-3 ${wc.isOverdue ? 'bg-sky-50 border border-sky-100' : 'bg-gray-50'}`}>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2.5">Dabar</p>
+            <div className="space-y-2">
+              {wc.lastDate && (
+                <div className="flex justify-between items-baseline gap-2">
+                  <span className="text-sm text-gray-500 flex-shrink-0">Paskutinis</span>
+                  <span className="text-sm font-semibold text-gray-800 text-right">
+                    {fmtDate(wc.lastDate)}
+                    {daysSince(wc.lastDate) != null && (
+                      <span className="text-gray-400 font-normal"> · {daysSince(wc.lastDate)} d. atgal</span>
+                    )}
+                  </span>
+                </div>
+              )}
+              {wc.daysUntil != null && (
+                <div className="flex justify-between items-baseline gap-2">
+                  <span className="text-sm text-gray-500 flex-shrink-0">
+                    {wc.isOverdue ? 'Vėluoja' : 'Kitas'}
+                  </span>
+                  <span className={`text-sm font-bold text-right ${wc.isOverdue ? 'text-sky-600' : 'text-gray-800'}`}>
+                    {wc.isOverdue
+                      ? `${Math.abs(wc.daysUntil)} d.`
+                      : `po ${wc.daysUntil} d.${wc.nextDate ? ` · ${fmtDate(wc.nextDate)}` : ''}`}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="w-full py-3 rounded-2xl text-sm font-semibold text-gray-500 bg-gray-100 active:bg-gray-200 transition-colors"
+          >
+            Uždaryti
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>,
+    document.body
+  )
+}
+
+function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCareToggle, onSelectAll, onDeselectAll, onScrollToGroup, onCareInfo }) {
   const [open, setOpen] = useState(true)
   const containerRef = useRef(null)
   const scrollToTop = () => onScrollToGroup?.(containerRef.current)
@@ -96,6 +249,7 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
                 careMode={careMode}
                 checked={careChecked?.has(plant.id)}
                 onToggle={() => onCareToggle(plant.id)}
+                onCareInfo={() => onCareInfo?.(plant)}
               />
             ))}
           </div>
@@ -107,7 +261,7 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
 
 function pinChecked(plants) { return plants }
 
-function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle, onSelectAll, onDeselectAll, onScrollToGroup }) {
+function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle, onSelectAll, onDeselectAll, onScrollToGroup, onCareInfo }) {
   const [open, setOpen] = useState(true)
   const containerRef = useRef(null)
   const scrollToTop = () => onScrollToGroup?.(containerRef.current)
@@ -119,6 +273,7 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
     careMode: true,
     checked: careChecked?.has(plant.id),
     onToggle: () => onCareToggle(plant.id),
+    onCareInfo: () => onCareInfo?.(plant),
   } : {}
 
   return (
@@ -198,6 +353,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const [query, setQuery]             = useState('')
   const [careMode, setCareMode]         = useState(false)
   const [careChecked, setCareChecked]   = useState(new Set())
+  const [careInfoPlant, setCareInfoPlant] = useState(null)
   const [confirmType, setConfirmType]   = useState(null)   // 'watering' | 'fertilizing' | null
   const [countdown, setCountdown]       = useState(5)
   const confirmTimerRef = useRef(null)
@@ -363,10 +519,11 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             <input
               ref={inputRef}
               type="text"
-              autoComplete="off"
+              inputMode="search"
+              enterKeyHint="search"
+              autoComplete="nope"
               autoCorrect="off"
               autoCapitalize="none"
-              inputMode="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => {
@@ -522,7 +679,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                   {wateringList.length > 0 && (
                     <div>
                       <p className="flex items-center gap-1 text-[10px] font-bold text-sky-500 uppercase tracking-wider mb-1.5">
-                        <Droplets size={11} /> Laistymas vėluoja
+                        <Droplets size={11} /> Patikrink ar ne sausi
                       </p>
                       <div className="flex flex-wrap gap-1.5">
                         {wateringList.map(p => {
@@ -546,7 +703,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                   {overdueList.length > 0 && (
                     <div>
                       <p className="flex items-center gap-1 text-[10px] font-bold text-orange-500 uppercase tracking-wider mb-1.5">
-                        <Leaf size={11} /> Tręšimas vėluoja
+                        <Leaf size={11} /> Pamaitink augalėlį
                       </p>
                       <div className="flex flex-wrap gap-1.5">
                         {overdueList.map(p => {
@@ -576,7 +733,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (
           <QuarantineSection plants={quarantinePlants} zones={zones} onTap={onTap}
-            careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onSelectAll={selectAll} onDeselectAll={deselectAll} onScrollToGroup={scrollToGroup} />
+            careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onSelectAll={selectAll} onDeselectAll={deselectAll} onScrollToGroup={scrollToGroup} onCareInfo={setCareInfoPlant} />
         )}
 
         {/* Plant grid */}
@@ -598,7 +755,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
           <>
             {zonedPlants.map(({ zone, plants: zp }) => zp.length > 0 && (
               <ZoneSection key={zone.id} zone={zone} plants={zp} onTap={onTap}
-                careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onSelectAll={selectAll} onDeselectAll={deselectAll} onScrollToGroup={scrollToGroup} />
+                careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onSelectAll={selectAll} onDeselectAll={deselectAll} onScrollToGroup={scrollToGroup} onCareInfo={setCareInfoPlant} />
             ))}
             {unzonedPlants.length > 0 && (
               <div ref={unzonedRef} className="mb-3 bg-white rounded-2xl px-3 pb-3">
@@ -628,7 +785,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                       <div className="grid grid-cols-2 gap-2">
                         {pinChecked(unzonedPlants.filter(p => p.status === 'sick'), careMode, careChecked).map(plant => (
                           <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)}
-                            careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} />
+                            careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} onCareInfo={() => setCareInfoPlant(plant)} />
                         ))}
                       </div>
                     </div>
@@ -637,7 +794,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                     <div className="grid grid-cols-2 gap-3">
                       {pinChecked(unzonedPlants.filter(p => p.status !== 'sick'), careMode, careChecked).map(plant => (
                         <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)}
-                          careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} />
+                          careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} onCareInfo={() => setCareInfoPlant(plant)} />
                       ))}
                     </div>
                   )}
@@ -670,6 +827,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                   careMode={careMode}
                   checked={careChecked.has(plant.id)}
                   onToggle={() => toggleCare(plant.id)}
+                  onCareInfo={() => setCareInfoPlant(plant)}
                 />
               ))}
             </div>
@@ -743,6 +901,16 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
               </button>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {careInfoPlant && (
+          <CareWateringSheet
+            key={careInfoPlant.id}
+            plant={careInfoPlant}
+            onClose={() => setCareInfoPlant(null)}
+          />
         )}
       </AnimatePresence>
 

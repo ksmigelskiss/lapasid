@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Navigation from './components/Navigation'
 import DeathModal from './components/DeathModal'
 import DeleteModal from './components/DeleteModal'
+import DuplicateBuyModal from './components/DuplicateBuyModal'
 import Dashboard from './pages/Dashboard'
 import { usePlants } from './hooks/usePlants'
 import PinGate from './components/PinGate'
@@ -19,8 +20,9 @@ export default function App() {
   const [showSearch, setShowSearch]   = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState('')
   const [searchAutoCamera, setSearchAutoCamera] = useState(false)
-  const [deathTarget, setDeathTarget]   = useState(null)
-  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deathTarget, setDeathTarget]       = useState(null)
+  const [deleteTarget, setDeleteTarget]     = useState(null)
+  const [buyConfirmTarget, setBuyConfirmTarget] = useState(null)
   const [detailPlant, setDetailPlant]   = useState(null)
 
   const {
@@ -108,7 +110,18 @@ export default function App() {
   }
 
   const handleLibraryAction = (action, plant) => {
-    if (action === 'buy')     { moveToDashboard(plant.id); setTab('dashboard') }
+    if (action === 'buy') {
+      const existing = dashboard.find(p => p.lotyniskas === plant.lotyniskas && p.id !== plant.id)
+      if (existing) {
+        closeDetail()
+        setBuyConfirmTarget({ plant, existing })
+      } else {
+        moveToDashboard(plant.id)
+        closeDetail()
+        setTab('dashboard')
+      }
+      return
+    }
     if (action === 'tryAgain'){ moveToDashboard(plant.id); setTab('dashboard') }
     if (action === 'pirkinys'){ togglePirkinys(plant.id) }
     if (action === 'delete')  setDeleteTarget({ plant, section: 'library' })
@@ -268,6 +281,7 @@ export default function App() {
                 openDetail(plant, plant.kategorija === 'istorija' ? 'istorija' : plant.kategorija === 'nori' ? 'nori' : 'auginama')
               }}
               onPromote={id => { moveToDashboard(id); setShowSearch(false); setSearchInitialQuery(''); setTab('dashboard') }}
+              onUpdatePlant={(id, patch) => { updatePlant(id, patch); setShowSearch(false); setSearchInitialQuery('') }}
             />
           </Suspense>
         )}
@@ -294,6 +308,25 @@ export default function App() {
             onMoveToLibrary={handleDeleteMoveToLibrary}
             onDeleteForever={handleDeleteForever}
             onClose={() => setDeleteTarget(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {buyConfirmTarget && (
+          <DuplicateBuyModal
+            key="buy-confirm"
+            plant={buyConfirmTarget.plant}
+            onAddAnother={() => {
+              moveToDashboard(buyConfirmTarget.plant.id)
+              setBuyConfirmTarget(null)
+              setTab('dashboard')
+            }}
+            onViewExisting={() => {
+              openDetail(buyConfirmTarget.existing, 'auginama')
+              setBuyConfirmTarget(null)
+            }}
+            onClose={() => setBuyConfirmTarget(null)}
           />
         )}
       </AnimatePresence>

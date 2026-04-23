@@ -73,7 +73,7 @@ export default function CareOverview({ plants, onTap, onSelectWatering, onSelect
             chipText="text-amber-900"
             badgeColor="text-amber-500"
             icon={<FlaskConical size={11} />}
-            label="Tręšimas vėluoja"
+            label="Pamaitink augalėlį"
             plants={fertList}
             renderBadge={p => { const d = getFertilizingForecast(p).daysUntil; return d != null ? `+${Math.abs(d)}d` : null }}
             onTap={onTap}

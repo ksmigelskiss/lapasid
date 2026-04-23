@@ -455,7 +455,7 @@ export function ProfileContent({ plant, section, onAction, onClose, className })
       {onAction && (
         <div className="flex flex-col gap-2 pt-1">
           {section === 'nori' && (<>
-            <button onClick={() => { onAction('buy', plant); onClose() }}
+            <button onClick={() => onAction('buy', plant)}
               className="w-full py-3.5 rounded-2xl text-sm font-medium text-white bg-sage-500 hover:bg-sage-600 transition-colors">
               Pirkau, turiu!
             </button>
@@ -1029,9 +1029,9 @@ export default function PlantDetail({
             <div className="absolute left-0 right-0 flex items-center justify-between px-4 z-30" style={{ top: 'max(1rem, env(safe-area-inset-top))' }}>
               <button
                 onClick={() => setShowPhoto(true)}
-                className="w-11 h-11 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+                className="flex items-center justify-center text-white/80 active:text-white transition-colors px-1 py-2"
               >
-                <MoreHorizontal size={16} />
+                <MoreHorizontal size={20} />
               </button>
               <div className="flex items-center gap-2">
                 <button
@@ -1114,9 +1114,9 @@ export default function PlantDetail({
             <div className="flex items-center justify-between mb-3">
               <button
                 onClick={() => setShowPhoto(true)}
-                className="w-11 h-11 bg-white/60 rounded-full flex items-center justify-center text-gray-500"
+                className="flex items-center justify-center text-gray-400 active:text-gray-600 transition-colors px-1 py-2"
               >
-                <MoreHorizontal size={16} />
+                <MoreHorizontal size={20} />
               </button>
               <div className="flex items-center gap-2">
                 <button

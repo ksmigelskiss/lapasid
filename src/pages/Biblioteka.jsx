@@ -116,6 +116,12 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
             <input
               ref={inputRef}
               type="text"
+              inputMode="search"
+              enterKeyHint="search"
+              autoComplete="nope"
+              autoCorrect="off"
+              autoCapitalize="none"
+              spellCheck="false"
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => {

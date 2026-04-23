@@ -1,5 +1,7 @@
-import { useState, memo } from 'react'
-import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost, FileText, MapPin, FlaskConical, Check } from 'lucide-react'
+import { useState, useRef, memo } from 'react'
+import { createPortal } from 'react-dom'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost, FileText, MapPin, FlaskConical, Check, X } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
@@ -34,12 +36,42 @@ function CareCircle({ checked, waterOverdue, fertOverdue }) {
 const PlantCard = memo(function PlantCard({
   plant, section, onTap, cardBg = 'bg-white',
   showDashboardBadge = false, zoneName,
-  careMode = false, checked = false, onToggle,
+  careMode = false, checked = false, onToggle, onCareInfo,
 }) {
   const [imgError, setImgError] = useState(false)
+  const [zoomed,   setZoomed]   = useState(false)
+  const longPressTimer = useRef(null)
+  const startPos       = useRef(null)
+  const didLongPress   = useRef(false)
 
-  const status    = plant.status ?? 'healthy'
-  const hasImage  = plant.image && !imgError
+  const status   = plant.status ?? 'healthy'
+  const hasImage = plant.image && !imgError
+
+  const onPressStart = (e) => {
+    didLongPress.current = false
+    startPos.current = { x: e.clientX, y: e.clientY }
+    if (careMode) {
+      longPressTimer.current = setTimeout(() => {
+        didLongPress.current = true
+        onCareInfo?.()
+        navigator.vibrate?.(30)
+      }, 450)
+    } else {
+      if (!hasImage) return
+      longPressTimer.current = setTimeout(() => {
+        didLongPress.current = true
+        setZoomed(true)
+        navigator.vibrate?.(30)
+      }, 450)
+    }
+  }
+  const onPressMove = (e) => {
+    if (!longPressTimer.current) return
+    const dx = e.clientX - (startPos.current?.x ?? e.clientX)
+    const dy = e.clientY - (startPos.current?.y ?? e.clientY)
+    if (dx * dx + dy * dy > 100) { clearTimeout(longPressTimer.current); longPressTimer.current = null }
+  }
+  const onPressEnd = () => { clearTimeout(longPressTimer.current); longPressTimer.current = null }
   const noteCount = plant.uzrasai?.length ?? (plant.komentaras?.trim() ? 1 : 0)
   const fertFC      = section === 'auginama' ? getFertilizingForecast(plant) : null
   const fertOverdue = fertFC?.isOverdue ?? false
@@ -54,18 +86,32 @@ const PlantCard = memo(function PlantCard({
     : section === 'nori'    ? 'bg-blush-50'
     : 'bg-sage-50'
 
-  const handleClick = careMode ? onToggle : onTap
+  const handleClick = () => { if (didLongPress.current) return; careMode ? onToggle?.() : onTap?.() }
 
   return (
+    <>
     <div
       className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card active:scale-95 transition-transform duration-100 cursor-pointer`}
       onClick={handleClick}
+      onPointerDown={careMode ? onPressStart : undefined}
+      onPointerMove={careMode ? onPressMove : undefined}
+      onPointerUp={careMode ? onPressEnd : undefined}
+      onPointerCancel={careMode ? onPressEnd : undefined}
+      onContextMenu={careMode ? e => e.preventDefault() : undefined}
     >
       {/* Image area */}
-      <div className={`relative aspect-square overflow-hidden select-none ${!hasImage ? bgClass : ''}`}>
+      <div
+        className={`relative aspect-square overflow-hidden select-none ${!hasImage ? bgClass : ''}`}
+        onPointerDown={!careMode ? onPressStart : undefined}
+        onPointerMove={!careMode ? onPressMove : undefined}
+        onPointerUp={!careMode ? onPressEnd : undefined}
+        onPointerCancel={!careMode ? onPressEnd : undefined}
+        onContextMenu={!careMode ? e => e.preventDefault() : undefined}
+      >
         {hasImage ? (
           <img src={plant.image} alt={plant.lietuviškas}
             className="w-full h-full object-cover pointer-events-none"
+            style={{ WebkitTouchCallout: 'none', userSelect: 'none' }}
             onError={() => setImgError(true)} />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-5xl">
@@ -73,21 +119,14 @@ const PlantCard = memo(function PlantCard({
           </div>
         )}
 
-        {/* Care mode: selection circle (top-right, replaces forecast icons) */}
-        {careMode && section === 'auginama' && (
-          <div className="absolute top-2 right-2">
-            <CareCircle checked={checked} waterOverdue={waterOverdue} fertOverdue={fertOverdue} />
-          </div>
-        )}
-
-        {/* Status dot (non-auginama, non-careMode only) */}
-        {!careMode && section !== 'auginama' && (
+        {/* Status dot (non-auginama only) */}
+        {section !== 'auginama' && (
           <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 border-white/60 bg-transparent shadow-sm" />
         )}
 
-        {/* Forecast icons (auginama only) */}
+        {/* Forecast icons (auginama only) — always top-right */}
         {section === 'auginama' && (
-          <div className={`absolute ${careMode ? 'top-2 left-2' : 'top-2 right-2'} flex flex-col gap-0.5 items-end`}>
+          <div className="absolute top-2 right-2 flex flex-col gap-0.5 items-end">
             <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
               <Droplets size={9} className={waterOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/50'} />
               {waterDays != null && (
@@ -140,6 +179,13 @@ const PlantCard = memo(function PlantCard({
         {plant.toksiskas && (
           <div className="absolute top-2 left-2 bg-red-500/90 backdrop-blur-sm rounded-lg px-1.5 py-0.5">
             <span className="flex items-center gap-0.5 text-[9px] text-white font-bold"><Skull size={9} /> TOKSIŠKA</span>
+          </div>
+        )}
+
+        {/* Care mode: selection circle — bottom-right */}
+        {careMode && section === 'auginama' && (
+          <div className="absolute bottom-2 right-2">
+            <CareCircle checked={checked} waterOverdue={waterOverdue} fertOverdue={fertOverdue} />
           </div>
         )}
 
@@ -206,6 +252,45 @@ const PlantCard = memo(function PlantCard({
         </div>
       </div>
     </div>
+
+    {/* Full-screen photo zoom portal */}
+    {createPortal(
+      <AnimatePresence>
+        {zoomed && (
+          <motion.div
+            className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-black/95"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            onPointerDown={() => setZoomed(false)}
+          >
+            <motion.img
+              src={plant.image}
+              alt={plant.lietuviškas}
+              className="max-w-full max-h-[80dvh] object-contain pointer-events-none select-none"
+              style={{ WebkitTouchCallout: 'none', userSelect: 'none' }}
+              initial={{ scale: 0.88, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.88, opacity: 0 }}
+              transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+            />
+            <div className="absolute bottom-16 left-0 right-0 text-center px-6 pointer-events-none">
+              <p className="text-white font-bold text-base leading-tight">{plant.lietuviškas}</p>
+              {plant.lotyniskas && <p className="text-white/50 text-sm italic mt-0.5">{plant.lotyniskas}</p>}
+            </div>
+            <button
+              className="absolute top-14 right-4 w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+              onPointerDown={e => { e.stopPropagation(); setZoomed(false) }}
+            >
+              <X size={16} className="text-white" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>,
+      document.body
+    )}
+    </>
   )
 })
 

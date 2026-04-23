@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
-import { ArrowLeft, Search, X, Camera } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight } from 'lucide-react'
 import Anthropic from '@anthropic-ai/sdk'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
@@ -122,6 +122,8 @@ const PLANT_SYSTEM = `Esi augalų ekspertas. Visada ieškok tiksliai nurodyto au
 
 SVARBU — laukas "name": PRIVALO būti tikras lietuviškas pavadinimas (žodynas/Vikipedija). NIEKADA lotyniškas ar angliškas. Hibridams be atskiro pavadinimo — naudok genties lietuvišką (pvz. Nepenthes → "Ąsotenė").
 
+Nuotraukų atpažinimas: identifikuok TIK pagrindinį nuotraukos augalą — tą, kuris užima daugiausiai kadro arba yra fokuse. Visiškai ignoruok fone ar šonuose matomus kitus augalus. Aprašyme ir visuose laukuose rašyk tik apie pagrindinį augalą.
+
 Šviesa: taskai 1 (žema) 50–150 μmol/m²/s; 2 (vidutinė) 150–400; 3 (ryški) 400–2000
 Vanduo: 1 (mažai) sultingi; 2 (vidutiniškai) tropiniai; 3 (daug) paparčiai
 Laistymas (dienomis): sultingi vasara 14–21, vidutiniai 7–14, paparčiai 3–7`
@@ -152,6 +154,7 @@ async function enrich(parsed) {
     // iNaturalist Lithuanian names are curated — use as primary name if available
     name:         inatLtName ?? parsed.name,
     image:        photos[0] ?? null,
+    photos,
     inatLtName,
     inatTaxonId:  namesData?.inatTaxonId  ?? null,
     sinonimai:    namesData?.sinonimai    ?? [],
@@ -160,7 +163,7 @@ async function enrich(parsed) {
 }
 
 
-export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose, plants = [], onViewPlant, onPromote, initialQuery = '', autoCamera = false }) {
+export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose, plants = [], onViewPlant, onPromote, onUpdatePlant, initialQuery = '', autoCamera = false }) {
   const [query, setQuery]         = useState(initialQuery)
   const [loading, setLoading]     = useState(false)
   const [result, setResult]       = useState(null)
@@ -168,6 +171,11 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   const [dots, setDots]           = useState('')
   const [statusMsg, setStatusMsg] = useState('')
   const [previewUrl, setPreview]  = useState(null) // photo search preview
+  const [savingPhase2, setSavingPhase2] = useState(false)
+  const [photoIdx, setPhotoIdx]         = useState(0)
+
+  // Reset gallery index when a new result arrives
+  useEffect(() => { setPhotoIdx(0) }, [result])
   const abortRef  = useRef(null)
   const inputRef  = useRef(null)
   const fileRef   = useRef(null)
@@ -297,8 +305,9 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   }
 
   // ── Duplicate detection ──────────────────────────────────────
+  const norm = s => s?.trim().toLowerCase() ?? ''
   const duplicate = result
-    ? plants.find(p => p.lotyniskas?.toLowerCase() === result.latinName?.toLowerCase())
+    ? plants.find(p => norm(p.lotyniskas) === norm(result.latinName))
     : null
 
   return (
@@ -330,13 +339,15 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             <Search size={18} className="text-gray-400 flex-shrink-0" />
             <input
               ref={inputRef}
-              type="search"
+              type="text"
+              inputMode="search"
+              enterKeyHint="search"
               placeholder="Pvz. Monstera, Ficus, Alavijas..."
               value={query}
               onChange={e => { setPreview(null); setQuery(e.target.value); setResult(null); setError(null) }}
               onKeyDown={handleKeyDown}
               className="flex-1 bg-transparent py-3.5 text-sm text-gray-800 placeholder-gray-500 outline-none"
-              autoComplete="off"
+              autoComplete="nope"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
@@ -398,11 +409,47 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
           >
-            {/* Hero */}
+            {/* Hero gallery */}
             {result.image ? (
-              <div className="rounded-3xl overflow-hidden h-52 relative -mx-4 mb-0">
-                <img src={result.image} alt={result.name} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+              <div className="rounded-3xl overflow-hidden h-56 relative -mx-4 mb-0">
+                {/* Cross-fade image swap */}
+                <AnimatePresence mode="sync" initial={false}>
+                  <motion.img
+                    key={result.photos?.[photoIdx] ?? result.image}
+                    src={result.photos?.[photoIdx] ?? result.image}
+                    alt={result.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.28 }}
+                  />
+                </AnimatePresence>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent pointer-events-none" />
+
+                {/* Prev / Next arrows */}
+                {(result.photos?.length ?? 0) > 1 && (
+                  <>
+                    <button
+                      onClick={() => setPhotoIdx(i => Math.max(0, i - 1))}
+                      disabled={photoIdx === 0}
+                      className="absolute left-3 top-1/2 -translate-y-[calc(50%+1.5rem)] w-8 h-8 bg-black/35 backdrop-blur-sm rounded-full flex items-center justify-center text-white disabled:opacity-20 transition-opacity active:scale-90"
+                    >
+                      <ChevronLeft size={16} strokeWidth={2.5} />
+                    </button>
+                    <button
+                      onClick={() => setPhotoIdx(i => Math.min((result.photos?.length ?? 1) - 1, i + 1))}
+                      disabled={photoIdx >= (result.photos?.length ?? 1) - 1}
+                      className="absolute right-3 top-1/2 -translate-y-[calc(50%+1.5rem)] w-8 h-8 bg-black/35 backdrop-blur-sm rounded-full flex items-center justify-center text-white disabled:opacity-20 transition-opacity active:scale-90"
+                    >
+                      <ChevronRight size={16} strokeWidth={2.5} />
+                    </button>
+                    <div className="absolute top-3 right-3 bg-black/35 backdrop-blur-sm rounded-full px-2 py-0.5">
+                      <span className="text-[11px] text-white/90 font-medium">{photoIdx + 1} / {result.photos.length}</span>
+                    </div>
+                  </>
+                )}
+
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <h3 className="text-xl font-bold text-white leading-tight">{result.name}</h3>
                   <p className="text-xs text-white/70 italic mt-0.5">{result.latinName}</p>
@@ -453,8 +500,9 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                   onAddToDashboard={onAddToDashboard}
                   onViewPlant={onViewPlant}
                   onPromote={onPromote}
+                  onUpdatePlant={onUpdatePlant}
                   onClose={onClose}
-                  fetchDetails={fetchDetails}
+                  onSavingChange={setSavingPhase2}
                 />
               ) : (
                 <>
@@ -464,6 +512,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                     className="w-full py-4 rounded-3xl text-sm font-semibold text-white bg-sage-500 hover:bg-sage-600 disabled:opacity-60 transition-colors shadow-ios"
                     onSave={onAddToDashboard}
                     onClose={onClose}
+                    onSavingChange={setSavingPhase2}
                   />
                   <SaveButton
                     label="Pridėti į biblioteką"
@@ -471,6 +520,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                     className="w-full py-4 rounded-3xl text-sm font-semibold text-blush-600 bg-blush-50 hover:bg-blush-100 disabled:opacity-60 transition-colors"
                     onSave={onAddToWishlist}
                     onClose={onClose}
+                    onSavingChange={setSavingPhase2}
                   />
                 </>
               )}
@@ -488,16 +538,101 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
         )}
       </div>
     </motion.div>
+
+    <AnimatePresence>
+      {savingPhase2 && <SavingOverlay key="saving" />}
+    </AnimatePresence>
     </div>
   )
 }
 
+// ── Full-screen Phase 2 loading overlay ──────────────────────────
+function SavingOverlay() {
+  const [msgIndex, setMsgIndex] = useState(0)
+  const msgs = [
+    'Traukiu išmintį iš interneto...',
+    'Klausiu augalų mokslininkų...',
+    'Renkuoju priežiūros paslaptis...',
+    'Skaičiuoju laistymo intervalus...',
+    'Sudarinėju ligų diagnostiką...',
+    'Beveik jau turiu viską...',
+  ]
+  useEffect(() => {
+    const t = setInterval(() => setMsgIndex(i => (i + 1) % msgs.length), 1800)
+    return () => clearInterval(t)
+  }, [])
+
+  const steps = [
+    { label: 'Pagrindai', done: true },
+    { label: 'Priežiūra',  active: true },
+    { label: 'Išsaugota',  done: false },
+  ]
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[90] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="bg-white rounded-3xl p-8 mx-6 flex flex-col items-center gap-5 shadow-2xl w-full max-w-[300px]"
+        initial={{ scale: 0.88, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.88, opacity: 0 }}
+        transition={{ type: 'spring', damping: 24, stiffness: 280 }}
+      >
+        <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />
+        <div className="text-center">
+          <p className="text-base font-bold text-gray-900">Kantrybės...</p>
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={msgIndex}
+              className="text-sm text-gray-500 mt-1.5 min-h-[20px]"
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -5 }}
+              transition={{ duration: 0.22 }}
+            >
+              {msgs[msgIndex]}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+
+        {/* Progress steps */}
+        <div className="flex items-center justify-center w-full">
+          {steps.map((s, i) => (
+            <div key={i} className="flex items-center">
+              <div className="flex flex-col items-center gap-1.5">
+                <div className={`w-2.5 h-2.5 rounded-full transition-colors ${
+                  s.done   ? 'bg-sage-500' :
+                  s.active ? 'bg-sage-300 animate-pulse' :
+                             'bg-gray-200'
+                }`} />
+                <span className={`text-[10px] font-medium ${
+                  s.done   ? 'text-sage-600' :
+                  s.active ? 'text-sage-500' :
+                             'text-gray-400'
+                }`}>{s.label}</span>
+              </div>
+              {i < steps.length - 1 && (
+                <div className={`w-10 h-px mb-3.5 mx-1 ${s.done ? 'bg-sage-200' : 'bg-gray-200'}`} />
+              )}
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 // ── Save button: fetches Phase 2 details on click, then saves ────
-function SaveButton({ label, result, className, onSave, onClose }) {
+function SaveButton({ label, result, className, onSave, onClose, onSavingChange }) {
   const [saving, setSaving] = useState(false)
 
   const handleClick = async () => {
     setSaving(true)
+    onSavingChange?.(true)
     try {
       const details = await fetchDetails(result.latinName, result.name)
       onSave({ ...result, ...details })
@@ -507,35 +642,95 @@ function SaveButton({ label, result, className, onSave, onClose }) {
       // Fall back to saving Phase 1 data
       onSave(result)
       onClose()
+    } finally {
+      setSaving(false)
+      onSavingChange?.(false)
     }
   }
 
   return (
     <button onClick={handleClick} disabled={saving} className={className}>
-      {saving
-        ? <span className="flex items-center justify-center gap-2">
-            <img src="/plant_pot.png" className="w-4 h-4 object-contain animate-spin" alt="" />
-            Kraunama...
-          </span>
-        : label
-      }
+      {label}
     </button>
   )
 }
 
-function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onPromote, onClose }) {
+// ── Update button: fetches Phase 2 and patches existing plant ────
+function UpdateButton({ label, result, existingId, className, onUpdate, onClose, onSavingChange }) {
+  const [saving, setSaving] = useState(false)
+
+  const handleClick = async () => {
+    setSaving(true)
+    onSavingChange?.(true)
+    try {
+      const details = await fetchDetails(result.latinName, result.name)
+      const merged  = { ...result, ...details }
+      const full    = fromAIResult(merged)
+      // Strip identity/personal fields — only update reference data
+      const { id: _id, kategorija: _kat, komentaras: _kom, data_prideta: _dat, status: _st } = full
+      const patch = { ...full }
+      delete patch.id; delete patch.kategorija; delete patch.komentaras
+      delete patch.data_prideta; delete patch.status
+      onUpdate(existingId, patch)
+      onClose()
+    } catch (e) {
+      console.error('[UpdateButton] Phase 2 error:', e)
+      onClose()
+    } finally {
+      setSaving(false)
+      onSavingChange?.(false)
+    }
+  }
+
+  return (
+    <button onClick={handleClick} disabled={saving} className={className}>
+      {label}
+    </button>
+  )
+}
+
+function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onPromote, onUpdatePlant, onClose, onSavingChange }) {
   const { kategorija } = duplicate
+
+  // ── nori: custom layout with 3 actions ──────────────────────────
+  if (kategorija === 'nori') {
+    return (
+      <div className="bg-blush-50 border border-blush-200 rounded-2xl p-4 space-y-2">
+        <p className="text-sm font-semibold text-blush-800">Jau norų sąraše</p>
+        <button
+          onClick={() => { onPromote?.(duplicate.id); onClose() }}
+          className="w-full py-3 rounded-2xl text-sm font-semibold text-white bg-gray-800 active:bg-gray-900 transition-colors"
+        >
+          Įsigijau!
+        </button>
+        <div className="flex gap-2">
+          {onUpdatePlant && (
+            <UpdateButton
+              label="Atnaujinti įrašą"
+              result={result}
+              existingId={duplicate.id}
+              className="flex-1 py-2.5 rounded-2xl text-sm font-semibold text-gray-700 bg-white border border-gray-200 active:bg-surface disabled:opacity-50 transition-colors"
+              onUpdate={onUpdatePlant}
+              onClose={onClose}
+              onSavingChange={onSavingChange}
+            />
+          )}
+          <button
+            onClick={() => { onViewPlant?.(duplicate) }}
+            className="flex-1 py-2.5 rounded-2xl text-sm font-semibold text-gray-700 bg-white border border-gray-200 active:bg-surface transition-colors"
+          >
+            Peržiūrėti
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   const configs = {
     auginama: {
       bg: 'bg-sage-50', border: 'border-sage-200', text: 'text-sage-800',
       message: `Jau augini šį augalą`,
       primary: { label: 'Pridėti dar vieną', onSave: onAddToDashboard },
-    },
-    nori: {
-      bg: 'bg-blush-50', border: 'border-blush-200', text: 'text-blush-800',
-      message: `Jau norų sąraše`,
-      primary: { label: 'Įsigijau!', action: () => { onPromote?.(duplicate.id) } },
     },
     istorija: {
       bg: 'bg-surface', border: 'border-gray-200', text: 'text-gray-700',
@@ -557,6 +752,7 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
             className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white bg-gray-800 active:bg-gray-900 disabled:opacity-60 transition-colors"
             onSave={cfg.primary.onSave}
             onClose={onClose}
+            onSavingChange={onSavingChange}
           />
         ) : (
           <button

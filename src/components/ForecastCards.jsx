@@ -51,7 +51,7 @@ export function FertilizingCard({ plant, section }) {
       <div className="bg-orange-50 border border-orange-200 rounded-2xl px-4 py-3 flex gap-3">
         <Leaf size={24} className="flex-shrink-0 text-orange-400 mt-0.5" />
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-orange-700">Tręšimas vėluoja {days} d.!</p>
+          <p className="text-sm font-bold text-orange-700">Pamaitink augalėlį — vėluoja {days} d.!</p>
           <p className="text-[11px] text-orange-600 mt-0.5">
             Paskutinis: {fmtDate(fc.lastDate)}
             {fc.lastType === 'repotting' ? ' (persodinimas)' : ''}

@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost, ImageIcon, MapPin } from 'lucide-react'
+import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost, ImageIcon, MapPin, X } from 'lucide-react'
 import { makeId, today } from '../utils/plantTransform'
 export { AddEventSheet, FAB } from './AddEventSheet'
 
@@ -304,9 +305,33 @@ function Tooltip({ event, onDelete, zones = [] }) {
 
 // ── Timeline event nodes ───────────────────────────────────────
 
+const NO_CALLOUT = { WebkitTouchCallout: 'none', userSelect: 'none' }
+
 function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, onSetAsProfile, inPeriod }) {
   const [imgError, setImgError] = useState(false)
   const [setAsProfileDone, setSetAsProfileDone] = useState(false)
+  const [zoomed, setZoomed] = useState(false)
+  const longPressTimer = useRef(null)
+  const startPos       = useRef(null)
+  const didLongPress   = useRef(false)
+
+  const onPressStart = (e) => {
+    didLongPress.current = false
+    startPos.current = { x: e.clientX, y: e.clientY }
+    longPressTimer.current = setTimeout(() => {
+      didLongPress.current = true
+      setZoomed(true)
+      navigator.vibrate?.(30)
+    }, 450)
+  }
+  const onPressMove = (e) => {
+    if (!longPressTimer.current) return
+    const dx = e.clientX - (startPos.current?.x ?? e.clientX)
+    const dy = e.clientY - (startPos.current?.y ?? e.clientY)
+    if (dx * dx + dy * dy > 100) { clearTimeout(longPressTimer.current); longPressTimer.current = null }
+  }
+  const onPressEnd = () => { clearTimeout(longPressTimer.current); longPressTimer.current = null }
+  const handleCardClick = () => { if (didLongPress.current) return; onToggle() }
 
   const handleSetAsProfile = (e) => {
     e.stopPropagation()
@@ -316,6 +341,7 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
   }
 
   return (
+    <>
     <motion.div
       className="relative pl-10 mb-4"
       initial={{ opacity: 0, x: -12 }}
@@ -346,12 +372,18 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
       {event.imageUrl && !imgError ? (
         <div
           className="rounded-2xl overflow-hidden shadow-sm border border-warm-border aspect-[4/3] cursor-pointer relative"
-          onClick={onToggle}
+          onClick={handleCardClick}
+          onPointerDown={onPressStart}
+          onPointerMove={onPressMove}
+          onPointerUp={onPressEnd}
+          onPointerCancel={onPressEnd}
+          onContextMenu={e => e.preventDefault()}
         >
           <img
             src={event.imageUrl}
             alt="augalo nuotrauka"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover pointer-events-none"
+            style={NO_CALLOUT}
             onError={() => setImgError(true)}
           />
           {/* Bottom overlay row */}
@@ -386,6 +418,46 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
         </div>
       )}
     </motion.div>
+
+    {/* Full-screen zoom portal */}
+    {createPortal(
+      <AnimatePresence>
+        {zoomed && (
+          <motion.div
+            className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-black/95"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            onPointerDown={() => setZoomed(false)}
+          >
+            <motion.img
+              src={event.imageUrl}
+              alt="augalo nuotrauka"
+              className="max-w-full max-h-[80dvh] object-contain pointer-events-none"
+              style={NO_CALLOUT}
+              initial={{ scale: 0.88, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.88, opacity: 0 }}
+              transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+            />
+            {event.note && (
+              <div className="absolute bottom-16 left-0 right-0 text-center px-6 pointer-events-none">
+                <p className="text-white/70 text-sm leading-snug">{event.note}</p>
+              </div>
+            )}
+            <button
+              className="absolute top-14 right-4 w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+              onPointerDown={e => { e.stopPropagation(); setZoomed(false) }}
+            >
+              <X size={16} className="text-white" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>,
+      document.body
+    )}
+    </>
   )
 }
 

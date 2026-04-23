@@ -123,6 +123,12 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, plants
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
+            inputMode="search"
+            enterKeyHint="search"
+            autoComplete="nope"
+            autoCorrect="off"
+            autoCapitalize="none"
+            spellCheck="false"
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Ieškoti žinyne..."
