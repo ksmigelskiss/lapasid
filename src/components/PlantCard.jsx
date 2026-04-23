@@ -231,11 +231,6 @@ const PlantCard = memo(function PlantCard({
             <div className="flex items-center gap-1">
               <Sun size={12} className="text-amber-400" />
               <DotScore value={plant.sviesa.taskai} color="bg-amber-400" />
-              {plant.sviesa?.ppfd && (
-                <span className="text-[9px] text-amber-500 font-medium leading-none">
-                  {plant.sviesa.ppfd.min}–{plant.sviesa.ppfd.max}
-                </span>
-              )}
             </div>
           )}
           {plant.vanduo?.taskai != null && (
