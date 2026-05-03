@@ -52,11 +52,12 @@ function sortPlants(plants, key) {
   }
 }
 
-function CareWateringSheet({ plant, onClose }) {
+function CareWateringSheet({ plant, onClose, onWater, onFertilize }) {
   const wc = getWateringForecast(plant)
   const hasImg = !!plant.image
   const intervals = plant.laistymasIntervalas
   const desc = plant.prieziura?.laistymas
+  const hasFert = getFertilizingForecast(plant).intervalDays != null
 
   const fmtDate = iso => iso
     ? new Date(iso + 'T00:00:00').toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
@@ -191,12 +192,33 @@ function CareWateringSheet({ plant, onClose }) {
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="w-full py-3 rounded-2xl text-sm font-semibold text-gray-500 bg-gray-100 active:bg-gray-200 transition-colors"
-          >
-            Uždaryti
-          </button>
+          {/* Action buttons */}
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <button
+                onClick={onWater}
+                className="flex-1 flex items-center justify-center gap-2 bg-sky-500 active:bg-sky-600 transition-colors rounded-2xl py-3"
+              >
+                <Droplets size={16} className="text-white" />
+                <span className="text-sm font-bold text-white">Laistyta ✓</span>
+              </button>
+              {hasFert && (
+                <button
+                  onClick={onFertilize}
+                  className="flex-1 flex items-center justify-center gap-2 bg-amber-500 active:bg-amber-600 transition-colors rounded-2xl py-3"
+                >
+                  <FlaskConical size={16} className="text-white" />
+                  <span className="text-sm font-bold text-white">Patręšta ✓</span>
+                </button>
+              )}
+            </div>
+            <button
+              onClick={onClose}
+              className="w-full py-2.5 rounded-2xl text-sm text-gray-400 active:text-gray-600 transition-colors"
+            >
+              Uždaryti
+            </button>
+          </div>
         </div>
       </motion.div>
     </motion.div>,
@@ -686,7 +708,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       {!searching && <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
 
         {/* Care overview — only in careMode */}
-        {careMode && <CareOverview plants={mainPlants} onTap={onTapFromCare ?? onTap} onSelectWatering={selectNeedsWatering} onSelectFertilizing={selectNeedsFertilizing} onSelectAllWatering={selectAllWatering} onSelectAllFertilizing={selectAllFertilizing} />}
+        {careMode && <CareOverview plants={mainPlants} onTap={onTapFromCare ?? onTap} onSelectWatering={selectNeedsWatering} onSelectFertilizing={selectNeedsFertilizing} onSelectAllWatering={selectAllWatering} onSelectAllFertilizing={selectAllFertilizing} onWaterTap={setCareInfoPlant} />}
 
         {/* Unified alerts widget — only outside careMode */}
         {!careMode && (() => {
@@ -955,6 +977,14 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             key={careInfoPlant.id}
             plant={careInfoPlant}
             onClose={() => setCareInfoPlant(null)}
+            onWater={() => {
+              onAddTimelineEvent(careInfoPlant.id, { id: makeId(), type: 'watering', date: today(), komentaras: '' })
+              setCareInfoPlant(null)
+            }}
+            onFertilize={() => {
+              onAddTimelineEvent(careInfoPlant.id, { id: makeId(), type: 'fertilizing', date: today(), komentaras: '' })
+              setCareInfoPlant(null)
+            }}
           />
         )}
       </AnimatePresence>
