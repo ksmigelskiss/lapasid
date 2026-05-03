@@ -764,6 +764,16 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                     </div>
                   )}
 
+                  {visibleWatering.length > 1 && (
+                    <button
+                      onClick={() => visibleWatering.forEach(p => snoozeWatering(p.id))}
+                      className="w-full flex items-center justify-center gap-1.5 bg-sky-50 border border-sky-200 active:bg-sky-100 transition-colors rounded-2xl py-2"
+                    >
+                      <Check size={12} className="text-sky-500" />
+                      <span className="text-[13px] font-semibold text-sky-600">Patikrinau visus</span>
+                    </button>
+                  )}
+
                   {/* Fertilizing section */}
                   {overdueList.length > 0 && (
                     <div>

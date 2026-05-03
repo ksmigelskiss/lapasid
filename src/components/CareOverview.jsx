@@ -105,6 +105,15 @@ export default function CareOverview({ plants, onTap, onWaterTap }) {
             onTap={onWaterTap ?? onTap}
             onSnooze={snooze}
           />
+          {wateringList.length > 1 && (
+            <button
+              onClick={() => wateringList.forEach(p => snooze(p.id))}
+              className="w-full flex items-center justify-center gap-1.5 bg-sky-50 border border-sky-200 active:bg-sky-100 transition-colors rounded-2xl py-2"
+            >
+              <Check size={12} className="text-sky-500" />
+              <span className="text-[13px] font-semibold text-sky-600">Patikrinau visus</span>
+            </button>
+          )}
           <Section
             bg="bg-amber-50"
             labelColor="text-amber-600"
@@ -117,15 +126,6 @@ export default function CareOverview({ plants, onTap, onWaterTap }) {
             renderBadge={p => { const d = getFertilizingForecast(p).daysUntil; return d != null ? `+${Math.abs(d)}d` : null }}
             onTap={onTap}
           />
-          {wateringList.length > 1 && (
-            <button
-              onClick={() => wateringList.forEach(p => snooze(p.id))}
-              className="w-full flex items-center justify-center gap-1.5 bg-sky-50 border border-sky-200 active:bg-sky-100 transition-colors rounded-2xl py-2"
-            >
-              <Check size={12} className="text-sky-500" />
-              <span className="text-[13px] font-semibold text-sky-600">Patikrinau visus</span>
-            </button>
-          )}
           <Section
             bg="bg-gray-50"
             labelColor="text-green-700"
