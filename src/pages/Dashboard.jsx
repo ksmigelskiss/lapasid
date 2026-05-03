@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera } from 'lucide-react'
+import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera, Check } from 'lucide-react'
 const GARDENER = '/gardener.png'
 import PlantCard from '../components/PlantCard'
 import CollectionChat from '../components/CollectionChat'
@@ -344,7 +344,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const missingCount     = plants.filter(p => !p.image).length
   const overdueList      = mainPlants.filter(p => getFertilizingForecast(p).isOverdue)
   const wateringList     = mainPlants.filter(p => shouldShowWateringAlert(p))
-  const hasAlerts        = overdueList.length > 0 || wateringList.length > 0
   const [alertsOpen, setAlertsOpen]   = useState(false)
   const [sortKey, setSortKey]         = useState('added')
   const [showFilters, setShowFilters] = useState(false)
@@ -354,6 +353,13 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const [careMode, setCareMode]         = useState(false)
   const [careChecked, setCareChecked]   = useState(new Set())
   const [careInfoPlant, setCareInfoPlant] = useState(null)
+  const [snoozedWatering, setSnoozedWatering] = useState(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('waterSnooze') ?? '{}')
+      const todayStr = new Date().toISOString().slice(0, 10)
+      return new Set(Object.entries(stored).filter(([, until]) => until >= todayStr).map(([id]) => id))
+    } catch { return new Set() }
+  })
   const [confirmType, setConfirmType]   = useState(null)   // 'watering' | 'fertilizing' | null
   const [countdown, setCountdown]       = useState(5)
   const confirmTimerRef = useRef(null)
@@ -424,6 +430,32 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     setCareChecked(new Set())
   }, [resetConfirm])
 
+  const snoozeWatering = useCallback((plantId) => {
+    const until = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10)
+    setSnoozedWatering(prev => new Set([...prev, plantId]))
+    try {
+      const stored = JSON.parse(localStorage.getItem('waterSnooze') ?? '{}')
+      stored[plantId] = until
+      localStorage.setItem('waterSnooze', JSON.stringify(stored))
+    } catch {}
+  }, [])
+
+  // Keep screen awake while in care mode
+  useEffect(() => {
+    if (!careMode || !navigator.wakeLock) return
+    let lock = null
+    const acquire = async () => {
+      try { lock = await navigator.wakeLock.request('screen') } catch {}
+    }
+    acquire()
+    const onVisible = () => { if (document.visibilityState === 'visible') acquire() }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible)
+      lock?.release()
+    }
+  }, [careMode])
+
   useEffect(() => {
     if (!confirmType) return
     confirmTimerRef.current = setInterval(() => {
@@ -444,8 +476,9 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         onAddTimelineEvent(plantId, { id: makeId(), type: 'fertilizing', date: t, komentaras: comment })
       }
     })
-    exitCareMode()
-  }, [careChecked, onAddTimelineEvent, exitCareMode])
+    resetConfirm()
+    setCareChecked(new Set())
+  }, [careChecked, onAddTimelineEvent, resetConfirm])
 
   useEffect(() => { if (searching) inputRef.current?.focus() }, [searching])
   const closeSearch = useCallback(() => { setSearching(false); setQuery('') }, [])
@@ -656,7 +689,10 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         {careMode && <CareOverview plants={mainPlants} onTap={onTapFromCare ?? onTap} onSelectWatering={selectNeedsWatering} onSelectFertilizing={selectNeedsFertilizing} onSelectAllWatering={selectAllWatering} onSelectAllFertilizing={selectAllFertilizing} />}
 
         {/* Unified alerts widget — only outside careMode */}
-        {!careMode && hasAlerts && (
+        {!careMode && (() => {
+          const visibleWatering = wateringList.filter(p => !snoozedWatering.has(p.id))
+          if (visibleWatering.length === 0 && overdueList.length === 0) return null
+          return (
           <div className="mb-4">
             <div className="bg-white rounded-2xl overflow-hidden shadow-ios-card">
               {/* Collapsible header */}
@@ -666,7 +702,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
               >
                 <AlertTriangle size={16} className="text-amber-500 flex-shrink-0" />
                 <p className="text-sm font-bold text-gray-800 flex-1 text-left">
-                  Priminimai ({wateringList.length + overdueList.length})
+                  Priminimai ({visibleWatering.length + overdueList.length})
                 </p>
                 <div className={`transition-transform duration-200 ${alertsOpen ? '' : 'rotate-180'}`}>
                   <ChevronUp size={14} className="text-gray-400" />
@@ -676,23 +712,31 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
               {alertsOpen && (
                 <div className="px-4 pb-3 space-y-3">
                   {/* Watering section */}
-                  {wateringList.length > 0 && (
+                  {visibleWatering.length > 0 && (
                     <div>
                       <p className="flex items-center gap-1 text-[10px] font-bold text-sky-500 uppercase tracking-wider mb-1.5">
                         <Droplets size={11} /> Patikrink ar ne sausi
                       </p>
                       <div className="flex flex-wrap gap-1.5">
-                        {wateringList.map(p => {
+                        {visibleWatering.map(p => {
                           const wc = getWateringForecast(p)
                           return (
-                            <button
-                              key={p.id}
-                              onClick={() => onTap(p)}
-                              className="flex items-center gap-1 bg-sky-100 hover:bg-sky-200 active:bg-sky-200 transition-colors rounded-xl px-2.5 py-1"
-                            >
-                              <span className="text-[11px] font-medium text-sky-800 max-w-[90px] truncate">{p.lietuviškas}</span>
-                              <span className="text-[10px] text-sky-500 font-semibold ml-0.5">+{Math.abs(wc.daysUntil)}d</span>
-                            </button>
+                            <div key={p.id} className="flex items-center bg-sky-100 rounded-xl overflow-hidden">
+                              <button
+                                onClick={() => onTap(p)}
+                                className="flex items-center gap-1 px-2.5 py-1 active:bg-sky-200 transition-colors"
+                              >
+                                <span className="text-[11px] font-medium text-sky-800 max-w-[80px] truncate">{p.lietuviškas}</span>
+                                <span className="text-[10px] text-sky-500 font-semibold ml-0.5">+{Math.abs(wc.daysUntil)}d</span>
+                              </button>
+                              <button
+                                onClick={() => snoozeWatering(p.id)}
+                                className="pr-2 pl-1 py-1 text-sky-400 active:text-sky-600 transition-colors"
+                                title="Patikrinau"
+                              >
+                                <Check size={11} />
+                              </button>
+                            </div>
                           )
                         })}
                       </div>
@@ -728,7 +772,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
               )}
             </div>
           </div>
-        )}
+          )
+        })()}
 
         {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (

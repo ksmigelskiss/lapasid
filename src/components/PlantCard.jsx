@@ -86,12 +86,18 @@ const PlantCard = memo(function PlantCard({
     : section === 'nori'    ? 'bg-blush-50'
     : 'bg-sage-50'
 
+  const todayStr = new Date().toISOString().slice(0, 10)
+  const doneToday = careMode && (
+    waterFC?.lastDate === todayStr ||
+    fertLastDate === todayStr
+  )
+
   const handleClick = () => { if (didLongPress.current) return; careMode ? onToggle?.() : onTap?.() }
 
   return (
     <>
     <div
-      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card active:scale-95 transition-transform duration-100 cursor-pointer`}
+      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card active:scale-95 transition-transform duration-100 cursor-pointer ${doneToday ? 'opacity-50' : ''}`}
       onClick={handleClick}
       onPointerDown={careMode ? onPressStart : undefined}
       onPointerMove={careMode ? onPressMove : undefined}
