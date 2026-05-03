@@ -106,7 +106,7 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize }) {
         </div>
 
         {/* Scrollable content */}
-        <div className="overflow-y-auto flex-1 px-5 pt-4 pb-8 space-y-4">
+        <div className="overflow-y-auto flex-1 px-5 pt-4 pb-4 space-y-4">
           {!hasImg && (
             <div>
               <p className="text-lg font-bold text-gray-900">{plant.lietuviškas}</p>
@@ -192,33 +192,32 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize }) {
             </div>
           </div>
 
-          {/* Action buttons */}
-          <div className="space-y-2">
-            <div className="flex gap-2">
-              <button
-                onClick={onWater}
-                className="flex-1 flex items-center justify-center gap-2 bg-sky-500 active:bg-sky-600 transition-colors rounded-2xl py-3"
-              >
-                <Droplets size={16} className="text-white" />
-                <span className="text-sm font-bold text-white">Laistyta ✓</span>
-              </button>
-              {hasFert && (
-                <button
-                  onClick={onFertilize}
-                  className="flex-1 flex items-center justify-center gap-2 bg-amber-500 active:bg-amber-600 transition-colors rounded-2xl py-3"
-                >
-                  <FlaskConical size={16} className="text-white" />
-                  <span className="text-sm font-bold text-white">Patręšta ✓</span>
-                </button>
-              )}
-            </div>
+        </div>
+
+        {/* Action bar — same style as care mode bar */}
+        <div className="flex-shrink-0 px-4 py-3 border-t border-gray-100 flex gap-2 items-center">
+          <button
+            onClick={onClose}
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 active:bg-gray-200 transition-colors flex-shrink-0"
+          >
+            <X size={18} className="text-gray-600" />
+          </button>
+          <button
+            onClick={onWater}
+            className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 active:bg-sky-600 transition-colors"
+          >
+            <Droplets size={16} className="text-white" />
+            <span className="text-sm font-bold text-white">Laistyta</span>
+          </button>
+          {hasFert && (
             <button
-              onClick={onClose}
-              className="w-full py-2.5 rounded-2xl text-sm text-gray-400 active:text-gray-600 transition-colors"
+              onClick={onFertilize}
+              className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-amber-500 active:bg-amber-600 transition-colors"
             >
-              Uždaryti
+              <FlaskConical size={16} className="text-white" />
+              <span className="text-sm font-bold text-white">Patręšta</span>
             </button>
-          </div>
+          )}
         </div>
       </motion.div>
     </motion.div>,
@@ -722,9 +721,9 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 onClick={() => setAlertsOpen(o => !o)}
                 className="w-full flex items-center gap-2 px-4 py-3 active:bg-surface-2 transition-colors"
               >
-                <AlertTriangle size={16} className="text-amber-500 flex-shrink-0" />
+                <Sprout size={15} className="text-sage-500 flex-shrink-0" />
                 <p className="text-sm font-bold text-gray-800 flex-1 text-left">
-                  Priminimai ({visibleWatering.length + overdueList.length})
+                  Priežiūros santrauka ({visibleWatering.length + overdueList.length})
                 </p>
                 <div className={`transition-transform duration-200 ${alertsOpen ? '' : 'rotate-180'}`}>
                   <ChevronUp size={14} className="text-gray-400" />
@@ -745,7 +744,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                           return (
                             <div key={p.id} className="flex items-center bg-sky-100 rounded-xl overflow-hidden">
                               <button
-                                onClick={() => onTap(p)}
+                                onClick={() => setCareInfoPlant(p)}
                                 className="flex items-center gap-1 px-2.5 py-1 active:bg-sky-200 transition-colors"
                               >
                                 <span className="text-[11px] font-medium text-sky-800 max-w-[80px] truncate">{p.lietuviškas}</span>
@@ -768,8 +767,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                   {/* Fertilizing section */}
                   {overdueList.length > 0 && (
                     <div>
-                      <p className="flex items-center gap-1 text-[10px] font-bold text-orange-500 uppercase tracking-wider mb-1.5">
-                        <Leaf size={11} /> Pamaitink augalėlį
+                      <p className="flex items-center gap-1 text-[10px] font-bold text-amber-600 uppercase tracking-wider mb-1.5">
+                        <FlaskConical size={11} /> Pamaitink augalėlį
                       </p>
                       <div className="flex flex-wrap gap-1.5">
                         {overdueList.map(p => {
@@ -777,11 +776,11 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                           return (
                             <button
                               key={p.id}
-                              onClick={() => onTap(p)}
-                              className="flex items-center gap-1 bg-orange-100 hover:bg-orange-200 active:bg-orange-200 transition-colors rounded-xl px-2.5 py-1"
+                              onClick={() => setCareInfoPlant(p)}
+                              className="flex items-center gap-1 bg-amber-100 active:bg-amber-200 transition-colors rounded-xl px-2.5 py-1"
                             >
-                              <span className="text-[11px] font-medium text-orange-800 max-w-[90px] truncate">{p.lietuviškas}</span>
-                              <span className="text-[10px] text-orange-500 font-semibold ml-0.5">+{Math.abs(fc.daysUntil)}d</span>
+                              <span className="text-[11px] font-medium text-amber-900 max-w-[90px] truncate">{p.lietuviškas}</span>
+                              <span className="text-[10px] text-amber-500 font-semibold ml-0.5">+{Math.abs(fc.daysUntil)}d</span>
                             </button>
                           )
                         })}
