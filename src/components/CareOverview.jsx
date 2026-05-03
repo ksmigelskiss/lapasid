@@ -49,7 +49,7 @@ function Section({ bg, labelColor, chipBg, chipText, badgeColor, icon, label, pl
   )
 }
 
-export default function CareOverview({ plants, onTap, onSelectWatering, onSelectFertilizing, onSelectAllWatering, onSelectAllFertilizing, onWaterTap }) {
+export default function CareOverview({ plants, onTap, onWaterTap }) {
   const [open, setOpen] = useState(false)
   const [snoozed, setSnoozed] = useState(() => {
     try {
@@ -117,45 +117,14 @@ export default function CareOverview({ plants, onTap, onSelectWatering, onSelect
             renderBadge={p => { const d = getFertilizingForecast(p).daysUntil; return d != null ? `+${Math.abs(d)}d` : null }}
             onTap={onTap}
           />
-          {onSelectWatering && wateringList.length > 0 && (
-            <div className="flex gap-2">
-              <button
-                onClick={onSelectWatering}
-                className="flex-1 flex items-center justify-center gap-1.5 bg-sky-50 border border-sky-200 active:bg-sky-100 transition-colors rounded-2xl py-2.5"
-              >
-                <Droplets size={14} className="text-sky-500" />
-                <span className="text-[13px] font-semibold text-sky-600">Laistyti ({wateringList.length})</span>
-              </button>
-              {onSelectAllWatering && (
-                <button
-                  onClick={onSelectAllWatering}
-                  className="flex-1 flex items-center justify-center gap-1.5 bg-sky-50 border border-sky-200 active:bg-sky-100 transition-colors rounded-2xl py-2.5"
-                >
-                  <Droplets size={14} className="text-sky-400" />
-                  <span className="text-[13px] font-semibold text-sky-500">Laistyti viską</span>
-                </button>
-              )}
-            </div>
-          )}
-          {onSelectFertilizing && fertList.length > 0 && (
-            <div className="flex gap-2">
-              <button
-                onClick={onSelectFertilizing}
-                className="flex-1 flex items-center justify-center gap-1.5 bg-amber-50 border border-amber-200 active:bg-amber-100 transition-colors rounded-2xl py-2.5"
-              >
-                <FlaskConical size={14} className="text-amber-500" />
-                <span className="text-[13px] font-semibold text-amber-600">Tręšti ({fertList.length})</span>
-              </button>
-              {onSelectAllFertilizing && (
-                <button
-                  onClick={onSelectAllFertilizing}
-                  className="flex-1 flex items-center justify-center gap-1.5 bg-amber-50 border border-amber-200 active:bg-amber-100 transition-colors rounded-2xl py-2.5"
-                >
-                  <FlaskConical size={14} className="text-amber-400" />
-                  <span className="text-[13px] font-semibold text-amber-500">Tręšti viską</span>
-                </button>
-              )}
-            </div>
+          {wateringList.length > 1 && (
+            <button
+              onClick={() => wateringList.forEach(p => snooze(p.id))}
+              className="w-full flex items-center justify-center gap-1.5 bg-sky-50 border border-sky-200 active:bg-sky-100 transition-colors rounded-2xl py-2"
+            >
+              <Check size={12} className="text-sky-500" />
+              <span className="text-[13px] font-semibold text-sky-600">Patikrinau visus</span>
+            </button>
           )}
           <Section
             bg="bg-gray-50"

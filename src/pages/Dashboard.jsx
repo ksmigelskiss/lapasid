@@ -707,7 +707,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       {!searching && <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
 
         {/* Care overview — only in careMode */}
-        {careMode && <CareOverview plants={mainPlants} onTap={onTapFromCare ?? onTap} onSelectWatering={selectNeedsWatering} onSelectFertilizing={selectNeedsFertilizing} onSelectAllWatering={selectAllWatering} onSelectAllFertilizing={selectAllFertilizing} onWaterTap={setCareInfoPlant} />}
+        {careMode && <CareOverview plants={mainPlants} onTap={onTapFromCare ?? onTap} onWaterTap={setCareInfoPlant} />}
 
         {/* Unified alerts widget — only outside careMode */}
         {!careMode && (() => {
