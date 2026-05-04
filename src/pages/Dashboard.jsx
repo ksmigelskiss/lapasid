@@ -492,10 +492,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     const t = today()
     const comment = type === 'watering' ? 'Laistyta masiniu laistymu' : 'Trešta masiniu laistymu'
     careChecked.forEach(plantId => {
-      onAddTimelineEvent(plantId, { id: makeId(), type: 'watering', date: t, komentaras: comment })
-      if (type === 'fertilizing') {
-        onAddTimelineEvent(plantId, { id: makeId(), type: 'fertilizing', date: t, komentaras: comment })
-      }
+      onAddTimelineEvent(plantId, { id: makeId(), type, date: t, komentaras: comment })
     })
     resetConfirm()
     setCareChecked(new Set())
