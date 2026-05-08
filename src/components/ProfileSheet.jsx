@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { X, LogOut, UserPlus, Copy, Check, Share2 } from 'lucide-react'
-import { doc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore'
+import { doc, setDoc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore'
 import { db } from '../utils/firebase'
 
 // Sukuria invite tokeną Firestore'e, grąžina URL
@@ -19,24 +19,45 @@ async function generateInviteLink(collectionId, uid) {
   return `${window.location.origin}?invite=${token}`
 }
 
+// Nuskaito kolekcijos narius (be einamojo vartotojo)
+async function loadMembers(collectionId, currentUid) {
+  const colSnap = await getDoc(doc(db, 'collections', collectionId))
+  if (!colSnap.exists()) return []
+  const uids = (colSnap.data().members ?? []).filter(id => id !== currentUid)
+  if (!uids.length) return []
+
+  return Promise.all(uids.map(async uid => {
+    try {
+      const snap = await getDoc(doc(db, 'users', uid))
+      if (snap.exists()) {
+        const { displayName, email } = snap.data()
+        return { uid, displayName: displayName || email?.split('@')[0] || 'Vartotojas', email: email || '' }
+      }
+    } catch {}
+    return { uid, displayName: 'Vartotojas', email: '' }
+  }))
+}
+
+// Inicialės iš vardo arba el. pašto
+function initials(str) {
+  return (str || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
+}
+
 // Prideda vartotoją prie kolekcijos narių pagal tokeną
-export async function acceptInvite(uid, token, inviteData) {
+export async function acceptInvite(uid, token, inviteData, userProfile = {}) {
   const { colId, used, expiresAt } = inviteData
   if (used || new Date(expiresAt) < new Date()) return null
 
-  // Pridedame save prie members (Firestore rule leidžia self-join)
-  await updateDoc(doc(db, 'collections', colId), {
-    members: arrayUnion(uid),
-  })
+  await updateDoc(doc(db, 'collections', colId), { members: arrayUnion(uid) })
 
-  // Atnaujiname vartotojo profilį
   await setDoc(doc(db, 'users', uid), {
     primaryCollection: colId,
     collections:       [colId],
+    displayName:       userProfile.displayName || '',
+    email:             userProfile.email || '',
     updatedAt:         new Date().toISOString(),
   }, { merge: true })
 
-  // Pažymime tokeną kaip panaudotą
   await updateDoc(doc(db, 'invites', token), { used: true, usedBy: uid })
 
   return colId
@@ -46,9 +67,13 @@ export default function ProfileSheet({ user, collectionId, onSignOut, onClose })
   const [inviteUrl, setInviteUrl]   = useState(null)
   const [generating, setGenerating] = useState(false)
   const [copied, setCopied]         = useState(false)
+  const [members, setMembers]       = useState([])
 
-  const initials = (user?.displayName || user?.email || '?')
-    .split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase()
+  // Krauname bendrininkus
+  useEffect(() => {
+    if (!collectionId || !user?.uid) return
+    loadMembers(collectionId, user.uid).then(setMembers).catch(() => {})
+  }, [collectionId, user?.uid])
 
   const handleInvite = async () => {
     setGenerating(true)
@@ -91,11 +116,13 @@ export default function ProfileSheet({ user, collectionId, onSignOut, onClose })
           {/* Handle */}
           <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
 
-          {/* Vartotojo info */}
+          {/* Einamasis vartotojas */}
           <div className="flex items-center gap-3 mb-5">
             {user?.photoURL
               ? <img src={user.photoURL} alt="" className="w-12 h-12 rounded-full object-cover" />
-              : <div className="w-12 h-12 rounded-full bg-sage-100 flex items-center justify-center text-sage-600 font-bold text-base">{initials}</div>
+              : <div className="w-12 h-12 rounded-full bg-sage-100 flex items-center justify-center text-sage-600 font-bold text-base">
+                  {initials(user?.displayName || user?.email)}
+                </div>
             }
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-gray-900 truncate">{user?.displayName || 'Vartotojas'}</p>
@@ -105,6 +132,26 @@ export default function ProfileSheet({ user, collectionId, onSignOut, onClose })
               <X size={16} className="text-gray-400" />
             </button>
           </div>
+
+          {/* Bendrininkai */}
+          {members.length > 0 && (
+            <div className="bg-surface rounded-2xl px-4 py-3.5 mb-3">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2.5">Dalijamasi su</p>
+              <div className="space-y-2.5">
+                {members.map(m => (
+                  <div key={m.uid} className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-sage-100 flex items-center justify-center text-sage-600 text-xs font-bold flex-shrink-0">
+                      {initials(m.displayName || m.email)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-800 truncate">{m.displayName}</p>
+                      {m.email && <p className="text-xs text-gray-400 truncate">{m.email}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Kvietimas */}
           <div className="bg-surface rounded-2xl p-4 mb-3">

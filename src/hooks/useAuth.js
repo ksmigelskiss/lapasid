@@ -69,11 +69,11 @@ async function runMigration(uid) {
   await setDoc(doc(db, 'users', uid), {
     primaryCollection: collectionId,
     collections:       [collectionId],
-    beta:              true,                  // pirmieji vartotojai — beta
+    beta:              true,
     aiUsage:           { searches: 0, chats: 0, fbPosts: 0 },
     subscription:      { plan: 'free', validUntil: null, stripeCustomerId: null },
-    displayName:       '',
-    email:             '',
+    displayName:       auth.currentUser?.displayName ?? '',
+    email:             auth.currentUser?.email ?? '',
     createdAt:         new Date().toISOString(),
   })
 
@@ -88,7 +88,10 @@ async function processPendingInvite(uid) {
   try {
     const invSnap = await getDoc(doc(db, 'invites', token))
     if (!invSnap.exists()) return null
-    return await acceptInvite(uid, token, invSnap.data())
+    return await acceptInvite(uid, token, invSnap.data(), {
+      displayName: auth.currentUser?.displayName ?? '',
+      email:       auth.currentUser?.email ?? '',
+    })
   } catch (e) {
     console.warn('[invite] accept failed:', e)
     return null
@@ -103,8 +106,15 @@ async function getOrCreateCollection(uid) {
 
   const userSnap = await getDoc(doc(db, 'users', uid))
   if (userSnap.exists() && userSnap.data().primaryCollection) {
-    // Naujas formatas — grąžiname collectionId
-    return userSnap.data().primaryCollection
+    // Jei vardas/el. paštas dar neišsaugotas — atnaujinkime tyliai
+    const d = userSnap.data()
+    if (!d.displayName && auth.currentUser?.displayName) {
+      setDoc(doc(db, 'users', uid), {
+        displayName: auth.currentUser.displayName,
+        email:       auth.currentUser.email ?? '',
+      }, { merge: true }).catch(() => {})
+    }
+    return d.primaryCollection
   }
   // Senasis doc formatas (turi plants[], bet ne primaryCollection) arba doc neegzistuoja
   // → paleidžiame migraciją
