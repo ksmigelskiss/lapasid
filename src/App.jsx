@@ -175,7 +175,7 @@ export default function App() {
     detailPlant?.section === 'istorija' ? handleLibraryAction   : null
 
   // ── Auth gate ─────────────────────────────────────────────────
-  if (authLoading) {
+  if (authLoading || (user && !collectionId)) {
     return (
       <div className="fixed inset-0 bg-app flex items-center justify-center">
         <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />

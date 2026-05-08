@@ -82,10 +82,12 @@ async function runMigration(uid) {
 // Grąžina collectionId pagal vartotojo profilį arba sukuria naują
 async function getOrCreateCollection(uid) {
   const userSnap = await getDoc(doc(db, 'users', uid))
-  if (userSnap.exists()) {
+  if (userSnap.exists() && userSnap.data().primaryCollection) {
+    // Naujas formatas — grąžiname collectionId
     return userSnap.data().primaryCollection
   }
-  // Pirmasis prisijungimas — migruojame duomenis
+  // Senasis doc formatas (turi plants[], bet ne primaryCollection) arba doc neegzistuoja
+  // → paleidžiame migraciją
   return runMigration(uid)
 }
 
