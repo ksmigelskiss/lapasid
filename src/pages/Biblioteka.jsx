@@ -273,7 +273,12 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
               {query ? <Search size={48} /> : <BookOpen size={48} />}
             </div>
             <p className="text-sm font-semibold text-gray-600">
-              {query ? `„${query}" nerasta bibliotekoje` : 'Nieko nerasta'}
+              {query ? `„${query}" nerasta bibliotekoje` : 'Biblioteka tuščia'}
+            </p>
+            <p className="text-xs text-gray-400 max-w-[220px] leading-relaxed">
+              {query
+                ? null
+                : 'Čia matysi augalus, kuriuos nori įsigyti, ir savo auginimo istoriją'}
             </p>
             {query ? (
               <button

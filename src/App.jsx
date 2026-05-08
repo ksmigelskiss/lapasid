@@ -17,7 +17,7 @@ const Biblioteka  = lazy(() => import('./pages/Biblioteka'))
 const Zinynas     = lazy(() => import('./pages/Zinynas'))
 
 export default function App() {
-  const { user, collectionId, loading: authLoading, authError, signIn, signOut } = useAuth()
+  const { user, collectionId, loading: authLoading, authError, loadingMessage, signIn, signOut } = useAuth()
 
   // Išsaugome invite tokeną prieš Google redirect'ą
   useEffect(() => {
@@ -187,8 +187,11 @@ export default function App() {
   // ── Auth gate ─────────────────────────────────────────────────
   if (authLoading) {
     return (
-      <div className="fixed inset-0 bg-app flex items-center justify-center">
+      <div className="fixed inset-0 bg-app flex flex-col items-center justify-center gap-3">
         <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />
+        {loadingMessage && (
+          <p className="text-sm text-gray-400">{loadingMessage}</p>
+        )}
       </div>
     )
   }

@@ -127,7 +127,7 @@ async function getOrCreateCollection(uid) {
  * Grąžina: { user, collectionId, loading, authError, signIn, signOut }
  */
 export function useAuth() {
-  const [state, setState] = useState({ user: null, collectionId: null, loading: true, authError: null })
+  const [state, setState] = useState({ user: null, collectionId: null, loading: true, authError: null, loadingMessage: null })
 
   useEffect(() => {
     // redirectDone: true kai getRedirectResult jau išspręstas
@@ -139,16 +139,19 @@ export function useAuth() {
       if (!user && !redirectDone) return
 
       if (!user) {
-        setState({ user: null, collectionId: null, loading: false })
+        setState({ user: null, collectionId: null, loading: false, authError: null })
         return
       }
 
+      // Iš karto rodyti spinner — kolekcijos kūrimas gali užtrukti kelias sekundes
+      setState(s => ({ ...s, loading: true, loadingMessage: 'Ruošiama kolekcija…' }))
+
       try {
         const collectionId = await getOrCreateCollection(user.uid)
-        setState({ user, collectionId, loading: false })
+        setState({ user, collectionId, loading: false, authError: null, loadingMessage: null })
       } catch (e) {
         console.error('[useAuth] profile error:', e)
-        setState({ user, collectionId: null, loading: false })
+        setState({ user, collectionId: null, loading: false, authError: null, loadingMessage: null })
       }
     })
 
