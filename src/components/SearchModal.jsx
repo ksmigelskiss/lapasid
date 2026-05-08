@@ -4,6 +4,7 @@ import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight } from 'lucide-
 import { fetchPhotos, resizeImage } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
+import { getCatalogEntry, saveToCatalog } from '../utils/catalog'
 import { ProfileContent } from './PlantDetail'
 
 // Calls server-side proxy — Anthropic API key never in browser
@@ -139,6 +140,10 @@ Laistymas (dienomis): sultingi vasara 14–21, vidutiniai 7–14, paparčiai 3�
 
 
 async function fetchDetails(latinName, name) {
+  // Pirma tikriname katalogą — jei jau yra priežiūros duomenys, nemokami
+  const cached = await getCatalogEntry(latinName)
+  if (cached?.laistymasIntervalas) return cached
+
   const r = await claudeCall({
     maxTokens:  2048,
     system:     PLANT_SYSTEM,
@@ -146,8 +151,15 @@ async function fetchDetails(latinName, name) {
     toolChoice: { type: 'tool', name: 'plant_details' },
     messages:   [{ role: 'user', content: `Pateik išsamią priežiūros informaciją apie augalą "${latinName}" (${name}).` }],
   })
-  const block = r.content.find(b => b.type === 'tool_use' && b.name === 'plant_details')
-  return block?.input ?? {}
+  const block   = r.content.find(b => b.type === 'tool_use' && b.name === 'plant_details')
+  const details = block?.input ?? {}
+
+  // Išsaugome į katalogą — kitas vartotojas gaus iš cache
+  if (details.laistymasIntervalas) {
+    saveToCatalog({ lotyniskas: latinName, lietuviškas: name, ...details }).catch(() => {})
+  }
+
+  return details
 }
 
 async function enrich(parsed) {
