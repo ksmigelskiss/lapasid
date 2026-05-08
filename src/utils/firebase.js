@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
-import { getAuth, GoogleAuthProvider } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, setPersistence, browserLocalPersistence } from 'firebase/auth'
 import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
@@ -18,3 +18,6 @@ export const db       = getFirestore(app)
 export const auth     = getAuth(app)
 export const storage  = getStorage(app)
 export const googleProvider = new GoogleAuthProvider()
+
+// Explicit localStorage persistence — apsaugo nuo redirect session praradimo mobile
+setPersistence(auth, browserLocalPersistence).catch(() => {})

@@ -129,10 +129,14 @@ export function useAuth() {
   const [state, setState] = useState({ user: null, collectionId: null, loading: true })
 
   useEffect(() => {
-    // Tvarko iOS PWA redirect po Google Sign-In
-    getRedirectResult(auth).catch(console.error)
+    // redirectDone: true kai getRedirectResult jau išspręstas
+    // Apsaugo nuo to kad onAuthStateChanged(null) anksti nutrauktų loading
+    let redirectDone = false
 
     const unsub = onAuthStateChanged(auth, async (user) => {
+      // Jei redirect dar neapdorotas ir nėra vartotojo — palaukiame
+      if (!user && !redirectDone) return
+
       if (!user) {
         setState({ user: null, collectionId: null, loading: false })
         return
@@ -146,6 +150,17 @@ export function useAuth() {
         setState({ user, collectionId: null, loading: false })
       }
     })
+
+    // Apdorojame redirect rezultatą — po to leidžiame onAuthStateChanged veikti normaliai
+    getRedirectResult(auth)
+      .catch(e => { if (e?.code !== 'auth/null-user') console.error('[auth] redirect error:', e) })
+      .finally(() => {
+        redirectDone = true
+        // Jei po redirect nėra vartotojo — rodom login ekraną
+        if (!auth.currentUser) {
+          setState({ user: null, collectionId: null, loading: false })
+        }
+      })
 
     return unsub
   }, [])
