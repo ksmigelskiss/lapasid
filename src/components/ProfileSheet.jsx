@@ -20,22 +20,20 @@ async function generateInviteLink(collectionId, uid) {
 }
 
 // Nuskaito kolekcijos narius (be einamojo vartotojo)
+// Vardai saugomi collection.memberProfiles — kitų vartotojų users/{uid} neskaito
 async function loadMembers(collectionId, currentUid) {
   const colSnap = await getDoc(doc(db, 'collections', collectionId))
   if (!colSnap.exists()) return []
-  const uids = (colSnap.data().members ?? []).filter(id => id !== currentUid)
+  const data     = colSnap.data()
+  const uids     = (data.members ?? []).filter(id => id !== currentUid)
   if (!uids.length) return []
+  const profiles = data.memberProfiles ?? {}
 
-  return Promise.all(uids.map(async uid => {
-    try {
-      const snap = await getDoc(doc(db, 'users', uid))
-      if (snap.exists()) {
-        const { displayName, email } = snap.data()
-        return { uid, displayName: displayName || email?.split('@')[0] || 'Vartotojas', email: email || '' }
-      }
-    } catch {}
-    return { uid, displayName: 'Vartotojas', email: '' }
-  }))
+  return uids.map(uid => {
+    const p = profiles[uid]
+    const name = p?.displayName || p?.email?.split('@')[0] || null
+    return { uid, displayName: name || `Narys ${uid.slice(0, 4)}`, email: p?.email || '' }
+  })
 }
 
 // Inicialės iš vardo arba el. pašto
@@ -48,7 +46,13 @@ export async function acceptInvite(uid, token, inviteData, userProfile = {}) {
   const { colId, used, expiresAt } = inviteData
   if (used || new Date(expiresAt) < new Date()) return null
 
-  await updateDoc(doc(db, 'collections', colId), { members: arrayUnion(uid) })
+  await updateDoc(doc(db, 'collections', colId), {
+    members: arrayUnion(uid),
+    [`memberProfiles.${uid}`]: {
+      displayName: userProfile.displayName || '',
+      email:       userProfile.email || '',
+    },
+  })
 
   await setDoc(doc(db, 'users', uid), {
     primaryCollection: colId,

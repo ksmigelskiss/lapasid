@@ -121,15 +121,21 @@ async function getOrCreateCollection(uid) {
 
   const userSnap = await getDoc(doc(db, 'users', uid))
   if (userSnap.exists() && userSnap.data().primaryCollection) {
-    // Jei vardas/el. paštas dar neišsaugotas — atnaujinkime tyliai
-    const d = userSnap.data()
-    if (!d.displayName && auth.currentUser?.displayName) {
-      setDoc(doc(db, 'users', uid), {
-        displayName: auth.currentUser.displayName,
-        email:       auth.currentUser.email ?? '',
-      }, { merge: true }).catch(() => {})
+    const d       = userSnap.data()
+    const colId   = d.primaryCollection
+    const name    = auth.currentUser?.displayName || ''
+    const email   = auth.currentUser?.email || ''
+
+    // Išsaugome profilį kolekcijai — kad kiti nariai matytų vardą
+    setDoc(doc(db, 'collections', colId), {
+      [`memberProfiles.${uid}`]: { displayName: name, email },
+    }, { merge: true }).catch(() => {})
+
+    // Jei vardas dar neišsaugotas users doc'e
+    if (!d.displayName && name) {
+      setDoc(doc(db, 'users', uid), { displayName: name, email }, { merge: true }).catch(() => {})
     }
-    return d.primaryCollection
+    return colId
   }
   // Senasis doc formatas (turi plants[], bet ne primaryCollection) arba doc neegzistuoja
   // → paleidžiame migraciją
