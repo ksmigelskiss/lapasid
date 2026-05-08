@@ -14,6 +14,14 @@ service cloud.firestore {
         request.auth.uid in resource.data.members;
       // Naujos kolekcijos kūrimas (pirmasis prisijungimas)
       allow create: if request.auth != null;
+      // Invite join: bet kuris auth vartotojas gali pridėti save prie members
+      // (tik arrayUnion su savo UID — serveris tikrina invite tokeną)
+      allow update: if request.auth != null && (
+        request.auth.uid in resource.data.members ||
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members']) &&
+         request.resource.data.members.hasAll(resource.data.members) &&
+         request.resource.data.members.hasAll([request.auth.uid]))
+      );
     }
 
     // Augalai (subkolekcija)
