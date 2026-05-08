@@ -6,6 +6,8 @@ import DeleteModal from './components/DeleteModal'
 import DuplicateBuyModal from './components/DuplicateBuyModal'
 import Dashboard from './pages/Dashboard'
 import { usePlants } from './hooks/usePlants'
+import { useAuth } from './hooks/useAuth'
+import LoginScreen from './components/LoginScreen'
 import PinGate from './components/PinGate'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
 
@@ -15,6 +17,8 @@ const Biblioteka  = lazy(() => import('./pages/Biblioteka'))
 const Zinynas     = lazy(() => import('./pages/Zinynas'))
 
 export default function App() {
+  const { user, collectionId, loading: authLoading, signIn, signOut } = useAuth()
+
   const [tab, setTab]                 = useState('dashboard')
   const [mountedTabs, setMountedTabs] = useState(() => new Set(['dashboard']))
   const [showSearch, setShowSearch]   = useState(false)
@@ -25,6 +29,7 @@ export default function App() {
   const [buyConfirmTarget, setBuyConfirmTarget] = useState(null)
   const [detailPlant, setDetailPlant]   = useState(null)
 
+  // usePlants visada kviečiamas (hooks taisyklės), bet veikia tik kai collectionId žinomas
   const {
     syncFromRemote,
     dashboard, library,
@@ -35,7 +40,7 @@ export default function App() {
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred,
     updateUzrasai,
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
-  } = usePlants()
+  } = usePlants(collectionId)
 
   const livePlant = detailPlant
     ? [...dashboard, ...library].find(p => p.id === detailPlant.plant.id)
@@ -168,6 +173,18 @@ export default function App() {
     detailPlant?.section === 'auginama' ? handleDashboardAction :
     detailPlant?.section === 'nori'     ? handleLibraryAction   :
     detailPlant?.section === 'istorija' ? handleLibraryAction   : null
+
+  // ── Auth gate ─────────────────────────────────────────────────
+  if (authLoading) {
+    return (
+      <div className="fixed inset-0 bg-app flex items-center justify-center">
+        <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />
+      </div>
+    )
+  }
+  if (!user) {
+    return <LoginScreen onSignIn={signIn} />
+  }
 
   const tabs = [
     { key: 'dashboard', page: (
