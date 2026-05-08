@@ -83,12 +83,24 @@ async function runMigration(uid) {
 
 // Tikrina ar yra pending invite tokenas ir prisijungia prie kolekcijos
 async function processPendingInvite(uid) {
-  const token = localStorage.getItem('pending-invite')
+  // Pirmiausia tikriname URL — apsaugo nuo race condition kai vartotojas jau prisijungęs
+  const urlParams = new URLSearchParams(window.location.search)
+  const urlToken  = urlParams.get('invite')
+  if (urlToken) {
+    // Išvalome URL iš karto kad nekartotų po reload
+    window.history.replaceState({}, '', window.location.pathname)
+  }
+
+  const token = urlToken || localStorage.getItem('pending-invite')
   if (!token) return null
   localStorage.removeItem('pending-invite')
+
   try {
     const invSnap = await getDoc(doc(db, 'invites', token))
-    if (!invSnap.exists()) return null
+    if (!invSnap.exists()) {
+      console.warn('[invite] token not found:', token)
+      return null
+    }
     return await acceptInvite(uid, token, invSnap.data(), {
       displayName: auth.currentUser?.displayName ?? '',
       email:       auth.currentUser?.email ?? '',

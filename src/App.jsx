@@ -19,13 +19,14 @@ const Zinynas     = lazy(() => import('./pages/Zinynas'))
 export default function App() {
   const { user, collectionId, loading: authLoading, authError, loadingMessage, signIn, signOut } = useAuth()
 
-  // Išsaugome invite tokeną prieš Google redirect'ą
+  // Išsaugome invite tokeną localStorage — fallback jei processPendingInvite
+  // neužspėja nuskaityti URL prieš sign-in redirect
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const token  = params.get('invite')
     if (token) {
       localStorage.setItem('pending-invite', token)
-      window.history.replaceState({}, '', window.location.pathname)
+      // URL valomas processPendingInvite, ne čia — kad išliktų kol auth baigiasi
     }
   }, [])
 
