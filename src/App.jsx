@@ -289,7 +289,7 @@ export default function App() {
         ))}
       </div>
 
-      <Navigation active={tab} onChange={setTabAndMount} dashboardCount={dashboard.length} />
+      <Navigation active={tab} onChange={setTabAndMount} dashboardCount={dashboard.length} role={role} />
 
       {detailForRender && (
         <Suspense fallback={null}>

@@ -29,12 +29,13 @@ const tabs = [
   { id: 'zinynas',   label: 'Žinynas',   Icon: SparkleIcon },
 ]
 
-export default function Navigation({ active, onChange, dashboardCount = 0 }) {
+export default function Navigation({ active, onChange, dashboardCount = 0, role = 'owner' }) {
+  const visibleTabs = role === 'viewer' ? tabs.filter(t => t.id === 'dashboard') : tabs
   return (
     <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-40">
       <div className="bg-white border-t border-gray-200 safe-bottom">
         <div className="flex">
-          {tabs.map(({ id, label, Icon }) => {
+          {visibleTabs.map(({ id, label, Icon }) => {
             const isActive = active === id
             return (
               <button
