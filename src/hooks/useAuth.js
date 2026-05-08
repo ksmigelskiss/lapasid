@@ -13,18 +13,34 @@ import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 const LEGACY_UID = 'HdAOoLtEzUXqU2px2h3YmzLygCp1'
 
 // Pirmojo prisijungimo migracija:
-// 1. Bandome nuskaityti duomenis iš localStorage (greičiau, nereikia Firestore prieigos)
-// 2. Sukuriame naują collections/{colId} su tais duomenimis
-// 3. Sukuriame users/{uid} dokumentą
+// 1. Pirma bandome nuskaityti iš Firestore senojo doc (tiksliausi duomenys)
+// 2. Fallback: localStorage (jei Firestore neprieinama arba teisių nėra)
+// 3. Sukuriame naują collections/{colId} su tais duomenimis
+// 4. Sukuriame users/{uid} dokumentą
 async function runMigration(uid) {
-  // Bandome iš localStorage (dabartinis įrenginys turės duomenis)
   let legacyData = null
+
+  // 1. Firestore senasis doc — patikimiausi duomenys
+  // Email/password vartotojas turi teisę skaityti savo doc.
+  // Google vartotojas negaus teisės (catch) ir grįš į localStorage.
   try {
-    const stored = localStorage.getItem('geliu-db')
-    if (stored) legacyData = migrate(JSON.parse(stored))
+    const legacySnap = await getDoc(doc(db, 'users', LEGACY_UID))
+    if (legacySnap.exists()) {
+      const d = legacySnap.data()
+      // Naudojame tik jei tai senojo formato doc (turi plants[], neturi members[])
+      if (Array.isArray(d.plants) && !d.members) legacyData = d
+    }
   } catch {}
 
-  // Fallback: bandome iš LEGACY_KEYS
+  // 2. Fallback: localStorage
+  if (!legacyData) {
+    try {
+      const stored = localStorage.getItem('geliu-db')
+      if (stored) legacyData = migrate(JSON.parse(stored))
+    } catch {}
+  }
+
+  // 3. Fallback: legacy versioned keys
   if (!legacyData) {
     try {
       for (const key of LEGACY_KEYS) {
