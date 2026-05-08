@@ -142,7 +142,11 @@ Laistymas (dienomis): sultingi vasara 14–21, vidutiniai 7–14, paparčiai 3�
 async function fetchDetails(latinName, name) {
   // Pirma tikriname katalogą — jei jau yra priežiūros duomenys, nemokami
   const cached = await getCatalogEntry(latinName)
-  if (cached?.laistymasIntervalas) return cached
+  if (cached?.laistymasIntervalas) {
+    // Grąžiname tik priežiūros duomenis — ne nuotrauką (kiekvienas vartotojas gauna savą iš iNaturalist)
+    const { image: _img, updatedAt: _ts, lotyniskas: _lt, lietuviškas: _liet, ...careData } = cached
+    return careData
+  }
 
   const r = await claudeCall({
     maxTokens:  2048,

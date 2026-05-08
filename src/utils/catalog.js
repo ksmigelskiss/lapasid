@@ -6,6 +6,7 @@ const PERSONAL_FIELDS = new Set([
   'id', 'kategorija', 'komentaras', 'uzrasai', 'data_prideta', 'status',
   'timeline', 'chat', 'zonaId', 'pirkinys', 'diedDate', 'deathReason',
   'lesson', 'useHistoryPhoto', 'photos',
+  'image',  // asmeninė nuotrauka — kiekvienas vartotojas gauna savą iš iNaturalist
 ])
 
 /** Normalizuotas lotyniškas pavadinimas → Firestore docId */
