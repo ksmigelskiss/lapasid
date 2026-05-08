@@ -6,14 +6,32 @@ import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
 import { getCatalogEntry, saveToCatalog } from '../utils/catalog'
 import { ProfileContent } from './PlantDetail'
+import { auth } from '../utils/firebase'
+import PaywallSheet from './PaywallSheet'
 
 // Calls server-side proxy — Anthropic API key never in browser
+// Throws { code: 'limit_reached', limitType } when free tier is exhausted
 async function claudeCall(body) {
+  const idToken = await auth.currentUser?.getIdToken().catch(() => null)
+  const headers = { 'Content-Type': 'application/json' }
+  if (idToken) headers['Authorization'] = `Bearer ${idToken}`
+
   const res = await fetch('/api/claude', {
     method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify(body),
+    headers,
+    body:    JSON.stringify({ ...body, limitType: 'searches' }),
   })
+
+  if (res.status === 403) {
+    const err = await res.json().catch(() => ({}))
+    if (err.error === 'limit_reached') {
+      const e = new Error('limit_reached')
+      e.code = 'limit_reached'
+      e.limitType = err.limitType ?? 'searches'
+      throw e
+    }
+  }
+
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))
     throw new Error(err.error ?? `HTTP ${res.status}`)
@@ -194,8 +212,10 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   const [dots, setDots]           = useState('')
   const [statusMsg, setStatusMsg] = useState('')
   const [previewUrl, setPreview]  = useState(null) // photo search preview
-  const [savingPhase2, setSavingPhase2] = useState(false)
-  const [photoIdx, setPhotoIdx]         = useState(0)
+  const [savingPhase2, setSavingPhase2]     = useState(false)
+  const [photoIdx, setPhotoIdx]             = useState(0)
+  const [paywallOpen, setPaywallOpen]       = useState(false)
+  const [paywallLimitType, setPaywallLimitType] = useState(null)
 
   // Reset gallery index when a new result arrives
   useEffect(() => { setPhotoIdx(0) }, [result])
@@ -271,8 +291,13 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       setStatusMsg('')
     } catch (e) {
       if (e.name === 'AbortError' || controller.signal.aborted) return
+      if (e.code === 'limit_reached') {
+        setLoading(false); setStatusMsg('')
+        setPaywallLimitType(e.limitType); setPaywallOpen(true)
+        return
+      }
       console.error('[SearchModal] error:', e)
-      setError('Klaida ieškant augalo. Patikrinkite API raktą.')
+      setError('Klaida ieškant augalo.')
       setLoading(false)
       setStatusMsg('')
     }
@@ -312,6 +337,11 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       setLoading(false)
       setStatusMsg('')
     } catch (e) {
+      if (e.code === 'limit_reached') {
+        setLoading(false); setStatusMsg('')
+        setPaywallLimitType(e.limitType); setPaywallOpen(true)
+        return
+      }
       console.error('[SearchModal photo] error:', e)
       setError('Nepavyko identifikuoti augalo. Bandykite aiškesnę nuotrauką.')
       setLoading(false)
@@ -563,6 +593,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     <AnimatePresence>
       {savingPhase2 && <SavingOverlay key="saving" />}
     </AnimatePresence>
+    <PaywallSheet open={paywallOpen} limitType={paywallLimitType} onClose={() => setPaywallOpen(false)} />
     </div>
   )
 }

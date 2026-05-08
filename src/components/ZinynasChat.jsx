@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, ArrowUp, BookOpen, Camera } from 'lucide-react'
 import { useChatStream } from '../hooks/useChatStream'
 import { resizeImage } from '../utils/imageService'
+import PaywallSheet from './PaywallSheet'
 
 function buildSystemPrompt(entry, allEntries, plants) {
   const plantList = (plants ?? [])
@@ -26,7 +27,7 @@ Aiškink esmingai: kodėl taip veikia, kas biologiškai lemia, ką reikia žinot
 const DEFAULT_HEIGHT = '65dvh'
 
 export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
-  const { messages, streaming, streamText, send } = useChatStream({ maxTokens: 400 })
+  const { messages, streaming, streamText, send, paywallOpen, paywallLimitType, closePaywall } = useChatStream({ maxTokens: 400, limitType: 'chats' })
   const [input, setInput]           = useState('')
   const [panelHeight, setPanelHeight] = useState(DEFAULT_HEIGHT)
   const [pendingImage, setPendingImage] = useState(null)
@@ -60,6 +61,7 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
   }
 
   return (
+    <>
     <div className="fixed inset-0 z-[70] flex items-end justify-center pointer-events-none">
       <div className="absolute inset-0 pointer-events-auto" onClick={onClose} />
 
@@ -186,5 +188,7 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
         </div>
       </motion.div>
     </div>
+    <PaywallSheet open={paywallOpen} limitType={paywallLimitType} onClose={closePaywall} />
+    </>
   )
 }

@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
+import { auth } from '../utils/firebase'
 
 const MAX_API = 12
 
@@ -12,6 +13,7 @@ const MAX_API = 12
  * @param {number}   opts.maxStored       - Trim history to N messages after each reply (optional)
  * @param {string}   opts.errorMessage    - Fallback assistant text on error
  * @param {Function} opts.onSuccess       - Called with (finalMessages, fullText) after a reply
+ * @param {string}   opts.limitType       - 'chats' | 'searches' — enables limit checking
  */
 export function useChatStream({
   initialMessages = [],
@@ -19,10 +21,13 @@ export function useChatStream({
   maxStored       = null,
   errorMessage    = '...',
   onSuccess,
+  limitType       = 'chats',
 } = {}) {
-  const [messages,   setMessages]   = useState(initialMessages)
-  const [streaming,  setStreaming]  = useState(false)
-  const [streamText, setStreamText] = useState('')
+  const [messages,         setMessages]         = useState(initialMessages)
+  const [streaming,        setStreaming]         = useState(false)
+  const [streamText,       setStreamText]        = useState('')
+  const [paywallOpen,      setPaywallOpen]       = useState(false)
+  const [paywallLimitType, setPaywallLimitType]  = useState(null)
   const abortRef = useRef(null)
 
   // send(text, systemPrompt, imageUrl?) — imageUrl is a data URL or null
@@ -54,12 +59,26 @@ export function useChatStream({
 
       let fullText = ''
 
+      const idToken = await auth.currentUser?.getIdToken().catch(() => null)
+      const headers = { 'Content-Type': 'application/json' }
+      if (idToken) headers['Authorization'] = `Bearer ${idToken}`
+
       const response = await fetch('/api/claude/stream', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ messages: apiMessages, system: systemPrompt, maxTokens }),
+        headers,
+        body:    JSON.stringify({ messages: apiMessages, system: systemPrompt, maxTokens, limitType }),
         signal:  controller.signal,
       })
+
+      if (response.status === 403) {
+        const err = await response.json().catch(() => ({}))
+        if (err.error === 'limit_reached') {
+          setMessages(m => m.slice(0, -1)) // remove the user message we just added
+          setPaywallLimitType(err.limitType ?? limitType)
+          setPaywallOpen(true)
+          return
+        }
+      }
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({}))
@@ -112,5 +131,7 @@ export function useChatStream({
     }
   }, [messages, streaming, maxTokens, maxStored, errorMessage, onSuccess])
 
-  return { messages, setMessages, streaming, streamText, send }
+  const closePaywall = useCallback(() => setPaywallOpen(false), [])
+
+  return { messages, setMessages, streaming, streamText, send, paywallOpen, paywallLimitType, closePaywall }
 }

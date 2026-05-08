@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { X, ArrowUp, Globe, Camera } from 'lucide-react'
 import { useChatStream } from '../hooks/useChatStream'
 import { resizeImage } from '../utils/imageService'
+import PaywallSheet from './PaywallSheet'
 
 // Parses assistant message text and wraps matched plant names in clickable buttons
 function renderMessage(text, plants, onViewPlant) {
@@ -41,7 +42,7 @@ function renderMessage(text, plants, onViewPlant) {
 const DEFAULT_HEIGHT = '68dvh'
 
 export default function CollectionChat({ systemPrompt, title, icon, iconLg, onClose, onSaveToZinynas, plants, onViewPlant }) {
-  const { messages, streaming, streamText, send } = useChatStream({ maxTokens: 400 })
+  const { messages, streaming, streamText, send, paywallOpen, paywallLimitType, closePaywall } = useChatStream({ maxTokens: 400, limitType: 'chats' })
   const [input, setInput]         = useState('')
   const [savingText, setSavingText] = useState(null)
   const [noteText, setNoteText]   = useState('')
@@ -78,6 +79,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
   }
 
   return (
+    <>
     <div className="fixed inset-0 z-[60] flex items-end justify-center pointer-events-none">
       <div className="absolute inset-0 pointer-events-auto" onClick={onClose} />
 
@@ -258,5 +260,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
         )}
       </motion.div>
     </div>
+    <PaywallSheet open={paywallOpen} limitType={paywallLimitType} onClose={closePaywall} />
+    </>
   )
 }

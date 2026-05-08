@@ -6,16 +6,18 @@ import { getPlantMood } from '../utils/plantMood'
 import { PlantAvatar } from './icons/ChatIcons'
 import { useChatStream } from '../hooks/useChatStream'
 import { resizeImage } from '../utils/imageService'
+import PaywallSheet from './PaywallSheet'
 
 const MAX_STORED = 40
 
 const DEFAULT_HEIGHT = '62dvh'
 
 export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSaveToZinynas, initialQuery }) {
-  const { messages, streaming, streamText, send } = useChatStream({
+  const { messages, streaming, streamText, send, paywallOpen, paywallLimitType, closePaywall } = useChatStream({
     initialMessages: plant.chat ?? [],
     maxTokens:       300,
     maxStored:       MAX_STORED,
+    limitType:       'chats',
     onSuccess:       (finalMessages) => onSaveChat?.(plant.id, finalMessages),
   })
   const [input, setInput]         = useState(initialQuery ?? '')
@@ -56,6 +58,7 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
   }
 
   return (
+    <>
     <div className="fixed inset-0 z-[70] flex items-end justify-center pointer-events-none">
       {/* Tap-outside closes */}
       <div
@@ -266,5 +269,7 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
         )}
       </motion.div>
     </div>
+    <PaywallSheet open={paywallOpen} limitType={paywallLimitType} onClose={closePaywall} />
+    </>
   )
 }
