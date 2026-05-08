@@ -1,15 +1,10 @@
 import { useState, useRef, useCallback } from 'react'
-import Anthropic from '@anthropic-ai/sdk'
-
-const client = new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true,
-})
 
 const MAX_API = 12
 
 /**
  * Shared Claude streaming hook for all chat components.
+ * Calls /api/claude/stream (server-side proxy — API key never in browser).
  *
  * @param {object} opts
  * @param {Array}    opts.initialMessages - Seed messages (read once on mount)
@@ -45,6 +40,7 @@ export function useChatStream({
     abortRef.current = controller
 
     try {
+      // Transform messages for API (convert data URLs to base64 blocks)
       const apiMessages = newMessages.slice(-MAX_API).map(m => {
         if (m.imageUrl) {
           const [header, data] = m.imageUrl.split(',')
@@ -58,18 +54,42 @@ export function useChatStream({
 
       let fullText = ''
 
-      const stream = await client.messages.stream({
-        model:      'claude-sonnet-4-6',
-        max_tokens: maxTokens,
-        system:     systemPrompt,
-        messages:   apiMessages,
+      const response = await fetch('/api/claude/stream', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ messages: apiMessages, system: systemPrompt, maxTokens }),
+        signal:  controller.signal,
       })
 
-      for await (const chunk of stream) {
-        if (controller.signal.aborted) return
-        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-          fullText += chunk.delta.text
-          setStreamText(fullText)
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}))
+        throw new Error(err.error ?? `HTTP ${response.status}`)
+      }
+
+      const reader  = response.body.getReader()
+      const decoder = new TextDecoder()
+      let   buffer  = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done || controller.signal.aborted) break
+
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() ?? '' // keep incomplete last line
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          const payload = line.slice(6).trim()
+          if (payload === '[DONE]') break
+          try {
+            const { text: delta, error } = JSON.parse(payload)
+            if (error) throw new Error(error)
+            if (delta) {
+              fullText += delta
+              setStreamText(fullText)
+            }
+          } catch {}
         }
       }
 
