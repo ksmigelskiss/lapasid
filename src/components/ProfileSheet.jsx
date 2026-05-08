@@ -20,7 +20,7 @@ async function generateInviteLink(collectionId, uid) {
 }
 
 // Nuskaito kolekcijos narius (be einamojo vartotojo)
-// Vardai saugomi collection.memberProfiles — kitų vartotojų users/{uid} neskaito
+// Pirma bando users/{uid} (veikia jei rules leidžia), fallback — memberProfiles
 async function loadMembers(collectionId, currentUid) {
   const colSnap = await getDoc(doc(db, 'collections', collectionId))
   if (!colSnap.exists()) return []
@@ -29,11 +29,18 @@ async function loadMembers(collectionId, currentUid) {
   if (!uids.length) return []
   const profiles = data.memberProfiles ?? {}
 
-  return uids.map(uid => {
+  return Promise.all(uids.map(async uid => {
+    try {
+      const snap = await getDoc(doc(db, 'users', uid))
+      if (snap.exists()) {
+        const { displayName, email } = snap.data()
+        return { uid, displayName: displayName || email?.split('@')[0] || 'Narys', email: email || '' }
+      }
+    } catch {}
+    // Fallback: memberProfiles (įrašomas prisijungiant)
     const p = profiles[uid]
-    const name = p?.displayName || p?.email?.split('@')[0] || null
-    return { uid, displayName: name || `Narys ${uid.slice(0, 4)}`, email: p?.email || '' }
-  })
+    return { uid, displayName: p?.displayName || p?.email?.split('@')[0] || 'Narys', email: p?.email || '' }
+  }))
 }
 
 // Inicialės iš vardo arba el. pašto
