@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera, Check, UserCircle } from 'lucide-react'
+import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera, Check, UserCircle, Pencil } from 'lucide-react'
 import ProfileSheet from '../components/ProfileSheet'
 const GARDENER = '/gardener.png'
 import PlantCard from '../components/PlantCard'
@@ -359,7 +359,7 @@ function matchesQuery(plant, q) {
     .some(c => c && c.toLowerCase().includes(lower))
 }
 
-export default function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, onSearch, onSearchByCamera, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones, user, collectionId, onSignOut }) {
+export default function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, onSearch, onSearchByCamera, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones, user, collectionId, onSignOut, role = 'owner', allCollections = [], onSwitchCollection, onRenameCollection, ownCollectionId }) {
   const quarantinePlants = plants.filter(p => p.status === 'quarantine')
   // sick plants stay in their zone (mainPlants includes them)
   const mainPlants       = plants.filter(p => p.status !== 'quarantine')
@@ -372,7 +372,10 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const [showChat, setShowChat]       = useState(false)
   const [searching, setSearching]     = useState(false)
   const [query, setQuery]             = useState('')
-  const [showProfile, setShowProfile] = useState(false)
+  const [showProfile,    setShowProfile]    = useState(false)
+  const [showSwitcher,   setShowSwitcher]   = useState(false)
+  const [editingName,    setEditingName]    = useState(false)
+  const [nameInput,      setNameInput]      = useState('')
   const [careMode, setCareMode]         = useState(false)
   const [careChecked, setCareChecked]   = useState(new Set())
   const [careInfoPlant, setCareInfoPlant] = useState(null)
@@ -526,7 +529,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       {/* Header */}
       <div className="px-5 pt-14 pb-4">
         <div className="flex items-center justify-between">
-          <div>
+          <div className="relative">
+            {/* Avatar + kolekcijos etiketė */}
             <div className="flex items-center gap-2 mb-0.5">
               <button
                 onClick={() => setShowProfile(true)}
@@ -539,9 +543,72 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                     </div>
                 }
               </button>
-              <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em]">Mano kolekcija</p>
+              {/* Kolekcijų switcher — rodomas kai > 1 kolekcija */}
+              {allCollections.length > 1 ? (
+                <button
+                  onClick={() => setShowSwitcher(v => !v)}
+                  className="flex items-center gap-1 active:opacity-70"
+                >
+                  <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em]">
+                    {allCollections.find(c => c.id === collectionId)?.name ?? 'Kolekcija'}
+                  </p>
+                  <ChevronDown size={11} className="text-sage-400" />
+                </button>
+              ) : (
+                <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em]">Mano kolekcija</p>
+              )}
             </div>
-            <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight">Mano augalai</h1>
+
+            {/* Kolekcijos pavadinimas — inline edit owner'iui */}
+            {editingName ? (
+              <input
+                autoFocus
+                value={nameInput}
+                onChange={e => setNameInput(e.target.value)}
+                onBlur={() => {
+                  if (nameInput.trim()) onRenameCollection?.(collectionId, nameInput.trim())
+                  setEditingName(false)
+                }}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') e.target.blur()
+                  if (e.key === 'Escape') { setEditingName(false) }
+                }}
+                className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight bg-transparent outline-none border-b-2 border-sage-400 w-full"
+              />
+            ) : (
+              <div className="flex items-center gap-2">
+                <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight">
+                  {allCollections.find(c => c.id === collectionId)?.name ?? 'Mano augalai'}
+                </h1>
+                {role === 'owner' && (
+                  <button
+                    onClick={() => {
+                      setNameInput(allCollections.find(c => c.id === collectionId)?.name ?? 'Mano augalai')
+                      setEditingName(true)
+                    }}
+                    className="opacity-40 active:opacity-80 mt-1"
+                  >
+                    <Pencil size={14} className="text-gray-500" />
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Switcher dropdown */}
+            {showSwitcher && allCollections.length > 1 && (
+              <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-lg border border-gray-100 z-10 min-w-[200px] overflow-hidden">
+                {allCollections.map(c => (
+                  <button
+                    key={c.id}
+                    onClick={() => { onSwitchCollection?.(c.id); setShowSwitcher(false) }}
+                    className={`w-full flex items-center gap-2.5 px-4 py-3 text-left text-sm transition-colors ${c.id === collectionId ? 'bg-sage-50 font-semibold text-sage-700' : 'text-gray-700 active:bg-surface'}`}
+                  >
+                    {c.id === collectionId && <Check size={14} className="text-sage-500 flex-shrink-0" />}
+                    <span className={c.id === collectionId ? '' : 'ml-[22px]'}>{c.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           <div className="flex flex-col items-end gap-2">
             {/* Top row: laistymas + augalai */}
@@ -1032,8 +1099,13 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             key="profile"
             user={user}
             collectionId={collectionId}
+            role={role}
+            ownCollectionId={ownCollectionId}
+            allCollections={allCollections}
             onSignOut={onSignOut}
             onClose={() => setShowProfile(false)}
+            onSwitchCollection={colId => { onSwitchCollection?.(colId); setShowProfile(false) }}
+            onRenameCollection={onRenameCollection}
           />
         )}
       </AnimatePresence>

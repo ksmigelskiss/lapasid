@@ -8,43 +8,29 @@ import {
   getRedirectResult,
   signOut as firebaseSignOut,
 } from 'firebase/auth'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { auth, db, googleProvider } from '../utils/firebase'
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
+import { auth, db, googleProvider, signInAnonymously, updateProfile } from '../utils/firebase'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { acceptInvite } from '../components/ProfileSheet'
 
-// UID iš senos vieno vartotojo sistemos — naudojamas migracijai
 const LEGACY_UID = 'HdAOoLtEzUXqU2px2h3YmzLygCp1'
 
-// Pirmojo prisijungimo migracija:
-// 1. Pirma bandome nuskaityti iš Firestore senojo doc (tiksliausi duomenys)
-// 2. Fallback: localStorage (jei Firestore neprieinama arba teisių nėra)
-// 3. Sukuriame naują collections/{colId} su tais duomenimis
-// 4. Sukuriame users/{uid} dokumentą
+// Sukuria naują asmeninę kolekciją ir users/{uid} dokumentą (pirmasis prisijungimas)
 async function runMigration(uid) {
   let legacyData = null
-
-  // 1. Firestore senasis doc — patikimiausi duomenys
-  // Email/password vartotojas turi teisę skaityti savo doc.
-  // Google vartotojas negaus teisės (catch) ir grįš į localStorage.
   try {
     const legacySnap = await getDoc(doc(db, 'users', LEGACY_UID))
     if (legacySnap.exists()) {
       const d = legacySnap.data()
-      // Naudojame tik jei tai senojo formato doc (turi plants[], neturi members[])
       if (Array.isArray(d.plants) && !d.members) legacyData = d
     }
   } catch {}
-
-  // 2. Fallback: localStorage
   if (!legacyData) {
     try {
       const stored = localStorage.getItem('geliu-db')
       if (stored) legacyData = migrate(JSON.parse(stored))
     } catch {}
   }
-
-  // 3. Fallback: legacy versioned keys
   if (!legacyData) {
     try {
       for (const key of LEGACY_KEYS) {
@@ -54,23 +40,24 @@ async function runMigration(uid) {
     } catch {}
   }
 
-  const data = legacyData ?? { plants: [], zinynas: [], zones: [], settings: {} }
+  const data         = legacyData ?? { plants: [], zinynas: [], zones: [], settings: {} }
   const collectionId = `col_${uid.slice(0, 8)}`
 
-  // Sukuriame collections dokumentą
   await setDoc(doc(db, 'collections', collectionId), {
-    plants:   data.plants   ?? [],
-    zinynas:  data.zinynas  ?? [],
-    zones:    data.zones    ?? [],
-    settings: data.settings ?? {},
-    members:  [uid],
-    ownerId:  uid,
+    plants:    data.plants   ?? [],
+    zinynas:   data.zinynas  ?? [],
+    zones:     data.zones    ?? [],
+    settings:  data.settings ?? {},
+    members:   [uid],
+    ownerId:   uid,
+    roles:     { [uid]: 'owner' },
+    name:      'Mano augalai',
     createdAt: new Date().toISOString(),
   })
 
-  // Sukuriame users dokumentą
   await setDoc(doc(db, 'users', uid), {
     primaryCollection: collectionId,
+    ownCollection:     collectionId,
     collections:       [collectionId],
     beta:              true,
     aiUsage:           { searches: 0, chats: 0, fbPosts: 0 },
@@ -83,15 +70,11 @@ async function runMigration(uid) {
   return collectionId
 }
 
-// Tikrina ar yra pending invite tokenas ir prisijungia prie kolekcijos
+// Nuskaito pending invite iš URL arba localStorage
 async function processPendingInvite(uid) {
-  // Pirmiausia tikriname URL — apsaugo nuo race condition kai vartotojas jau prisijungęs
   const urlParams = new URLSearchParams(window.location.search)
   const urlToken  = urlParams.get('invite')
-  if (urlToken) {
-    // Išvalome URL iš karto kad nekartotų po reload
-    window.history.replaceState({}, '', window.location.pathname)
-  }
+  if (urlToken) window.history.replaceState({}, '', window.location.pathname)
 
   const token = urlToken || localStorage.getItem('pending-invite')
   if (!token) return null
@@ -99,124 +82,146 @@ async function processPendingInvite(uid) {
 
   try {
     const invSnap = await getDoc(doc(db, 'invites', token))
-    if (!invSnap.exists()) {
-      console.warn('[invite] token not found:', token)
-      return null
+    if (!invSnap.exists()) { console.warn('[invite] token not found:', token); return null }
+
+    const guestName = localStorage.getItem('guest-name')
+    const profile = {
+      displayName: auth.currentUser?.displayName || guestName || '',
+      email:       auth.currentUser?.email || '',
     }
-    return await acceptInvite(uid, token, invSnap.data(), {
-      displayName: auth.currentUser?.displayName ?? '',
-      email:       auth.currentUser?.email ?? '',
-    })
+    if (guestName) localStorage.removeItem('guest-name')
+
+    return await acceptInvite(uid, token, invSnap.data(), profile)
   } catch (e) {
     console.warn('[invite] accept failed:', e)
     return null
   }
 }
 
-// Grąžina collectionId pagal vartotojo profilį arba sukuria naują
+// Nuskaito visų vartotojo kolekcijų sąrašą su vardais ir rolėmis
+async function loadAllCollections(uid, colIds) {
+  const results = await Promise.all(colIds.map(async id => {
+    try {
+      const snap = await getDoc(doc(db, 'collections', id))
+      if (!snap.exists()) return null
+      const d = snap.data()
+      return { id, name: d.name || 'Kolekcija', role: d.roles?.[uid] ?? 'member', ownerId: d.ownerId }
+    } catch { return null }
+  }))
+  return results.filter(Boolean)
+}
+
+// Grąžina aktyvios kolekcijos info arba sukuria naują
 async function getOrCreateCollection(uid) {
   // Invite turi pirmenybę — net jei vartotojas jau egzistuoja
   const inviteColId = await processPendingInvite(uid)
-  if (inviteColId) return inviteColId
 
   const userSnap = await getDoc(doc(db, 'users', uid))
-  if (userSnap.exists() && userSnap.data().primaryCollection) {
-    const d       = userSnap.data()
-    const colId   = d.primaryCollection
-    const name    = auth.currentUser?.displayName || ''
-    const email   = auth.currentUser?.email || ''
 
-    // Išsaugome profilį kolekcijai — kad kiti nariai matytų vardą
-    setDoc(doc(db, 'collections', colId), {
+  if (inviteColId) {
+    const colSnap  = await getDoc(doc(db, 'collections', inviteColId))
+    const colData  = colSnap.data() ?? {}
+    const role     = colData.roles?.[uid] ?? 'member'
+    const colIds   = userSnap.exists() ? (userSnap.data().collections ?? [inviteColId]) : [inviteColId]
+    const allCols  = await loadAllCollections(uid, [...new Set([...colIds, inviteColId])])
+    return { colId: inviteColId, role, ownColId: userSnap.data()?.ownCollection ?? null, allCollections: allCols }
+  }
+
+  if (userSnap.exists() && userSnap.data().primaryCollection) {
+    const d         = userSnap.data()
+    const colId     = d.primaryCollection
+    const ownColId  = d.ownCollection ?? colId
+
+    // Nuskaityti kolekciją — lazy detection + role
+    const colSnap = await getDoc(doc(db, 'collections', colId))
+    let activeColId = colId
+    let role        = 'owner'
+
+    if (colSnap.exists()) {
+      const members = colSnap.data().members ?? []
+      if (!members.includes(uid)) {
+        // Pašalintas iš kolekcijos — grįžta į asmeninę
+        console.log('[auth] removed from collection, switching to own:', ownColId)
+        activeColId = ownColId
+        await setDoc(doc(db, 'users', uid), { primaryCollection: ownColId }, { merge: true })
+      } else {
+        role = colSnap.data().roles?.[uid] ?? 'member'
+      }
+    }
+
+    // Atnaujinti memberProfiles + vardą
+    const name  = auth.currentUser?.displayName || ''
+    const email = auth.currentUser?.email || ''
+    setDoc(doc(db, 'collections', activeColId), {
       [`memberProfiles.${uid}`]: { displayName: name, email },
     }, { merge: true }).catch(() => {})
-
-    // Jei vardas dar neišsaugotas users doc'e
     if (!d.displayName && name) {
       setDoc(doc(db, 'users', uid), { displayName: name, email }, { merge: true }).catch(() => {})
     }
-    return colId
+
+    const colIds  = d.collections ?? [activeColId]
+    const allCols = await loadAllCollections(uid, [...new Set(colIds)])
+    return { colId: activeColId, role, ownColId, allCollections: allCols }
   }
-  // Senasis doc formatas (turi plants[], bet ne primaryCollection) arba doc neegzistuoja
-  // → paleidžiame migraciją
-  return runMigration(uid)
+
+  // Naujas vartotojas — migracija
+  const colId   = await runMigration(uid)
+  const allCols = [{ id: colId, name: 'Mano augalai', role: 'owner', ownerId: uid }]
+  return { colId, role: 'owner', ownColId: colId, allCollections: allCols }
 }
 
 /**
- * useAuth — Google Sign-In hook
- * Grąžina: { user, collectionId, loading, authError, signIn, signOut }
+ * useAuth — autentifikacijos hook
+ * Grąžina: { user, collectionId, role, ownCollectionId, allCollections,
+ *            loading, authError, loadingMessage,
+ *            signIn, signInAsGuest, signOut, switchCollection, renameCollection }
  */
 export function useAuth() {
-  const [state, setState] = useState({ user: null, collectionId: null, loading: true, authError: null, loadingMessage: null })
+  const [state, setState] = useState({
+    user: null, collectionId: null, role: 'owner',
+    ownCollectionId: null, allCollections: [],
+    loading: true, authError: null, loadingMessage: null,
+  })
 
   useEffect(() => {
-    // Server-side OAuth callback (iOS standalone PWA)
-    // /api/auth/callback grąžina ?googleIdToken=TOKEN į šį puslapį
-    const urlParams = new URLSearchParams(window.location.search)
-    const googleIdToken = urlParams.get('googleIdToken')
+    const urlParams      = new URLSearchParams(window.location.search)
+    const googleIdToken  = urlParams.get('googleIdToken')
     const authErrorParam = urlParams.get('authError')
 
     if (googleIdToken) {
       window.history.replaceState({}, '', window.location.pathname)
       signInWithCredential(auth, GoogleAuthProvider.credential(googleIdToken))
-        .catch(e => {
-          console.error('[auth] signInWithCredential error:', e)
-          setState(s => ({ ...s, loading: false, authError: e.message ?? 'Prisijungimo klaida' }))
-        })
-      // onAuthStateChanged suveiks kai signInWithCredential baigs — toliau nestabdome
+        .catch(e => setState(s => ({ ...s, loading: false, authError: e.message ?? 'Prisijungimo klaida' })))
     }
-
     if (authErrorParam) {
       window.history.replaceState({}, '', window.location.pathname)
       setState(s => ({ ...s, loading: false, authError: decodeURIComponent(authErrorParam) }))
     }
 
-    // redirectDone: true kai getRedirectResult jau išspręstas
-    // Apsaugo nuo to kad onAuthStateChanged(null) anksti nutrauktų loading
     let redirectDone = false
 
     const unsub = onAuthStateChanged(auth, async (user) => {
-      // Jei redirect dar neapdorotas ir nėra vartotojo — palaukiame
       if (!user && !redirectDone) return
-
       if (!user) {
-        setState({ user: null, collectionId: null, loading: false, authError: null })
+        setState({ user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, authError: null, loadingMessage: null })
         return
       }
-
-      // Iš karto rodyti spinner — kolekcijos kūrimas gali užtrukti kelias sekundes
       setState(s => ({ ...s, loading: true, loadingMessage: 'Ruošiama kolekcija…' }))
-
       try {
-        const collectionId = await getOrCreateCollection(user.uid)
-        setState({ user, collectionId, loading: false, authError: null, loadingMessage: null })
+        const { colId, role, ownColId, allCollections } = await getOrCreateCollection(user.uid)
+        setState({ user, collectionId: colId, role, ownCollectionId: ownColId, allCollections, loading: false, authError: null, loadingMessage: null })
       } catch (e) {
         console.error('[useAuth] profile error:', e)
-        setState({ user, collectionId: null, loading: false, authError: null, loadingMessage: null })
+        setState({ user, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, authError: null, loadingMessage: null })
       }
     })
 
-    // Apdorojame redirect rezultatą
-    // getRedirectResult turi būti tikrinamas prieš onAuthStateChanged settle'inasi
     getRedirectResult(auth)
-      .then(async result => {
-        if (result?.user) {
-          // Redirect sėkmingas — onAuthStateChanged irgi suveiks, bet
-          // setState jau bus atliktas tada (loading:true nustatytas aukščiau)
-          console.log('[auth] redirect result user:', result.user.email)
-        }
-      })
-      .catch(e => {
-        if (e?.code !== 'auth/null-user') {
-          console.error('[auth] redirect error:', e)
-          setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' }))
-        }
-      })
+      .then(result => { if (result?.user) console.log('[auth] redirect:', result.user.email) })
+      .catch(e => { if (e?.code !== 'auth/null-user') setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' })) })
       .finally(() => {
         redirectDone = true
-        if (!auth.currentUser) {
-          setState({ user: null, collectionId: null, loading: false, authError: null, loadingMessage: null })
-        }
+        if (!auth.currentUser) setState({ user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, authError: null, loadingMessage: null })
       })
 
     return unsub
@@ -224,30 +229,51 @@ export function useAuth() {
 
   const signIn = async () => {
     setState(s => ({ ...s, authError: null }))
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-      || window.navigator.standalone === true
-
-    if (isStandalone) {
-      // iOS standalone PWA: server-side OAuth — WebView naviguoja per mūsų serverį,
-      // gauname Google ID tokeną URL'e, signInWithCredential jį naudoja be redirect problemų
-      window.location.href = '/api/auth/google-start'
-      return
-    }
-
-    // Naršyklė: popup (veikia su Chrome 120+ third-party cookie apribojimais)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true
+    if (isStandalone) { window.location.href = '/api/auth/google-start'; return }
     try {
       await signInWithPopup(auth, googleProvider)
     } catch (e) {
       const fallbackCodes = ['auth/popup-blocked', 'auth/popup-closed-by-user', 'auth/cancelled-popup-request']
-      if (fallbackCodes.includes(e?.code)) {
-        return signInWithRedirect(auth, googleProvider)
-      }
-      console.error('[auth] signInWithPopup error:', e)
+      if (fallbackCodes.includes(e?.code)) return signInWithRedirect(auth, googleProvider)
       setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' }))
     }
   }
 
+  // Anoniminis prisijungimas — viewer invitams (be Google)
+  const signInAsGuest = async (displayName) => {
+    setState(s => ({ ...s, authError: null }))
+    const name = displayName?.trim() || 'Prižiūrėtojas'
+    if (name) localStorage.setItem('guest-name', name)
+    try {
+      const { user } = await signInAnonymously()
+      if (name) await updateProfile(user, { displayName: name }).catch(() => {})
+    } catch (e) {
+      setState(s => ({ ...s, authError: e?.message ?? 'Klaida' }))
+    }
+  }
+
+  // Perjungia aktyvią kolekciją
+  const switchCollection = async (colId) => {
+    const { user, allCollections } = state
+    if (!user || !colId) return
+    await setDoc(doc(db, 'users', user.uid), { primaryCollection: colId }, { merge: true })
+    const col  = allCollections.find(c => c.id === colId)
+    const role = col?.role ?? 'member'
+    setState(s => ({ ...s, collectionId: colId, role }))
+  }
+
+  // Pervardina kolekciją (tik owner)
+  const renameCollection = async (colId, name) => {
+    if (!name?.trim()) return
+    await setDoc(doc(db, 'collections', colId), { name: name.trim() }, { merge: true })
+    setState(s => ({
+      ...s,
+      allCollections: s.allCollections.map(c => c.id === colId ? { ...c, name: name.trim() } : c),
+    }))
+  }
+
   const signOut = () => firebaseSignOut(auth)
 
-  return { ...state, signIn, signOut }
+  return { ...state, signIn, signInAsGuest, signOut, switchCollection, renameCollection }
 }

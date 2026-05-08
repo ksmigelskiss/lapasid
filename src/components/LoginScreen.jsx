@@ -1,22 +1,33 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-export default function LoginScreen({ onSignIn, loading = false, error = null }) {
-  const [signingIn, setSigningIn] = useState(false)
+export default function LoginScreen({ onSignIn, onSignInAsGuest, loading = false, error = null }) {
+  const [signingIn,    setSigningIn]    = useState(false)
+  const [guestName,    setGuestName]    = useState('')
+  const [joiningGuest, setJoiningGuest] = useState(false)
+
+  // Viewer invite — rodyti svečio prisijungimą
+  const urlParams   = new URLSearchParams(window.location.search)
+  const inviteToken = urlParams.get('invite')
+  const inviteRole  = urlParams.get('role')
+  const isViewer    = !!(inviteToken && inviteRole === 'viewer')
+  const isMember    = !!(inviteToken && inviteRole !== 'viewer')
 
   const handleSignIn = async () => {
     setSigningIn(true)
-    try {
-      await onSignIn()
-    } finally {
-      // Keep spinner if redirect happened (page unloads); clear if popup closed/errored
-      setSigningIn(false)
-    }
+    try { await onSignIn() } finally { setSigningIn(false) }
   }
+
+  const handleGuestJoin = async () => {
+    setJoiningGuest(true)
+    try { await onSignInAsGuest?.(guestName || 'Prižiūrėtojas') }
+    finally { setJoiningGuest(false) }
+  }
+
   return (
     <div className="fixed inset-0 bg-app flex flex-col items-center justify-center px-8">
       <motion.div
-        className="flex flex-col items-center gap-8 w-full max-w-[320px]"
+        className="flex flex-col items-center gap-6 w-full max-w-[320px]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
@@ -26,21 +37,61 @@ export default function LoginScreen({ onSignIn, loading = false, error = null })
           <img src="/plant_pot.png" alt="" className="w-20 h-20 object-contain" />
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900">Gėlių žinynas</h1>
-            <p className="text-sm text-gray-500 mt-1">Tavo augalų kolekcija</p>
+            {isViewer
+              ? <p className="text-sm text-gray-500 mt-1">Kvietimas prižiūrėti augalus 🌿</p>
+              : isMember
+              ? <p className="text-sm text-gray-500 mt-1">Prisijunk prie kolekcijos</p>
+              : <p className="text-sm text-gray-500 mt-1">Tavo augalų kolekcija</p>
+            }
           </div>
         </div>
 
-        {/* Sign in button */}
+        {/* Viewer invite — svečio prisijungimas */}
+        {isViewer && (
+          <div className="w-full flex flex-col gap-3">
+            <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3.5">
+              <p className="text-xs text-gray-400 mb-1.5">Kaip jus vadinti?</p>
+              <input
+                type="text"
+                value={guestName}
+                onChange={e => setGuestName(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleGuestJoin()}
+                placeholder="Prižiūrėtojas"
+                className="w-full text-sm text-gray-800 outline-none placeholder-gray-400"
+                autoFocus
+              />
+            </div>
+            <button
+              onClick={handleGuestJoin}
+              disabled={loading || joiningGuest}
+              className="w-full flex items-center justify-center gap-3 bg-sage-500 rounded-2xl px-6 py-4 shadow-ios-card active:scale-95 transition-transform disabled:opacity-60"
+            >
+              {(loading || joiningGuest)
+                ? <img src="/plant_pot.png" className="w-5 h-5 animate-spin" alt="" />
+                : <span className="text-base">🌿</span>
+              }
+              <span className="text-sm font-semibold text-white">
+                {(loading || joiningGuest) ? 'Jungiamasi...' : 'Tęsti kaip svečias'}
+              </span>
+            </button>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-gray-200" />
+              <span className="text-xs text-gray-400">arba</span>
+              <div className="flex-1 h-px bg-gray-200" />
+            </div>
+          </div>
+        )}
+
+        {/* Google prisijungimas */}
         <button
           onClick={handleSignIn}
           disabled={loading || signingIn}
           className="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 rounded-2xl px-6 py-4 shadow-ios-card active:scale-95 transition-transform disabled:opacity-60"
         >
-          {(loading || signingIn) ? (
-            <img src="/plant_pot.png" className="w-5 h-5 animate-spin" alt="" />
-          ) : (
-            <GoogleIcon />
-          )}
+          {(loading || signingIn)
+            ? <img src="/plant_pot.png" className="w-5 h-5 animate-spin" alt="" />
+            : <GoogleIcon />
+          }
           <span className="text-sm font-semibold text-gray-800">
             {(loading || signingIn) ? 'Jungiamasi...' : 'Prisijungti su Google'}
           </span>

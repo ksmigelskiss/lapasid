@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
-import { getAuth, GoogleAuthProvider, setPersistence, browserLocalPersistence } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, setPersistence, browserLocalPersistence, signInAnonymously as _signInAnonymously, updateProfile } from 'firebase/auth'
 import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
@@ -21,3 +21,6 @@ export const googleProvider = new GoogleAuthProvider()
 
 // Explicit localStorage persistence — apsaugo nuo redirect session praradimo mobile
 setPersistence(auth, browserLocalPersistence).catch(() => {})
+
+export const signInAnonymously = () => _signInAnonymously(auth)
+export { updateProfile }

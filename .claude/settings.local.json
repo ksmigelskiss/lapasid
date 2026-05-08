@@ -40,7 +40,8 @@
       "Bash(npx tsc *)",
       "Bash(git checkout *)",
       "Bash(git tag *)",
-      "Bash(git merge *)"
+      "Bash(git merge *)",
+      "Bash(grep -n \"^  \\)$\" /Users/kestutissmigelskis/geliu-db/src/components/SearchModal.jsx)"
     ]
   }
 }

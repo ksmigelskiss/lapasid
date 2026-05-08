@@ -16,7 +16,11 @@ const Biblioteka  = lazy(() => import('./pages/Biblioteka'))
 const Zinynas     = lazy(() => import('./pages/Zinynas'))
 
 export default function App() {
-  const { user, collectionId, loading: authLoading, authError, loadingMessage, signIn, signOut } = useAuth()
+  const {
+    user, collectionId, role, ownCollectionId, allCollections,
+    loading: authLoading, authError, loadingMessage,
+    signIn, signInAsGuest, signOut, switchCollection, renameCollection,
+  } = useAuth()
 
   // Išsaugome invite tokeną localStorage — fallback jei processPendingInvite
   // neužspėja nuskaityti URL prieš sign-in redirect
@@ -196,7 +200,7 @@ export default function App() {
     )
   }
   if (!user) {
-    return <LoginScreen onSignIn={signIn} error={authError} />
+    return <LoginScreen onSignIn={signIn} onSignInAsGuest={signInAsGuest} error={authError} />
   }
   // Vartotojas prisijungęs, bet kolekcija nesukurta (Firestore rules klaida arba tinklas)
   if (!collectionId) {
@@ -237,6 +241,11 @@ export default function App() {
         onReorderZones={reorderZones}
         user={user}
         collectionId={collectionId}
+        role={role}
+        ownCollectionId={ownCollectionId}
+        allCollections={allCollections}
+        onSwitchCollection={switchCollection}
+        onRenameCollection={renameCollection}
         onSignOut={signOut}
       />
     )},
