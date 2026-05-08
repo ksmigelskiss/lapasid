@@ -35,7 +35,7 @@ function ZinynasCard({ entry, expanded, onToggle, onDelete, onToggleStar, onChat
 
   return (
     <motion.div
-      className="bg-surface rounded-2xl px-4 py-3.5 cursor-pointer active:bg-surface-2 transition-colors"
+      className="bg-white rounded-2xl px-4 py-3.5 cursor-pointer shadow-ios active:bg-surface transition-colors"
       onClick={onToggle}
       layout
       transition={{ duration: 0.2 }}
@@ -110,7 +110,7 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, plants
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-app">
       {/* Header */}
       <div className="px-5 pt-14 pb-3 flex-shrink-0">
         <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em] mb-1">Sodininkystė</p>
@@ -132,7 +132,7 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, plants
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Ieškoti žinyne..."
-            className="w-full bg-surface-2 rounded-2xl pl-9 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none"
+            className="w-full bg-white border border-gray-200 rounded-2xl pl-9 pr-4 py-2.5 text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-gray-400 transition-colors"
           />
           {query && (
             <button
@@ -159,7 +159,7 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, plants
                 transition={{ duration: 0.18 }}
               >
                 <textarea
-                  className="w-full bg-surface rounded-2xl px-4 py-3 text-sm text-gray-800 placeholder-gray-400 outline-none resize-none border border-transparent focus:border-sage-300 transition-colors"
+                  className="w-full bg-white border border-gray-200 rounded-2xl px-4 py-3 text-sm text-gray-800 placeholder-gray-400 outline-none resize-none focus:border-sage-300 transition-colors"
                   rows={5}
                   value={newText}
                   onChange={e => setNewText(e.target.value)}
@@ -169,7 +169,7 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, plants
                 <div className="flex gap-2">
                   <button
                     onClick={() => { setAdding(false); setNewText('') }}
-                    className="flex-1 py-2.5 rounded-2xl text-sm text-gray-500 bg-surface-2"
+                    className="flex-1 py-2.5 rounded-2xl text-sm text-gray-500 bg-surface border border-gray-200"
                   >
                     Atšaukti
                   </button>
