@@ -27,7 +27,8 @@ function loadLocal(colId) {
       if (old) return migrate(JSON.parse(old))
     }
   } catch {}
-  return initialData
+  // Nauji vartotojai gauna tuščią kolekciją — initialData tik legacy fallback
+  return { plants: [], zinynas: [], zones: [], settings: {} }
 }
 
 const makeId = _makeId
