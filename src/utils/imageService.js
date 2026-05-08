@@ -1,5 +1,5 @@
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { storage, authReady } from './firebase'
+import { storage } from './firebase'
 
 // ── Fetch ──────────────────────────────────────────────────────
 
@@ -118,7 +118,7 @@ export function resizeImage(file, maxSize = 900, quality = 0.82) {
  */
 export async function uploadImage(dataUrl, plantId) {
   if (!dataUrl.startsWith('data:')) return dataUrl
-  await authReady
+  // auth garantuota App.jsx lygyje — uploadImage kviečiamas tik prisijungus
   try {
     const base64 = dataUrl.split(',')[1]
     const mime   = dataUrl.match(/data:([^;]+)/)?.[1] ?? 'image/jpeg'

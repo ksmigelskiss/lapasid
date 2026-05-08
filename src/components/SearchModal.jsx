@@ -1,16 +1,24 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight } from 'lucide-react'
-import Anthropic from '@anthropic-ai/sdk'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
 import { ProfileContent } from './PlantDetail'
 
-const client = new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true,
-})
+// Calls server-side proxy — Anthropic API key never in browser
+async function claudeCall(body) {
+  const res = await fetch('/api/claude', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(body),
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error ?? `HTTP ${res.status}`)
+  }
+  return res.json()
+}
 
 // ── Phase 1: fast preview (name, stats, description, facts) ──────
 const TOOL_PREVIEW = {
@@ -131,13 +139,12 @@ Laistymas (dienomis): sultingi vasara 14–21, vidutiniai 7–14, paparčiai 3�
 
 
 async function fetchDetails(latinName, name) {
-  const r = await client.messages.create({
-    model:       'claude-sonnet-4-6',
-    max_tokens:  2048,
-    system:      PLANT_SYSTEM,
-    tools:       [TOOL_DETAILS],
-    tool_choice: { type: 'tool', name: 'plant_details' },
-    messages:    [{ role: 'user', content: `Pateik išsamią priežiūros informaciją apie augalą "${latinName}" (${name}).` }],
+  const r = await claudeCall({
+    maxTokens:  2048,
+    system:     PLANT_SYSTEM,
+    tools:      [TOOL_DETAILS],
+    toolChoice: { type: 'tool', name: 'plant_details' },
+    messages:   [{ role: 'user', content: `Pateik išsamią priežiūros informaciją apie augalą "${latinName}" (${name}).` }],
   })
   const block = r.content.find(b => b.type === 'tool_use' && b.name === 'plant_details')
   return block?.input ?? {}
@@ -228,13 +235,12 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
 
     try {
       // ── Phase 1: fast preview ──────────────────────────────────
-      const r1 = await client.messages.create({
-        model:       'claude-sonnet-4-6',
-        max_tokens:  1024,
-        system:      PLANT_SYSTEM,
-        tools:       [TOOL_PREVIEW],
-        tool_choice: { type: 'tool', name: 'plant_preview' },
-        messages:    [{ role: 'user', content: `Rask informaciją apie augalą: "${q}"` }],
+      const r1 = await claudeCall({
+        maxTokens:  1024,
+        system:     PLANT_SYSTEM,
+        tools:      [TOOL_PREVIEW],
+        toolChoice: { type: 'tool', name: 'plant_preview' },
+        messages:   [{ role: 'user', content: `Rask informaciją apie augalą: "${q}"` }],
       })
       if (controller.signal.aborted) return
 
@@ -274,13 +280,12 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       }
 
       // ── Phase 1: fast preview ──────────────────────────────────
-      const r1 = await client.messages.create({
-        model:       'claude-sonnet-4-6',
-        max_tokens:  1024,
-        system:      PLANT_SYSTEM,
-        tools:       [TOOL_PREVIEW],
-        tool_choice: { type: 'tool', name: 'plant_preview' },
-        messages:    [userMsg],
+      const r1 = await claudeCall({
+        maxTokens:  1024,
+        system:     PLANT_SYSTEM,
+        tools:      [TOOL_PREVIEW],
+        toolChoice: { type: 'tool', name: 'plant_preview' },
+        messages:   [userMsg],
       })
 
       const previewBlock = r1.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')

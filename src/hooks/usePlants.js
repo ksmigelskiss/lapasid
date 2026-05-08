@@ -1,65 +1,83 @@
-import { useState, useCallback, useEffect } from 'react'
-import { getDoc, setDoc } from 'firebase/firestore'
-import { DATA_DOC, authReady } from '../utils/firebase'
+import { useState, useCallback, useEffect, useRef } from 'react'
+import { getDoc, setDoc, doc } from 'firebase/firestore'
+import { db } from '../utils/firebase'
 import initialData from '../data/plants.json'
 import { fromAIResult, makeId as _makeId, today as _today } from '../utils/plantTransform'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 
 export { fromAIResult }
 
-const STORAGE_KEY = 'geliu-db'
+// localStorage key namespaced by collectionId — keli vartotojai viename įrenginyje
+function storageKey(collectionId) {
+  return collectionId ? `geliu-db-${collectionId}` : 'geliu-db'
+}
 
-function loadLocal() {
+function loadLocal(colId) {
+  const key = storageKey(colId)
   try {
-    // Try current key first
-    const stored = localStorage.getItem(STORAGE_KEY)
+    const stored = localStorage.getItem(key)
     if (stored) return migrate(JSON.parse(stored))
 
-    // Fall back to legacy versioned keys (existing installs)
-    for (const key of LEGACY_KEYS) {
-      const legacy = localStorage.getItem(key)
-      if (legacy) return migrate(JSON.parse(legacy))
+    // Pirmasis prisijungimas šiame įrenginyje — bandome senąjį raktą (migracijos duomenys)
+    const legacy = localStorage.getItem('geliu-db')
+    if (legacy) return migrate(JSON.parse(legacy))
+
+    for (const k of LEGACY_KEYS) {
+      const old = localStorage.getItem(k)
+      if (old) return migrate(JSON.parse(old))
     }
   } catch {}
   return initialData
-}
-
-function saveLocal(data) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {}
-}
-
-// Write to Firestore — waits for auth, fire and forget, never blocks UI
-function saveRemote(data) {
-  authReady.then(() => setDoc(DATA_DOC, data))
-    .catch(e => console.warn('[firestore] save failed:', e))
 }
 
 const makeId = _makeId
 const today  = _today
 
 
-export function usePlants() {
-  const [data, setData] = useState(loadLocal)
+export function usePlants(collectionId) {
+  const [data, setData] = useState(() => loadLocal(collectionId))
 
-  // Fetch from Firestore and update state
+  // Stable refs — leidžia useCallback nepriklausyti nuo collectionId
+  const colIdRef = useRef(collectionId)
+  useEffect(() => { colIdRef.current = collectionId })
+
+  // Išsaugo į localStorage + Firestore (fire-and-forget)
+  const update = useCallback((updater) => {
+    setData(prev => {
+      const next = updater(prev)
+      // localStorage
+      try { localStorage.setItem(storageKey(colIdRef.current), JSON.stringify(next)) } catch {}
+      // Firestore
+      const cid = colIdRef.current
+      if (cid) setDoc(doc(db, 'collections', cid), next)
+        .catch(e => console.warn('[firestore] save failed:', e))
+      return next
+    })
+  }, []) // stabilus — naudoja ref viduje
+
+  // Nuskaito iš Firestore (stabilus — naudoja ref)
   const syncFromRemote = useCallback(() => {
-    authReady.then(() => getDoc(DATA_DOC)).then(snap => {
+    const cid = colIdRef.current
+    if (!cid) return
+    getDoc(doc(db, 'collections', cid)).then(snap => {
       if (snap.exists()) {
         const remote = snap.data()
         setData(remote)
-        saveLocal(remote)
-      } else {
-        saveRemote(loadLocal())
+        try { localStorage.setItem(storageKey(cid), JSON.stringify(remote)) } catch {}
       }
     }).catch(e => console.warn('[firestore] load failed:', e))
-  }, [])
+  }, []) // stabilus — naudoja ref viduje
 
-  // On mount: initial sync
-  useEffect(() => { syncFromRemote() }, [syncFromRemote])
+  // Sinchronizacija kai collectionId tampa prieinamas (po auth) arba pasikeičia
+  const prevColId = useRef(null)
+  useEffect(() => {
+    if (collectionId && collectionId !== prevColId.current) {
+      prevColId.current = collectionId
+      syncFromRemote()
+    }
+  }, [collectionId, syncFromRemote])
 
-  // On visibility change: re-sync when app returns from background (iOS PWA)
+  // Grįžus iš fono — re-sync jei praėjo > 60s (iOS PWA)
   useEffect(() => {
     let hiddenAt = null
     const handle = () => {
@@ -68,21 +86,12 @@ export function usePlants() {
       } else if (document.visibilityState === 'visible') {
         const away = hiddenAt ? Date.now() - hiddenAt : Infinity
         hiddenAt = null
-        if (away > 60_000) syncFromRemote() // re-sync if away > 60s
+        if (away > 60_000) syncFromRemote()
       }
     }
     document.addEventListener('visibilitychange', handle)
     return () => document.removeEventListener('visibilitychange', handle)
   }, [syncFromRemote])
-
-  const update = useCallback((updater) => {
-    setData(prev => {
-      const next = updater(prev)
-      saveLocal(next)
-      saveRemote(next)
-      return next
-    })
-  }, [])
 
   const updatePlant = useCallback((id, patch) => {
     update(prev => ({
