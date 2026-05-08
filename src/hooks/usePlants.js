@@ -44,7 +44,8 @@ export function usePlants(collectionId) {
   // Išsaugo į localStorage + Firestore (fire-and-forget)
   const update = useCallback((updater) => {
     setData(prev => {
-      const next = updater(prev)
+      const safe = { plants: [], zinynas: [], zones: [], settings: {}, ...prev }
+      const next = updater(safe)
       // localStorage
       try { localStorage.setItem(storageKey(colIdRef.current), JSON.stringify(next)) } catch {}
       // Firestore
@@ -61,7 +62,8 @@ export function usePlants(collectionId) {
     if (!cid) return
     getDoc(doc(db, 'collections', cid)).then(snap => {
       if (snap.exists()) {
-        const remote = snap.data()
+        const raw    = snap.data()
+        const remote = { plants: [], zinynas: [], zones: [], settings: {}, ...raw }
         setData(remote)
         try { localStorage.setItem(storageKey(cid), JSON.stringify(remote)) } catch {}
       }
@@ -101,10 +103,11 @@ export function usePlants(collectionId) {
   }, [update])
 
   // Filtered views
-  const dashboard  = data.plants.filter(p => p.kategorija === 'auginama')
-  const wishlist   = data.plants.filter(p => p.kategorija === 'nori')
-  const history    = data.plants.filter(p => p.kategorija === 'istorija')
-  const library    = data.plants
+  const plants     = data.plants ?? []
+  const dashboard  = plants.filter(p => p.kategorija === 'auginama')
+  const wishlist   = plants.filter(p => p.kategorija === 'nori')
+  const history    = plants.filter(p => p.kategorija === 'istorija')
+  const library    = plants
   const zinynas    = data.zinynas  ?? []
   const zones      = data.zones   ?? []
   const settings   = data.settings ?? {}
