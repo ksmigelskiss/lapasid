@@ -148,7 +148,16 @@ async function getOrCreateCollection(uid) {
       } else {
         const cd = colSnap.data()
         role = cd.roles?.[uid] ?? (cd.ownerId === uid ? 'owner' : 'member')
-        console.log('[auth] role debug:', { uid, ownerId: cd.ownerId, roles: cd.roles, inferredRole: role })
+
+        // One-time fix: legacy collections were created with the old hardcoded UID as ownerId.
+        // If the user is a member but ownerId points to the legacy account → they ARE the owner.
+        if (role === 'member' && cd.ownerId === LEGACY_UID) {
+          role = 'owner'
+          setDoc(doc(db, 'collections', activeColId), {
+            ownerId:              uid,
+            [`roles.${uid}`]:     'owner',
+          }, { merge: true }).catch(() => {})
+        }
       }
     }
 
