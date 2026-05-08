@@ -195,19 +195,15 @@ export function useAuth() {
 
   const signIn = async () => {
     setState(s => ({ ...s, authError: null }))
-    // PWA standalone mode — redirect is more reliable inside installed PWA
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-      || window.navigator.standalone === true
-    if (isStandalone) {
-      return signInWithRedirect(auth, googleProvider)
-    }
-    // Browser: popup first (works with Chrome 120+ third-party cookie restrictions)
+    // Visur naudojame popup:
+    // - Naršyklėje: popup langas, veikia su Chrome 120+ (ne third-party cookies)
+    // - iOS PWA standalone: signInWithPopup atidaro SFSafariViewController (tikras Safari),
+    //   kurį Google laiko saugiu. signInWithRedirect naudoja WKWebView — Google blokuoja.
     try {
       await signInWithPopup(auth, googleProvider)
     } catch (e) {
       const fallbackCodes = ['auth/popup-blocked', 'auth/popup-closed-by-user', 'auth/cancelled-popup-request']
       if (fallbackCodes.includes(e?.code)) {
-        // User closed popup or it was blocked — try redirect
         return signInWithRedirect(auth, googleProvider)
       }
       console.error('[auth] signInWithPopup error:', e)
