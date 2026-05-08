@@ -3,6 +3,8 @@ import {
   onAuthStateChanged,
   signInWithPopup,
   signInWithRedirect,
+  signInWithCredential,
+  GoogleAuthProvider,
   getRedirectResult,
   signOut as firebaseSignOut,
 } from 'firebase/auth'
@@ -142,6 +144,27 @@ export function useAuth() {
   const [state, setState] = useState({ user: null, collectionId: null, loading: true, authError: null, loadingMessage: null })
 
   useEffect(() => {
+    // Server-side OAuth callback (iOS standalone PWA)
+    // /api/auth/callback grąžina ?googleIdToken=TOKEN į šį puslapį
+    const urlParams = new URLSearchParams(window.location.search)
+    const googleIdToken = urlParams.get('googleIdToken')
+    const authErrorParam = urlParams.get('authError')
+
+    if (googleIdToken) {
+      window.history.replaceState({}, '', window.location.pathname)
+      signInWithCredential(auth, GoogleAuthProvider.credential(googleIdToken))
+        .catch(e => {
+          console.error('[auth] signInWithCredential error:', e)
+          setState(s => ({ ...s, loading: false, authError: e.message ?? 'Prisijungimo klaida' }))
+        })
+      // onAuthStateChanged suveiks kai signInWithCredential baigs — toliau nestabdome
+    }
+
+    if (authErrorParam) {
+      window.history.replaceState({}, '', window.location.pathname)
+      setState(s => ({ ...s, loading: false, authError: decodeURIComponent(authErrorParam) }))
+    }
+
     // redirectDone: true kai getRedirectResult jau išspręstas
     // Apsaugo nuo to kad onAuthStateChanged(null) anksti nutrauktų loading
     let redirectDone = false
@@ -199,9 +222,10 @@ export function useAuth() {
       || window.navigator.standalone === true
 
     if (isStandalone) {
-      // Standalone PWA: redirect per augalai.crazyeuropean.eu/__/auth/handler
-      // (authDomain = mūsų domenas + Vercel proxy + Google Console redirect URI — visi suderinti)
-      return signInWithRedirect(auth, googleProvider)
+      // iOS standalone PWA: server-side OAuth — WebView naviguoja per mūsų serverį,
+      // gauname Google ID tokeną URL'e, signInWithCredential jį naudoja be redirect problemų
+      window.location.href = '/api/auth/google-start'
+      return
     }
 
     // Naršyklė: popup (veikia su Chrome 120+ third-party cookie apribojimais)
