@@ -45,10 +45,16 @@ export function usePlants(collectionId) {
   // Vienkartinė migracija: plants[] iš pagrindinio doc → subkolekcija + katalogas
   const migrateToSubcollection = useCallback(async (cid, plants) => {
     console.log('[migration] plants[] → subcollection, n=', plants.length)
-    await Promise.all(plants.map(p =>
-      setDoc(doc(db, 'collections', cid, 'plants', p.id), p)
-    ))
-    // Katalogo užpildymas iš esamų augalų (fire-and-forget, nekartojame jei jau yra)
+    // allSettled — vieno klaida nesutraukia kitų
+    const results = await Promise.allSettled(
+      plants.map(p => setDoc(doc(db, 'collections', cid, 'plants', p.id), p))
+    )
+    const failed = results.filter(r => r.status === 'rejected').length
+    if (failed > 0) {
+      console.warn(`[migration] ${failed}/${plants.length} plants write failed — will retry next sync`)
+      return // Netrinkame plants[] kol ne visi įrašyti
+    }
+    // Katalogo užpildymas iš esamų augalų
     plants.forEach(p => { if (p.lotyniskas) saveToCatalog(p).catch(() => {}) })
     // Pašaliname plants[] iš pagrindinio doc (paliekame tik metadata)
     const snap = await getDoc(doc(db, 'collections', cid))
@@ -113,16 +119,16 @@ export function usePlants(collectionId) {
       const meta   = metaSnap.exists() ? metaSnap.data() : {}
       const plants = plantsSnap.docs.map(d => d.data())
 
-      // Sena struktūra aptikta: plants[] vis dar pagrindiniame doc, subkolekcija tuščia
-      if (meta.plants?.length > 0 && plants.length === 0) {
-        const legacy = {
-          plants:   meta.plants,
-          zinynas:  meta.zinynas  ?? [],
-          zones:    meta.zones    ?? [],
-          settings: meta.settings ?? {},
-        }
-        setData(legacy)
-        try { localStorage.setItem(storageKey(cid), JSON.stringify(legacy)) } catch {}
+      // Sena struktūra aptikta: plants[] vis dar pagrindiniame doc
+      // Tvarko tiek pilną (subkolekcija tuščia), tiek dalinę migraciją (keletas augalų jau perkelti)
+      if (meta.plants?.length > 0) {
+        // Suliejame abu šaltinius: pagrindinis doc + subkolekcija (subkolekcija turi pirmenybę — naujesnė)
+        const byId = new Map(meta.plants.map(p => [p.id, p]))
+        plants.forEach(p => byId.set(p.id, p))
+        const merged = [...byId.values()]
+        const remote = { plants: merged, zinynas: meta.zinynas ?? [], zones: meta.zones ?? [], settings: meta.settings ?? {} }
+        setData(remote)
+        try { localStorage.setItem(storageKey(cid), JSON.stringify(remote)) } catch {}
         migrateToSubcollection(cid, meta.plants).catch(console.error)
         return
       }
