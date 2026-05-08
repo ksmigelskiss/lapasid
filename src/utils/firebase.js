@@ -5,7 +5,7 @@ import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey:            'AIzaSyCrmPG0svbkL8irAwsRutwZURnpqgqieds',
-  authDomain:        'augalai.crazyeuropean.eu',
+  authDomain:        'geliu-db.firebaseapp.com',
   projectId:         'geliu-db',
   storageBucket:     'geliu-db.firebasestorage.app',
   messagingSenderId: '429930306781',
