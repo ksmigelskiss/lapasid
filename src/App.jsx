@@ -8,7 +8,6 @@ import Dashboard from './pages/Dashboard'
 import { usePlants } from './hooks/usePlants'
 import { useAuth } from './hooks/useAuth'
 import LoginScreen from './components/LoginScreen'
-import PinGate from './components/PinGate'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
 
 const SearchModal = lazy(() => import('./components/SearchModal'))
@@ -268,7 +267,6 @@ export default function App() {
   ]
 
   return (
-    <PinGate>
     <div className="flex flex-col h-dvh overflow-hidden">
       <div className="flex-1 overflow-hidden relative">
         {tabs.map(({ key, page }) => mountedTabs.has(key) && (
@@ -383,6 +381,5 @@ export default function App() {
 
 
     </div>
-    </PinGate>
   )
 }
