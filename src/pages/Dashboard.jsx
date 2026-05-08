@@ -520,7 +520,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     : sortedPlants
 
   return (
-    <div className="flex flex-col h-full bg-surface">
+    <div className="flex flex-col h-full bg-app">
       {/* Header */}
       <div className="px-5 pt-14 pb-4">
         <div className="flex items-center justify-between">
