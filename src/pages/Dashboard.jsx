@@ -527,18 +527,20 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       <div className="px-5 pt-14 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <button
-              onClick={() => setShowProfile(true)}
-              className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 active:opacity-70 transition-opacity mb-1.5"
-            >
-              {user?.photoURL
-                ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
-                : <div className="w-full h-full bg-sage-100 flex items-center justify-center">
-                    <UserCircle size={16} className="text-sage-500" />
-                  </div>
-              }
-            </button>
-            <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em] mb-0.5">Mano kolekcija</p>
+            <div className="flex items-center gap-2 mb-0.5">
+              <button
+                onClick={() => setShowProfile(true)}
+                className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 active:opacity-70 transition-opacity"
+              >
+                {user?.photoURL
+                  ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                  : <div className="w-full h-full bg-sage-100 flex items-center justify-center">
+                      <UserCircle size={12} className="text-sage-500" />
+                    </div>
+                }
+              </button>
+              <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em]">Mano kolekcija</p>
+            </div>
             <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight">Mano augalai</h1>
           </div>
           <div className="flex flex-col items-end gap-2">
