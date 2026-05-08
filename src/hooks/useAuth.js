@@ -105,7 +105,8 @@ async function loadAllCollections(uid, colIds) {
       const snap = await getDoc(doc(db, 'collections', id))
       if (!snap.exists()) return null
       const d = snap.data()
-      return { id, name: d.name || 'Kolekcija', role: d.roles?.[uid] ?? 'member', ownerId: d.ownerId }
+      const inferredRole = d.roles?.[uid] ?? (d.ownerId === uid ? 'owner' : 'member')
+      return { id, name: d.name || 'Kolekcija', role: inferredRole, ownerId: d.ownerId }
     } catch { return null }
   }))
   return results.filter(Boolean)
@@ -121,7 +122,7 @@ async function getOrCreateCollection(uid) {
   if (inviteColId) {
     const colSnap  = await getDoc(doc(db, 'collections', inviteColId))
     const colData  = colSnap.data() ?? {}
-    const role     = colData.roles?.[uid] ?? 'member'
+    const role     = colData.roles?.[uid] ?? (colData.ownerId === uid ? 'owner' : 'member')
     const colIds   = userSnap.exists() ? (userSnap.data().collections ?? [inviteColId]) : [inviteColId]
     const allCols  = await loadAllCollections(uid, [...new Set([...colIds, inviteColId])])
     return { colId: inviteColId, role, ownColId: userSnap.data()?.ownCollection ?? null, allCollections: allCols }
@@ -145,7 +146,8 @@ async function getOrCreateCollection(uid) {
         activeColId = ownColId
         await setDoc(doc(db, 'users', uid), { primaryCollection: ownColId }, { merge: true })
       } else {
-        role = colSnap.data().roles?.[uid] ?? 'member'
+        const cd = colSnap.data()
+        role = cd.roles?.[uid] ?? (cd.ownerId === uid ? 'owner' : 'member')
       }
     }
 
