@@ -42,29 +42,6 @@ export function usePlants(collectionId) {
   const colIdRef = useRef(collectionId)
   useEffect(() => { colIdRef.current = collectionId })
 
-  // Vienkartinė migracija: plants[] iš pagrindinio doc → subkolekcija + katalogas
-  const migrateToSubcollection = useCallback(async (cid, plants) => {
-    console.log('[migration] plants[] → subcollection, n=', plants.length)
-    // allSettled — vieno klaida nesutraukia kitų
-    const results = await Promise.allSettled(
-      plants.map(p => setDoc(doc(db, 'collections', cid, 'plants', p.id), p))
-    )
-    const failed = results.filter(r => r.status === 'rejected').length
-    if (failed > 0) {
-      console.warn(`[migration] ${failed}/${plants.length} plants write failed — will retry next sync`)
-      return // Netrinkame plants[] kol ne visi įrašyti
-    }
-    // Katalogo užpildymas iš esamų augalų
-    plants.forEach(p => { if (p.lotyniskas) saveToCatalog(p).catch(() => {}) })
-    // Pašaliname plants[] iš pagrindinio doc (paliekame tik metadata)
-    const snap = await getDoc(doc(db, 'collections', cid))
-    if (snap.exists()) {
-      const { plants: _removed, ...meta } = snap.data()
-      await setDoc(doc(db, 'collections', cid), meta)
-    }
-    console.log('[migration] subcollection migration done')
-  }, [])
-
   // Išsaugo į localStorage + Firestore (fire-and-forget)
   const update = useCallback((updater) => {
     setData(prev => {
@@ -107,7 +84,7 @@ export function usePlants(collectionId) {
     })
   }, []) // stabilus — naudoja ref viduje
 
-  // Nuskaito iš Firestore (stabilus — naudoja ref)
+  // Nuskaito iš Firestore — sulieja visus šaltinius (stabilus — naudoja ref)
   const syncFromRemote = useCallback(() => {
     const cid = colIdRef.current
     if (!cid) return
@@ -116,28 +93,48 @@ export function usePlants(collectionId) {
       getDoc(doc(db, 'collections', cid)),
       getDocs(fsCol(db, 'collections', cid, 'plants')),
     ]).then(([metaSnap, plantsSnap]) => {
-      const meta   = metaSnap.exists() ? metaSnap.data() : {}
-      const plants = plantsSnap.docs.map(d => d.data())
+      const meta      = metaSnap.exists() ? metaSnap.data() : {}
+      const subPlants = plantsSnap.docs.map(d => d.data())
 
-      // Sena struktūra aptikta: plants[] vis dar pagrindiniame doc
-      // Tvarko tiek pilną (subkolekcija tuščia), tiek dalinę migraciją (keletas augalų jau perkelti)
-      if (meta.plants?.length > 0) {
-        // Suliejame abu šaltinius: pagrindinis doc + subkolekcija (subkolekcija turi pirmenybę — naujesnė)
-        const byId = new Map(meta.plants.map(p => [p.id, p]))
-        plants.forEach(p => byId.set(p.id, p))
-        const merged = [...byId.values()]
-        const remote = { plants: merged, zinynas: meta.zinynas ?? [], zones: meta.zones ?? [], settings: meta.settings ?? {} }
-        setData(remote)
-        try { localStorage.setItem(storageKey(cid), JSON.stringify(remote)) } catch {}
-        migrateToSubcollection(cid, meta.plants).catch(console.error)
-        return
-      }
+      // Suliejame visus šaltinius į vieną Map (subkolekcija turi aukščiausią prioritetą)
+      const byId = new Map()
+      if (meta.plants?.length > 0) meta.plants.forEach(p => byId.set(p.id, p)) // senas formatas
+      subPlants.forEach(p => byId.set(p.id, p))                                  // subkolekcija
 
+      // Saugiklis: localStorage gali turėti augalų dar nesinchronizuotų su Firestore
+      try {
+        const local = JSON.parse(localStorage.getItem(storageKey(cid)) || '{}')
+        if ((local.plants?.length ?? 0) > byId.size) {
+          local.plants.forEach(p => { if (!byId.has(p.id)) byId.set(p.id, p) })
+        }
+      } catch {}
+
+      const plants = [...byId.values()]
       const remote = { plants, zinynas: meta.zinynas ?? [], zones: meta.zones ?? [], settings: meta.settings ?? {} }
       setData(remote)
       try { localStorage.setItem(storageKey(cid), JSON.stringify(remote)) } catch {}
+
+      // Augalai, kurių dar nėra subkolekcijoje — įrašome
+      const subIds = new Set(subPlants.map(p => p.id))
+      const missing = plants.filter(p => !subIds.has(p.id))
+      if (missing.length > 0) {
+        console.log('[sync] pushing', missing.length, 'plants to subcollection')
+        missing.forEach(p => {
+          setDoc(doc(db, 'collections', cid, 'plants', p.id), p)
+            .catch(e => console.warn('[sync] plant push failed:', e))
+          if (p.lotyniskas) saveToCatalog(p).catch(() => {})
+        })
+      }
+
+      // Seną plants[] iš pagrindinio doc trinkame kai visi augalai jau subkolekcijoje
+      if (meta.plants?.length > 0 && missing.length === 0) {
+        const { plants: _, ...cleanMeta } = meta
+        setDoc(doc(db, 'collections', cid), cleanMeta)
+          .catch(e => console.warn('[sync] cleanup failed:', e))
+        console.log('[sync] migration complete — plants[] removed from main doc')
+      }
     }).catch(e => console.warn('[firestore] load failed:', e))
-  }, [migrateToSubcollection]) // stabilus — naudoja ref viduje
+  }, []) // stabilus — naudoja ref viduje
 
   // Sinchronizacija kai collectionId tampa prieinamas (po auth) arba pasikeičia
   const prevColId = useRef(null)
