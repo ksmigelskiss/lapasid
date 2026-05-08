@@ -17,7 +17,7 @@ const Biblioteka  = lazy(() => import('./pages/Biblioteka'))
 const Zinynas     = lazy(() => import('./pages/Zinynas'))
 
 export default function App() {
-  const { user, collectionId, loading: authLoading, signIn, signOut } = useAuth()
+  const { user, collectionId, loading: authLoading, authError, signIn, signOut } = useAuth()
 
   // Išsaugome invite tokeną prieš Google redirect'ą
   useEffect(() => {
@@ -193,7 +193,7 @@ export default function App() {
     )
   }
   if (!user) {
-    return <LoginScreen onSignIn={signIn} />
+    return <LoginScreen onSignIn={signIn} error={authError} />
   }
 
   const tabs = [

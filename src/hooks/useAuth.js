@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import {
   onAuthStateChanged,
+  signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
   signOut as firebaseSignOut,
@@ -123,10 +124,10 @@ async function getOrCreateCollection(uid) {
 
 /**
  * useAuth — Google Sign-In hook
- * Grąžina: { user, collectionId, loading, signIn, signOut }
+ * Grąžina: { user, collectionId, loading, authError, signIn, signOut }
  */
 export function useAuth() {
-  const [state, setState] = useState({ user: null, collectionId: null, loading: true })
+  const [state, setState] = useState({ user: null, collectionId: null, loading: true, authError: null })
 
   useEffect(() => {
     // redirectDone: true kai getRedirectResult jau išspręstas
@@ -165,7 +166,28 @@ export function useAuth() {
     return unsub
   }, [])
 
-  const signIn  = () => signInWithRedirect(auth, googleProvider)
+  const signIn = async () => {
+    setState(s => ({ ...s, authError: null }))
+    // PWA standalone mode — redirect is more reliable inside installed PWA
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true
+    if (isStandalone) {
+      return signInWithRedirect(auth, googleProvider)
+    }
+    // Browser: popup first (works with Chrome 120+ third-party cookie restrictions)
+    try {
+      await signInWithPopup(auth, googleProvider)
+    } catch (e) {
+      const fallbackCodes = ['auth/popup-blocked', 'auth/popup-closed-by-user', 'auth/cancelled-popup-request']
+      if (fallbackCodes.includes(e?.code)) {
+        // User closed popup or it was blocked — try redirect
+        return signInWithRedirect(auth, googleProvider)
+      }
+      console.error('[auth] signInWithPopup error:', e)
+      setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' }))
+    }
+  }
+
   const signOut = () => firebaseSignOut(auth)
 
   return { ...state, signIn, signOut }

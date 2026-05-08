@@ -1,6 +1,18 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-export default function LoginScreen({ onSignIn, loading = false }) {
+export default function LoginScreen({ onSignIn, loading = false, error = null }) {
+  const [signingIn, setSigningIn] = useState(false)
+
+  const handleSignIn = async () => {
+    setSigningIn(true)
+    try {
+      await onSignIn()
+    } finally {
+      // Keep spinner if redirect happened (page unloads); clear if popup closed/errored
+      setSigningIn(false)
+    }
+  }
   return (
     <div className="fixed inset-0 bg-app flex flex-col items-center justify-center px-8">
       <motion.div
@@ -20,19 +32,25 @@ export default function LoginScreen({ onSignIn, loading = false }) {
 
         {/* Sign in button */}
         <button
-          onClick={onSignIn}
-          disabled={loading}
+          onClick={handleSignIn}
+          disabled={loading || signingIn}
           className="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 rounded-2xl px-6 py-4 shadow-ios-card active:scale-95 transition-transform disabled:opacity-60"
         >
-          {loading ? (
+          {(loading || signingIn) ? (
             <img src="/plant_pot.png" className="w-5 h-5 animate-spin" alt="" />
           ) : (
             <GoogleIcon />
           )}
           <span className="text-sm font-semibold text-gray-800">
-            {loading ? 'Jungiamasi...' : 'Prisijungti su Google'}
+            {(loading || signingIn) ? 'Jungiamasi...' : 'Prisijungti su Google'}
           </span>
         </button>
+
+        {error && (
+          <p className="text-xs text-red-500 text-center leading-relaxed bg-red-50 rounded-xl px-4 py-3">
+            {error}
+          </p>
+        )}
 
         <p className="text-xs text-gray-400 text-center leading-relaxed">
           Tavo duomenys saugomi tik tavo paskyroje
