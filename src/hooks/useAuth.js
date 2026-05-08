@@ -148,6 +148,7 @@ async function getOrCreateCollection(uid) {
       } else {
         const cd = colSnap.data()
         role = cd.roles?.[uid] ?? (cd.ownerId === uid ? 'owner' : 'member')
+        console.log('[auth] role debug:', { uid, ownerId: cd.ownerId, roles: cd.roles, inferredRole: role })
       }
     }
 
