@@ -195,10 +195,16 @@ export function useAuth() {
 
   const signIn = async () => {
     setState(s => ({ ...s, authError: null }))
-    // Visur naudojame popup:
-    // - Naršyklėje: popup langas, veikia su Chrome 120+ (ne third-party cookies)
-    // - iOS PWA standalone: signInWithPopup atidaro SFSafariViewController (tikras Safari),
-    //   kurį Google laiko saugiu. signInWithRedirect naudoja WKWebView — Google blokuoja.
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true
+
+    if (isStandalone) {
+      // Standalone PWA: redirect per augalai.crazyeuropean.eu/__/auth/handler
+      // (authDomain = mūsų domenas + Vercel proxy + Google Console redirect URI — visi suderinti)
+      return signInWithRedirect(auth, googleProvider)
+    }
+
+    // Naršyklė: popup (veikia su Chrome 120+ third-party cookie apribojimais)
     try {
       await signInWithPopup(auth, googleProvider)
     } catch (e) {
