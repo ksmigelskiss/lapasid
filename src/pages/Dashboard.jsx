@@ -529,7 +529,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
           <div>
             <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em] mb-1">Mano kolekcija</p>
             <div className="flex items-center gap-2">
-              <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight">Mano augalai</h1>
               <button
                 onClick={() => setShowProfile(true)}
                 className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 active:opacity-70 transition-opacity"
@@ -541,6 +540,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                     </div>
                 }
               </button>
+              <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight">Mano augalai</h1>
             </div>
           </div>
           <div className="flex flex-col items-end gap-2">
