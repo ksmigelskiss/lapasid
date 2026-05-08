@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Kiekvienas vartotojas skaito/rašo tik savo profilį
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Kolekcijų metaduomenys (zones, zinynas, settings, members)
+    match /collections/{colId} {
+      // Nariai gali skaityti ir keisti
+      allow read, write: if request.auth != null &&
+        request.auth.uid in resource.data.members;
+      // Naujos kolekcijos kūrimas (pirmasis prisijungimas)
+      allow create: if request.auth != null;
+    }
+
+    // Augalai (subkolekcija)
+    match /collections/{colId}/plants/{plantId} {
+      allow read, write: if request.auth != null &&
+        request.auth.uid in
+          get(/databases/$(database)/documents/collections/$(colId)).data.members;
+    }
+
+    // Bendra augalų katalogo DB — visi skaito, rašo tik serveris
+    match /catalog/{docId} {
+      allow read: if request.auth != null;
+      // Kol nėra serverio — leidžiame ir klientui rašyti (Phase 1 metu)
+      allow write: if request.auth != null;
+    }
+
+    // Kvietimai į kolekciją
+    match /invites/{token} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      // arrayUnion savęs prie narių — bet kuris auth vartotojas gali prisijungti
+      allow update: if request.auth != null;
+    }
+  }
+}

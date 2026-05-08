@@ -185,7 +185,7 @@ export default function App() {
     detailPlant?.section === 'istorija' ? handleLibraryAction   : null
 
   // ── Auth gate ─────────────────────────────────────────────────
-  if (authLoading || (user && !collectionId)) {
+  if (authLoading) {
     return (
       <div className="fixed inset-0 bg-app flex items-center justify-center">
         <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />
@@ -194,6 +194,22 @@ export default function App() {
   }
   if (!user) {
     return <LoginScreen onSignIn={signIn} error={authError} />
+  }
+  // Vartotojas prisijungęs, bet kolekcija nesukurta (Firestore rules klaida arba tinklas)
+  if (!collectionId) {
+    return (
+      <div className="fixed inset-0 bg-app flex flex-col items-center justify-center gap-4 px-8">
+        <img src="/plant_pot.png" className="w-16 h-16 object-contain opacity-40" alt="" />
+        <p className="text-sm text-gray-500 text-center">Nepavyko įkelti kolekcijos.<br />Patikrink interneto ryšį ir bandyk iš naujo.</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-6 py-2 bg-brand text-white rounded-xl text-sm font-medium"
+        >
+          Bandyti iš naujo
+        </button>
+        <button onClick={signOut} className="text-xs text-gray-400 underline">Atsijungti</button>
+      </div>
+    )
   }
 
   const tabs = [
