@@ -8,6 +8,7 @@ import {
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { auth, db, googleProvider } from '../utils/firebase'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
+import { acceptInvite } from '../components/ProfileSheet'
 
 // UID iš senos vieno vartotojo sistemos — naudojamas migracijai
 const LEGACY_UID = 'HdAOoLtEzUXqU2px2h3YmzLygCp1'
@@ -79,8 +80,27 @@ async function runMigration(uid) {
   return collectionId
 }
 
+// Tikrina ar yra pending invite tokenas ir prisijungia prie kolekcijos
+async function processPendingInvite(uid) {
+  const token = localStorage.getItem('pending-invite')
+  if (!token) return null
+  localStorage.removeItem('pending-invite')
+  try {
+    const invSnap = await getDoc(doc(db, 'invites', token))
+    if (!invSnap.exists()) return null
+    return await acceptInvite(uid, token, invSnap.data())
+  } catch (e) {
+    console.warn('[invite] accept failed:', e)
+    return null
+  }
+}
+
 // Grąžina collectionId pagal vartotojo profilį arba sukuria naują
 async function getOrCreateCollection(uid) {
+  // Invite turi pirmenybę — net jei vartotojas jau egzistuoja
+  const inviteColId = await processPendingInvite(uid)
+  if (inviteColId) return inviteColId
+
   const userSnap = await getDoc(doc(db, 'users', uid))
   if (userSnap.exists() && userSnap.data().primaryCollection) {
     // Naujas formatas — grąžiname collectionId

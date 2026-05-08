@@ -34,7 +34,13 @@
       "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/hooks/*.js)",
       "Bash(npm ls:*)",
       "Bash(vercel ls:*)",
-      "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/components/*.jsx /Users/kestutissmigelskis/geliu-db/src/pages/*.jsx /Users/kestutissmigelskis/geliu-db/src/hooks/*.js /Users/kestutissmigelskis/geliu-db/src/utils/*.js)"
+      "Bash(wc -l /Users/kestutissmigelskis/geliu-db/src/components/*.jsx /Users/kestutissmigelskis/geliu-db/src/pages/*.jsx /Users/kestutissmigelskis/geliu-db/src/hooks/*.js /Users/kestutissmigelskis/geliu-db/src/utils/*.js)",
+      "Bash(npm i:*)",
+      "Bash(npx vercel:*)",
+      "Bash(npx tsc *)",
+      "Bash(git checkout *)",
+      "Bash(git tag *)",
+      "Bash(git merge *)"
     ]
   }
 }

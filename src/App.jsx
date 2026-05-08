@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
+import { useState, useCallback, useEffect, useRef, lazy, Suspense, useMemo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import Navigation from './components/Navigation'
 import DeathModal from './components/DeathModal'
@@ -18,6 +18,16 @@ const Zinynas     = lazy(() => import('./pages/Zinynas'))
 
 export default function App() {
   const { user, collectionId, loading: authLoading, signIn, signOut } = useAuth()
+
+  // Išsaugome invite tokeną prieš Google redirect'ą
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const token  = params.get('invite')
+    if (token) {
+      localStorage.setItem('pending-invite', token)
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  }, [])
 
   const [tab, setTab]                 = useState('dashboard')
   const [mountedTabs, setMountedTabs] = useState(() => new Set(['dashboard']))
@@ -206,6 +216,9 @@ export default function App() {
         onUpdateZone={updateZone}
         onDeleteZone={deleteZone}
         onReorderZones={reorderZones}
+        user={user}
+        collectionId={collectionId}
+        onSignOut={signOut}
       />
     )},
     { key: 'biblioteka', page: (

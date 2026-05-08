@@ -1,7 +1,8 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera, Check } from 'lucide-react'
+import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera, Check, UserCircle } from 'lucide-react'
+import ProfileSheet from '../components/ProfileSheet'
 const GARDENER = '/gardener.png'
 import PlantCard from '../components/PlantCard'
 import CollectionChat from '../components/CollectionChat'
@@ -358,7 +359,7 @@ function matchesQuery(plant, q) {
     .some(c => c && c.toLowerCase().includes(lower))
 }
 
-export default function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, onSearch, onSearchByCamera, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones }) {
+export default function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, onSearch, onSearchByCamera, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones, user, collectionId, onSignOut }) {
   const quarantinePlants = plants.filter(p => p.status === 'quarantine')
   // sick plants stay in their zone (mainPlants includes them)
   const mainPlants       = plants.filter(p => p.status !== 'quarantine')
@@ -371,6 +372,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const [showChat, setShowChat]       = useState(false)
   const [searching, setSearching]     = useState(false)
   const [query, setQuery]             = useState('')
+  const [showProfile, setShowProfile] = useState(false)
   const [careMode, setCareMode]         = useState(false)
   const [careChecked, setCareChecked]   = useState(new Set())
   const [careInfoPlant, setCareInfoPlant] = useState(null)
@@ -526,7 +528,20 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em] mb-1">Mano kolekcija</p>
-            <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight">Mano augalai</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight">Mano augalai</h1>
+              <button
+                onClick={() => setShowProfile(true)}
+                className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 active:opacity-70 transition-opacity"
+              >
+                {user?.photoURL
+                  ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                  : <div className="w-full h-full bg-sage-100 flex items-center justify-center">
+                      <UserCircle size={16} className="text-sage-500" />
+                    </div>
+                }
+              </button>
+            </div>
           </div>
           <div className="flex flex-col items-end gap-2">
             {/* Top row: laistymas + augalai */}
@@ -1007,6 +1022,18 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             onSaveToZinynas={onSaveToZinynas}
             plants={plants}
             onViewPlant={onViewPlant}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showProfile && (
+          <ProfileSheet
+            key="profile"
+            user={user}
+            collectionId={collectionId}
+            onSignOut={onSignOut}
+            onClose={() => setShowProfile(false)}
           />
         )}
       </AnimatePresence>
