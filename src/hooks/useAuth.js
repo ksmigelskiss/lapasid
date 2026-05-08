@@ -167,14 +167,26 @@ export function useAuth() {
       }
     })
 
-    // Apdorojame redirect rezultatą — po to leidžiame onAuthStateChanged veikti normaliai
+    // Apdorojame redirect rezultatą
+    // getRedirectResult turi būti tikrinamas prieš onAuthStateChanged settle'inasi
     getRedirectResult(auth)
-      .catch(e => { if (e?.code !== 'auth/null-user') console.error('[auth] redirect error:', e) })
+      .then(async result => {
+        if (result?.user) {
+          // Redirect sėkmingas — onAuthStateChanged irgi suveiks, bet
+          // setState jau bus atliktas tada (loading:true nustatytas aukščiau)
+          console.log('[auth] redirect result user:', result.user.email)
+        }
+      })
+      .catch(e => {
+        if (e?.code !== 'auth/null-user') {
+          console.error('[auth] redirect error:', e)
+          setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' }))
+        }
+      })
       .finally(() => {
         redirectDone = true
-        // Jei po redirect nėra vartotojo — rodom login ekraną
         if (!auth.currentUser) {
-          setState({ user: null, collectionId: null, loading: false })
+          setState({ user: null, collectionId: null, loading: false, authError: null, loadingMessage: null })
         }
       })
 
