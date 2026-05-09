@@ -175,7 +175,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
                   <span>
                     {confirmType === 'watering'
                       ? `Patvirtinti (${countdown})`
-                      : busy ? '...' : 'Palaistyti'}
+                      : busy ? '...' : 'Laistyti'}
                   </span>
                 </>
               )}
