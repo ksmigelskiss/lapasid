@@ -1,5 +1,137 @@
 import { useState, useEffect, useRef } from 'react'
-import { Sun, Droplets, ChevronRight, FlaskConical } from 'lucide-react'
+import { Sun, Droplets, ChevronRight, FlaskConical, Leaf } from 'lucide-react'
+
+// ── Forecast helpers ──────────────────────────────────────────────
+
+function fmtDate(iso) {
+  if (!iso) return '—'
+  return new Date(iso + 'T00:00:00').toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
+}
+
+function daysSince(iso) {
+  if (!iso) return null
+  return Math.floor((Date.now() - new Date(iso + 'T00:00:00')) / 86400000)
+}
+
+// Pasirenkame intervalo sezoną pagal dabartinį mėnesį
+function pickInterval(laistymasIntervalas) {
+  if (!laistymasIntervalas) return null
+  const m = new Date().getMonth() + 1 // 1–12
+  const isWinter = m <= 2 || m >= 11
+  return isWinter
+    ? (laistymasIntervalas.ziema ?? laistymasIntervalas.vasara ?? null)
+    : (laistymasIntervalas.vasara ?? laistymasIntervalas.ziema ?? null)
+}
+
+function WateringStatus({ snapshot, watered }) {
+  const interval = pickInterval(snapshot.laistymasIntervalas)
+  if (!interval) return null
+
+  // Jei ką tik palaistyta šiame session — rodome "✓" būseną
+  const lastDate  = watered
+    ? new Date().toISOString().split('T')[0]
+    : snapshot.lastWatered
+
+  const since = daysSince(lastDate)
+  const until = since != null ? interval - since : null
+
+  if (since == null) {
+    return (
+      <div className="bg-sky-50 border border-sky-100 rounded-2xl px-4 py-3 flex gap-3">
+        <Droplets size={22} className="flex-shrink-0 text-sky-400 mt-0.5" />
+        <div>
+          <p className="text-sm font-semibold text-sky-700">Laistymo duomenų nėra</p>
+          <p className="text-[11px] text-sky-600 mt-0.5">{interval}d intervalas</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (until <= 0) {
+    return (
+      <div className="bg-sky-50 border border-sky-100 rounded-2xl px-4 py-3 flex gap-3">
+        <Droplets size={22} className="flex-shrink-0 text-sky-400 mt-0.5" />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-sky-700">
+            {watered ? 'Palaistyta šiandien ✓' : `Laistymas vėluoja ${Math.abs(until)} d.!`}
+          </p>
+          <p className="text-[11px] text-sky-600 mt-0.5">
+            Paskutinis: {fmtDate(lastDate)} · {interval}d intervalas
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-green-50 border border-green-100 rounded-2xl px-4 py-3 flex gap-3">
+      <Droplets size={20} className="flex-shrink-0 text-green-400 mt-0.5" />
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-semibold text-green-700">
+          Kitas laistymas: {fmtDate(
+            new Date(new Date(lastDate + 'T00:00:00').getTime() + interval * 86400000)
+              .toISOString().split('T')[0]
+          )}
+        </p>
+        <p className="text-[11px] text-green-600 mt-0.5">
+          {until === 0 ? 'Šiandien!' : `Po ${until} d.`} · {interval}d intervalas
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function FertilizingStatus({ snapshot, fertilized }) {
+  const interval = snapshot.laistymasIntervalas?.tresimasIntervalas ?? null
+  // Bandome iš vanduo arba prieziura jei nėra specifinio
+  const fertInterval = interval ?? snapshot.fertIntervalas ?? null
+  if (!fertInterval && !snapshot.lastFertilized) return null
+
+  const lastDate = fertilized
+    ? new Date().toISOString().split('T')[0]
+    : snapshot.lastFertilized
+
+  const since = daysSince(lastDate)
+  const until = (since != null && fertInterval) ? fertInterval - since : null
+
+  if (!lastDate) return null
+
+  if (until != null && until <= 0) {
+    return (
+      <div className="bg-orange-50 border border-orange-200 rounded-2xl px-4 py-3 flex gap-3">
+        <Leaf size={22} className="flex-shrink-0 text-orange-400 mt-0.5" />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-orange-700">
+            {fertilized ? 'Patręšta šiandien ✓' : `Pamaitink augalėlį — vėluoja ${Math.abs(until)} d.!`}
+          </p>
+          <p className="text-[11px] text-orange-600 mt-0.5">
+            Paskutinis: {fmtDate(lastDate)}{fertInterval ? ` · ${fertInterval}d intervalas` : ''}
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  if (lastDate) {
+    return (
+      <div className="bg-green-50 border border-green-100 rounded-2xl px-4 py-3 flex gap-3">
+        <Leaf size={20} className="flex-shrink-0 text-green-400 mt-0.5" />
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-green-700">
+            {fertilized ? 'Patręšta šiandien ✓' : `Paskutinis tręšimas: ${fmtDate(lastDate)}`}
+          </p>
+          {until != null && (
+            <p className="text-[11px] text-green-600 mt-0.5">
+              Kitas po {until} d.
+            </p>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  return null
+}
 
 /**
  * PlantCareCard — NFC paso modulis
@@ -149,6 +281,10 @@ export default function PlantCareCard({ passport, plantId, user }) {
         {s.aprasymas && (
           <p className="text-sm text-gray-600 leading-relaxed">{s.aprasymas}</p>
         )}
+
+        {/* Forecast widgetai */}
+        <WateringStatus snapshot={s} watered={watered} />
+        <FertilizingStatus snapshot={s} fertilized={fertilized} />
 
         {/* ── Veiksmai ─────────────────────────────────────────────── */}
         <div className="pt-2 space-y-3">

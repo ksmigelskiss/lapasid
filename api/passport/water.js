@@ -35,6 +35,12 @@ export default async function handler(req, res) {
     }
 
     await plantRef.update({ timeline: [event, ...(plantSnap.data().timeline ?? [])] })
+
+    // Atnaujina paso snapshot — kad PlantCareCard matytų realią datą
+    const snapshotField = eventType === 'watering' ? 'snapshot.lastWatered' : 'snapshot.lastFertilized'
+    await db.collection('plant-passports').doc(plantId).update({ [snapshotField]: event.date })
+      .catch(() => {}) // paso gali nebūti (ok)
+
     return res.json({ ok: true, event })
   } catch (e) {
     console.error('[passport/water]', e)

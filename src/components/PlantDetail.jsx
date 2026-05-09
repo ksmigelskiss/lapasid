@@ -1032,6 +1032,9 @@ export default function PlantDetail({
   const togglePassport = async (p, enabled) => {
     onUpdateNames?.(p.id, { isPublic: enabled })
     if (enabled && collectionId) {
+      const tl = p.timeline ?? []
+      const lastWatered    = tl.find(e => e.type === 'watering')?.date    ?? null
+      const lastFertilized = tl.find(e => e.type === 'fertilizing')?.date ?? null
       await setDoc(doc(db, 'plant-passports', p.id), {
         collectionId,
         isPublic: true,
@@ -1045,6 +1048,8 @@ export default function PlantDetail({
           laistymasIntervalas:  p.laistymasIntervalas ?? null,
           aprasymas:            p.aprasymas    ?? null,
           kilme:                p.kilme        ?? null,
+          lastWatered,
+          lastFertilized,
         },
         updatedAt: new Date().toISOString(),
       }, { merge: true })
