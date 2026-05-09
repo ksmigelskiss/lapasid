@@ -39,6 +39,38 @@ Greita referensinė kortelė. Naudok šią kortelę kuriant naujus komponentus �
 | Vanduo | `bg-sky-50 text-sky-700` |
 | Neutralus | `bg-surface text-gray-600` |
 
+### Forecast / status korteliu spalvos (PRIVALOMA)
+
+Visi forecast / status info card'ai (PlantCareCard widgets, PlantDetail, CareWateringSheet "Dabar" sekcija) turi laikytis šios sistemos. Jokių vienkartinių spalvų išradimų — **vartotojas turi atpažinti būseną iš pirmo žvilgsnio**.
+
+| Būsena | Bg | Border | Tekstas (heading) | Tekstas (meta) | Ikonos spalva | Naudojimas |
+|--------|----|----|----|----|----|----|
+| **Laistymas — vėluoja / dabar** | `bg-sky-50` | `border-sky-100` | `text-sky-700` | `text-sky-600` | `text-sky-500` | "Laistymas vėluoja N d.", "Patikrink ar ne sausi" |
+| **Laistymas — kitas planinis** | `bg-green-50` | `border-green-100` | `text-green-700` | `text-green-600` | `text-green-400` | "Kitas laistymas: 05-23" |
+| **Laistymas — palaisyta šiandien (done)** | `bg-green-50` | `border-green-100` | `text-green-700` | — | — | Action mygtuko done būsena |
+| **Tręšimas — vėluoja** | `bg-orange-50` | `border-orange-200` | `text-orange-700` | `text-orange-600` | `text-orange-400` | "Pamaitink augalėlį — vėluoja N d." |
+| **Tręšimas — kitas planinis** | `bg-amber-50` | `border-amber-100` | `text-amber-700` | `text-amber-600` | `text-amber-400` | "Kitas tręšimas: 05-23" (žr. screenshot brandbook'e) |
+| **Snooze / „Patikrinta"** | `bg-green-50` | `border-green-100` | `text-green-700` | `text-green-600` | — | "Patikrinta — ramybė iki ..." |
+| **Šiandienos timeline event'as** | `bg-green-50` | `border-green-200` | — | — | node `border-green-300` | Bet kuris event'as kurio `date === today()` |
+| **Karantinas (period wrap)** | `bg-red-50` | `border-red-100` | `text-red-700` | — | — | PlantTimeline status period wrap |
+| **Liga (period wrap)** | `bg-orange-50` | `border-orange-200` | `text-orange-700` | — | — | PlantTimeline status period wrap |
+| **Neutralus / nieko ypatingo** | `bg-gray-50` | — | `text-gray-700` | `text-gray-500` | `text-gray-400` | "Dabar" sekcija kai nieko nelaukia |
+| **Nepriskirtas / placeholder** | `bg-sage-50` | `border-sage-100` | `text-sage-600` | — | — | Augalas be nuotraukos hero, tuščias placeholder |
+
+**Mygtukų spalvos (action bar, įsk. `<PostFertilizePrompt>`):**
+
+| Veiksmas | Idle bg | Active bg | Tekstas |
+|----------|---------|-----------|---------|
+| Laistyti / Palaisčiau | `bg-sky-500` | `active:bg-sky-600` | `text-white font-bold` |
+| Tręšti | `bg-amber-500` | `active:bg-amber-600` | `text-white font-bold` |
+| Patikrinau (snooze) | `bg-green-500` | `active:bg-green-600` | `text-white font-bold` |
+| Nelaisčiau / dismiss | `bg-gray-100` | `active:bg-gray-200` | `text-gray-700 font-bold` |
+| Confirmation (countdown) | tos pačios šeimos `-700` | tos pačios `-800` | `text-white font-bold` |
+
+> ⚠️ **Niekur kitur** šios spalvos nenaudojamos pagrindiniam veiksmui (kad būtų nedviprasmiškas signalas). Pvz.: jei kuriame mygtuką "Pridėti augalą", tai NĖRA `bg-sky-500` (nes tai laistymo mygtuko spalva).
+
+> ⚠️ **Šeimų nesumaišyti.** Tręšimas turi DVI šeimas (`amber` planinis, `orange` vėluoja). Tai sąmoninga — vėluoja yra rimtesnis signalas (orange + 200 border vietoj 100), planinis informacinis (švelnesnis amber).
+
 ---
 
 ## Ikonos (Lucide React)

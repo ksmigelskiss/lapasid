@@ -465,6 +465,17 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
 
 function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, inPeriod, zones = [] }) {
   const meta = EVENT_META[event.type] ?? EVENT_META.note
+  const isToday = event.date === today()
+
+  // Pill stilius: today highlight > period wrapper > default
+  const pillClass = isToday
+    ? 'bg-green-50 border border-green-200'
+    : inPeriod
+      ? 'bg-transparent'
+      : 'bg-white border border-warm-border'
+
+  // Node border'as: today → green
+  const nodeBorder = isToday ? 'border-green-300' : 'border-gray-200'
 
   return (
     <motion.div
@@ -476,7 +487,7 @@ function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete,
       {/* Node */}
       <button
         onClick={onToggle}
-        className="absolute left-0 top-1/2 -translate-y-1/2 w-7 h-7 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center text-sm shadow-sm z-10 -translate-x-3 active:scale-90 transition-transform"
+        className={`absolute left-0 top-1/2 -translate-y-1/2 w-7 h-7 bg-white border-2 ${nodeBorder} rounded-full flex items-center justify-center text-sm shadow-sm z-10 -translate-x-3 active:scale-90 transition-transform`}
       >
         {meta.icon}
       </button>
@@ -496,7 +507,7 @@ function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete,
 
       {/* Pill */}
       <div
-        className={`flex items-center gap-2 rounded-xl px-3 py-2 cursor-pointer active:opacity-70 transition-opacity ${inPeriod ? 'bg-transparent' : 'bg-white border border-warm-border'}`}
+        className={`flex items-center gap-2 rounded-xl px-3 py-2 cursor-pointer active:opacity-70 transition-opacity ${pillClass}`}
         onClick={onToggle}
       >
         <span className="text-xs font-semibold text-gray-700">
