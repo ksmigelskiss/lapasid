@@ -268,10 +268,16 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
                     <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                       <Eye size={14} className="text-gray-400" />
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <button
+                      className="flex-1 min-w-0 text-left active:opacity-60"
+                      onClick={() => {
+                        setInviteRole('viewer')
+                        setInviteUrl(`${window.location.origin}?invite=${v.token}&role=viewer`)
+                      }}
+                    >
                       <p className="text-sm font-medium text-gray-600">Prižiūrėtojas</p>
                       <p className="text-xs text-gray-400 font-mono truncate">{v.token}</p>
-                    </div>
+                    </button>
                     <button
                       onClick={() => handleRevokeViewer(v.token)}
                       disabled={revokingToken === v.token}
