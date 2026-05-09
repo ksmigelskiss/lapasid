@@ -17,10 +17,14 @@ export default async function handler(req, res) {
     ])
     if (!colSnap.exists) return res.status(404).json({ error: 'not_found' })
     const col = colSnap.data()
-    const plants = plantsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+
+    // Subkolekcija pirmenybė; fallback į senas col.plants[] jei subkolekcija tuščia
+    const subPlants = plantsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+    const plants = subPlants.length > 0 ? subPlants : (col.plants ?? [])
+
     return res.json({ colId, collectionName: col.name || 'Kolekcija', plants, zones: col.zones || [] })
   } catch (e) {
     console.error('[viewer]', e)
-    return res.status(500).json({ error: 'server_error' })
+    return res.status(500).json({ error: 'server_error', message: e.message })
   }
 }

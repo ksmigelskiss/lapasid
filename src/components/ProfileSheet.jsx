@@ -137,7 +137,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
         try {
           await navigator.share({
             title: roleToUse === 'viewer' ? 'Augalų priežiūra' : 'Augalų kolekcija',
-            text:  roleToUse === 'viewer' ? 'Kviečiu peržiūrėti augalus 🌿' : 'Prisijunk prie augalų kolekcijos 🌿',
+            text:  roleToUse === 'viewer' ? 'Kviečiu kaip svečią peržiūrėti augalus 🌿' : 'Prisijunk prie augalų kolekcijos 🌿',
             url,
           })
         } catch (e) { if (e.name !== 'AbortError') console.error(e) }
@@ -275,7 +275,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
                         setInviteUrl(`${window.location.origin}?invite=${v.token}&role=viewer`)
                       }}
                     >
-                      <p className="text-sm font-medium text-gray-600">Prižiūrėtojas</p>
+                      <p className="text-sm font-medium text-gray-600">Svečias</p>
                       <p className="text-xs text-gray-400 font-mono truncate">{v.token}</p>
                     </button>
                     <button
@@ -318,7 +318,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
                     }`}
                   >
                     <Eye size={13} />
-                    Prižiūrėtojas
+                    Svečias
                   </button>
                 </div>
               )}
@@ -327,7 +327,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
               <p className="text-xs text-gray-400 mb-3">
                 {inviteRole === 'member'
                   ? 'Narys gali redaguoti augalus ir naudotis AI funkcijomis.'
-                  : 'Prižiūrėtojas gali matyti augalus ir žymėti laistymą. Prieiga atšaukiama vienu mygtuku.'}
+                  : 'Svečias gali matyti augalus ir žymėti laistymą. Prieiga atšaukiama vienu mygtuku.'}
               </p>
 
               {!inviteUrl ? (
@@ -337,7 +337,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
                   className="w-full py-2.5 rounded-xl bg-sage-500 active:bg-sage-600 text-white text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50 transition-colors"
                 >
                   {inviteRole === 'member' ? <UserPlus size={15} /> : <Eye size={15} />}
-                  {generating ? 'Generuojama...' : 'Generuoti nuorodą'}
+                  {generating ? 'Generuojama...' : inviteRole === 'member' ? 'Generuoti nuorodą' : 'Pakviesti svečią'}
                 </button>
               ) : (
                 <div className="space-y-3">
