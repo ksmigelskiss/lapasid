@@ -307,12 +307,10 @@ function CareWateringSheet({ plant, zones = [], onClose, onAddEvent }) {
   )
 }
 
-function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCareToggle, onSelectAll, onDeselectAll, onScrollToGroup, onCareInfo }) {
+function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCareToggle, onCareInfo }) {
   const [open, setOpen] = useState(true)
   const containerRef = useRef(null)
-  const scrollToTop = () => onScrollToGroup?.(containerRef.current)
   const orderedPlants = pinChecked(plants, careMode, careChecked)
-  const allChecked    = careMode && plants.length > 0 && plants.every(p => careChecked?.has(p.id))
   return (
     <div ref={containerRef} className="mb-3 bg-white rounded-2xl px-3 pb-3">
       <div className="w-full flex items-center gap-2 py-2">
@@ -322,19 +320,6 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
           <span className="text-xs text-red-300 flex-shrink-0">{plants.length}</span>
         </button>
         <div className="flex-1" />
-        {careMode && open && (
-          <div className="flex items-center gap-1 flex-shrink-0">
-            <button onClick={() => { onSelectAll(plants.filter(p => getWateringForecast(p).isOverdue)); scrollToTop() }} className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-100 active:bg-sky-200">
-              <Droplets size={13} className="text-sky-500" />
-            </button>
-            <button onClick={() => { onSelectAll(plants.filter(p => getFertilizingForecast(p).isOverdue)); scrollToTop() }} className="w-7 h-7 flex items-center justify-center rounded-lg bg-amber-100 active:bg-amber-200">
-              <FlaskConical size={13} className="text-amber-500" />
-            </button>
-            <button onClick={() => { allChecked ? onDeselectAll?.(plants) : onSelectAll(plants); scrollToTop() }} className="text-[11px] font-semibold text-red-400 px-1">
-              {allChecked ? 'Atžymėti' : 'Žymėti visus'}
-            </button>
-          </div>
-        )}
         <button onClick={() => setOpen(v => !v)} className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
           {open ? <ChevronUp size={14} className="text-red-300" /> : <ChevronDown size={14} className="text-red-300" />}
         </button>
@@ -364,13 +349,11 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
 
 function pinChecked(plants) { return plants }
 
-function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle, onSelectAll, onDeselectAll, onScrollToGroup, onCareInfo }) {
+function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle, onCareInfo }) {
   const [open, setOpen] = useState(true)
   const containerRef = useRef(null)
-  const scrollToTop = () => onScrollToGroup?.(containerRef.current)
   const sickPlants    = pinChecked(plants.filter(p => p.status === 'sick'),    careMode, careChecked)
   const healthyPlants = pinChecked(plants.filter(p => p.status !== 'sick'), careMode, careChecked)
-  const allChecked    = careMode && plants.length > 0 && plants.every(p => careChecked?.has(p.id))
 
   const carePropsFn = (plant) => careMode ? {
     careMode: true,
@@ -388,19 +371,6 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
           <span className="text-xs text-gray-400 flex-shrink-0">{plants.length}</span>
         </button>
         <div className="flex-1" />
-        {careMode && open && (
-          <div className="flex items-center gap-1 flex-shrink-0">
-            <button onClick={() => { onSelectAll(plants.filter(p => getWateringForecast(p).isOverdue)); scrollToTop() }} className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-100 active:bg-sky-200">
-              <Droplets size={13} className="text-sky-500" />
-            </button>
-            <button onClick={() => { onSelectAll(plants.filter(p => getFertilizingForecast(p).isOverdue)); scrollToTop() }} className="w-7 h-7 flex items-center justify-center rounded-lg bg-amber-100 active:bg-amber-200">
-              <FlaskConical size={13} className="text-amber-500" />
-            </button>
-            <button onClick={() => { allChecked ? onDeselectAll?.(plants) : onSelectAll(plants); scrollToTop() }} className="text-[11px] font-semibold text-sage-500 px-1">
-              {allChecked ? 'Atžymėti' : 'Žymėti visus'}
-            </button>
-          </div>
-        )}
         <button onClick={() => setOpen(v => !v)} className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
           {open ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
         </button>
@@ -467,15 +437,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const scrollRef       = useRef(null)
   const unzonedRef      = useRef(null)
 
-  const scrollToGroup = useCallback((el) => {
-    requestAnimationFrame(() => {
-      if (!el || !scrollRef.current) return
-      const c = scrollRef.current
-      const top = el.getBoundingClientRect().top - c.getBoundingClientRect().top + c.scrollTop
-      c.scrollTo({ top, behavior: 'smooth' })
-    })
-  }, [])
-
   const toggleCare = useCallback((id) => {
     setCareChecked(prev => {
       const next = new Set(prev)
@@ -483,40 +444,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       return next
     })
   }, [])
-
-  const selectAll = useCallback((groupPlants) => {
-    setCareChecked(prev => {
-      const next = new Set(prev)
-      groupPlants.forEach(p => next.add(p.id))
-      return next
-    })
-  }, [])
-
-  const deselectAll = useCallback((groupPlants) => {
-    setCareChecked(prev => {
-      const next = new Set(prev)
-      groupPlants.forEach(p => next.delete(p.id))
-      return next
-    })
-  }, [])
-
-  const selectNeedsWatering = useCallback(() => {
-    const ids = mainPlants.filter(p => getWateringForecast(p).isOverdue).map(p => p.id)
-    setCareChecked(prev => new Set([...prev, ...ids]))
-  }, [mainPlants])
-
-  const selectNeedsFertilizing = useCallback(() => {
-    const ids = mainPlants.filter(p => getFertilizingForecast(p).isOverdue).map(p => p.id)
-    setCareChecked(prev => new Set([...prev, ...ids]))
-  }, [mainPlants])
-
-  const selectAllWatering = useCallback(() => {
-    setCareChecked(prev => new Set([...prev, ...mainPlants.map(p => p.id)]))
-  }, [mainPlants])
-
-  const selectAllFertilizing = useCallback(() => {
-    setCareChecked(prev => new Set([...prev, ...mainPlants.map(p => p.id)]))
-  }, [mainPlants])
 
   const resetConfirm = useCallback(() => {
     clearInterval(confirmTimerRef.current)
@@ -880,7 +807,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (
           <QuarantineSection plants={quarantinePlants} zones={zones} onTap={onTap}
-            careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onSelectAll={selectAll} onDeselectAll={deselectAll} onScrollToGroup={scrollToGroup} onCareInfo={setCareInfoPlant} />
+            careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onCareInfo={setCareInfoPlant} />
         )}
 
         {/* Plant grid */}
@@ -902,25 +829,12 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
           <>
             {zonedPlants.map(({ zone, plants: zp }) => zp.length > 0 && (
               <ZoneSection key={zone.id} zone={zone} plants={zp} onTap={onTap}
-                careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onSelectAll={selectAll} onDeselectAll={deselectAll} onScrollToGroup={scrollToGroup} onCareInfo={setCareInfoPlant} />
+                careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onCareInfo={setCareInfoPlant} />
             ))}
             {unzonedPlants.length > 0 && (
               <div ref={unzonedRef} className="mb-3 bg-white rounded-2xl px-3 pb-3">
                 <div className="flex items-center py-2">
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-1">Nepriskirti</p>
-                  {careMode && (
-                    <div className="flex items-center gap-1">
-                      <button onClick={() => { selectAll(unzonedPlants.filter(p => getWateringForecast(p).isOverdue)); scrollToGroup(unzonedRef.current) }} className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-100 active:bg-sky-200">
-                        <Droplets size={13} className="text-sky-500" />
-                      </button>
-                      <button onClick={() => { selectAll(unzonedPlants.filter(p => getFertilizingForecast(p).isOverdue)); scrollToGroup(unzonedRef.current) }} className="w-7 h-7 flex items-center justify-center rounded-lg bg-amber-100 active:bg-amber-200">
-                        <FlaskConical size={13} className="text-amber-500" />
-                      </button>
-                      <button onClick={() => { const allChk = unzonedPlants.every(p => careChecked.has(p.id)); allChk ? deselectAll(unzonedPlants) : selectAll(unzonedPlants); scrollToGroup(unzonedRef.current) }} className="text-[11px] font-semibold text-sage-500 px-1">
-                        {unzonedPlants.every(p => careChecked.has(p.id)) ? 'Atžymėti' : 'Žymėti visus'}
-                      </button>
-                    </div>
-                  )}
                 </div>
                 <div className="space-y-3">
                   {pinChecked(unzonedPlants.filter(p => p.status === 'sick'), careMode, careChecked).length > 0 && (
@@ -951,19 +865,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
           </>
         ) : (
           <>
-            {careMode && (
-              <div className="flex justify-end items-center gap-1 py-1 mb-1">
-                <button onClick={() => selectAll(sortedPlants.filter(p => getWateringForecast(p).isOverdue))} className="w-7 h-7 flex items-center justify-center rounded-lg bg-sky-100 active:bg-sky-200">
-                  <Droplets size={13} className="text-sky-500" />
-                </button>
-                <button onClick={() => selectAll(sortedPlants.filter(p => getFertilizingForecast(p).isOverdue))} className="w-7 h-7 flex items-center justify-center rounded-lg bg-amber-100 active:bg-amber-200">
-                  <FlaskConical size={13} className="text-amber-500" />
-                </button>
-                <button onClick={() => sortedPlants.every(p => careChecked.has(p.id)) ? deselectAll(sortedPlants) : selectAll(sortedPlants)} className="text-[11px] font-semibold text-sage-500 px-1">
-                  {sortedPlants.every(p => careChecked.has(p.id)) ? 'Atžymėti' : 'Žymėti visus'}
-                </button>
-              </div>
-            )}
             <div className="grid grid-cols-2 gap-3">
               {pinChecked(sortedPlants, careMode, careChecked).map(plant => (
                 <PlantCard
