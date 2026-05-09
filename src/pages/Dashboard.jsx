@@ -496,6 +496,14 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     setCountdown(5)
   }, [])
 
+  // careConfidence — aggregate per visus auginama augalus.
+  // Turi būti deklaruotas PRIEŠ exitCareMode ir useEffect kurie jį naudoja
+  // (kitaip TDZ klaida useCallback dependency array'uje).
+  const careConfidence = useMemo(
+    () => aggregateConfidence(mainPlants.map(p => getWateringForecast(p))),
+    [mainPlants]
+  )
+
   const exitCareMode = useCallback(() => {
     resetConfirm()
     setCareChecked(new Set())
@@ -712,12 +720,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const { pullY, refreshing } = usePullToRefresh(scrollRef, onRefresh ?? (() => {}))
 
   const sortedPlants = useMemo(() => sortPlants(mainPlants, sortKey), [mainPlants, sortKey])
-
-  // Confidence aggregate per visus auginama augalus (priežiūros badge'ui)
-  const careConfidence = useMemo(
-    () => aggregateConfidence(mainPlants.map(p => getWateringForecast(p))),
-    [mainPlants]
-  )
 
   // Zone grouping: only active when zones exist
   const hasZones = zones.length > 0
