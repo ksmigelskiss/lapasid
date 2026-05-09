@@ -23,7 +23,12 @@ const emptySession = () => ({
   watering:    { perfect: 0, early: 0, late: 0, waylate: 0 },
   fertilizing: { perfect: 0, early: 0, late: 0, waylate: 0 },
   plants: new Set(),
-  deltaPct: 0,  // suminis confidence delta (procentais) per visą session'ą
+  // startConfidence — aggregate confidence snapshot care mode pradžioje.
+  // Sesijos delta skaičiuojama exit metu kaip (current - start), todėl
+  // automatiškai apima ir non-bulk veiksmus (single-plant CareWateringSheet,
+  // PlantDetail, NFC) kurie irgi atnaujina plant.timeline ir atitinkamai
+  // perskaičiuoja confidence.
+  startConfidence: 0,
 })
 
 const sessionTotal = (s) =>
@@ -500,21 +505,32 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     // Jei session turėjo veiksmų — parodom summary modal'ą; care mode visada baigiamas
     const s = sessionRef.current
     if (sessionTotal(s) > 0) {
+      // Snapshot/diff: pakaitalas per-action sumai. Tikslesnis, nes apima
+      // visus confidence pokyčius (bulk + single-plant + bet kokie kiti),
+      // kurie atnaujino plant.timeline care mode metu.
+      const rawDelta = Math.round((careConfidence - (s.startConfidence ?? 0)) * 100)
       setShowSummary({
         watering:    { ...s.watering },
         fertilizing: { ...s.fertilizing },
         plants:      new Set(s.plants),
-        deltaPct:    s.deltaPct,
+        deltaPct:    Math.max(0, rawDelta),  // negatyvių (outlier filtravimas) nerodom
       })
     }
     sessionRef.current = emptySession()
     setCareMode(false)
-  }, [resetConfirm])
+  }, [resetConfirm, careConfidence])
 
   const dismissSummary = useCallback(() => setShowSummary(null), [])
 
-  // Care mode'o pradžia — reset'inam session
-  useEffect(() => { if (careMode) sessionRef.current = emptySession() }, [careMode])
+  // Care mode'o pradžia — reset'inam session ir snapshot'inam pradinį confidence.
+  // Snapshot reikalingas, kad sesijos delta būtų tikslus net jei vartotojas
+  // padaro single-plant veiksmų (CareWateringSheet long-press) care mode metu.
+  useEffect(() => {
+    if (careMode) {
+      sessionRef.current = emptySession()
+      sessionRef.current.startConfidence = careConfidence
+    }
+  }, [careMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // DEV/DEMO: parodo fake toast'ą be jokio DB rašymo. Cikliuoja per 3 delta dydžius.
   const careToastDemoIdx = useRef(0)
@@ -585,7 +601,9 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     sb.late    += counts.late
     sb.waylate += counts.waylate
     plantsToShow.forEach(p => sessionRef.current.plants.add(p.id))
-    sessionRef.current.deltaPct += deltaPct
+    // Pastaba: nebenakaupiame deltaPct į session — sesijos delta dabar
+    // skaičiuojama snapshot/diff būdu exit metu (žr. exitCareMode).
+    // Tai užfiksuoja IR single-plant veiksmus, kurie neateina per šį path'ą.
 
     // Circuit detection — ar bet kuri zona po šio veiksmo lieka be todo
     const cleared = detectClearedZones(plantsToShow.map(p => p.id), eventTypes)
