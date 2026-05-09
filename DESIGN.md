@@ -203,6 +203,8 @@ className="relative w-full flex-shrink-0"
 className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent"
 ```
 
+> ⚠️ **Hero tekste emoji NERODYTI.** Emoji naudojamas tik kaip fallback kai augalas neturi nuotraukos (didelis, centre hero zonoje). Šalia pavadinimo ant gradiento — tik `lietuviškas` + `lotyniskas`, jokių emoji.
+
 ---
 
 ## Tipografija
