@@ -109,7 +109,10 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
   const closeSearch = () => { setSearching(false); setQuery('') }
   const launchFullSearch = () => { onSearch(query); closeSearch() }
 
-  const filtersActive = kategorija != null || modifiers.size > 0 || sortKey !== 'added'
+  // Sliders mygtukas highlightinasi tik kai aktyvūs jo panelio dalykai
+  // (modifikatoriai arba sort). Kategorija turi savo segmented control viršuje
+  // — todėl ji neskaitomi į "filtrai aktyvūs".
+  const filtersActive = modifiers.size > 0 || sortKey !== 'added'
 
   return (
     <div className="flex flex-col h-full bg-lib">
@@ -174,7 +177,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
             onClick={() => setShowFilters(v => !v)}
             className={`flex-shrink-0 w-11 rounded-2xl flex items-center justify-center transition-colors ${
               showFilters || filtersActive
-                ? 'bg-gray-800 text-white'
+                ? 'bg-sage-500 text-white'
                 : 'bg-white border border-gray-200 text-gray-600'
             }`}
           >
@@ -190,7 +193,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
             <button
               onClick={() => setKategorija(null)}
               className={`flex-1 h-9 flex items-center justify-center gap-1 rounded-xl text-xs font-semibold transition-colors ${
-                kategorija == null ? 'bg-gray-800 text-white' : 'text-gray-500 active:bg-surface'
+                kategorija == null ? 'bg-sage-500 text-white' : 'text-gray-500 active:bg-surface'
               }`}
             >
               <span>Visi</span>
@@ -204,7 +207,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
                   key={key}
                   onClick={() => setKategorija(active ? null : key)}
                   className={`flex-1 h-9 flex items-center justify-center gap-1 rounded-xl text-xs font-semibold transition-colors ${
-                    active ? 'bg-gray-800 text-white' : 'text-gray-500 active:bg-surface'
+                    active ? 'bg-sage-500 text-white' : 'text-gray-500 active:bg-surface'
                   }`}
                 >
                   {Icon && <Icon size={13} />}
@@ -301,14 +304,14 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
             {query ? (
               <button
                 onClick={launchFullSearch}
-                className="mt-1 px-6 py-3 bg-gray-800 text-white rounded-2xl text-sm font-medium"
+                className="mt-1 px-6 py-3 bg-sage-500 active:bg-sage-600 text-white rounded-2xl text-sm font-medium"
               >
                 Ieškoti „{query}" naujų augalų
               </button>
             ) : kategorija == null && (
               <button
                 onClick={() => setSearching(true)}
-                className="mt-1 px-6 py-3 bg-gray-800 text-white rounded-2xl text-sm font-medium"
+                className="mt-1 px-6 py-3 bg-sage-500 active:bg-sage-600 text-white rounded-2xl text-sm font-medium"
               >
                 + Pridėti augalą
               </button>
