@@ -441,6 +441,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const [careMode, setCareMode]         = useState(false)
   const [careChecked, setCareChecked]   = useState(new Set())
   const [careInfoPlant, setCareInfoPlant] = useState(null)
+  const [postFertilizeFor, setPostFertilizeFor] = useState(null) // null | Set<plantId> — laukia "ar palaistei?" atsakymo
   const [confirmType, setConfirmType]   = useState(null)   // 'watering' | 'fertilizing' | null
   const [countdown, setCountdown]       = useState(5)
   const confirmTimerRef = useRef(null)
@@ -509,6 +510,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     resetConfirm()
     setCareMode(false)
     setCareChecked(new Set())
+    setPostFertilizeFor(null)
   }, [resetConfirm])
 
   // Keep screen awake while in care mode
@@ -541,12 +543,29 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const handleCareAction = useCallback((type) => {
     const t = today()
     const comment = type === 'watering' ? 'Laistyta masiniu laistymu' : 'Trešta masiniu laistymu'
-    careChecked.forEach(plantId => {
+    const ids = new Set(careChecked)
+    ids.forEach(plantId => {
       onAddTimelineEvent(plantId, { id: makeId(), type, date: t, komentaras: comment })
     })
     resetConfirm()
     setCareChecked(new Set())
+    if (type === 'fertilizing' && ids.size > 0) {
+      setPostFertilizeFor(ids)
+    }
   }, [careChecked, onAddTimelineEvent, resetConfirm])
+
+  const confirmPostFertWater = useCallback(() => {
+    if (!postFertilizeFor) return
+    const t = today()
+    postFertilizeFor.forEach(plantId => {
+      onAddTimelineEvent(plantId, { id: makeId(), type: 'watering', date: t, komentaras: 'Laistyta po tręšimo' })
+    })
+    setPostFertilizeFor(null)
+  }, [postFertilizeFor, onAddTimelineEvent])
+
+  const dismissPostFert = useCallback(() => {
+    setPostFertilizeFor(null)
+  }, [])
 
   useEffect(() => { if (searching) inputRef.current?.focus() }, [searching])
   const closeSearch = useCallback(() => { setSearching(false); setQuery('') }, [])
@@ -967,6 +986,28 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             className={`fixed ${role === 'viewer' ? 'bottom-2' : 'bottom-[68px]'} left-0 right-0 z-30`}
           >
             <div className="max-w-[430px] mx-auto px-4 pb-2">
+            {postFertilizeFor ? (
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3">
+                <p className="text-[11px] font-medium text-gray-500 mb-2 px-1">
+                  Patręšta {postFertilizeFor.size} {postFertilizeFor.size === 1 ? 'augalas' : 'augalai'} · ar palaistei?
+                </p>
+                <div className="flex gap-2 items-center">
+                  <button
+                    onClick={confirmPostFertWater}
+                    className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 active:bg-sky-600 transition-colors"
+                  >
+                    <Droplets size={16} className="text-white" />
+                    <span className="text-sm font-bold text-white">Palaisčiau</span>
+                  </button>
+                  <button
+                    onClick={dismissPostFert}
+                    className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-gray-100 active:bg-gray-200 transition-colors"
+                  >
+                    <span className="text-sm font-bold text-gray-700">Nelaisčiau</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3 flex gap-2 items-center">
               <button
                 onClick={exitCareMode}
@@ -1013,6 +1054,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 </span>
               </button>
             </div>
+            )}
             </div>
           </motion.div>
         )}
