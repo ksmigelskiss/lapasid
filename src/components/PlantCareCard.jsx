@@ -1,12 +1,17 @@
-import { useState } from 'react'
-import { Sun, Droplets, ChevronRight } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Sun, Droplets, ChevronRight, FlaskConical } from 'lucide-react'
 
 /**
  * PlantCareCard — NFC paso modulis
  *
  * Tas pats komponentas visiems lankytojams, skirtingas turinys:
- *   user === null  → trumpa info + tik "Palaistyta"
- *   user !== null  → ta pati info + "Trąšos" + "Atidaryti kortelę"
+ *   user === null  → trumpa info + tik "Palaistyti"
+ *   user !== null  → ta pati info + "Tręšti" + "Atidaryti kortelę"
+ *
+ * Du tapai su countdown (identiškas Dashboard priežiūros režimui):
+ *   1. tap → "Patvirtinti (5)" + tamsesnis fonas + countdown
+ *   2. tap → įrašo → "✓ Laistyta"
+ *   laikas baigiasi → atšaukia, grįžta į pradinę
  */
 
 async function recordEvent(plantId, eventType) {
@@ -22,15 +27,40 @@ async function recordEvent(plantId, eventType) {
 export default function PlantCareCard({ passport, plantId, user }) {
   const s = passport?.snapshot ?? {}
 
-  const [watered,    setWatered]    = useState(false)
-  const [fertilized, setFertilized] = useState(false)
-  const [busy,       setBusy]       = useState(null) // 'watering' | 'fertilizing' | null
-  const [error,      setError]      = useState(null)
+  const [watered,     setWatered]     = useState(false)
+  const [fertilized,  setFertilized]  = useState(false)
+  const [confirmType, setConfirmType] = useState(null)   // null | 'watering' | 'fertilizing'
+  const [countdown,   setCountdown]   = useState(5)
+  const [busy,        setBusy]        = useState(false)
+  const [error,       setError]       = useState(null)
+  const timerRef = useRef(null)
 
-  async function handleAction(type) {
-    if (busy) return
-    setBusy(type)
+  // Countdown — startuoja kai laukiama patvirtinimo
+  useEffect(() => {
+    if (!confirmType) return
+    timerRef.current = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current)
+          setConfirmType(null)
+          return 5
+        }
+        return prev - 1
+      })
+    }, 1000)
+    return () => clearInterval(timerRef.current)
+  }, [confirmType])
+
+  function resetConfirm() {
+    clearInterval(timerRef.current)
+    setConfirmType(null)
+    setCountdown(5)
+  }
+
+  async function commitAction(type) {
+    setBusy(true)
     setError(null)
+    resetConfirm()
     try {
       await recordEvent(plantId, type)
       if (type === 'watering')    setWatered(true)
@@ -38,8 +68,20 @@ export default function PlantCareCard({ passport, plantId, user }) {
     } catch {
       setError('Nepavyko įrašyti. Bandyk dar kartą.')
     } finally {
-      setBusy(null)
+      setBusy(false)
     }
+  }
+
+  function onWaterTap() {
+    if (watered || busy) return
+    if (confirmType === 'watering') commitAction('watering')
+    else { resetConfirm(); setConfirmType('watering'); setCountdown(5) }
+  }
+
+  function onFertilizeTap() {
+    if (fertilized || busy) return
+    if (confirmType === 'fertilizing') commitAction('fertilizing')
+    else { resetConfirm(); setConfirmType('fertilizing'); setCountdown(5) }
   }
 
   function openInApp() {
@@ -116,42 +158,59 @@ export default function PlantCareCard({ passport, plantId, user }) {
         {/* ── Veiksmai ─────────────────────────────────────────────── */}
         <div className="pt-2 space-y-3">
 
-          {/* Pagrindiniai mygtukai */}
           <div className="flex gap-3">
 
-            {/* Laistymas — visada matomas */}
+            {/* Laistymas */}
             <button
-              onClick={() => handleAction('watering')}
-              disabled={!!busy || watered}
-              className={`flex-1 py-4 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
+              onClick={onWaterTap}
+              disabled={watered || busy}
+              className={`flex-1 h-14 flex items-center justify-center gap-2 rounded-2xl font-bold text-base transition-colors active:scale-95 ${
                 watered
                   ? 'bg-green-50 text-green-600'
+                  : confirmType === 'watering'
+                  ? 'bg-sky-700 text-white'
                   : 'bg-sky-500 text-white shadow-md'
               }`}
             >
-              {watered
-                ? '✓ Laistyta'
-                : busy === 'watering'
-                ? '...'
-                : '💧 Palaistyti'}
+              {watered ? (
+                <span>✓ Laistyta</span>
+              ) : (
+                <>
+                  <Droplets size={18} />
+                  <span>
+                    {confirmType === 'watering'
+                      ? `Patvirtinti (${countdown})`
+                      : busy ? '...' : 'Palaistyti'}
+                  </span>
+                </>
+              )}
             </button>
 
             {/* Trąšos — tik auth vartotojams */}
             {user && (
               <button
-                onClick={() => handleAction('fertilizing')}
-                disabled={!!busy || fertilized}
-                className={`flex-1 py-4 rounded-2xl font-semibold text-base flex items-center justify-center gap-2 transition-all active:scale-95 ${
+                onClick={onFertilizeTap}
+                disabled={fertilized || busy}
+                className={`flex-1 h-14 flex items-center justify-center gap-2 rounded-2xl font-bold text-base transition-colors active:scale-95 ${
                   fertilized
                     ? 'bg-green-50 text-green-600'
-                    : 'bg-emerald-500 text-white shadow-md'
+                    : confirmType === 'fertilizing'
+                    ? 'bg-amber-700 text-white'
+                    : 'bg-amber-500 text-white shadow-md'
                 }`}
               >
-                {fertilized
-                  ? '✓ Patręšta'
-                  : busy === 'fertilizing'
-                  ? '...'
-                  : '🌿 Tręšti'}
+                {fertilized ? (
+                  <span>✓ Patręšta</span>
+                ) : (
+                  <>
+                    <FlaskConical size={18} />
+                    <span>
+                      {confirmType === 'fertilizing'
+                        ? `Patvirtinti (${countdown})`
+                        : busy ? '...' : 'Tręšti'}
+                    </span>
+                  </>
+                )}
               </button>
             )}
           </div>
