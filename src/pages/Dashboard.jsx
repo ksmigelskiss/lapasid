@@ -992,8 +992,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         )}
       </div>}
 
-      {/* Floating AI bubble — hidden in care mode */}
-      {plants.length > 0 && !careMode && (
+      {/* Floating AI bubble — hidden in care mode and for viewers */}
+      {plants.length > 0 && !careMode && role !== 'viewer' && (
         <button
           onClick={() => setShowChat(true)}
           className="absolute bottom-24 right-4 active:scale-90 transition-transform z-10"
