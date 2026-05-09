@@ -48,6 +48,7 @@ export default function App() {
 
   const [tab, setTab]                 = useState('dashboard')
   const [mountedTabs, setMountedTabs] = useState(() => new Set(['dashboard']))
+  const [dashCareMode, setDashCareMode] = useState(false)
   const [showSearch, setShowSearch]   = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState('')
   const [searchAutoCamera, setSearchAutoCamera] = useState(false)
@@ -251,6 +252,7 @@ export default function App() {
         plants={dashboard}
         allPlants={library}
         zones={zones}
+        onCareModeChange={setDashCareMode}
         onTap={p => openDetail(p, 'auginama')}
         onTapFromCare={p => openDetail(p, 'auginama', true)}
         onSearch={q => { setSearchAutoCamera(false); setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
@@ -315,7 +317,7 @@ export default function App() {
         ))}
       </div>
 
-      {role !== 'viewer' && <Navigation active={tab} onChange={setTabAndMount} counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }} role={role} />}
+      {role !== 'viewer' && !dashCareMode && <Navigation active={tab} onChange={setTabAndMount} counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }} role={role} />}
 
       {detailForRender && (
         <Suspense fallback={null}>

@@ -410,7 +410,7 @@ function matchesQuery(plant, q) {
     .some(c => c && c.toLowerCase().includes(lower))
 }
 
-export default function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, onSearch, onSearchByCamera, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones, user, collectionId, onSignOut, role = 'owner', allCollections = [], onSwitchCollection, onRenameCollection, ownCollectionId }) {
+export default function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, onSearch, onSearchByCamera, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones, onCareModeChange, user, collectionId, onSignOut, role = 'owner', allCollections = [], onSwitchCollection, onRenameCollection, ownCollectionId }) {
   const quarantinePlants = plants.filter(p => p.status === 'quarantine')
   // sick plants stay in their zone (mainPlants includes them)
   const mainPlants       = plants.filter(p => p.status !== 'quarantine')
@@ -459,6 +459,9 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   }, [resetConfirm])
 
   // Keep screen awake while in care mode
+  // Praneša parent'ui apie care mode būseną (kad App.jsx galėtų slėpti Navigation)
+  useEffect(() => { onCareModeChange?.(careMode) }, [careMode, onCareModeChange])
+
   useEffect(() => {
     if (!careMode || !navigator.wakeLock) return
     let lock = null
@@ -535,6 +538,18 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
 
   return (
     <div className="flex flex-col h-full bg-app">
+      {/* Top region — header + search + sort. Slepiama animuotai care mode'e
+          (kad augalų grid'as gautų visą ekraną). */}
+      <AnimatePresence initial={false}>
+        {!careMode && (
+          <motion.div
+            key="dash-top"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+            style={{ overflow: 'hidden' }}
+          >
       {/* Header */}
       <div className="px-5 pb-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
         <div className="flex items-center justify-between">
@@ -732,6 +747,9 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
           ))}
         </div>
       )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Inline search results */}
       {searching && (
@@ -902,7 +920,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-            className={`fixed ${role === 'viewer' ? 'bottom-2' : 'bottom-[68px]'} left-0 right-0 z-30`}
+            className="fixed bottom-2 left-0 right-0 z-30"
           >
             <div className="max-w-[430px] mx-auto px-4 pb-2">
             {postFertilizeFor ? (
