@@ -10,10 +10,22 @@ import { useAuth } from './hooks/useAuth'
 import LoginScreen from './components/LoginScreen'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
 
-const SearchModal = lazy(() => import('./components/SearchModal'))
-const PlantDetail = lazy(() => import('./components/PlantDetail'))
-const Biblioteka  = lazy(() => import('./pages/Biblioteka'))
-const Zinynas     = lazy(() => import('./pages/Zinynas'))
+// ChunkLoadError (senas SW aptarnauja seną HTML su naujais chunk hash'ais) → force reload
+// Kiti tinklo errori → retry kartą
+function lazyWithRetry(factory) {
+  return lazy(() =>
+    factory().catch(err => {
+      const isChunkErr = err?.name === 'ChunkLoadError' || /Loading chunk|Failed to fetch dynamically/i.test(err?.message ?? '')
+      if (isChunkErr) { window.location.reload(); return new Promise(() => {}) }
+      return factory() // retry kartą
+    })
+  )
+}
+
+const SearchModal = lazyWithRetry(() => import('./components/SearchModal'))
+const PlantDetail = lazyWithRetry(() => import('./components/PlantDetail'))
+const Biblioteka  = lazyWithRetry(() => import('./pages/Biblioteka'))
+const Zinynas     = lazyWithRetry(() => import('./pages/Zinynas'))
 
 export default function App() {
   const {
