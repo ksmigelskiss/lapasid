@@ -3,7 +3,7 @@ import { Sprout, Droplets, FlaskConical, Clock, Heart } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { createPortal } from 'react-dom'
 import { CARE_COPY, plPlantsInstr, pick } from '../constants/careCopy'
-import { moodFromCounts, confidenceLabel } from '../utils/careBuckets'
+import { moodFromCounts } from '../utils/careBuckets'
 
 // Bucket meta — vienas šaltinis vizualams
 const BUCKET_META = {
@@ -65,9 +65,7 @@ export default function CareSessionSummary({ session, confidence = 0, onDismiss 
   const fertilizingVerb = pick(CARE_COPY.bulk.section.fertilizing)
 
   // Confidence display
-  const confPct   = Math.round(confidence * 100)
-  const confKey   = confidenceLabel(confidence)
-  const confText  = CARE_COPY.confidence[confKey]
+  const confPct = Math.round(confidence * 100)
 
   // Auto-close po 10s
   useEffect(() => {
@@ -91,14 +89,14 @@ export default function CareSessionSummary({ session, confidence = 0, onDismiss 
         transition={{ type: 'spring', damping: 26, stiffness: 320 }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Confidence — pakeičia anksčiau buvusią Sprout ikoną */}
+        {/* Confidence — antraštinis akcentas paliktas pagyrimui (sumažinta) */}
         <div className="text-center">
-          <p className="text-[42px] font-extrabold leading-none text-sage-600">{confPct}%</p>
-          <p className="text-xs font-semibold text-gray-500 mt-1.5 uppercase tracking-wider">{confText}</p>
+          <p className="text-xl font-bold leading-none text-sage-600">{confPct}%</p>
+          <p className="text-[10px] font-semibold text-gray-400 mt-1 uppercase tracking-wider">Prognozių tikslumas</p>
         </div>
 
-        {/* Headline + subtitle */}
-        <h2 className="text-xl font-extrabold text-gray-900 text-center mt-5 leading-tight">{headline}</h2>
+        {/* Headline (pagrindinis akcentas) + subtitle */}
+        <h2 className="text-2xl font-extrabold text-gray-900 text-center mt-5 leading-tight">{headline}</h2>
         <p className="text-sm text-gray-500 text-center mt-1.5">
           Pasirūpinai {uniquePlants} {plPlantsInstr(uniquePlants)}
         </p>
@@ -125,13 +123,7 @@ export default function CareSessionSummary({ session, confidence = 0, onDismiss 
           )}
         </div>
 
-        {/* Dismiss */}
-        <button
-          onClick={onDismiss}
-          className="mt-5 w-full h-11 rounded-2xl bg-sage-500 active:bg-sage-600 text-white font-bold transition-colors"
-        >
-          Baigta
-        </button>
+        {/* Dismiss — paspaudus bet kur ar 10s auto-close. „Baigta" mygtuko atsisakyta. */}
       </motion.div>
     </motion.div>,
     document.body
