@@ -13,8 +13,20 @@ import { buildDashboardSystemPrompt } from '../utils/collectionChatContext'
 import CareOverview from '../components/CareOverview'
 import PostFertilizePrompt from '../components/PostFertilizePrompt'
 import CareToast from '../components/CareToast'
+import CareSessionSummary from '../components/CareSessionSummary'
 import { aggregateConfidence, bucketCounts, moodFromCounts } from '../utils/careBuckets'
 import { CARE_COPY, pick } from '../constants/careCopy'
+
+// Tuščia care session struktūra
+const emptySession = () => ({
+  watering:    { perfect: 0, early: 0, late: 0, waylate: 0 },
+  fertilizing: { perfect: 0, early: 0, late: 0, waylate: 0 },
+  plants: new Set(),
+})
+
+const sessionTotal = (s) =>
+  s.watering.perfect + s.watering.early + s.watering.late + s.watering.waylate +
+  s.fertilizing.perfect + s.fertilizing.early + s.fertilizing.late + s.fertilizing.waylate
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { RefreshCw } from 'lucide-react'
 import { makeId, today } from '../utils/plantTransform'
@@ -435,6 +447,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const [postFertilizeFor, setPostFertilizeFor] = useState(null) // null | Set<plantId> — laukia "ar palaistei?" atsakymo
   const [careToast, setCareToast] = useState(null)         // { headline, counts, total } | null — bulk action reward
   const careToastTimerRef = useRef(null)
+  const sessionRef = useRef(emptySession())                 // Visi care session veiksmai aggregate'inami
+  const [showSummary, setShowSummary] = useState(null)      // session snapshot | null — modal po exit
   const [confirmType, setConfirmType]   = useState(null)   // 'watering' | 'fertilizing' | null
   const [countdown, setCountdown]       = useState(5)
   const confirmTimerRef = useRef(null)
@@ -458,12 +472,27 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
 
   const exitCareMode = useCallback(() => {
     resetConfirm()
-    setCareMode(false)
     setCareChecked(new Set())
     setPostFertilizeFor(null)
     setCareToast(null)
     if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
+    // Jei session turėjo veiksmų — parodom summary modal'ą; care mode visada baigiamas
+    const s = sessionRef.current
+    if (sessionTotal(s) > 0) {
+      setShowSummary({
+        watering:    { ...s.watering },
+        fertilizing: { ...s.fertilizing },
+        plants:      new Set(s.plants),
+      })
+    }
+    sessionRef.current = emptySession()
+    setCareMode(false)
   }, [resetConfirm])
+
+  const dismissSummary = useCallback(() => setShowSummary(null), [])
+
+  // Care mode'o pradžia — reset'inam session
+  useEffect(() => { if (careMode) sessionRef.current = emptySession() }, [careMode])
 
   // DEV/DEMO: parodo fake toast'ą be jokio DB rašymo. Cikliuoja per 3 mood'us.
   const careToastDemoIdx = useRef(0)
@@ -480,18 +509,38 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     careToastTimerRef.current = setTimeout(() => setCareToast(null), 4500)
   }, [])
 
-  // Toast po bulk action — antraštė pagal mood'ą + breakdown pagal bucket'us
+  // Toast po bulk action — antraštė pagal mood'ą + breakdown pagal bucket'us.
+  // Tuo pačiu papildo session'ą (kad exit summary turėtų aggregate'ą).
   const showCareToast = useCallback((plantsToShow, kind) => {
     const days = plantsToShow
       .map(p => kind === 'watering' ? getWateringForecast(p).daysUntil : getFertilizingForecast(p).daysUntil)
       .filter(d => d != null)
     if (days.length === 0) return
     const counts = bucketCounts(days)
+
+    // Aggregate į session
+    const sb = sessionRef.current[kind]
+    sb.perfect += counts.perfect
+    sb.early   += counts.early
+    sb.late    += counts.late
+    sb.waylate += counts.waylate
+    plantsToShow.forEach(p => sessionRef.current.plants.add(p.id))
+
+    // Per-action toast
     const mood = moodFromCounts(counts)
     const headline = pick(CARE_COPY.bulk.headline[mood])
     setCareToast({ headline, counts, total: plantsToShow.length })
     if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
     careToastTimerRef.current = setTimeout(() => setCareToast(null), 4500)
+  }, [])
+
+  // DEMO: session summary fake data
+  const runSessionSummaryDemo = useCallback(() => {
+    setShowSummary({
+      watering:    { perfect: 5, early: 2, late: 1, waylate: 0 },
+      fertilizing: { perfect: 2, early: 0, late: 0, waylate: 1 },
+      plants: new Set(['fake1','fake2','fake3','fake4','fake5','fake6','fake7','fake8']),
+    })
   }, [])
 
   // Keep screen awake while in care mode
@@ -975,7 +1024,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         </button>
       )}
 
-      {/* Care reward toast — virš care action bar'o */}
+      {/* Care reward toast — viršuje, kaip notification */}
       <AnimatePresence>
         {careMode && careToast && (
           <motion.div
@@ -984,13 +1033,19 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed bottom-[72px] left-0 right-0 z-30 pointer-events-none"
+            className="fixed top-0 left-0 right-0 z-30 pointer-events-none"
+            style={{ paddingTop: 'max(0.5rem, env(safe-area-inset-top))' }}
           >
             <div className="max-w-[430px] mx-auto px-4">
               <CareToast headline={careToast.headline} counts={careToast.counts} total={careToast.total} />
             </div>
           </motion.div>
         )}
+      </AnimatePresence>
+
+      {/* Care session summary modal — atsiranda išėjus iš care mode po >0 veiksmų */}
+      <AnimatePresence>
+        {showSummary && <CareSessionSummary session={showSummary} onDismiss={dismissSummary} />}
       </AnimatePresence>
 
       {/* Care mode action bar */}
@@ -1005,13 +1060,21 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             className="fixed bottom-2 left-0 right-0 z-30"
           >
             <div className="max-w-[430px] mx-auto px-4 pb-2">
-            {/* DEV/DEMO: pakeičia veiksmus į demo toast trigger. Pašalinti po testavimo. */}
-            <button
-              onClick={runCareToastDemo}
-              className="absolute -top-7 right-4 text-[10px] font-medium text-gray-400 bg-white/80 backdrop-blur-sm rounded-md px-2 py-0.5 border border-gray-200"
-            >
-              Demo toast
-            </button>
+            {/* DEV/DEMO: du mygtukai be DB rašymo. Pašalinti po testavimo. */}
+            <div className="absolute -top-7 right-4 flex gap-1.5">
+              <button
+                onClick={runCareToastDemo}
+                className="text-[10px] font-medium text-gray-400 bg-white/80 backdrop-blur-sm rounded-md px-2 py-0.5 border border-gray-200"
+              >
+                Demo toast
+              </button>
+              <button
+                onClick={runSessionSummaryDemo}
+                className="text-[10px] font-medium text-gray-400 bg-white/80 backdrop-blur-sm rounded-md px-2 py-0.5 border border-gray-200"
+              >
+                Demo summary
+              </button>
+            </div>
             {postFertilizeFor ? (
               <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3">
                 <PostFertilizePrompt

@@ -26,25 +26,25 @@ const BUCKET_META = {
 export default function CareToast({ headline, counts, total }) {
   return (
     <motion.div
-      initial={{ y: 20, opacity: 0 }}
+      initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      exit={{ y: 20, opacity: 0 }}
+      exit={{ y: -20, opacity: 0 }}
       transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-      className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3"
+      className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3.5"
     >
-      <p className="text-[13px] font-bold text-gray-800 leading-tight">{headline}</p>
-      <p className="text-[10px] text-gray-400 mt-0.5 mb-2">
+      <p className="text-[15px] font-bold text-gray-900 leading-tight">{headline}</p>
+      <p className="text-[11px] text-gray-400 mt-0.5 mb-2">
         {total} {plPlants(total)}
       </p>
-      <div className="flex flex-wrap gap-x-3 gap-y-1">
+      <div className="flex flex-wrap gap-x-3 gap-y-1.5">
         {Object.entries(counts).map(([key, count]) => {
           if (count <= 0) return null
           const { Icon, color } = BUCKET_META[key]
           return (
             <div key={key} className="flex items-center gap-1">
-              <Icon size={12} className={color} />
-              <span className="text-[11px] font-semibold text-gray-700">{count}</span>
-              <span className="text-[11px] text-gray-500">{CARE_COPY.bulk.label[key]}</span>
+              <Icon size={14} className={color} />
+              <span className="text-[12px] font-bold text-gray-800">{count}</span>
+              <span className="text-[12px] text-gray-500">{CARE_COPY.bulk.label[key]}</span>
             </div>
           )
         })}
