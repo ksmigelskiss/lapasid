@@ -12,6 +12,7 @@ import { getWateringForecast, shouldShowWateringAlert } from '../utils/wateringF
 import { buildDashboardSystemPrompt } from '../utils/collectionChatContext'
 import CareOverview from '../components/CareOverview'
 import PostFertilizePrompt from '../components/PostFertilizePrompt'
+import { aggregateConfidence } from '../utils/careBuckets'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { RefreshCw } from 'lucide-react'
 import { makeId, today } from '../utils/plantTransform'
@@ -527,6 +528,12 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
 
   const sortedPlants = useMemo(() => sortPlants(mainPlants, sortKey), [mainPlants, sortKey])
 
+  // Confidence aggregate per visus auginama augalus (priežiūros badge'ui)
+  const careConfidence = useMemo(
+    () => aggregateConfidence(mainPlants.map(p => getWateringForecast(p))),
+    [mainPlants]
+  )
+
   // Zone grouping: only active when zones exist
   const hasZones = zones.length > 0
   const zonedPlants = hasZones
@@ -644,10 +651,20 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             <div className="flex items-center gap-2">
               <button
                 onClick={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
-                className={`transition-colors rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px] ${careMode ? 'bg-sage-500 active:bg-sage-600' : 'bg-white border border-gray-200 active:bg-surface'}`}
+                className={`relative transition-colors rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px] ${careMode ? 'bg-sage-500 active:bg-sage-600' : 'bg-white border border-gray-200 active:bg-surface'}`}
               >
                 <Sprout size={20} className={careMode ? 'text-white' : 'text-sage-500'} />
                 <span className={`text-[10px] font-medium mt-0.5 ${careMode ? 'text-white' : 'text-sage-500'}`}>priežiūra</span>
+                {/* Confidence badge — rodomas tik išėjus iš care mode'o ir kai turime duomenų */}
+                {!careMode && mainPlants.length > 0 && careConfidence > 0 && (
+                  <div className={`absolute -top-1.5 -right-1.5 px-1.5 h-[16px] flex items-center justify-center rounded-full shadow-sm ${
+                    careConfidence >= 0.66 ? 'bg-sage-500' :
+                    careConfidence >= 0.33 ? 'bg-amber-400' :
+                    'bg-gray-300'
+                  }`}>
+                    <span className="text-[9px] font-bold leading-none text-white">{Math.round(careConfidence * 100)}%</span>
+                  </div>
+                )}
               </button>
               <div className="border border-gray-300 rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]">
                 <span className="text-2xl font-extrabold text-gray-700 leading-none">{plants.length}</span>
