@@ -220,14 +220,17 @@ export function useAuth() {
     const urlParams      = new URLSearchParams(window.location.search)
 
     // ── Viewer token check — BEFORE Firebase auth ──────────────────
-    const inviteToken       = urlParams.get('invite')
-    const inviteRole        = urlParams.get('role')
-    const savedViewerToken  = localStorage.getItem('viewer-token')
-    const viewerToken       = (inviteToken && inviteRole === 'viewer') ? inviteToken : savedViewerToken
+    // URL parametrai NĖRA trinami — URL yra prieigos raktas (kaip Notion/Google Docs share)
+    const inviteToken      = urlParams.get('invite')
+    const inviteRole       = urlParams.get('role')
+    const savedViewerToken = localStorage.getItem('viewer-token')
+    const rawViewerToken   = (inviteToken && inviteRole === 'viewer') ? inviteToken : savedViewerToken
+
+    // Prisijungęs vartotojas visada turi prioritetą prieš viewer tokeną
+    const viewerToken = rawViewerToken && !auth.currentUser ? rawViewerToken : null
 
     if (viewerToken) {
-      if (inviteToken) window.history.replaceState({}, '', window.location.pathname)
-      localStorage.setItem('viewer-token', viewerToken)
+      localStorage.setItem('viewer-token', viewerToken) // cache refresh'ams be URL
 
       getDoc(doc(db, 'invites', viewerToken)).then(snap => {
         if (!snap.exists() || snap.data().active === false ||
