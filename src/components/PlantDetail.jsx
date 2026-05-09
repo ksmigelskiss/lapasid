@@ -542,32 +542,20 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
       {/* ── Actions ── */}
       {onAction && (
         <div className="flex flex-col gap-2 pt-1">
-          {section === 'nori' && (<>
+          {section === 'nori' && (
             <button onClick={() => onAction('buy', plant)}
               className="w-full py-3.5 rounded-2xl text-sm font-medium text-white bg-sage-500 hover:bg-sage-600 transition-colors">
               Pirkau, turiu!
             </button>
-            <button onClick={() => onAction('pirkinys', plant)}
-              className={`w-full py-3 rounded-2xl text-sm font-medium transition-colors ${
-                plant.pirkinys
-                  ? 'bg-orange-100 text-orange-600 hover:bg-orange-200'
-                  : 'bg-surface-2 text-gray-500 hover:bg-surface-2'
-              }`}>
-              {plant.pirkinys ? 'Pirkimo sąraše ✓' : 'Pridėti į pirkimo sąrašą'}
-            </button>
-          </>)}
+          )}
           {section === 'istorija' && (<>
             <button onClick={() => { onAction('tryAgain', plant); onClose() }}
               className="w-full py-3.5 rounded-2xl text-sm font-medium text-white bg-sage-500 hover:bg-sage-600 transition-colors">
               Bandyti vėl
             </button>
-            <button onClick={() => onAction('pirkinys', plant)}
-              className={`w-full py-3 rounded-2xl text-sm font-medium transition-colors ${
-                plant.pirkinys
-                  ? 'bg-orange-100 text-orange-600 hover:bg-orange-200'
-                  : 'bg-surface-2 text-gray-500 hover:bg-surface-2'
-              }`}>
-              {plant.pirkinys ? 'Pirkimo sąraše ✓' : 'Noriu nusipirkti vėl'}
+            <button onClick={() => { onAction('wantAgain', plant); onClose() }}
+              className="w-full py-3 rounded-2xl text-sm font-medium bg-surface-2 text-gray-600 hover:bg-surface-2 transition-colors">
+              Noriu nusipirkti vėl
             </button>
           </>)}
           {(section === 'auginama' || section === 'nori' || section === 'istorija') && (

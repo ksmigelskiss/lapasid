@@ -1,7 +1,7 @@
 import { useState, useRef, memo } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, ShoppingCart, Ghost, FileText, MapPin, FlaskConical, Check, X } from 'lucide-react'
+import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, Ghost, FileText, MapPin, FlaskConical, Check, X } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
@@ -156,16 +156,11 @@ const PlantCard = memo(function PlantCard({
         )}
 
         {/* Right-side badge column */}
-        {(showDashboardBadge || plant.pirkinys || section === 'istorija' || noteCount > 0) && (
+        {(showDashboardBadge || section === 'istorija' || noteCount > 0) && (
           <div className={`absolute ${section === 'auginama' ? 'top-12' : 'top-6'} right-1.5 flex flex-col gap-1 items-center`}>
             {showDashboardBadge && (
               <div className="bg-sage-500/90 backdrop-blur-sm rounded-md p-0.5">
                 <House size={10} className="text-white" />
-              </div>
-            )}
-            {plant.pirkinys && (
-              <div className="bg-orange-500/90 backdrop-blur-sm rounded-md p-0.5">
-                <ShoppingCart size={10} className="text-white" />
               </div>
             )}
             {section === 'istorija' && (

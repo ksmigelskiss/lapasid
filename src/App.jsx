@@ -59,18 +59,18 @@ export default function App() {
   // usePlants visada kviečiamas (hooks taisyklės), bet veikia tik kai collectionId žinomas
   const {
     syncFromRemote,
-    dashboard, library,
+    dashboard, library, archive,
     addToDashboard, addToWishlist,
     markAsDied, moveToDashboard,
     updateComment, updateImage, updateStatus, updatePlant, deletePlant,
-    addTimelineEvent, deleteTimelineEvent, updateChat, togglePirkinys,
+    addTimelineEvent, deleteTimelineEvent, updateChat,
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred,
     updateUzrasai,
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
   } = usePlants(collectionId, viewerToken)
 
   const livePlant = detailPlant
-    ? [...dashboard, ...library].find(p => p.id === detailPlant.plant.id)
+    ? library.find(p => p.id === detailPlant.plant.id)
       ?? detailPlant.plant
     : null
 
@@ -168,7 +168,7 @@ export default function App() {
       return
     }
     if (action === 'tryAgain'){ moveToDashboard(plant.id); setTab('dashboard') }
-    if (action === 'pirkinys'){ togglePirkinys(plant.id) }
+    if (action === 'wantAgain'){ updatePlant(plant.id, { kategorija: 'nori' }); setTab('biblioteka') }
     if (action === 'delete')  setDeleteTarget({ plant, section: 'library' })
   }
 
@@ -278,12 +278,12 @@ export default function App() {
     { key: 'biblioteka', page: (
       <Suspense fallback={null}>
         <Biblioteka
-          plants={library}
-          onTap={p => openDetail(p, p.kategorija === 'auginama' ? 'nori' : p.kategorija)}
+          plants={archive}
+          onTap={p => openDetail(p, p.kategorija)}
           onSearch={q => { setSearchAutoCamera(false); setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
           onSearchByCamera={() => { setSearchAutoCamera(true); setSearchInitialQuery(''); setShowSearch(true) }}
           onSaveToZinynas={addToZinynas}
-          onViewPlant={p => openDetail(p, p.kategorija === 'auginama' ? 'nori' : p.kategorija)}
+          onViewPlant={p => openDetail(p, p.kategorija)}
           onRefresh={syncFromRemote}
         />
       </Suspense>

@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Star, SlidersHorizontal, Search, Ghost, ShoppingCart, BookOpen, RefreshCw, FileText, Camera } from 'lucide-react'
+import { Star, SlidersHorizontal, Search, Ghost, BookOpen, RefreshCw, FileText, Camera } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import CollectionChat from '../components/CollectionChat'
@@ -14,10 +14,16 @@ const SORT_OPTIONS = [
   { key: 'difficulty', label: 'Sunkumas', icon: Star },
 ]
 
-const TAGS = [
-  { key: 'pirkti',  Icon: ShoppingCart, label: 'Įsigyti' },
-  { key: 'mirei',   Icon: Ghost,        label: 'Mirę' },
-  { key: 'uzrasai', Icon: FileText,     label: 'Su užrašais' },
+// Pagrindinis kategorijos filtras (mutually exclusive). `null` = visi.
+// Bibliotekoje rodomi tik `nori` ir `istorija` augalai (`auginama` lieka Dashboard'e).
+const KATEGORIJA_TABS = [
+  { key: 'nori',     label: 'Norėčiau' },
+  { key: 'istorija', label: 'Istorija', Icon: Ghost },
+]
+
+// Papildomi modifikatoriai (AND virš kategorijos)
+const MODIFIERS = [
+  { key: 'uzrasai', Icon: FileText, label: 'Su užrašais' },
 ]
 
 function sortPlants(plants, key) {
@@ -38,19 +44,22 @@ function matchesQuery(plant, q) {
     .some(c => c && c.toLowerCase().includes(lower))
 }
 
-function matchesTags(plant, tags) {
-  if (tags.size === 0) return true
-  if (tags.has('nauji')   && plant.kategorija !== 'nori')       return false
-  if (tags.has('mirei')   && plant.kategorija !== 'istorija')   return false
-  if (tags.has('pirkti')  && !plant.pirkinys)                   return false
-  if (tags.has('uzrasai') && !(plant.uzrasai?.length > 0 || plant.komentaras?.trim())) return false
+function matchesKategorija(plant, kategorija) {
+  if (kategorija == null) return true
+  return plant.kategorija === kategorija
+}
+
+function matchesModifiers(plant, mods) {
+  if (mods.size === 0) return true
+  if (mods.has('uzrasai') && !(plant.uzrasai?.length > 0 || plant.komentaras?.trim())) return false
   return true
 }
 
 export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, onSaveToZinynas, onViewPlant, onRefresh }) {
-  const [activeTags, setActiveTags] = useState(new Set())
+  const [kategorija, setKategorija] = useState(null)        // null = visi
+  const [modifiers, setModifiers]   = useState(new Set())
   const [sortKey, setSortKey]       = useState('added')
-  const [showSort, setShowSort]     = useState(false)
+  const [showFilters, setShowFilters] = useState(false)
   const [showChat, setShowChat]     = useState(false)
   const [searching, setSearching]   = useState(false)
   const [query, setQuery]           = useState('')
@@ -58,12 +67,13 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
   const scrollRef = useRef(null)
   const { pullY, refreshing } = usePullToRefresh(scrollRef, onRefresh ?? (() => {}))
 
-  const isVisi = activeTags.size === 0
-
-  // Reset to Visi when app returns from background
+  // Reset to "visi" when app returns from background
   useEffect(() => {
     const handle = () => {
-      if (document.visibilityState === 'visible') setActiveTags(new Set())
+      if (document.visibilityState === 'visible') {
+        setKategorija(null)
+        setModifiers(new Set())
+      }
     }
     document.addEventListener('visibilitychange', handle)
     return () => document.removeEventListener('visibilitychange', handle)
@@ -73,8 +83,8 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
     if (searching) inputRef.current?.focus()
   }, [searching])
 
-  const toggleTag = useCallback((key) => {
-    setActiveTags(prev => {
+  const toggleModifier = useCallback((key) => {
+    setModifiers(prev => {
       const next = new Set(prev)
       if (next.has(key)) next.delete(key)
       else next.add(key)
@@ -82,15 +92,24 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
     })
   }, [])
 
+  // Skaičiai segmented control'ui
+  const counts = useMemo(() => ({
+    all:      plants.length,
+    nori:     plants.filter(p => p.kategorija === 'nori').length,
+    istorija: plants.filter(p => p.kategorija === 'istorija').length,
+  }), [plants])
+
   const visible = useMemo(() => {
-    const filtered = plants.filter(p => matchesTags(p, activeTags))
+    const filtered = plants.filter(p => matchesKategorija(p, kategorija) && matchesModifiers(p, modifiers))
     const sorted   = sortPlants(filtered, sortKey)
     if (!query.trim()) return sorted
     return sorted.filter(p => matchesQuery(p, query))
-  }, [plants, activeTags, sortKey, query])
+  }, [plants, kategorija, modifiers, sortKey, query])
 
   const closeSearch = () => { setSearching(false); setQuery('') }
   const launchFullSearch = () => { onSearch(query); closeSearch() }
+
+  const filtersActive = kategorija != null || modifiers.size > 0 || sortKey !== 'added'
 
   return (
     <div className="flex flex-col h-full bg-lib">
@@ -152,9 +171,9 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
         )}
         {!searching && (
           <button
-            onClick={() => setShowSort(v => !v)}
+            onClick={() => setShowFilters(v => !v)}
             className={`flex-shrink-0 w-11 rounded-2xl flex items-center justify-center transition-colors ${
-              showSort || sortKey !== 'added' || !isVisi
+              showFilters || filtersActive
                 ? 'bg-gray-800 text-white'
                 : 'bg-white border border-gray-200 text-gray-600'
             }`}
@@ -164,88 +183,87 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
         )}
       </div>
 
-      {/* Collapsible: sort + tag filters */}
-      {showSort && !searching && (
-        <div className="space-y-3 mb-3">
-          {/* Tag filter row — above sort */}
-          <div className="flex items-end gap-2 px-5">
-            {/* Visi — square text button */}
+      {/* Segmented control — kategorijos filtras (visada matomas) */}
+      {!searching && (
+        <div className="px-5 mb-3">
+          <div className="inline-flex items-center bg-white border border-gray-200 rounded-2xl p-1 w-full">
             <button
-              onClick={() => setActiveTags(new Set())}
-              className={`flex-shrink-0 flex flex-col items-center gap-0.5`}
+              onClick={() => setKategorija(null)}
+              className={`flex-1 h-9 flex items-center justify-center gap-1 rounded-xl text-xs font-semibold transition-colors ${
+                kategorija == null ? 'bg-gray-800 text-white' : 'text-gray-500 active:bg-surface'
+              }`}
             >
-              <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-[11px] font-bold transition-colors ${
-                isVisi ? 'bg-gray-800 text-white' : 'bg-white border border-gray-200 text-gray-400'
-              }`}>
-                Visi
-              </span>
-              <span className="text-[9px] font-medium leading-none text-transparent select-none">·</span>
+              <span>Visi</span>
+              <span className={kategorija == null ? 'text-white/70' : 'text-gray-400'}>{counts.all}</span>
             </button>
-
-            {/* Nauji — square text button */}
-            {(() => {
-              const isActive = activeTags.has('nauji')
-              return (
-                <button
-                  onClick={() => toggleTag('nauji')}
-                  className="flex-shrink-0 flex flex-col items-center gap-0.5"
-                >
-                  <span className={`w-9 h-9 rounded-xl flex items-center justify-center text-[11px] font-bold transition-colors ${
-                    isActive
-                      ? 'bg-gray-800 text-white'
-                      : 'text-gray-400 bg-white border border-gray-200'
-                  }`}>
-                    Nauji
-                  </span>
-                  <span className="text-[9px] font-medium leading-none text-transparent select-none">·</span>
-                </button>
-              )
-            })()}
-
-            <div className="w-px h-9 bg-gray-200 flex-shrink-0" />
-
-            {/* Icon tags */}
-            {TAGS.map(({ key, Icon, label }) => {
-              const isActive = activeTags.has(key)
+            {KATEGORIJA_TABS.map(({ key, label, Icon }) => {
+              const active = kategorija === key
+              const count = counts[key]
               return (
                 <button
                   key={key}
-                  title={label}
-                  onClick={() => toggleTag(key)}
-                  className="flex-shrink-0 flex flex-col items-center gap-0.5"
+                  onClick={() => setKategorija(active ? null : key)}
+                  className={`flex-1 h-9 flex items-center justify-center gap-1 rounded-xl text-xs font-semibold transition-colors ${
+                    active ? 'bg-gray-800 text-white' : 'text-gray-500 active:bg-surface'
+                  }`}
                 >
-                  <span className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
-                    isActive
-                      ? 'bg-sage-500 text-white'
-                      : 'text-gray-400 bg-white border border-gray-200'
-                  }`}>
-                    <Icon size={17} />
-                  </span>
-                  <span className={`text-[9px] font-medium leading-none transition-colors ${
-                    isActive ? 'text-gray-700' : 'text-gray-400'
-                  }`}>
-                    {label}
-                  </span>
+                  {Icon && <Icon size={13} />}
+                  <span>{label}</span>
+                  <span className={active ? 'text-white/70' : 'text-gray-400'}>{count}</span>
                 </button>
               )
             })}
           </div>
+        </div>
+      )}
 
-          {/* Sort row */}
-          <div className="flex gap-2 overflow-x-auto scrollbar-none px-5">
-            {SORT_OPTIONS.map(opt => (
-              <button
-                key={opt.key}
-                onClick={() => setSortKey(opt.key)}
-                className={`flex-shrink-0 text-xs font-medium rounded-xl px-3 py-1.5 transition-colors ${
-                  sortKey === opt.key
-                    ? 'bg-sage-500 text-white'
-                    : 'bg-white border border-gray-200 text-gray-600 hover:bg-surface'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
+      {/* Išplečiama: modifikatoriai + sort */}
+      {showFilters && !searching && (
+        <div className="space-y-3 mb-3 px-5">
+          {/* Modifikatoriai (papildomi AND filtrai) */}
+          {MODIFIERS.length > 0 && (
+            <div>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Papildomai</p>
+              <div className="flex gap-2 flex-wrap">
+                {MODIFIERS.map(({ key, Icon, label }) => {
+                  const active = modifiers.has(key)
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => toggleModifier(key)}
+                      className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
+                        active
+                          ? 'bg-sage-500 text-white'
+                          : 'bg-white border border-gray-200 text-gray-600'
+                      }`}
+                    >
+                      <Icon size={13} />
+                      {label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Sort */}
+          <div>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Rūšiuoti</p>
+            <div className="flex gap-2 overflow-x-auto scrollbar-none">
+              {SORT_OPTIONS.map(opt => (
+                <button
+                  key={opt.key}
+                  onClick={() => setSortKey(opt.key)}
+                  className={`flex-shrink-0 text-xs font-medium rounded-xl px-3 py-1.5 transition-colors ${
+                    sortKey === opt.key
+                      ? 'bg-sage-500 text-white'
+                      : 'bg-white border border-gray-200 text-gray-600 hover:bg-surface'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -287,7 +305,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
               >
                 Ieškoti „{query}" naujų augalų
               </button>
-            ) : isVisi && (
+            ) : kategorija == null && (
               <button
                 onClick={() => setSearching(true)}
                 className="mt-1 px-6 py-3 bg-gray-800 text-white rounded-2xl text-sm font-medium"
@@ -305,9 +323,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
                   plant={plant}
                   section={plant.kategorija === 'istorija' ? 'istorija' : 'nori'}
                   onTap={() => onTap(plant)}
-                 
                   cardBg="bg-white"
-                  showDashboardBadge={plant.kategorija === 'auginama'}
                 />
               ))}
             </div>

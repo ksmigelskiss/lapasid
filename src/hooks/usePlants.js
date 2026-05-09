@@ -197,7 +197,8 @@ export function usePlants(collectionId, viewerToken = null) {
   const dashboard  = plants.filter(p => p.kategorija === 'auginama')
   const wishlist   = plants.filter(p => p.kategorija === 'nori')
   const history    = plants.filter(p => p.kategorija === 'istorija')
-  const library    = plants
+  const library    = plants                                          // visi (Dashboard search'ui)
+  const archive    = plants.filter(p => p.kategorija !== 'auginama') // Bibliotekai (be aktyvių)
   const zinynas    = data.zinynas  ?? []
   const zones      = data.zones   ?? []
   const settings   = data.settings ?? {}
@@ -248,7 +249,6 @@ export function usePlants(collectionId, viewerToken = null) {
       deathReason: '',
       lesson: '',
       zonaId: null,
-      pirkinys: false,
     })
   }, [updatePlant])
 
@@ -323,13 +323,6 @@ export function usePlants(collectionId, viewerToken = null) {
         }
         return updated
       }),
-    }))
-  }, [update])
-
-  const togglePirkinys = useCallback((id) => {
-    update(prev => ({
-      ...prev,
-      plants: prev.plants.map(p => p.id === id ? { ...p, pirkinys: !p.pirkinys } : p),
     }))
   }, [update])
 
@@ -431,7 +424,7 @@ export function usePlants(collectionId, viewerToken = null) {
     markAsDied, moveToDashboard,
     updateComment, updateImage, updateStatus, updatePlant, deletePlant,
     addTimelineEvent, deleteTimelineEvent, clearTimeline, updateChat,
-    library, togglePirkinys,
+    library, archive,
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred,
     updateUzrasai,
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
