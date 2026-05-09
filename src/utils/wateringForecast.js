@@ -74,10 +74,12 @@ export function getWateringForecast(plant) {
 
   // Weighted blend: confidence 0→1 as we accumulate 0→3 same-season gaps
   let resolvedInterval = theoreticalInterval
+  let historicalAvg    = null
+  let confidence       = 0
   if (validGaps.length > 0) {
-    const historicalAvg = Math.round(validGaps.reduce((s, g) => s + g, 0) / validGaps.length)
-    const confidence    = Math.min(validGaps.length / 3, 1)
-    resolvedInterval    = Math.round(historicalAvg * confidence + theoreticalInterval * (1 - confidence))
+    historicalAvg    = Math.round(validGaps.reduce((s, g) => s + g, 0) / validGaps.length)
+    confidence       = Math.min(validGaps.length / 3, 1)
+    resolvedInterval = Math.round(historicalAvg * confidence + theoreticalInterval * (1 - confidence))
   }
 
   if (!resolvedInterval) {
@@ -86,6 +88,7 @@ export function getWateringForecast(plant) {
       intervalDays: null, nextDate: null, daysUntil: null,
       isOverdue: false, skipSeason: true, metodas,
       isSnoozed: false, snoozedUntil: null, lastInspectionDate: lastInspection?.date ?? null,
+      theoreticalInterval, historicalAvg, confidence, validGapsCount: validGaps.length,
     }
   }
 
@@ -116,6 +119,10 @@ export function getWateringForecast(plant) {
     isSnoozed,
     snoozedUntil,
     lastInspectionDate: lastInspection?.date ?? null,
+    theoreticalInterval,
+    historicalAvg,
+    confidence,
+    validGapsCount: validGaps.length,
   }
 }
 
