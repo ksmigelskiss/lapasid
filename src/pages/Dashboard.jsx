@@ -1114,9 +1114,12 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         </button>
       )}
 
-      {/* Care reward toast — viršuje, kaip notification */}
+      {/* Care reward toast — viršuje, kaip notification.
+          Matomas ir care mode'e (header paslėptas), ir ne care mode'e
+          (single-plant veiksmai per CareWateringSheet). z-30 tinka virš
+          dashboard'o, ne care mode'e gali trumpai uždengti header'į. */}
       <AnimatePresence>
-        {careMode && careToast && (
+        {careToast && (
           <motion.div
             key="care-toast"
             initial={{ opacity: 0 }}
@@ -1242,7 +1245,17 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             zones={zones}
             onClose={() => setCareInfoPlant(null)}
             onAddEvent={(type, extra = {}) => {
-              onAddTimelineEvent(careInfoPlant.id, { id: makeId(), type, date: today(), komentaras: '', ...extra })
+              const plant = careInfoPlant
+              onAddTimelineEvent(plant.id, { id: makeId(), type, date: today(), komentaras: '', ...extra })
+              // Reward toast — tik watering veiksmui (delta + circuit šiame eventType nenuliniai).
+              // Detektuojam Palaisčiau path'ą per komentaro hint'ą — fert irgi reikia simuliuoti
+              // circuit detection'ui (jis pridėtas anksčiau handleFertilizeTap step'e).
+              if (type === 'watering') {
+                const eventTypes = extra.komentaras === 'Laistyta po tręšimo'
+                  ? ['fertilizing', 'watering']
+                  : ['watering']
+                showCareToast([plant], eventTypes, 'watering')
+              }
             }}
           />
         )}
