@@ -39,7 +39,8 @@ export default function PlantPassportPage({ plantId }) {
         const colSnap = await getDoc(doc(db, 'collections', passport.collectionId))
         if (colSnap.exists() && (colSnap.data().members ?? []).includes(user.uid)) {
           setStatus('redirecting')
-          window.location.href = `/?openPlant=${plantId}`
+          sessionStorage.setItem('open-plant', plantId)
+          window.location.href = '/'
         }
       } catch {}
     })
