@@ -8,7 +8,7 @@ import {
   getRedirectResult,
   signOut as firebaseSignOut,
 } from 'firebase/auth'
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc, updateDoc, getDocs, collection, query, limit } from 'firebase/firestore'
 import { auth, db, googleProvider } from '../utils/firebase'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { acceptInvite } from '../components/ProfileSheet'
@@ -117,15 +117,20 @@ async function processPendingInvite(uid) {
   }
 }
 
-// Nuskaito visų vartotojo kolekcijų sąrašą su vardais ir rolėmis
+// Nuskaito visų vartotojo kolekcijų sąrašą su vardais, rolėmis ir augalų egzistavimu
 async function loadAllCollections(uid, colIds) {
   const results = await Promise.all(colIds.map(async id => {
     try {
-      const snap = await getDoc(doc(db, 'collections', id))
+      const [snap, plantsSnap] = await Promise.all([
+        getDoc(doc(db, 'collections', id)),
+        getDocs(query(collection(db, 'collections', id, 'plants'), limit(1))),
+      ])
       if (!snap.exists()) return null
       const d = snap.data()
       const inferredRole = d.roles?.[uid] ?? (d.ownerId === uid ? 'owner' : 'member')
-      return { id, name: d.name || 'Kolekcija', role: inferredRole, ownerId: d.ownerId }
+      const hasPlants = plantsSnap.docs.length > 0 || (d.plants?.length ?? 0) > 0
+      const name = (!d.name || d.name === 'Kolekcija') ? 'Mano augalai' : d.name
+      return { id, name, role: inferredRole, ownerId: d.ownerId, hasPlants }
     } catch { return null }
   }))
   return results.filter(Boolean)

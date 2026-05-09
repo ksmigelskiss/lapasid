@@ -545,20 +545,23 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                   }
                 </button>
               )}
-              {/* Kolekcijų switcher — rodomas kai > 1 kolekcija */}
-              {allCollections.length > 1 ? (
-                <button
-                  onClick={() => setShowSwitcher(v => !v)}
-                  className="flex items-center gap-1 active:opacity-70"
-                >
-                  <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em]">
-                    {allCollections.find(c => c.id === collectionId)?.name ?? 'Kolekcija'}
-                  </p>
-                  <ChevronDown size={11} className="text-sage-400" />
-                </button>
-              ) : (
-                <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em]">Mano kolekcija</p>
-              )}
+              {/* Kolekcijų switcher — rodomas kai > 1 kolekcija su augalais */}
+              {(() => {
+                const switcher = allCollections.filter(c => c.hasPlants !== false)
+                return switcher.length > 1 ? (
+                  <button
+                    onClick={() => setShowSwitcher(v => !v)}
+                    className="flex items-center gap-1 active:opacity-70"
+                  >
+                    <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em]">
+                      {allCollections.find(c => c.id === collectionId)?.name ?? 'Mano augalai'}
+                    </p>
+                    <ChevronDown size={11} className="text-sage-400" />
+                  </button>
+                ) : (
+                  <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em]">Mano kolekcija</p>
+                )
+              })()}
             </div>
 
             {/* Kolekcijos pavadinimas — inline edit owner'iui */}
@@ -597,9 +600,9 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             )}
 
             {/* Switcher dropdown */}
-            {showSwitcher && allCollections.length > 1 && (
+            {showSwitcher && allCollections.filter(c => c.hasPlants !== false).length > 1 && (
               <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-lg border border-gray-100 z-10 min-w-[200px] overflow-hidden">
-                {allCollections.map(c => (
+                {allCollections.filter(c => c.hasPlants !== false).map(c => (
                   <button
                     key={c.id}
                     onClick={() => { onSwitchCollection?.(c.id); setShowSwitcher(false) }}
