@@ -147,14 +147,25 @@ function FertilizingStatus({ snapshot, fertilized }) {
  *   laikas baigiasi → atšaukia, grįžta į pradinę
  */
 
-async function recordEvent(plantId, eventType, komentaras = '') {
-  const res = await fetch('/api/passport/water', {
+// events: [{ type: 'watering'|'fertilizing', komentaras?: string }]
+async function recordEvents(plantId, events) {
+  const res = await fetch('/api/passport/care', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ plantId, eventType, komentaras }),
+    body: JSON.stringify({ plantId, events }),
   })
   if (!res.ok) throw new Error(await res.text())
   return res.json()
+}
+
+// Fire-and-forget unmount fallback (kai vartotojas užduoda Tręšti, bet
+// nesujaučia ar palaistė, tada uždaro kortelę — fert event'as vis tiek
+// įrašomas per sendBeacon, kad nebūtų prarasti).
+function recordEventsBeacon(plantId, events) {
+  try {
+    const blob = new Blob([JSON.stringify({ plantId, events })], { type: 'application/json' })
+    navigator.sendBeacon?.('/api/passport/care', blob)
+  } catch {}
 }
 
 export default function PlantCareCard({ passport, plantId, user }) {
@@ -166,8 +177,11 @@ export default function PlantCareCard({ passport, plantId, user }) {
   const [countdown,   setCountdown]   = useState(5)
   const [error,       setError]       = useState(null)
   const [postFert,    setPostFert]    = useState(false)
-  const timerRef       = useRef(null)
-  const fertInflightRef = useRef(null)
+  const timerRef         = useRef(null)
+  // pendingFertRef = true reiškia "vartotojas patvirtino tręšimą, bet
+  // dar neatsakė Palaisčiau/Nelaisčiau — API call dar nepaleistas".
+  // Naudojama unmount fallback'ui per sendBeacon.
+  const pendingFertRef   = useRef(false)
 
   // Countdown — startuoja kai laukiama patvirtinimo
   useEffect(() => {
@@ -191,27 +205,25 @@ export default function PlantCareCard({ passport, plantId, user }) {
     setCountdown(5)
   }
 
-  // Optimistic UI: NFC pass'as eina per Vercel serverless (cold start + Firebase Admin),
-  // todėl reali užklausa lėta. Vietoj to UI persijungia iškart, API fone. Jei
-  // failina — atstatoma būsena ir parodoma klaida.
+  // Optimistic UI + deferred fert fire:
+  // - Watering tap: UI persijungia momentaliai, API fone, revert jei fail.
+  // - Fertilizing tap: UI persijungia momentaliai, BET API call atidedamas
+  //   kol vartotojas atsako prompt'ą — tada vienoje užklausoje siunčiam
+  //   [fert] arba [fert, water] kombinuotai (vietoj 2 atskirų API call'ų).
+  //   Unmount fallback (sendBeacon) jei vartotojas uždaro nesujaučęs.
   function commitAction(type) {
     setError(null)
     resetConfirm()
     if (type === 'watering') {
       setWatered(true)
-      recordEvent(plantId, 'watering').catch(() => {
+      recordEvents(plantId, [{ type: 'watering' }]).catch(() => {
         setWatered(false)
         setError('Nepavyko įrašyti laistymo. Bandyk dar kartą.')
       })
     } else if (type === 'fertilizing') {
       setFertilized(true)
       setPostFert(true)
-      fertInflightRef.current = recordEvent(plantId, 'fertilizing').catch((e) => {
-        setFertilized(false)
-        setPostFert(false)
-        setError('Nepavyko įrašyti tręšimo. Bandyk dar kartą.')
-        throw e
-      })
+      pendingFertRef.current = true   // dar nepaleista, laukiam Palaisčiau/Nelaisčiau
     }
   }
 
@@ -219,20 +231,50 @@ export default function PlantCareCard({ passport, plantId, user }) {
     setError(null)
     setWatered(true)
     setPostFert(false)
+    pendingFertRef.current = false
     try {
-      // Palaukiam, kol fertilize įrašas užbaigia, kad timeline'e būtų
-      // teisinga tvarka (fertilize → watering, ne atvirkščiai).
-      await fertInflightRef.current
-      await recordEvent(plantId, 'watering', 'Laistyta po tręšimo')
+      // Vienas API call'as su abiem event'ais — fert pirmiausia, kad timeline
+      // tvarka būtų teisinga (fertilize → watering).
+      await recordEvents(plantId, [
+        { type: 'fertilizing' },
+        { type: 'watering', komentaras: 'Laistyta po tręšimo' },
+      ])
     } catch {
+      setFertilized(false)
       setWatered(false)
-      setError('Nepavyko įrašyti laistymo. Bandyk dar kartą.')
+      setError('Nepavyko įrašyti. Bandyk dar kartą.')
     }
   }
 
-  function onNelasciau() {
+  async function onNelasciau() {
     setPostFert(false)
+    pendingFertRef.current = false
+    try {
+      await recordEvents(plantId, [{ type: 'fertilizing' }])
+    } catch {
+      setFertilized(false)
+      setError('Nepavyko įrašyti tręšimo. Bandyk dar kartą.')
+    }
   }
+
+  // Unmount fallback: jei kortelė uždaroma (page nav, tab close) kol fert
+  // dar nepatvirtintas — siunčiam per sendBeacon, kad event'as nedingtų.
+  useEffect(() => {
+    const flushOnHide = () => {
+      if (pendingFertRef.current && document.visibilityState === 'hidden') {
+        recordEventsBeacon(plantId, [{ type: 'fertilizing' }])
+        pendingFertRef.current = false
+      }
+    }
+    document.addEventListener('visibilitychange', flushOnHide)
+    return () => {
+      document.removeEventListener('visibilitychange', flushOnHide)
+      if (pendingFertRef.current) {
+        recordEventsBeacon(plantId, [{ type: 'fertilizing' }])
+        pendingFertRef.current = false
+      }
+    }
+  }, [plantId])
 
   function onWaterTap() {
     if (watered) return
