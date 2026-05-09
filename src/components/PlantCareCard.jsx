@@ -159,19 +159,19 @@ export default function PlantCareCard({ passport, plantId, user }) {
             <button
               onClick={onWaterTap}
               disabled={watered || busy}
-              className={`flex-1 h-14 flex items-center justify-center gap-2 rounded-2xl font-bold text-base transition-colors active:scale-95 ${
+              className={`flex-1 h-12 flex items-center justify-center gap-1.5 rounded-xl font-bold text-sm transition-colors active:bg-sky-600 ${
                 watered
                   ? 'bg-green-50 text-green-600'
                   : confirmType === 'watering'
                   ? 'bg-sky-700 text-white'
-                  : 'bg-sky-500 text-white shadow-md'
+                  : 'bg-sky-500 text-white'
               }`}
             >
               {watered ? (
                 <span>✓ Laistyta</span>
               ) : (
                 <>
-                  <Droplets size={18} />
+                  <Droplets size={16} className="text-white" />
                   <span>
                     {confirmType === 'watering'
                       ? `Patvirtinti (${countdown})`
@@ -186,19 +186,19 @@ export default function PlantCareCard({ passport, plantId, user }) {
               <button
                 onClick={onFertilizeTap}
                 disabled={fertilized || busy}
-                className={`flex-1 h-14 flex items-center justify-center gap-2 rounded-2xl font-bold text-base transition-colors active:scale-95 ${
+                className={`flex-1 h-12 flex items-center justify-center gap-1.5 rounded-xl font-bold text-sm transition-colors active:bg-amber-600 ${
                   fertilized
                     ? 'bg-green-50 text-green-600'
                     : confirmType === 'fertilizing'
                     ? 'bg-amber-700 text-white'
-                    : 'bg-amber-500 text-white shadow-md'
+                    : 'bg-amber-500 text-white'
                 }`}
               >
                 {fertilized ? (
                   <span>✓ Patręšta</span>
                 ) : (
                   <>
-                    <FlaskConical size={18} />
+                    <FlaskConical size={16} className="text-white" />
                     <span>
                       {confirmType === 'fertilizing'
                         ? `Patvirtinti (${countdown})`
