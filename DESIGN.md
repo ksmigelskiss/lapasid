@@ -197,11 +197,6 @@ className="bg-white rounded-2xl shadow-ios p-4"
 // Info pill / badge
 className="inline-flex items-center gap-1.5 bg-sky-50 text-sky-700 rounded-xl px-3 py-1.5 text-xs font-medium"
 
-// Bottom sheet
-className="bg-white rounded-t-3xl overflow-hidden"
-// Handle bar:
-className="w-10 h-1 rounded-full bg-gray-200 mx-auto mt-3 mb-1"
-
 // Hero sekcija (NFC/Passport)
 style={{ height: '40dvh', maxHeight: '320px' }}
 className="relative w-full flex-shrink-0"
@@ -210,6 +205,143 @@ className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-trans
 ```
 
 > ⚠️ **Hero tekste emoji NERODYTI.** Emoji naudojamas tik kaip fallback kai augalas neturi nuotraukos (didelis, centre hero zonoje). Šalia pavadinimo ant gradiento — tik `lietuviškas` + `lotyniskas`, jokių emoji.
+
+---
+
+## Full-screen sheet pattern (PRIVALOMA)
+
+Visiems augalo kortelės-tipo modal'ams (PlantDetail, CareWateringSheet, panašiems): **full-screen iki viršaus + drag handle + hero**. Reference: [PlantDetail.jsx](src/components/PlantDetail.jsx) ir [CareWateringSheet (Dashboard.jsx)](src/pages/Dashboard.jsx).
+
+### Skelet'as
+
+```jsx
+import { useDragControls, useMotionValue, animate } from 'framer-motion'
+
+const dragControls = useDragControls()
+const y = useMotionValue(0)
+const handleDragEnd = (_, info) => {
+  if (info.velocity.y > 400 || info.offset.y > 120) onClose()
+  else animate(y, 0, { type: 'spring', stiffness: 400, damping: 30 })
+}
+
+return createPortal(
+  <div className="fixed inset-0 z-[110] flex items-end justify-center">
+    {/* Backdrop */}
+    <motion.div
+      className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      onClick={onClose}
+    />
+    {/* Sheet — full-height, mobile-width centered */}
+    <motion.div
+      className="relative w-full max-w-[430px] bg-app flex flex-col"
+      style={{ height: '100dvh', y }}
+      drag="y" dragControls={dragControls} dragListener={false}
+      dragConstraints={{ top: 0 }} dragElastic={{ top: 0, bottom: 0.25 }}
+      onDragEnd={handleDragEnd}
+      initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+      transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+    >
+      {/* Drag handle pill viršuje (su safe-area pad) */}
+      <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pb-2 pointer-events-none select-none"
+           style={{ paddingTop: 'max(0.625rem, env(safe-area-inset-top))' }}>
+        <div onPointerDown={e => dragControls.start(e)}
+             className="px-8 py-1 cursor-grab active:cursor-grabbing pointer-events-auto"
+             style={{ touchAction: 'none' }}>
+          <div className="w-10 h-1 bg-black/15 rounded-full" />
+        </div>
+      </div>
+
+      {/* Hero su nuotrauka */}
+      {plant.image ? (
+        <div className="relative flex-shrink-0 overflow-hidden"
+             style={{ height: 'calc(17rem + env(safe-area-inset-top))' }}>
+          <img src={plant.image} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+          {/* X mygtukas viršutiniame dešiniame kampe */}
+          <div className="absolute right-4 z-30" style={{ top: 'max(1rem, env(safe-area-inset-top))' }}>
+            <button onClick={onClose}
+                    className="w-11 h-11 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white">
+              <X size={16} />
+            </button>
+          </div>
+          {/* Pavadinimas ant gradiento */}
+          <div className="absolute bottom-0 left-0 right-0 p-4">
+            <h2 className="text-xl font-bold text-white leading-tight">{plant.lietuviškas}</h2>
+            {plant.lotyniskas && <p className="text-xs text-white/70 italic mt-0.5">{plant.lotyniskas}</p>}
+          </div>
+        </div>
+      ) : (
+        // Hero be nuotraukos: sage-50 fonas, X dešinėje, emoji + pavadinimas
+        <div className="relative flex-shrink-0 px-5 pb-4 bg-sage-50"
+             style={{ paddingTop: 'max(1.75rem, env(safe-area-inset-top))' }}>
+          <div className="flex items-center justify-end mb-3">
+            <button onClick={onClose}
+                    className="w-11 h-11 bg-white/60 rounded-full flex items-center justify-center text-gray-600">
+              <X size={16} />
+            </button>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-14 h-14 bg-white/80 rounded-2xl flex items-center justify-center text-3xl shadow-ios flex-shrink-0">
+              {plant.emoji ?? '🌿'}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-lg font-bold text-gray-900 leading-tight">{plant.lietuviškas}</h2>
+              {plant.lotyniskas && <p className="text-xs text-gray-500 italic mt-0.5">{plant.lotyniskas}</p>}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Scrollable content */}
+      <div className="overflow-y-auto flex-1 px-5 pt-4 pb-4 space-y-4">
+        {/* ... turinys ... */}
+      </div>
+
+      {/* Action bar — float apačioje su safe-area pad */}
+      <div className="flex-shrink-0 px-4 pt-3 border-t border-gray-100 bg-white"
+           style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+        {/* ... mygtukai ... */}
+      </div>
+    </motion.div>
+  </div>,
+  document.body
+)
+```
+
+### Sheet konvencijos (TURI BŪTI tas pats kiekvieną kartą)
+
+| Elementas | Reikšmė |
+|-----------|---------|
+| Outer wrapper | `fixed inset-0 z-[110] flex items-end justify-center` (ne `flex-col`) |
+| Backdrop | `bg-black/40 backdrop-blur-sm`, `duration: 0.25` opacity |
+| Sheet plotis | `w-full max-w-[430px]` |
+| Sheet aukštis | `style={{ height: '100dvh' }}` (full screen) |
+| Sheet fonas | `bg-app` (ne `bg-white` — kad scrollable content fonas vienodas) |
+| Drag handle | `absolute top-0 z-20`, pill `w-10 h-1 bg-black/15`, `paddingTop: max(0.625rem, env(safe-area-inset-top))` |
+| Hero su nuotrauka aukštis | `calc(17rem + env(safe-area-inset-top))` |
+| Hero gradient | `bg-gradient-to-t from-black/65 via-black/10 to-transparent` |
+| X mygtukas (su nuotrauka) | `w-11 h-11 bg-black/30 backdrop-blur-sm rounded-full`, `text-white`, `top: max(1rem, env(safe-area-inset-top))` |
+| X mygtukas (be nuotraukos) | `w-11 h-11 bg-white/60 rounded-full`, `text-gray-600` |
+| Hero be nuotraukos fonas | `bg-sage-50` (default), `bg-blush-50` (`nori`), `bg-surface-2` (`istorija`) |
+| Pavadinimo dydis (ant gradiento) | `text-xl font-bold text-white leading-tight` |
+| Lotyniško dydis | `text-xs text-white/70 italic mt-0.5` |
+| Action bar | `flex-shrink-0 px-4 pt-3 border-t border-gray-100 bg-white`, `paddingBottom: max(0.75rem, env(safe-area-inset-bottom))` |
+| Action mygtuko aukštis | `h-10` |
+| z-index | `z-[110]` (virš tab bar `z-40`, virš PlantDetail `z-[70]`) |
+
+### Veiksmų mygtukų spalvos action bar'e
+
+| Veiksmas | Klasės |
+|----------|--------|
+| Laistyti / Laistyta | `bg-sky-500 active:bg-sky-600` |
+| Tręšti / Patręšta | `bg-amber-500 active:bg-amber-600` |
+| Patikrinau / „Viskas tvarkoj" (snooze) | `bg-green-500 active:bg-green-600` |
+
+> ❌ **NEBEDARYTI:** bottom sheet'ų su `max-h-[84dvh]` (jie palieka backdrop tarpą viršuje). Visada full screen `100dvh`.
+> ❌ **NEBEDARYTI:** drag handle ant nuotraukos (`absolute top-3 inset-x-0`). Pill turi būti virš hero, ne ant jo.
+> ❌ **NEBEDARYTI:** Close mygtuko action bar'e (kairiausiai prieš pagrindinius). X uždarymas tik hero kampe.
 
 ---
 

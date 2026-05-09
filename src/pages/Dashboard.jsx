@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera, Check, UserCircle, Pencil } from 'lucide-react'
 import ProfileSheet from '../components/ProfileSheet'
 const GARDENER = '/gardener.png'
@@ -68,53 +68,93 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize, onInspect }) 
     ? Math.floor((Date.now() - new Date(iso + 'T00:00:00')) / 86400000)
     : null
 
+  const dragControls = useDragControls()
+  const y = useMotionValue(0)
+  const handleDragEnd = (_, info) => {
+    if (info.velocity.y > 400 || info.offset.y > 120) onClose()
+    else animate(y, 0, { type: 'spring', stiffness: 400, damping: 30 })
+  }
+
   return createPortal(
-    <motion.div
-      className="fixed inset-0 z-[110] flex flex-col items-center justify-end"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      onClick={onClose}
-    >
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+    <div className="fixed inset-0 z-[110] flex items-end justify-center">
+      {/* Backdrop */}
       <motion.div
-        className="relative w-full max-w-[430px] bg-white rounded-t-3xl overflow-hidden max-h-[84dvh] flex flex-col"
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        transition={{ duration: 0.25 }}
+        onClick={onClose}
+      />
+
+      {/* Sheet — full-screen mobile width, identiška PlantDetail struktūrai */}
+      <motion.div
+        className="relative w-full max-w-[430px] bg-app flex flex-col"
+        style={{ height: '100dvh', y }}
+        drag="y"
+        dragControls={dragControls}
+        dragListener={false}
+        dragConstraints={{ top: 0 }}
+        dragElastic={{ top: 0, bottom: 0.25 }}
+        onDragEnd={handleDragEnd}
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
-        transition={{ type: 'spring', damping: 32, stiffness: 340 }}
-        onClick={e => e.stopPropagation()}
+        transition={{ type: 'spring', damping: 32, stiffness: 320 }}
       >
-        {/* Photo header — handle overlaid on top */}
-        <div className="relative flex-shrink-0">
-          {hasImg ? (
-            <>
-              <img src={plant.image} alt="" className="w-full h-52 object-cover" />
-              {/* Handle on image */}
-              <div className="absolute top-3 inset-x-0 flex justify-center">
-                <div className="w-10 h-1 rounded-full bg-white/50" />
-              </div>
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent px-5 pb-4 pt-12">
-                <p className="text-white font-bold text-lg leading-tight">{plant.lietuviškas}</p>
-                {plant.lotyniskas && <p className="text-white/60 text-sm italic leading-tight">{plant.lotyniskas}</p>}
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex justify-center pt-3 pb-1">
-                <div className="w-10 h-1 rounded-full bg-gray-200" />
-              </div>
-              <div className="w-full h-24 bg-sky-50 flex items-center justify-center">
-                <span className="text-6xl">{plant.emoji ?? '🌿'}</span>
-              </div>
-            </>
-          )}
+        {/* Drag handle — pill viršuje, su safe-area pad */}
+        <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pb-2 pointer-events-none select-none" style={{ paddingTop: 'max(0.625rem, env(safe-area-inset-top))' }}>
+          <div
+            onPointerDown={e => dragControls.start(e)}
+            className="px-8 py-1 cursor-grab active:cursor-grabbing pointer-events-auto"
+            style={{ touchAction: 'none' }}
+          >
+            <div className="w-10 h-1 bg-black/15 rounded-full" />
+          </div>
         </div>
+
+        {/* ── Hero ── identiška PlantDetail */}
+        {hasImg ? (
+          <div className="relative flex-shrink-0 overflow-hidden" style={{ height: 'calc(17rem + env(safe-area-inset-top))' }}>
+            <img src={plant.image} alt={plant.lietuviškas} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
+            <div className="absolute right-4 z-30" style={{ top: 'max(1rem, env(safe-area-inset-top))' }}>
+              <button
+                onClick={onClose}
+                className="w-11 h-11 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <h2 className="text-xl font-bold text-white leading-tight">{plant.lietuviškas}</h2>
+              {plant.lotyniskas && (
+                <p className="text-xs text-white/70 italic mt-0.5">{plant.lotyniskas}</p>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="relative flex-shrink-0 px-5 pb-4 bg-sage-50" style={{ paddingTop: 'max(1.75rem, env(safe-area-inset-top))' }}>
+            <div className="flex items-center justify-end mb-3">
+              <button
+                onClick={onClose}
+                className="w-11 h-11 bg-white/60 rounded-full flex items-center justify-center text-gray-600"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-14 h-14 bg-white/80 rounded-2xl flex items-center justify-center text-3xl shadow-ios flex-shrink-0">
+                {plant.emoji ?? '🌿'}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg font-bold text-gray-900 leading-tight">{plant.lietuviškas}</h2>
+                {plant.lotyniskas && (
+                  <p className="text-xs text-gray-500 italic mt-0.5">{plant.lotyniskas}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Scrollable content */}
         <div className="overflow-y-auto flex-1 px-5 pt-4 pb-4 space-y-4">
-          {!hasImg && (
-            <div>
-              <p className="text-lg font-bold text-gray-900">{plant.lietuviškas}</p>
-              {plant.lotyniskas && <p className="text-sm italic text-gray-500">{plant.lotyniskas}</p>}
-            </div>
-          )}
 
           {/* Description */}
           {desc ? (
@@ -204,44 +244,38 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize, onInspect }) 
 
         </div>
 
-        {/* Action bar — same style as care mode bar */}
-        <div className="flex-shrink-0 px-4 py-3 border-t border-gray-100 flex gap-2 items-center">
-          <button
-            onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 active:bg-gray-200 transition-colors flex-shrink-0"
-          >
-            <X size={18} className="text-gray-600" />
-          </button>
-          <button
-            onClick={onWater}
-            className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 active:bg-sky-600 transition-colors"
-          >
-            <Droplets size={16} className="text-white" />
-            <span className="text-sm font-bold text-white">Laistyta</span>
-          </button>
-          {hasFert && (
+        {/* Action bar — float apačioje, su safe-area pad */}
+        <div className="flex-shrink-0 px-4 pt-3 border-t border-gray-100 bg-white" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+          <div className="flex gap-2 items-center">
             <button
-              onClick={onFertilize}
-              className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-amber-500 active:bg-amber-600 transition-colors"
+              onClick={onWater}
+              className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 active:bg-sky-600 transition-colors"
             >
-              <FlaskConical size={16} className="text-white" />
-              <span className="text-sm font-bold text-white">Patręšta</span>
+              <Droplets size={16} className="text-white" />
+              <span className="text-sm font-bold text-white">Laistyta</span>
+            </button>
+            {hasFert && (
+              <button
+                onClick={onFertilize}
+                className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-amber-500 active:bg-amber-600 transition-colors"
+              >
+                <FlaskConical size={16} className="text-white" />
+                <span className="text-sm font-bold text-white">Patręšta</span>
+              </button>
+            )}
+          </div>
+          {showInspect && onInspect && (
+            <button
+              onClick={onInspect}
+              className="mt-2 w-full h-10 flex items-center justify-center gap-1.5 rounded-xl bg-green-500 active:bg-green-600 transition-colors"
+            >
+              <Check size={16} className="text-white" />
+              <span className="text-sm font-bold text-white">Patikrinau — viskas tvarkoj</span>
             </button>
           )}
         </div>
-        {showInspect && onInspect && (
-          <div className="flex-shrink-0 px-4 pb-3">
-            <button
-              onClick={onInspect}
-              className="w-full h-10 flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 active:bg-gray-50 transition-colors"
-            >
-              <Check size={15} className="text-gray-500" />
-              <span className="text-sm font-semibold text-gray-700">Patikrinau — viskas tvarkoj</span>
-            </button>
-          </div>
-        )}
       </motion.div>
-    </motion.div>,
+    </div>,
     document.body
   )
 }
