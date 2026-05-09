@@ -315,7 +315,7 @@ export default function App() {
         ))}
       </div>
 
-      {role !== 'viewer' && <Navigation active={tab} onChange={setTabAndMount} dashboardCount={dashboard.length} role={role} />}
+      {role !== 'viewer' && <Navigation active={tab} onChange={setTabAndMount} counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }} role={role} />}
 
       {detailForRender && (
         <Suspense fallback={null}>

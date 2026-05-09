@@ -24,19 +24,20 @@ function SparkleIcon({ className }) {
 }
 
 const tabs = [
-  { id: 'dashboard',  label: 'Augalai',   Icon: LeafIcon },
-  { id: 'biblioteka', label: 'Biblioteka', Icon: BookIcon },
-  { id: 'zinynas',   label: 'Žinynas',   Icon: SparkleIcon },
+  { id: 'dashboard',  label: 'Augalai',   Icon: LeafIcon,    countKey: 'dashboard' },
+  { id: 'biblioteka', label: 'Biblioteka', Icon: BookIcon,    countKey: 'biblioteka' },
+  { id: 'zinynas',   label: 'Žinynas',   Icon: SparkleIcon, countKey: 'zinynas' },
 ]
 
-export default function Navigation({ active, onChange, dashboardCount = 0, role = 'owner' }) {
+export default function Navigation({ active, onChange, counts = {}, role = 'owner' }) {
   const visibleTabs = role === 'viewer' ? tabs.filter(t => t.id === 'dashboard') : tabs
   return (
     <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-40">
       <div className="bg-white border-t border-gray-200 safe-bottom">
         <div className="flex">
-          {visibleTabs.map(({ id, label, Icon }) => {
+          {visibleTabs.map(({ id, label, Icon, countKey }) => {
             const isActive = active === id
+            const count = counts[countKey] ?? 0
             return (
               <button
                 key={id}
@@ -47,10 +48,10 @@ export default function Navigation({ active, onChange, dashboardCount = 0, role 
                   <Icon className={`w-6 h-6 transition-colors duration-150 ${
                     isActive ? 'text-primary' : 'text-gray-400'
                   }`} />
-                  {id === 'dashboard' && dashboardCount > 0 && (
+                  {count > 0 && (
                     <div className="absolute -top-1 -right-2.5 bg-primary text-white rounded-full min-w-[15px] h-[15px] flex items-center justify-center px-0.5">
                       <span className="text-[9px] font-bold leading-none">
-                        {dashboardCount > 99 ? '99+' : dashboardCount}
+                        {count > 99 ? '99+' : count}
                       </span>
                     </div>
                   )}
