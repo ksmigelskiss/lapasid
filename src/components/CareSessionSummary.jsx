@@ -89,17 +89,16 @@ export default function CareSessionSummary({ session, confidence = 0, onDismiss 
         transition={{ type: 'spring', damping: 26, stiffness: 320 }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Confidence — antrasis akcentas. Pakankamas dydis gratification'ui,
-            bet aiškiai mažesnis nei headline (per dydį + svorį + spalvą).
-            Šalia pridėtas sesijos delta (jei +>0) — vizualus „padaugino pažinimą". */}
+        {/* Confidence + sesijos delta. Delta — didesnis ir amber, nes vizualus
+            reward yra GAIN (ne static būsena). Bazinis % — sage-600, ramus. */}
         <div className="text-center">
-          <p className="text-[22px] font-bold leading-none text-sage-600 tabular-nums">
-            {confPct}%
+          <p className="leading-none tabular-nums">
+            <span className="text-[22px] font-bold text-sage-600">{confPct}%</span>
             {session.deltaPct > 0 && (
-              <span className="ml-2 text-[14px] font-bold text-sage-500 align-middle">+{session.deltaPct}</span>
+              <span className="ml-2 text-[28px] font-extrabold text-amber-500 align-middle">+{session.deltaPct}</span>
             )}
           </p>
-          <p className="text-[10px] font-semibold text-gray-400 mt-1 uppercase tracking-wider">Prognozių tikslumas</p>
+          <p className="text-[10px] font-semibold text-gray-400 mt-1.5 uppercase tracking-wider">Prognozių tikslumas</p>
         </div>
 
         {/* Headline — pagrindinis akcentas: didžiausias, drąsiausias, tamsus */}

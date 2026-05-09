@@ -515,23 +515,20 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   // Care mode'o pradžia — reset'inam session
   useEffect(() => { if (careMode) sessionRef.current = emptySession() }, [careMode])
 
-  // DEV/DEMO: parodo fake toast'ą be jokio DB rašymo. Cikliuoja per 3 mood'us.
+  // DEV/DEMO: parodo fake toast'ą be jokio DB rašymo. Cikliuoja per 3 delta dydžius.
   const careToastDemoIdx = useRef(0)
   const runCareToastDemo = useCallback(() => {
-    const samples = [
-      { headline: pick(CARE_COPY.bulk.headline.mostlyPerfect), counts: { perfect: 5, early: 2, late: 1, waylate: 0 }, total: 8, deltaPct: 4 },
-      { headline: pick(CARE_COPY.bulk.headline.mixed),         counts: { perfect: 2, early: 1, late: 2, waylate: 0 }, total: 5, deltaPct: 2 },
-      { headline: pick(CARE_COPY.bulk.headline.manyLate),      counts: { perfect: 0, early: 0, late: 1, waylate: 4 }, total: 5, deltaPct: 1 },
-    ]
-    const sample = samples[careToastDemoIdx.current % samples.length]
+    const samples = [4, 2, 7]  // skirtingi delta dydžiai
+    const deltaPct = samples[careToastDemoIdx.current % samples.length]
     careToastDemoIdx.current += 1
-    setCareToast(sample)
+    setCareToast({ deltaPct, phrase: pick(CARE_COPY.delta) })
     if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
-    careToastTimerRef.current = setTimeout(() => setCareToast(null), 4500)
+    careToastTimerRef.current = setTimeout(() => setCareToast(null), 3000)
   }, [])
 
-  // Toast po bulk action — antraštė pagal mood'ą + breakdown pagal bucket'us +
-  // confidence delta. Tuo pačiu papildo session'ą (exit summary aggregate'ui).
+  // Bulk action akumuliacija + per-action toast.
+  // Toast minimalus: +X% + frazė. Detalus breakdown lieka exit summary'ui.
+  // Skip toast jei delta=0 (pvz. fert-only, inspection) — tyla geriau nei „+0%".
   const showCareToast = useCallback((plantsToShow, kind) => {
     const days = plantsToShow
       .map(p => kind === 'watering' ? getWateringForecast(p).daysUntil : getFertilizingForecast(p).daysUntil)
@@ -543,7 +540,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     const deltaFraction = computeWateringDelta(plantsToShow, mainPlants.length, kind, today())
     const deltaPct = Math.round(deltaFraction * 100)
 
-    // Aggregate į session
+    // Aggregate į session (visada — net jei delta=0, breakdown matomas summary'je)
     const sb = sessionRef.current[kind]
     sb.perfect += counts.perfect
     sb.early   += counts.early
@@ -552,12 +549,12 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     plantsToShow.forEach(p => sessionRef.current.plants.add(p.id))
     sessionRef.current.deltaPct += deltaPct
 
-    // Per-action toast
-    const mood = moodFromCounts(counts)
-    const headline = pick(CARE_COPY.bulk.headline[mood])
-    setCareToast({ headline, counts, total: plantsToShow.length, deltaPct })
-    if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
-    careToastTimerRef.current = setTimeout(() => setCareToast(null), 4500)
+    // Per-action toast tik jei delta > 0
+    if (deltaPct > 0) {
+      setCareToast({ deltaPct, phrase: pick(CARE_COPY.delta) })
+      if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
+      careToastTimerRef.current = setTimeout(() => setCareToast(null), 3000)
+    }
   }, [mainPlants.length])
 
   // DEMO: session summary fake data
@@ -1064,7 +1061,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             style={{ paddingTop: 'max(0.5rem, env(safe-area-inset-top))' }}
           >
             <div className="max-w-[430px] mx-auto px-4">
-              <CareToast headline={careToast.headline} counts={careToast.counts} total={careToast.total} />
+              <CareToast deltaPct={careToast.deltaPct} phrase={careToast.phrase} />
             </div>
           </motion.div>
         )}

@@ -125,6 +125,20 @@ export const CARE_COPY = {
     low:  'Mokausi tavo ritmą',     // 33–66%
     high: 'Pažįstu tavo augalus',   // 66%+
   },
+
+  // ─── Delta toast frazės (greitas reward'as kai sistema patobulėja)
+  // Trumpos, savimi pasitikinčios. Random pick iš sąrašo.
+  delta: [
+    'Mano pažinimas paaugo',
+    'Suprantu augalus geriau',
+    'Aiškiau. Tu mano akys',
+    'Pažinau dar geriau',
+    'Tikslesnės prognozės',
+    'Stiprėju kartu su tavimi',
+    'Žinau tave dar geriau',
+    'Algoritmas tavęs klauso',
+    'Patikslinau ritmą',
+  ],
 }
 
 // Random pick iš sąrašo
