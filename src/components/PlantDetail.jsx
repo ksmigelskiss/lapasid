@@ -239,11 +239,9 @@ function InfoRow({ icon, label, value }) {
 
 // ── Augalo pasas sekcija ───────────────────────────────────────
 
-const DOMAIN = 'geliai.app'
-
 function PassportSection({ plant, collectionId, onToggle }) {
   const isPublic    = plant.isPublic === true
-  const passportUrl = `https://${DOMAIN}/p/${plant.id}`
+  const passportUrl = `${window.location.origin}/p/${plant.id}`
   const [copied, setCopied] = useState(false)
   const [saving, setSaving] = useState(false)
 
