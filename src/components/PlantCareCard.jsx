@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Sun, Droplets, ChevronRight, FlaskConical, Leaf } from 'lucide-react'
+import { Sun, Droplets, ChevronRight, FlaskConical, Leaf, Sprout } from 'lucide-react'
 
 // ── Forecast helpers ──────────────────────────────────────────────
 
@@ -114,14 +114,14 @@ function FertilizingStatus({ snapshot, fertilized }) {
 
   if (lastDate) {
     return (
-      <div className="bg-green-50 border border-green-100 rounded-2xl px-4 py-3 flex gap-3">
-        <Leaf size={20} className="flex-shrink-0 text-green-400 mt-0.5" />
+      <div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 flex gap-3">
+        <Leaf size={20} className="flex-shrink-0 text-amber-400 mt-0.5" />
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-green-700">
+          <p className="text-sm font-semibold text-amber-700">
             {fertilized ? 'Patręšta šiandien ✓' : `Paskutinis tręšimas: ${fmtDate(lastDate)}`}
           </p>
           {until != null && (
-            <p className="text-[11px] text-green-600 mt-0.5">
+            <p className="text-[11px] text-amber-600 mt-0.5">
               Kitas po {until} d.
             </p>
           )}
@@ -272,7 +272,8 @@ export default function PlantCareCard({ passport, plantId, user }) {
           )}
           {s.laistymasIntervalas?.vasara && (
             <span className="inline-flex items-center gap-1.5 bg-surface text-gray-600 rounded-xl px-3 py-1.5 text-xs font-medium">
-              💧 Kas {s.laistymasIntervalas.vasara} d.
+              <Droplets size={13} className="text-sky-400" />
+              Kas {s.laistymasIntervalas.vasara} d.
             </span>
           )}
         </div>
@@ -357,7 +358,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
               onClick={openInApp}
               className="w-full py-3 rounded-2xl border border-gray-200 text-gray-600 text-sm font-medium flex items-center justify-center gap-1.5 active:bg-gray-50 transition-colors"
             >
-              🌱 Atidaryti kortelę <ChevronRight size={14} />
+              <Sprout size={14} /> Atidaryti kortelę <ChevronRight size={14} />
             </button>
           )}
 
