@@ -157,21 +157,21 @@ const PlantCard = memo(function PlantCard({
 
         {/* Right-side badge column */}
         {(showDashboardBadge || section === 'istorija' || noteCount > 0) && (
-          <div className={`absolute ${section === 'auginama' ? 'top-12' : 'top-6'} right-1.5 flex flex-col gap-1 items-center`}>
+          <div className={`absolute ${section === 'auginama' ? 'top-12' : 'top-2'} right-2 flex flex-col gap-1 items-center`}>
             {showDashboardBadge && (
-              <div className="bg-sage-500/90 backdrop-blur-sm rounded-md p-0.5">
-                <House size={10} className="text-white" />
+              <div className="bg-sage-500/90 backdrop-blur-sm rounded-lg p-1">
+                <House size={14} className="text-white" />
               </div>
             )}
             {section === 'istorija' && (
-              <div className="bg-black/50 backdrop-blur-sm rounded-md p-0.5">
-                <Ghost size={10} className="text-white" />
+              <div className="bg-black/55 backdrop-blur-sm rounded-lg p-1">
+                <Ghost size={14} className="text-white" />
               </div>
             )}
             {noteCount > 0 && (
-              <div className="bg-gray-500/80 backdrop-blur-sm rounded-md px-1 py-0.5 flex items-center gap-0.5">
-                <FileText size={8} className="text-white" />
-                <span className="text-[8px] text-white font-bold leading-none">{noteCount}</span>
+              <div className="bg-gray-700/75 backdrop-blur-sm rounded-lg px-1.5 py-1 flex items-center gap-0.5">
+                <FileText size={12} className="text-white" />
+                <span className="text-[10px] text-white font-bold leading-none">{noteCount}</span>
               </div>
             )}
           </div>

@@ -1,18 +1,10 @@
-import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Star, SlidersHorizontal, Search, Ghost, BookOpen, RefreshCw, FileText, Camera } from 'lucide-react'
+import { Search, Ghost, BookOpen, RefreshCw, Camera } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import CollectionChat from '../components/CollectionChat'
 import { buildLibrarySystemPrompt } from '../utils/collectionChatContext'
-
-const SORT_OPTIONS = [
-  { key: 'added',      label: 'Pridėta' },
-  { key: 'name',       label: 'A–Z' },
-  { key: 'light',      label: 'Šviesa' },
-  { key: 'water',      label: 'Vanduo' },
-  { key: 'difficulty', label: 'Sunkumas', icon: Star },
-]
 
 // Pagrindinis kategorijos filtras (mutually exclusive). `null` = visi.
 // Bibliotekoje rodomi tik `nori` ir `istorija` augalai (`auginama` lieka Dashboard'e).
@@ -21,22 +13,6 @@ const KATEGORIJA_TABS = [
   { key: 'istorija', label: 'Istorija', Icon: Ghost },
 ]
 
-// Papildomi modifikatoriai (AND virš kategorijos)
-const MODIFIERS = [
-  { key: 'uzrasai', Icon: FileText, label: 'Su užrašais' },
-]
-
-function sortPlants(plants, key) {
-  const s = [...plants]
-  switch (key) {
-    case 'name':       return s.sort((a, b) => (a.lietuviškas ?? '').localeCompare(b.lietuviškas ?? '', 'lt'))
-    case 'light':      return s.sort((a, b) => (b.sviesa?.taskai ?? 0) - (a.sviesa?.taskai ?? 0))
-    case 'water':      return s.sort((a, b) => (b.vanduo?.taskai ?? 0) - (a.vanduo?.taskai ?? 0))
-    case 'difficulty': return s.sort((a, b) => (b.sunkumas ?? 0) - (a.sunkumas ?? 0))
-    default:           return s.sort((a, b) => new Date(b.data_prideta) - new Date(a.data_prideta))
-  }
-}
-
 function matchesQuery(plant, q) {
   const lower = q.toLowerCase()
   return [plant.lietuviškas, plant.lotyniskas, plant.inatLtName,
@@ -44,22 +20,8 @@ function matchesQuery(plant, q) {
     .some(c => c && c.toLowerCase().includes(lower))
 }
 
-function matchesKategorija(plant, kategorija) {
-  if (kategorija == null) return true
-  return plant.kategorija === kategorija
-}
-
-function matchesModifiers(plant, mods) {
-  if (mods.size === 0) return true
-  if (mods.has('uzrasai') && !(plant.uzrasai?.length > 0 || plant.komentaras?.trim())) return false
-  return true
-}
-
 export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, onSaveToZinynas, onViewPlant, onRefresh }) {
   const [kategorija, setKategorija] = useState(null)        // null = visi
-  const [modifiers, setModifiers]   = useState(new Set())
-  const [sortKey, setSortKey]       = useState('added')
-  const [showFilters, setShowFilters] = useState(false)
   const [showChat, setShowChat]     = useState(false)
   const [searching, setSearching]   = useState(false)
   const [query, setQuery]           = useState('')
@@ -70,10 +32,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
   // Reset to "visi" when app returns from background
   useEffect(() => {
     const handle = () => {
-      if (document.visibilityState === 'visible') {
-        setKategorija(null)
-        setModifiers(new Set())
-      }
+      if (document.visibilityState === 'visible') setKategorija(null)
     }
     document.addEventListener('visibilitychange', handle)
     return () => document.removeEventListener('visibilitychange', handle)
@@ -83,15 +42,6 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
     if (searching) inputRef.current?.focus()
   }, [searching])
 
-  const toggleModifier = useCallback((key) => {
-    setModifiers(prev => {
-      const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
-    })
-  }, [])
-
   // Skaičiai segmented control'ui
   const counts = useMemo(() => ({
     all:      plants.length,
@@ -100,19 +50,16 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
   }), [plants])
 
   const visible = useMemo(() => {
-    const filtered = plants.filter(p => matchesKategorija(p, kategorija) && matchesModifiers(p, modifiers))
-    const sorted   = sortPlants(filtered, sortKey)
+    const filtered = kategorija == null
+      ? plants
+      : plants.filter(p => p.kategorija === kategorija)
+    const sorted = [...filtered].sort((a, b) => new Date(b.data_prideta) - new Date(a.data_prideta))
     if (!query.trim()) return sorted
     return sorted.filter(p => matchesQuery(p, query))
-  }, [plants, kategorija, modifiers, sortKey, query])
+  }, [plants, kategorija, query])
 
   const closeSearch = () => { setSearching(false); setQuery('') }
   const launchFullSearch = () => { onSearch(query); closeSearch() }
-
-  // Sliders mygtukas highlightinasi tik kai aktyvūs jo panelio dalykai
-  // (modifikatoriai arba sort). Kategorija turi savo segmented control viršuje
-  // — todėl ji neskaitomi į "filtrai aktyvūs".
-  const filtersActive = modifiers.size > 0 || sortKey !== 'added'
 
   return (
     <div className="flex flex-col h-full bg-lib">
@@ -172,21 +119,9 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
             <Camera size={16} />
           </button>
         )}
-        {!searching && (
-          <button
-            onClick={() => setShowFilters(v => !v)}
-            className={`flex-shrink-0 w-11 rounded-2xl flex items-center justify-center transition-colors ${
-              showFilters || filtersActive
-                ? 'bg-sage-500 text-white'
-                : 'bg-white border border-gray-200 text-gray-600'
-            }`}
-          >
-            <SlidersHorizontal size={18} />
-          </button>
-        )}
       </div>
 
-      {/* Segmented control — kategorijos filtras (visada matomas) */}
+      {/* Segmented control — kategorijos filtras */}
       {!searching && (
         <div className="px-5 mb-3">
           <div className="inline-flex items-center bg-white border border-gray-200 rounded-2xl p-1 w-full">
@@ -216,57 +151,6 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
                 </button>
               )
             })}
-          </div>
-        </div>
-      )}
-
-      {/* Išplečiama: modifikatoriai + sort */}
-      {showFilters && !searching && (
-        <div className="space-y-3 mb-3 px-5">
-          {/* Modifikatoriai (papildomi AND filtrai) */}
-          {MODIFIERS.length > 0 && (
-            <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Papildomai</p>
-              <div className="flex gap-2 flex-wrap">
-                {MODIFIERS.map(({ key, Icon, label }) => {
-                  const active = modifiers.has(key)
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => toggleModifier(key)}
-                      className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
-                        active
-                          ? 'bg-sage-500 text-white'
-                          : 'bg-white border border-gray-200 text-gray-600'
-                      }`}
-                    >
-                      <Icon size={13} />
-                      {label}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Sort */}
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Rūšiuoti</p>
-            <div className="flex gap-2 overflow-x-auto scrollbar-none">
-              {SORT_OPTIONS.map(opt => (
-                <button
-                  key={opt.key}
-                  onClick={() => setSortKey(opt.key)}
-                  className={`flex-shrink-0 text-xs font-medium rounded-xl px-3 py-1.5 transition-colors ${
-                    sortKey === opt.key
-                      ? 'bg-sage-500 text-white'
-                      : 'bg-white border border-gray-200 text-gray-600 hover:bg-surface'
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
           </div>
         </div>
       )}
