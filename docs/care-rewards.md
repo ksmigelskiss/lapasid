@@ -20,7 +20,8 @@ Tikslas — kurti emocinį ryšį su appsu per pozityvius mikro-momentus, ne pam
 | [src/constants/careCopy.js](../src/constants/careCopy.js) | **Visos frazės.** Single šaltinis tonui ir žodynui. Be unicode emojis (Lucide ikonas parinka komponentai pagal bucket'ą). Plus helper'iai: `pick()`, `fillTemplate()`, `plPlants()`, `plPlantsInstr()`. |
 | [src/utils/careBuckets.js](../src/utils/careBuckets.js) | **Bucket logika.** `bucketByDays()` — kategorizuoja pagal `daysUntil`. `bucketCounts()` — agreguoja. `moodFromCounts()` — bendros nuotaikos. `aggregateConfidence()`, `confidenceLabel()` — pasitikėjimo helper'iai. |
 | [src/utils/wateringForecast.js](../src/utils/wateringForecast.js) | **Confidence šaltinis.** `getWateringForecast()` grąžina `confidence`, `historicalAvg`, `validGapsCount`, `theoreticalInterval` — naudojami delta skaičiavimui ir summary. |
-| [src/components/CareToast.jsx](../src/components/CareToast.jsx) | Per-action top toast. Minimalus: `+X% [frazė]`. Auto-fade 3s. Skip jei delta=0. |
+| [src/components/CareToast.jsx](../src/components/CareToast.jsx) | Per-action top toast (delta variantas). Minimalus: `+X% [frazė]`. Auto-fade 3s. Skip jei delta=0. |
+| [src/components/CareCircuitToast.jsx](../src/components/CareCircuitToast.jsx) | Per-action top toast (circuit variantas). Sage-500 bg + Check + „Virtuvė pasirūpinta". Auto-fade 3.5s. Prioritetas virš delta. |
 | [src/components/CareSessionSummary.jsx](../src/components/CareSessionSummary.jsx) | Modal po care mode išėjimo (jei buvo veiksmų). Aggregate breakdown + sesijos delta. Auto-close 10s + tap-anywhere. |
 | [src/pages/Dashboard.jsx](../src/pages/Dashboard.jsx) | **Wiring**: confidence badge ant Sprout mygtuko, session tracking (`sessionRef`), `showCareToast()`, `runCareToastDemo()`, `runSessionSummaryDemo()`. |
 
@@ -95,8 +96,16 @@ Mažas badge ant Sprout mygtuko viršaus dešinio kampo. Spalva pagal aggregate 
 
 ### 2. Per-action top toast (instant gratification)
 
-Po Laistyti / Palaisčiau / Nelaisčiau veiksmo:
-- Atsiranda viršuje (su safe-area pad)
+Po Laistyti / Palaisčiau / Nelaisčiau veiksmo. **Du variantai, prioritetas circuit > delta.**
+
+**Circuit toast** (kai veiksmas išvalo paskutinį todo zonoje):
+- Sage-500 bg + Check ikona + zonos vardas iš `CARE_COPY.circuit`
+- Format: „Virtuvė pasirūpinta" / „Virtuvė — viskas vietose"
+- Auto-fade 3.5s
+- Detekcija per `detectClearedZones()` su event types simuliacija (Pure JS, jokio I/O)
+
+**Delta toast** (kai circuit netriggerina, bet confidence padidėjo):
+- Baltas bg
 - Format: `+X%` (24px amber-500 extrabold) + frazė (14px gray-700)
 - Frazė random pick iš `CARE_COPY.delta` (9 sinonimų)
 - Auto-fade 3s
@@ -136,7 +145,8 @@ Išėjus iš care mode (X paspaudimas) jei buvo bent vienas veiksmas:
 
 Du laikini mygtukai care action bar'e (top-right):
 
-- **Demo toast** — cikliuoja per 3 delta dydžius (4%, 2%, 7%) su random fraze
+- **Demo delta** — cikliuoja per 3 delta dydžius (4%, 2%, 7%) su random fraze
+- **Demo circuit** — cikliuoja per 4 fake zonas su random circuit fraze (sage bg + Check)
 - **Demo summary** — fake session su 8 augalais, +7% delta
 
 Niekas neįrašoma į DB. Naudojama UI dizainui kalibruoti.
@@ -187,7 +197,7 @@ Niekas neįrašoma į DB. Naudojama UI dizainui kalibruoti.
 | 3. Bulk action toast | ✅ Done |
 | 4. Confidence delta (per-action + sesijos suma) | ✅ Done |
 | 4b. Toast supaprastinimas + amber summary delta | ✅ Done |
-| 5. Zone circuit toast (zonoje nelieka todo) | ⬜ TODO |
+| 5. Zone circuit toast (zonoje nelieka todo) | ✅ Done |
 
 **Ateičiai (po visko):** single-plant CareWateringSheet mikro-toast (kai vienas augalas, ne bulk).
 
