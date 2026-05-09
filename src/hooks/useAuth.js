@@ -268,7 +268,8 @@ export function useAuth() {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (!user && !redirectDone) return
       if (!user) {
-        setState({ user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, authError: null, loadingMessage: null })
+        // authError paliekame — gali būti jau užpildytas signInWithCredential/.catch bloke
+        setState(s => ({ ...s, user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, loadingMessage: null }))
         return
       }
       setState(s => ({ ...s, loading: true, loadingMessage: 'Ruošiama kolekcija…' }))
@@ -286,7 +287,8 @@ export function useAuth() {
       .catch(e => { if (e?.code !== 'auth/null-user') setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' })) })
       .finally(() => {
         redirectDone = true
-        if (!auth.currentUser) setState({ user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, authError: null, loadingMessage: null })
+        // authError paliekame — gali būti jau užpildytas signInWithCredential/.catch bloke
+        if (!auth.currentUser) setState(s => ({ ...s, user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, loadingMessage: null }))
       })
 
     return unsub
@@ -294,13 +296,13 @@ export function useAuth() {
 
   const signIn = async () => {
     setState(s => ({ ...s, authError: null }))
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true
-    if (isStandalone) { window.location.href = '/api/auth/google-start'; return }
     try {
+      // signInWithPopup veikia visur: naršyklė, Android PWA, iOS 14.5+ PWA (SFSafariViewController popup)
       await signInWithPopup(auth, googleProvider)
     } catch (e) {
-      const fallbackCodes = ['auth/popup-blocked', 'auth/popup-closed-by-user', 'auth/cancelled-popup-request']
-      if (fallbackCodes.includes(e?.code)) return signInWithRedirect(auth, googleProvider)
+      // Popup blokuotas arba uždarytas — fallback į Firebase redirect
+      const popupFallback = ['auth/popup-blocked', 'auth/popup-closed-by-user', 'auth/cancelled-popup-request']
+      if (popupFallback.includes(e?.code)) return signInWithRedirect(auth, googleProvider)
       setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' }))
     }
   }
