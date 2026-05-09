@@ -1011,7 +1011,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-            className="fixed bottom-[68px] left-0 right-0 z-30 px-4 pb-2"
+            className={`fixed ${role === 'viewer' ? 'bottom-2' : 'bottom-[68px]'} left-1/2 -translate-x-1/2 w-full max-w-[430px] z-30 px-4 pb-2`}
           >
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3 flex gap-2 items-center">
               <button
@@ -1039,21 +1039,23 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 </span>
               </button>
               <button
-                onClick={() => {
+                onClick={role === 'viewer' ? undefined : () => {
                   if (careChecked.size === 0) return
                   if (confirmType === 'fertilizing') { handleCareAction('fertilizing'); resetConfirm() }
                   else { resetConfirm(); setConfirmType('fertilizing'); setCountdown(5) }
                 }}
-                disabled={careChecked.size === 0}
-                className={`flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl disabled:opacity-40 transition-colors ${
-                  confirmType === 'fertilizing' ? 'bg-amber-700 active:bg-amber-800' : 'bg-amber-500 active:bg-amber-600'
+                disabled={role === 'viewer' || careChecked.size === 0}
+                className={`flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl transition-colors ${
+                  role === 'viewer'
+                    ? 'bg-amber-500 opacity-25 cursor-not-allowed'
+                    : `disabled:opacity-40 ${confirmType === 'fertilizing' ? 'bg-amber-700 active:bg-amber-800' : 'bg-amber-500 active:bg-amber-600'}`
                 }`}
               >
                 <FlaskConical size={16} className="text-white" />
                 <span className="text-sm font-bold text-white">
-                  {confirmType === 'fertilizing'
+                  {role !== 'viewer' && confirmType === 'fertilizing'
                     ? `Patvirtinti (${countdown})`
-                    : `Tręšti${careChecked.size > 0 ? ` (${careChecked.size})` : ''}`}
+                    : `Tręšti${role !== 'viewer' && careChecked.size > 0 ? ` (${careChecked.size})` : ''}`}
                 </span>
               </button>
             </div>
