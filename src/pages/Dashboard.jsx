@@ -1011,8 +1011,9 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-            className={`fixed ${role === 'viewer' ? 'bottom-2' : 'bottom-[68px]'} left-1/2 -translate-x-1/2 w-full max-w-[430px] z-30 px-4 pb-2`}
+            className={`fixed ${role === 'viewer' ? 'bottom-2' : 'bottom-[68px]'} left-0 right-0 z-30`}
           >
+            <div className="max-w-[430px] mx-auto px-4 pb-2">
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3 flex gap-2 items-center">
               <button
                 onClick={exitCareMode}
@@ -1058,6 +1059,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                     : `Tręšti${role !== 'viewer' && careChecked.size > 0 ? ` (${careChecked.size})` : ''}`}
                 </span>
               </button>
+            </div>
             </div>
           </motion.div>
         )}
