@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost, ImageIcon, MapPin, X } from 'lucide-react'
+import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost, ImageIcon, MapPin, X, Check } from 'lucide-react'
 import { makeId, today } from '../utils/plantTransform'
 export { AddEventSheet, FAB } from './AddEventSheet'
 
@@ -99,6 +99,7 @@ const EVENT_META = {
   photo:        { icon: <Camera size={13} />,      label: 'Nuotrauka',    color: 'bg-sage-50',   border: 'border-sage-100',   text: 'text-sage-600' },
   statusChange: { icon: <RefreshCw size={13} />,   label: 'Būsena',       color: 'bg-surface',   border: 'border-warm-border',   text: 'text-gray-500' },
   move:         { icon: <MapPin size={13} />,      label: 'Perkėlimas',   color: 'bg-sage-50',   border: 'border-sage-100',   text: 'text-sage-600' },
+  inspection:   { icon: <Check size={13} />,       label: 'Patikrinta',   color: 'bg-green-50',  border: 'border-green-100',  text: 'text-green-700' },
 }
 
 const STATUS_PERIOD_META = {

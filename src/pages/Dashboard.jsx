@@ -53,12 +53,13 @@ function sortPlants(plants, key) {
   }
 }
 
-function CareWateringSheet({ plant, onClose, onWater, onFertilize }) {
+function CareWateringSheet({ plant, onClose, onWater, onFertilize, onInspect }) {
   const wc = getWateringForecast(plant)
   const hasImg = !!plant.image
   const intervals = plant.laistymasIntervalas
   const desc = plant.prieziura?.laistymas
   const hasFert = getFertilizingForecast(plant).intervalDays != null
+  const showInspect = wc.isOverdue && wc.lastType === 'watering'
 
   const fmtDate = iso => iso
     ? new Date(iso + 'T00:00:00').toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
@@ -164,7 +165,7 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize }) {
           )}
 
           {/* Current status */}
-          <div className={`rounded-2xl px-4 py-3 ${wc.isOverdue ? 'bg-sky-50 border border-sky-100' : 'bg-gray-50'}`}>
+          <div className={`rounded-2xl px-4 py-3 ${wc.isOverdue ? 'bg-sky-50 border border-sky-100' : wc.isSnoozed ? 'bg-green-50 border border-green-100' : 'bg-gray-50'}`}>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2.5">Dabar</p>
             <div className="space-y-2">
               {wc.lastDate && (
@@ -187,6 +188,14 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize }) {
                     {wc.isOverdue
                       ? `${Math.abs(wc.daysUntil)} d.`
                       : `po ${wc.daysUntil} d.${wc.nextDate ? ` · ${fmtDate(wc.nextDate)}` : ''}`}
+                  </span>
+                </div>
+              )}
+              {wc.isSnoozed && wc.snoozedUntil && (
+                <div className="flex justify-between items-baseline gap-2">
+                  <span className="text-sm text-gray-500 flex-shrink-0">Patikrinta</span>
+                  <span className="text-sm font-semibold text-green-700 text-right">
+                    {fmtDate(wc.lastInspectionDate)} · ramybė iki {fmtDate(wc.snoozedUntil)}
                   </span>
                 </div>
               )}
@@ -220,6 +229,17 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize }) {
             </button>
           )}
         </div>
+        {showInspect && onInspect && (
+          <div className="flex-shrink-0 px-4 pb-3">
+            <button
+              onClick={onInspect}
+              className="w-full h-10 flex items-center justify-center gap-1.5 rounded-xl border border-gray-200 active:bg-gray-50 transition-colors"
+            >
+              <Check size={15} className="text-gray-500" />
+              <span className="text-sm font-semibold text-gray-700">Patikrinau — viskas tvarkoj</span>
+            </button>
+          </div>
+        )}
       </motion.div>
     </motion.div>,
     document.body
@@ -366,7 +386,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const missingCount     = plants.filter(p => !p.image).length
   const overdueList      = mainPlants.filter(p => getFertilizingForecast(p).isOverdue)
   const wateringList     = mainPlants.filter(p => shouldShowWateringAlert(p))
-  const [alertsOpen, setAlertsOpen]   = useState(false)
   const [sortKey, setSortKey]         = useState('added')
   const [showFilters, setShowFilters] = useState(false)
   const [showChat, setShowChat]       = useState(false)
@@ -379,13 +398,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const [careMode, setCareMode]         = useState(false)
   const [careChecked, setCareChecked]   = useState(new Set())
   const [careInfoPlant, setCareInfoPlant] = useState(null)
-  const [snoozedWatering, setSnoozedWatering] = useState(() => {
-    try {
-      const stored = JSON.parse(localStorage.getItem('waterSnooze') ?? '{}')
-      const todayStr = new Date().toISOString().slice(0, 10)
-      return new Set(Object.entries(stored).filter(([, until]) => until >= todayStr).map(([id]) => id))
-    } catch { return new Set() }
-  })
   const [confirmType, setConfirmType]   = useState(null)   // 'watering' | 'fertilizing' | null
   const [countdown, setCountdown]       = useState(5)
   const confirmTimerRef = useRef(null)
@@ -455,16 +467,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     setCareMode(false)
     setCareChecked(new Set())
   }, [resetConfirm])
-
-  const snoozeWatering = useCallback((plantId) => {
-    const until = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10)
-    setSnoozedWatering(prev => new Set([...prev, plantId]))
-    try {
-      const stored = JSON.parse(localStorage.getItem('waterSnooze') ?? '{}')
-      stored[plantId] = until
-      localStorage.setItem('waterSnooze', JSON.stringify(stored))
-    } catch {}
-  }, [])
 
   // Keep screen awake while in care mode
   useEffect(() => {
@@ -790,105 +792,10 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       {/* Scrollable content */}
       {!searching && <div ref={scrollRef} className={`flex-1 overflow-y-auto scrollbar-none px-5 ${role === 'viewer' ? 'pb-8' : 'pb-28'}`}>
 
-        {/* Care overview — only in careMode */}
-        {careMode && <CareOverview plants={mainPlants} onTap={onTapFromCare ?? onTap} onWaterTap={setCareInfoPlant} />}
-
-        {/* Unified alerts widget — only outside careMode */}
-        {!careMode && (() => {
-          const visibleWatering = wateringList.filter(p => !snoozedWatering.has(p.id))
-          if (visibleWatering.length === 0 && overdueList.length === 0) return null
-          return (
-          <div className="mb-4">
-            <div className="bg-white rounded-2xl overflow-hidden shadow-ios-card">
-              {/* Collapsible header */}
-              <button
-                onClick={() => setAlertsOpen(o => !o)}
-                className="w-full flex items-center gap-2 px-4 py-3 active:bg-surface-2 transition-colors"
-              >
-                <Sprout size={15} className="text-sage-500 flex-shrink-0" />
-                <p className="text-sm font-bold text-gray-800 flex-1 text-left">
-                  Priežiūros santrauka ({visibleWatering.length + overdueList.length})
-                </p>
-                <div className={`transition-transform duration-200 ${alertsOpen ? '' : 'rotate-180'}`}>
-                  <ChevronUp size={14} className="text-gray-400" />
-                </div>
-              </button>
-
-              {alertsOpen && (
-                <div className="px-4 pb-3 space-y-3">
-                  {/* Watering section */}
-                  {visibleWatering.length > 0 && (
-                    <div>
-                      <p className="flex items-center gap-1 text-[10px] font-bold text-sky-500 uppercase tracking-wider mb-1.5">
-                        <Droplets size={11} /> Patikrink ar ne sausi
-                      </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {visibleWatering.map(p => {
-                          const wc = getWateringForecast(p)
-                          return (
-                            <div key={p.id} className="flex items-center bg-sky-100 rounded-xl overflow-hidden">
-                              <button
-                                onClick={() => setCareInfoPlant(p)}
-                                className="flex items-center gap-1 px-2.5 py-1 active:bg-sky-200 transition-colors"
-                              >
-                                <span className="text-[11px] font-medium text-sky-800 max-w-[80px] truncate">{p.lietuviškas}</span>
-                                <span className="text-[10px] text-sky-500 font-semibold ml-0.5">+{Math.abs(wc.daysUntil)}d</span>
-                              </button>
-                              <button
-                                onClick={() => snoozeWatering(p.id)}
-                                className="pr-2 pl-1 py-1 text-sky-400 active:text-sky-600 transition-colors"
-                                title="Patikrinau"
-                              >
-                                <Check size={11} />
-                              </button>
-                            </div>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {visibleWatering.length > 1 && (
-                    <button
-                      onClick={() => visibleWatering.forEach(p => snoozeWatering(p.id))}
-                      className="w-full flex items-center justify-center gap-1.5 bg-sky-50 border border-sky-200 active:bg-sky-100 transition-colors rounded-2xl py-2"
-                    >
-                      <Check size={12} className="text-sky-500" />
-                      <span className="text-[13px] font-semibold text-sky-600">Patikrinau visus</span>
-                    </button>
-                  )}
-
-                  {/* Fertilizing section */}
-                  {overdueList.length > 0 && (
-                    <div>
-                      <p className="flex items-center gap-1 text-[10px] font-bold text-amber-600 uppercase tracking-wider mb-1.5">
-                        <FlaskConical size={11} /> Pamaitink augalėlį
-                      </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {overdueList.map(p => {
-                          const fc = getFertilizingForecast(p)
-                          return (
-                            <button
-                              key={p.id}
-                              onClick={() => setCareInfoPlant(p)}
-                              className="flex items-center gap-1 bg-amber-100 active:bg-amber-200 transition-colors rounded-xl px-2.5 py-1"
-                            >
-                              <span className="text-[11px] font-medium text-amber-900 max-w-[90px] truncate">{p.lietuviškas}</span>
-                              <span className="text-[10px] text-amber-500 font-semibold ml-0.5">+{Math.abs(fc.daysUntil)}d</span>
-                            </button>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-
-                </div>
-              )}
-            </div>
-          </div>
-          )
-        })()}
+        {/* Care overview — single source of truth for both careMode and normal view */}
+        {careMode
+          ? <CareOverview plants={mainPlants} onTap={onTapFromCare ?? onTap} onWaterTap={setCareInfoPlant} />
+          : <CareOverview plants={mainPlants} onTap={setCareInfoPlant} />}
 
         {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (
@@ -1080,6 +987,10 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             }}
             onFertilize={() => {
               onAddTimelineEvent(careInfoPlant.id, { id: makeId(), type: 'fertilizing', date: today(), komentaras: '' })
+              setCareInfoPlant(null)
+            }}
+            onInspect={() => {
+              onAddTimelineEvent(careInfoPlant.id, { id: makeId(), type: 'inspection', date: today(), komentaras: '' })
               setCareInfoPlant(null)
             }}
           />

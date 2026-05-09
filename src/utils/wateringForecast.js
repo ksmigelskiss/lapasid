@@ -47,6 +47,9 @@ export function getWateringForecast(plant) {
   const waterings = [...timeline]
     .filter(e => e.type === 'watering')
     .sort((a, b) => new Date(b.date) - new Date(a.date))
+  const lastInspection = [...timeline]
+    .filter(e => e.type === 'inspection')
+    .sort((a, b) => new Date(b.date) - new Date(a.date))[0] ?? null
 
   const lastEvent = waterings[0] ?? null
   const lastDate  = lastEvent?.date ?? plant.data_prideta ?? now.toISOString().slice(0, 10)
@@ -82,19 +85,37 @@ export function getWateringForecast(plant) {
       season, category, lastDate, lastType,
       intervalDays: null, nextDate: null, daysUntil: null,
       isOverdue: false, skipSeason: true, metodas,
+      isSnoozed: false, snoozedUntil: null, lastInspectionDate: lastInspection?.date ?? null,
     }
   }
 
-  const { nextDate, daysUntil, isOverdue } = computeNextDate({
+  const { nextDate, daysUntil, isOverdue: rawOverdue } = computeNextDate({
     lastDate, intervalDays: resolvedInterval, skipsWinter, now,
   })
+
+  // Snooze: an `inspection` event newer than the last watering temporarily
+  // suppresses the overdue alert for ceil(intervalDays / 3) days.
+  let isSnoozed = false
+  let snoozedUntil = null
+  if (lastInspection && lastInspection.date > lastDate) {
+    const snoozeDays = Math.max(1, Math.ceil(resolvedInterval / 3))
+    // Use UTC math to avoid timezone slip (toISOString returns UTC).
+    const base = new Date(lastInspection.date + 'T12:00:00Z')
+    base.setUTCDate(base.getUTCDate() + snoozeDays)
+    snoozedUntil = base.toISOString().slice(0, 10)
+    isSnoozed = now < base
+  }
 
   return {
     season, category, lastDate, lastType,
     intervalDays: resolvedInterval,
-    nextDate, daysUntil, isOverdue,
+    nextDate, daysUntil,
+    isOverdue: rawOverdue && !isSnoozed,
     skipSeason: false,
     metodas,
+    isSnoozed,
+    snoozedUntil,
+    lastInspectionDate: lastInspection?.date ?? null,
   }
 }
 
