@@ -84,6 +84,18 @@ async function processPendingInvite(uid) {
     const invSnap = await getDoc(doc(db, 'invites', token))
     if (!invSnap.exists()) { console.warn('[invite] token not found:', token); return null }
 
+    const { colId } = invSnap.data()
+
+    // Jei vartotojas jau yra šioje kolekcijoje — nesiprocessinam invite
+    // (apsauga nuo accidental role downgrade jei owner atidaro savo invite nuorodą)
+    if (colId) {
+      const colSnap = await getDoc(doc(db, 'collections', colId))
+      if (colSnap.exists() && (colSnap.data().members ?? []).includes(uid)) {
+        console.log('[invite] user already in collection, skipping invite:', colId)
+        return null
+      }
+    }
+
     const guestName = localStorage.getItem('guest-name')
     const profile = {
       displayName: auth.currentUser?.displayName || guestName || '',
@@ -149,9 +161,10 @@ async function getOrCreateCollection(uid) {
         const cd = colSnap.data()
         role = cd.roles?.[uid] ?? (cd.ownerId === uid ? 'owner' : 'member')
 
-        // One-time fix: legacy collections were created with the old hardcoded UID as ownerId.
-        // If the user is a member but ownerId points to the legacy account → they ARE the owner.
-        if (role === 'member' && cd.ownerId === LEGACY_UID) {
+        // Fix: atstatome owner rolę jei:
+        // (a) sena kolekcija su legacy ownerId, arba
+        // (b) owner atsitiktinai pats sau priėmė viewer/member invite ir save downgradeino
+        if (role !== 'owner' && (cd.ownerId === uid || cd.ownerId === LEGACY_UID)) {
           role = 'owner'
           setDoc(doc(db, 'collections', activeColId), {
             ownerId:              uid,
