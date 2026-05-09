@@ -817,10 +817,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       {/* Scrollable content */}
       {!searching && <div ref={scrollRef} className={`flex-1 overflow-y-auto scrollbar-none px-5 ${role === 'viewer' ? 'pb-8' : 'pb-28'}`}>
 
-        {/* Care overview — single source of truth for both careMode and normal view */}
-        {careMode
-          ? <CareOverview plants={mainPlants} onTap={onTapFromCare ?? onTap} onWaterTap={setCareInfoPlant} />
-          : <CareOverview plants={mainPlants} onTap={setCareInfoPlant} />}
+        {/* Care overview — slepiama care mode'e (vartotojas jau dirba su augalais tiesiogiai) */}
+        {!careMode && <CareOverview plants={mainPlants} onTap={setCareInfoPlant} />}
 
         {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (
