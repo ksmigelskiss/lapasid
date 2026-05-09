@@ -1045,7 +1045,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
 
       {/* Care session summary modal — atsiranda išėjus iš care mode po >0 veiksmų */}
       <AnimatePresence>
-        {showSummary && <CareSessionSummary session={showSummary} onDismiss={dismissSummary} />}
+        {showSummary && <CareSessionSummary session={showSummary} confidence={careConfidence} onDismiss={dismissSummary} />}
       </AnimatePresence>
 
       {/* Care mode action bar */}

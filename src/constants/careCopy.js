@@ -3,7 +3,7 @@
 // (pagal bucket'ą / kontekstą), todėl unicode emojis čia nenaudojami.
 //
 // Tonas: skatinimas ir reward, ne pamokslavimas. „Vėluoja" tipo žodžiai
-// pakeisti į „po pauzės", „ramiu tempu". Augalas patenkintas / atsigauna /
+// pakeisti į „po pauzės", „ramiai". Augalas patenkintas / atsigauna /
 // kantrus; tu — atsargus / sąmoningas / žinai.
 
 export const CARE_COPY = {
@@ -45,18 +45,69 @@ export const CARE_COPY = {
     ],
   },
 
-  // ─── Bulk care mode po veiksmo (toast su breakdown)
+  // ─── Bulk care mode po veiksmo (toast / summary)
   bulk: {
+    // Trumpos label'ės bucket'ams — kompaktiškai (pvz. "5 laiku" vietoj "5 pataikei laiku")
     label: {
-      perfect: 'pataikei laiku',
-      early:   'truputį anksčiau',
-      late:    'ramiu tempu',
-      waylate: 'po ilgesnės pauzės',
+      perfect: 'laiku',
+      early:   'anksti',
+      late:    'ramiai',
+      waylate: 'po pauzės',
     },
+    // Sekcijų antraštės — verb-style, count po žodžio („Palaistei 8")
+    section: {
+      watering: [
+        'Palaistei',
+        'Vandens davei',
+        'Atgaivinai',
+      ],
+      fertilizing: [
+        'Pamaitinai',
+        'Maisto gavo',
+        'Valgo ir čepsi',
+      ],
+    },
+    // Antraštės pagal bendrą rezultatą (>50% perfect = pirma, kitaip pagal kontekstą)
     headline: {
-      mostlyPerfect: ['Geras ritmas šiandien', 'Augalai tave gerai pažįsta'],
-      mixed:         ['Pasirūpinta', 'Atnaujinta priežiūra'],
-      manyLate:      ['Augalai atsigauna — ačiū', 'Šventė augalams'],
+      mostlyPerfect: [
+        'Geras ritmas šiandien',
+        'Tu šaunuolis',
+        'Geras tu žmogus',
+        'Augalai tave gerai pažįsta',
+        'Tikras augintojas',
+        'Auginimo meistras',
+        'Žinai, ką darai',
+        'Žaliasis nykštys',
+        'Augalų bičiulis',
+        'Augalų globėjas',
+        'Pataikei lygiai',
+        'Tikras profas',
+        'Augalams pasisekė',
+        'Auginimo dovana',
+        'Priežiūros guru',
+      ],
+      mixed: [
+        'Pasirūpinta',
+        'Atnaujinta priežiūra',
+        'Diena augalams',
+        'Pasidirbėta gerai',
+        'Augalai padaryti',
+        'Užbaigta sesija',
+        'Šiandien padaryta',
+        'Augalai pasidžiaugė',
+        'Dėmesys atskirtas',
+        'Sodas atjaunintas',
+      ],
+      manyLate: [
+        'Augalai atsigauna — ačiū',
+        'Šventė augalams',
+        'Atgaivinai',
+        'Augalams palengvėjo',
+        'Atokvėpis',
+        'Pasipila gyvybė',
+        'Augalai dėkingi',
+        'Ilgiau lauktas vanduo, daugiau džiaugsmo',
+      ],
     },
   },
 
@@ -68,7 +119,7 @@ export const CARE_COPY = {
     '{zone} dabar tvarkinga',
   ],
 
-  // ─── Confidence pill ant Priežiūros mygtuko (visada matomas)
+  // ─── Confidence pill ant Priežiūros mygtuko + summary
   confidence: {
     none: 'Susipažįstam',           // <33% (0–1 įrašas/augalui)
     low:  'Mokausi tavo ritmą',     // 33–66%
@@ -87,7 +138,7 @@ export function fillTemplate(str, vars) {
   return str.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? '')
 }
 
-// Lt. plural form'a "augalas" pagal skaičių
+// Lt. plural form'a "augalas" (vardininkas)
 export function plPlants(n) {
   const lastTwo = n % 100
   if (lastTwo >= 11 && lastTwo <= 19) return 'augalų'
@@ -95,4 +146,13 @@ export function plPlants(n) {
   if (last === 1)             return 'augalas'
   if (last >= 2 && last <= 9) return 'augalai'
   return 'augalų'
+}
+
+// Lt. plural "augalas" — įnagininkas (po veiksmažodžių „Pasirūpinai")
+export function plPlantsInstr(n) {
+  const lastTwo = n % 100
+  if (lastTwo >= 11 && lastTwo <= 19) return 'augalų'
+  const last = n % 10
+  if (last === 1)             return 'augalu'
+  return 'augalais'
 }

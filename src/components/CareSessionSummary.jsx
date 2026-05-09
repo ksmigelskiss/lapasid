@@ -1,10 +1,11 @@
+import { useEffect } from 'react'
 import { Sprout, Droplets, FlaskConical, Clock, Heart } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { createPortal } from 'react-dom'
-import { CARE_COPY, plPlants, pick } from '../constants/careCopy'
-import { moodFromCounts } from '../utils/careBuckets'
+import { CARE_COPY, plPlantsInstr, pick } from '../constants/careCopy'
+import { moodFromCounts, confidenceLabel } from '../utils/careBuckets'
 
-// Tas pats bucket meta map'as kaip CareToast'e — vienas šaltinis vizualams
+// Bucket meta — vienas šaltinis vizualams
 const BUCKET_META = {
   perfect: { Icon: Sprout,   color: 'text-sage-600' },
   early:   { Icon: Droplets, color: 'text-sky-500'  },
@@ -18,12 +19,12 @@ function totalIn(c) {
 
 function BucketRow({ counts }) {
   return (
-    <div className="flex flex-wrap gap-x-3 gap-y-1.5 mt-2">
+    <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-2">
       {Object.entries(counts).map(([key, count]) => {
         if (count <= 0) return null
         const { Icon, color } = BUCKET_META[key]
         return (
-          <div key={key} className="flex items-center gap-1">
+          <div key={key} className="flex items-center gap-1.5">
             <Icon size={15} className={color} />
             <span className="text-sm font-bold text-gray-800">{count}</span>
             <span className="text-sm text-gray-500">{CARE_COPY.bulk.label[key]}</span>
@@ -37,25 +38,42 @@ function BucketRow({ counts }) {
 /**
  * Session summary modal — atsiranda išėjus iš care mode po >0 veiksmų.
  * Centruotas, su backdrop, dismissable per tap arba mygtuką.
+ * Auto-close po 10s.
  *
  * Props:
  *   session: { watering: counts, fertilizing: counts, plants: Set }
+ *   confidence: 0..1 — vartotojo „pažinimo" lygis (iš aggregateConfidence)
  *   onDismiss: callback uždarymui
  */
-export default function CareSessionSummary({ session, onDismiss }) {
+export default function CareSessionSummary({ session, confidence = 0, onDismiss }) {
   const wT = totalIn(session.watering)
   const fT = totalIn(session.fertilizing)
   const uniquePlants = session.plants.size
 
-  // Nuotaika imama iš agreguotų counts'ų visoms veikloms
+  // Mood iš agreguotų counts'ų visoms veikloms
   const allCounts = {
     perfect: session.watering.perfect + session.fertilizing.perfect,
     early:   session.watering.early   + session.fertilizing.early,
     late:    session.watering.late    + session.fertilizing.late,
     waylate: session.watering.waylate + session.fertilizing.waylate,
   }
-  const mood = moodFromCounts(allCounts)
+  const mood     = moodFromCounts(allCounts)
   const headline = pick(CARE_COPY.bulk.headline[mood])
+
+  // Sekcijų antraštės — random per render
+  const wateringVerb = pick(CARE_COPY.bulk.section.watering)
+  const fertilizingVerb = pick(CARE_COPY.bulk.section.fertilizing)
+
+  // Confidence display
+  const confPct   = Math.round(confidence * 100)
+  const confKey   = confidenceLabel(confidence)
+  const confText  = CARE_COPY.confidence[confKey]
+
+  // Auto-close po 10s
+  useEffect(() => {
+    const timer = setTimeout(onDismiss, 10000)
+    return () => clearTimeout(timer)
+  }, [onDismiss])
 
   return createPortal(
     <motion.div
@@ -73,17 +91,16 @@ export default function CareSessionSummary({ session, onDismiss }) {
         transition={{ type: 'spring', damping: 26, stiffness: 320 }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Big icon */}
-        <div className="flex justify-center mb-4">
-          <div className="w-16 h-16 rounded-full bg-sage-100 flex items-center justify-center">
-            <Sprout size={32} className="text-sage-600" />
-          </div>
+        {/* Confidence — pakeičia anksčiau buvusią Sprout ikoną */}
+        <div className="text-center">
+          <p className="text-[42px] font-extrabold leading-none text-sage-600">{confPct}%</p>
+          <p className="text-xs font-semibold text-gray-500 mt-1.5 uppercase tracking-wider">{confText}</p>
         </div>
 
         {/* Headline + subtitle */}
-        <h2 className="text-xl font-extrabold text-gray-900 text-center leading-tight">{headline}</h2>
+        <h2 className="text-xl font-extrabold text-gray-900 text-center mt-5 leading-tight">{headline}</h2>
         <p className="text-sm text-gray-500 text-center mt-1.5">
-          Pasirūpinai {uniquePlants} {plPlants(uniquePlants)}
+          Pasirūpinai {uniquePlants} {plPlantsInstr(uniquePlants)}
         </p>
 
         {/* Sections */}
@@ -92,8 +109,7 @@ export default function CareSessionSummary({ session, onDismiss }) {
             <div className="bg-gray-50 rounded-2xl p-4">
               <div className="flex items-center gap-2">
                 <Droplets size={16} className="text-sky-500" />
-                <span className="text-sm font-bold text-gray-800">Laistymas</span>
-                <span className="text-sm text-gray-400">· {wT}</span>
+                <span className="text-sm font-bold text-gray-800">{wateringVerb} {wT}</span>
               </div>
               <BucketRow counts={session.watering} />
             </div>
@@ -102,8 +118,7 @@ export default function CareSessionSummary({ session, onDismiss }) {
             <div className="bg-gray-50 rounded-2xl p-4">
               <div className="flex items-center gap-2">
                 <FlaskConical size={16} className="text-amber-500" />
-                <span className="text-sm font-bold text-gray-800">Tręšimas</span>
-                <span className="text-sm text-gray-400">· {fT}</span>
+                <span className="text-sm font-bold text-gray-800">{fertilizingVerb} {fT}</span>
               </div>
               <BucketRow counts={session.fertilizing} />
             </div>
