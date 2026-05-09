@@ -70,13 +70,13 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize, onInspect }) 
 
   return createPortal(
     <motion.div
-      className="fixed inset-0 z-[110] flex flex-col justify-end"
+      className="fixed inset-0 z-[110] flex flex-col items-center justify-end"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       onClick={onClose}
     >
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <motion.div
-        className="relative bg-white rounded-t-3xl overflow-hidden max-h-[84dvh] flex flex-col"
+        className="relative w-full max-w-[430px] bg-white rounded-t-3xl overflow-hidden max-h-[84dvh] flex flex-col"
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 340 }}
         onClick={e => e.stopPropagation()}
