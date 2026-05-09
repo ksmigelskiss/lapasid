@@ -13,7 +13,7 @@ export const STATUS = {
   NUMIRE:     'numire',
 }
 
-// Status display metadata (used in PlantDetail, PlantCard, Dashboard, WateringSession)
+// Status display metadata (used in PlantDetail, PlantCard, Dashboard)
 export const STATUS_OPTIONS = [
   { key: STATUS.HEALTHY,    dot: 'bg-green-400',  label: 'Sveikas',    bg: 'bg-green-100',  text: 'text-green-700' },
   { key: STATUS.SICK,       dot: 'bg-orange-400', label: 'Dėmesio',    bg: 'bg-orange-100', text: 'text-orange-700' },
