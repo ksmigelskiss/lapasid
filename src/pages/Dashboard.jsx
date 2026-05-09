@@ -312,7 +312,7 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
   const containerRef = useRef(null)
   const orderedPlants = pinChecked(plants, careMode, careChecked)
   return (
-    <div ref={containerRef} className="mb-3 bg-white rounded-2xl px-3 pb-3">
+    <div ref={containerRef} className="mb-3 bg-white rounded-2xl px-1.5 pb-2">
       <div className="w-full flex items-center gap-2 py-2">
         <button onClick={() => setOpen(v => !v)} className="flex items-center gap-1.5 min-w-0">
           <ShieldAlert size={13} className="text-red-400 flex-shrink-0" />
@@ -325,7 +325,7 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
         </button>
       </div>
       {open && (
-        <div className="bg-red-50 rounded-2xl p-2.5">
+        <div className="bg-red-50 rounded-2xl p-1.5">
           <div className="grid grid-cols-2 gap-3">
             {orderedPlants.map(plant => (
               <PlantCard
@@ -363,7 +363,7 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
   } : {}
 
   return (
-    <div ref={containerRef} className="mb-3 bg-white rounded-2xl px-3 pb-3">
+    <div ref={containerRef} className="mb-3 bg-white rounded-2xl px-1.5 pb-2">
       <div className="w-full flex items-center gap-2 py-2">
         <button onClick={() => setOpen(v => !v)} className="flex items-center gap-1.5 min-w-0">
           <MapPin size={13} className="text-sage-400 flex-shrink-0" />
@@ -378,7 +378,7 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
       {open && (
         <div className="space-y-3">
           {sickPlants.length > 0 && (
-            <div className="bg-amber-50 rounded-2xl p-2.5">
+            <div className="bg-amber-50 rounded-2xl p-1.5">
               <div className="flex items-center gap-1.5 mb-2 px-1">
                 <Thermometer size={12} className="text-amber-500" />
                 <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wide">Dėmesio</span>
@@ -848,13 +848,13 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onCareInfo={setCareInfoPlant} />
             ))}
             {unzonedPlants.length > 0 && (
-              <div ref={unzonedRef} className="mb-3 bg-white rounded-2xl px-3 pb-3">
+              <div ref={unzonedRef} className="mb-3 bg-white rounded-2xl px-1.5 pb-2">
                 <div className="flex items-center py-2">
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-1">Nepriskirti</p>
                 </div>
                 <div className="space-y-3">
                   {pinChecked(unzonedPlants.filter(p => p.status === 'sick'), careMode, careChecked).length > 0 && (
-                    <div className="bg-amber-50 rounded-2xl p-2.5">
+                    <div className="bg-amber-50 rounded-2xl p-1.5">
                       <div className="flex items-center gap-1.5 mb-2 px-1">
                         <Thermometer size={12} className="text-amber-500" />
                         <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wide">Dėmesio</span>
