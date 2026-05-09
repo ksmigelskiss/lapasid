@@ -35,15 +35,19 @@ const makeId = _makeId
 const today  = _today
 
 
-export function usePlants(collectionId) {
+export function usePlants(collectionId, viewerToken = null) {
   const [data, setData] = useState(() => loadLocal(collectionId))
 
   // Stable refs — leidžia useCallback nepriklausyti nuo collectionId
   const colIdRef = useRef(collectionId)
   useEffect(() => { colIdRef.current = collectionId })
 
+  const viewerTokenRef = useRef(viewerToken)
+  useEffect(() => { viewerTokenRef.current = viewerToken })
+
   // Išsaugo į localStorage + Firestore (fire-and-forget)
   const update = useCallback((updater) => {
+    if (viewerTokenRef.current) return // viewers — no writes via this path
     setData(prev => {
       const safe = { plants: [], zinynas: [], zones: [], settings: {}, ...prev }
       const next = updater(safe)
@@ -88,6 +92,19 @@ export function usePlants(collectionId) {
   const syncFromRemote = useCallback(() => {
     const cid = colIdRef.current
     if (!cid) return
+
+    // Viewer — fetch via server API
+    if (viewerTokenRef.current) {
+      fetch(`/api/viewer?token=${encodeURIComponent(viewerTokenRef.current)}`)
+        .then(r => r.ok ? r.json() : Promise.reject(r.status))
+        .then(({ plants, zones }) => {
+          const remote = { plants: plants ?? [], zinynas: [], zones: zones ?? [], settings: {} }
+          setData(remote)
+          try { localStorage.setItem(storageKey(cid), JSON.stringify(remote)) } catch {}
+        })
+        .catch(e => console.warn('[viewer] fetch failed:', e))
+      return
+    }
 
     Promise.all([
       getDoc(doc(db, 'collections', cid)),
@@ -160,6 +177,13 @@ export function usePlants(collectionId) {
     document.addEventListener('visibilitychange', handle)
     return () => document.removeEventListener('visibilitychange', handle)
   }, [syncFromRemote])
+
+  // Viewer polling — re-sync every 60s
+  useEffect(() => {
+    if (!viewerToken) return
+    const id = setInterval(syncFromRemote, 60_000)
+    return () => clearInterval(id)
+  }, [viewerToken, syncFromRemote])
 
   const updatePlant = useCallback((id, patch) => {
     update(prev => ({
@@ -272,6 +296,22 @@ export function usePlants(collectionId) {
   }, [update])
 
   const addTimelineEvent = useCallback((plantId, event) => {
+    // Viewer — only watering is allowed, via server API
+    if (viewerTokenRef.current) {
+      if (event.type !== 'watering') return
+      const token = viewerTokenRef.current
+      // Optimistic local update
+      setData(prev => ({
+        ...prev,
+        plants: prev.plants.map(p => p.id !== plantId ? p : { ...p, timeline: [event, ...(p.timeline ?? [])] }),
+      }))
+      fetch('/api/viewer/water', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, plantId, event }),
+      }).catch(e => console.warn('[viewer/water]', e))
+      return
+    }
     update(prev => ({
       ...prev,
       plants: prev.plants.map(p => {

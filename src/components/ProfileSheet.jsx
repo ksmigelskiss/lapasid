@@ -11,13 +11,22 @@ async function generateInviteLink(collectionId, uid, role = 'member') {
   const token = btoa(String.fromCharCode(...bytes))
     .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
     .slice(0, 12)
+  const createdAt = new Date().toISOString()
   await setDoc(doc(db, 'invites', token), {
     colId:     collectionId,
     createdBy: uid,
     role,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
     used:      false,
+    active:    true,
+    createdAt,
   })
+  // For viewer invites — also track in collection's viewerInvites array
+  if (role === 'viewer') {
+    await setDoc(doc(db, 'collections', collectionId), {
+      viewerInvites: arrayUnion({ token, createdAt, active: true }),
+    }, { merge: true })
+  }
   return `${window.location.origin}?invite=${token}&role=${role}`
 }
 
@@ -87,36 +96,57 @@ export async function acceptInvite(uid, token, inviteData, userProfile = {}) {
 }
 
 export default function ProfileSheet({ user, collectionId, role = 'owner', ownCollectionId, allCollections = [], onSignOut, onClose, onSwitchCollection, onRenameCollection }) {
-  const [members,       setMembers]       = useState([])
-  const [inviteRole,    setInviteRole]    = useState('member')
-  const [inviteUrl,     setInviteUrl]     = useState(null)
-  const [generating,    setGenerating]    = useState(false)
-  const [copied,        setCopied]        = useState(false)
-  const [removeTarget,  setRemoveTarget]  = useState(null) // { uid, name }
-  const [removing,      setRemoving]      = useState(false)
-  const [leaving,       setLeaving]       = useState(false)
+  const [members,         setMembers]         = useState([])
+  const [viewerInvites,   setViewerInvites]   = useState([]) // { token, createdAt, active }
+  const [inviteRole,      setInviteRole]      = useState('member')
+  const [inviteUrl,       setInviteUrl]       = useState(null)
+  const [generating,      setGenerating]      = useState(false)
+  const [copied,          setCopied]          = useState(false)
+  const [removeTarget,    setRemoveTarget]    = useState(null) // { uid, name }
+  const [removing,        setRemoving]        = useState(false)
+  const [leaving,         setLeaving]         = useState(false)
+  const [revokingToken,   setRevokingToken]   = useState(null)
 
-  const isOwner      = role === 'owner'
-  const isShared     = collectionId !== ownCollectionId && ownCollectionId != null
+  const isOwner         = role === 'owner'
+  const isShared        = collectionId !== ownCollectionId && ownCollectionId != null
   const canInviteMember = isOwner
   const canInviteViewer = isOwner || role === 'member'
 
   useEffect(() => {
     if (!collectionId || !user?.uid) return
     loadMembers(collectionId, user.uid).then(setMembers).catch(() => {})
+    // Load viewer invites from collection doc
+    getDoc(doc(db, 'collections', collectionId)).then(snap => {
+      if (!snap.exists()) return
+      const arr = (snap.data().viewerInvites ?? []).filter(v => v.active !== false)
+      setViewerInvites(arr)
+    }).catch(() => {})
   }, [collectionId, user?.uid])
 
   // Reset invite url when role changes
   useEffect(() => { setInviteUrl(null) }, [inviteRole])
 
-  const handleInvite = async () => {
+  const handleInvite = async (forRole) => {
+    const roleToUse = forRole ?? inviteRole
     setGenerating(true)
     try {
-      const url = await generateInviteLink(collectionId, user.uid, inviteRole)
-      setInviteUrl(url)
-      if (navigator.share) {
-        try { await navigator.share({ title: 'Augalų kolekcija', text: 'Prisijunk prie augalų kolekcijos 🌿', url }) }
-        catch (e) { if (e.name !== 'AbortError') console.error(e) }
+      const url = await generateInviteLink(collectionId, user.uid, roleToUse)
+      if (roleToUse === 'viewer') {
+        // For viewer invites — share/copy directly, don't show QR in member section
+        const newToken = new URL(url).searchParams.get('invite')
+        if (newToken) setViewerInvites(prev => [...prev, { token: newToken, createdAt: new Date().toISOString(), active: true }])
+        if (navigator.share) {
+          try { await navigator.share({ title: 'Augalų priežiūra', text: 'Kvietimas prižiūrėti augalus', url }) }
+          catch (e) { if (e.name !== 'AbortError') console.error(e) }
+        } else {
+          try { await navigator.clipboard.writeText(url) } catch {}
+        }
+      } else {
+        setInviteUrl(url)
+        if (navigator.share) {
+          try { await navigator.share({ title: 'Augalų kolekcija', text: 'Prisijunk prie augalų kolekcijos 🌿', url }) }
+          catch (e) { if (e.name !== 'AbortError') console.error(e) }
+        }
       }
     } catch (e) { console.error('generateInviteLink failed:', e) }
     setGenerating(false)
@@ -158,6 +188,22 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
       onClose?.()
     } catch (e) { console.error('leave failed:', e) }
     setLeaving(false)
+  }
+
+  const handleRevokeViewer = async (token) => {
+    setRevokingToken(token)
+    try {
+      await updateDoc(doc(db, 'invites', token), { active: false })
+      // Update viewerInvites in collection — mark as inactive
+      const colSnap = await getDoc(doc(db, 'collections', collectionId))
+      if (colSnap.exists()) {
+        const existing = colSnap.data().viewerInvites ?? []
+        const updated  = existing.map(v => v.token === token ? { ...v, active: false } : v)
+        await setDoc(doc(db, 'collections', collectionId), { viewerInvites: updated }, { merge: true })
+      }
+      setViewerInvites(prev => prev.filter(v => v.token !== token))
+    } catch (e) { console.error('revoke viewer failed:', e) }
+    setRevokingToken(null)
   }
 
   return (
@@ -223,38 +269,14 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
             </div>
           )}
 
-          {/* Kvietimas */}
-          {(canInviteMember || canInviteViewer) && (
+          {/* Narių kvietimas (tik owner) */}
+          {canInviteMember && (
             <div className="bg-surface rounded-2xl p-4 mb-3">
-              <p className="text-sm font-semibold text-gray-800 mb-3">Pakviesti į kolekciją</p>
-
-              {/* Rolės pasirinkimas */}
-              {canInviteMember && (
-                <div className="flex gap-2 mb-3">
-                  {[
-                    { key: 'member', label: 'Narys', icon: Users, desc: 'Pilna prieiga' },
-                    { key: 'viewer', label: 'Prižiūrėtojas', icon: Eye, desc: 'Tik laistyti' },
-                  ].map(({ key, label, icon: Icon, desc }) => (
-                    <button
-                      key={key}
-                      onClick={() => setInviteRole(key)}
-                      className={`flex-1 flex flex-col items-center gap-0.5 rounded-xl py-2.5 px-2 border transition-colors ${
-                        inviteRole === key
-                          ? 'bg-sage-50 border-sage-300 text-sage-700'
-                          : 'bg-white border-gray-200 text-gray-500'
-                      }`}
-                    >
-                      <Icon size={15} />
-                      <span className="text-xs font-semibold">{label}</span>
-                      <span className="text-[10px] opacity-70">{desc}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
+              <p className="text-sm font-semibold text-gray-800 mb-3">Pakviesti narį</p>
 
               {!inviteUrl ? (
                 <button
-                  onClick={handleInvite}
+                  onClick={() => handleInvite('member')}
                   disabled={generating}
                   className="w-full py-2.5 rounded-xl bg-sage-500 active:bg-sage-600 text-white text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50 transition-colors"
                 >
@@ -278,7 +300,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
                     </button>
                     {typeof navigator.share === 'function' && (
                       <button
-                        onClick={handleInvite}
+                        onClick={() => handleInvite('member')}
                         className="flex-1 py-2.5 rounded-xl bg-sage-500 active:bg-sage-600 text-white text-sm font-medium flex items-center justify-center gap-1.5 transition-colors"
                       >
                         <Share2 size={14} />
@@ -291,6 +313,41 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
                   </button>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Prižiūrėtojų kvietimas */}
+          {canInviteViewer && (
+            <div className="bg-surface rounded-2xl p-4 mb-3">
+              <p className="text-sm font-semibold text-gray-800 mb-3">Pakviesti prižiūrėtoją</p>
+
+              {/* Aktyvūs viewer invite'ai */}
+              {viewerInvites.length > 0 && (
+                <div className="mb-3 space-y-2">
+                  {viewerInvites.map(v => (
+                    <div key={v.token} className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-2">
+                      <Eye size={13} className="text-gray-400 flex-shrink-0" />
+                      <span className="flex-1 text-xs text-gray-500 font-mono truncate">{v.token}</span>
+                      <button
+                        onClick={() => handleRevokeViewer(v.token)}
+                        disabled={revokingToken === v.token}
+                        className="text-xs text-red-400 font-medium active:text-red-600 disabled:opacity-50 flex-shrink-0"
+                      >
+                        {revokingToken === v.token ? '...' : 'Atšaukti'}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <button
+                onClick={() => handleInvite('viewer')}
+                disabled={generating}
+                className="w-full py-2.5 rounded-xl bg-sage-500 active:bg-sage-600 text-white text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50 transition-colors"
+              >
+                <Eye size={15} />
+                {generating ? 'Generuojama...' : 'Pakviesti prižiūrėtoją →'}
+              </button>
             </div>
           )}
 

@@ -19,7 +19,8 @@ export default function App() {
   const {
     user, collectionId, role, ownCollectionId, allCollections,
     loading: authLoading, authError, loadingMessage,
-    signIn, signInAsGuest, signOut, switchCollection, renameCollection,
+    viewerToken,
+    signIn, signOut, switchCollection, renameCollection,
   } = useAuth()
 
   // Išsaugome invite tokeną localStorage — fallback jei processPendingInvite
@@ -54,7 +55,7 @@ export default function App() {
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred,
     updateUzrasai,
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
-  } = usePlants(collectionId)
+  } = usePlants(collectionId, viewerToken)
 
   const livePlant = detailPlant
     ? [...dashboard, ...library].find(p => p.id === detailPlant.plant.id)
@@ -199,8 +200,8 @@ export default function App() {
       </div>
     )
   }
-  if (!user) {
-    return <LoginScreen onSignIn={signIn} onSignInAsGuest={signInAsGuest} error={authError} />
+  if (!user && !viewerToken) {
+    return <LoginScreen onSignIn={signIn} error={authError} />
   }
   // Vartotojas prisijungęs, bet kolekcija nesukurta (Firestore rules klaida arba tinklas)
   if (!collectionId) {

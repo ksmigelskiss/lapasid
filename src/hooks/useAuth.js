@@ -9,7 +9,7 @@ import {
   signOut as firebaseSignOut,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
-import { auth, db, googleProvider, signInAnonymously, updateProfile } from '../utils/firebase'
+import { auth, db, googleProvider } from '../utils/firebase'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { acceptInvite } from '../components/ProfileSheet'
 
@@ -70,11 +70,15 @@ async function runMigration(uid) {
   return collectionId
 }
 
-// Nuskaito pending invite iš URL arba localStorage
+// Nuskaito pending invite iš URL arba localStorage (tik member invitams, ne viewer)
 async function processPendingInvite(uid) {
   const urlParams = new URLSearchParams(window.location.search)
   const urlToken  = urlParams.get('invite')
+  const urlRole   = urlParams.get('role')
   if (urlToken) window.history.replaceState({}, '', window.location.pathname)
+
+  // Viewer invitai tvarkomi useAuth viewer check bloke — čia praleisti
+  if (urlToken && urlRole === 'viewer') return null
 
   const token = urlToken || localStorage.getItem('pending-invite')
   if (!token) return null
@@ -83,6 +87,9 @@ async function processPendingInvite(uid) {
   try {
     const invSnap = await getDoc(doc(db, 'invites', token))
     if (!invSnap.exists()) { console.warn('[invite] token not found:', token); return null }
+
+    // Skip viewer invites (stored in localStorage as pending-invite)
+    if (invSnap.data().role === 'viewer') return null
 
     const { colId } = invSnap.data()
 
@@ -206,10 +213,40 @@ export function useAuth() {
     user: null, collectionId: null, role: 'owner',
     ownCollectionId: null, allCollections: [],
     loading: true, authError: null, loadingMessage: null,
+    viewerToken: null,
   })
 
   useEffect(() => {
     const urlParams      = new URLSearchParams(window.location.search)
+
+    // ── Viewer token check — BEFORE Firebase auth ──────────────────
+    const inviteToken       = urlParams.get('invite')
+    const inviteRole        = urlParams.get('role')
+    const savedViewerToken  = localStorage.getItem('viewer-token')
+    const viewerToken       = (inviteToken && inviteRole === 'viewer') ? inviteToken : savedViewerToken
+
+    if (viewerToken) {
+      if (inviteToken) window.history.replaceState({}, '', window.location.pathname)
+      localStorage.setItem('viewer-token', viewerToken)
+
+      getDoc(doc(db, 'invites', viewerToken)).then(snap => {
+        if (!snap.exists() || snap.data().active === false ||
+            (snap.data().expiresAt && new Date(snap.data().expiresAt) < new Date())) {
+          localStorage.removeItem('viewer-token')
+          setState(s => ({ ...s, loading: false }))
+          return
+        }
+        setState({
+          user: null, collectionId: snap.data().colId, role: 'viewer',
+          ownCollectionId: null, allCollections: [], loading: false,
+          authError: null, loadingMessage: null, viewerToken,
+        })
+      }).catch(() => setState(s => ({ ...s, loading: false })))
+
+      return // Skip Firebase auth entirely for viewers
+    }
+    // ── End viewer check ───────────────────────────────────────────
+
     const googleIdToken  = urlParams.get('googleIdToken')
     const authErrorParam = urlParams.get('authError')
 
@@ -265,19 +302,6 @@ export function useAuth() {
     }
   }
 
-  // Anoniminis prisijungimas — viewer invitams (be Google)
-  const signInAsGuest = async (displayName) => {
-    setState(s => ({ ...s, authError: null }))
-    const name = displayName?.trim() || 'Prižiūrėtojas'
-    if (name) localStorage.setItem('guest-name', name)
-    try {
-      const { user } = await signInAnonymously()
-      if (name) await updateProfile(user, { displayName: name }).catch(() => {})
-    } catch (e) {
-      setState(s => ({ ...s, authError: e?.message ?? 'Klaida' }))
-    }
-  }
-
   // Perjungia aktyvią kolekciją
   const switchCollection = async (colId) => {
     const { user, allCollections } = state
@@ -298,7 +322,18 @@ export function useAuth() {
     }))
   }
 
-  const signOut = () => firebaseSignOut(auth)
+  const signOut = () => {
+    if (state.viewerToken) {
+      localStorage.removeItem('viewer-token')
+      setState({
+        user: null, collectionId: null, role: 'owner',
+        ownCollectionId: null, allCollections: [],
+        loading: false, authError: null, loadingMessage: null, viewerToken: null,
+      })
+      return
+    }
+    return firebaseSignOut(auth)
+  }
 
-  return { ...state, signIn, signInAsGuest, signOut, switchCollection, renameCollection }
+  return { ...state, signIn, signOut, switchCollection, renameCollection }
 }

@@ -1,27 +1,18 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 
-export default function LoginScreen({ onSignIn, onSignInAsGuest, loading = false, error = null }) {
-  const [signingIn,    setSigningIn]    = useState(false)
-  const [guestName,    setGuestName]    = useState('')
-  const [joiningGuest, setJoiningGuest] = useState(false)
+export default function LoginScreen({ onSignIn, loading = false, error = null }) {
+  const [signingIn, setSigningIn] = useState(false)
 
-  // Viewer invite — rodyti svečio prisijungimą
+  // Member invite — rodyti žinutę apie prisijungimą prie kolekcijos
   const urlParams   = new URLSearchParams(window.location.search)
   const inviteToken = urlParams.get('invite')
   const inviteRole  = urlParams.get('role')
-  const isViewer    = !!(inviteToken && inviteRole === 'viewer')
   const isMember    = !!(inviteToken && inviteRole !== 'viewer')
 
   const handleSignIn = async () => {
     setSigningIn(true)
     try { await onSignIn() } finally { setSigningIn(false) }
-  }
-
-  const handleGuestJoin = async () => {
-    setJoiningGuest(true)
-    try { await onSignInAsGuest?.(guestName || 'Prižiūrėtojas') }
-    finally { setJoiningGuest(false) }
   }
 
   return (
@@ -37,50 +28,12 @@ export default function LoginScreen({ onSignIn, onSignInAsGuest, loading = false
           <img src="/plant_pot.png" alt="" className="w-20 h-20 object-contain" />
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900">Gėlių žinynas</h1>
-            {isViewer
-              ? <p className="text-sm text-gray-500 mt-1">Kvietimas prižiūrėti augalus 🌿</p>
-              : isMember
+            {isMember
               ? <p className="text-sm text-gray-500 mt-1">Prisijunk prie kolekcijos</p>
               : <p className="text-sm text-gray-500 mt-1">Tavo augalų kolekcija</p>
             }
           </div>
         </div>
-
-        {/* Viewer invite — svečio prisijungimas */}
-        {isViewer && (
-          <div className="w-full flex flex-col gap-3">
-            <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3.5">
-              <p className="text-xs text-gray-400 mb-1.5">Kaip jus vadinti?</p>
-              <input
-                type="text"
-                value={guestName}
-                onChange={e => setGuestName(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleGuestJoin()}
-                placeholder="Prižiūrėtojas"
-                className="w-full text-sm text-gray-800 outline-none placeholder-gray-400"
-                autoFocus
-              />
-            </div>
-            <button
-              onClick={handleGuestJoin}
-              disabled={loading || joiningGuest}
-              className="w-full flex items-center justify-center gap-3 bg-sage-500 rounded-2xl px-6 py-4 shadow-ios-card active:scale-95 transition-transform disabled:opacity-60"
-            >
-              {(loading || joiningGuest)
-                ? <img src="/plant_pot.png" className="w-5 h-5 animate-spin" alt="" />
-                : <span className="text-base">🌿</span>
-              }
-              <span className="text-sm font-semibold text-white">
-                {(loading || joiningGuest) ? 'Jungiamasi...' : 'Tęsti kaip svečias'}
-              </span>
-            </button>
-            <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-gray-200" />
-              <span className="text-xs text-gray-400">arba</span>
-              <div className="flex-1 h-px bg-gray-200" />
-            </div>
-          </div>
-        )}
 
         {/* Google prisijungimas */}
         <button
