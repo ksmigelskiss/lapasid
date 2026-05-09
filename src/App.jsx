@@ -318,6 +318,7 @@ export default function App() {
             onReorderZones={reorderZones}
             scrollToCare={detailForRender.scrollToCare ?? false}
             visible={!!(detailPlant && livePlant)}
+            role={role}
           />
         </Suspense>
       )}

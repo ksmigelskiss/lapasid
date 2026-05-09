@@ -920,6 +920,7 @@ export default function PlantDetail({
   onReorderZones,
   scrollToCare = false,
   visible = true,
+  role = 'owner',
 }) {
   const [activeTab, setActiveTab]           = useState('profile')
   const [heroError, setHeroError]           = useState(false)
@@ -1246,8 +1247,8 @@ export default function PlantDetail({
           </AnimatePresence>
         </div>
 
-        {/* Floating AI bubble — bottom-left, profile tab only */}
-        {section === 'auginama' && activeTab === 'profile' && (
+        {/* Floating AI bubble — bottom-left, profile tab only, not for viewers */}
+        {section === 'auginama' && activeTab === 'profile' && role !== 'viewer' && (
           <button
             onClick={() => setShowChat(true)}
             className="absolute bottom-5 right-4 z-20 active:scale-90 transition-transform"
