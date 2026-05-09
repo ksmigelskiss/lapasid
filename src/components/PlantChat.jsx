@@ -15,7 +15,7 @@ const DEFAULT_HEIGHT = '62dvh'
 export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSaveToZinynas, initialQuery }) {
   const { messages, streaming, streamText, send, paywallOpen, paywallLimitType, closePaywall } = useChatStream({
     initialMessages: plant.chat ?? [],
-    maxTokens:       300,
+    maxTokens:       600,
     maxStored:       MAX_STORED,
     limitType:       'chats',
     onSuccess:       (finalMessages) => onSaveChat?.(plant.id, finalMessages),
@@ -31,7 +31,7 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
   const mood      = getPlantMood(plant)
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    bottomRef.current?.scrollIntoView({ behavior: streamText ? 'instant' : 'smooth' })
   }, [messages, streamText])
 
   // Focus input on open

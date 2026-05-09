@@ -42,7 +42,7 @@ function renderMessage(text, plants, onViewPlant) {
 const DEFAULT_HEIGHT = '68dvh'
 
 export default function CollectionChat({ systemPrompt, title, icon, iconLg, onClose, onSaveToZinynas, plants, onViewPlant }) {
-  const { messages, streaming, streamText, send, paywallOpen, paywallLimitType, closePaywall } = useChatStream({ maxTokens: 400, limitType: 'chats' })
+  const { messages, streaming, streamText, send, paywallOpen, paywallLimitType, closePaywall } = useChatStream({ maxTokens: 600, limitType: 'chats' })
   const [input, setInput]         = useState('')
   const [savingText, setSavingText] = useState(null)
   const [noteText, setNoteText]   = useState('')
@@ -65,7 +65,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
   }, [])
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    bottomRef.current?.scrollIntoView({ behavior: streamText ? 'instant' : 'smooth' })
   }, [messages, streamText])
 
   useEffect(() => { inputRef.current?.focus() }, [])
