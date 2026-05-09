@@ -164,10 +164,10 @@ export default function PlantCareCard({ passport, plantId, user }) {
   const [fertilized,  setFertilized]  = useState(false)
   const [confirmType, setConfirmType] = useState(null)   // null | 'watering' | 'fertilizing'
   const [countdown,   setCountdown]   = useState(5)
-  const [busy,        setBusy]        = useState(false)
   const [error,       setError]       = useState(null)
   const [postFert,    setPostFert]    = useState(false)
-  const timerRef = useRef(null)
+  const timerRef       = useRef(null)
+  const fertInflightRef = useRef(null)
 
   // Countdown — startuoja kai laukiama patvirtinimo
   useEffect(() => {
@@ -191,32 +191,42 @@ export default function PlantCareCard({ passport, plantId, user }) {
     setCountdown(5)
   }
 
-  async function commitAction(type) {
-    setBusy(true)
+  // Optimistic UI: NFC pass'as eina per Vercel serverless (cold start + Firebase Admin),
+  // todėl reali užklausa lėta. Vietoj to UI persijungia iškart, API fone. Jei
+  // failina — atstatoma būsena ir parodoma klaida.
+  function commitAction(type) {
     setError(null)
     resetConfirm()
-    try {
-      await recordEvent(plantId, type)
-      if (type === 'watering')    setWatered(true)
-      if (type === 'fertilizing') { setFertilized(true); setPostFert(true) }
-    } catch {
-      setError('Nepavyko įrašyti. Bandyk dar kartą.')
-    } finally {
-      setBusy(false)
+    if (type === 'watering') {
+      setWatered(true)
+      recordEvent(plantId, 'watering').catch(() => {
+        setWatered(false)
+        setError('Nepavyko įrašyti laistymo. Bandyk dar kartą.')
+      })
+    } else if (type === 'fertilizing') {
+      setFertilized(true)
+      setPostFert(true)
+      fertInflightRef.current = recordEvent(plantId, 'fertilizing').catch((e) => {
+        setFertilized(false)
+        setPostFert(false)
+        setError('Nepavyko įrašyti tręšimo. Bandyk dar kartą.')
+        throw e
+      })
     }
   }
 
   async function onPalasciau() {
-    setBusy(true)
     setError(null)
+    setWatered(true)
+    setPostFert(false)
     try {
+      // Palaukiam, kol fertilize įrašas užbaigia, kad timeline'e būtų
+      // teisinga tvarka (fertilize → watering, ne atvirkščiai).
+      await fertInflightRef.current
       await recordEvent(plantId, 'watering', 'Laistyta po tręšimo')
-      setWatered(true)
-      setPostFert(false)
     } catch {
+      setWatered(false)
       setError('Nepavyko įrašyti laistymo. Bandyk dar kartą.')
-    } finally {
-      setBusy(false)
     }
   }
 
@@ -225,13 +235,13 @@ export default function PlantCareCard({ passport, plantId, user }) {
   }
 
   function onWaterTap() {
-    if (watered || busy) return
+    if (watered) return
     if (confirmType === 'watering') commitAction('watering')
     else { resetConfirm(); setConfirmType('watering'); setCountdown(5) }
   }
 
   function onFertilizeTap() {
-    if (fertilized || busy) return
+    if (fertilized) return
     if (confirmType === 'fertilizing') commitAction('fertilizing')
     else { resetConfirm(); setConfirmType('fertilizing'); setCountdown(5) }
   }
@@ -318,7 +328,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
             {/* Laistymas */}
             <button
               onClick={onWaterTap}
-              disabled={watered || busy}
+              disabled={watered}
               className={`flex-1 h-12 flex items-center justify-center gap-1.5 rounded-xl font-bold text-sm transition-colors active:bg-sky-600 ${
                 watered
                   ? 'bg-green-50 text-green-600'
@@ -333,9 +343,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
                 <>
                   <Droplets size={16} className="text-white" />
                   <span>
-                    {confirmType === 'watering'
-                      ? `Patvirtinti (${countdown})`
-                      : busy ? '...' : 'Laistyti'}
+                    {confirmType === 'watering' ? `Patvirtinti (${countdown})` : 'Laistyti'}
                   </span>
                 </>
               )}
@@ -345,7 +353,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
             {user && (
               <button
                 onClick={onFertilizeTap}
-                disabled={fertilized || busy}
+                disabled={fertilized}
                 className={`flex-1 h-12 flex items-center justify-center gap-1.5 rounded-xl font-bold text-sm transition-colors active:bg-amber-600 ${
                   fertilized
                     ? 'bg-green-50 text-green-600'
@@ -360,9 +368,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
                   <>
                     <FlaskConical size={16} className="text-white" />
                     <span>
-                      {confirmType === 'fertilizing'
-                        ? `Patvirtinti (${countdown})`
-                        : busy ? '...' : 'Tręšti'}
+                      {confirmType === 'fertilizing' ? `Patvirtinti (${countdown})` : 'Tręšti'}
                     </span>
                   </>
                 )}
