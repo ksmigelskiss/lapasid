@@ -20,6 +20,12 @@ Greita referensinė kortelė. Naudok šią kortelę kuriant naujus komponentus �
 |----------|------------|----------------------|------|
 | Laistymas | `bg-sky-500` | `bg-sky-700` | `bg-green-50 text-green-600` |
 | Trąšos   | `bg-amber-500` | `bg-amber-700` | `bg-green-50 text-green-600` |
+
+**Mygtukų tekstai (priežiūros veiksmai):**
+| Veiksmas | Veiksmažodis | Patvirtinimas | Done |
+|----------|-------------|---------------|------|
+| Laistymas | `Laistyti` | `Patvirtinti (N)` | `✓ Laistyta` |
+| Trąšos | `Tręšti` | `Patvirtinti (N)` | `✓ Patręšta` |
 | Pavojus/toksiškas | `bg-red-500` | — | — |
 | Karantinas | `bg-orange-500` | — | — |
 
