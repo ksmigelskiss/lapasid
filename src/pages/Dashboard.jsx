@@ -22,11 +22,31 @@ const emptySession = () => ({
   watering:    { perfect: 0, early: 0, late: 0, waylate: 0 },
   fertilizing: { perfect: 0, early: 0, late: 0, waylate: 0 },
   plants: new Set(),
+  deltaPct: 0,  // suminis confidence delta (procentais) per visą session'ą
 })
 
 const sessionTotal = (s) =>
   s.watering.perfect + s.watering.early + s.watering.late + s.watering.waylate +
   s.fertilizing.perfect + s.fertilizing.early + s.fertilizing.late + s.fertilizing.waylate
+
+// Apskaičiuoja aggregate confidence delta nuo watering veiksmo,
+// simuliuojant naują event'ą plant.timeline atminty (be DB).
+// Confidence skaičiuoja tik watering events, todėl tik kind='watering'
+// realiai prideda. Kitiems return 0.
+function computeWateringDelta(actedPlants, allPlantsCount, eventType, todayIso) {
+  if (eventType !== 'watering' || allPlantsCount === 0 || actedPlants.length === 0) return 0
+  let sumPlantDelta = 0
+  for (const p of actedPlants) {
+    const before = getWateringForecast(p).confidence ?? 0
+    const simPlant = {
+      ...p,
+      timeline: [{ id: 'sim', type: 'watering', date: todayIso }, ...(p.timeline ?? [])],
+    }
+    const after = getWateringForecast(simPlant).confidence ?? 0
+    sumPlantDelta += (after - before)
+  }
+  return sumPlantDelta / allPlantsCount
+}
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { RefreshCw } from 'lucide-react'
 import { makeId, today } from '../utils/plantTransform'
@@ -483,6 +503,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         watering:    { ...s.watering },
         fertilizing: { ...s.fertilizing },
         plants:      new Set(s.plants),
+        deltaPct:    s.deltaPct,
       })
     }
     sessionRef.current = emptySession()
@@ -498,9 +519,9 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const careToastDemoIdx = useRef(0)
   const runCareToastDemo = useCallback(() => {
     const samples = [
-      { headline: pick(CARE_COPY.bulk.headline.mostlyPerfect), counts: { perfect: 5, early: 2, late: 1, waylate: 0 }, total: 8 },
-      { headline: pick(CARE_COPY.bulk.headline.mixed),         counts: { perfect: 2, early: 1, late: 2, waylate: 0 }, total: 5 },
-      { headline: pick(CARE_COPY.bulk.headline.manyLate),      counts: { perfect: 0, early: 0, late: 1, waylate: 4 }, total: 5 },
+      { headline: pick(CARE_COPY.bulk.headline.mostlyPerfect), counts: { perfect: 5, early: 2, late: 1, waylate: 0 }, total: 8, deltaPct: 4 },
+      { headline: pick(CARE_COPY.bulk.headline.mixed),         counts: { perfect: 2, early: 1, late: 2, waylate: 0 }, total: 5, deltaPct: 2 },
+      { headline: pick(CARE_COPY.bulk.headline.manyLate),      counts: { perfect: 0, early: 0, late: 1, waylate: 4 }, total: 5, deltaPct: 1 },
     ]
     const sample = samples[careToastDemoIdx.current % samples.length]
     careToastDemoIdx.current += 1
@@ -509,14 +530,18 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     careToastTimerRef.current = setTimeout(() => setCareToast(null), 4500)
   }, [])
 
-  // Toast po bulk action — antraštė pagal mood'ą + breakdown pagal bucket'us.
-  // Tuo pačiu papildo session'ą (kad exit summary turėtų aggregate'ą).
+  // Toast po bulk action — antraštė pagal mood'ą + breakdown pagal bucket'us +
+  // confidence delta. Tuo pačiu papildo session'ą (exit summary aggregate'ui).
   const showCareToast = useCallback((plantsToShow, kind) => {
     const days = plantsToShow
       .map(p => kind === 'watering' ? getWateringForecast(p).daysUntil : getFertilizingForecast(p).daysUntil)
       .filter(d => d != null)
     if (days.length === 0) return
     const counts = bucketCounts(days)
+
+    // Confidence delta — tik watering veiksmo metu nenulinis
+    const deltaFraction = computeWateringDelta(plantsToShow, mainPlants.length, kind, today())
+    const deltaPct = Math.round(deltaFraction * 100)
 
     // Aggregate į session
     const sb = sessionRef.current[kind]
@@ -525,14 +550,15 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     sb.late    += counts.late
     sb.waylate += counts.waylate
     plantsToShow.forEach(p => sessionRef.current.plants.add(p.id))
+    sessionRef.current.deltaPct += deltaPct
 
     // Per-action toast
     const mood = moodFromCounts(counts)
     const headline = pick(CARE_COPY.bulk.headline[mood])
-    setCareToast({ headline, counts, total: plantsToShow.length })
+    setCareToast({ headline, counts, total: plantsToShow.length, deltaPct })
     if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
     careToastTimerRef.current = setTimeout(() => setCareToast(null), 4500)
-  }, [])
+  }, [mainPlants.length])
 
   // DEMO: session summary fake data
   const runSessionSummaryDemo = useCallback(() => {
@@ -540,6 +566,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       watering:    { perfect: 5, early: 2, late: 1, waylate: 0 },
       fertilizing: { perfect: 2, early: 0, late: 0, waylate: 1 },
       plants: new Set(['fake1','fake2','fake3','fake4','fake5','fake6','fake7','fake8']),
+      deltaPct: 7,  // demo: +7% sesijos pažinimo prieaugis
     })
   }, [])
 

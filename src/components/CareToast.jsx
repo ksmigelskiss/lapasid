@@ -22,8 +22,9 @@ const BUCKET_META = {
  *   headline: antraštė pagal mood'ą (iš CARE_COPY.bulk.headline)
  *   counts:   { perfect, early, late, waylate } — kiek augalų į kurį bucket'ą
  *   total:    bendras augalų skaičius (antraštės pluralui)
+ *   deltaPct: confidence prieaugis (procentais), opcionalus
  */
-export default function CareToast({ headline, counts, total }) {
+export default function CareToast({ headline, counts, total, deltaPct = 0 }) {
   return (
     <motion.div
       initial={{ y: -20, opacity: 0 }}
@@ -32,7 +33,12 @@ export default function CareToast({ headline, counts, total }) {
       transition={{ type: 'spring', damping: 28, stiffness: 320 }}
       className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3.5"
     >
-      <p className="text-[15px] font-bold text-gray-900 leading-tight">{headline}</p>
+      <div className="flex items-baseline justify-between gap-2">
+        <p className="text-[15px] font-bold text-gray-900 leading-tight flex-1">{headline}</p>
+        {deltaPct > 0 && (
+          <span className="text-[13px] font-bold text-sage-600 tabular-nums flex-shrink-0">+{deltaPct}%</span>
+        )}
+      </div>
       <p className="text-[11px] text-gray-400 mt-0.5 mb-2">
         {total} {plPlants(total)}
       </p>
