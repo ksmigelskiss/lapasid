@@ -130,10 +130,10 @@ export default function PlantCareCard({ passport, plantId, user }) {
               }`}
             >
               {watered
-                ? '✓ Palaistyta'
+                ? '✓ Laistyta'
                 : busy === 'watering'
                 ? '...'
-                : '💧 Palaistyta'}
+                : '💧 Palaistyti'}
             </button>
 
             {/* Trąšos — tik auth vartotojams */}
@@ -148,10 +148,10 @@ export default function PlantCareCard({ passport, plantId, user }) {
                 }`}
               >
                 {fertilized
-                  ? '✓ Įrašyta'
+                  ? '✓ Patręšta'
                   : busy === 'fertilizing'
                   ? '...'
-                  : '🌿 Trąšos'}
+                  : '🌿 Tręšti'}
               </button>
             )}
           </div>
