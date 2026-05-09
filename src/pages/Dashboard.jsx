@@ -532,17 +532,19 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
           <div className="relative">
             {/* Avatar + kolekcijos etiketė */}
             <div className="flex items-center gap-2 mb-0.5">
-              <button
-                onClick={() => setShowProfile(true)}
-                className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 active:opacity-70 transition-opacity"
-              >
-                {user?.photoURL
-                  ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
-                  : <div className="w-full h-full bg-sage-100 flex items-center justify-center">
-                      <UserCircle size={12} className="text-sage-500" />
-                    </div>
-                }
-              </button>
+              {role !== 'viewer' && (
+                <button
+                  onClick={() => setShowProfile(true)}
+                  className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 active:opacity-70 transition-opacity"
+                >
+                  {user?.photoURL
+                    ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                    : <div className="w-full h-full bg-sage-100 flex items-center justify-center">
+                        <UserCircle size={12} className="text-sage-500" />
+                      </div>
+                  }
+                </button>
+              )}
               {/* Kolekcijų switcher — rodomas kai > 1 kolekcija */}
               {allCollections.length > 1 ? (
                 <button
@@ -645,7 +647,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       </div>
 
       {/* Search + filter toggle */}
-      <div className="px-5 mb-3 flex gap-2">
+      {role !== 'viewer' && <div className="px-5 mb-3 flex gap-2">
         {searching ? (
           <div className="flex-1 flex items-center gap-2 bg-white border border-gray-200 rounded-2xl px-4 py-3 focus-within:border-gray-400 transition-colors">
             <Search size={15} className="text-gray-400 flex-shrink-0" />
@@ -697,7 +699,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             <SlidersHorizontal size={16} />
           </button>
         )}
-      </div>
+      </div>}
 
 
       {/* Collapsible sort */}
