@@ -89,15 +89,16 @@ export default function CareSessionSummary({ session, confidence = 0, onDismiss 
         transition={{ type: 'spring', damping: 26, stiffness: 320 }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Confidence — antraštinis akcentas paliktas pagyrimui (sumažinta) */}
+        {/* Confidence — antrasis akcentas. Pakankamas dydis gratification'ui,
+            bet aiškiai mažesnis nei headline (per dydį + svorį + spalvą). */}
         <div className="text-center">
-          <p className="text-xl font-bold leading-none text-sage-600">{confPct}%</p>
+          <p className="text-[22px] font-bold leading-none text-sage-600 tabular-nums">{confPct}%</p>
           <p className="text-[10px] font-semibold text-gray-400 mt-1 uppercase tracking-wider">Prognozių tikslumas</p>
         </div>
 
-        {/* Headline (pagrindinis akcentas) + subtitle */}
-        <h2 className="text-2xl font-extrabold text-gray-900 text-center mt-5 leading-tight">{headline}</h2>
-        <p className="text-sm text-gray-500 text-center mt-1.5">
+        {/* Headline — pagrindinis akcentas: didžiausias, drąsiausias, tamsus */}
+        <h2 className="text-[28px] font-extrabold text-gray-900 text-center mt-5 leading-[1.15] tracking-tight">{headline}</h2>
+        <p className="text-sm text-gray-500 text-center mt-2">
           Pasirūpinai {uniquePlants} {plPlantsInstr(uniquePlants)}
         </p>
 
