@@ -11,6 +11,7 @@ import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast, shouldShowWateringAlert } from '../utils/wateringForecast'
 import { buildDashboardSystemPrompt } from '../utils/collectionChatContext'
 import CareOverview from '../components/CareOverview'
+import PostFertilizePrompt from '../components/PostFertilizePrompt'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { RefreshCw } from 'lucide-react'
 import { makeId, today } from '../utils/plantTransform'
@@ -53,7 +54,7 @@ function sortPlants(plants, key) {
   }
 }
 
-function CareWateringSheet({ plant, zones = [], onClose, onWater, onFertilize, onInspect }) {
+function CareWateringSheet({ plant, zones = [], onClose, onAddEvent }) {
   const wc = getWateringForecast(plant)
   const hasImg = !!plant.image
   const intervals = plant.laistymasIntervalas
@@ -61,6 +62,13 @@ function CareWateringSheet({ plant, zones = [], onClose, onWater, onFertilize, o
   const hasFert = getFertilizingForecast(plant).intervalDays != null
   const showInspect = wc.isOverdue && wc.lastType === 'watering'
   const currentZone = zones.find(z => z.id === plant.zonaId)
+  const [postFert, setPostFert] = useState(false)
+
+  const onWater     = () => { onAddEvent('watering');     onClose() }
+  const onFertilize = () => { onAddEvent('fertilizing'); setPostFert(true) }
+  const onInspect   = () => { onAddEvent('inspection');   onClose() }
+  const onPalasciau = () => { onAddEvent('watering', { komentaras: 'Laistyta po tręšimo' }); onClose() }
+  const onNelasciau = () => { onClose() }
 
   const fmtDate = iso => iso
     ? new Date(iso + 'T00:00:00').toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
@@ -255,32 +263,42 @@ function CareWateringSheet({ plant, zones = [], onClose, onWater, onFertilize, o
 
         {/* Action bar — float apačioje, su safe-area pad */}
         <div className="flex-shrink-0 px-4 pt-3 border-t border-gray-100 bg-white" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
-          <div className="flex gap-2 items-center">
-            <button
-              onClick={onWater}
-              className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 active:bg-sky-600 transition-colors"
-            >
-              <Droplets size={16} className="text-white" />
-              <span className="text-sm font-bold text-white">Laistyti</span>
-            </button>
-            {hasFert && (
-              <button
-                onClick={onFertilize}
-                className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-amber-500 active:bg-amber-600 transition-colors"
-              >
-                <FlaskConical size={16} className="text-white" />
-                <span className="text-sm font-bold text-white">Tręšti</span>
-              </button>
-            )}
-          </div>
-          {showInspect && onInspect && (
-            <button
-              onClick={onInspect}
-              className="mt-2 w-full h-10 flex items-center justify-center gap-1.5 rounded-xl bg-green-500 active:bg-green-600 transition-colors"
-            >
-              <Check size={16} className="text-white" />
-              <span className="text-sm font-bold text-white">Patikrinau — viskas tvarkoj</span>
-            </button>
+          {postFert ? (
+            <PostFertilizePrompt
+              count={1}
+              onPalasciau={onPalasciau}
+              onNelasciau={onNelasciau}
+            />
+          ) : (
+            <>
+              <div className="flex gap-2 items-center">
+                <button
+                  onClick={onWater}
+                  className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 active:bg-sky-600 transition-colors"
+                >
+                  <Droplets size={16} className="text-white" />
+                  <span className="text-sm font-bold text-white">Laistyti</span>
+                </button>
+                {hasFert && (
+                  <button
+                    onClick={onFertilize}
+                    className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-amber-500 active:bg-amber-600 transition-colors"
+                  >
+                    <FlaskConical size={16} className="text-white" />
+                    <span className="text-sm font-bold text-white">Tręšti</span>
+                  </button>
+                )}
+              </div>
+              {showInspect && (
+                <button
+                  onClick={onInspect}
+                  className="mt-2 w-full h-10 flex items-center justify-center gap-1.5 rounded-xl bg-green-500 active:bg-green-600 transition-colors"
+                >
+                  <Check size={16} className="text-white" />
+                  <span className="text-sm font-bold text-white">Patikrinau — viskas tvarkoj</span>
+                </button>
+              )}
+            </>
           )}
         </div>
       </motion.div>
@@ -988,24 +1006,11 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             <div className="max-w-[430px] mx-auto px-4 pb-2">
             {postFertilizeFor ? (
               <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3">
-                <p className="text-[11px] font-medium text-gray-500 mb-2 px-1">
-                  Patręšta {postFertilizeFor.size} {postFertilizeFor.size === 1 ? 'augalas' : 'augalai'} · ar palaistei?
-                </p>
-                <div className="flex gap-2 items-center">
-                  <button
-                    onClick={confirmPostFertWater}
-                    className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 active:bg-sky-600 transition-colors"
-                  >
-                    <Droplets size={16} className="text-white" />
-                    <span className="text-sm font-bold text-white">Palaisčiau</span>
-                  </button>
-                  <button
-                    onClick={dismissPostFert}
-                    className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-gray-100 active:bg-gray-200 transition-colors"
-                  >
-                    <span className="text-sm font-bold text-gray-700">Nelaisčiau</span>
-                  </button>
-                </div>
+                <PostFertilizePrompt
+                  count={postFertilizeFor.size}
+                  onPalasciau={confirmPostFertWater}
+                  onNelasciau={dismissPostFert}
+                />
               </div>
             ) : (
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3 flex gap-2 items-center">
@@ -1067,17 +1072,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             plant={careInfoPlant}
             zones={zones}
             onClose={() => setCareInfoPlant(null)}
-            onWater={() => {
-              onAddTimelineEvent(careInfoPlant.id, { id: makeId(), type: 'watering', date: today(), komentaras: '' })
-              setCareInfoPlant(null)
-            }}
-            onFertilize={() => {
-              onAddTimelineEvent(careInfoPlant.id, { id: makeId(), type: 'fertilizing', date: today(), komentaras: '' })
-              setCareInfoPlant(null)
-            }}
-            onInspect={() => {
-              onAddTimelineEvent(careInfoPlant.id, { id: makeId(), type: 'inspection', date: today(), komentaras: '' })
-              setCareInfoPlant(null)
+            onAddEvent={(type, extra = {}) => {
+              onAddTimelineEvent(careInfoPlant.id, { id: makeId(), type, date: today(), komentaras: '', ...extra })
             }}
           />
         )}

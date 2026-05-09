@@ -339,6 +339,45 @@ return createPortal(
 | Tręšti / Patręšta | `bg-amber-500 active:bg-amber-600` |
 | Patikrinau / „Viskas tvarkoj" (snooze) | `bg-green-500 active:bg-green-600` |
 
+---
+
+## Care veiksmų sinchronizacija (PRIVALOMA)
+
+Visi „augalo priežiūros" mygtukai (Laistyti / Tręšti / Patikrinau) turi vienodai elgtis bet kurioje vietoje (Dashboard care mode bulk, CareWateringSheet single-plant, ateities NFC pass'ai). Kad nereiktų kiekvieną kartą perdaryti — **nedubliuokim UI/logikos**, naudokim shared blokus.
+
+### Kanoninės taisyklės
+
+1. **Mygtukų label'iai** = veiksmažodžiai (`Laistyti`, `Tręšti`, `Patikrinau — viskas tvarkoj`). Done būsena = būdvardis (`✓ Laistyta`, `✓ Patręšta`).
+2. **Spalvos** kaip lentelėje viršuje. Niekur kitur šios trys spalvos nenaudojamos pagrindinį veiksmą — kad būtų atpažįstama iš pirmo žvilgsnio.
+3. **Po tręšimo** visada paklausti: „Patręšta · ar palaistei? **[Palaisčiau] [Nelaisčiau]**". Tręšimas namų augalams beveik visada eina kartu su laistymu — neefektyvu, jei vartotojas turi atskirai pažymėti.
+4. **Patikrinau** mygtukas = `inspection` event'as timeline'e. Trigerio sąlyga: `wc.isOverdue && wc.lastType === 'watering'` (žiūr. [wateringForecast.js](src/utils/wateringForecast.js)).
+
+### Shared building block'ai
+
+| Komponentas | Failas | Naudoja |
+|-------------|--------|---------|
+| `<PostFertilizePrompt>` | [src/components/PostFertilizePrompt.jsx](src/components/PostFertilizePrompt.jsx) | Dashboard care bar, CareWateringSheet |
+| (TODO) `<CareActionButtons>` | — | dar neištraukta — žr. „ateities planas" |
+
+### Ateities planas (kai užtenka motyvacijos)
+
+Šiuo metu countdown patvirtinimo logika (`confirmType`, `countdown`, `useEffect` countdown'ui) yra dubliuota:
+- [Dashboard.jsx](src/pages/Dashboard.jsx) `confirmType` state (care mode bulk)
+- [PlantCareCard.jsx](src/components/PlantCareCard.jsx) `confirmType` state (NFC pass)
+
+CareWateringSheet šiuo metu countdown'o NETURI (instant action). Dabar tai OK, nes paliečiama tik per priežiūros santrauką ir vienam augalui.
+
+Jei ateityje atsiras 4-as place'as su panašia logika — laikas išskaidyti į `useCareConfirmation()` hook'ą:
+
+```jsx
+const { confirmType, countdown, ask, commit, reset } = useCareConfirmation()
+// ask('watering') — pradeda countdown
+// commit() — vykdo veiksmą
+// reset() — atšaukia
+```
+
+Iki tol — laikomasi kanoninių taisyklių (label, spalva, post-fert prompt) per shared komponentus.
+
 > ❌ **NEBEDARYTI:** bottom sheet'ų su `max-h-[84dvh]` (jie palieka backdrop tarpą viršuje). Visada full screen `100dvh`.
 > ❌ **NEBEDARYTI:** drag handle ant nuotraukos (`absolute top-3 inset-x-0`). Pill turi būti virš hero, ne ant jo.
 > ❌ **NEBEDARYTI:** Close mygtuko action bar'e (kairiausiai prieš pagrindinius). X uždarymas tik hero kampe.
