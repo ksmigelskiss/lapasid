@@ -133,20 +133,20 @@ const PlantCard = memo(function PlantCard({
 
         {/* Forecast icons (auginama only) — always top-right */}
         {section === 'auginama' && (
-          <div className="absolute top-2 right-2 flex flex-col gap-0.5 items-end">
-            <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
-              <Droplets size={9} className={waterOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/50'} />
+          <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
+            <div className="flex items-center gap-1 bg-black/35 backdrop-blur-sm rounded-lg px-1.5 py-1">
+              <Droplets size={12} className={waterOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/60'} />
               {waterDays != null && (
-                <span className={`text-[8px] font-semibold leading-none ${waterOverdue ? 'text-sky-200' : 'text-white/50'}`}>
+                <span className={`text-[10px] font-bold leading-none ${waterOverdue ? 'text-sky-200' : 'text-white/70'}`}>
                   {waterDays}d
                 </span>
               )}
             </div>
             {fertFC?.intervalDays != null && (
-              <div className="flex items-center gap-0.5 bg-black/30 backdrop-blur-sm rounded-md px-1 py-0.5">
-                <FlaskConical size={9} className={fertOverdue ? 'text-amber-300 fill-amber-300' : 'text-white/50'} />
+              <div className="flex items-center gap-1 bg-black/35 backdrop-blur-sm rounded-lg px-1.5 py-1">
+                <FlaskConical size={12} className={fertOverdue ? 'text-amber-300 fill-amber-300' : 'text-white/60'} />
                 {fertDays != null && (
-                  <span className={`text-[8px] font-semibold leading-none ${fertOverdue ? 'text-amber-200' : 'text-white/50'}`}>
+                  <span className={`text-[10px] font-bold leading-none ${fertOverdue ? 'text-amber-200' : 'text-white/70'}`}>
                     {fertDays}d
                   </span>
                 )}
@@ -157,7 +157,7 @@ const PlantCard = memo(function PlantCard({
 
         {/* Right-side badge column */}
         {(showDashboardBadge || section === 'istorija' || noteCount > 0) && (
-          <div className={`absolute ${section === 'auginama' ? 'top-12' : 'top-2'} right-2 flex flex-col gap-1 items-center`}>
+          <div className={`absolute ${section === 'auginama' ? 'top-[68px]' : 'top-2'} right-2 flex flex-col gap-1 items-center`}>
             {showDashboardBadge && (
               <div className="bg-sage-500/90 backdrop-blur-sm rounded-lg p-1">
                 <House size={14} className="text-white" />
