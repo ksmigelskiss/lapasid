@@ -785,7 +785,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       </div>}
 
       {/* Scrollable content */}
-      {!searching && <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
+      {!searching && <div ref={scrollRef} className={`flex-1 overflow-y-auto scrollbar-none px-5 ${role === 'viewer' ? 'pb-8' : 'pb-28'}`}>
 
         {/* Care overview — only in careMode */}
         {careMode && <CareOverview plants={mainPlants} onTap={onTapFromCare ?? onTap} onWaterTap={setCareInfoPlant} />}
