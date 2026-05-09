@@ -13,9 +13,10 @@ import { buildDashboardSystemPrompt } from '../utils/collectionChatContext'
 import CareOverview from '../components/CareOverview'
 import PostFertilizePrompt from '../components/PostFertilizePrompt'
 import CareToast from '../components/CareToast'
+import CareCircuitToast from '../components/CareCircuitToast'
 import CareSessionSummary from '../components/CareSessionSummary'
 import { aggregateConfidence, bucketCounts, moodFromCounts } from '../utils/careBuckets'
-import { CARE_COPY, pick } from '../constants/careCopy'
+import { CARE_COPY, pick, fillTemplate } from '../constants/careCopy'
 
 // Tuščia care session struktūra
 const emptySession = () => ({
@@ -521,27 +522,64 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     const samples = [4, 2, 7]  // skirtingi delta dydžiai
     const deltaPct = samples[careToastDemoIdx.current % samples.length]
     careToastDemoIdx.current += 1
-    setCareToast({ deltaPct, phrase: pick(CARE_COPY.delta) })
+    setCareToast({ kind: 'delta', deltaPct, phrase: pick(CARE_COPY.delta) })
     if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
     careToastTimerRef.current = setTimeout(() => setCareToast(null), 3000)
   }, [])
 
+  // DEV/DEMO: circuit toast su fake zonos vardu. Cikliuoja zona ↔ frazė variantus.
+  const careCircuitDemoIdx = useRef(0)
+  const runCareCircuitDemo = useCallback(() => {
+    const fakeZones = ['Virtuvė', 'Svetainė', 'Miegamasis', 'Balkonas']
+    const zoneName = fakeZones[careCircuitDemoIdx.current % fakeZones.length]
+    careCircuitDemoIdx.current += 1
+    const message = fillTemplate(pick(CARE_COPY.circuit), { zone: zoneName })
+    setCareToast({ kind: 'circuit', message })
+    if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
+    careToastTimerRef.current = setTimeout(() => setCareToast(null), 3500)
+  }, [])
+
+  // Detect zonų, kurios po simuliuotų event'ų pridėjimo eina iš todo>0 → todo=0.
+  // Naudojama circuit toast'ui („Virtuvė pasirūpinta"). Pure JS, jokio I/O.
+  const detectClearedZones = useCallback((actedIds, eventTypes) => {
+    const idSet = actedIds instanceof Set ? actedIds : new Set(actedIds)
+    const t = today()
+    const cleared = []
+    for (const z of zones) {
+      const zonePlants = mainPlants.filter(p => p.zonaId === z.id)
+      if (zonePlants.length === 0) continue
+      const before = zonePlants.filter(p => shouldShowWateringAlert(p) || getFertilizingForecast(p).isOverdue).length
+      if (before === 0) continue  // zona jau buvo tuščia — nieko įdomaus
+      const afterCount = zonePlants
+        .map(p => {
+          if (!idSet.has(p.id)) return p
+          const newEvents = eventTypes.map((type, i) => ({ id: 'sim_' + i, type, date: t }))
+          return { ...p, timeline: [...newEvents, ...(p.timeline ?? [])] }
+        })
+        .filter(p => shouldShowWateringAlert(p) || getFertilizingForecast(p).isOverdue).length
+      if (afterCount === 0) cleared.push(z.name)
+    }
+    return cleared
+  }, [mainPlants, zones])
+
   // Bulk action akumuliacija + per-action toast.
-  // Toast minimalus: +X% + frazė. Detalus breakdown lieka exit summary'ui.
-  // Skip toast jei delta=0 (pvz. fert-only, inspection) — tyla geriau nei „+0%".
-  const showCareToast = useCallback((plantsToShow, kind) => {
+  // Prioritizuoja circuit toast'ą virš delta toast'o (kai zona pilnai išvaloma —
+  // tai didesnis momentas nei pats prieaugis).
+  // Skip jei nei circuit nei delta — tyla geriau nei „+0%" arba tuščias toast'as.
+  const showCareToast = useCallback((plantsToShow, eventTypes, primaryKind) => {
     const days = plantsToShow
-      .map(p => kind === 'watering' ? getWateringForecast(p).daysUntil : getFertilizingForecast(p).daysUntil)
+      .map(p => primaryKind === 'watering' ? getWateringForecast(p).daysUntil : getFertilizingForecast(p).daysUntil)
       .filter(d => d != null)
     if (days.length === 0) return
     const counts = bucketCounts(days)
 
-    // Confidence delta — tik watering veiksmo metu nenulinis
-    const deltaFraction = computeWateringDelta(plantsToShow, mainPlants.length, kind, today())
+    // Confidence delta — tik watering keičia confidence
+    const hasWatering = eventTypes.includes('watering')
+    const deltaFraction = hasWatering ? computeWateringDelta(plantsToShow, mainPlants.length, 'watering', today()) : 0
     const deltaPct = Math.round(deltaFraction * 100)
 
-    // Aggregate į session (visada — net jei delta=0, breakdown matomas summary'je)
-    const sb = sessionRef.current[kind]
+    // Aggregate į session (visada — breakdown matomas summary'je)
+    const sb = sessionRef.current[primaryKind]
     sb.perfect += counts.perfect
     sb.early   += counts.early
     sb.late    += counts.late
@@ -549,13 +587,21 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     plantsToShow.forEach(p => sessionRef.current.plants.add(p.id))
     sessionRef.current.deltaPct += deltaPct
 
-    // Per-action toast tik jei delta > 0
-    if (deltaPct > 0) {
-      setCareToast({ deltaPct, phrase: pick(CARE_COPY.delta) })
+    // Circuit detection — ar bet kuri zona po šio veiksmo lieka be todo
+    const cleared = detectClearedZones(plantsToShow.map(p => p.id), eventTypes)
+
+    // Toast prioritetas: circuit > delta. Jei nei vienas — tylu.
+    if (cleared.length > 0) {
+      const message = fillTemplate(pick(CARE_COPY.circuit), { zone: cleared[0] })
+      setCareToast({ kind: 'circuit', message })
+      if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
+      careToastTimerRef.current = setTimeout(() => setCareToast(null), 3500)
+    } else if (deltaPct > 0) {
+      setCareToast({ kind: 'delta', deltaPct, phrase: pick(CARE_COPY.delta) })
       if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
       careToastTimerRef.current = setTimeout(() => setCareToast(null), 3000)
     }
-  }, [mainPlants.length])
+  }, [mainPlants.length, detectClearedZones])
 
   // DEMO: session summary fake data
   const runSessionSummaryDemo = useCallback(() => {
@@ -614,7 +660,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       return
     }
     // Watering — toast iškart
-    showCareToast(ourPlants, 'watering')
+    showCareToast(ourPlants, ['watering'], 'watering')
   }, [careChecked, mainPlants, onAddTimelineEvent, resetConfirm, showCareToast])
 
   const confirmPostFertWater = useCallback(() => {
@@ -625,16 +671,16 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       onAddTimelineEvent(plantId, { id: makeId(), type: 'watering', date: t, komentaras: 'Laistyta po tręšimo' })
     })
     setPostFertilizeFor(null)
-    // Watering toast — pagrindinis veiksmo rezultatas
-    showCareToast(ourPlants, 'watering')
+    // Pridėtas ir fert (anksčiau handleCareAction etape), ir water — abu simuliuojami circuit detectionui
+    showCareToast(ourPlants, ['fertilizing', 'watering'], 'watering')
   }, [postFertilizeFor, mainPlants, onAddTimelineEvent, showCareToast])
 
   const dismissPostFert = useCallback(() => {
     if (!postFertilizeFor) return
     const ourPlants = mainPlants.filter(p => postFertilizeFor.has(p.id))
     setPostFertilizeFor(null)
-    // Tik tręšimas įrašytas — toast'as su fertilizing bucket'ais
-    showCareToast(ourPlants, 'fertilizing')
+    // Tik tręšimas įrašytas — circuit detection simuliuoja tik fert
+    showCareToast(ourPlants, ['fertilizing'], 'fertilizing')
   }, [postFertilizeFor, mainPlants, showCareToast])
 
   useEffect(() => { if (searching) inputRef.current?.focus() }, [searching])
@@ -1061,7 +1107,9 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             style={{ paddingTop: 'max(0.5rem, env(safe-area-inset-top))' }}
           >
             <div className="max-w-[430px] mx-auto px-4">
-              <CareToast deltaPct={careToast.deltaPct} phrase={careToast.phrase} />
+              {careToast.kind === 'circuit'
+                ? <CareCircuitToast message={careToast.message} />
+                : <CareToast deltaPct={careToast.deltaPct} phrase={careToast.phrase} />}
             </div>
           </motion.div>
         )}
@@ -1084,13 +1132,19 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             className="fixed bottom-2 left-0 right-0 z-30"
           >
             <div className="max-w-[430px] mx-auto px-4 pb-2">
-            {/* DEV/DEMO: du mygtukai be DB rašymo. Pašalinti po testavimo. */}
+            {/* DEV/DEMO: trys mygtukai be DB rašymo. Pašalinti po testavimo. */}
             <div className="absolute -top-7 right-4 flex gap-1.5">
               <button
                 onClick={runCareToastDemo}
                 className="text-[10px] font-medium text-gray-400 bg-white/80 backdrop-blur-sm rounded-md px-2 py-0.5 border border-gray-200"
               >
-                Demo toast
+                Demo delta
+              </button>
+              <button
+                onClick={runCareCircuitDemo}
+                className="text-[10px] font-medium text-gray-400 bg-white/80 backdrop-blur-sm rounded-md px-2 py-0.5 border border-gray-200"
+              >
+                Demo circuit
               </button>
               <button
                 onClick={runSessionSummaryDemo}
