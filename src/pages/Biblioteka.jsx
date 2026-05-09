@@ -63,8 +63,8 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
 
   return (
     <div className="flex flex-col h-full bg-lib">
-      {/* Header */}
-      <div className="px-5 pt-14 pb-4">
+      {/* Header — dynamic safe-area pad (compact ant non-notched, full ant iPhone notched) */}
+      <div className="px-5 pb-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em] mb-1">Augalų žinynas</p>

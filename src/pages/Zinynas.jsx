@@ -112,7 +112,7 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, plants
   return (
     <div className="flex flex-col h-full bg-app">
       {/* Header */}
-      <div className="px-5 pt-14 pb-3 flex-shrink-0">
+      <div className="px-5 pb-3 flex-shrink-0" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
         <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em] mb-1">Sodininkystė</p>
         <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight">Žinynas</h1>
       </div>
