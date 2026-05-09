@@ -6,7 +6,7 @@ const PERSONAL_FIELDS = new Set([
   'id', 'kategorija', 'komentaras', 'uzrasai', 'data_prideta', 'status',
   'timeline', 'chat', 'zonaId', 'pirkinys', 'diedDate', 'deathReason',
   'lesson', 'useHistoryPhoto', 'photos',
-  'image',  // asmeninė nuotrauka — kiekvienas vartotojas gauna savą iš iNaturalist
+  // 'image' čia NĖRA — iNaturalist URL yra rūšinis, ne asmeninis; saugomas kataloge kaip referenceImage
 ])
 
 /** Normalizuotas lotyniškas pavadinimas → Firestore docId */
@@ -21,11 +21,23 @@ export function catalogDocId(lotyniskas) {
     .slice(0, 100)
 }
 
+/** Ar nuotrauka yra viešas rūšinis šaltinis (iNaturalist / Wikimedia), ne asmeninė */
+function isPublicPhoto(url) {
+  if (!url || typeof url !== 'string') return false
+  return url.startsWith('https://static.inaturalist') ||
+         url.startsWith('https://inaturalist-open-data') ||
+         url.startsWith('https://upload.wikimedia') ||
+         url.startsWith('https://photos.inaturalist')
+}
+
 /** Iš augalo objekto paliekame tik rūšiniai (ne asmeniniai) laukai */
 export function toCatalogEntry(plant) {
-  return Object.fromEntries(
+  const entry = Object.fromEntries(
     Object.entries(plant).filter(([k, v]) => !PERSONAL_FIELDS.has(k) && v != null)
   )
+  // image: saugome tik jei viešas rūšinis URL — ne Firebase Storage (asmeninė nuotrauka)
+  if (plant.image && isPublicPhoto(plant.image)) entry.image = plant.image
+  return entry
 }
 
 /** Nuskaito katalogo įrašą. Grąžina null jei nerasta arba klaida. */
