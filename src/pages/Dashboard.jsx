@@ -465,6 +465,21 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
   }, [resetConfirm])
 
+  // DEV/DEMO: parodo fake toast'ą be jokio DB rašymo. Cikliuoja per 3 mood'us.
+  const careToastDemoIdx = useRef(0)
+  const runCareToastDemo = useCallback(() => {
+    const samples = [
+      { headline: pick(CARE_COPY.bulk.headline.mostlyPerfect), counts: { perfect: 5, early: 2, late: 1, waylate: 0 }, total: 8 },
+      { headline: pick(CARE_COPY.bulk.headline.mixed),         counts: { perfect: 2, early: 1, late: 2, waylate: 0 }, total: 5 },
+      { headline: pick(CARE_COPY.bulk.headline.manyLate),      counts: { perfect: 0, early: 0, late: 1, waylate: 4 }, total: 5 },
+    ]
+    const sample = samples[careToastDemoIdx.current % samples.length]
+    careToastDemoIdx.current += 1
+    setCareToast(sample)
+    if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
+    careToastTimerRef.current = setTimeout(() => setCareToast(null), 4500)
+  }, [])
+
   // Toast po bulk action — antraštė pagal mood'ą + breakdown pagal bucket'us
   const showCareToast = useCallback((plantsToShow, kind) => {
     const days = plantsToShow
@@ -990,6 +1005,13 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             className="fixed bottom-2 left-0 right-0 z-30"
           >
             <div className="max-w-[430px] mx-auto px-4 pb-2">
+            {/* DEV/DEMO: pakeičia veiksmus į demo toast trigger. Pašalinti po testavimo. */}
+            <button
+              onClick={runCareToastDemo}
+              className="absolute -top-7 right-4 text-[10px] font-medium text-gray-400 bg-white/80 backdrop-blur-sm rounded-md px-2 py-0.5 border border-gray-200"
+            >
+              Demo toast
+            </button>
             {postFertilizeFor ? (
               <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3">
                 <PostFertilizePrompt
