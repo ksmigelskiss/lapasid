@@ -45,5 +45,17 @@ service cloud.firestore {
       // arrayUnion savęs prie narių — bet kuris auth vartotojas gali prisijungti
       allow update: if request.auth != null;
     }
+
+    // Augalo pasas — viešas skaitymas jei isPublic, rašo tik auth vartotojas
+    match /plant-passports/{plantId} {
+      allow read: if resource.data.isPublic == true || request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    // Plant-sitter tokenai — skaito visi (token žinojimas = prieiga), rašo auth
+    match /plant-sitter-tokens/{token} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
   }
 }

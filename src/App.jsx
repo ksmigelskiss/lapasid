@@ -46,6 +46,14 @@ export default function App() {
     }
   }, [])
 
+  // Augalo paso redirect: /p/{id} → /?openPlant={id} kai savininkas
+  const [pendingOpenPlant] = useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    const id = params.get('openPlant')
+    if (id) window.history.replaceState({}, '', '/')
+    return id
+  })
+
   const [tab, setTab]                 = useState('dashboard')
   const [mountedTabs, setMountedTabs] = useState(() => new Set(['dashboard']))
   const [showSearch, setShowSearch]   = useState(false)
@@ -89,6 +97,19 @@ export default function App() {
     setDetailPlant({ plant, section, scrollToCare })
   }
   const closeDetail     = () => setDetailPlant(null)
+
+  // Passport redirect: kai augalai užkrauti, atidaryti plantId iš ?openPlant=
+  const openedPassportRef = useRef(false)
+  useEffect(() => {
+    if (!pendingOpenPlant || openedPassportRef.current) return
+    const allPlants = [...dashboard, ...library]
+    if (allPlants.length === 0) return
+    const plant = allPlants.find(p => p.id === pendingOpenPlant)
+    if (plant) {
+      openedPassportRef.current = true
+      openDetail(plant, plant.kategorija === 'auginama' ? 'auginama' : plant.kategorija === 'nori' ? 'nori' : 'istorija')
+    }
+  }, [pendingOpenPlant, dashboard.length + library.length]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // One-time background migration: upload any base64 images still in Firestore to Storage
   const migratedRef = useRef(false)
@@ -331,6 +352,7 @@ export default function App() {
             scrollToCare={detailForRender.scrollToCare ?? false}
             visible={!!(detailPlant && livePlant)}
             role={role}
+            collectionId={collectionId}
           />
         </Suspense>
       )}

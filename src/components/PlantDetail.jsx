@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
-import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronRight } from 'lucide-react'
+import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronRight, Share2, Copy, Check } from 'lucide-react'
+import { doc, setDoc } from 'firebase/firestore'
+import { db } from '../utils/firebase'
 import { ZonePicker } from './ZoneManager'
 import PlantTimeline, { FAB, AddEventSheet } from './PlantTimeline'
 import { getWateringForecast } from '../utils/wateringForecast'
@@ -235,9 +237,92 @@ function InfoRow({ icon, label, value }) {
   )
 }
 
+// ── Augalo pasas sekcija ───────────────────────────────────────
+
+const DOMAIN = 'geliai.app'
+
+function PassportSection({ plant, collectionId, onToggle }) {
+  const isPublic    = plant.isPublic === true
+  const passportUrl = `https://${DOMAIN}/p/${plant.id}`
+  const [copied, setCopied] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  const handleToggle = async () => {
+    setSaving(true)
+    try {
+      await onToggle(plant, !isPublic)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const copyUrl = () => {
+    navigator.clipboard.writeText(passportUrl).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  const share = () => {
+    if (navigator.share) {
+      navigator.share({ title: plant.lietuviškas, url: passportUrl })
+    } else {
+      copyUrl()
+    }
+  }
+
+  return (
+    <div className="bg-surface rounded-2xl p-4 space-y-3">
+      {/* Toggle row */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <span className="text-lg">🔗</span>
+          <div>
+            <p className="text-sm font-semibold text-gray-800">Augalo pasas</p>
+            <p className="text-[11px] text-gray-400">Viešas profilis su priežiūros info</p>
+          </div>
+        </div>
+        <button
+          onClick={handleToggle}
+          disabled={saving}
+          className={`relative w-11 h-6 rounded-full transition-colors duration-200 flex-shrink-0 ${
+            isPublic ? 'bg-sage-500' : 'bg-gray-200'
+          } ${saving ? 'opacity-50' : ''}`}
+        >
+          <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${
+            isPublic ? 'translate-x-5' : 'translate-x-0'
+          }`} />
+        </button>
+      </div>
+
+      {/* URL + share — tik kai įjungta */}
+      {isPublic && (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-gray-100">
+            <span className="text-xs text-gray-500 flex-1 truncate font-mono">{passportUrl}</span>
+            <button onClick={copyUrl} className="flex-shrink-0 p-1 rounded-lg active:bg-gray-100 transition-colors">
+              {copied
+                ? <Check size={14} className="text-sage-500" />
+                : <Copy size={14} className="text-gray-400" />
+              }
+            </button>
+          </div>
+          <button
+            onClick={share}
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-sage-500 text-white rounded-xl text-sm font-medium"
+          >
+            <Share2 size={14} />
+            Dalintis nuoroda
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Profile tab content ────────────────────────────────────────
 
-export function ProfileContent({ plant, section, onAction, onClose, className }) {
+export function ProfileContent({ plant, section, onAction, onClose, collectionId, onTogglePassport, className }) {
 
   return (
     <div className={className ?? "px-5 pt-5 pb-10 space-y-6"}>
@@ -450,6 +535,11 @@ export function ProfileContent({ plant, section, onAction, onClose, className })
         </Section>
       )}
 
+
+      {/* ── Augalo pasas ── */}
+      {section === 'auginama' && onTogglePassport && (
+        <PassportSection plant={plant} collectionId={collectionId} onToggle={onTogglePassport} />
+      )}
 
       {/* ── Actions ── */}
       {onAction && (
@@ -921,6 +1011,7 @@ export default function PlantDetail({
   scrollToCare = false,
   visible = true,
   role = 'owner',
+  collectionId = null,
 }) {
   const [activeTab, setActiveTab]           = useState('profile')
   const [heroError, setHeroError]           = useState(false)
@@ -938,6 +1029,31 @@ export default function PlantDetail({
   const mood                            = getPlantMood(plant)
   const fetchedRef                      = useRef(false)
   const scrollContainerRef              = useRef(null)
+
+  // Augalo paso įjungimas/išjungimas
+  const togglePassport = async (p, enabled) => {
+    onUpdateNames?.(p.id, { isPublic: enabled })
+    if (enabled && collectionId) {
+      await setDoc(doc(db, 'plant-passports', p.id), {
+        collectionId,
+        isPublic: true,
+        snapshot: {
+          lotyniskas:           p.lotyniskas   ?? null,
+          lietuviškas:          p.lietuviškas  ?? null,
+          emoji:                p.emoji        ?? null,
+          image:                p.image        ?? null,
+          sviesa:               p.sviesa       ?? null,
+          vanduo:               p.vanduo       ?? null,
+          laistymasIntervalas:  p.laistymasIntervalas ?? null,
+          aprasymas:            p.aprasymas    ?? null,
+          kilme:                p.kilme        ?? null,
+        },
+        updatedAt: new Date().toISOString(),
+      }, { merge: true })
+    } else {
+      await setDoc(doc(db, 'plant-passports', p.id), { isPublic: false }, { merge: true })
+    }
+  }
 
   useEffect(() => {
     if (!scrollToCare) return
@@ -1207,6 +1323,8 @@ export default function PlantDetail({
                   section={section}
                   onAction={onAction}
                   onClose={onClose}
+                  collectionId={collectionId}
+                  onTogglePassport={role !== 'viewer' && role !== 'member' ? togglePassport : null}
                 />
               </motion.div>
             )}
