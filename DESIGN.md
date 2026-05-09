@@ -388,18 +388,18 @@ Visi „augalo priežiūros" mygtukai (Laistyti / Tręšti / Patikrinau) turi vi
 
 | Komponentas | Failas | Naudoja |
 |-------------|--------|---------|
-| `<PostFertilizePrompt>` | [src/components/PostFertilizePrompt.jsx](src/components/PostFertilizePrompt.jsx) | Dashboard care bar, CareWateringSheet |
+| `<PostFertilizePrompt>` | [src/components/PostFertilizePrompt.jsx](src/components/PostFertilizePrompt.jsx) | Dashboard care bar, CareWateringSheet, PlantCareCard (NFC pass) |
 | (TODO) `<CareActionButtons>` | — | dar neištraukta — žr. „ateities planas" |
 
 ### Ateities planas (kai užtenka motyvacijos)
 
-Šiuo metu countdown patvirtinimo logika (`confirmType`, `countdown`, `useEffect` countdown'ui) yra dubliuota:
+Šiuo metu countdown patvirtinimo logika (`confirmType`, `countdown`, `useEffect` countdown'ui) yra dubliuota dviejose vietose:
 - [Dashboard.jsx](src/pages/Dashboard.jsx) `confirmType` state (care mode bulk)
 - [PlantCareCard.jsx](src/components/PlantCareCard.jsx) `confirmType` state (NFC pass)
 
 CareWateringSheet šiuo metu countdown'o NETURI (instant action). Dabar tai OK, nes paliečiama tik per priežiūros santrauką ir vienam augalui.
 
-Jei ateityje atsiras 4-as place'as su panašia logika — laikas išskaidyti į `useCareConfirmation()` hook'ą:
+Jei ateityje atsiras 3-čias place'as su countdown'u — laikas išskaidyti į `useCareConfirmation()` hook'ą:
 
 ```jsx
 const { confirmType, countdown, ask, commit, reset } = useCareConfirmation()

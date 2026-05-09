@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Sun, Droplets, ChevronRight, FlaskConical, Leaf, Sprout } from 'lucide-react'
+import PostFertilizePrompt from './PostFertilizePrompt'
 
 // ── Forecast helpers ──────────────────────────────────────────────
 
@@ -146,11 +147,11 @@ function FertilizingStatus({ snapshot, fertilized }) {
  *   laikas baigiasi → atšaukia, grįžta į pradinę
  */
 
-async function recordEvent(plantId, eventType) {
+async function recordEvent(plantId, eventType, komentaras = '') {
   const res = await fetch('/api/passport/water', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ plantId, eventType }),
+    body: JSON.stringify({ plantId, eventType, komentaras }),
   })
   if (!res.ok) throw new Error(await res.text())
   return res.json()
@@ -165,6 +166,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
   const [countdown,   setCountdown]   = useState(5)
   const [busy,        setBusy]        = useState(false)
   const [error,       setError]       = useState(null)
+  const [postFert,    setPostFert]    = useState(false)
   const timerRef = useRef(null)
 
   // Countdown — startuoja kai laukiama patvirtinimo
@@ -196,12 +198,30 @@ export default function PlantCareCard({ passport, plantId, user }) {
     try {
       await recordEvent(plantId, type)
       if (type === 'watering')    setWatered(true)
-      if (type === 'fertilizing') setFertilized(true)
+      if (type === 'fertilizing') { setFertilized(true); setPostFert(true) }
     } catch {
       setError('Nepavyko įrašyti. Bandyk dar kartą.')
     } finally {
       setBusy(false)
     }
+  }
+
+  async function onPalasciau() {
+    setBusy(true)
+    setError(null)
+    try {
+      await recordEvent(plantId, 'watering', 'Laistyta po tręšimo')
+      setWatered(true)
+      setPostFert(false)
+    } catch {
+      setError('Nepavyko įrašyti laistymo. Bandyk dar kartą.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  function onNelasciau() {
+    setPostFert(false)
   }
 
   function onWaterTap() {
@@ -290,6 +310,9 @@ export default function PlantCareCard({ passport, plantId, user }) {
         {/* ── Veiksmai ─────────────────────────────────────────────── */}
         <div className="pt-2 space-y-3">
 
+          {postFert ? (
+            <PostFertilizePrompt count={1} onPalasciau={onPalasciau} onNelasciau={onNelasciau} />
+          ) : (
           <div className="flex gap-3">
 
             {/* Laistymas */}
@@ -346,6 +369,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
               </button>
             )}
           </div>
+          )}
 
           {/* Klaida */}
           {error && (

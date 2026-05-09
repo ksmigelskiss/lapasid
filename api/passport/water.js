@@ -5,9 +5,12 @@ const ALLOWED_TYPES = ['watering', 'fertilizing']
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
 
-  const { plantId, eventType = 'watering' } = req.body ?? {}
+  const { plantId, eventType = 'watering', komentaras: rawKomentaras } = req.body ?? {}
   if (!plantId) return res.status(400).json({ error: 'missing_params' })
   if (!ALLOWED_TYPES.includes(eventType)) return res.status(400).json({ error: 'invalid_type' })
+
+  // Sanitize komentaras: tik string, max 100 simbolių
+  const komentaras = (typeof rawKomentaras === 'string' ? rawKomentaras : '').slice(0, 100)
 
   try {
     const db = adminDb()
@@ -30,7 +33,7 @@ export default async function handler(req, res) {
       id:         `${prefix}_${Date.now()}`,
       type:       eventType,
       date:       new Date().toISOString().split('T')[0],
-      komentaras: '',
+      komentaras,
       source:     'nfc',
     }
 
