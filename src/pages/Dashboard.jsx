@@ -53,13 +53,14 @@ function sortPlants(plants, key) {
   }
 }
 
-function CareWateringSheet({ plant, onClose, onWater, onFertilize, onInspect }) {
+function CareWateringSheet({ plant, zones = [], onClose, onWater, onFertilize, onInspect }) {
   const wc = getWateringForecast(plant)
   const hasImg = !!plant.image
   const intervals = plant.laistymasIntervalas
   const desc = plant.prieziura?.laistymas
   const hasFert = getFertilizingForecast(plant).intervalDays != null
   const showInspect = wc.isOverdue && wc.lastType === 'watering'
+  const currentZone = zones.find(z => z.id === plant.zonaId)
 
   const fmtDate = iso => iso
     ? new Date(iso + 'T00:00:00').toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
@@ -123,6 +124,12 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize, onInspect }) 
               </button>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-4">
+              {currentZone && (
+                <div className="inline-flex items-center gap-1 mb-1 px-2 py-0.5 rounded-lg bg-white/20">
+                  <MapPin size={9} className="text-white/80" />
+                  <span className="text-[10px] text-white/90 font-medium">{currentZone.name}</span>
+                </div>
+              )}
               <h2 className="text-xl font-bold text-white leading-tight">{plant.lietuviškas}</h2>
               {plant.lotyniskas && (
                 <p className="text-xs text-white/70 italic mt-0.5">{plant.lotyniskas}</p>
@@ -144,6 +151,12 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize, onInspect }) 
                 {plant.emoji ?? '🌿'}
               </div>
               <div className="flex-1 min-w-0">
+                {currentZone && (
+                  <div className="inline-flex items-center gap-1 mb-1 px-2 py-0.5 rounded-lg bg-sage-100">
+                    <MapPin size={9} className="text-sage-600" />
+                    <span className="text-[10px] text-sage-700 font-medium">{currentZone.name}</span>
+                  </div>
+                )}
                 <h2 className="text-lg font-bold text-gray-900 leading-tight">{plant.lietuviškas}</h2>
                 {plant.lotyniskas && (
                   <p className="text-xs text-gray-500 italic mt-0.5">{plant.lotyniskas}</p>
@@ -172,30 +185,6 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize, onInspect }) 
             </div>
           )}
 
-          {/* Interval badges */}
-          {(intervals?.vasara != null || wc.intervalDays != null) && (
-            <div className="flex gap-2">
-              <div className="flex-1 bg-amber-50 rounded-2xl p-3 text-center">
-                <p className="text-[10px] font-bold text-amber-600 uppercase tracking-wider mb-1">☀️ Vasara</p>
-                <p className="text-base font-bold text-amber-700">
-                  {intervals?.vasara != null
-                    ? `kas ${intervals.vasara} d.`
-                    : wc.intervalDays ? `kas ${wc.intervalDays} d.` : '–'}
-                </p>
-              </div>
-              <div className="flex-1 bg-sky-50 rounded-2xl p-3 text-center">
-                <p className="text-[10px] font-bold text-sky-600 uppercase tracking-wider mb-1">❄️ Žiema</p>
-                <p className="text-base font-bold text-sky-700">
-                  {intervals?.ziema === null
-                    ? 'Neskaistoma'
-                    : intervals?.ziema != null
-                      ? `kas ${intervals.ziema} d.`
-                      : '–'}
-                </p>
-              </div>
-            </div>
-          )}
-
           {/* Method */}
           {wc.metodas && (
             <div className="bg-gray-50 rounded-2xl px-4 py-3">
@@ -219,10 +208,30 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize, onInspect }) 
                   </span>
                 </div>
               )}
+              {(intervals?.vasara != null || wc.intervalDays != null) && (
+                <div className="flex justify-between items-baseline gap-2">
+                  <span className="text-sm text-gray-500 flex-shrink-0">Rekomenduojama</span>
+                  <span className="text-sm font-semibold text-gray-800 text-right">
+                    {intervals?.vasara != null
+                      ? `vasarą kas ${intervals.vasara} d.`
+                      : `kas ${wc.intervalDays} d.`}
+                    {intervals && (
+                      <span className="text-gray-400 font-normal">
+                        {' · '}
+                        {intervals.ziema === null
+                          ? 'žiemą neskaistoma'
+                          : intervals.ziema != null
+                            ? `žiemą kas ${intervals.ziema} d.`
+                            : ''}
+                      </span>
+                    )}
+                  </span>
+                </div>
+              )}
               {wc.daysUntil != null && (
                 <div className="flex justify-between items-baseline gap-2">
                   <span className="text-sm text-gray-500 flex-shrink-0">
-                    {wc.isOverdue ? 'Vėluoja' : 'Kitas'}
+                    {wc.isOverdue ? 'Galimai vėluoja' : 'Kitas'}
                   </span>
                   <span className={`text-sm font-bold text-right ${wc.isOverdue ? 'text-sky-600' : 'text-gray-800'}`}>
                     {wc.isOverdue
@@ -252,7 +261,7 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize, onInspect }) 
               className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 active:bg-sky-600 transition-colors"
             >
               <Droplets size={16} className="text-white" />
-              <span className="text-sm font-bold text-white">Laistyta</span>
+              <span className="text-sm font-bold text-white">Laistyti</span>
             </button>
             {hasFert && (
               <button
@@ -260,7 +269,7 @@ function CareWateringSheet({ plant, onClose, onWater, onFertilize, onInspect }) 
                 className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-amber-500 active:bg-amber-600 transition-colors"
               >
                 <FlaskConical size={16} className="text-white" />
-                <span className="text-sm font-bold text-white">Patręšta</span>
+                <span className="text-sm font-bold text-white">Tręšti</span>
               </button>
             )}
           </div>
@@ -1014,6 +1023,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
           <CareWateringSheet
             key={careInfoPlant.id}
             plant={careInfoPlant}
+            zones={zones}
             onClose={() => setCareInfoPlant(null)}
             onWater={() => {
               onAddTimelineEvent(careInfoPlant.id, { id: makeId(), type: 'watering', date: today(), komentaras: '' })
