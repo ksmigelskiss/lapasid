@@ -319,7 +319,7 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
           <span className="text-sm font-bold text-red-600">Karantinas</span>
           <span className="text-xs text-red-300 flex-shrink-0">{plants.length}</span>
         </button>
-        <div className="flex-1" />
+        <div className="flex-1 h-px bg-gradient-to-r from-red-200/70 to-transparent ml-2" />
         <button onClick={() => setOpen(v => !v)} className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
           {open ? <ChevronUp size={14} className="text-red-300" /> : <ChevronDown size={14} className="text-red-300" />}
         </button>
@@ -370,7 +370,7 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
           <span className="text-sm font-bold text-gray-700 truncate">{zone.name}</span>
           <span className="text-xs text-gray-400 flex-shrink-0">{plants.length}</span>
         </button>
-        <div className="flex-1" />
+        <div className="flex-1 h-px bg-gradient-to-r from-sage-200/70 to-transparent ml-2" />
         <button onClick={() => setOpen(v => !v)} className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
           {open ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
         </button>
@@ -849,8 +849,9 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             ))}
             {unzonedPlants.length > 0 && (
               <div ref={unzonedRef} className="mb-3">
-                <div className="flex items-center py-2">
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-1">Nepriskirti</p>
+                <div className="flex items-center gap-2 py-2">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-shrink-0">Nepriskirti</p>
+                  <div className="flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent" />
                 </div>
                 <div className="space-y-3">
                   {pinChecked(unzonedPlants.filter(p => p.status === 'sick'), careMode, careChecked).length > 0 && (
