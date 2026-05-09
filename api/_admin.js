@@ -11,18 +11,36 @@ let _exp = 0
 
 async function getToken() {
   if (_tok && Date.now() < _exp) return _tok
-  const sa = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || '{}')
-  if (!sa.client_email) throw new Error('FIREBASE_SERVICE_ACCOUNT not configured')
+
+  // Pirmiausia bandome atskirus env kintamuosius (patikimiau nei JSON parsing)
+  let clientEmail = process.env.FIREBASE_CLIENT_EMAIL
+  let privateKey  = process.env.FIREBASE_PRIVATE_KEY
+
+  // Fallback: FIREBASE_SERVICE_ACCOUNT JSON
+  if ((!clientEmail || !privateKey) && process.env.FIREBASE_SERVICE_ACCOUNT) {
+    try {
+      const sa = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+      clientEmail = clientEmail || sa.client_email
+      privateKey  = privateKey  || sa.private_key
+    } catch (e) {
+      throw new Error('FIREBASE_SERVICE_ACCOUNT JSON parse failed: ' + e.message)
+    }
+  }
+
+  if (!clientEmail || !privateKey) throw new Error('Firebase credentials not configured (set FIREBASE_CLIENT_EMAIL + FIREBASE_PRIVATE_KEY)')
+
+  // Vercel gali saugoti \n kaip literal backslash-n — konvertuojam į tikrus newlines
+  privateKey = privateKey.replace(/\\n/g, '\n')
 
   const now = Math.floor(Date.now() / 1000)
   const hdr = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url')
   const pay = Buffer.from(JSON.stringify({
-    iss: sa.client_email,
+    iss: clientEmail,
     scope: 'https://www.googleapis.com/auth/datastore',
     aud: 'https://oauth2.googleapis.com/token',
     iat: now, exp: now + 3600,
   })).toString('base64url')
-  const sig = createSign('RSA-SHA256').update(`${hdr}.${pay}`).sign(sa.private_key, 'base64url')
+  const sig = createSign('RSA-SHA256').update(`${hdr}.${pay}`).sign(privateKey, 'base64url')
 
   const r = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
