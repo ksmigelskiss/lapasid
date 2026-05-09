@@ -12,7 +12,9 @@ import { getWateringForecast, shouldShowWateringAlert } from '../utils/wateringF
 import { buildDashboardSystemPrompt } from '../utils/collectionChatContext'
 import CareOverview from '../components/CareOverview'
 import PostFertilizePrompt from '../components/PostFertilizePrompt'
-import { aggregateConfidence } from '../utils/careBuckets'
+import CareToast from '../components/CareToast'
+import { aggregateConfidence, bucketCounts, moodFromCounts } from '../utils/careBuckets'
+import { CARE_COPY, pick } from '../constants/careCopy'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { RefreshCw } from 'lucide-react'
 import { makeId, today } from '../utils/plantTransform'
@@ -431,6 +433,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const [careChecked, setCareChecked]   = useState(new Set())
   const [careInfoPlant, setCareInfoPlant] = useState(null)
   const [postFertilizeFor, setPostFertilizeFor] = useState(null) // null | Set<plantId> — laukia "ar palaistei?" atsakymo
+  const [careToast, setCareToast] = useState(null)         // { headline, counts, total } | null — bulk action reward
+  const careToastTimerRef = useRef(null)
   const [confirmType, setConfirmType]   = useState(null)   // 'watering' | 'fertilizing' | null
   const [countdown, setCountdown]       = useState(5)
   const confirmTimerRef = useRef(null)
@@ -457,7 +461,23 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     setCareMode(false)
     setCareChecked(new Set())
     setPostFertilizeFor(null)
+    setCareToast(null)
+    if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
   }, [resetConfirm])
+
+  // Toast po bulk action — antraštė pagal mood'ą + breakdown pagal bucket'us
+  const showCareToast = useCallback((plantsToShow, kind) => {
+    const days = plantsToShow
+      .map(p => kind === 'watering' ? getWateringForecast(p).daysUntil : getFertilizingForecast(p).daysUntil)
+      .filter(d => d != null)
+    if (days.length === 0) return
+    const counts = bucketCounts(days)
+    const mood = moodFromCounts(counts)
+    const headline = pick(CARE_COPY.bulk.headline[mood])
+    setCareToast({ headline, counts, total: plantsToShow.length })
+    if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
+    careToastTimerRef.current = setTimeout(() => setCareToast(null), 4500)
+  }, [])
 
   // Keep screen awake while in care mode
   // Praneša parent'ui apie care mode būseną (kad App.jsx galėtų slėpti Navigation)
@@ -493,6 +513,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     const t = today()
     const comment = type === 'watering' ? 'Laistyta masiniu laistymu' : 'Trešta masiniu laistymu'
     const ids = new Set(careChecked)
+    // Snapshot pre-action plant data — buckets'ams reikia daysUntil prieš įrašant
+    const ourPlants = mainPlants.filter(p => ids.has(p.id))
     ids.forEach(plantId => {
       onAddTimelineEvent(plantId, { id: makeId(), type, date: t, komentaras: comment })
     })
@@ -500,21 +522,32 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     setCareChecked(new Set())
     if (type === 'fertilizing' && ids.size > 0) {
       setPostFertilizeFor(ids)
+      // Toast'as bus parodytas po Palaisčiau / Nelaisčiau (kad neperdengtų prompt'o)
+      return
     }
-  }, [careChecked, onAddTimelineEvent, resetConfirm])
+    // Watering — toast iškart
+    showCareToast(ourPlants, 'watering')
+  }, [careChecked, mainPlants, onAddTimelineEvent, resetConfirm, showCareToast])
 
   const confirmPostFertWater = useCallback(() => {
     if (!postFertilizeFor) return
     const t = today()
+    const ourPlants = mainPlants.filter(p => postFertilizeFor.has(p.id))
     postFertilizeFor.forEach(plantId => {
       onAddTimelineEvent(plantId, { id: makeId(), type: 'watering', date: t, komentaras: 'Laistyta po tręšimo' })
     })
     setPostFertilizeFor(null)
-  }, [postFertilizeFor, onAddTimelineEvent])
+    // Watering toast — pagrindinis veiksmo rezultatas
+    showCareToast(ourPlants, 'watering')
+  }, [postFertilizeFor, mainPlants, onAddTimelineEvent, showCareToast])
 
   const dismissPostFert = useCallback(() => {
+    if (!postFertilizeFor) return
+    const ourPlants = mainPlants.filter(p => postFertilizeFor.has(p.id))
     setPostFertilizeFor(null)
-  }, [])
+    // Tik tręšimas įrašytas — toast'as su fertilizing bucket'ais
+    showCareToast(ourPlants, 'fertilizing')
+  }, [postFertilizeFor, mainPlants, showCareToast])
 
   useEffect(() => { if (searching) inputRef.current?.focus() }, [searching])
   const closeSearch = useCallback(() => { setSearching(false); setQuery('') }, [])
@@ -926,6 +959,24 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
           <img src={GARDENER} className="h-[96px] w-auto object-contain drop-shadow opacity-90 animate-idle-float-gardener" alt="" />
         </button>
       )}
+
+      {/* Care reward toast — virš care action bar'o */}
+      <AnimatePresence>
+        {careMode && careToast && (
+          <motion.div
+            key="care-toast"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="fixed bottom-[72px] left-0 right-0 z-30 pointer-events-none"
+          >
+            <div className="max-w-[430px] mx-auto px-4">
+              <CareToast headline={careToast.headline} counts={careToast.counts} total={careToast.total} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Care mode action bar */}
       <AnimatePresence>

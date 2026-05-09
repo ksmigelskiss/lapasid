@@ -86,3 +86,13 @@ export function pick(arr) {
 export function fillTemplate(str, vars) {
   return str.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? '')
 }
+
+// Lt. plural form'a "augalas" pagal skaičių
+export function plPlants(n) {
+  const lastTwo = n % 100
+  if (lastTwo >= 11 && lastTwo <= 19) return 'augalų'
+  const last = n % 10
+  if (last === 1)             return 'augalas'
+  if (last >= 2 && last <= 9) return 'augalai'
+  return 'augalų'
+}
