@@ -110,18 +110,13 @@ export default function PlantCareCard({ passport, plantId, user }) {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-5">
-          <div className="flex items-end gap-3">
-            {s.emoji && (
-              <span className="text-4xl leading-none flex-shrink-0">{s.emoji}</span>
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold text-white leading-tight">
+              {s.lietuviškas}
+            </h1>
+            {s.lotyniskas && (
+              <p className="text-sm text-white/70 italic mt-0.5">{s.lotyniskas}</p>
             )}
-            <div className="min-w-0">
-              <h1 className="text-2xl font-bold text-white leading-tight">
-                {s.lietuviškas}
-              </h1>
-              {s.lotyniskas && (
-                <p className="text-sm text-white/70 italic mt-0.5">{s.lotyniskas}</p>
-              )}
-            </div>
           </div>
         </div>
       </div>
