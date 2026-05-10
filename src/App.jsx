@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef, lazy, Suspense, useMemo } from 'react'
+import { useCareLists } from './components/CareOverview'
 import { AnimatePresence, motion } from 'framer-motion'
 import Navigation from './components/Navigation'
 import DeathModal from './components/DeathModal'
@@ -334,6 +335,20 @@ export default function App() {
   const activeCollection = allCollections.find(c => c.id === collectionId)
   const collectionName = activeCollection?.name || 'Mano kolekcija'
 
+  // Care notification count bell'ui (filtruojam quarantine — Dashboard'o atitikmuo `mainPlants`)
+  const carePopupPlants = useMemo(
+    () => dashboard.filter(p => p.status !== 'quarantine'),
+    [dashboard]
+  )
+  const careNotificationCount = useCareLists(carePopupPlants).total
+
+  // Bell popup callback — atidaro CareWateringSheet per Dashboard'o imperative API
+  const handleCarePopupTap = useCallback((plant, list) => {
+    dashboardRef.current?.openCareInfo(plant, list)
+    // Įsitikinam, kad Dashboard tab'as aktyvus (jei buvo Biblioteka/Žinynas)
+    if (tab !== 'dashboard') setTabAndMount('dashboard')
+  }, [tab])
+
   const desktopHeader = isDesktop ? (
     <DesktopHeader
       active={tab}
@@ -349,6 +364,9 @@ export default function App() {
       allCollections={allCollections}
       collectionId={collectionId}
       onSwitchCollection={switchCollection}
+      careNotificationCount={careNotificationCount}
+      carePopupPlants={carePopupPlants}
+      onCareTap={handleCarePopupTap}
     />
   ) : null
 

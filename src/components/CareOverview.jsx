@@ -47,28 +47,146 @@ function userFirstName(user) {
   return name?.split(/\s+/)[0] || 'svečias'
 }
 
-export default function CareOverview({ plants, onTap, onWaterTap, defaultOpen = false, user }) {
-  const [open, setOpen] = useState(defaultOpen)
+// Lietuviška „augalas" žodžio galūnė pagal kiekį (1 augalas, 2-9 augalai, 0/10-19/.. augalų).
+function plAugal(n) {
+  const lastTwo = n % 100
+  const last    = n % 10
+  if (lastTwo >= 11 && lastTwo <= 19) return 'augalų'
+  if (last === 1) return 'augalas'
+  if (last >= 2 && last <= 9)  return 'augalai'
+  return 'augalų'
+}
 
+// Kvietikliškas subline'as: laistymas yra „gali būti", tręšimas — „prašo valgyti"
+//   (laistymo tikslumas priklauso nuo daug parametrų, tręšimas — aiški cikliška sistema).
+function buildSubline(waterCount, fertCount) {
+  if (waterCount === 0 && fertCount === 0) return 'Visi augalai laimingi 🌿'
+  const parts = []
+  if (waterCount > 0) parts.push(`${waterCount} ${plAugal(waterCount)} gali būti ištroškę`)
+  if (fertCount > 0)  parts.push(`${fertCount} ${plAugal(fertCount)} prašo valgyti`)
+  return parts.join(' · ')
+}
+
+/**
+ * Visų care list'ų skaičiavimai vienoj vietoj — leidžia ir greeting'ui ir
+ * popup'ui dalintis tomis pačiomis reikšmėmis.
+ */
+export function useCareLists(plants) {
   const wateringList = plants.filter(p => shouldShowWateringAlert(p))
   const fertList     = plants.filter(p => getFertilizingForecast(p).isOverdue)
   const wakingList   = plants.filter(p => getDormancyForecast(p)?.window === 'waking')
   const dormingList  = plants.filter(p => getDormancyForecast(p)?.window === 'active')
   const approachList = plants.filter(p => getDormancyForecast(p)?.window === 'approaching')
-
   const total = wateringList.length + fertList.length + wakingList.length + dormingList.length + approachList.length
-  if (total === 0) return null
+  return { wateringList, fertList, wakingList, dormingList, approachList, total }
+}
+
+/**
+ * CareSummaryList — visos sekcijos (laistymas / tręšimas / dormancy).
+ * Naudojama:
+ *  - inline CareOverview (mobile)
+ *  - bell popup (desktop)
+ */
+export function CareSummaryList({ plants, onTap, onWaterTap }) {
+  const lists = useCareLists(plants)
+  return (
+    <div className="space-y-2">
+      <Section
+        bg="bg-sky-50" labelColor="text-sky-600" chipBg="bg-sky-100" chipText="text-sky-900" badgeColor="text-sky-500"
+        icon={<Droplets size={11} />}
+        label="Patikrink ar ne sausi"
+        plants={lists.wateringList}
+        renderBadge={p => { const d = getWateringForecast(p).daysUntil; return d != null ? `+${Math.abs(d)}d` : null }}
+        onTap={onWaterTap ?? onTap}
+        withList
+      />
+      <Section
+        bg="bg-amber-50" labelColor="text-amber-600" chipBg="bg-amber-100" chipText="text-amber-900" badgeColor="text-amber-500"
+        icon={<FlaskConical size={11} />}
+        label="Pamaitink augalėlį"
+        plants={lists.fertList}
+        renderBadge={p => { const d = getFertilizingForecast(p).daysUntil; return d != null ? `+${Math.abs(d)}d` : null }}
+        onTap={onWaterTap ?? onTap}
+        withList
+      />
+      <Section
+        bg="bg-gray-50" labelColor="text-green-700" chipBg="bg-white" chipText="text-gray-800" badgeColor="text-gray-400"
+        icon={<Sprout size={11} />}
+        label="Palengva žadink"
+        plants={lists.wakingList}
+        onTap={onTap}
+      />
+      <Section
+        bg="bg-gray-50" labelColor="text-blue-600" chipBg="bg-white" chipText="text-gray-800" badgeColor="text-gray-400"
+        icon={<Moon size={11} />}
+        label="Miega"
+        plants={lists.dormingList}
+        onTap={onTap}
+      />
+      <Section
+        bg="bg-gray-50" labelColor="text-orange-500" chipBg="bg-white" chipText="text-gray-800" badgeColor="text-gray-400"
+        icon={<Snowflake size={11} />}
+        label="Ruošiasi miegui"
+        plants={lists.approachList}
+        onTap={onTap}
+      />
+    </div>
+  )
+}
+
+/**
+ * CareOverview — greeting + (opcionalus) summary.
+ *
+ * Props:
+ *   plants       — augalų masyvas (mainPlants)
+ *   onTap        — augalo tap iš dormancy chip
+ *   onWaterTap   — augalo tap iš water/fert chip (kviečia CareWateringSheet)
+ *   user         — auth user (greeting'ui)
+ *   defaultOpen  — ar santrauka iš pradžių išskleista (mobile)
+ *   mode         — 'inline' (default, mobile) | 'greeting' (tik kreipinys, be summary) | 'summary' (tik summary, be greeting)
+ *   bigGreeting  — kai true, h1 + didesnis šriftas (desktop „hero" greeting'as)
+ */
+export default function CareOverview({
+  plants, onTap, onWaterTap, defaultOpen = false, user,
+  mode = 'inline', bigGreeting = false,
+}) {
+  const [open, setOpen] = useState(defaultOpen)
+  const lists = useCareLists(plants)
+
+  // Tylus state — niekas nerodo, bet ir lieka neutraliai (nėra ką rašyt apie 0 augalų)
+  if (lists.total === 0 && mode !== 'greeting') return null
+  // 'greeting' režimas — visada rodom kreipinį, net jei 0 augalų reikalauja priežiūros
 
   const greeting = `${timeGreeting()}, ${userFirstName(user)}`
-  // Subline parodo aktualų augalų darbų skaičių. Be augalų — santrauka null'u
-  // (`if (total === 0) return null`), todėl čia visada >0.
-  const subline = wateringList.length > 0
-    ? `${wateringList.length} augal${wateringList.length === 1 ? 'as' : (wateringList.length < 10 ? 'ai' : 'ų')} laukia laistymo`
-    : `${total} augal${total === 1 ? 'as' : 'ų'} laukia priežiūros`
+  const subline  = buildSubline(lists.wateringList.length, lists.fertList.length)
 
+  // 'summary' režimas — tik sąrašas, be kortelės wrapper'io (popup'ui)
+  if (mode === 'summary') {
+    return <CareSummaryList plants={plants} onTap={onTap} onWaterTap={onWaterTap} />
+  }
+
+  // 'greeting' režimas — tik kreipinys, jokio summary expand'o
+  if (mode === 'greeting') {
+    return (
+      <div className={bigGreeting ? '' : 'mb-4'}>
+        {bigGreeting ? (
+          <>
+            <h1 className="text-[28px] sm:text-[32px] font-extrabold text-gray-950 leading-tight tracking-tight">{greeting}</h1>
+            <p className="text-sm text-gray-500 mt-1">{subline}</p>
+          </>
+        ) : (
+          <>
+            <h2 className="text-base font-bold text-gray-900 leading-tight">{greeting}</h2>
+            <p className="text-xs text-gray-500 mt-0.5">{subline}</p>
+          </>
+        )}
+      </div>
+    )
+  }
+
+  // 'inline' režimas (default, mobile) — greeting + summary toggle
   return (
     <div className="mb-4 bg-white rounded-2xl overflow-hidden shadow-ios-card">
-      {/* Greeting — designer'io „CareOverview" stilistika; visada matoma, nepriklauso nuo open state'o */}
       <div className="px-4 pt-3 pb-2 border-b border-gray-100">
         <h2 className="text-base font-bold text-gray-900 leading-tight">{greeting}</h2>
         <p className="text-xs text-gray-500 mt-0.5">{subline}</p>
@@ -79,71 +197,13 @@ export default function CareOverview({ plants, onTap, onWaterTap, defaultOpen = 
         className="w-full flex items-center gap-2 px-4 py-3 active:bg-surface transition-colors"
       >
         <Sprout size={15} className="text-sage-500 flex-shrink-0" />
-        <p className="text-sm font-bold text-gray-800 flex-1 text-left">Priežiūros santrauka ({total})</p>
+        <p className="text-sm font-bold text-gray-800 flex-1 text-left">Priežiūros santrauka ({lists.total})</p>
         {open ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
       </button>
 
       {open && (
-        <div className="px-3 pb-3 space-y-2">
-          <Section
-            bg="bg-sky-50"
-            labelColor="text-sky-600"
-            chipBg="bg-sky-100"
-            chipText="text-sky-900"
-            badgeColor="text-sky-500"
-            icon={<Droplets size={11} />}
-            label="Patikrink ar ne sausi"
-            plants={wateringList}
-            renderBadge={p => { const d = getWateringForecast(p).daysUntil; return d != null ? `+${Math.abs(d)}d` : null }}
-            onTap={onWaterTap ?? onTap}
-            withList
-          />
-          <Section
-            bg="bg-amber-50"
-            labelColor="text-amber-600"
-            chipBg="bg-amber-100"
-            chipText="text-amber-900"
-            badgeColor="text-amber-500"
-            icon={<FlaskConical size={11} />}
-            label="Pamaitink augalėlį"
-            plants={fertList}
-            renderBadge={p => { const d = getFertilizingForecast(p).daysUntil; return d != null ? `+${Math.abs(d)}d` : null }}
-            onTap={onWaterTap ?? onTap}
-            withList
-          />
-          <Section
-            bg="bg-gray-50"
-            labelColor="text-green-700"
-            chipBg="bg-white"
-            chipText="text-gray-800"
-            badgeColor="text-gray-400"
-            icon={<Sprout size={11} />}
-            label="Palengva žadink"
-            plants={wakingList}
-            onTap={onTap}
-          />
-          <Section
-            bg="bg-gray-50"
-            labelColor="text-blue-600"
-            chipBg="bg-white"
-            chipText="text-gray-800"
-            badgeColor="text-gray-400"
-            icon={<Moon size={11} />}
-            label="Miega"
-            plants={dormingList}
-            onTap={onTap}
-          />
-          <Section
-            bg="bg-gray-50"
-            labelColor="text-orange-500"
-            chipBg="bg-white"
-            chipText="text-gray-800"
-            badgeColor="text-gray-400"
-            icon={<Snowflake size={11} />}
-            label="Ruošiasi miegui"
-            plants={approachList}
-            onTap={onTap}
-          />
+        <div className="px-3 pb-3">
+          <CareSummaryList plants={plants} onTap={onTap} onWaterTap={onWaterTap} />
         </div>
       )}
     </div>

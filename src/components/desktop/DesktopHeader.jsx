@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Bell, Leaf, ChevronDown, Check } from 'lucide-react'
 import AccuracySprite, { accuracyLabel } from '../AccuracySprite'
+import { CareSummaryList } from '../CareOverview'
 
 /**
  * DesktopHeader — top juosta desktop'e (≥1024px), pakeičia mobile bottom
@@ -33,6 +34,7 @@ export default function DesktopHeader({
   careMode = false, onCareToggle,
   collectionName = '', user, onProfileClick, role = 'owner',
   allCollections = [], collectionId, onSwitchCollection,
+  careNotificationCount = 0, carePopupPlants = [], onCareTap,
 }) {
   // Collection switcher dropdown state — atidaroma tik jei > 1 kolekcija su augalais
   const [showSwitcher, setShowSwitcher] = useState(false)
@@ -40,17 +42,24 @@ export default function DesktopHeader({
   const switchableCollections = allCollections.filter(c => c.hasPlants !== false)
   const canSwitch = switchableCollections.length > 1
 
-  // Outside click — uždarom dropdown
+  // Bell popup state — atidaroma su pranešimų count
+  const [showCarePopup, setShowCarePopup] = useState(false)
+  const carePopupRef = useRef(null)
+
+  // Outside click — uždarom switcher arba care popup'ą (tas pats pattern abiem)
   useEffect(() => {
-    if (!showSwitcher) return
+    if (!showSwitcher && !showCarePopup) return
     const handler = (e) => {
-      if (switcherRef.current && !switcherRef.current.contains(e.target)) {
+      if (showSwitcher && switcherRef.current && !switcherRef.current.contains(e.target)) {
         setShowSwitcher(false)
+      }
+      if (showCarePopup && carePopupRef.current && !carePopupRef.current.contains(e.target)) {
+        setShowCarePopup(false)
       }
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
-  }, [showSwitcher])
+  }, [showSwitcher, showCarePopup])
 
   const pct   = Math.round((careConfidence ?? 0) * 100)
   const label = accuracyLabel(pct)
@@ -219,14 +228,44 @@ export default function DesktopHeader({
             )}
           </div>
         )}
-        {/* Notifications bell — placeholder, dabar tik vizualinis */}
-        <button
-          className="w-9 h-9 rounded-lg hover:bg-gray-900/[0.05] inline-flex items-center justify-center text-gray-600 transition-colors"
-          title="Pranešimai"
-          disabled
-        >
-          <Bell size={18} />
-        </button>
+        {/* Notifications bell — atidaro priežiūros santrauką su pranešimų count badge */}
+        <div className="relative" ref={carePopupRef}>
+          <button
+            onClick={() => setShowCarePopup(v => !v)}
+            className={`w-9 h-9 rounded-lg inline-flex items-center justify-center transition-colors ${
+              showCarePopup ? 'bg-sage-100 text-sage-700' : 'hover:bg-gray-900/[0.05] text-gray-600'
+            }`}
+            title={careNotificationCount > 0
+              ? `Priežiūros santrauka (${careNotificationCount})`
+              : 'Visi augalai laimingi'}
+          >
+            <Bell size={18} />
+            {careNotificationCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none flex items-center justify-center ring-2 ring-white">
+                {careNotificationCount > 99 ? '99+' : careNotificationCount}
+              </span>
+            )}
+          </button>
+
+          {/* Popup — priežiūros santrauka pagal sekcijas (laistymas / tręšimas / dormancy) */}
+          {showCarePopup && (
+            <div className="absolute top-full right-0 mt-2 w-[360px] max-h-[70vh] overflow-y-auto bg-white rounded-2xl shadow-[0_12px_32px_rgba(20,40,30,0.18)] border border-gray-100 z-50 p-3">
+              <div className="flex items-center gap-2 px-1 pb-2 mb-1 border-b border-gray-100">
+                <Bell size={14} className="text-sage-600" />
+                <p className="text-sm font-bold text-gray-800 flex-1">Priežiūros santrauka</p>
+                <span className="text-[11px] font-semibold text-gray-400">{careNotificationCount}</span>
+              </div>
+              {careNotificationCount > 0 ? (
+                <CareSummaryList
+                  plants={carePopupPlants}
+                  onTap={(plant, list) => { onCareTap?.(plant, list); setShowCarePopup(false) }}
+                />
+              ) : (
+                <p className="text-center text-sm text-gray-500 py-6">Visi augalai laimingi 🌿</p>
+              )}
+            </div>
+          )}
+        </div>
         {/* Avatar — atidaro ProfileSheet */}
         <button
           onClick={onProfileClick}

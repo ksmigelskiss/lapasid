@@ -208,11 +208,15 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
   }, [careConfidence, onCareConfidenceChange])
 
   // Imperative API: leidžia App per ref iškviesti careMode toggle iš
-  // DesktopHeader'io (kuris kabo virš Dashboard'o).
+  // DesktopHeader'io + atidaryti CareWateringSheet iš bell popup'o.
   useImperativeHandle(ref, () => ({
     toggleCareMode: () => {
       setCareMode(v => !v)
       setCareChecked(new Set())
+    },
+    openCareInfo: (plant, list) => {
+      setCareInfoPlantId(plant.id)
+      setCareInfoList(list ? list.map(p => p.id) : null)
     },
   }), [])
 
@@ -594,60 +598,88 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
         </div>
       </div>}
 
-      {/* Search + filter toggle */}
-      {role !== 'viewer' && <div className="px-5 mb-3 flex gap-2">
-        {searching ? (
-          <div className="flex-1 flex items-center gap-2 bg-white border border-gray-200 rounded-2xl px-4 py-3 focus-within:border-gray-400 transition-colors">
-            <Search size={15} className="text-gray-400 flex-shrink-0" />
-            <input
-              ref={inputRef}
-              type="text"
-              inputMode="search"
-              enterKeyHint="search"
-              autoComplete="nope"
-              autoCorrect="off"
-              autoCapitalize="none"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter' && query.trim()) launchFullSearch()
-                if (e.key === 'Escape') closeSearch()
-              }}
-              placeholder="Ieškoti augalo..."
-              className="flex-1 text-sm text-gray-800 placeholder-gray-400 outline-none bg-transparent"
-            />
-            <button onClick={closeSearch} className="text-gray-400 text-xs">✕</button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setSearching(true)}
-            className="flex-1 flex items-center gap-3 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl px-4 py-3"
-          >
-            <Search size={16} className="text-gray-400 flex-shrink-0" />
-            <span className="text-sm text-gray-500">Ieškoti augalo...</span>
-          </button>
-        )}
-        {!searching && (
-          <button
-            onClick={() => onSearchByCamera ? onSearchByCamera() : onSearch('')}
-            className="flex-shrink-0 w-11 rounded-2xl flex items-center justify-center bg-white border border-gray-200 text-gray-600 active:bg-surface transition-colors"
-          >
-            <Camera size={16} />
-          </button>
-        )}
-        {!searching && plants.length > 1 && (
-          <button
-            onClick={() => setShowFilters(v => !v)}
-            className={`flex-shrink-0 w-11 rounded-2xl flex items-center justify-center text-base transition-colors ${
-              showFilters || sortKey !== 'added'
-                ? 'bg-sage-500 text-white'
-                : 'bg-white border border-gray-200 text-gray-600'
-            }`}
-          >
-            <SlidersHorizontal size={16} />
-          </button>
-        )}
-      </div>}
+      {/* Search row content — extractintas, kad reuse'intume tiek mobile (atskira eilutė),
+          tiek desktop (inline su greeting'u). Kiekvienas vaikas turi flex hint'us. */}
+      {(() => {
+        const searchRow = role !== 'viewer' && (
+          <>
+            {searching ? (
+              <div className="flex-1 flex items-center gap-2 bg-white border border-gray-200 rounded-2xl px-4 py-3 focus-within:border-gray-400 transition-colors">
+                <Search size={15} className="text-gray-400 flex-shrink-0" />
+                <input
+                  ref={inputRef}
+                  type="text"
+                  inputMode="search"
+                  enterKeyHint="search"
+                  autoComplete="nope"
+                  autoCorrect="off"
+                  autoCapitalize="none"
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && query.trim()) launchFullSearch()
+                    if (e.key === 'Escape') closeSearch()
+                  }}
+                  placeholder="Ieškoti augalo..."
+                  className="flex-1 text-sm text-gray-800 placeholder-gray-400 outline-none bg-transparent"
+                />
+                <button onClick={closeSearch} className="text-gray-400 text-xs">✕</button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setSearching(true)}
+                className="flex-1 flex items-center gap-3 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl px-4 py-3"
+              >
+                <Search size={16} className="text-gray-400 flex-shrink-0" />
+                <span className="text-sm text-gray-500">Ieškoti augalo...</span>
+              </button>
+            )}
+            {!searching && (
+              <button
+                onClick={() => onSearchByCamera ? onSearchByCamera() : onSearch('')}
+                className="flex-shrink-0 w-11 rounded-2xl flex items-center justify-center bg-white border border-gray-200 text-gray-600 active:bg-surface transition-colors"
+              >
+                <Camera size={16} />
+              </button>
+            )}
+            {!searching && plants.length > 1 && (
+              <button
+                onClick={() => setShowFilters(v => !v)}
+                className={`flex-shrink-0 w-11 rounded-2xl flex items-center justify-center text-base transition-colors ${
+                  showFilters || sortKey !== 'added'
+                    ? 'bg-sage-500 text-white'
+                    : 'bg-white border border-gray-200 text-gray-600'
+                }`}
+              >
+                <SlidersHorizontal size={16} />
+              </button>
+            )}
+          </>
+        )
+
+        return (
+          <>
+            {/* Desktop: greeting kairėje + search inline dešinėje, tos pačios eilutės flex */}
+            {hideInnerHeader && (
+              <div className="px-5 pt-4 pb-3 flex items-end justify-between gap-6">
+                <div className="flex-shrink min-w-0">
+                  <CareOverview plants={mainPlants} user={user} mode="greeting" bigGreeting />
+                </div>
+                {searchRow && (
+                  <div className="flex-1 max-w-[440px] flex gap-2 items-stretch">
+                    {searchRow}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Mobile: search atskira full-width eilutė */}
+            {!hideInnerHeader && searchRow && (
+              <div className="px-5 mb-3 flex gap-2">{searchRow}</div>
+            )}
+          </>
+        )
+      })()}
 
 
       {/* Collapsible sort */}
@@ -741,7 +773,9 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
         {/* Care overview — slepiama care mode'e (vartotojas jau dirba su augalais tiesiogiai).
             onTap gauna (plant, list?) — list = sąrašas to skyrelio (pvz. wateringList),
             kuris perduodamas openCareInfo navigacijai per CareWateringSheet strėles. */}
-        {!careMode && <CareOverview plants={mainPlants} onTap={openCareInfo} user={user} />}
+        {/* Mobile only — desktop'e CareOverview greeting jau renderintas top'e + summary
+            perkeltas į bell popup'ą (DesktopHeader'yje). */}
+        {!careMode && !hideInnerHeader && <CareOverview plants={mainPlants} onTap={openCareInfo} user={user} />}
 
         {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (
