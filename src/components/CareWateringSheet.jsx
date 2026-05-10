@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { Droplets, FlaskConical, Check, X, MapPin, ChevronLeft, ChevronRight } from 'lucide-react'
 import { getWateringForecast } from '../utils/wateringForecast'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import PostFertilizePrompt from './PostFertilizePrompt'
+import { useIsDesktop } from '../hooks/useIsDesktop'
+import { useDetailHost } from '../contexts/DetailHostContext'
 
 /**
  * CareWateringSheet — single-plant care kortelė.
@@ -41,6 +43,17 @@ export default function CareWateringSheet({
   plant, zones = [], onClose, onAddEvent,
   onAfterAction, onPrev, onNext, navIndex, navTotal,
 }) {
+  // Desktop split panel — portal į RightPanel container'į vietoj document.body.
+  const isDesktop = useIsDesktop()
+  const host = useDetailHost()
+  const useDesktopPanel = isDesktop && !!host?.container
+
+  useEffect(() => {
+    if (!useDesktopPanel || !host) return
+    host.open()
+    return () => host.close()
+  }, [useDesktopPanel]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const afterAction = onAfterAction || onClose
   const wc = getWateringForecast(plant)
   const hasImg = !!plant.image
@@ -74,38 +87,48 @@ export default function CareWateringSheet({
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-[110] flex items-end justify-center">
-      {/* Backdrop */}
-      <motion.div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        transition={{ duration: 0.25 }}
-        onClick={onClose}
-      />
+    <div className={useDesktopPanel
+      ? "absolute inset-0 bg-app flex flex-col"
+      : "fixed inset-0 z-[110] flex items-end justify-center"}>
+      {/* Backdrop — tik mobile */}
+      {!useDesktopPanel && (
+        <motion.div
+          className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          onClick={onClose}
+        />
+      )}
 
       {/* Sheet — full-screen mobile width, identiška PlantDetail struktūrai */}
       <motion.div
-        className="relative w-full max-w-[430px] bg-app flex flex-col"
-        style={{ height: '100dvh', y }}
-        drag="y"
-        dragControls={dragControls}
-        dragListener={false}
-        dragConstraints={{ top: 0 }}
-        dragElastic={{ top: 0, bottom: 0.25 }}
-        onDragEnd={handleDragEnd}
-        initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+        className={useDesktopPanel
+          ? "relative w-full h-full bg-app flex flex-col"
+          : "relative w-full max-w-[430px] bg-app flex flex-col"}
+        style={useDesktopPanel ? { height: '100%' } : { height: '100dvh', y }}
+        {...(useDesktopPanel ? {} : {
+          drag: 'y',
+          dragControls,
+          dragListener: false,
+          dragConstraints: { top: 0 },
+          dragElastic: { top: 0, bottom: 0.25 },
+          onDragEnd: handleDragEnd,
+          initial: { y: '100%' }, animate: { y: 0 }, exit: { y: '100%' },
+        })}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
       >
-        {/* Drag handle — pill viršuje, su safe-area pad */}
-        <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pb-2 pointer-events-none select-none" style={{ paddingTop: 'max(0.625rem, env(safe-area-inset-top))' }}>
-          <div
-            onPointerDown={e => dragControls.start(e)}
-            className="px-8 py-1 cursor-grab active:cursor-grabbing pointer-events-auto"
-            style={{ touchAction: 'none' }}
-          >
-            <div className="w-10 h-1 bg-black/15 rounded-full" />
+        {/* Drag handle — tik mobile (desktop'e uždarymas per X) */}
+        {!useDesktopPanel && (
+          <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pb-2 pointer-events-none select-none" style={{ paddingTop: 'max(0.625rem, env(safe-area-inset-top))' }}>
+            <div
+              onPointerDown={e => dragControls.start(e)}
+              className="px-8 py-1 cursor-grab active:cursor-grabbing pointer-events-auto"
+              style={{ touchAction: 'none' }}
+            >
+              <div className="w-10 h-1 bg-black/15 rounded-full" />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Navigacijos strėlės — rodoma tik jei priežiūros santrauka pateikė
             list (per onPrev/onNext callbacks). Long-press care mode'e — null. */}
@@ -321,6 +344,6 @@ export default function CareWateringSheet({
         </div>
       </motion.div>
     </div>,
-    document.body
+    useDesktopPanel ? host.container : document.body
   )
 }
