@@ -32,6 +32,84 @@ function eventDayISO(event) {
   return null
 }
 
+// LT mėnesio sutrumpinimas pagal mėnesio indeksą (0-11).
+const MONTH_SHORT = ['Sau', 'Vas', 'Kov', 'Bal', 'Geg', 'Bir', 'Lie', 'Rgp', 'Rgs', 'Spa', 'Lap', 'Grd']
+
+/**
+ * aggregateCareGrid — sumeta plant.timeline event'us į 7×N savaičių grid'ą
+ * (heatmap'ui). Output forma: 2D array (savaitės kaip stulpeliai, dienos
+ * Pir→Sek kaip eilutės).
+ *
+ * @param {Array} plants — augalų sąrašas
+ * @param {number} weeks — kiek savaičių (default 8 = ~2 mėn)
+ * @returns {{ grid: Day[][], monthMarkers: { weekIndex, label }[] }}
+ */
+export function aggregateCareGrid(plants = [], weeks = 8) {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const todayISO = dateToISODay(today)
+
+  // Pirmadienis šios savaitės. Iš šio taško atgal — weeks * 7 dienų,
+  // pirmyn — iki sekmadienio (kad savaitė pilna; ateities langeliai = future).
+  const dayOfWeek = today.getDay() // 0=Sek, 1-6=Pir-Šeš
+  const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+  const thisMonday = new Date(today)
+  thisMonday.setDate(today.getDate() - daysSinceMonday)
+
+  // Start = thisMonday - (weeks-1) * 7 days (pradedam weeks-1 savaičių atgal,
+  // baigiam šios savaitės sekmadienį)
+  const startDate = new Date(thisMonday)
+  startDate.setDate(thisMonday.getDate() - (weeks - 1) * 7)
+
+  const grid = [] // savaitės kaip stulpeliai
+  const monthMarkers = [] // { weekIndex, label } — kuriam stulpely pirmadienis pakeičia mėnesį
+  let lastMonth = -1
+
+  for (let w = 0; w < weeks; w++) {
+    const week = []
+    for (let d = 0; d < 7; d++) {
+      const date = new Date(startDate)
+      date.setDate(startDate.getDate() + w * 7 + d)
+      const iso = dateToISODay(date)
+      week.push({
+        dateISO: iso,
+        date,
+        watering: 0,
+        fertilizing: 0,
+        isToday: iso === todayISO,
+        isFuture: date > today,
+      })
+    }
+    grid.push(week)
+    // Mėnesio žymeklis — kai šios savaitės pirmadienio mėnuo skiriasi nuo praeito
+    const mondayMonth = week[0].date.getMonth()
+    if (mondayMonth !== lastMonth) {
+      monthMarkers.push({ weekIndex: w, label: MONTH_SHORT[mondayMonth] })
+      lastMonth = mondayMonth
+    }
+  }
+
+  // Aggregate from plants
+  for (const plant of plants) {
+    const tl = plant?.timeline ?? []
+    for (const e of tl) {
+      if (e?.type !== 'watering' && e?.type !== 'fertilizing') continue
+      const eventISO = eventDayISO(e)
+      if (!eventISO) continue
+      // Surask atitinkamą langelį
+      for (const week of grid) {
+        const cell = week.find(c => c.dateISO === eventISO)
+        if (cell) {
+          cell[e.type] += 1
+          break
+        }
+      }
+    }
+  }
+
+  return { grid, monthMarkers }
+}
+
 /**
  * aggregateCareWeek — sumeta visus plant.timeline watering+fertilizing event'us
  * į 7-dienos lentą šiai savaitei.

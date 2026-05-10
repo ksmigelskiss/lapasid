@@ -1,9 +1,9 @@
 import { Leaf } from 'lucide-react'
 import { useDetailHost } from '../../contexts/DetailHostContext'
 import { useWeather } from '../../hooks/useWeather'
-import { aggregateCareWeek } from '../../utils/careWeekStats'
+import { aggregateCareGrid } from '../../utils/careWeekStats'
 import WeatherWidget from '../widgets/WeatherWidget'
-import CareChartWidget from '../widgets/CareChartWidget'
+import CareHeatmapWidget from '../widgets/CareHeatmapWidget'
 import ShopWidget from '../widgets/ShopWidget'
 
 /**
@@ -17,7 +17,8 @@ export default function RightPanel({ plantsForChart = [], onAddToWishlist, onBuy
   const host = useDetailHost()
   const isActive = host?.isActive ?? false
   const weather = useWeather()
-  const weekData = isActive ? [] : aggregateCareWeek(plantsForChart)
+  // 8 savaičių (~2 mėn) heatmap'ą skaičiuojam tik default state'e
+  const heatmapData = isActive ? null : aggregateCareGrid(plantsForChart, 8)
 
   return (
     <aside className="w-[430px] flex-shrink-0 border-l border-gray-200 bg-app-warm relative overflow-hidden flex flex-col">
@@ -47,7 +48,7 @@ export default function RightPanel({ plantsForChart = [], onAddToWishlist, onBuy
           <div className="relative z-10 flex flex-col gap-3 px-4 py-4 overflow-y-auto scrollbar-none h-full">
             <WeatherWidget weather={weather} />
             <div className="flex-1" />
-            <CareChartWidget weekData={weekData} />
+            <CareHeatmapWidget data={heatmapData} />
             <ShopWidget onAddToWishlist={onAddToWishlist} onBuy={onBuy} />
           </div>
         </>
