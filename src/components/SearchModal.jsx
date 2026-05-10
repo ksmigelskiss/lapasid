@@ -393,16 +393,17 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       transition={{ type: 'spring', damping: 32, stiffness: 320 }}
       style={{ touchAction: 'pan-y' }}
     >
-      {/* Header */}
+      {/* Header — X close top-right (suvienodintas su kitais top-level modal'ais) */}
       <div className="safe-top" />
       <div className="flex items-center gap-3 px-4 py-3 border-b border-warm-border">
+        <h2 className="text-base font-semibold text-gray-900 flex-1">Rasti augalą</h2>
         <button
           onClick={onClose}
-          className="w-9 h-9 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-600"
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
+          aria-label="Uždaryti"
         >
-          <ArrowLeft size={18} />
+          <X size={16} />
         </button>
-        <h2 className="text-base font-semibold text-gray-900">Rasti augalą</h2>
       </div>
 
       <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-none px-4 py-5 space-y-5">

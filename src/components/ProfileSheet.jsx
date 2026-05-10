@@ -261,8 +261,8 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
               <p className="font-semibold text-gray-900 truncate">{user?.displayName || 'Vartotojas'}</p>
               <p className="text-xs text-gray-400 truncate">{user?.email || ''}</p>
             </div>
-            <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-surface flex-shrink-0">
-              <X size={16} className="text-gray-400" />
+            <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors flex-shrink-0" aria-label="Uždaryti">
+              <X size={16} />
             </button>
           </div>
 

@@ -1227,7 +1227,8 @@ export default function PlantDetail({
               <div className="flex items-center gap-2">
                 <button
                   onClick={onClose}
-                  className="w-11 h-11 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+                  className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+                  aria-label="Uždaryti"
                 >
                   <X size={16} />
                 </button>
@@ -1312,7 +1313,8 @@ export default function PlantDetail({
               <div className="flex items-center gap-2">
                 <button
                   onClick={onClose}
-                  className="w-11 h-11 bg-white/60 rounded-full flex items-center justify-center text-gray-600"
+                  className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-700 transition-colors"
+                  aria-label="Uždaryti"
                 >
                   <X size={16} />
                 </button>
