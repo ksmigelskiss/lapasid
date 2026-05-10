@@ -726,7 +726,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
         {/* Care overview — slepiama care mode'e (vartotojas jau dirba su augalais tiesiogiai).
             onTap gauna (plant, list?) — list = sąrašas to skyrelio (pvz. wateringList),
             kuris perduodamas openCareInfo navigacijai per CareWateringSheet strėles. */}
-        {!careMode && <CareOverview plants={mainPlants} onTap={openCareInfo} />}
+        {!careMode && <CareOverview plants={mainPlants} onTap={openCareInfo} user={user} />}
 
         {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (

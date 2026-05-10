@@ -31,7 +31,23 @@ function Section({ bg, labelColor, chipBg, chipText, badgeColor, icon, label, pl
   )
 }
 
-export default function CareOverview({ plants, onTap, onWaterTap, defaultOpen = false }) {
+// „Labas rytas / dienai / vakaras / nakt" pagal valandą.
+function timeGreeting() {
+  const h = new Date().getHours()
+  if (h >= 5  && h < 12) return 'Labas rytas'
+  if (h >= 12 && h < 18) return 'Laba diena'
+  if (h >= 18 && h < 23) return 'Labas vakaras'
+  return 'Labanakt'
+}
+
+// Vardas iš Google displayName (pirmas žodis), arba „svečias" jei viewer.
+function userFirstName(user) {
+  if (!user) return 'svečias'
+  const name = user.displayName?.trim() || user.email?.split('@')[0]
+  return name?.split(/\s+/)[0] || 'svečias'
+}
+
+export default function CareOverview({ plants, onTap, onWaterTap, defaultOpen = false, user }) {
   const [open, setOpen] = useState(defaultOpen)
 
   const wateringList = plants.filter(p => shouldShowWateringAlert(p))
@@ -43,8 +59,21 @@ export default function CareOverview({ plants, onTap, onWaterTap, defaultOpen = 
   const total = wateringList.length + fertList.length + wakingList.length + dormingList.length + approachList.length
   if (total === 0) return null
 
+  const greeting = `${timeGreeting()}, ${userFirstName(user)}`
+  // Subline parodo aktualų augalų darbų skaičių. Be augalų — santrauka null'u
+  // (`if (total === 0) return null`), todėl čia visada >0.
+  const subline = wateringList.length > 0
+    ? `${wateringList.length} augal${wateringList.length === 1 ? 'as' : (wateringList.length < 10 ? 'ai' : 'ų')} laukia laistymo`
+    : `${total} augal${total === 1 ? 'as' : 'ų'} laukia priežiūros`
+
   return (
     <div className="mb-4 bg-white rounded-2xl overflow-hidden shadow-ios-card">
+      {/* Greeting — designer'io „CareOverview" stilistika; visada matoma, nepriklauso nuo open state'o */}
+      <div className="px-4 pt-3 pb-2 border-b border-gray-100">
+        <h2 className="text-base font-bold text-gray-900 leading-tight">{greeting}</h2>
+        <p className="text-xs text-gray-500 mt-0.5">{subline}</p>
+      </div>
+
       <button
         onClick={() => setOpen(v => !v)}
         className="w-full flex items-center gap-2 px-4 py-3 active:bg-surface transition-colors"
