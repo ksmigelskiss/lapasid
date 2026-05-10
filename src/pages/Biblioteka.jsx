@@ -5,6 +5,7 @@ import PlantCard from '../components/PlantCard'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import CollectionChat from '../components/CollectionChat'
 import { buildLibrarySystemPrompt } from '../utils/collectionChatContext'
+import { useIsDesktop } from '../hooks/useIsDesktop'
 
 // Pagrindinis kategorijos filtras (mutually exclusive). `null` = visi.
 // Bibliotekoje rodomi tik `nori` ir `istorija` augalai (`auginama` lieka Dashboard'e).
@@ -21,6 +22,7 @@ function matchesQuery(plant, q) {
 }
 
 export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, onSaveToZinynas, onViewPlant, onRefresh }) {
+  const isDesktop = useIsDesktop()
   const [kategorija, setKategorija] = useState(null)        // null = visi
   const [showChat, setShowChat]     = useState(false)
   const [searching, setSearching]   = useState(false)
@@ -140,18 +142,22 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
 
   return (
     <div className="flex flex-col h-full bg-lib">
-      {/* Top row: filter | search inline (designer'io ekonomiškas top'as, be h1 +
-          augalų count'o — tos info dubliuoja header tabs su badge'u) */}
+      {/* Top row: desktop'e tik filter tabs (search perkelta į DesktopHeader toolbar'ą),
+          mobile'e — filter + search + camera vienoj eilutėj. */}
       <div className="px-5 pb-3 flex items-center gap-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
         {filterTabs}
-        {searchRow}
-        {!searching && (
-          <button
-            onClick={() => onSearchByCamera ? onSearchByCamera() : onSearch('')}
-            className="flex-shrink-0 w-9 h-9 rounded-2xl flex items-center justify-center bg-white border border-gray-200 text-gray-600 active:bg-surface transition-colors"
-          >
-            <Camera size={16} />
-          </button>
+        {!isDesktop && (
+          <>
+            {searchRow}
+            {!searching && (
+              <button
+                onClick={() => onSearchByCamera ? onSearchByCamera() : onSearch('')}
+                className="flex-shrink-0 w-9 h-9 rounded-2xl flex items-center justify-center bg-white border border-gray-200 text-gray-600 active:bg-surface transition-colors"
+              >
+                <Camera size={16} />
+              </button>
+            )}
+          </>
         )}
       </div>
 

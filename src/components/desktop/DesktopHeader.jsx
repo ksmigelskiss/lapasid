@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Bell, Leaf, ChevronDown, Check } from 'lucide-react'
+import { Bell, Leaf, Search } from 'lucide-react'
 import AccuracySprite, { accuracyLabel } from '../AccuracySprite'
 import { CareSummaryList } from '../CareOverview'
 
@@ -32,34 +32,25 @@ import { CareSummaryList } from '../CareOverview'
 export default function DesktopHeader({
   active, onTabChange, counts = {}, careConfidence = 0,
   careMode = false, onCareToggle,
-  collectionName = '', user, onProfileClick, role = 'owner',
-  allCollections = [], collectionId, onSwitchCollection,
+  user, onProfileClick, role = 'owner',
   careNotificationCount = 0, carePopupPlants = [], onCareTap,
+  onSearchClick,
 }) {
-  // Collection switcher dropdown state — atidaroma tik jei > 1 kolekcija su augalais
-  const [showSwitcher, setShowSwitcher] = useState(false)
-  const switcherRef = useRef(null)
-  const switchableCollections = allCollections.filter(c => c.hasPlants !== false)
-  const canSwitch = switchableCollections.length > 1
-
   // Bell popup state — atidaroma su pranešimų count
   const [showCarePopup, setShowCarePopup] = useState(false)
   const carePopupRef = useRef(null)
 
-  // Outside click — uždarom switcher arba care popup'ą (tas pats pattern abiem)
+  // Outside click — uždarom care popup'ą
   useEffect(() => {
-    if (!showSwitcher && !showCarePopup) return
+    if (!showCarePopup) return
     const handler = (e) => {
-      if (showSwitcher && switcherRef.current && !switcherRef.current.contains(e.target)) {
-        setShowSwitcher(false)
-      }
-      if (showCarePopup && carePopupRef.current && !carePopupRef.current.contains(e.target)) {
+      if (carePopupRef.current && !carePopupRef.current.contains(e.target)) {
         setShowCarePopup(false)
       }
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
-  }, [showSwitcher, showCarePopup])
+  }, [showCarePopup])
 
   const pct   = Math.round((careConfidence ?? 0) * 100)
   const label = accuracyLabel(pct)
@@ -116,8 +107,9 @@ export default function DesktopHeader({
   const initials = (user?.displayName || user?.email || '?')
     .split(/[\s@]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase()
 
-  // Kolekcijos pip — pirma raidė
-  const colPip = (collectionName || 'L')[0].toUpperCase()
+  // Priežiūra/Tikslumas pill rodomas tik Augalai tab'e (priežiūros prasmė susijusi
+  // su auginamais augalais; Bibliotekoje/Žinyne — neaktualu).
+  const showAccuracyButton = role !== 'viewer' && active === 'dashboard'
 
   return (
     <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-white/85 backdrop-blur border-b border-gray-200/80 z-30 relative">
@@ -129,8 +121,8 @@ export default function DesktopHeader({
           </div>
           <span className="text-[19px] font-bold text-sage-700 tracking-tight">LapasID</span>
         </div>
-        <div className="w-px h-5 bg-gray-300/60" />
-        {role !== 'viewer' && (
+        {showAccuracyButton && <div className="w-px h-5 bg-gray-300/60" />}
+        {showAccuracyButton && (
           <button
             onClick={onCareToggle}
             className={`h-10 inline-flex items-stretch rounded-full overflow-hidden transition-all active:scale-[0.97] ${wrapperCls}`}
@@ -179,54 +171,19 @@ export default function DesktopHeader({
         })}
       </nav>
 
-      {/* Profile cluster: collection switcher + bell + avatar */}
+      {/* Profile cluster: search + bell + avatar.
+          Kolekcijų pasirinkimo logika perkelta į ProfileSheet (avatar trigger),
+          kad toolbar turėtų vietos search mygtukui. */}
       <div className="flex items-center gap-2 flex-shrink-0">
         {role !== 'viewer' && (
-          <div className="relative" ref={switcherRef}>
-            {canSwitch ? (
-              <button
-                onClick={() => setShowSwitcher(v => !v)}
-                className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-gray-900/[0.05] transition-colors"
-                title="Pakeisti kolekciją"
-              >
-                <span className="w-6 h-6 rounded-full bg-sage-100 text-sage-700 inline-flex items-center justify-center text-[11px] font-bold">
-                  {colPip}
-                </span>
-                <span className="text-sm font-semibold text-gray-900 tracking-tight">{collectionName}</span>
-                <ChevronDown size={11} className={`text-gray-400 transition-transform ${showSwitcher ? 'rotate-180' : ''}`} />
-              </button>
-            ) : (
-              // Tik viena kolekcija — statiškas display, neclickinama
-              <div className="inline-flex items-center gap-2 px-2.5 py-1.5">
-                <span className="w-6 h-6 rounded-full bg-sage-100 text-sage-700 inline-flex items-center justify-center text-[11px] font-bold">
-                  {colPip}
-                </span>
-                <span className="text-sm font-semibold text-gray-900 tracking-tight">{collectionName}</span>
-              </div>
-            )}
-
-            {/* Switcher dropdown — pasirinkimas tarp kolekcijų */}
-            {showSwitcher && canSwitch && (
-              <div className="absolute top-full right-0 mt-1.5 bg-white rounded-2xl shadow-[0_8px_32px_rgba(20,40,30,0.12)] border border-gray-100 z-50 min-w-[220px] overflow-hidden">
-                {switchableCollections.map(c => (
-                  <button
-                    key={c.id}
-                    onClick={() => { onSwitchCollection?.(c.id); setShowSwitcher(false) }}
-                    className={`w-full flex items-center gap-2.5 px-4 py-3 text-left text-sm transition-colors ${
-                      c.id === collectionId
-                        ? 'bg-sage-50 font-semibold text-sage-700'
-                        : 'text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    {c.id === collectionId
-                      ? <Check size={14} className="text-sage-500 flex-shrink-0" />
-                      : <span className="w-[14px] flex-shrink-0" />}
-                    <span>{c.name}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <button
+            onClick={onSearchClick}
+            className="inline-flex items-center gap-2 h-9 px-3 rounded-lg hover:bg-gray-900/[0.05] transition-colors text-gray-600"
+            title="Ieškoti augalo"
+          >
+            <Search size={16} />
+            <span className="text-sm font-medium">Ieškoti</span>
+          </button>
         )}
         {/* Notifications bell — atidaro priežiūros santrauką su pranešimų count badge */}
         <div className="relative" ref={carePopupRef}>

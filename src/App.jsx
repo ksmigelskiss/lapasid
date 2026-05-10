@@ -358,16 +358,13 @@ export default function App() {
       careConfidence={dashCareConfidence}
       careMode={dashCareMode}
       onCareToggle={() => dashboardRef.current?.toggleCareMode()}
-      collectionName={collectionName}
       user={user}
       onProfileClick={() => setShowDesktopProfile(true)}
       role={role}
-      allCollections={allCollections}
-      collectionId={collectionId}
-      onSwitchCollection={switchCollection}
       careNotificationCount={careNotificationCount}
       carePopupPlants={carePopupPlants}
       onCareTap={handleCarePopupTap}
+      onSearchClick={() => { setSearchAutoCamera(false); setSearchInitialQuery(''); setShowSearch(true) }}
     />
   ) : null
 

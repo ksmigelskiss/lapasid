@@ -659,17 +659,10 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
 
         return (
           <>
-            {/* Desktop: greeting kairėje + search inline dešinėje, tos pačios eilutės flex */}
+            {/* Desktop: tik greeting full-width (search perkelta į DesktopHeader toolbar'ą) */}
             {hideInnerHeader && (
-              <div className="px-5 pt-4 pb-3 flex items-end justify-between gap-6">
-                <div className="flex-shrink min-w-0">
-                  <CareOverview plants={mainPlants} user={user} mode="greeting" bigGreeting />
-                </div>
-                {searchRow && (
-                  <div className="flex-1 max-w-[440px] flex gap-2 items-stretch">
-                    {searchRow}
-                  </div>
-                )}
+              <div className="px-5 pt-4 pb-3">
+                <CareOverview plants={mainPlants} user={user} mode="greeting" bigGreeting />
               </div>
             )}
 
