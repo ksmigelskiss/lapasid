@@ -175,7 +175,7 @@ export default function CareOverview({
           // kai viewport siauras (~lg breakpoint).
           <div className="flex items-baseline gap-x-4 gap-y-1 flex-wrap">
             <h1 className="text-[28px] sm:text-[32px] font-extrabold text-gray-950 leading-tight tracking-tight">{greeting}</h1>
-            <p className="text-sm text-gray-500">{subline}</p>
+            <p className="ml-auto text-sm text-gray-500">{subline}</p>
           </div>
         ) : (
           <>
