@@ -92,12 +92,26 @@ export default function App() {
   const detailForRender = lastDetailRef.current
 
   const setTabAndMount = (key) => {
+    // Tab switch'inant — uždarom bet kokį atidarytą modal'ą (pereinam į kitą view).
+    if (isDesktop) {
+      setDetailPlant(null)
+      setShowSearch(false)
+      setShowDesktopProfile(false)
+      dashboardRef.current?.closeCareInfo?.()
+    }
     setMountedTabs(prev => new Set([...prev, key]))
     setTab(key)
   }
 
-  const openDetail      = (plant, section, scrollToCare = false) => {
+  const openDetail = (plant, section, scrollToCare = false) => {
     if (plant.image) new Image().src = plant.image
+    // Replace pattern — uždarom esamus desktop modal'us, kad panel'ėje
+    // PlantDetail būtų vienintelis aktyvus view'as.
+    if (isDesktop) {
+      setShowSearch(false)
+      setShowDesktopProfile(false)
+      dashboardRef.current?.closeCareInfo?.()
+    }
     setDetailPlant({ plant, section, scrollToCare })
   }
   const closeDetail     = () => setDetailPlant(null)
@@ -233,13 +247,24 @@ export default function App() {
     [dashboard]
   )
   const careNotificationCount = useCareLists(carePopupPlants).total
+
+  // Replace pattern desktop'e: bet kuris top-level modal'as uždaro kitus,
+  // kad panel'ėje vienu metu būtų tik VIENAS view'as.
+  const closeAllDesktopModals = useCallback(() => {
+    setDetailPlant(null)
+    setShowSearch(false)
+    setShowDesktopProfile(false)
+    dashboardRef.current?.closeCareInfo?.()
+  }, [])
+
   const handleCarePopupTap = useCallback((plant, list) => {
+    closeAllDesktopModals()
     dashboardRef.current?.openCareInfo(plant, list)
     if (tab !== 'dashboard') {
       setMountedTabs(prev => new Set([...prev, 'dashboard']))
       setTab('dashboard')
     }
-  }, [tab])
+  }, [tab, closeAllDesktopModals])
 
   // ── Auth gate ─────────────────────────────────────────────────
   if (authLoading) {
@@ -359,12 +384,12 @@ export default function App() {
       careMode={dashCareMode}
       onCareToggle={() => dashboardRef.current?.toggleCareMode()}
       user={user}
-      onProfileClick={() => setShowDesktopProfile(true)}
+      onProfileClick={() => { closeAllDesktopModals(); setShowDesktopProfile(true) }}
       role={role}
       careNotificationCount={careNotificationCount}
       carePopupPlants={carePopupPlants}
       onCareTap={handleCarePopupTap}
-      onSearchClick={() => { setSearchAutoCamera(false); setSearchInitialQuery(''); setShowSearch(true) }}
+      onSearchClick={() => { closeAllDesktopModals(); setSearchAutoCamera(false); setSearchInitialQuery(''); setShowSearch(true) }}
     />
   ) : null
 

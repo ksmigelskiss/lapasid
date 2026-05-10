@@ -218,6 +218,10 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
       setCareInfoPlantId(plant.id)
       setCareInfoList(list ? list.map(p => p.id) : null)
     },
+    closeCareInfo: () => {
+      setCareInfoPlantId(null)
+      setCareInfoList(null)
+    },
   }), [])
 
   // CareWateringSheet: derived state ir navigacijos handler'iai
