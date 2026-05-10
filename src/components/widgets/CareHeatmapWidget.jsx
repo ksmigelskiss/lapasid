@@ -6,23 +6,28 @@
  *          iš utils/careWeekStats.js aggregateCareGrid(plants, weeks)
  *
  * Spalvų logika:
- *   - Tręšimas (bet kokia diena): solid amber-400 (tręšimas wins, nes rečiau)
- *   - Laistymas (intensyvumas):
+ *   - Tręšimas (bet kokia diena): solid amber-400 (laimi prieš laist, retas)
+ *   - Laistymas intensyvumas:
  *       1     → sky-100
  *       2-3   → sky-300
  *       4-5   → sky-500
  *       6+    → sky-700
- *   - 0 veiksmų: gray-200/40
+ *   - 0 veiksmų: gray-100 (matomas grid struktūra)
  *   - Šiandien: sage-700 ring outline
- *   - Future: transparent (savaitė virš šios)
+ *   - Future: visai NErenderinami (clean truncate ties šiandien)
+ *
+ * Visual papildomai: vertikalūs divider'iai tarp savaičių, kur prasideda
+ * naujas mėnuo (sinchronizuotas su mėnesio label'iais virš grid'o).
  */
 
-const DAY_LABELS = ['P', 'A', 'T', 'K', 'P', 'Š', 'S']
+const DAY_LABELS = ['Pi', 'An', 'Tr', 'Ke', 'Pe', 'Še', 'Se']
+const CELL_PX    = 15
+const GAP_PX     = 3
+const COL_PX     = CELL_PX + GAP_PX // 18px
 
 function cellColor(day) {
-  if (day.isFuture) return 'bg-transparent'
   if (day.fertilizing > 0) return 'bg-amber-400'
-  if (day.watering === 0) return 'bg-gray-200/40'
+  if (day.watering === 0) return 'bg-gray-100'
   if (day.watering <= 1)  return 'bg-sky-100'
   if (day.watering <= 3)  return 'bg-sky-300'
   if (day.watering <= 5)  return 'bg-sky-500'
@@ -39,6 +44,23 @@ function cellTooltip(day) {
 export default function CareHeatmapWidget({ data }) {
   if (!data) return null
   const { grid, monthMarkers } = data
+
+  // Bendri count'ai apatiniam summary: reikia praeit visas dienas (be future)
+  let totalWater = 0
+  let totalFert = 0
+  for (const week of grid) {
+    for (const day of week) {
+      if (day.isFuture) continue
+      totalWater += day.watering
+      totalFert += day.fertilizing
+    }
+  }
+
+  // Mėnesio divider'iai — visi marker'iai išskyrus weekIndex=0 (pati pradžia
+  // nereikalinga — tas tiesiog pirmas matomas mėnuo).
+  const dividerWeekIdxs = new Set(
+    monthMarkers.filter(m => m.weekIndex > 0).map(m => m.weekIndex)
+  )
 
   return (
     <div className="bg-white/55 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40 px-4 py-3.5">
@@ -58,50 +80,77 @@ export default function CareHeatmapWidget({ data }) {
       </div>
 
       {/* Mėnesio žymekliai virš grid'o */}
-      <div className="flex pl-5 pb-1 text-[9.5px] font-semibold text-gray-400 uppercase tracking-wider relative h-3.5">
+      <div className="flex pl-7 pb-1 text-[9.5px] font-semibold text-gray-400 uppercase tracking-wider relative h-3.5">
         {monthMarkers.map(m => (
           <span
             key={`${m.weekIndex}-${m.label}`}
             className="absolute"
-            // weekIndex * (cellW + gap) — width parametrai apačioj
-            style={{ left: `${m.weekIndex * 18}px` }}
+            style={{ left: `${m.weekIndex * COL_PX}px` }}
           >
             {m.label}
           </span>
         ))}
       </div>
 
-      {/* Grid: kairėj day labels (P A T K P Š S), dešinėj 8 savaičių stulpeliai */}
+      {/* Grid: kairėj day labels, dešinėj 8 savaičių stulpeliai su divider'iais */}
       <div className="flex gap-1.5">
-        {/* Day labels column */}
+        {/* Day labels (visi 7 matomi, 2-letter abbr — Pi, An, Tr, Ke, Pe, Še, Se) */}
         <div className="flex flex-col gap-[3px] pt-[1px]">
           {DAY_LABELS.map((label, i) => (
             <span
               key={i}
-              className="text-[9px] font-medium text-gray-400 leading-none w-3 h-[15px] flex items-center"
+              className="text-[9px] font-medium text-gray-400 leading-none w-4 h-[15px] flex items-center"
             >
-              {/* Show only Mon, Wed, Fri (kas antrą), kad netilptų pernelyg arti */}
-              {i % 2 === 0 ? label : ''}
+              {label}
             </span>
           ))}
         </div>
 
-        {/* Heatmap grid — 8 savaičių stulpeliai */}
-        <div className="flex gap-[3px]">
-          {grid.map((week, wi) => (
-            <div key={wi} className="flex flex-col gap-[3px]">
-              {week.map(day => (
-                <div
-                  key={day.dateISO}
-                  title={cellTooltip(day)}
-                  className={`w-[15px] h-[15px] rounded-[3px] ${cellColor(day)} ${
-                    day.isToday ? 'ring-[1.5px] ring-sage-700 ring-offset-0' : ''
-                  }`}
-                />
-              ))}
-            </div>
-          ))}
+        {/* Heatmap grid — 8 savaičių stulpeliai su mėnesio divider'iais */}
+        <div className="flex gap-[3px] relative">
+          {grid.map((week, wi) => {
+            const isMonthDivider = dividerWeekIdxs.has(wi)
+            return (
+              <div key={wi} className="relative flex flex-col gap-[3px]">
+                {/* Vertikalus divider — plonas linijos virš -gap pozicijoj */}
+                {isMonthDivider && (
+                  <div
+                    className="absolute top-0 bottom-0 w-px bg-gray-300/70"
+                    style={{ left: '-2px' }}
+                  />
+                )}
+                {week.map(day =>
+                  day.isFuture ? (
+                    // Future — nerenderinam (placeholder dydis išlaikomas div'u
+                    // be content'o, kad savaitės grid'as nesusispaustų)
+                    <div key={day.dateISO} className="w-[15px] h-[15px]" />
+                  ) : (
+                    <div
+                      key={day.dateISO}
+                      title={cellTooltip(day)}
+                      className={`w-[15px] h-[15px] rounded-[3px] ${cellColor(day)} ${
+                        day.isToday ? 'ring-[1.5px] ring-sage-700 ring-offset-0' : ''
+                      }`}
+                    />
+                  )
+                )}
+              </div>
+            )
+          })}
         </div>
+      </div>
+
+      {/* Total summary — kontekstas */}
+      <div className="flex items-center justify-between text-[10.5px] text-gray-500 mt-3 pt-2 border-t border-gray-200/60">
+        <span>Iš viso (8 sav.):</span>
+        <span className="inline-flex items-center gap-2 font-semibold">
+          <span className="inline-flex items-center gap-1 text-sky-700 tabular-nums">
+            <span className="w-2 h-2 rounded-sm bg-sky-400" />{totalWater}
+          </span>
+          <span className="inline-flex items-center gap-1 text-amber-700 tabular-nums">
+            <span className="w-2 h-2 rounded-sm bg-amber-400" />{totalFert}
+          </span>
+        </span>
       </div>
     </div>
   )
