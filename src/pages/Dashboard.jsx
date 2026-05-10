@@ -1029,6 +1029,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
             onSaveToZinynas={onSaveToZinynas}
             plants={plants}
             onViewPlant={onViewPlant}
+            desktopPopover={hideInnerHeader}
           />
         )}
       </AnimatePresence>

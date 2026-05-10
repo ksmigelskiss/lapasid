@@ -245,6 +245,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
             onSaveToZinynas={onSaveToZinynas}
             plants={plants}
             onViewPlant={onViewPlant}
+            desktopPopover={isDesktop}
           />
         )}
       </AnimatePresence>

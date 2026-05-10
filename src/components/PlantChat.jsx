@@ -12,7 +12,7 @@ const MAX_STORED = 40
 
 const DEFAULT_HEIGHT = '62dvh'
 
-export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSaveToZinynas, initialQuery }) {
+export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSaveToZinynas, initialQuery, desktopPopover = false }) {
   const { messages, streaming, streamText, send, paywallOpen, paywallLimitType, closePaywall } = useChatStream({
     initialMessages: plant.chat ?? [],
     maxTokens:       600,
@@ -49,6 +49,22 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
     return () => vv.removeEventListener('resize', update)
   }, [])
 
+  // Popover mode (desktop): ESC + outside click uždaro
+  const popoverRef = useRef(null)
+  useEffect(() => {
+    if (!desktopPopover) return
+    const escHandler = (e) => { if (e.key === 'Escape') onClose?.() }
+    const clickHandler = (e) => {
+      if (popoverRef.current && !popoverRef.current.contains(e.target)) onClose?.()
+    }
+    window.addEventListener('keydown', escHandler)
+    document.addEventListener('mousedown', clickHandler)
+    return () => {
+      window.removeEventListener('keydown', escHandler)
+      document.removeEventListener('mousedown', clickHandler)
+    }
+  }, [desktopPopover, onClose])
+
   const handleSend = () => {
     const text = input.trim()
     if (!text && !pendingImage) return
@@ -57,28 +73,44 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
     send(text, buildChatSystemPrompt(plant), pendingImage)
   }
 
+  // Wrapper struktūra: mobile fixed + slide-up; desktop popover bottom-right
+  const wrapperCls = desktopPopover
+    ? 'absolute bottom-24 right-4 z-[70] w-[380px]'
+    : 'fixed inset-0 z-[70] flex items-end justify-center pointer-events-none'
+
   return (
     <>
-    <div className="fixed inset-0 z-[70] flex items-end justify-center pointer-events-none">
-      {/* Tap-outside closes */}
-      <div
-        className="absolute inset-0 pointer-events-auto"
-        onClick={onClose}
-      />
+    <div className={wrapperCls}>
+      {!desktopPopover && (
+        <div className="absolute inset-0 pointer-events-auto" onClick={onClose} />
+      )}
 
       <motion.div
-        className="relative w-full max-w-[430px] bg-app rounded-t-4xl flex flex-col shadow-2xl pointer-events-auto"
-        style={{ height: panelHeight, transition: 'height 0.2s ease' }}
-        initial={{ y: '100%' }}
-        animate={{ y: 0 }}
-        exit={{ y: '100%' }}
-        transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+        ref={popoverRef}
+        className={desktopPopover
+          ? "relative w-full bg-app rounded-2xl flex flex-col shadow-[0_20px_50px_rgba(20,40,30,0.25)] border border-gray-200 overflow-hidden"
+          : "relative w-full max-w-[430px] bg-app rounded-t-4xl flex flex-col shadow-2xl pointer-events-auto"}
+        {...(desktopPopover ? {
+          initial: { opacity: 0, scale: 0.85, y: 20 },
+          animate: { opacity: 1, scale: 1, y: 0 },
+          exit:    { opacity: 0, scale: 0.85, y: 20 },
+          transition: { type: 'spring', damping: 24, stiffness: 320 },
+          style: { height: '500px', maxHeight: 'calc(100vh - 200px)', transformOrigin: 'bottom right' },
+        } : {
+          initial: { y: '100%' },
+          animate: { y: 0 },
+          exit:    { y: '100%' },
+          transition: { type: 'spring', damping: 32, stiffness: 320 },
+          style: { height: panelHeight, transition: 'height 0.2s ease' },
+        })}
         onClick={e => e.stopPropagation()}
       >
-        {/* Handle */}
-        <div className="flex justify-center pt-2.5 pb-1 flex-shrink-0">
-          <div className="w-10 h-1 bg-gray-200 rounded-full" />
-        </div>
+        {/* Drag handle — tik mobile */}
+        {!desktopPopover && (
+          <div className="flex justify-center pt-2.5 pb-1 flex-shrink-0">
+            <div className="w-10 h-1 bg-gray-200 rounded-full" />
+          </div>
+        )}
 
         {/* Header */}
         <div className="flex items-center gap-3 px-4 pb-3 pt-1 border-b border-warm-border flex-shrink-0">

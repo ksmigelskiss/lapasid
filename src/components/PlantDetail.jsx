@@ -1508,6 +1508,7 @@ export default function PlantDetail({
               const existing = loadNotes(plant)
               onUzrasaiSave?.(plant.id, [newNote, ...existing])
             }}
+            desktopPopover={useDesktopPanel}
           />
         )}
       </AnimatePresence>
