@@ -105,6 +105,12 @@ export default function App() {
 
   const openDetail = (plant, section, scrollToCare = false) => {
     if (plant.image) new Image().src = plant.image
+    // Toggle pattern desktop'e: paspaudus tą patį augalą antrą kartą — uždarom
+    // (pirmas atidaro, antras uždaro). Kitas augalas — Replace.
+    if (isDesktop && detailPlant?.plant?.id === plant.id) {
+      setDetailPlant(null)
+      return
+    }
     // Replace pattern — uždarom esamus desktop modal'us, kad panel'ėje
     // PlantDetail būtų vienintelis aktyvus view'as.
     if (isDesktop) {
@@ -381,12 +387,22 @@ export default function App() {
       onTabChange={setTabAndMount}
       counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }}
       user={user}
-      onProfileClick={() => { closeAllDesktopModals(); setShowDesktopProfile(true) }}
+      onProfileClick={() => {
+        if (showDesktopProfile) { setShowDesktopProfile(false); return }
+        closeAllDesktopModals()
+        setShowDesktopProfile(true)
+      }}
       role={role}
       careNotificationCount={careNotificationCount}
       carePopupPlants={carePopupPlants}
       onCareTap={handleCarePopupTap}
-      onSearchClick={() => { closeAllDesktopModals(); setSearchAutoCamera(false); setSearchInitialQuery(''); setShowSearch(true) }}
+      onSearchClick={() => {
+        if (showSearch) { setShowSearch(false); return }
+        closeAllDesktopModals()
+        setSearchAutoCamera(false)
+        setSearchInitialQuery('')
+        setShowSearch(true)
+      }}
     />
   ) : null
 

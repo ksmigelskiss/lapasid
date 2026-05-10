@@ -214,9 +214,18 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
       setCareMode(v => !v)
       setCareChecked(new Set())
     },
+    // Toggle: jei tas pats plant.id jau atvertas — uždarom (pirmas atidaro,
+    // antras uždaro). Naudojam funkcinį setState, kad gauti šviežią state'ą
+    // (useImperativeHandle deps yra [] → closure'as nebūtų aktualus).
     openCareInfo: (plant, list) => {
-      setCareInfoPlantId(plant.id)
-      setCareInfoList(list ? list.map(p => p.id) : null)
+      setCareInfoPlantId(curr => {
+        if (curr === plant.id) {
+          setCareInfoList(null)
+          return null
+        }
+        setCareInfoList(list ? list.map(p => p.id) : null)
+        return plant.id
+      })
     },
     closeCareInfo: () => {
       setCareInfoPlantId(null)

@@ -1221,7 +1221,7 @@ export default function PlantDetail({
                 <div className="min-w-0">
                   {section === 'auginama' && zones.length > 0 && (
                     <button
-                      onClick={() => setShowZonePicker(true)}
+                      onClick={() => setShowZonePicker(v => !v)}
                       className="inline-flex items-center gap-1 mb-1 px-2 py-0.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
                     >
                       <MapPin size={9} className="text-white/80" />
@@ -1311,7 +1311,7 @@ export default function PlantDetail({
                     {/* Zone chip — toks pat patternas kaip foto hero (clickable, ZonePicker trigger) */}
                     {section === 'auginama' && zones.length > 0 && (
                       <button
-                        onClick={() => setShowZonePicker(true)}
+                        onClick={() => setShowZonePicker(v => !v)}
                         className="inline-flex items-center gap-1 mb-1 px-2 py-0.5 rounded-lg bg-sage-100 hover:bg-sage-200 transition-colors"
                       >
                         <MapPin size={9} className="text-sage-600" />
