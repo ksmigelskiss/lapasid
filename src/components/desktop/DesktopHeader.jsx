@@ -36,19 +36,37 @@ export default function DesktopHeader({
   const label = accuracyLabel(pct)
   const stage = pct < 25 ? 0 : pct < 50 ? 1 : pct < 75 ? 2 : 3
 
-  // Du atskiri pill'ai (designer'io spec): „Priežiūra" (toggle, žalias active'as)
-  // ir „Tikslumas N%" (informacinis, stage spalva). Vizualiai liečiasi, bet
-  // funkciškai abu kartu yra careMode toggle.
-  const prieziuraPill = careMode
-    ? 'bg-sage-700 text-white shadow-[0_4px_12px_rgba(46,125,82,0.25)]'
-    : 'bg-sage-50 text-sage-700 hover:bg-sage-100'
+  // Vienas pill button su dviem vidinėm sekcijom (designer'io spec):
+  //   acc-cta  — kairė: sprite + „Priežiūra" (sage)
+  //   acc-meta — dešinė: „Tikslumas N%" (stage spalva)
+  // Outer wrapper su rounded-full + overflow-hidden, kad inner sekcijos
+  // gražiai pilnai užimtų pill formą.
 
-  const tikslumasPill = careMode
-    ? 'bg-white/20 text-white'
-    : stage === 0 ? 'bg-gray-100 text-gray-600'
+  // Outer wrapper — care mode'e tampa tamsiai sage su shadow'u, inactive'e plokščia
+  const wrapperCls = careMode
+    ? 'bg-sage-700 shadow-[0_4px_14px_rgba(46,125,82,0.32)]'
+    : 'shadow-[0_1px_2px_rgba(20,40,30,0.04),0_1px_3px_rgba(20,40,30,0.04)]'
+
+  // Acc-cta (Priežiūra) — visada sage, active'e tampa baltas su sage tekstu + inset border
+  const ctaCls = careMode
+    ? 'bg-white text-sage-700 ring-2 ring-inset ring-sage-700'
+    : 'bg-sage-50 text-sage-700'
+
+  // Acc-meta (Tikslumas N%) — stage spalva pagal confidence
+  const metaCls = careMode
+    ? 'bg-white/15 text-white'
+    : stage === 0 ? 'bg-gray-100 text-gray-700'
     : stage === 1 ? 'bg-amber-100 text-amber-800'
     : stage === 2 ? 'bg-sage-100 text-sage-700'
     : 'bg-sage-200 text-sage-800'
+
+  // Pct badge'as acc-meta viduj — dar tamsesnis stage tone
+  const pctCls = careMode
+    ? 'bg-white/25 text-white'
+    : stage === 0 ? 'bg-gray-200 text-gray-800'
+    : stage === 1 ? 'bg-amber-200/70 text-amber-900'
+    : stage === 2 ? 'bg-sage-200 text-sage-800'
+    : 'bg-sage-300/70 text-sage-900'
 
   const tabs = [
     { id: 'dashboard',  label: 'Augalai',    badge: counts.dashboard },
@@ -76,26 +94,24 @@ export default function DesktopHeader({
         </div>
         <div className="w-px h-5 bg-gray-300/60" />
         {role !== 'viewer' && (
-          <div className="inline-flex items-center gap-1.5">
-            <button
-              onClick={onCareToggle}
-              className={`inline-flex items-center gap-2 pl-2.5 pr-3.5 py-1.5 rounded-full transition-all active:scale-[0.97] ${prieziuraPill}`}
-              title={careMode ? 'Išeiti iš priežiūros režimo' : 'Priežiūra · prognozės tikslumas auga, kai laiku atliktas laistymas'}
-            >
+          <button
+            onClick={onCareToggle}
+            className={`inline-flex items-stretch rounded-full overflow-hidden transition-all active:scale-[0.97] ${wrapperCls}`}
+            title={careMode ? 'Išeiti iš priežiūros režimo' : `Priežiūra · ${label} ${pct}%`}
+          >
+            {/* acc-cta — Priežiūra (kairė) */}
+            <span className={`inline-flex items-center gap-2 pl-2.5 pr-3.5 py-1.5 rounded-full ${ctaCls}`}>
               <AccuracySprite pct={pct} size={20} />
-              <span className="text-[13px] font-semibold leading-none">Priežiūra</span>
-            </button>
-            <button
-              onClick={onCareToggle}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all active:scale-[0.97] ${tikslumasPill}`}
-              title={`Tikslumas — ${label}`}
-            >
-              <span className="text-[13px] font-semibold leading-none">Tikslumas</span>
-              <span className={`text-[12px] font-bold leading-none tabular-nums`}>
+              <span className="text-[13.5px] font-bold leading-none tracking-tight">Priežiūra</span>
+            </span>
+            {/* acc-meta — Tikslumas N% (dešinė) */}
+            <span className={`inline-flex items-center gap-1.5 pl-3 pr-3 py-1.5 ${metaCls}`}>
+              <span className="text-[12.5px] font-semibold leading-none">Tikslumas</span>
+              <span className={`text-[11px] font-bold leading-none tabular-nums px-1.5 py-0.5 rounded-full ${pctCls}`}>
                 {pct}%
               </span>
-            </button>
-          </div>
+            </span>
+          </button>
         )}
       </div>
 
