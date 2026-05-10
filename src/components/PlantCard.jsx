@@ -148,7 +148,7 @@ const PlantCard = memo(function PlantCard({
   return (
     <>
     <div
-      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card active:scale-95 transition-transform duration-100 cursor-pointer ${doneToday ? 'opacity-50' : ''}`}
+      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card transition-all duration-200 cursor-pointer active:scale-[0.97] lg:hover:-translate-y-0.5 lg:hover:shadow-ios-lg ${doneToday ? 'opacity-50' : ''}`}
       onClick={handleClick}
       onPointerDown={careMode ? onPressStart : undefined}
       onPointerMove={careMode ? onPressMove : undefined}
