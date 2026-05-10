@@ -52,7 +52,7 @@ export default function DesktopHeader({
   // (kaip tabs nav), active'e solid sage-700 su didesnio shadow'u.
   const wrapperCls = careMode
     ? 'bg-sage-700 shadow-[0_4px_14px_rgba(46,125,82,0.32)]'
-    : 'bg-gray-900/[0.04] shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
+    : 'bg-white shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
 
   // Acc-cta (Priežiūra) — kairė sekcija
   const ctaCls = careMode
