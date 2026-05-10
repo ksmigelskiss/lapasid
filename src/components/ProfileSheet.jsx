@@ -254,6 +254,50 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
             </button>
           </div>
 
+          {/* Kolekcijos — switcher kai > 1 (toolbar Stepono mygtuko pakaitalas).
+              Jei tik 1 — statiškai parodom dabartinę. */}
+          {(() => {
+            const switchable = allCollections.filter(c => c.hasPlants !== false)
+            if (switchable.length <= 1) {
+              const cur = allCollections.find(c => c.id === collectionId)
+              return cur ? (
+                <div className="bg-surface rounded-2xl px-4 py-3 mb-3 flex items-center gap-2.5">
+                  <span className="w-7 h-7 rounded-full bg-sage-100 text-sage-700 inline-flex items-center justify-center text-[12px] font-bold flex-shrink-0">
+                    {(cur.name || 'L')[0].toUpperCase()}
+                  </span>
+                  <span className="text-sm font-semibold text-gray-800 flex-1 truncate">{cur.name}</span>
+                </div>
+              ) : null
+            }
+            return (
+              <div className="bg-surface rounded-2xl px-4 py-3.5 mb-3">
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2.5">Kolekcijos</p>
+                <div className="space-y-1">
+                  {switchable.map(c => {
+                    const isActive = c.id === collectionId
+                    return (
+                      <button
+                        key={c.id}
+                        onClick={() => { onSwitchCollection?.(c.id); onClose?.() }}
+                        className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-xl text-left transition-colors ${
+                          isActive ? 'bg-sage-50' : 'active:bg-white hover:bg-white/60'
+                        }`}
+                      >
+                        <span className={`w-7 h-7 rounded-full inline-flex items-center justify-center text-[12px] font-bold flex-shrink-0 ${
+                          isActive ? 'bg-sage-500 text-white' : 'bg-sage-100 text-sage-700'
+                        }`}>
+                          {(c.name || 'L')[0].toUpperCase()}
+                        </span>
+                        <span className={`flex-1 text-sm truncate ${isActive ? 'font-semibold text-sage-700' : 'text-gray-800'}`}>{c.name}</span>
+                        {isActive && <Check size={15} className="text-sage-500 flex-shrink-0" />}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })()}
+
           {/* Nariai + prižiūrėtojų nuorodos — vienas sąrašas */}
           {hasPeople && (
             <div className="bg-surface rounded-2xl px-4 py-3.5 mb-3">
