@@ -68,32 +68,33 @@ export default function DesktopHeader({
   // Inner sekcijos (cta + meta) turi tik bg/text spalvas — JOKIO `rounded-*`,
   // kad outer pill'as būtų vientisas (overflow-hidden cut'ina inner kvadratus).
 
-  // Outer wrapper — tik shadow (joks ring/outline). Inactive'e bg-gray-900/[0.04]
-  // (kaip tabs nav), active'e solid sage-700 su didesnio shadow'u.
+  // OFF (inactive): kairė sekcija — visada solid dark sage; dešinė — stage spalva
+  // ON  (active careMode): visas pill solid sage-700, abi sekcijos white tekstu
+
   const wrapperCls = careMode
     ? 'bg-sage-700 shadow-[0_4px_14px_rgba(46,125,82,0.32)]'
-    : 'bg-white shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
+    : 'shadow-[0_1px_2px_rgba(20,40,30,0.06)]'
 
   // Acc-cta (Priežiūra) — kairė sekcija
   const ctaCls = careMode
     ? 'bg-transparent text-white'
-    : 'bg-transparent text-sage-700'
+    : 'bg-sage-700 text-white'
 
-  // Acc-meta (Tikslumas N%) — dešinė sekcija; subtle separator border-l (be ring)
+  // Acc-meta (Tikslumas N%) — dešinė sekcija (stage spalva inactive'e)
   const metaCls = careMode
     ? 'bg-white/12 text-white border-l border-white/15'
-    : stage === 0 ? 'bg-transparent text-gray-700 border-l border-gray-900/[0.06]'
-    : stage === 1 ? 'bg-transparent text-amber-800 border-l border-gray-900/[0.06]'
-    : stage === 2 ? 'bg-transparent text-sage-700 border-l border-gray-900/[0.06]'
-    : 'bg-transparent text-sage-800 border-l border-gray-900/[0.06]'
+    : stage === 0 ? 'bg-gray-100 text-gray-700'
+    : stage === 1 ? 'bg-amber-100 text-amber-800'
+    : stage === 2 ? 'bg-sage-50 text-sage-700'
+    : 'bg-sage-100 text-sage-800'
 
-  // Pct badge'as acc-meta viduj
+  // Pct badge'as acc-meta viduj — labiau saturated stage spalva
   const pctCls = careMode
     ? 'bg-white/25 text-white'
-    : stage === 0 ? 'bg-gray-200 text-gray-800'
-    : stage === 1 ? 'bg-amber-200/70 text-amber-900'
-    : stage === 2 ? 'bg-sage-200 text-sage-800'
-    : 'bg-sage-300/70 text-sage-900'
+    : stage === 0 ? 'bg-gray-200/80 text-gray-700'
+    : stage === 1 ? 'bg-amber-200/70 text-amber-800'
+    : stage === 2 ? 'bg-sage-100 text-sage-700'
+    : 'bg-sage-200/80 text-sage-800'
 
   const tabs = [
     { id: 'dashboard',  label: 'Augalai',    badge: counts.dashboard },
