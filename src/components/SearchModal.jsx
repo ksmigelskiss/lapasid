@@ -383,6 +383,19 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     ? plants.find(p => norm(p.lotyniskas) === norm(result.latinName))
     : null
 
+  // Local search: kol nėra AI result + nėra loading'o, filtruojam esamus
+  // augalus (kad vartotojas pirma rastų savus, o AI lookup'ą darytume tik jei
+  // tikrai naujo augalo ieško). Match'as per visus žinomus pavadinimus.
+  const localMatches = (() => {
+    const q = query.trim().toLowerCase()
+    if (!q || result || loading) return []
+    return plants.filter(p => {
+      const pool = [p.lietuviškas, p.lotyniskas, p.inatLtName,
+        ...(p.sinonimai ?? []), ...(p.englishNames ?? [])]
+      return pool.some(c => c && c.toLowerCase().includes(q))
+    }).slice(0, 8) // max 8 — kad nesusijungtų ilga lista
+  })()
+
   const tree = (
     <div className={useDesktopPanel ? "absolute inset-0 flex justify-center" : "fixed inset-0 z-50 flex justify-center"}>
     <motion.div
@@ -603,12 +616,71 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
           </motion.div>
         )}
 
-        {/* Empty state */}
-        {!result && !loading && !error && (
+        {/* Local matches — rodom kol nėra AI lookup'o (vartotojas turi galimybę
+            pirma rasti savus augalus, prieš einant ieškoti naujų internete). */}
+        {!result && !loading && !error && query.trim() && localMatches.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-1">
+              Tavo augalai ({localMatches.length})
+            </p>
+            <div className="space-y-1.5">
+              {localMatches.map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => onViewPlant?.(p)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 bg-white border border-gray-100 rounded-2xl text-left hover:bg-surface active:bg-surface-2 transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 bg-sage-50">
+                    {p.image ? (
+                      <img src={p.image} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-xl">{p.emoji ?? '🌿'}</div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 truncate">{p.lietuviškas}</p>
+                    <p className="text-xs text-gray-500 italic truncate">{p.lotyniskas}</p>
+                  </div>
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 ${
+                    p.kategorija === 'auginama' ? 'bg-sage-100 text-sage-700' :
+                    p.kategorija === 'nori' ? 'bg-blush-100 text-blush-700' :
+                    'bg-gray-100 text-gray-500'
+                  }`}>
+                    {p.kategorija === 'auginama' ? 'Auginu' : p.kategorija === 'nori' ? 'Noriu' : 'Istorija'}
+                  </span>
+                </button>
+              ))}
+            </div>
+            {/* CTA — eit ieškoti naujų augalų internete */}
+            <button
+              onClick={launchFullSearch}
+              className="w-full mt-2 py-3 rounded-2xl text-sm text-sage-700 font-semibold border border-dashed border-sage-300 hover:border-sage-400 hover:bg-sage-50 transition-colors"
+            >
+              Ieškoti naujų augalų: „{query}"
+            </button>
+          </div>
+        )}
+
+        {/* No local matches + query — siūlom AI lookup */}
+        {!result && !loading && !error && query.trim() && localMatches.length === 0 && (
+          <div className="text-center py-12 space-y-3">
+            <img src="/plant_pot.png" className="w-14 h-14 object-contain mx-auto opacity-60" alt="" />
+            <p className="text-sm text-gray-500">Tavo kolekcijoje neradome „{query}"</p>
+            <button
+              onClick={launchFullSearch}
+              className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white bg-sage-500 hover:bg-sage-600 transition-colors shadow-ios"
+            >
+              Ieškoti internete
+            </button>
+          </div>
+        )}
+
+        {/* Empty state — be query */}
+        {!result && !loading && !error && !query.trim() && (
           <div className="text-center py-16 space-y-3">
             <img src="/plant_pot.png" className="w-16 h-16 object-contain mx-auto animate-idle-float" alt="" />
-            <p className="text-sm text-gray-500">Įveskite augalo pavadinimą ir spauskite Enter</p>
-            <p className="text-xs text-gray-400">arba nufotografuokite augalą / etiketę</p>
+            <p className="text-sm text-gray-500">Įveskite augalo pavadinimą</p>
+            <p className="text-xs text-gray-400">paieška ras tavo augalus, arba galėsi ieškoti naujų internete</p>
           </div>
         )}
       </div>
