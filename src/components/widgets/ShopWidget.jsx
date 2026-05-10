@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { ChevronRight, Sparkles, Heart, ShoppingBag } from 'lucide-react'
+import { ChevronRight, Sparkles, Heart, ShoppingBag, ChevronDown } from 'lucide-react'
+import { useCollapsible } from '../../hooks/useCollapsible'
 
 /**
  * ShopWidget — demo „pasiūlymas iš tiekėjo" kortelė. Rodo augalų pasiūlymus,
@@ -114,35 +115,49 @@ function OfferCard({ offer, onAddToWishlist, onBuy }) {
 }
 
 export default function ShopWidget({ onAddToWishlist, onBuy }) {
-  // idx — pirmojo iš dviejų rodomų offer'ių indeksas. „Kitas >" advansuoja per 1.
-  // Wraps modulu LOCAL_OFFERS.length, kad cikliškai grįžtų prie pradžios.
+  const [collapsed, toggle] = useCollapsible('shop', false)
   const [idx, setIdx] = useState(0)
   const a = LOCAL_OFFERS[idx % LOCAL_OFFERS.length]
   const b = LOCAL_OFFERS[(idx + 1) % LOCAL_OFFERS.length]
-  const next = () => setIdx(i => (i + 1) % LOCAL_OFFERS.length)
+  const next = (e) => {
+    e.stopPropagation() // kad header click'as netrigerintų collapse
+    setIdx(i => (i + 1) % LOCAL_OFFERS.length)
+  }
 
   return (
     <div className="bg-white/55 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40 overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-2.5">
+      {/* Header — visada matomas, click toggleina collapse. „Kitas" mygtukas
+          stopProp'ina, kad nesutrigerintų collapse'o. */}
+      <button
+        onClick={toggle}
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/30 transition-colors"
+        aria-expanded={!collapsed}
+      >
         <p className="inline-flex items-center gap-1.5 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
           <Sparkles size={12} className="text-amber-500" />
           Pasiūlymai
         </p>
-        <button
-          onClick={next}
-          className="text-[11px] font-semibold text-sage-600 hover:text-sage-700 inline-flex items-center gap-0.5"
-          title="Sekantys pasiūlymai"
-        >
-          Kitas <ChevronRight size={12} />
-        </button>
-      </div>
+        <div className="inline-flex items-center gap-2.5">
+          {!collapsed && (
+            <span
+              onClick={next}
+              className="text-[11px] font-semibold text-sage-600 hover:text-sage-700 inline-flex items-center gap-0.5 cursor-pointer"
+              title="Sekantys pasiūlymai"
+            >
+              Kitas <ChevronRight size={12} />
+            </span>
+          )}
+          <ChevronDown size={14} className={`text-gray-400 transition-transform ${collapsed ? '' : 'rotate-180'}`} />
+        </div>
+      </button>
 
-      {/* 2-grid */}
-      <div className="grid grid-cols-2 gap-2 px-3 pb-3">
-        <OfferCard offer={a} onAddToWishlist={onAddToWishlist} onBuy={onBuy} />
-        <OfferCard offer={b} onAddToWishlist={onAddToWishlist} onBuy={onBuy} />
-      </div>
+      {/* 2-grid — slepiamas kai collapsed */}
+      {!collapsed && (
+        <div className="grid grid-cols-2 gap-2 px-3 pb-3">
+          <OfferCard offer={a} onAddToWishlist={onAddToWishlist} onBuy={onBuy} />
+          <OfferCard offer={b} onAddToWishlist={onAddToWishlist} onBuy={onBuy} />
+        </div>
+      )}
     </div>
   )
 }

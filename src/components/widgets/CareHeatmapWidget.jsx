@@ -1,3 +1,6 @@
+import { ChevronDown } from 'lucide-react'
+import { useCollapsible } from '../../hooks/useCollapsible'
+
 /**
  * CareHeatmapWidget — 2 mėn priežiūros heatmap'as (kalendorinis grid).
  *
@@ -42,6 +45,8 @@ function cellTooltip(day) {
 }
 
 export default function CareHeatmapWidget({ data }) {
+  const [collapsed, toggle] = useCollapsible('heatmap', false)
+
   if (!data) return null
   const { grid, monthMarkers } = data
 
@@ -63,21 +68,44 @@ export default function CareHeatmapWidget({ data }) {
   )
 
   return (
-    <div className="bg-white/55 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40 px-4 py-3.5">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-2">
+    <div className="bg-white/55 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40">
+      {/* Header — visada matomas, click toggleina collapse */}
+      <button
+        onClick={toggle}
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/30 transition-colors rounded-2xl"
+        aria-expanded={!collapsed}
+      >
         <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
           Priežiūros istorija
         </p>
-        <div className="flex items-center gap-2 text-[10.5px] text-gray-500">
-          <span className="inline-flex items-center gap-1">
-            <span className="w-2 h-2 rounded-sm bg-sky-400" />Laist.
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <span className="w-2 h-2 rounded-sm bg-amber-400" />Tręš.
-          </span>
+        <div className="flex items-center gap-2.5">
+          {collapsed ? (
+            // Collapsed — tik total skaičiai pakaitalui
+            <span className="inline-flex items-center gap-2 text-[10.5px] font-semibold">
+              <span className="inline-flex items-center gap-1 text-sky-700 tabular-nums">
+                <span className="w-2 h-2 rounded-sm bg-sky-400" />{totalWater}
+              </span>
+              <span className="inline-flex items-center gap-1 text-amber-700 tabular-nums">
+                <span className="w-2 h-2 rounded-sm bg-amber-400" />{totalFert}
+              </span>
+            </span>
+          ) : (
+            // Expanded — legenda
+            <div className="flex items-center gap-2 text-[10.5px] text-gray-500">
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2 h-2 rounded-sm bg-sky-400" />Laist.
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2 h-2 rounded-sm bg-amber-400" />Tręš.
+              </span>
+            </div>
+          )}
+          <ChevronDown size={14} className={`text-gray-400 transition-transform ${collapsed ? '' : 'rotate-180'}`} />
         </div>
-      </div>
+      </button>
+
+      {!collapsed && (
+        <div className="px-4 pb-3.5">
 
       {/* Mėnesio žymekliai virš grid'o */}
       <div className="flex pl-7 pb-1 text-[9.5px] font-semibold text-gray-400 uppercase tracking-wider relative h-3.5">
@@ -152,6 +180,8 @@ export default function CareHeatmapWidget({ data }) {
           </span>
         </span>
       </div>
+        </div>
+      )}
     </div>
   )
 }
