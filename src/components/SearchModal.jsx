@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useIsDesktop } from '../hooks/useIsDesktop'
+import { useDetailHost } from '../contexts/DetailHostContext'
 import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight } from 'lucide-react'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
@@ -205,6 +208,17 @@ async function enrich(parsed) {
 
 
 export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose, plants = [], onViewPlant, onPromote, onUpdatePlant, initialQuery = '', autoCamera = false }) {
+  // Desktop split panel: portaliuojam į RightPanel container'į.
+  const isDesktop = useIsDesktop()
+  const host = useDetailHost()
+  const useDesktopPanel = isDesktop && !!host?.container
+
+  useEffect(() => {
+    if (!useDesktopPanel || !host) return
+    host.open()
+    return () => host.close()
+  }, [useDesktopPanel]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const [query, setQuery]         = useState(initialQuery)
   const [loading, setLoading]     = useState(false)
   const [result, setResult]       = useState(null)
@@ -361,14 +375,16 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     ? plants.find(p => norm(p.lotyniskas) === norm(result.latinName))
     : null
 
-  return (
-    <div className="fixed inset-0 z-50 flex justify-center">
+  const tree = (
+    <div className={useDesktopPanel ? "absolute inset-0 flex justify-center" : "fixed inset-0 z-50 flex justify-center"}>
     <motion.div
-      className="w-full max-w-[430px] flex flex-col bg-app"
-      initial={{ x: '100%' }}
-      animate={{ x: 0 }}
-      exit={{ x: '100%' }}
-      transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+      className={useDesktopPanel ? "w-full h-full flex flex-col bg-app" : "w-full max-w-[430px] flex flex-col bg-app"}
+      {...(useDesktopPanel ? {} : {
+        initial: { x: '100%' },
+        animate: { x: 0 },
+        exit: { x: '100%' },
+        transition: { type: 'spring', damping: 32, stiffness: 320 },
+      })}
       style={{ touchAction: 'pan-y' }}
     >
       {/* Header */}
@@ -596,6 +612,9 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     <PaywallSheet open={paywallOpen} limitType={paywallLimitType} onClose={() => setPaywallOpen(false)} />
     </div>
   )
+
+  if (useDesktopPanel) return createPortal(tree, host.container)
+  return tree
 }
 
 // ── Full-screen Phase 2 loading overlay ──────────────────────────
