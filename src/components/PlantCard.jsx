@@ -97,6 +97,11 @@ const PlantCard = memo(function PlantCard({
   const fertLastDate = fertFC ? (plant.timeline ?? []).filter(e => e.type === 'fertilizing').sort((a,b) => new Date(b.date)-new Date(a.date))[0]?.date : null
   const fertDays    = fertLastDate ? daysSinceDate(fertLastDate) : null
 
+  // Designer'io glass-pill rodo „dienos iki kito veiksmo" countdown (abs reikšmė).
+  // null jei intervalas neskaičiuojamas.
+  const waterDaysUntil = waterFC?.daysUntil != null ? Math.abs(waterFC.daysUntil) : null
+  const fertDaysUntil  = fertFC?.daysUntil  != null ? Math.abs(fertFC.daysUntil)  : null
+
   const bgClass = section === 'history' ? 'bg-surface-2'
     : section === 'nori'    ? 'bg-blush-50'
     : 'bg-sage-50'
@@ -146,23 +151,28 @@ const PlantCard = memo(function PlantCard({
           <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 border-white/60 bg-transparent shadow-sm" />
         )}
 
-        {/* Forecast icons (auginama only) — always top-right */}
+        {/* Forecast glass pills (auginama only) — designer'io glass-pill stilius:
+            tamsus pusiau permatomas bg + blur, color-tinted ikonos, countdown „Xd" */}
         {section === 'auginama' && (
-          <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
-            <div className="flex items-center gap-1 bg-black/35 backdrop-blur-sm rounded-lg px-1.5 py-1">
-              <Droplets size={12} className={waterOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/60'} />
-              {waterDays != null && (
-                <span className={`text-[10px] font-bold leading-none ${waterOverdue ? 'text-sky-200' : 'text-white/70'}`}>
-                  {waterDays}d
+          <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 items-end z-[2]">
+            <div className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-2.5 py-1 ${
+              waterOverdue ? 'bg-red-500/70' : 'bg-black/55'
+            }`}>
+              <Droplets size={12} className={waterOverdue ? 'text-white' : 'text-sky-300'} />
+              {waterDaysUntil != null && (
+                <span className="text-[11.5px] font-semibold leading-none text-white tracking-tight">
+                  {waterDaysUntil}d
                 </span>
               )}
             </div>
             {fertFC?.intervalDays != null && (
-              <div className="flex items-center gap-1 bg-black/35 backdrop-blur-sm rounded-lg px-1.5 py-1">
-                <FlaskConical size={12} className={fertOverdue ? 'text-amber-300 fill-amber-300' : 'text-white/60'} />
-                {fertDays != null && (
-                  <span className={`text-[10px] font-bold leading-none ${fertOverdue ? 'text-amber-200' : 'text-white/70'}`}>
-                    {fertDays}d
+              <div className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-2.5 py-1 ${
+                fertOverdue ? 'bg-red-500/70' : 'bg-black/55'
+              }`}>
+                <FlaskConical size={12} className={fertOverdue ? 'text-white' : 'text-amber-300'} />
+                {fertDaysUntil != null && (
+                  <span className="text-[11.5px] font-semibold leading-none text-white tracking-tight">
+                    {fertDaysUntil}d
                   </span>
                 )}
               </div>
@@ -192,10 +202,12 @@ const PlantCard = memo(function PlantCard({
           </div>
         )}
 
-        {/* Toxic badge */}
+        {/* Toxic pill — designer'io spec: red full-pill, white uppercase, bold, soft shadow */}
         {plant.toksiskas && (
-          <div className="absolute top-2 left-2 bg-red-500/90 backdrop-blur-sm rounded-lg px-1.5 py-0.5">
-            <span className="flex items-center gap-0.5 text-[9px] text-white font-bold"><Skull size={9} /> TOKSIŠKA</span>
+          <div className="absolute top-2.5 left-2.5 z-[2]">
+            <span className="inline-flex items-center gap-1 bg-red-500 text-white text-[10.5px] font-extrabold uppercase tracking-[0.06em] rounded-full px-2.5 py-1 shadow-[0_2px_8px_rgba(239,68,68,0.35)]">
+              <Skull size={11} /> Toksiška
+            </span>
           </div>
         )}
 
@@ -206,30 +218,27 @@ const PlantCard = memo(function PlantCard({
           </div>
         )}
 
-        {/* Bottom-left badge column: zone + dormancy */}
+        {/* Bottom-left badges: zone (location glass-pill su mint pin) + dormancy */}
         {(zoneName || dormFC) && (
-          <div className="absolute bottom-2 left-2 flex flex-col gap-1 items-start">
+          <div className="absolute bottom-2.5 left-2.5 flex flex-col gap-1.5 items-start z-[2]">
             {zoneName && (
-              <div className="bg-black/40 backdrop-blur-sm rounded-lg px-1.5 py-0.5">
-                <span className="flex items-center gap-0.5 text-[9px] text-white font-medium">
-                  <MapPin size={8} className="flex-shrink-0" />{zoneName}
-                </span>
-              </div>
+              <span className="inline-flex items-center gap-1.5 bg-black/55 backdrop-blur-md rounded-full px-2.5 py-1">
+                <MapPin size={11} className="text-emerald-300 flex-shrink-0" />
+                <span className="text-[11.5px] text-white font-semibold tracking-tight leading-none">{zoneName}</span>
+              </span>
             )}
             {dormFC && (
-              <div className={`backdrop-blur-sm rounded-lg px-1.5 py-0.5 ${
-                dormFC.window === 'active' ? 'bg-blue-500/90' :
-                dormFC.window === 'waking' ? 'bg-green-500/90' :
-                                             'bg-amber-500/90'
+              <span className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-2.5 py-1 ${
+                dormFC.window === 'active' ? 'bg-blue-500/85' :
+                dormFC.window === 'waking' ? 'bg-green-500/85' :
+                                             'bg-amber-500/85'
               }`}>
-                <span className="flex items-center gap-0.5 text-[9px] text-white font-bold">
-                  {dormFC.window === 'active'
-                    ? <><Moon size={9} /> Miega</>
-                    : dormFC.window === 'waking'
-                      ? <><Sprout size={9} /> Žadinti</>
-                      : <><Snowflake size={9} /> Ruoštis</>}
-                </span>
-              </div>
+                {dormFC.window === 'active'
+                  ? <><Moon size={11} className="text-white" /><span className="text-[11px] text-white font-bold leading-none">Miega</span></>
+                  : dormFC.window === 'waking'
+                    ? <><Sprout size={11} className="text-white" /><span className="text-[11px] text-white font-bold leading-none">Žadinti</span></>
+                    : <><Snowflake size={11} className="text-white" /><span className="text-[11px] text-white font-bold leading-none">Ruoštis</span></>}
+              </span>
             )}
           </div>
         )}
