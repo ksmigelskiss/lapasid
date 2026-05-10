@@ -871,11 +871,13 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
         )}
       </div>}
 
-      {/* Floating AI bubble — hidden in care mode and for viewers */}
+      {/* Floating AI bubble — hidden in care mode and for viewers.
+          Mobile: bottom-24 (virš mobile nav). Desktop: bottom-5 (nav nėra,
+          suvienodinta su PlantDetail PlantAvatar pozicija). */}
       {plants.length > 0 && !careMode && role !== 'viewer' && (
         <button
           onClick={() => setShowChat(true)}
-          className="absolute bottom-24 right-4 active:scale-90 transition-transform z-10"
+          className="absolute bottom-24 lg:bottom-5 right-4 active:scale-90 transition-transform z-10"
         >
           <img src={GARDENER} className="h-[96px] w-auto object-contain drop-shadow opacity-90 animate-idle-float-gardener" alt="" />
         </button>

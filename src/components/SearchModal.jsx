@@ -483,9 +483,10 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
           >
-            {/* Hero gallery */}
+            {/* Hero gallery — mobile bleeds (-mx-4) iki ekrano krašto; desktop'e
+                lieka rounded card su parent padding'u (kad neišlystų už panel'ės) */}
             {result.image ? (
-              <div className="rounded-3xl overflow-hidden h-56 relative -mx-4 mb-0">
+              <div className={`rounded-3xl overflow-hidden h-56 relative mb-0 ${useDesktopPanel ? '' : '-mx-4'}`}>
                 {/* Cross-fade image swap */}
                 <AnimatePresence mode="sync" initial={false}>
                   <motion.img
