@@ -226,6 +226,21 @@ export default function App() {
     detailPlant?.section === 'nori'     ? handleLibraryAction   :
     detailPlant?.section === 'istorija' ? handleLibraryAction   : null
 
+  // ── DesktopHeader hooks (turi būt PRIEŠ auth gate, kad hook order'is
+  //    nesikaitė kai auth gate trigger'inasi vs. užkrauta) ─────────
+  const carePopupPlants = useMemo(
+    () => dashboard.filter(p => p.status !== 'quarantine'),
+    [dashboard]
+  )
+  const careNotificationCount = useCareLists(carePopupPlants).total
+  const handleCarePopupTap = useCallback((plant, list) => {
+    dashboardRef.current?.openCareInfo(plant, list)
+    if (tab !== 'dashboard') {
+      setMountedTabs(prev => new Set([...prev, 'dashboard']))
+      setTab('dashboard')
+    }
+  }, [tab])
+
   // ── Auth gate ─────────────────────────────────────────────────
   if (authLoading) {
     return (
@@ -334,20 +349,6 @@ export default function App() {
   // Aktyvios kolekcijos vardas DesktopHeader'iui (pip + display name)
   const activeCollection = allCollections.find(c => c.id === collectionId)
   const collectionName = activeCollection?.name || 'Mano kolekcija'
-
-  // Care notification count bell'ui (filtruojam quarantine — Dashboard'o atitikmuo `mainPlants`)
-  const carePopupPlants = useMemo(
-    () => dashboard.filter(p => p.status !== 'quarantine'),
-    [dashboard]
-  )
-  const careNotificationCount = useCareLists(carePopupPlants).total
-
-  // Bell popup callback — atidaro CareWateringSheet per Dashboard'o imperative API
-  const handleCarePopupTap = useCallback((plant, list) => {
-    dashboardRef.current?.openCareInfo(plant, list)
-    // Įsitikinam, kad Dashboard tab'as aktyvus (jei buvo Biblioteka/Žinynas)
-    if (tab !== 'dashboard') setTabAndMount('dashboard')
-  }, [tab])
 
   const desktopHeader = isDesktop ? (
     <DesktopHeader
