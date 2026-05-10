@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, LogOut, UserPlus, Copy, Check, Share2, Eye, Trash2, LogIn } from 'lucide-react'
 import { doc, setDoc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore'
 import { QRCodeSVG } from 'qrcode.react'
 import { db } from '../utils/firebase'
+import { useIsDesktop } from '../hooks/useIsDesktop'
+import { useDetailHost } from '../contexts/DetailHostContext'
 
 // Sukuria invite tokeną Firestore'e, grąžina URL su role
 async function generateInviteLink(collectionId, uid, role = 'member') {
@@ -93,6 +96,17 @@ export async function acceptInvite(uid, token, inviteData, userProfile = {}) {
 }
 
 export default function ProfileSheet({ user, collectionId, role = 'owner', ownCollectionId, allCollections = [], onSignOut, onClose, onSwitchCollection, onRenameCollection }) {
+  // Desktop split panel: portaliuojam į RightPanel container'į.
+  const isDesktop = useIsDesktop()
+  const host = useDetailHost()
+  const useDesktopPanel = isDesktop && !!host?.container
+
+  useEffect(() => {
+    if (!useDesktopPanel || !host) return
+    host.open()
+    return () => host.close()
+  }, [useDesktopPanel]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const [members,       setMembers]       = useState([])
   const [viewerInvites, setViewerInvites] = useState([])
   const [inviteRole,    setInviteRole]    = useState('member')
@@ -201,17 +215,24 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
 
   const hasPeople = members.length > 0 || viewerInvites.length > 0
 
-  return (
+  const tree = (
     <>
+      {/* Backdrop — tik mobile (desktop'e panelė pati yra konteineris) */}
+      {!useDesktopPanel && (
+        <motion.div
+          className="fixed inset-0 bg-black/40 z-40"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          onClick={onClose}
+        />
+      )}
       <motion.div
-        className="fixed inset-0 bg-black/40 z-40"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        onClick={onClose}
-      />
-      <motion.div
-        className="fixed bottom-0 inset-x-0 z-50 bg-white rounded-t-3xl max-w-[430px] mx-auto"
-        initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
-        transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+        className={useDesktopPanel
+          ? "absolute inset-0 z-20 bg-white overflow-y-auto"
+          : "fixed bottom-0 inset-x-0 z-50 bg-white rounded-t-3xl max-w-[430px] mx-auto"}
+        {...(useDesktopPanel ? {} : {
+          initial: { y: '100%' }, animate: { y: 0 }, exit: { y: '100%' },
+          transition: { type: 'spring', damping: 30, stiffness: 300 },
+        })}
       >
         <div className="px-5 pt-5 pb-8 safe-bottom">
           <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
@@ -430,4 +451,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
       </AnimatePresence>
     </>
   )
+
+  if (useDesktopPanel) return createPortal(tree, host.container)
+  return tree
 }
