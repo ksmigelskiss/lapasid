@@ -1057,6 +1057,23 @@ export default function PlantDetail({
     setAddingType(null)
   }, [plant.id])
 
+  // ESC keyboard shortcut — uždaryti PlantDetail desktop'e. JEI atvertas sub-modal'as
+  // (ZonePicker, photo sheet, status menu, chat, editing, status transition, adding)
+  // — jo paties ESC handler'is uždaro jį, o mūsų handler'is praleidžia (kad nepasitiktų
+  // dvigubas close — top sub-modal first, parent second).
+  useEffect(() => {
+    if (!useDesktopPanel || !visible) return
+    const handler = (e) => {
+      if (e.key !== 'Escape') return
+      const subModalOpen = showZonePicker || showPhotoSheet || showStatusMenu
+        || showChat || editingName || pendingStatus || addingType
+      if (subModalOpen) return
+      onClose?.()
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [useDesktopPanel, visible, showZonePicker, showPhotoSheet, showStatusMenu, showChat, editingName, pendingStatus, addingType, onClose])
+
   const status                              = plant.status ?? 'healthy'
   const currentZone                         = zones.find(z => z.id === plant.zonaId) ?? null
   const mood                            = getPlantMood(plant)

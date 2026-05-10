@@ -219,6 +219,14 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     return () => host.close()
   }, [useDesktopPanel]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ESC keyboard shortcut — uždaryti modal'ą iš paneles desktop'e
+  useEffect(() => {
+    if (!useDesktopPanel) return
+    const handler = (e) => { if (e.key === 'Escape') onClose?.() }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [useDesktopPanel, onClose])
+
   const [query, setQuery]         = useState(initialQuery)
   const [loading, setLoading]     = useState(false)
   const [result, setResult]       = useState(null)

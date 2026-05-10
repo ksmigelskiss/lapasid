@@ -107,6 +107,14 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
     return () => host.close()
   }, [useDesktopPanel]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ESC keyboard shortcut
+  useEffect(() => {
+    if (!useDesktopPanel) return
+    const handler = (e) => { if (e.key === 'Escape') onClose?.() }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [useDesktopPanel, onClose])
+
   const [members,       setMembers]       = useState([])
   const [viewerInvites, setViewerInvites] = useState([])
   const [inviteRole,    setInviteRole]    = useState('member')

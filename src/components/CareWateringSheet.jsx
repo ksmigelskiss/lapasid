@@ -54,6 +54,14 @@ export default function CareWateringSheet({
     return () => host.close()
   }, [useDesktopPanel]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ESC keyboard shortcut
+  useEffect(() => {
+    if (!useDesktopPanel) return
+    const handler = (e) => { if (e.key === 'Escape') onClose?.() }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [useDesktopPanel, onClose])
+
   const afterAction = onAfterAction || onClose
   const wc = getWateringForecast(plant)
   const hasImg = !!plant.image

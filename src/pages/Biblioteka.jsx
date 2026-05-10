@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Search, Ghost, BookOpen, RefreshCw, Camera } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
@@ -63,43 +63,34 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
   const closeSearch = () => { setSearching(false); setQuery('') }
   const launchFullSearch = () => { onSearch(query); closeSearch() }
 
-  // Filter tabs + search row — extracted, kad reuse'intume inline (filter|search vienoj eilutėj).
+  // Filter tabs — underline stilius (toks pat kaip PlantDetail TabBar): plain
+  // border-b + sage-500 active underline su layoutId animacija.
+  const tabKeys = [{ key: null, label: 'Visi', count: counts.all }, ...KATEGORIJA_TABS.map(t => ({ ...t, count: counts[t.key] }))]
   const filterTabs = (
-    <div className="inline-flex items-center bg-gray-900/[0.04] rounded-full p-1 gap-0.5 flex-shrink-0">
-      <button
-        onClick={() => setKategorija(null)}
-        className={`h-9 inline-flex items-center justify-center gap-1.5 px-3 rounded-full text-[13.5px] font-medium transition-colors ${
-          kategorija == null
-            ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
-            : 'text-gray-600 hover:text-gray-900'
-        }`}
-      >
-        <span>Visi</span>
-        {counts.all > 0 && (
-          <span className={`text-[11px] font-bold px-1.5 py-px rounded-full ${
-            kategorija == null ? 'bg-sage-100 text-sage-700' : 'bg-sky-100 text-sky-800'
-          }`}>{counts.all}</span>
-        )}
-      </button>
-      {KATEGORIJA_TABS.map(({ key, label, Icon }) => {
+    <div className="flex border-b border-warm-border flex-shrink-0">
+      {tabKeys.map(({ key, label, Icon, count }) => {
         const active = kategorija === key
-        const count = counts[key]
         return (
           <button
-            key={key}
-            onClick={() => setKategorija(active ? null : key)}
-            className={`h-9 inline-flex items-center justify-center gap-1.5 px-3 rounded-full text-[13.5px] font-medium transition-colors ${
-              active
-                ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
-                : 'text-gray-600 hover:text-gray-900'
+            key={key ?? 'visi'}
+            onClick={() => setKategorija(key)}
+            className={`relative py-3 mr-5 text-sm font-semibold transition-colors flex items-center gap-1.5 ${
+              active ? 'text-sage-600' : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             {Icon && <Icon size={13} />}
             <span>{label}</span>
             {count > 0 && (
-              <span className={`text-[11px] font-bold px-1.5 py-px rounded-full ${
-                active ? 'bg-sage-100 text-sage-700' : 'bg-sky-100 text-sky-800'
+              <span className={`text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none ${
+                active ? 'bg-sage-100 text-sage-600' : 'bg-gray-100 text-gray-400'
               }`}>{count}</span>
+            )}
+            {active && (
+              <motion.div
+                layoutId="biblioteka-tab-underline"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-sage-500 rounded-full"
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              />
             )}
           </button>
         )

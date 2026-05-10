@@ -153,6 +153,16 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
     return () => host.close()
   }, [useDesktopPanel]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ESC keyboard shortcut — uždaryti ZonePicker (sub-modal); jei tuo pat metu
+  // PlantDetail atvertas, jis savo handler'yje patikrina sub-modal state ir
+  // nesireaguoja, tad ESC uždaro tik šitą.
+  useEffect(() => {
+    if (!useDesktopPanel) return
+    const handler = (e) => { if (e.key === 'Escape') onClose?.() }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [useDesktopPanel, onClose])
+
   const tree = (
     <div className={useDesktopPanel
       ? "absolute inset-0 z-[5] flex items-end justify-center"
