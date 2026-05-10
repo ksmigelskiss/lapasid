@@ -653,7 +653,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             </div>
             {/* CTA — eit ieškoti naujų augalų internete */}
             <button
-              onClick={launchFullSearch}
+              onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
               className="w-full mt-2 py-3 rounded-2xl text-sm text-sage-700 font-semibold border border-dashed border-sage-300 hover:border-sage-400 hover:bg-sage-50 transition-colors"
             >
               Ieškoti naujų augalų: „{query}"
@@ -667,7 +667,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             <img src="/plant_pot.png" className="w-14 h-14 object-contain mx-auto opacity-60" alt="" />
             <p className="text-sm text-gray-500">Tavo kolekcijoje neradome „{query}"</p>
             <button
-              onClick={launchFullSearch}
+              onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
               className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white bg-sage-500 hover:bg-sage-600 transition-colors shadow-ios"
             >
               Ieškoti internete
