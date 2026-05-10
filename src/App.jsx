@@ -7,6 +7,8 @@ import DuplicateBuyModal from './components/DuplicateBuyModal'
 import Dashboard from './pages/Dashboard'
 import { usePlants } from './hooks/usePlants'
 import { useAuth } from './hooks/useAuth'
+import { useIsDesktop } from './hooks/useIsDesktop'
+import DesktopLayout from './components/desktop/DesktopLayout'
 import LoginScreen from './components/LoginScreen'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
 
@@ -34,6 +36,8 @@ export default function App() {
     viewerToken,
     signIn, signOut, switchCollection, renameCollection,
   } = useAuth()
+
+  const isDesktop = useIsDesktop()
 
   // Išsaugome invite tokeną localStorage — fallback jei processPendingInvite
   // neužspėja nuskaityti URL prieš sign-in redirect
@@ -303,21 +307,31 @@ export default function App() {
     )},
   ]
 
-  return (
-    <div className="flex flex-col h-dvh overflow-hidden">
-      <div className="flex-1 overflow-hidden relative">
-        {tabs.map(({ key, page }) => mountedTabs.has(key) && (
-          <div
-            key={key}
-            className="absolute inset-0"
-            style={{ display: tab === key ? 'flex' : 'none', flexDirection: 'column' }}
-          >
-            {page}
-          </div>
-        ))}
-      </div>
+  const tabsArea = (
+    <div className="flex-1 overflow-hidden relative">
+      {tabs.map(({ key, page }) => mountedTabs.has(key) && (
+        <div
+          key={key}
+          className="absolute inset-0"
+          style={{ display: tab === key ? 'flex' : 'none', flexDirection: 'column' }}
+        >
+          {page}
+        </div>
+      ))}
+    </div>
+  )
 
-      {role !== 'viewer' && !dashCareMode && <Navigation active={tab} onChange={setTabAndMount} counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }} role={role} />}
+  return (
+    <>
+      {isDesktop ? (
+        <DesktopLayout>{tabsArea}</DesktopLayout>
+      ) : (
+        <div className="flex flex-col h-dvh overflow-hidden">
+          {tabsArea}
+        </div>
+      )}
+
+      {role !== 'viewer' && !dashCareMode && <Navigation active={tab} onChange={setTabAndMount} counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }} role={role} isDesktop={isDesktop} />}
 
       {detailForRender && (
         <Suspense fallback={null}>
@@ -417,8 +431,6 @@ export default function App() {
           />
         )}
       </AnimatePresence>
-
-
-    </div>
+    </>
   )
 }

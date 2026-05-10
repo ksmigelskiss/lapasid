@@ -32,7 +32,7 @@ export default {
         gray: { 950: '#0d0d0d' },
 
         // ── Semantic tokens ────────────────────────────
-        app:     P.appBg,
+        app:     { DEFAULT: P.appBg, warm: '#faf8f3' },  // app.warm — desktop right panel bg
         lib:     P.libBg,
         surface: { DEFAULT: P.surface, 2: P.surface2 },
         warm:    { border: P.border },

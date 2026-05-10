@@ -29,10 +29,14 @@ const tabs = [
   { id: 'zinynas',   label: 'Žinynas',   Icon: SparkleIcon, countKey: 'zinynas' },
 ]
 
-export default function Navigation({ active, onChange, counts = {}, role = 'owner' }) {
+export default function Navigation({ active, onChange, counts = {}, role = 'owner', isDesktop = false }) {
   const visibleTabs = role === 'viewer' ? tabs.filter(t => t.id === 'dashboard') : tabs
+  // Desktop'e nav apsiriboja kairiame panelyje (right-[430px]); mobile — center max-w-[430px]
+  const navPos = isDesktop
+    ? 'fixed bottom-0 left-0 right-[430px] z-40'
+    : 'fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-40'
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-40">
+    <nav className={navPos}>
       <div className="bg-white border-t border-gray-200 safe-bottom">
         <div className="flex">
           {visibleTabs.map(({ id, label, Icon, countKey }) => {
