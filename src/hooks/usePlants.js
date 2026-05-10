@@ -4,6 +4,7 @@ import { db } from '../utils/firebase'
 import { fromAIResult, makeId as _makeId, today as _today } from '../utils/plantTransform'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { saveToCatalog, catalogDocId } from '../utils/catalog'
+import { isMockMode, MOCK_DATA } from '../utils/mockData'
 
 export { fromAIResult }
 
@@ -36,7 +37,9 @@ const today  = _today
 
 
 export function usePlants(collectionId, viewerToken = null) {
-  const [data, setData] = useState(() => loadLocal(collectionId))
+  // MOCK MODE — desktop-ux branch preview'ams (žr. utils/mockData.js).
+  // Inicializuojama iš MOCK_DATA, mutators tik atnaujina state (jokių DB rašymų).
+  const [data, setData] = useState(() => isMockMode() ? MOCK_DATA : loadLocal(collectionId))
 
   // Stable refs — leidžia useCallback nepriklausyti nuo collectionId
   const colIdRef = useRef(collectionId)
@@ -48,6 +51,14 @@ export function usePlants(collectionId, viewerToken = null) {
   // Išsaugo į localStorage + Firestore (fire-and-forget)
   const update = useCallback((updater) => {
     if (viewerTokenRef.current) return // viewers — no writes via this path
+    // Mock mode — atnaujina tik in-memory state, jokių DB rašymų
+    if (isMockMode()) {
+      setData(prev => {
+        const safe = { plants: [], zinynas: [], zones: [], settings: {}, ...prev }
+        return updater(safe)
+      })
+      return
+    }
     setData(prev => {
       const safe = { plants: [], zinynas: [], zones: [], settings: {}, ...prev }
       const next = updater(safe)
@@ -90,6 +101,7 @@ export function usePlants(collectionId, viewerToken = null) {
 
   // Nuskaito iš Firestore — sulieja visus šaltinius (stabilus — naudoja ref)
   const syncFromRemote = useCallback(() => {
+    if (isMockMode()) return // Mock mode — duomenys static, jokio sync
     const cid = colIdRef.current
     if (!cid) return
 

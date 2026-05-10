@@ -12,6 +12,7 @@ import { doc, getDoc, setDoc, updateDoc, getDocs, collection, query, limit } fro
 import { auth, db, googleProvider } from '../utils/firebase'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { acceptInvite } from '../components/ProfileSheet'
+import { isMockMode, MOCK_USER, MOCK_COLLECTION_ID, MOCK_COLLECTION_NAME } from '../utils/mockData'
 
 const LEGACY_UID = 'HdAOoLtEzUXqU2px2h3YmzLygCp1'
 
@@ -222,6 +223,25 @@ export function useAuth() {
   })
 
   useEffect(() => {
+    // ── MOCK MODE (Vercel preview iš desktop-ux branch) ─────────────
+    // Aktyvuojama per VITE_USE_MOCK_USER=true env. Skip Firebase auth,
+    // grąžina fake user'į. Plant duomenys ateina iš mockData.js per usePlants.
+    if (isMockMode()) {
+      setState({
+        user: MOCK_USER,
+        collectionId: MOCK_COLLECTION_ID,
+        role: 'owner',
+        ownCollectionId: MOCK_COLLECTION_ID,
+        allCollections: [{ id: MOCK_COLLECTION_ID, name: MOCK_COLLECTION_NAME, hasPlants: true }],
+        loading: false,
+        authError: null,
+        loadingMessage: null,
+        viewerToken: null,
+      })
+      return
+    }
+    // ─────────────────────────────────────────────────────────────────
+
     const urlParams      = new URLSearchParams(window.location.search)
 
     // ── Viewer token check — BEFORE Firebase auth ──────────────────
