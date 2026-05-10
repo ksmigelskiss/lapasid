@@ -13,10 +13,13 @@
  * Default size 22px, header'yje. Galima skalei 32px+ (jei norėsim
  * parodyti kortelėse ar ant sprite'o atskirai).
  */
-export default function AccuracySprite({ pct = 0, size = 22 }) {
+export default function AccuracySprite({ pct = 0, size = 22, color }) {
   const stage = pct < 25 ? 0 : pct < 50 ? 1 : pct < 75 ? 2 : 3
+  // Stage tones — naudojami tik jei explicit `color` neperduotas. Default
+  // (žaliuojanti spalva) tinka mobile baltame fone; AccuracyButton (desktop
+  // greeting) kelia tamsų sage-700 fonu, todėl perduoda color="#fff".
   const tones = ['#94a3a0', '#f59e0b', '#2e7d52', '#1f5f3d']
-  const tone = tones[stage]
+  const tone = color ?? tones[stage]
   const stemTop = [16, 13, 10, 8][stage]
 
   return (

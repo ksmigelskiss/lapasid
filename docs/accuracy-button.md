@@ -11,14 +11,21 @@ Toolbar mygtukas (desktop'e — `CareOverview` greeting eilutėje), rodantis pri
 
 ## 4 stadijos pagal `careConfidence × 100`
 
-| Stage | Range | Sprite spalva | Sprite leaf'ai | Tikslumas pill bg | Label |
-|-------|-------|---------------|----------------|-------------------|-------|
-| 0 | 0–24% | `#94a3a0` (gray) | 1 leaf, no bloom | `bg-gray-100` text-gray-700 | „Mokomės" |
-| 1 | 25–49% | `#f59e0b` (amber) | 2 leaf, no bloom | `bg-amber-100` text-amber-800 | „Tikslumas" |
-| 2 | 50–74% | `#2e7d52` (sage) | 3 leaf, no bloom | `bg-sage-50` text-sage-700 | „Tikslu" |
-| 3 | 75–100% | `#1f5f3d` (dark sage) | 3 leaf + bloom (white center) | `bg-sage-100` text-sage-800 | „Tobula" |
+| Stage | Range | Sprite leaf'ai | Tikslumas pill bg | Label |
+|-------|-------|----------------|-------------------|-------|
+| 0 | 0–24% | 1 leaf, no bloom | `bg-gray-100` text-gray-700 | „Mokomės" |
+| 1 | 25–49% | 2 leaf, no bloom | `bg-amber-100` text-amber-800 | „Tikslumas" |
+| 2 | 50–74% | 3 leaf, no bloom | `bg-sage-50` text-sage-700 | „Tikslu" |
+| 3 | 75–100% | 3 leaf + bloom (white center) | `bg-sage-100` text-sage-800 | „Tobula" |
 
 **Stage threshold'ai** apskaičiuojami `pct < 25 ? 0 : pct < 50 ? 1 : pct < 75 ? 2 : 3`.
+
+## Sprite spalva
+
+`AccuracySprite` priima opcionalų `color` prop:
+
+- **Be `color` (default)** — naudoja stage tonus: `#94a3a0` (gray) → `#f59e0b` (amber) → `#2e7d52` (sage) → `#1f5f3d` (dark sage). Tinka šviesiame fone (Dashboard mobile „priežiūra" mygtukas — bg-white).
+- **`color="#fff"` (AccuracyButton)** — visada baltas. Acc-cta fonas yra dark sage-700 visomis stage'omis, todėl žalia ant žalio būtų nematoma. Spalvos progresą atspindi `acc-meta` (Tikslumas N%) sekcija dešinėje.
 
 ## Vizualinis pavyzdys
 

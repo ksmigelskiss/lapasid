@@ -46,7 +46,10 @@ export default function AccuracyButton({ careConfidence = 0, careMode = false, o
       title={careMode ? 'Išeiti iš priežiūros režimo' : `Priežiūra · ${label} ${pct}%`}
     >
       <span className={`inline-flex items-center gap-2 pl-3 pr-3.5 ${ctaCls}`}>
-        <AccuracySprite pct={pct} size={20} />
+        {/* Sprite'as visada baltas — acc-cta fonas dark sage'as visomis stage'omis,
+            stage spalva (žalia) ant žalio nematoma. Spalvos progresą atspindi
+            acc-meta (Tikslumas N%) sekcija dešinėje. */}
+        <AccuracySprite pct={pct} size={20} color="#fff" />
         <span className="text-[13.5px] font-bold leading-none tracking-tight">Priežiūra</span>
       </span>
       <span className={`inline-flex items-center gap-1.5 pl-3 pr-3.5 ${metaCls}`}>
