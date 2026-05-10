@@ -25,17 +25,18 @@ function CareCircle({ checked, waterOverdue, fertOverdue }) {
   const baseSize = 'w-7 h-7 rounded-full border-2 shadow-md'
   const single   = `${baseSize} flex items-center justify-center`
 
-  // BOTH overdue — pusinis-pusinis split (sky kairė, amber dešinė).
-  // Border lieka neutralus (white), kad nesikonkuruotų su vidaus spalvomis.
+  // BOTH overdue — kapsulė (stadiono forma): wider nei circle, kad ikonos
+  // turėtų erdvės. h-7 lieka kaip kitose būsenose (viena linija). Border
+  // neutralus (white) — vidaus spalvos kalbą už save.
   if (waterOverdue && fertOverdue) {
-    const split = `${baseSize} overflow-hidden flex ${checked ? 'border-white' : 'border-white/80'}`
+    const pill = `w-12 h-7 rounded-full border-2 shadow-md overflow-hidden flex ${checked ? 'border-white' : 'border-white/80'}`
     return (
-      <div className={split}>
+      <div className={pill}>
         <div className={`w-1/2 flex items-center justify-center ${checked ? 'bg-sky-400' : 'bg-sky-400/30'}`}>
-          <Droplets size={10} className={checked ? 'text-white' : 'text-sky-500'} />
+          <Droplets size={11} className={checked ? 'text-white' : 'text-sky-500'} />
         </div>
         <div className={`w-1/2 flex items-center justify-center ${checked ? 'bg-amber-400' : 'bg-amber-400/30'}`}>
-          <FlaskConical size={10} className={checked ? 'text-white' : 'text-amber-500'} />
+          <FlaskConical size={11} className={checked ? 'text-white' : 'text-amber-500'} />
         </div>
       </div>
     )
