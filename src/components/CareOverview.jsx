@@ -173,15 +173,19 @@ export default function CareOverview({
     return (
       <div className={bigGreeting ? '' : 'mb-4'}>
         {bigGreeting ? (
-          // Inline: didelis greeting + smulki subline subtle-padded į dešinę,
-          // baseline-aligned. flex-wrap leidžia subline užšokti į kitą eilutę
-          // kai viewport siauras (~lg breakpoint).
-          <div className="flex items-center gap-x-4 gap-y-2 flex-wrap">
-            <h1 className="text-[28px] sm:text-[32px] font-extrabold text-gray-950 leading-tight tracking-tight">{greeting}</h1>
+          // Two-column kompozicija (designer'io .overview pattern):
+          //   kairė: greeting h1 + subline stacked
+          //   dešinė: AccuracyButton pill, vertikaliai centruotas
+          // flex-wrap saugiklis siauresniam viewport'ui — pill'as užšoks
+          // po greeting block'u (vis dar dešinėje per ml-auto savo eilutėj).
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex-shrink min-w-0">
+              <h1 className="text-[28px] sm:text-[32px] font-extrabold text-gray-950 leading-tight tracking-tight">{greeting}</h1>
+              <p className="text-sm text-gray-500 mt-1">{subline}</p>
+            </div>
             {onCareToggle && (
               <AccuracyButton careConfidence={careConfidence} careMode={careMode} onClick={onCareToggle} />
             )}
-            <p className="ml-auto text-sm text-gray-500">{subline}</p>
           </div>
         ) : (
           <>
