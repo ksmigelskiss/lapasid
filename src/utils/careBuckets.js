@@ -5,6 +5,8 @@
 // tik prognozės lyginimui, bet ne kaltinimui — sąlygos galėjo pasikeisti,
 // arba inspection event'as patvirtino sąmoningą pauzę.
 
+import { getWateringForecast } from './wateringForecast'
+
 export const BUCKETS = {
   PERFECT: 'perfect',
   EARLY:   'early',
@@ -54,4 +56,23 @@ export function confidenceLabel(conf) {
   if (conf < 0.33) return 'none'
   if (conf < 0.66) return 'low'
   return 'high'
+}
+
+// Apskaičiuoja aggregate confidence delta nuo watering veiksmo,
+// simuliuojant naują event'ą plant.timeline atminty (be DB).
+// Confidence skaičiuoja tik watering events, todėl tik kind='watering'
+// realiai prideda. Kitiems return 0.
+export function computeWateringDelta(actedPlants, allPlantsCount, eventType, todayIso) {
+  if (eventType !== 'watering' || allPlantsCount === 0 || actedPlants.length === 0) return 0
+  let sumPlantDelta = 0
+  for (const p of actedPlants) {
+    const before = getWateringForecast(p).confidence ?? 0
+    const simPlant = {
+      ...p,
+      timeline: [{ id: 'sim', type: 'watering', date: todayIso }, ...(p.timeline ?? [])],
+    }
+    const after = getWateringForecast(simPlant).confidence ?? 0
+    sumPlantDelta += (after - before)
+  }
+  return sumPlantDelta / allPlantsCount
 }
