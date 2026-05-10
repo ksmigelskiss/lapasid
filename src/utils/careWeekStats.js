@@ -20,15 +20,22 @@ function thisWeekMonday(now = new Date()) {
   return d
 }
 
+// LOCAL date → 'YYYY-MM-DD'. Negalima naudoti `toISOString()` — tas
+// konvertuoja į UTC, ir vakare/naktį (kai UTC viena diena, lokalu kita)
+// gauname klaidingą datą (off-by-one bug).
 function dateToISODay(date) {
-  return date.toISOString().slice(0, 10)
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
 }
 
 // Iš event'o ištraukiam datos string'ą (gali būti `date: '2026-05-09'`
 // arba `timestamp: '2026-05-09T...Z'` — abu formatai timeline'e pasitaiko).
+// Timestamp atveju konvertuojam į lokalią datą, ne UTC slice'iuojam.
 function eventDayISO(event) {
   if (event?.date) return String(event.date).slice(0, 10)
-  if (event?.timestamp) return String(event.timestamp).slice(0, 10)
+  if (event?.timestamp) return dateToISODay(new Date(event.timestamp))
   return null
 }
 
