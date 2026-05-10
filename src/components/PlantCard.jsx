@@ -188,27 +188,24 @@ const PlantCard = memo(function PlantCard({
           <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 border-white/60 bg-transparent shadow-sm" />
         )}
 
-        {/* Forecast glass pills (auginama only) — designer'io glass-pill stilius:
-            tamsus pusiau permatomas bg + blur, color-tinted ikonos, countdown „Xd" */}
+        {/* Forecast pills (auginama only) — mobile pattern:
+            kompaktiškas dark bg pill, ikona SPALVINTA tik kai overdue
+            (kai dėmesio reikia), kitu metu — bespalvis white/60. */}
         {section === 'auginama' && (
-          <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 items-end z-[2]">
-            <div className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-2.5 py-1 ${
-              waterOverdue ? 'bg-red-500/70' : 'bg-black/55'
-            }`}>
-              <Droplets size={12} className={waterOverdue ? 'text-white' : 'text-sky-300'} />
+          <div className="absolute top-2 right-2 flex flex-col gap-1 items-end z-[2]">
+            <div className="inline-flex items-center gap-1 bg-black/35 backdrop-blur-sm rounded-lg px-1.5 py-1">
+              <Droplets size={12} className={waterOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/60'} />
               {waterDaysUntil != null && (
-                <span className="text-[11.5px] font-semibold leading-none text-white tracking-tight">
+                <span className={`text-[10px] font-bold leading-none ${waterOverdue ? 'text-sky-200' : 'text-white/70'}`}>
                   {waterDaysUntil}d
                 </span>
               )}
             </div>
             {fertFC?.intervalDays != null && (
-              <div className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-2.5 py-1 ${
-                fertOverdue ? 'bg-red-500/70' : 'bg-black/55'
-              }`}>
-                <FlaskConical size={12} className={fertOverdue ? 'text-white' : 'text-amber-300'} />
+              <div className="inline-flex items-center gap-1 bg-black/35 backdrop-blur-sm rounded-lg px-1.5 py-1">
+                <FlaskConical size={12} className={fertOverdue ? 'text-amber-300 fill-amber-300' : 'text-white/60'} />
                 {fertDaysUntil != null && (
-                  <span className="text-[11.5px] font-semibold leading-none text-white tracking-tight">
+                  <span className={`text-[10px] font-bold leading-none ${fertOverdue ? 'text-amber-200' : 'text-white/70'}`}>
                     {fertDaysUntil}d
                   </span>
                 )}
