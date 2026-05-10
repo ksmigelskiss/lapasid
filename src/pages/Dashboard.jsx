@@ -540,29 +540,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     }
   }, [careMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // DEV/DEMO: parodo fake toast'ą be jokio DB rašymo. Cikliuoja per 3 delta dydžius.
-  const careToastDemoIdx = useRef(0)
-  const runCareToastDemo = useCallback(() => {
-    const samples = [4, 2, 7]  // skirtingi delta dydžiai
-    const deltaPct = samples[careToastDemoIdx.current % samples.length]
-    careToastDemoIdx.current += 1
-    setCareToast({ kind: 'delta', deltaPct, phrase: pick(CARE_COPY.delta) })
-    if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
-    careToastTimerRef.current = setTimeout(() => setCareToast(null), 3000)
-  }, [])
-
-  // DEV/DEMO: circuit toast su fake zonos vardu. Cikliuoja zona ↔ frazė variantus.
-  const careCircuitDemoIdx = useRef(0)
-  const runCareCircuitDemo = useCallback(() => {
-    const fakeZones = ['Virtuvė', 'Svetainė', 'Miegamasis', 'Balkonas']
-    const zoneName = fakeZones[careCircuitDemoIdx.current % fakeZones.length]
-    careCircuitDemoIdx.current += 1
-    const message = fillTemplate(pick(CARE_COPY.circuit), { zone: zoneName })
-    setCareToast({ kind: 'circuit', message })
-    if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
-    careToastTimerRef.current = setTimeout(() => setCareToast(null), 3500)
-  }, [])
-
   // Detect zonų, kurios po simuliuotų event'ų pridėjimo eina iš todo>0 → todo=0.
   // Naudojama circuit toast'ui („Virtuvė pasirūpinta"). Pure JS, jokio I/O.
   const detectClearedZones = useCallback((actedIds, eventTypes) => {
@@ -629,17 +606,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     }
   }, [mainPlants.length, detectClearedZones])
 
-  // DEMO: session summary fake data
-  const runSessionSummaryDemo = useCallback(() => {
-    setShowSummary({
-      watering:    { perfect: 5, early: 2, late: 1, waylate: 0 },
-      fertilizing: { perfect: 2, early: 0, late: 0, waylate: 1 },
-      plants: new Set(['fake1','fake2','fake3','fake4','fake5','fake6','fake7','fake8']),
-      deltaPct: 7,  // demo: +7% sesijos pažinimo prieaugis
-    })
-  }, [])
-
-  // Keep screen awake while in care mode
   // Praneša parent'ui apie care mode būseną (kad App.jsx galėtų slėpti Navigation)
   useEffect(() => { onCareModeChange?.(careMode) }, [careMode, onCareModeChange])
 
@@ -1155,27 +1121,6 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             className="fixed bottom-2 left-0 right-0 z-30"
           >
             <div className="max-w-[430px] mx-auto px-4 pb-2">
-            {/* DEV/DEMO: trys mygtukai be DB rašymo. Pašalinti po testavimo. */}
-            <div className="absolute -top-7 right-4 flex gap-1.5">
-              <button
-                onClick={runCareToastDemo}
-                className="text-[10px] font-medium text-gray-400 bg-white/80 backdrop-blur-sm rounded-md px-2 py-0.5 border border-gray-200"
-              >
-                Demo delta
-              </button>
-              <button
-                onClick={runCareCircuitDemo}
-                className="text-[10px] font-medium text-gray-400 bg-white/80 backdrop-blur-sm rounded-md px-2 py-0.5 border border-gray-200"
-              >
-                Demo circuit
-              </button>
-              <button
-                onClick={runSessionSummaryDemo}
-                className="text-[10px] font-medium text-gray-400 bg-white/80 backdrop-blur-sm rounded-md px-2 py-0.5 border border-gray-200"
-              >
-                Demo summary
-              </button>
-            </div>
             {postFertilizeFor ? (
               <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3">
                 <PostFertilizePrompt

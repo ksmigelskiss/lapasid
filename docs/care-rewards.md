@@ -141,22 +141,6 @@ Išėjus iš care mode (X paspaudimas) jei buvo bent vienas veiksmas:
 
 ---
 
-## Demo / testavimas
-
-Du laikini mygtukai care action bar'e (top-right):
-
-- **Demo delta** — cikliuoja per 3 delta dydžius (4%, 2%, 7%) su random fraze
-- **Demo circuit** — cikliuoja per 4 fake zonas su random circuit fraze (sage bg + Check)
-- **Demo summary** — fake session su 8 augalais, +7% delta
-
-Niekas neįrašoma į DB. Naudojama UI dizainui kalibruoti.
-
-**Pašalinimo path'ai:**
-- Dashboard.jsx grep'as: `runCareToastDemo`, `runSessionSummaryDemo`, „DEV/DEMO", „Demo toast", „Demo summary"
-- Pašalinti po vartotojo apsisprendimo, kuris variantas lieka
-
----
-
 ## Kaip pridėti naują frazę
 
 1. Atidaryti [src/constants/careCopy.js](../src/constants/careCopy.js)
@@ -198,6 +182,9 @@ Niekas neįrašoma į DB. Naudojama UI dizainui kalibruoti.
 | 4. Confidence delta (per-action + sesijos suma) | ✅ Done |
 | 4b. Toast supaprastinimas + amber summary delta | ✅ Done |
 | 5. Zone circuit toast (zonoje nelieka todo) | ✅ Done |
+| 6. Single-plant rewards (CareWateringSheet) | ✅ Done |
+| 7. Snapshot/diff session delta (apima visus paths) | ✅ Done |
+| 8. Demo mygtukų pašalinimas | ✅ Done |
 
 **Ateičiai (po visko):** single-plant CareWateringSheet mikro-toast (kai vienas augalas, ne bulk).
 
@@ -206,5 +193,5 @@ Niekas neįrašoma į DB. Naudojama UI dizainui kalibruoti.
 ## Žinomi rizikingi dalykai
 
 - **Confidence vs realybė:** algoritmo „pažinimas" remiasi VIDUTINIAIS tarpais. Jei vartotojas labai netaisyklingai laisto, confidence vis tiek augs (tarpai bus „valid"). Filtras yra `outlierCap = theoreticalInterval × 3` — virš to atsijoja, bet nevaloma confidence delta dėl outlierių. Jei reikės — galima tikslinti.
-- **Demo mygtukai produkcijoje:** dabar matomi visiems vartotojams (ne tik dev). Pašalinti po pasirinkimo.
 - **Per-action toast deltaPct=0:** dabar skip — geriau nei „+0%". Bet jei tai ilgai ilgai trunkantis status (visi augalai jau 100% confidence), vartotojas niekada nematys toast'o. Galima ateičiai pridėti „silent" praise frazes.
+- **Palaisčiau path detekcija per komentaro hint'ą:** CareWateringSheet → Dashboard `onAddEvent` callback'as detektuoja Palaisčiau veiksmą per `extra.komentaras === 'Laistyta po tręšimo'`. Hacky bet veikia. Jei vėliau norėsim švariau, refaktoruoti CareWateringSheet API kad praneštų eventTypes tiesiogiai.
