@@ -61,111 +61,99 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
   const closeSearch = () => { setSearching(false); setQuery('') }
   const launchFullSearch = () => { onSearch(query); closeSearch() }
 
+  // Filter tabs + search row — extracted, kad reuse'intume inline (filter|search vienoj eilutėj).
+  const filterTabs = (
+    <div className="inline-flex items-center bg-gray-900/[0.04] rounded-full p-1 gap-0.5 flex-shrink-0">
+      <button
+        onClick={() => setKategorija(null)}
+        className={`h-9 inline-flex items-center justify-center gap-1.5 px-3 rounded-full text-[13.5px] font-medium transition-colors ${
+          kategorija == null
+            ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
+            : 'text-gray-600 hover:text-gray-900'
+        }`}
+      >
+        <span>Visi</span>
+        {counts.all > 0 && (
+          <span className={`text-[11px] font-bold px-1.5 py-px rounded-full ${
+            kategorija == null ? 'bg-sage-100 text-sage-700' : 'bg-sky-100 text-sky-800'
+          }`}>{counts.all}</span>
+        )}
+      </button>
+      {KATEGORIJA_TABS.map(({ key, label, Icon }) => {
+        const active = kategorija === key
+        const count = counts[key]
+        return (
+          <button
+            key={key}
+            onClick={() => setKategorija(active ? null : key)}
+            className={`h-9 inline-flex items-center justify-center gap-1.5 px-3 rounded-full text-[13.5px] font-medium transition-colors ${
+              active
+                ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            {Icon && <Icon size={13} />}
+            <span>{label}</span>
+            {count > 0 && (
+              <span className={`text-[11px] font-bold px-1.5 py-px rounded-full ${
+                active ? 'bg-sage-100 text-sage-700' : 'bg-sky-100 text-sky-800'
+              }`}>{count}</span>
+            )}
+          </button>
+        )
+      })}
+    </div>
+  )
+
+  const searchRow = searching ? (
+    <div className="flex-1 flex items-center gap-2 bg-white border border-gray-300 rounded-2xl px-4 h-9 focus-within:border-gray-400 transition-colors">
+      <Search size={15} className="text-gray-400 flex-shrink-0" />
+      <input
+        ref={inputRef}
+        type="text"
+        inputMode="search"
+        enterKeyHint="search"
+        autoComplete="nope"
+        autoCorrect="off"
+        autoCapitalize="none"
+        spellCheck="false"
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+        onKeyDown={e => {
+          if (e.key === 'Enter' && query.trim()) launchFullSearch()
+          if (e.key === 'Escape') closeSearch()
+        }}
+        placeholder="Ieškoti augalo..."
+        className="flex-1 text-sm text-gray-800 placeholder-gray-400 outline-none bg-transparent"
+      />
+      <button onClick={closeSearch} className="text-gray-400 text-xs">✕</button>
+    </div>
+  ) : (
+    <button
+      onClick={() => setSearching(true)}
+      className="flex-1 inline-flex items-center gap-2 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl px-4 h-9"
+    >
+      <Search size={15} className="text-gray-400" />
+      <span className="text-sm text-gray-500">Ieškoti augalo...</span>
+    </button>
+  )
+
   return (
     <div className="flex flex-col h-full bg-lib">
-      {/* Header — dynamic safe-area pad (compact ant non-notched, full ant iPhone notched) */}
-      <div className="px-5 pb-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em] mb-1">Augalų žinynas</p>
-            <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight">Biblioteka</h1>
-          </div>
-          <div className="border border-gray-300 rounded-2xl px-3.5 py-2 flex flex-col items-center">
-            <span className="text-2xl font-extrabold text-gray-700 leading-none">{plants.length}</span>
-            <span className="text-[10px] text-gray-500 font-medium mt-0.5">augal{plants.length === 1 ? 'as' : 'ai'}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Search bar */}
-      <div className="px-5 mb-3 flex gap-2">
-        {searching ? (
-          <div className="flex-1 flex items-center gap-2 bg-white border border-gray-300 rounded-2xl px-4 py-3 focus-within:border-gray-400 transition-colors">
-            <Search size={15} className="text-gray-400 flex-shrink-0" />
-            <input
-              ref={inputRef}
-              type="text"
-              inputMode="search"
-              enterKeyHint="search"
-              autoComplete="nope"
-              autoCorrect="off"
-              autoCapitalize="none"
-              spellCheck="false"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter' && query.trim()) launchFullSearch()
-                if (e.key === 'Escape') closeSearch()
-              }}
-              placeholder="Ieškoti augalo..."
-              className="flex-1 text-sm text-gray-800 placeholder-gray-400 outline-none bg-transparent"
-            />
-            <button onClick={closeSearch} className="text-gray-400 text-xs">✕</button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setSearching(true)}
-            className="flex-1 flex items-center gap-3 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl px-4 py-3"
-          >
-            <Search size={15} className="text-gray-400" />
-            <span className="text-sm text-gray-500">Ieškoti augalo...</span>
-          </button>
-        )}
+      {/* Top row: filter | search inline (designer'io ekonomiškas top'as, be h1 +
+          augalų count'o — tos info dubliuoja header tabs su badge'u) */}
+      <div className="px-5 pb-3 flex items-center gap-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
+        {filterTabs}
+        {searchRow}
         {!searching && (
           <button
             onClick={() => onSearchByCamera ? onSearchByCamera() : onSearch('')}
-            className="flex-shrink-0 w-11 rounded-2xl flex items-center justify-center bg-white border border-gray-200 text-gray-600 active:bg-surface transition-colors"
+            className="flex-shrink-0 w-9 h-9 rounded-2xl flex items-center justify-center bg-white border border-gray-200 text-gray-600 active:bg-surface transition-colors"
           >
             <Camera size={16} />
           </button>
         )}
       </div>
-
-      {/* Segmented control — kategorijos filtras (DesktopHeader tab nav stilius) */}
-      {!searching && (
-        <div className="px-5 mb-3">
-          <div className="inline-flex items-center bg-gray-900/[0.04] rounded-full p-1 w-full gap-0.5">
-            <button
-              onClick={() => setKategorija(null)}
-              className={`flex-1 h-9 inline-flex items-center justify-center gap-1.5 rounded-full text-[13.5px] font-medium transition-colors ${
-                kategorija == null
-                  ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <span>Visi</span>
-              {counts.all > 0 && (
-                <span className={`text-[11px] font-bold px-1.5 py-px rounded-full ${
-                  kategorija == null ? 'bg-sage-100 text-sage-700' : 'bg-sky-100 text-sky-800'
-                }`}>{counts.all}</span>
-              )}
-            </button>
-            {KATEGORIJA_TABS.map(({ key, label, Icon }) => {
-              const active = kategorija === key
-              const count = counts[key]
-              return (
-                <button
-                  key={key}
-                  onClick={() => setKategorija(active ? null : key)}
-                  className={`flex-1 h-9 inline-flex items-center justify-center gap-1.5 rounded-full text-[13.5px] font-medium transition-colors ${
-                    active
-                      ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  {Icon && <Icon size={13} />}
-                  <span>{label}</span>
-                  {count > 0 && (
-                    <span className={`text-[11px] font-bold px-1.5 py-px rounded-full ${
-                      active ? 'bg-sage-100 text-sage-700' : 'bg-sky-100 text-sky-800'
-                    }`}>{count}</span>
-                  )}
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      )}
 
       {/* Pull-to-refresh indicator */}
       <div
