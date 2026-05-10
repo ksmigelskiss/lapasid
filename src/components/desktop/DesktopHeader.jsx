@@ -48,22 +48,24 @@ export default function DesktopHeader({
   // Inner sekcijos (cta + meta) turi tik bg/text spalvas — JOKIO `rounded-*`,
   // kad outer pill'as būtų vientisas (overflow-hidden cut'ina inner kvadratus).
 
+  // Outer wrapper — tik shadow (joks ring/outline). Inactive'e bg-gray-900/[0.04]
+  // (kaip tabs nav), active'e solid sage-700 su didesnio shadow'u.
   const wrapperCls = careMode
     ? 'bg-sage-700 shadow-[0_4px_14px_rgba(46,125,82,0.32)]'
-    : 'bg-white ring-1 ring-sage-200 shadow-[0_1px_2px_rgba(20,40,30,0.04)]'
+    : 'bg-gray-900/[0.04] shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
 
   // Acc-cta (Priežiūra) — kairė sekcija
   const ctaCls = careMode
     ? 'bg-transparent text-white'
     : 'bg-transparent text-sage-700'
 
-  // Acc-meta (Tikslumas N%) — dešinė sekcija; turi subtle separator border-l
+  // Acc-meta (Tikslumas N%) — dešinė sekcija; subtle separator border-l (be ring)
   const metaCls = careMode
     ? 'bg-white/12 text-white border-l border-white/15'
-    : stage === 0 ? 'bg-gray-50 text-gray-700 border-l border-sage-100'
-    : stage === 1 ? 'bg-amber-50 text-amber-800 border-l border-sage-100'
-    : stage === 2 ? 'bg-sage-50 text-sage-700 border-l border-sage-100'
-    : 'bg-sage-100 text-sage-800 border-l border-sage-100'
+    : stage === 0 ? 'bg-transparent text-gray-700 border-l border-gray-900/[0.06]'
+    : stage === 1 ? 'bg-transparent text-amber-800 border-l border-gray-900/[0.06]'
+    : stage === 2 ? 'bg-transparent text-sage-700 border-l border-gray-900/[0.06]'
+    : 'bg-transparent text-sage-800 border-l border-gray-900/[0.06]'
 
   // Pct badge'as acc-meta viduj
   const pctCls = careMode
