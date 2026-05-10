@@ -931,8 +931,8 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                 />
               </div>
             ) : (
-            {/* Care action bar — pill style match (suderinta su toolbar/AccuracyButton):
-                outer wrapper rounded-full, vidiniai mygtukai irgi rounded-full */}
+            // Care action bar — pill style match (rounded-full + tighter padding,
+            // suderinta su toolbar / AccuracyButton / Biblioteka filter pill stiliumi)
             <div className="bg-white rounded-full shadow-[0_8px_24px_rgba(20,40,30,0.12),0_0_0_1px_rgba(20,40,30,0.04)] p-1.5 flex gap-1.5 items-center">
               <button
                 onClick={exitCareMode}
