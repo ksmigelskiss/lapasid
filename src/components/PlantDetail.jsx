@@ -1280,6 +1280,18 @@ export default function PlantDetail({
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
+                    {/* Zone chip — toks pat patternas kaip foto hero (clickable, ZonePicker trigger) */}
+                    {section === 'auginama' && zones.length > 0 && (
+                      <button
+                        onClick={() => setShowZonePicker(true)}
+                        className="inline-flex items-center gap-1 mb-1 px-2 py-0.5 rounded-lg bg-sage-100 hover:bg-sage-200 transition-colors"
+                      >
+                        <MapPin size={9} className="text-sage-600" />
+                        <span className="text-[10px] text-sage-700 font-medium">
+                          {currentZone ? currentZone.name : 'Nepriskirta'}
+                        </span>
+                      </button>
+                    )}
                     {editingName ? (
                       <input
                         autoFocus
