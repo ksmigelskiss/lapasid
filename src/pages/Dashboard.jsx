@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useEffect, useCallback } from 'react'
+import { useState, useMemo, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera, Check, UserCircle, Pencil, RefreshCw } from 'lucide-react'
 import ProfileSheet from '../components/ProfileSheet'
@@ -143,7 +143,7 @@ function matchesQuery(plant, q) {
     .some(c => c && c.toLowerCase().includes(lower))
 }
 
-export default function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, onSearch, onSearchByCamera, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones, onCareModeChange, user, collectionId, onSignOut, role = 'owner', allCollections = [], onSwitchCollection, onRenameCollection, ownCollectionId }) {
+function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, onSearch, onSearchByCamera, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones, onCareModeChange, onCareConfidenceChange, user, collectionId, onSignOut, role = 'owner', allCollections = [], onSwitchCollection, onRenameCollection, ownCollectionId, hideInnerHeader = false }, ref) {
   const quarantinePlants = plants.filter(p => p.status === 'quarantine')
   // sick plants stay in their zone (mainPlants includes them)
   const mainPlants       = plants.filter(p => p.status !== 'quarantine')
@@ -200,6 +200,21 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     () => aggregateConfidence(mainPlants.map(p => getWateringForecast(p))),
     [mainPlants]
   )
+
+  // Pranešam App'ui apie confidence pasikeitimus, kad DesktopHeader
+  // (kuris renderinasi App lygyje) galėtų atvaizduoti tą pačią reikšmę.
+  useEffect(() => {
+    onCareConfidenceChange?.(careConfidence)
+  }, [careConfidence, onCareConfidenceChange])
+
+  // Imperative API: leidžia App per ref iškviesti careMode toggle iš
+  // DesktopHeader'io (kuris kabo virš Dashboard'o).
+  useImperativeHandle(ref, () => ({
+    toggleCareMode: () => {
+      setCareMode(v => !v)
+      setCareChecked(new Set())
+    },
+  }), [])
 
   // CareWateringSheet: derived state ir navigacijos handler'iai
   const careInfoPlant = useMemo(
@@ -447,8 +462,8 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             transition={{ duration: 0.22, ease: 'easeOut' }}
             style={{ overflow: 'hidden' }}
           >
-      {/* Header */}
-      <div className="px-5 pb-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
+      {/* Header — desktop'e slepiama (DesktopHeader perima collection name + priežiūra + augalai count) */}
+      {!hideInnerHeader && <div className="px-5 pb-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
         <div className="flex items-center justify-between">
           <div className="relative">
             {/* Avatar + kolekcijos etiketė */}
@@ -577,7 +592,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             )}
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* Search + filter toggle */}
       {role !== 'viewer' && <div className="px-5 mb-3 flex gap-2">
@@ -984,3 +999,5 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     </div>
   )
 }
+
+export default forwardRef(Dashboard)

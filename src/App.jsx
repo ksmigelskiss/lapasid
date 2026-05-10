@@ -9,6 +9,7 @@ import { usePlants } from './hooks/usePlants'
 import { useAuth } from './hooks/useAuth'
 import { useIsDesktop } from './hooks/useIsDesktop'
 import DesktopLayout from './components/desktop/DesktopLayout'
+import DesktopHeader from './components/desktop/DesktopHeader'
 import { DetailHostProvider } from './contexts/DetailHostContext'
 import LoginScreen from './components/LoginScreen'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
@@ -27,6 +28,7 @@ function lazyWithRetry(factory) {
 
 const SearchModal = lazyWithRetry(() => import('./components/SearchModal'))
 const PlantDetail = lazyWithRetry(() => import('./components/PlantDetail'))
+const ProfileSheet = lazyWithRetry(() => import('./components/ProfileSheet'))
 const Biblioteka  = lazyWithRetry(() => import('./pages/Biblioteka'))
 const Zinynas     = lazyWithRetry(() => import('./pages/Zinynas'))
 
@@ -54,6 +56,9 @@ export default function App() {
   const [tab, setTab]                 = useState('dashboard')
   const [mountedTabs, setMountedTabs] = useState(() => new Set(['dashboard']))
   const [dashCareMode, setDashCareMode] = useState(false)
+  const [dashCareConfidence, setDashCareConfidence] = useState(0)
+  const dashboardRef = useRef(null)
+  const [showDesktopProfile, setShowDesktopProfile] = useState(false)
   const [showSearch, setShowSearch]   = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState('')
   const [searchAutoCamera, setSearchAutoCamera] = useState(false)
@@ -254,10 +259,13 @@ export default function App() {
   const tabs = [
     { key: 'dashboard', page: (
       <Dashboard
+        ref={dashboardRef}
+        hideInnerHeader={isDesktop}
         plants={dashboard}
         allPlants={library}
         zones={zones}
         onCareModeChange={setDashCareMode}
+        onCareConfidenceChange={setDashCareConfidence}
         onTap={p => openDetail(p, 'auginama')}
         onTapFromCare={p => openDetail(p, 'auginama', true)}
         onSearch={q => { setSearchAutoCamera(false); setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
@@ -322,17 +330,55 @@ export default function App() {
     </div>
   )
 
+  // Aktyvios kolekcijos vardas DesktopHeader'iui (pip + display name)
+  const activeCollection = allCollections.find(c => c.id === collectionId)
+  const collectionName = activeCollection?.name || 'Mano kolekcija'
+
+  const desktopHeader = isDesktop ? (
+    <DesktopHeader
+      active={tab}
+      onTabChange={setTabAndMount}
+      counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }}
+      careConfidence={dashCareConfidence}
+      careMode={dashCareMode}
+      onCareToggle={() => dashboardRef.current?.toggleCareMode()}
+      collectionName={collectionName}
+      user={user}
+      onProfileClick={() => setShowDesktopProfile(true)}
+      role={role}
+    />
+  ) : null
+
   return (
     <DetailHostProvider>
       {isDesktop ? (
-        <DesktopLayout>{tabsArea}</DesktopLayout>
+        <DesktopLayout header={desktopHeader}>{tabsArea}</DesktopLayout>
       ) : (
         <div className="flex flex-col h-dvh overflow-hidden">
           {tabsArea}
         </div>
       )}
 
-      {role !== 'viewer' && !dashCareMode && <Navigation active={tab} onChange={setTabAndMount} counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }} role={role} isDesktop={isDesktop} />}
+      {/* Bottom navigation — tik mobile (desktop'e tabs gyvena DesktopHeader'yje) */}
+      {!isDesktop && role !== 'viewer' && !dashCareMode && <Navigation active={tab} onChange={setTabAndMount} counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }} role={role} isDesktop={isDesktop} />}
+
+      {/* Desktop ProfileSheet — kviečiamas iš DesktopHeader avatar/collection mygtukų.
+          Mobile turi savo ProfileSheet Dashboard'o vidury (per esamą flow). */}
+      {isDesktop && showDesktopProfile && (
+        <Suspense fallback={null}>
+          <ProfileSheet
+            user={user}
+            collectionId={collectionId}
+            role={role}
+            ownCollectionId={ownCollectionId}
+            allCollections={allCollections}
+            onSignOut={signOut}
+            onSwitchCollection={(id) => { switchCollection(id); setShowDesktopProfile(false) }}
+            onRenameCollection={renameCollection}
+            onClose={() => setShowDesktopProfile(false)}
+          />
+        </Suspense>
+      )}
 
       {detailForRender && (
         <Suspense fallback={null}>
