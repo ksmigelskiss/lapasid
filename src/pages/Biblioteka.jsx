@@ -121,18 +121,24 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
         )}
       </div>
 
-      {/* Segmented control — kategorijos filtras */}
+      {/* Segmented control — kategorijos filtras (DesktopHeader tab nav stilius) */}
       {!searching && (
         <div className="px-5 mb-3">
-          <div className="inline-flex items-center bg-white border border-gray-200 rounded-2xl p-1 w-full">
+          <div className="inline-flex items-center bg-gray-900/[0.04] rounded-full p-1 w-full gap-0.5">
             <button
               onClick={() => setKategorija(null)}
-              className={`flex-1 h-9 flex items-center justify-center gap-1 rounded-xl text-xs font-semibold transition-colors ${
-                kategorija == null ? 'bg-sage-500 text-white' : 'text-gray-500 active:bg-surface'
+              className={`flex-1 h-9 inline-flex items-center justify-center gap-1.5 rounded-full text-[13.5px] font-medium transition-colors ${
+                kategorija == null
+                  ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               <span>Visi</span>
-              <span className={kategorija == null ? 'text-white/70' : 'text-gray-400'}>{counts.all}</span>
+              {counts.all > 0 && (
+                <span className={`text-[11px] font-bold px-1.5 py-px rounded-full ${
+                  kategorija == null ? 'bg-sage-100 text-sage-700' : 'bg-sky-100 text-sky-800'
+                }`}>{counts.all}</span>
+              )}
             </button>
             {KATEGORIJA_TABS.map(({ key, label, Icon }) => {
               const active = kategorija === key
@@ -141,13 +147,19 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
                 <button
                   key={key}
                   onClick={() => setKategorija(active ? null : key)}
-                  className={`flex-1 h-9 flex items-center justify-center gap-1 rounded-xl text-xs font-semibold transition-colors ${
-                    active ? 'bg-sage-500 text-white' : 'text-gray-500 active:bg-surface'
+                  className={`flex-1 h-9 inline-flex items-center justify-center gap-1.5 rounded-full text-[13.5px] font-medium transition-colors ${
+                    active
+                      ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
+                      : 'text-gray-600 hover:text-gray-900'
                   }`}
                 >
                   {Icon && <Icon size={13} />}
                   <span>{label}</span>
-                  <span className={active ? 'text-white/70' : 'text-gray-400'}>{count}</span>
+                  {count > 0 && (
+                    <span className={`text-[11px] font-bold px-1.5 py-px rounded-full ${
+                      active ? 'bg-sage-100 text-sage-700' : 'bg-sky-100 text-sky-800'
+                    }`}>{count}</span>
+                  )}
                 </button>
               )
             })}
@@ -203,7 +215,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
               {visible.map(plant => (
                 <PlantCard
                   key={plant.id}
