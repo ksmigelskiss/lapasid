@@ -13,7 +13,7 @@ import RightPanel from './RightPanel'
  *   │                                      │              │
  *   └──────────────────────────────────────┴──────────────┘
  */
-export default function DesktopLayout({ children, header }) {
+export default function DesktopLayout({ children, header, plantsForChart, onAddToWishlist }) {
   return (
     <div className="flex h-dvh">
       <div className="flex-1 flex flex-col min-w-0">
@@ -22,7 +22,7 @@ export default function DesktopLayout({ children, header }) {
           {children}
         </main>
       </div>
-      <RightPanel />
+      <RightPanel plantsForChart={plantsForChart} onAddToWishlist={onAddToWishlist} />
     </div>
   )
 }
