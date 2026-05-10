@@ -663,10 +663,18 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
 
         return (
           <>
-            {/* Desktop: tik greeting full-width (search perkelta į DesktopHeader toolbar'ą) */}
+            {/* Desktop: tik greeting full-width su AccuracyButton inline (search perkelta į toolbar) */}
             {hideInnerHeader && (
               <div className="px-5 pt-4 pb-3">
-                <CareOverview plants={mainPlants} user={user} mode="greeting" bigGreeting />
+                <CareOverview
+                  plants={mainPlants}
+                  user={user}
+                  mode="greeting"
+                  bigGreeting
+                  careMode={careMode}
+                  careConfidence={careConfidence}
+                  onCareToggle={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
+                />
               </div>
             )}
 

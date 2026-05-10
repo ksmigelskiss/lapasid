@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 import { Bell, Leaf, Search } from 'lucide-react'
-import AccuracySprite, { accuracyLabel } from '../AccuracySprite'
 import { CareSummaryList } from '../CareOverview'
 
 /**
@@ -30,8 +29,7 @@ import { CareSummaryList } from '../CareOverview'
  *   role              — 'owner' | 'member' | 'viewer'
  */
 export default function DesktopHeader({
-  active, onTabChange, counts = {}, careConfidence = 0,
-  careMode = false, onCareToggle,
+  active, onTabChange, counts = {},
   user, onProfileClick, role = 'owner',
   careNotificationCount = 0, carePopupPlants = [], onCareTap,
   onSearchClick,
@@ -52,50 +50,6 @@ export default function DesktopHeader({
     return () => document.removeEventListener('mousedown', handler)
   }, [showCarePopup])
 
-  const pct   = Math.round((careConfidence ?? 0) * 100)
-  const label = accuracyLabel(pct)
-  const stage = pct < 25 ? 0 : pct < 50 ? 1 : pct < 75 ? 2 : 3
-
-  // Vienas pill button su dviem vidinėm sekcijom (designer'io spec):
-  //   acc-cta  — kairė: sprite + „Priežiūra" (sage)
-  //   acc-meta — dešinė: „Tikslumas N%" (stage spalva)
-  // Outer wrapper su rounded-full + overflow-hidden, kad inner sekcijos
-  // gražiai pilnai užimtų pill formą.
-
-  // INVERTED state'ai (vs. ankstesnė versija):
-  //   inactive (default) — ghost: white bg + sage ring outer
-  //   active   (careMode) — filled: solid sage outer su white text'u
-  // Inner sekcijos (cta + meta) turi tik bg/text spalvas — JOKIO `rounded-*`,
-  // kad outer pill'as būtų vientisas (overflow-hidden cut'ina inner kvadratus).
-
-  // OFF (inactive): kairė sekcija — visada solid dark sage; dešinė — stage spalva
-  // ON  (active careMode): visas pill solid sage-700, abi sekcijos white tekstu
-
-  const wrapperCls = careMode
-    ? 'bg-sage-700 shadow-[0_4px_14px_rgba(46,125,82,0.32)]'
-    : 'shadow-[0_1px_2px_rgba(20,40,30,0.06)]'
-
-  // Acc-cta (Priežiūra) — kairė sekcija
-  const ctaCls = careMode
-    ? 'bg-transparent text-white'
-    : 'bg-sage-700 text-white'
-
-  // Acc-meta (Tikslumas N%) — dešinė sekcija (stage spalva inactive'e)
-  const metaCls = careMode
-    ? 'bg-white/12 text-white border-l border-white/15'
-    : stage === 0 ? 'bg-gray-100 text-gray-700'
-    : stage === 1 ? 'bg-amber-100 text-amber-800'
-    : stage === 2 ? 'bg-sage-50 text-sage-700'
-    : 'bg-sage-100 text-sage-800'
-
-  // Pct badge'as acc-meta viduj — labiau saturated stage spalva
-  const pctCls = careMode
-    ? 'bg-white/25 text-white'
-    : stage === 0 ? 'bg-gray-200/80 text-gray-700'
-    : stage === 1 ? 'bg-amber-200/70 text-amber-800'
-    : stage === 2 ? 'bg-sage-100 text-sage-700'
-    : 'bg-sage-200/80 text-sage-800'
-
   const tabs = [
     { id: 'dashboard',  label: 'Augalai',    badge: counts.dashboard },
     { id: 'biblioteka', label: 'Biblioteka', badge: counts.biblioteka },
@@ -107,13 +61,9 @@ export default function DesktopHeader({
   const initials = (user?.displayName || user?.email || '?')
     .split(/[\s@]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase()
 
-  // Priežiūra/Tikslumas pill rodomas tik Augalai tab'e (priežiūros prasmė susijusi
-  // su auginamais augalais; Bibliotekoje/Žinyne — neaktualu).
-  const showAccuracyButton = role !== 'viewer' && active === 'dashboard'
-
   return (
     <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-white/85 backdrop-blur border-b border-gray-200/80 z-30 relative">
-      {/* Brand cluster: logo + accuracy button */}
+      {/* Brand cluster: tik logo (AccuracyButton perkeltas į CareOverview greeting'ą) */}
       <div className="flex items-center gap-3.5 flex-shrink-0">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-sage-500 flex items-center justify-center text-white">
@@ -121,31 +71,9 @@ export default function DesktopHeader({
           </div>
           <span className="text-[19px] font-bold text-sage-700 tracking-tight">LapasID</span>
         </div>
-        {showAccuracyButton && <div className="w-px h-5 bg-gray-300/60" />}
-        {showAccuracyButton && (
-          <button
-            onClick={onCareToggle}
-            className={`h-10 inline-flex items-stretch rounded-full overflow-hidden transition-all active:scale-[0.97] ${wrapperCls}`}
-            title={careMode ? 'Išeiti iš priežiūros režimo' : `Priežiūra · ${label} ${pct}%`}
-          >
-            {/* acc-cta — Priežiūra (kairė); be rounded — outer wrapper duoda formą */}
-            <span className={`inline-flex items-center gap-2 pl-3 pr-3.5 ${ctaCls}`}>
-              <AccuracySprite pct={pct} size={20} />
-              <span className="text-[13.5px] font-bold leading-none tracking-tight">Priežiūra</span>
-            </span>
-            {/* acc-meta — Tikslumas N% (dešinė); border-l skiria nuo cta */}
-            <span className={`inline-flex items-center gap-1.5 pl-3 pr-3.5 ${metaCls}`}>
-              <span className="text-[12.5px] font-semibold leading-none">Tikslumas</span>
-              <span className={`text-[11px] font-bold leading-none tabular-nums px-1.5 py-0.5 rounded-full ${pctCls}`}>
-                {pct}%
-              </span>
-            </span>
-          </button>
-        )}
       </div>
 
-      {/* Tabs — absolute pozicija viewport-centered, kad nesikraustytų kai brand cluster
-          plotis kinta (Priežiūra pill slepiama ne-Augalai tab'uose). */}
+      {/* Tabs — absolute pozicija viewport-centered (brand cluster plotis fiksuotas) */}
       <nav className="absolute left-1/2 -translate-x-1/2 flex bg-gray-900/[0.04] rounded-full p-1 gap-0.5">
         {visibleTabs.map(t => {
           const isActive = active === t.id

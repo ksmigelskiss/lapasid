@@ -3,6 +3,7 @@ import { Droplets, FlaskConical, Moon, Sprout, Snowflake, ChevronUp, ChevronDown
 import { getWateringForecast, shouldShowWateringAlert } from '../utils/wateringForecast'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
+import AccuracyButton from './AccuracyButton'
 
 // `withList` — kai true, perduoda Section.plants kaip 2-ą onTap argumentą
 // (CareWateringSheet navigacijai). Dormancy sekcijoms — false (nėra cycle reikalo).
@@ -149,6 +150,8 @@ export function CareSummaryList({ plants, onTap, onWaterTap }) {
 export default function CareOverview({
   plants, onTap, onWaterTap, defaultOpen = false, user,
   mode = 'inline', bigGreeting = false,
+  // AccuracyButton — bigGreeting mode'e renderinamas tarp greeting ir subline.
+  careMode = false, careConfidence = 0, onCareToggle,
 }) {
   const [open, setOpen] = useState(defaultOpen)
   const lists = useCareLists(plants)
@@ -173,8 +176,11 @@ export default function CareOverview({
           // Inline: didelis greeting + smulki subline subtle-padded į dešinę,
           // baseline-aligned. flex-wrap leidžia subline užšokti į kitą eilutę
           // kai viewport siauras (~lg breakpoint).
-          <div className="flex items-baseline gap-x-4 gap-y-1 flex-wrap">
+          <div className="flex items-center gap-x-4 gap-y-2 flex-wrap">
             <h1 className="text-[28px] sm:text-[32px] font-extrabold text-gray-950 leading-tight tracking-tight">{greeting}</h1>
+            {onCareToggle && (
+              <AccuracyButton careConfidence={careConfidence} careMode={careMode} onClick={onCareToggle} />
+            )}
             <p className="ml-auto text-sm text-gray-500">{subline}</p>
           </div>
         ) : (

@@ -380,9 +380,6 @@ export default function App() {
       active={tab}
       onTabChange={setTabAndMount}
       counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }}
-      careConfidence={dashCareConfidence}
-      careMode={dashCareMode}
-      onCareToggle={() => dashboardRef.current?.toggleCareMode()}
       user={user}
       onProfileClick={() => { closeAllDesktopModals(); setShowDesktopProfile(true) }}
       role={role}
