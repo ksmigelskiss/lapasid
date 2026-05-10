@@ -6,6 +6,34 @@ import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
 
+// Designer'io PlantPhoto gradient pool (paimta iš /tmp/geliai-design styles.css `.pp-*`).
+// Hash from plant.id deterministiškai parinka vieną iš 12 gradient'ų.
+const PLANT_GRADIENTS = [
+  'linear-gradient(135deg, #1f4d36 0%, #3a8a5a 60%, #5fae7c 100%)',  // monstera
+  'linear-gradient(150deg, #2d4a32 0%, #4a7549 50%, #8aa861 100%)',  // sansevieria
+  'linear-gradient(140deg, #6a3a4d 0%, #c2647a 50%, #e8a5b5 100%)',  // pelargonia
+  'linear-gradient(150deg, #335a3a 0%, #5a8a4a 70%, #a4c878 100%)',  // bazilikas
+  'linear-gradient(160deg, #4a6b3f 0%, #82a55a 60%, #c5d49a 100%)',  // aloe
+  'linear-gradient(140deg, #4d2a5a 0%, #8a4ea0 50%, #c490d0 100%)',  // orchid
+  'linear-gradient(135deg, #1a3a26 0%, #2f6644 60%, #4d9268 100%)',  // filodend
+  'linear-gradient(160deg, #2c5a3f 0%, #5a8a5a 60%, #c8d8a4 100%)',  // pakalnute
+  'linear-gradient(150deg, #2a5040 0%, #4a8a6a 60%, #94c4a4 100%)',  // metos
+  'linear-gradient(140deg, #804020 0%, #c8704a 50%, #ec9c80 100%)',  // begonija
+  'linear-gradient(155deg, #4a3a6a 0%, #8a7ab0 50%, #c4b8d8 100%)',  // levanda
+  'linear-gradient(140deg, #2a4030 0%, #4a7050 60%, #7fa07f 100%)',  // ficus
+]
+
+// Stabilus djb2-style hash iš string'o → gradient index.
+function gradientForPlant(id) {
+  const s = String(id ?? '')
+  let h = 5381
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0
+  return PLANT_GRADIENTS[Math.abs(h) % PLANT_GRADIENTS.length]
+}
+
+// Diagonal stripes overlay (designer'io .plant-photo .stripes pattern)
+const STRIPES_BG = 'repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 8px, rgba(0,0,0,0.04) 8px, rgba(0,0,0,0.04) 16px)'
+
 function daysSinceDate(iso) {
   if (!iso) return null
   return Math.floor((Date.now() - new Date(iso + 'T00:00:00')) / 86400000)
@@ -25,26 +53,29 @@ function CareCircle({ checked, waterOverdue, fertOverdue }) {
   const baseSize = 'w-7 h-7 rounded-full border-2 shadow-md'
   const single   = `${baseSize} flex items-center justify-center`
 
-  // BOTH overdue — kapsulė su split border'iu. Spalva pasakoja istoriją
-  // (sky=laistyti, amber=tręšti); ikonų nėra, nes informacija dubliuojasi
-  // su water meter'iu apačioje + amber halo.
+  // BOTH overdue — kapsulė su split border'iu. Kiekvienas pusinis turi
+  // savo border'ą atitinkančia spalvą (sky kairė, amber dešinė) + ikoną.
   if (waterOverdue && fertOverdue) {
     return (
       <div className="w-12 h-7 rounded-full shadow-md flex">
-        <div className={`w-1/2 border-2 border-r-0 rounded-l-full ${checked ? 'bg-sky-400 border-sky-400' : 'bg-sky-400/30 border-sky-400'}`} />
-        <div className={`w-1/2 border-2 border-l-0 rounded-r-full ${checked ? 'bg-amber-400 border-amber-400' : 'bg-amber-400/30 border-amber-400'}`} />
+        <div className={`w-1/2 flex items-center justify-center border-2 border-r-0 rounded-l-full ${checked ? 'bg-sky-400 border-sky-400' : 'bg-sky-400/30 border-sky-400'}`}>
+          <Droplets size={11} className={checked ? 'text-white' : 'text-sky-500'} />
+        </div>
+        <div className={`w-1/2 flex items-center justify-center border-2 border-l-0 rounded-r-full ${checked ? 'bg-amber-400 border-amber-400' : 'bg-amber-400/30 border-amber-400'}`}>
+          <FlaskConical size={11} className={checked ? 'text-white' : 'text-amber-500'} />
+        </div>
       </div>
     )
   }
 
-  // Single overdue (fert ARBA water ARBA nei) — spalva, be ikonų
+  // Single overdue (fert ARBA water ARBA nei) su ikonomis
   if (checked) {
-    if (fertOverdue)  return <div className={`${single} bg-amber-400 border-amber-400`}><Check size={13} className="text-white" /></div>
-    if (waterOverdue) return <div className={`${single} bg-sky-400 border-sky-400`}><Check size={13} className="text-white" /></div>
+    if (fertOverdue)  return <div className={`${single} bg-amber-400 border-amber-400`}><FlaskConical size={14} className="text-white" /></div>
+    if (waterOverdue) return <div className={`${single} bg-sky-400 border-sky-400`}><Droplets size={14} className="text-white" /></div>
     return <div className={`${single} bg-sage-400 border-sage-400`}><Check size={13} className="text-white" /></div>
   }
-  if (fertOverdue)  return <div className={`${single} border-amber-400 bg-amber-400/20`} />
-  if (waterOverdue) return <div className={`${single} border-sky-400 bg-sky-400/20`} />
+  if (fertOverdue)  return <div className={`${single} border-amber-400 bg-amber-400/20`}><FlaskConical size={12} className="text-amber-400" /></div>
+  if (waterOverdue) return <div className={`${single} border-sky-400 bg-sky-400/20`}><Droplets size={12} className="text-sky-400" /></div>
   return <div className={`${single} border-white/80 bg-black/30`} />
 }
 
@@ -128,7 +159,8 @@ const PlantCard = memo(function PlantCard({
     >
       {/* Image area */}
       <div
-        className={`relative aspect-square overflow-hidden select-none ${!hasImage ? bgClass : ''}`}
+        className="relative aspect-square overflow-hidden select-none"
+        style={!hasImage ? { background: gradientForPlant(plant.id) } : undefined}
         onPointerDown={!careMode ? onPressStart : undefined}
         onPointerMove={!careMode ? onPressMove : undefined}
         onPointerUp={!careMode ? onPressEnd : undefined}
@@ -141,9 +173,14 @@ const PlantCard = memo(function PlantCard({
             style={{ WebkitTouchCallout: 'none', userSelect: 'none' }}
             onError={() => setImgError(true)} />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-5xl">
-            {plant.emoji ?? '🌿'}
-          </div>
+          <>
+            {/* Diagonal stripes overlay (designer'io .stripes pattern) */}
+            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: STRIPES_BG }} />
+            {/* Augalo emoji centruotas, baltas su minkšta opacity (ne dominuoja) */}
+            <div className="absolute inset-0 flex items-center justify-center text-5xl opacity-90 mix-blend-luminosity">
+              {plant.emoji ?? '🌿'}
+            </div>
+          </>
         )}
 
         {/* Status dot (non-auginama only) */}

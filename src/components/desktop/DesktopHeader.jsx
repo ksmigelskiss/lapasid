@@ -36,18 +36,17 @@ export default function DesktopHeader({
   const label = accuracyLabel(pct)
   const stage = pct < 25 ? 0 : pct < 50 ? 1 : pct < 75 ? 2 : 3
 
-  // Stage spalvos paimtas iš designer'io stiliaus (.accuracy-btn.stage-N)
-  const stageBg = careMode
-    ? 'bg-sage-700 text-white shadow-md'
+  // Du atskiri pill'ai (designer'io spec): „Priežiūra" (toggle, žalias active'as)
+  // ir „Tikslumas N%" (informacinis, stage spalva). Vizualiai liečiasi, bet
+  // funkciškai abu kartu yra careMode toggle.
+  const prieziuraPill = careMode
+    ? 'bg-sage-700 text-white shadow-[0_4px_12px_rgba(46,125,82,0.25)]'
+    : 'bg-sage-50 text-sage-700 hover:bg-sage-100'
+
+  const tikslumasPill = careMode
+    ? 'bg-white/20 text-white'
     : stage === 0 ? 'bg-gray-100 text-gray-600'
     : stage === 1 ? 'bg-amber-100 text-amber-800'
-    : stage === 2 ? 'bg-sage-50 text-sage-700'
-    : 'bg-sage-100 text-sage-800'
-
-  const pctBg = careMode
-    ? 'bg-white/20 text-white'
-    : stage === 0 ? 'bg-gray-200 text-gray-600'
-    : stage === 1 ? 'bg-amber-200/70 text-amber-800'
     : stage === 2 ? 'bg-sage-100 text-sage-700'
     : 'bg-sage-200 text-sage-800'
 
@@ -77,17 +76,26 @@ export default function DesktopHeader({
         </div>
         <div className="w-px h-5 bg-gray-300/60" />
         {role !== 'viewer' && (
-          <button
-            onClick={onCareToggle}
-            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full transition-all active:scale-[0.97] ${stageBg}`}
-            title={careMode ? 'Išeiti iš priežiūros režimo' : 'Priežiūra · prognozės tikslumas auga, kai laiku atliktas laistymas'}
-          >
-            <AccuracySprite pct={pct} size={20} />
-            <span className="text-[13px] font-semibold leading-none">Priežiūra</span>
-            <span className={`text-[12px] font-medium px-2 py-0.5 rounded-full leading-none ${pctBg}`}>
-              {label} {pct}%
-            </span>
-          </button>
+          <div className="inline-flex items-center gap-1.5">
+            <button
+              onClick={onCareToggle}
+              className={`inline-flex items-center gap-2 pl-2.5 pr-3.5 py-1.5 rounded-full transition-all active:scale-[0.97] ${prieziuraPill}`}
+              title={careMode ? 'Išeiti iš priežiūros režimo' : 'Priežiūra · prognozės tikslumas auga, kai laiku atliktas laistymas'}
+            >
+              <AccuracySprite pct={pct} size={20} />
+              <span className="text-[13px] font-semibold leading-none">Priežiūra</span>
+            </button>
+            <button
+              onClick={onCareToggle}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all active:scale-[0.97] ${tikslumasPill}`}
+              title={`Tikslumas — ${label}`}
+            >
+              <span className="text-[13px] font-semibold leading-none">Tikslumas</span>
+              <span className={`text-[12px] font-bold leading-none tabular-nums`}>
+                {pct}%
+              </span>
+            </button>
+          </div>
         )}
       </div>
 

@@ -59,7 +59,7 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
       </div>
       {open && (
         <div className="bg-red-50 rounded-2xl p-1.5">
-          <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
             {orderedPlants.map(plant => (
               <PlantCard
                 key={plant.id}
@@ -116,7 +116,7 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
                 <Thermometer size={12} className="text-amber-500" />
                 <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wide">Dėmesio</span>
               </div>
-              <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
                 {sickPlants.map(plant => (
                   <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} {...carePropsFn(plant)} />
                 ))}
@@ -124,7 +124,7 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
             </div>
           )}
           {healthyPlants.length > 0 && (
-            <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
               {healthyPlants.map(plant => (
                 <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} {...carePropsFn(plant)} />
               ))}
@@ -678,7 +678,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
           {query.trim() ? (
             <>
               {searchResults.length > 0 ? (
-                <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mb-3">
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 mb-3">
                   {searchResults.map(plant => (
                     <PlantCard
                       key={plant.id}
@@ -783,7 +783,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                         <Thermometer size={12} className="text-amber-500" />
                         <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wide">Dėmesio</span>
                       </div>
-                      <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-2">
+                      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
                         {pinChecked(unzonedPlants.filter(p => p.status === 'sick'), careMode, careChecked).map(plant => (
                           <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)}
                             careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} onCareInfo={() => openCareInfo(plant)} />
@@ -792,7 +792,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                     </div>
                   )}
                   {pinChecked(unzonedPlants.filter(p => p.status !== 'sick'), careMode, careChecked).length > 0 && (
-                    <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
                       {pinChecked(unzonedPlants.filter(p => p.status !== 'sick'), careMode, careChecked).map(plant => (
                         <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)}
                           careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} onCareInfo={() => openCareInfo(plant)} />
@@ -805,7 +805,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
           </>
         ) : (
           <>
-            <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
               {pinChecked(sortedPlants, careMode, careChecked).map(plant => (
                 <PlantCard
                   key={plant.id}
