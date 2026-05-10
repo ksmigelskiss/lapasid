@@ -24,8 +24,8 @@ Greita referensinė kortelė. Naudok šią kortelę kuriant naujus komponentus �
 **Mygtukų tekstai (priežiūros veiksmai):**
 | Veiksmas | Veiksmažodis | Patvirtinimas | Done |
 |----------|-------------|---------------|------|
-| Laistymas | `Laistyti` | `Patvirtinti (N)` | `✓ Laistyta` |
-| Trąšos | `Tręšti` | `Patvirtinti (N)` | `✓ Patręšta` |
+| Laistymas | `Laistyti` | `Tikrai? (N)` | `✓ Laistyta` |
+| Trąšos | `Tręšti` | `Tikrai? (N)` | `✓ Patręšta` |
 | Pavojus/toksiškas | `bg-red-500` | — | — |
 | Karantinas | `bg-orange-500` | — | — |
 
@@ -209,7 +209,7 @@ if (confirmType === 'watering') commitAction('watering')
 else { resetConfirm(); setConfirmType('watering'); setCountdown(5) }
 
 // Mygtuko tekstas:
-{confirmType === 'watering' ? `Patvirtinti (${countdown})` : 'Palaistyti'}
+{confirmType === 'watering' ? `Tikrai? (${countdown})` : 'Palaistyti'}
 
 // Mygtuko spalva:
 confirmType === 'watering' ? 'bg-sky-700' : 'bg-sky-500'

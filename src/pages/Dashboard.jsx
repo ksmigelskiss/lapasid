@@ -889,7 +889,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 <Droplets size={16} className="text-white" />
                 <span className="text-sm font-bold text-white">
                   {confirmType === 'watering'
-                    ? `Patvirtinti (${countdown})`
+                    ? `Tikrai? (${countdown})`
                     : `Laistyti${careChecked.size > 0 ? ` (${careChecked.size})` : ''}`}
                 </span>
               </button>
@@ -909,7 +909,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 <FlaskConical size={16} className="text-white" />
                 <span className="text-sm font-bold text-white">
                   {role !== 'viewer' && confirmType === 'fertilizing'
-                    ? `Patvirtinti (${countdown})`
+                    ? `Tikrai? (${countdown})`
                     : `Tręšti${role !== 'viewer' && careChecked.size > 0 ? ` (${careChecked.size})` : ''}`}
                 </span>
               </button>

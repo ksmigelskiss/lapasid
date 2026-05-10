@@ -142,7 +142,7 @@ function FertilizingStatus({ snapshot, fertilized }) {
  *   user !== null  → ta pati info + "Tręšti" + "Atidaryti kortelę"
  *
  * Du tapai su countdown (identiškas Dashboard priežiūros režimui):
- *   1. tap → "Patvirtinti (5)" + tamsesnis fonas + countdown
+ *   1. tap → "Tikrai? (5)" + tamsesnis fonas + countdown
  *   2. tap → įrašo → "✓ Laistyta"
  *   laikas baigiasi → atšaukia, grįžta į pradinę
  */
@@ -385,7 +385,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
                 <>
                   <Droplets size={16} className="text-white" />
                   <span>
-                    {confirmType === 'watering' ? `Patvirtinti (${countdown})` : 'Laistyti'}
+                    {confirmType === 'watering' ? `Tikrai? (${countdown})` : 'Laistyti'}
                   </span>
                 </>
               )}
@@ -410,7 +410,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
                   <>
                     <FlaskConical size={16} className="text-white" />
                     <span>
-                      {confirmType === 'fertilizing' ? `Patvirtinti (${countdown})` : 'Tręšti'}
+                      {confirmType === 'fertilizing' ? `Tikrai? (${countdown})` : 'Tręšti'}
                     </span>
                   </>
                 )}
