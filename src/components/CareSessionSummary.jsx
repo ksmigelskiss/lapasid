@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Sprout, Droplets, FlaskConical, Clock, Heart } from 'lucide-react'
+import { Sprout, Droplets, FlaskConical, Clock, Heart, X } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { createPortal } from 'react-dom'
 import { CARE_COPY, plPlantsInstr, pick } from '../constants/careCopy'
@@ -89,6 +89,16 @@ export default function CareSessionSummary({ session, confidence = 0, onDismiss 
         transition={{ type: 'spring', damping: 26, stiffness: 320 }}
         onClick={e => e.stopPropagation()}
       >
+        {/* Close X — viršutiniame dešiniame kampe. Dismiss yra ir per
+            tap-anywhere + 10s auto-close, bet ne visiems aišku → eksplicit X. */}
+        <button
+          onClick={onDismiss}
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-gray-100 active:bg-gray-200 flex items-center justify-center text-gray-500 transition-colors"
+          aria-label="Uždaryti"
+        >
+          <X size={16} />
+        </button>
+
         {/* Confidence + sesijos delta. Delta — didesnis ir amber, nes vizualus
             reward yra GAIN (ne static būsena). Bazinis % — sage-600, ramus. */}
         <div className="text-center">
