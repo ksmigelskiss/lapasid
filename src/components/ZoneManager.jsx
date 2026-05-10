@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { X, ChevronUp, ChevronDown, Trash2, Plus, Settings } from 'lucide-react'
+import { X, ChevronUp, ChevronDown, ChevronLeft, Trash2, Plus, Settings } from 'lucide-react'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
 
@@ -175,12 +175,31 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}
       >
-        <div className="flex justify-center pb-3">
-          <div className="w-10 h-1 bg-gray-200 rounded-full" />
-        </div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider text-center mb-3">
-          Pasirinkti zoną
-        </p>
+        {/* Mobile — drag handle pill; desktop — back button (be backdrop'o nebūtų kaip uždaryti) */}
+        {useDesktopPanel ? (
+          <div className="flex items-center justify-between mb-3">
+            <button
+              onClick={onClose}
+              className="inline-flex items-center gap-1 px-2 py-1 -ml-1 rounded-lg text-sage-700 hover:bg-sage-50 transition-colors"
+            >
+              <ChevronLeft size={16} />
+              <span className="text-sm font-medium">Atgal</span>
+            </button>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Pasirinkti zoną
+            </p>
+            <span className="w-[64px]" />
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-center pb-3">
+              <div className="w-10 h-1 bg-gray-200 rounded-full" />
+            </div>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider text-center mb-3">
+              Pasirinkti zoną
+            </p>
+          </>
+        )}
         <div className="space-y-2">
           <button
             onClick={() => { onSelect(null); onClose() }}

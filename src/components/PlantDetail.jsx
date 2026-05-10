@@ -1029,6 +1029,34 @@ export default function PlantDetail({
   const [editingName, setEditingName]       = useState(false)
   const [nameVal, setNameVal]               = useState('')
   const [showZonePicker, setShowZonePicker] = useState(false)
+
+  // App.jsx laiko PlantDetail mount'intą per lastDetailRef (greitam reopen),
+  // todėl sub-modal state'ai (ZonePicker, photo sheet, status menu) PERSIST'INA
+  // tarp uždarymo / kito augalo atidarymo. Reset'inam, kai:
+  //   - užsidaro (visible=false) — kad nebeliktų atviro sub-modal'o
+  //   - keičiasi plantas (plant.id) — kad ne paveldėtų ankstesnio plant'o sub-state
+  useEffect(() => {
+    if (!visible) {
+      setShowZonePicker(false)
+      setShowPhoto(false)
+      setStatusMenu(false)
+      setShowChat(false)
+      setEditingName(false)
+      setPendingStatus(null)
+      setAddingType(null)
+    }
+  }, [visible])
+
+  useEffect(() => {
+    setShowZonePicker(false)
+    setShowPhoto(false)
+    setStatusMenu(false)
+    setShowChat(false)
+    setEditingName(false)
+    setPendingStatus(null)
+    setAddingType(null)
+  }, [plant.id])
+
   const status                              = plant.status ?? 'healthy'
   const currentZone                         = zones.find(z => z.id === plant.zonaId) ?? null
   const mood                            = getPlantMood(plant)
