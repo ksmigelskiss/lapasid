@@ -170,10 +170,13 @@ export default function CareOverview({
     return (
       <div className={bigGreeting ? '' : 'mb-4'}>
         {bigGreeting ? (
-          <>
+          // Inline: didelis greeting + smulki subline subtle-padded į dešinę,
+          // baseline-aligned. flex-wrap leidžia subline užšokti į kitą eilutę
+          // kai viewport siauras (~lg breakpoint).
+          <div className="flex items-baseline gap-x-4 gap-y-1 flex-wrap">
             <h1 className="text-[28px] sm:text-[32px] font-extrabold text-gray-950 leading-tight tracking-tight">{greeting}</h1>
-            <p className="text-sm text-gray-500 mt-1">{subline}</p>
-          </>
+            <p className="text-sm text-gray-500">{subline}</p>
+          </div>
         ) : (
           <>
             <h2 className="text-base font-bold text-gray-900 leading-tight">{greeting}</h2>
