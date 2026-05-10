@@ -144,8 +144,9 @@ export default function DesktopHeader({
         )}
       </div>
 
-      {/* Tabs centered */}
-      <nav className="ml-auto mr-auto flex bg-gray-900/[0.04] rounded-full p-1 gap-0.5">
+      {/* Tabs — absolute pozicija viewport-centered, kad nesikraustytų kai brand cluster
+          plotis kinta (Priežiūra pill slepiama ne-Augalai tab'uose). */}
+      <nav className="absolute left-1/2 -translate-x-1/2 flex bg-gray-900/[0.04] rounded-full p-1 gap-0.5">
         {visibleTabs.map(t => {
           const isActive = active === t.id
           return (
@@ -172,9 +173,8 @@ export default function DesktopHeader({
       </nav>
 
       {/* Profile cluster: search + bell + avatar.
-          Kolekcijų pasirinkimo logika perkelta į ProfileSheet (avatar trigger),
-          kad toolbar turėtų vietos search mygtukui. */}
-      <div className="flex items-center gap-2 flex-shrink-0">
+          ml-auto stumia į dešinį kraštą (nes nav nebėra flex-grabbing). */}
+      <div className="ml-auto flex items-center gap-2 flex-shrink-0">
         {role !== 'viewer' && (
           <button
             onClick={onSearchClick}
