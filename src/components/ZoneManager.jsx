@@ -1,6 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X, ChevronUp, ChevronDown, Trash2, Plus, Settings } from 'lucide-react'
+import { useIsDesktop } from '../hooks/useIsDesktop'
+import { useDetailHost } from '../contexts/DetailHostContext'
 
 // ── Zone form (name only now) ──────────────────────────────────
 
@@ -138,16 +141,37 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
   const [showManager, setShowManager] = useState(false)
   const canManage = onAddZone && onUpdateZone && onDeleteZone && onReorderZones
 
-  return (
-    <div className="fixed inset-0 z-[95] flex items-end justify-center">
+  // Desktop split panel: portal į RightPanel container'į (sub-modal ant
+  // PlantDetail viršaus, slide-in iš dešinės). Mobile lieka full-screen.
+  const isDesktop = useIsDesktop()
+  const host = useDetailHost()
+  const useDesktopPanel = isDesktop && !!host?.container
+
+  useEffect(() => {
+    if (!useDesktopPanel || !host) return
+    host.open()
+    return () => host.close()
+  }, [useDesktopPanel]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const tree = (
+    <div className={useDesktopPanel
+      ? "absolute inset-0 z-[5] flex items-end justify-center"
+      : "fixed inset-0 z-[95] flex items-end justify-center"}>
+      {/* Backdrop — tik mobile (desktop'e panel uždangstomas pačios ZonePicker'io kortelės) */}
+      {!useDesktopPanel && (
+        <motion.div
+          className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }} onPointerDown={onClose}
+        />
+      )}
       <motion.div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }} onPointerDown={onClose}
-      />
-      <motion.div
-        className="relative w-full max-w-[430px] bg-white rounded-t-4xl px-4 pt-3 pb-10"
-        initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+        className={useDesktopPanel
+          ? "relative w-full h-full bg-white px-4 pt-3 pb-6 overflow-y-auto"
+          : "relative w-full max-w-[430px] bg-white rounded-t-4xl px-4 pt-3 pb-10"}
+        {...(useDesktopPanel
+          ? { initial: { x: '100%' }, animate: { x: 0 }, exit: { x: '100%' } }
+          : { initial: { y: '100%' }, animate: { y: 0 }, exit: { y: '100%' } })}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}
       >
@@ -208,5 +232,8 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
       </AnimatePresence>
     </div>
   )
+
+  if (useDesktopPanel) return createPortal(tree, host.container)
+  return tree
 }
 
