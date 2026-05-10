@@ -931,10 +931,13 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                 />
               </div>
             ) : (
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3 flex gap-2 items-center">
+            {/* Care action bar — pill style match (suderinta su toolbar/AccuracyButton):
+                outer wrapper rounded-full, vidiniai mygtukai irgi rounded-full */}
+            <div className="bg-white rounded-full shadow-[0_8px_24px_rgba(20,40,30,0.12),0_0_0_1px_rgba(20,40,30,0.04)] p-1.5 flex gap-1.5 items-center">
               <button
                 onClick={exitCareMode}
-                className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 active:bg-gray-200 flex-shrink-0"
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 active:bg-gray-200 flex-shrink-0"
+                aria-label="Išeiti iš priežiūros"
               >
                 <X size={18} className="text-gray-600" />
               </button>
@@ -945,7 +948,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                   else { resetConfirm(); setConfirmType('watering'); setCountdown(5) }
                 }}
                 disabled={careChecked.size === 0}
-                className={`flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl disabled:opacity-40 transition-colors ${
+                className={`flex-1 h-10 flex items-center justify-center gap-1.5 rounded-full disabled:opacity-40 transition-colors ${
                   confirmType === 'watering' ? 'bg-sky-700 active:bg-sky-800' : 'bg-sky-500 active:bg-sky-600'
                 }`}
               >
@@ -963,7 +966,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                   else { resetConfirm(); setConfirmType('fertilizing'); setCountdown(5) }
                 }}
                 disabled={role === 'viewer' || careChecked.size === 0}
-                className={`flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl transition-colors ${
+                className={`flex-1 h-10 flex items-center justify-center gap-1.5 rounded-full transition-colors ${
                   role === 'viewer'
                     ? 'bg-amber-500 opacity-25 cursor-not-allowed'
                     : `disabled:opacity-40 ${confirmType === 'fertilizing' ? 'bg-amber-700 active:bg-amber-800' : 'bg-amber-500 active:bg-amber-600'}`
