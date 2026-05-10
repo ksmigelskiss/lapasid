@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, useDragControls, useMotionValue, animate } from 'framer-motion'
-import { Droplets, FlaskConical, Check, X, MapPin } from 'lucide-react'
+import { Droplets, FlaskConical, Check, X, MapPin, ChevronLeft, ChevronRight } from 'lucide-react'
 import { getWateringForecast } from '../utils/wateringForecast'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import PostFertilizePrompt from './PostFertilizePrompt'
@@ -15,18 +15,33 @@ import PostFertilizePrompt from './PostFertilizePrompt'
  * X mygtukas kampe, action bar apačioje).
  *
  * 3 veiksmai:
- * - Laistyti → onAddEvent('watering') → close
+ * - Laistyti → onAddEvent('watering') → onAfterAction (kuris auto-advance
+ *   į kitą list'o augalą arba uždaro jei paskutinis)
  * - Tręšti → onAddEvent('fertilizing') → post-fert prompt → Palaisčiau/Nelaisčiau
- * - Patikrinau (snooze) → onAddEvent('inspection') → close (rodoma tik
- *   kai watering vėluoja)
+ * - Patikrinau (snooze) → onAddEvent('inspection') → onAfterAction (rodoma
+ *   tik kai watering vėluoja)
+ *
+ * Navigation (priežiūros santrauka kontekste):
+ * - onPrev / onNext — strėlės šonuose, rodoma tik jei callback pateiktas
+ * - navIndex / navTotal — opcionalus "1 / 5" indikatorius
+ * - Long-press care mode'e nepateikia šių props — strėlių nėra
  *
  * Props:
- *   plant      — augalo objektas
- *   zones      — visos zonos (zone chip rendering'ui)
- *   onClose    — uždarymas
- *   onAddEvent — (type, extra) => void; type ∈ {watering, fertilizing, inspection}
+ *   plant         — augalo objektas
+ *   zones         — visos zonos (zone chip rendering'ui)
+ *   onClose       — uždarymas (X mygtukas, drag down, backdrop)
+ *   onAddEvent    — (type, extra) => void; type ∈ {watering, fertilizing, inspection}
+ *   onAfterAction — (opcionalus) iškviečiamas po veiksmo. Default: onClose
+ *   onPrev        — (opcionalus) ankstesnis augalas list'e (null jei nėra prev)
+ *   onNext        — (opcionalus) sekantis augalas list'e (null jei nėra next)
+ *   navIndex      — (opcionalus) dabartinio augalo indeksas (rodyklės indikatoriui)
+ *   navTotal      — (opcionalus) bendras list'o ilgis
  */
-export default function CareWateringSheet({ plant, zones = [], onClose, onAddEvent }) {
+export default function CareWateringSheet({
+  plant, zones = [], onClose, onAddEvent,
+  onAfterAction, onPrev, onNext, navIndex, navTotal,
+}) {
+  const afterAction = onAfterAction || onClose
   const wc = getWateringForecast(plant)
   const hasImg = !!plant.image
   const intervals = plant.laistymasIntervalas
@@ -36,11 +51,13 @@ export default function CareWateringSheet({ plant, zones = [], onClose, onAddEve
   const currentZone = zones.find(z => z.id === plant.zonaId)
   const [postFert, setPostFert] = useState(false)
 
-  const onWater     = () => { onAddEvent('watering');     onClose() }
+  // Veiksmai naudoja afterAction (auto-advance į kitą list'o augalą arba close).
+  // Tręšti yra išimtis — neperžengia, post-fert prompt'as turi būti atsakytas.
+  const onWater     = () => { onAddEvent('watering');     afterAction() }
   const onFertilize = () => { onAddEvent('fertilizing'); setPostFert(true) }
-  const onInspect   = () => { onAddEvent('inspection');   onClose() }
-  const onPalasciau = () => { onAddEvent('watering', { komentaras: 'Laistyta po tręšimo' }); onClose() }
-  const onNelasciau = () => { onClose() }
+  const onInspect   = () => { onAddEvent('inspection');   afterAction() }
+  const onPalasciau = () => { onAddEvent('watering', { komentaras: 'Laistyta po tręšimo' }); afterAction() }
+  const onNelasciau = () => { afterAction() }
 
   const fmtDate = iso => iso
     ? new Date(iso + 'T00:00:00').toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
@@ -89,6 +106,35 @@ export default function CareWateringSheet({ plant, zones = [], onClose, onAddEve
             <div className="w-10 h-1 bg-black/15 rounded-full" />
           </div>
         </div>
+
+        {/* Navigacijos strėlės — rodoma tik jei priežiūros santrauka pateikė
+            list (per onPrev/onNext callbacks). Long-press care mode'e — null. */}
+        {onPrev && (
+          <button
+            onClick={onPrev}
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-black/45 transition-colors"
+            aria-label="Ankstesnis augalas"
+          >
+            <ChevronLeft size={20} />
+          </button>
+        )}
+        {onNext && (
+          <button
+            onClick={onNext}
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-black/45 transition-colors"
+            aria-label="Sekantis augalas"
+          >
+            <ChevronRight size={20} />
+          </button>
+        )}
+        {/* Indikatorius "2 / 5" — kompaktiškas pill po drag handle, jei nav aktyvi */}
+        {navIndex != null && navTotal != null && navTotal > 1 && (
+          <div className="absolute z-20 left-1/2 -translate-x-1/2" style={{ top: 'calc(env(safe-area-inset-top) + 1.5rem)' }}>
+            <div className="bg-black/30 backdrop-blur-sm rounded-full px-2.5 py-0.5">
+              <span className="text-[11px] font-semibold text-white tabular-nums">{navIndex + 1} / {navTotal}</span>
+            </div>
+          </div>
+        )}
 
         {/* ── Hero ── identiška PlantDetail */}
         {hasImg ? (

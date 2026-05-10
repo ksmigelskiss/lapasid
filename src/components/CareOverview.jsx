@@ -4,7 +4,9 @@ import { getWateringForecast, shouldShowWateringAlert } from '../utils/wateringF
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 
-function Section({ bg, labelColor, chipBg, chipText, badgeColor, icon, label, plants, renderBadge, onTap }) {
+// `withList` — kai true, perduoda Section.plants kaip 2-ą onTap argumentą
+// (CareWateringSheet navigacijai). Dormancy sekcijoms — false (nėra cycle reikalo).
+function Section({ bg, labelColor, chipBg, chipText, badgeColor, icon, label, plants, renderBadge, onTap, withList = false }) {
   if (plants.length === 0) return null
   return (
     <div className={`${bg} rounded-2xl px-3 py-2.5`}>
@@ -15,7 +17,7 @@ function Section({ bg, labelColor, chipBg, chipText, badgeColor, icon, label, pl
         {plants.map(p => (
           <button
             key={p.id}
-            onClick={() => onTap(p)}
+            onClick={() => withList ? onTap(p, plants) : onTap(p)}
             className={`flex items-center gap-1 ${chipBg} rounded-xl px-2.5 py-1 active:opacity-70 transition-opacity`}
           >
             <span className={`text-[11px] font-medium max-w-[90px] truncate ${chipText}`}>{p.lietuviškas}</span>
@@ -65,6 +67,7 @@ export default function CareOverview({ plants, onTap, onWaterTap, defaultOpen = 
             plants={wateringList}
             renderBadge={p => { const d = getWateringForecast(p).daysUntil; return d != null ? `+${Math.abs(d)}d` : null }}
             onTap={onWaterTap ?? onTap}
+            withList
           />
           <Section
             bg="bg-amber-50"
@@ -77,6 +80,7 @@ export default function CareOverview({ plants, onTap, onWaterTap, defaultOpen = 
             plants={fertList}
             renderBadge={p => { const d = getFertilizingForecast(p).daysUntil; return d != null ? `+${Math.abs(d)}d` : null }}
             onTap={onWaterTap ?? onTap}
+            withList
           />
           <Section
             bg="bg-gray-50"

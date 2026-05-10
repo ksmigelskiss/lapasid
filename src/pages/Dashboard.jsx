@@ -159,7 +159,12 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
   const [nameInput,      setNameInput]      = useState('')
   const [careMode, setCareMode]         = useState(false)
   const [careChecked, setCareChecked]   = useState(new Set())
-  const [careInfoPlant, setCareInfoPlant] = useState(null)
+  // CareWateringSheet kontekstas. Vietoj objekto saugom ID + opcionalų navigacijos sąrašą,
+  // kad galėtume cyclinti per priežiūros santraukos sąrašą (Patikrink ar ne sausi /
+  // Pamaitink augalėlį). Plant duomenys live-resolve'inami iš mainPlants per useMemo,
+  // todėl jie visada šviežūs po veiksmų (Firestore listener atnaujina mainPlants).
+  const [careInfoPlantId, setCareInfoPlantId] = useState(null)
+  const [careInfoList, setCareInfoList]       = useState(null) // string[] | null — augalų ID sąrašas navigacijai
   const [postFertilizeFor, setPostFertilizeFor] = useState(null) // null | Set<plantId> — laukia "ar palaistei?" atsakymo
   const [careToast, setCareToast] = useState(null)         // { headline, counts, total } | null — bulk action reward
   const careToastTimerRef = useRef(null)
@@ -193,6 +198,46 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
     () => aggregateConfidence(mainPlants.map(p => getWateringForecast(p))),
     [mainPlants]
   )
+
+  // CareWateringSheet: derived state ir navigacijos handler'iai
+  const careInfoPlant = useMemo(
+    () => careInfoPlantId ? mainPlants.find(p => p.id === careInfoPlantId) ?? null : null,
+    [careInfoPlantId, mainPlants]
+  )
+  const careInfoIdx = (careInfoList && careInfoPlantId) ? careInfoList.indexOf(careInfoPlantId) : -1
+
+  // Atidarymas — list opcionalus (nav strėlės rodomos tik jei list pateikta).
+  // Long-press care mode'e neperduoda list (viengubas augalas), priežiūros
+  // santraukos tap'as perduoda atitinkamo skyrelio sąrašą (watering / fert).
+  const openCareInfo = useCallback((plant, list) => {
+    setCareInfoPlantId(plant.id)
+    setCareInfoList(list ? list.map(p => p.id) : null)
+  }, [])
+
+  const closeCareInfo = useCallback(() => {
+    setCareInfoPlantId(null)
+    setCareInfoList(null)
+  }, [])
+
+  const goCareInfoPrev = useCallback(() => {
+    if (!careInfoList || careInfoIdx <= 0) return
+    setCareInfoPlantId(careInfoList[careInfoIdx - 1])
+  }, [careInfoList, careInfoIdx])
+
+  const goCareInfoNext = useCallback(() => {
+    if (!careInfoList || careInfoIdx === -1 || careInfoIdx >= careInfoList.length - 1) return
+    setCareInfoPlantId(careInfoList[careInfoIdx + 1])
+  }, [careInfoList, careInfoIdx])
+
+  // Auto-advance po veiksmo: jei sąraše dar yra augalų — pereiti į kitą,
+  // kitaip uždaryti sheet'ą. Variant B (vartotojo pasirinkimas).
+  const onCareInfoAfterAction = useCallback(() => {
+    if (careInfoList && careInfoIdx !== -1 && careInfoIdx < careInfoList.length - 1) {
+      setCareInfoPlantId(careInfoList[careInfoIdx + 1])
+    } else {
+      closeCareInfo()
+    }
+  }, [careInfoList, careInfoIdx, closeCareInfo])
 
   const exitCareMode = useCallback(() => {
     resetConfirm()
@@ -677,13 +722,15 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
       {/* Scrollable content */}
       {!searching && <div ref={scrollRef} className={`flex-1 overflow-y-auto scrollbar-none px-5 ${role === 'viewer' ? 'pb-8' : 'pb-28'}`}>
 
-        {/* Care overview — slepiama care mode'e (vartotojas jau dirba su augalais tiesiogiai) */}
-        {!careMode && <CareOverview plants={mainPlants} onTap={setCareInfoPlant} />}
+        {/* Care overview — slepiama care mode'e (vartotojas jau dirba su augalais tiesiogiai).
+            onTap gauna (plant, list?) — list = sąrašas to skyrelio (pvz. wateringList),
+            kuris perduodamas openCareInfo navigacijai per CareWateringSheet strėles. */}
+        {!careMode && <CareOverview plants={mainPlants} onTap={openCareInfo} />}
 
         {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (
           <QuarantineSection plants={quarantinePlants} zones={zones} onTap={onTap}
-            careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onCareInfo={setCareInfoPlant} />
+            careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onCareInfo={(p) => openCareInfo(p)} />
         )}
 
         {/* Plant grid */}
@@ -705,7 +752,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
           <>
             {zonedPlants.map(({ zone, plants: zp }) => zp.length > 0 && (
               <ZoneSection key={zone.id} zone={zone} plants={zp} onTap={onTap}
-                careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onCareInfo={setCareInfoPlant} />
+                careMode={careMode} careChecked={careChecked} onCareToggle={toggleCare} onCareInfo={(p) => openCareInfo(p)} />
             ))}
             {unzonedPlants.length > 0 && (
               <div ref={unzonedRef} className="mb-3">
@@ -723,7 +770,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                       <div className="grid grid-cols-2 gap-2">
                         {pinChecked(unzonedPlants.filter(p => p.status === 'sick'), careMode, careChecked).map(plant => (
                           <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)}
-                            careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} onCareInfo={() => setCareInfoPlant(plant)} />
+                            careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} onCareInfo={() => openCareInfo(plant)} />
                         ))}
                       </div>
                     </div>
@@ -732,7 +779,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                     <div className="grid grid-cols-2 gap-3">
                       {pinChecked(unzonedPlants.filter(p => p.status !== 'sick'), careMode, careChecked).map(plant => (
                         <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)}
-                          careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} onCareInfo={() => setCareInfoPlant(plant)} />
+                          careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} onCareInfo={() => openCareInfo(plant)} />
                       ))}
                     </div>
                   )}
@@ -752,7 +799,7 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                   careMode={careMode}
                   checked={careChecked.has(plant.id)}
                   onToggle={() => toggleCare(plant.id)}
-                  onCareInfo={() => setCareInfoPlant(plant)}
+                  onCareInfo={() => openCareInfo(plant)}
                 />
               ))}
             </div>
@@ -878,7 +925,12 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
             key={careInfoPlant.id}
             plant={careInfoPlant}
             zones={zones}
-            onClose={() => setCareInfoPlant(null)}
+            onClose={closeCareInfo}
+            onPrev={careInfoIdx > 0 ? goCareInfoPrev : null}
+            onNext={(careInfoList && careInfoIdx < careInfoList.length - 1) ? goCareInfoNext : null}
+            onAfterAction={onCareInfoAfterAction}
+            navIndex={careInfoIdx >= 0 ? careInfoIdx : null}
+            navTotal={careInfoList?.length ?? null}
             onAddEvent={(type, extra = {}) => {
               const plant = careInfoPlant
               onAddTimelineEvent(plant.id, { id: makeId(), type, date: today(), komentaras: '', ...extra })
