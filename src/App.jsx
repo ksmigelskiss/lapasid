@@ -346,6 +346,9 @@ export default function App() {
       user={user}
       onProfileClick={() => setShowDesktopProfile(true)}
       role={role}
+      allCollections={allCollections}
+      collectionId={collectionId}
+      onSwitchCollection={switchCollection}
     />
   ) : null
 
