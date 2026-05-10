@@ -1,6 +1,6 @@
 {
-  "name": "Gėlių žinynas",
-  "short_name": "Gėlės",
+  "name": "LapasID",
+  "short_name": "LapasID",
   "description": "Asmeninis augalų žinynas",
   "start_url": "/",
   "display": "standalone",

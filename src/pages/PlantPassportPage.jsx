@@ -54,7 +54,7 @@ function NotFoundView() {
         href="/"
         className="mt-2 px-6 py-3 bg-sage-500 text-white rounded-2xl text-sm font-medium"
       >
-        Grįžti į geliai.app
+        Grįžti į LapasID
       </a>
     </div>
   )

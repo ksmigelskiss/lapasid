@@ -27,7 +27,7 @@ export default function LoginScreen({ onSignIn, loading = false, error = null })
         <div className="flex flex-col items-center gap-3">
           <img src="/plant_pot.png" alt="" className="w-20 h-20 object-contain" />
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900">Gėlių žinynas</h1>
+            <h1 className="text-2xl font-bold text-gray-900">LapasID</h1>
             {isMember
               ? <p className="text-sm text-gray-500 mt-1">Prisijunk prie kolekcijos</p>
               : <p className="text-sm text-gray-500 mt-1">Tavo augalų kolekcija</p>

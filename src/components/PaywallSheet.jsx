@@ -113,7 +113,7 @@ export default function PaywallSheet({ open, limitType, onClose }) {
 
             {/* CTA */}
             <a
-              href="mailto:kestutis@okone.lt?subject=Gėlių žinynas prenumerata"
+              href="mailto:kestutis@okone.lt?subject=LapasID prenumerata"
               className="block w-full py-3.5 bg-brand text-white text-sm font-semibold text-center rounded-2xl"
             >
               Susisiekti dėl prenumeratos
