@@ -229,7 +229,11 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
         className={useDesktopPanel
           ? "absolute inset-0 z-20 bg-white overflow-y-auto"
           : "fixed bottom-0 inset-x-0 z-50 bg-white rounded-t-3xl max-w-[430px] mx-auto"}
-        {...(useDesktopPanel ? {} : {
+        {...(useDesktopPanel ? {
+          // Desktop'e — slide iš dešinės (kortelė įvažiuoja iš panel'ės krašto)
+          initial: { x: '100%' }, animate: { x: 0 }, exit: { x: '100%' },
+          transition: { type: 'spring', damping: 32, stiffness: 320 },
+        } : {
           initial: { y: '100%' }, animate: { y: 0 }, exit: { y: '100%' },
           transition: { type: 'spring', damping: 30, stiffness: 300 },
         })}

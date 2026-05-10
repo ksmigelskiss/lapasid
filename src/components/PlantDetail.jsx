@@ -1132,7 +1132,13 @@ export default function PlantDetail({
           ? "relative w-full h-full bg-app flex flex-col"
           : "relative w-full max-w-[430px] bg-app flex flex-col"}
         style={useDesktopPanel ? { height: '100%' } : { height: '100dvh', y }}
-        {...(useDesktopPanel ? {} : {
+        {...(useDesktopPanel ? {
+          // Desktop'e — slide iš dešinės (panel'ėje atrodo, kaip kad kortelė
+          // įvažiuotų iš ekrano krašto). Be drag, be dynamiško y.
+          initial: { x: '100%' },
+          animate: { x: visible ? 0 : '100%' },
+          transition: { type: 'spring', damping: 32, stiffness: 320 },
+        } : {
           drag: 'y',
           dragControls,
           dragListener: false,

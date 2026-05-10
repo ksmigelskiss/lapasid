@@ -106,7 +106,10 @@ export default function CareWateringSheet({
           ? "relative w-full h-full bg-app flex flex-col"
           : "relative w-full max-w-[430px] bg-app flex flex-col"}
         style={useDesktopPanel ? { height: '100%' } : { height: '100dvh', y }}
-        {...(useDesktopPanel ? {} : {
+        {...(useDesktopPanel ? {
+          // Desktop'e — slide iš dešinės (kortelė įvažiuoja iš panel'ės krašto)
+          initial: { x: '100%' }, animate: { x: 0 }, exit: { x: '100%' },
+        } : {
           drag: 'y',
           dragControls,
           dragListener: false,

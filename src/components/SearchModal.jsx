@@ -379,12 +379,10 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     <div className={useDesktopPanel ? "absolute inset-0 flex justify-center" : "fixed inset-0 z-50 flex justify-center"}>
     <motion.div
       className={useDesktopPanel ? "w-full h-full flex flex-col bg-app" : "w-full max-w-[430px] flex flex-col bg-app"}
-      {...(useDesktopPanel ? {} : {
-        initial: { x: '100%' },
-        animate: { x: 0 },
-        exit: { x: '100%' },
-        transition: { type: 'spring', damping: 32, stiffness: 320 },
-      })}
+      initial={{ x: '100%' }}
+      animate={{ x: 0 }}
+      exit={{ x: '100%' }}
+      transition={{ type: 'spring', damping: 32, stiffness: 320 }}
       style={{ touchAction: 'pan-y' }}
     >
       {/* Header */}
