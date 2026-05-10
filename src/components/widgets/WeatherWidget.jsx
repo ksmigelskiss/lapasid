@@ -15,7 +15,7 @@ export default function WeatherWidget({ weather }) {
   // Loading skeleton
   if (!weather) {
     return (
-      <div className="bg-white/95 backdrop-blur rounded-2xl shadow-[0_2px_12px_rgba(20,40,30,0.08)] border border-white/60 px-4 py-3.5">
+      <div className="bg-white/55 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40 px-4 py-3.5">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-4 h-4 rounded-full bg-gray-200 animate-pulse" />
           <div className="w-20 h-3.5 bg-gray-200 rounded animate-pulse" />
@@ -38,7 +38,7 @@ export default function WeatherWidget({ weather }) {
   const mm = String(now.getMinutes()).padStart(2, '0')
 
   return (
-    <div className="bg-white/95 backdrop-blur rounded-2xl shadow-[0_2px_12px_rgba(20,40,30,0.08)] border border-white/60 px-4 py-3.5 space-y-2.5">
+    <div className="bg-white/55 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40 px-4 py-3.5 space-y-2.5">
       {/* Header: location + time */}
       <div className="flex items-center justify-between text-[12px]">
         <span className="inline-flex items-center gap-1.5 font-semibold text-gray-700">

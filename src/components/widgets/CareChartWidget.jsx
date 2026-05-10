@@ -15,7 +15,7 @@ export default function CareChartWidget({ weekData = [] }) {
   const maxStack = Math.max(1, ...weekData.map(d => d.watering + d.fertilizing))
 
   return (
-    <div className="bg-white/95 backdrop-blur rounded-2xl shadow-[0_2px_12px_rgba(20,40,30,0.08)] border border-white/60 px-4 py-3.5">
+    <div className="bg-white/55 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40 px-4 py-3.5">
       {/* Header: title + legend */}
       <div className="flex items-center justify-between mb-3">
         <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
