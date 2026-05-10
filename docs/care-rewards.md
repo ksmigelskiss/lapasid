@@ -111,6 +111,37 @@ Po Laistyti / Palaisčiau / Nelaisčiau veiksmo. **Du variantai, prioritetas cir
 - Auto-fade 3s
 - **Skip jei deltaPct = 0** (pvz. fert-only veiksmas — tyla geriau nei „+0%")
 
+### 2b. CareWateringSheet navigacija (priežiūros santrauka kontekste)
+
+Atidarius CareWateringSheet iš priežiūros santraukos (Patikrink ar ne sausi /
+Pamaitink augalėlį), vartotojas gauna **galerijos stiliaus navigaciją** per
+to skyrelio sąrašą:
+
+- **Strėlės šonuose** (chevron-left / chevron-right, semi-transparent black, w-10 h-10)
+  - Rodoma tik jei pateikta onPrev/onNext callback (priežiūros santraukos kontekste)
+  - Ne edge'uose disable'inama (paslepiama)
+- **Indikatorius "2 / 5"** po drag handle (mažas pill, juodas/30 backdrop)
+- **Auto-advance po veiksmo** (Variant B, vartotojo pasirinkimas):
+  - Po Laistyti / Patręšta+Palaisčiau / Patręšta+Nelaisčiau / Patikrinau →
+    automatiškai pereina į kitą sąrašo augalą
+  - Paskutinis sąraše → sheet uždaromas
+  - X mygtukas / drag-down / backdrop tap → visada uždaro be advance
+- **Long-press care mode'e nepateikia** onPrev/onNext/onAfterAction →
+  strėlių nėra, elgsena identiška kaip prieš
+
+**Architektūra:** Dashboard.jsx vietoj `careInfoPlant` objekto laiko
+`careInfoPlantId` + `careInfoList` (string[] of IDs). Plant duomenys
+live-resolve'inami iš mainPlants per useMemo — visada švieži po Firestore
+propagation. List snapshot'as paimamas atidarymo metu (per IDs), todėl
+order stabilus, bet kiekvieno plant duomenys atnaujinami live.
+
+CareOverview Section komponentas: naujas `withList` prop. Watering ir Fert
+sekcijos perduoda plants kaip 2-ą onTap argumentą; dormancy sekcijos —
+ne (nesukuria nav konteksto).
+
+CareWateringSheet props: 5 nauji opcionalūs — `onPrev`, `onNext`,
+`onAfterAction`, `navIndex`, `navTotal`. Default `afterAction = onClose`.
+
 ### 3. Session summary modal (sesijos pabaigos recap)
 
 Išėjus iš care mode (X paspaudimas) jei buvo bent vienas veiksmas:
@@ -185,8 +216,34 @@ Išėjus iš care mode (X paspaudimas) jei buvo bent vienas veiksmas:
 | 6. Single-plant rewards (CareWateringSheet) | ✅ Done |
 | 7. Snapshot/diff session delta (apima visus paths) | ✅ Done |
 | 8. Demo mygtukų pašalinimas | ✅ Done |
+| 9. Refaktoras: CareWateringSheet + utils iš Dashboard.jsx | ✅ Done |
+| 10. CareWateringSheet navigacijos strėlės + auto-advance (Variant B) | ✅ Done |
+| 11. CareCircle pill split (abu overdue) | ✅ Done |
+
+**Statusas po žingsnio 11:** dizaino struktūra baigta. Sekanti fazė — testavimas.
 
 **Ateičiai (po visko):** single-plant CareWateringSheet mikro-toast (kai vienas augalas, ne bulk).
+
+---
+
+## CareCircle ant PlantCard (care mode pasirinkimo burbuliukas)
+
+Care mode'e ant kiekvieno PlantCard yra mažas pasirinkimo indikatorius
+(bottom-right kampe). 4 vizualinės būsenos:
+
+| Būsena | Forma | Spalva |
+|--------|-------|--------|
+| Nei vienas overdue | Apskritimas (w-7 h-7) | white/80 border + black/30 fill |
+| Tik laistymas overdue | Apskritimas | sky-400 border + sky-400/20 fill (unchecked) arba sky-400 fill (checked) |
+| Tik tręšimas overdue | Apskritimas | amber-400 border + amber-400/20 fill (unchecked) arba amber-400 fill (checked) |
+| **ABU overdue** | **Kapsulė (w-12 h-7, stadiono forma)** | **Pusinis-pusinis split**: sky kairė, amber dešinė. Border irgi split'intas (kiekvienas pusinis savo border'ą atitinkančia spalva, vidury border'o nėra — pusiniai liečiasi seamlessly) |
+
+Anksčiau abu-overdue atvejis rodydavo TIK kolbą (fert priority) — vandens
+ikona dingdavo. Dabar abu matomi vienu metu.
+
+**Implementacija:** `CareCircle` komponente PlantCard.jsx. Kapsulė pasirinkta
+vietoj didesnio apskritimo, kad ikonos turėtų pakankamai erdvės (icon size
+11 vs single-overdue 12-14).
 
 ---
 

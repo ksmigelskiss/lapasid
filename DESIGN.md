@@ -377,7 +377,7 @@ return createPortal(
 
 Visi „augalo priežiūros" mygtukai (Laistyti / Tręšti / Patikrinau) turi vienodai elgtis bet kurioje vietoje (Dashboard care mode bulk, CareWateringSheet single-plant, ateities NFC pass'ai). Kad nereiktų kiekvieną kartą perdaryti — **nedubliuokim UI/logikos**, naudokim shared blokus.
 
-> 📚 **Pilnas reward sistemos dokumentas:** [docs/care-rewards.md](docs/care-rewards.md) — confidence skaičiavimas, delta logika, toast/summary failų schema, kaip pridėti naują frazę.
+> 📚 **Pilnas reward sistemos dokumentas:** [docs/care-rewards.md](docs/care-rewards.md) — confidence skaičiavimas, delta logika, toast/summary failų schema, CareWateringSheet navigacija, CareCircle pill, kaip pridėti naują frazę.
 
 ### Kanoninės taisyklės
 
