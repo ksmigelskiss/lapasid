@@ -9,6 +9,7 @@ import { usePlants } from './hooks/usePlants'
 import { useAuth } from './hooks/useAuth'
 import { useIsDesktop } from './hooks/useIsDesktop'
 import DesktopLayout from './components/desktop/DesktopLayout'
+import { DetailHostProvider } from './contexts/DetailHostContext'
 import LoginScreen from './components/LoginScreen'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
 
@@ -322,7 +323,7 @@ export default function App() {
   )
 
   return (
-    <>
+    <DetailHostProvider>
       {isDesktop ? (
         <DesktopLayout>{tabsArea}</DesktopLayout>
       ) : (
@@ -431,6 +432,6 @@ export default function App() {
           />
         )}
       </AnimatePresence>
-    </>
+    </DetailHostProvider>
   )
 }

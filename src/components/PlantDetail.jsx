@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
+import { useIsDesktop } from '../hooks/useIsDesktop'
+import { useDetailHost } from '../contexts/DetailHostContext'
 import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronRight, Share2, Copy, Check } from 'lucide-react'
 import { doc, setDoc } from 'firebase/firestore'
 import { db } from '../utils/firebase'
@@ -999,6 +1002,22 @@ export default function PlantDetail({
   role = 'owner',
   collectionId = null,
 }) {
+  // Desktop split panel: render'inam į RightPanel'ą per createPortal,
+  //   ne fullscreen overlay'ų. Mobile (<1024px) lieka kaip buvo.
+  const isDesktop = useIsDesktop()
+  const host = useDetailHost()
+  const useDesktopPanel = isDesktop && !!host?.container
+
+  // Desktop'e — atidarom/uždarom host'ą sekant `visible` flag (App.jsx
+  // laiko PlantDetail mount'inta su lastDetailRef, todėl unmount įvyksta retai;
+  // visible=false reiškia, kad uždaryta).
+  useEffect(() => {
+    if (!useDesktopPanel || !host) return
+    if (!visible) return
+    host.open()
+    return () => host.close()
+  }, [useDesktopPanel, visible]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const [activeTab, setActiveTab]           = useState('profile')
   const [heroError, setHeroError]           = useState(false)
   const [showPhotoSheet, setShowPhoto]      = useState(false)
@@ -1089,41 +1108,54 @@ export default function PlantDetail({
     }
   }
 
-  return (
-    <div className="fixed inset-0 z-[70] flex items-end justify-center" style={{ pointerEvents: visible ? '' : 'none' }}>
-      {/* Backdrop */}
-      <motion.div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: visible ? 1 : 0 }}
-        transition={{ duration: 0.25 }}
-        onClick={onClose}
-      />
+  const tree = (
+    <div
+      className={useDesktopPanel
+        ? "absolute inset-0 bg-app flex flex-col"
+        : "fixed inset-0 z-[70] flex items-end justify-center"}
+      style={useDesktopPanel ? undefined : { pointerEvents: visible ? '' : 'none' }}
+    >
+      {/* Backdrop — tik mobile; desktop'e panel pati yra "modal" konteineris */}
+      {!useDesktopPanel && (
+        <motion.div
+          className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: visible ? 1 : 0 }}
+          transition={{ duration: 0.25 }}
+          onClick={onClose}
+        />
+      )}
 
       {/* Sheet */}
       <motion.div
-        className="relative w-full max-w-[430px] bg-app flex flex-col"
-        style={{ height: '100dvh', y }}
-        drag="y"
-        dragControls={dragControls}
-        dragListener={false}
-        dragConstraints={{ top: 0 }}
-        dragElastic={{ top: 0, bottom: 0.25 }}
-        onDragEnd={handleDragEnd}
-        initial={{ y: '100%' }}
-        animate={{ y: visible ? 0 : '100%' }}
-        transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+        className={useDesktopPanel
+          ? "relative w-full h-full bg-app flex flex-col"
+          : "relative w-full max-w-[430px] bg-app flex flex-col"}
+        style={useDesktopPanel ? { height: '100%' } : { height: '100dvh', y }}
+        {...(useDesktopPanel ? {} : {
+          drag: 'y',
+          dragControls,
+          dragListener: false,
+          dragConstraints: { top: 0 },
+          dragElastic: { top: 0, bottom: 0.25 },
+          onDragEnd: handleDragEnd,
+          initial: { y: '100%' },
+          animate: { y: visible ? 0 : '100%' },
+          transition: { type: 'spring', damping: 32, stiffness: 320 },
+        })}
       >
-        {/* Drag handle — pointer-events only on the pill, not full width */}
-        <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pb-2 pointer-events-none select-none" style={{ paddingTop: 'max(0.625rem, env(safe-area-inset-top))' }}>
-          <div
-            onPointerDown={e => dragControls.start(e)}
-            className="px-8 py-1 cursor-grab active:cursor-grabbing pointer-events-auto"
-            style={{ touchAction: 'none' }}
-          >
-            <div className="w-10 h-1 bg-black/15 rounded-full" />
+        {/* Drag handle — tik mobile; desktop'e nereikia (uždarom per X mygtuką) */}
+        {!useDesktopPanel && (
+          <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pb-2 pointer-events-none select-none" style={{ paddingTop: 'max(0.625rem, env(safe-area-inset-top))' }}>
+            <div
+              onPointerDown={e => dragControls.start(e)}
+              className="px-8 py-1 cursor-grab active:cursor-grabbing pointer-events-auto"
+              style={{ touchAction: 'none' }}
+            >
+              <div className="w-10 h-1 bg-black/15 rounded-full" />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* ── Hero ── */}
         {plant.image && !heroError ? (
@@ -1452,4 +1484,10 @@ export default function PlantDetail({
       </AnimatePresence>
     </div>
   )
+
+  if (useDesktopPanel) {
+    if (!visible) return null
+    return createPortal(tree, host.container)
+  }
+  return tree
 }
