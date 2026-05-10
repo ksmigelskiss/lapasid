@@ -25,30 +25,26 @@ function CareCircle({ checked, waterOverdue, fertOverdue }) {
   const baseSize = 'w-7 h-7 rounded-full border-2 shadow-md'
   const single   = `${baseSize} flex items-center justify-center`
 
-  // BOTH overdue — kapsulė su split border'iu. Kiekvienas pusinis turi
-  // savo border'ą atitinkančia spalvą (sky kairė, amber dešinė). Vidury
-  // border'o nėra (border-r-0 / border-l-0), pusiniai liečiasi seamlessly.
+  // BOTH overdue — kapsulė su split border'iu. Spalva pasakoja istoriją
+  // (sky=laistyti, amber=tręšti); ikonų nėra, nes informacija dubliuojasi
+  // su water meter'iu apačioje + amber halo.
   if (waterOverdue && fertOverdue) {
     return (
       <div className="w-12 h-7 rounded-full shadow-md flex">
-        <div className={`w-1/2 flex items-center justify-center border-2 border-r-0 rounded-l-full ${checked ? 'bg-sky-400 border-sky-400' : 'bg-sky-400/30 border-sky-400'}`}>
-          <Droplets size={11} className={checked ? 'text-white' : 'text-sky-500'} />
-        </div>
-        <div className={`w-1/2 flex items-center justify-center border-2 border-l-0 rounded-r-full ${checked ? 'bg-amber-400 border-amber-400' : 'bg-amber-400/30 border-amber-400'}`}>
-          <FlaskConical size={11} className={checked ? 'text-white' : 'text-amber-500'} />
-        </div>
+        <div className={`w-1/2 border-2 border-r-0 rounded-l-full ${checked ? 'bg-sky-400 border-sky-400' : 'bg-sky-400/30 border-sky-400'}`} />
+        <div className={`w-1/2 border-2 border-l-0 rounded-r-full ${checked ? 'bg-amber-400 border-amber-400' : 'bg-amber-400/30 border-amber-400'}`} />
       </div>
     )
   }
 
-  // Single overdue (fert ARBA water ARBA nei)
+  // Single overdue (fert ARBA water ARBA nei) — spalva, be ikonų
   if (checked) {
-    if (fertOverdue)  return <div className={`${single} bg-amber-400 border-amber-400`}><FlaskConical size={14} className="text-white" /></div>
-    if (waterOverdue) return <div className={`${single} bg-sky-400 border-sky-400`}><Droplets size={14} className="text-white" /></div>
+    if (fertOverdue)  return <div className={`${single} bg-amber-400 border-amber-400`}><Check size={13} className="text-white" /></div>
+    if (waterOverdue) return <div className={`${single} bg-sky-400 border-sky-400`}><Check size={13} className="text-white" /></div>
     return <div className={`${single} bg-sage-400 border-sage-400`}><Check size={13} className="text-white" /></div>
   }
-  if (fertOverdue)  return <div className={`${single} border-amber-400 bg-amber-400/20`}><FlaskConical size={12} className="text-amber-400" /></div>
-  if (waterOverdue) return <div className={`${single} border-sky-400 bg-sky-400/20`}><Droplets size={12} className="text-sky-400" /></div>
+  if (fertOverdue)  return <div className={`${single} border-amber-400 bg-amber-400/20`} />
+  if (waterOverdue) return <div className={`${single} border-sky-400 bg-sky-400/20`} />
   return <div className={`${single} border-white/80 bg-black/30`} />
 }
 
@@ -245,6 +241,30 @@ const PlantCard = memo(function PlantCard({
           {plant.lietuviškas}
         </h3>
         <p className="text-[10px] text-gray-600 italic mt-0.5 truncate">{plant.lotyniskas}</p>
+
+        {/* Water meter — care mode'e, vietoj generic dot-scores rodom realią būklę */}
+        {careMode && section === 'auginama' && waterFC?.intervalDays > 0 && (
+          (() => {
+            const daysSince = waterDays ?? 0
+            const daysRemaining = waterFC.intervalDays - daysSince
+            const pctFull = Math.max(8, Math.min(100, Math.round((daysRemaining / waterFC.intervalDays) * 100)))
+            const urgent = waterOverdue || daysRemaining <= 1
+            return (
+              <div className="flex items-center gap-1.5 mt-2">
+                <Droplets size={11} className={urgent ? 'text-red-500' : 'text-sky-400'} />
+                <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${urgent ? 'bg-red-400' : 'bg-sky-400'}`}
+                    style={{ width: `${pctFull}%` }}
+                  />
+                </div>
+                <span className={`text-[10px] font-semibold ${urgent ? 'text-red-500' : 'text-gray-600'}`}>
+                  {daysRemaining >= 0 ? `${daysRemaining}d` : `+${Math.abs(daysRemaining)}d`}
+                </span>
+              </div>
+            )
+          })()
+        )}
 
         <div className="flex items-center gap-2.5 mt-2">
           {plant.sviesa?.taskai != null && (
