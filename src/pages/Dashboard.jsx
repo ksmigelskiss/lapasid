@@ -879,7 +879,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
           onClick={() => setShowChat(true)}
           className="absolute bottom-24 lg:bottom-5 right-4 active:scale-90 transition-transform z-10"
         >
-          <img src={GARDENER} className="h-[96px] w-auto object-contain drop-shadow opacity-90 animate-idle-float-gardener" alt="" />
+          <img src={GARDENER} className="h-[96px] w-auto object-contain drop-shadow opacity-90 animate-idle-float-gardener lg:animate-idle-float" alt="" />
         </button>
       )}
 
