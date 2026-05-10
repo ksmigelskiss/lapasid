@@ -28,13 +28,26 @@ const CELL_PX    = 15
 const GAP_PX     = 3
 const COL_PX     = CELL_PX + GAP_PX // 18px
 
-function cellColor(day) {
-  if (day.fertilizing > 0) return 'bg-amber-400'
-  if (day.watering === 0) return 'bg-gray-100'
-  if (day.watering <= 1)  return 'bg-sky-100'
-  if (day.watering <= 3)  return 'bg-sky-300'
-  if (day.watering <= 5)  return 'bg-sky-500'
-  return 'bg-sky-700'
+// Quartile bucket pagal value vs. max — adaptuojasi prie konkretaus dataset'o.
+// Bucket 0 → 0 actions; 1-4 → 1-25% / 25-50% / 50-75% / 75-100% nuo max'o.
+function bucket(value, max) {
+  if (value <= 0) return 0
+  if (max <= 1) return 4 // edge case — max=1 reiškia visi vienodai aukščiausi
+  const pct = value / max
+  if (pct <= 0.25) return 1
+  if (pct <= 0.5)  return 2
+  if (pct <= 0.75) return 3
+  return 4
+}
+
+const SKY_TONES   = ['', 'bg-sky-100',   'bg-sky-300',   'bg-sky-500',   'bg-sky-700']
+const AMBER_TONES = ['', 'bg-amber-100', 'bg-amber-300', 'bg-amber-500', 'bg-amber-700']
+
+function cellColor(day, maxWater, maxFert) {
+  // Tręšimas wins (rečiau, vizualiai svarbiau) — bet su gradient ne vienu tonu.
+  if (day.fertilizing > 0) return AMBER_TONES[bucket(day.fertilizing, maxFert)]
+  if (day.watering > 0)    return SKY_TONES[bucket(day.watering, maxWater)]
+  return 'bg-gray-100'
 }
 
 function cellTooltip(day) {
@@ -50,14 +63,18 @@ export default function CareHeatmapWidget({ data }) {
   if (!data) return null
   const { grid, monthMarkers } = data
 
-  // Bendri count'ai apatiniam summary: reikia praeit visas dienas (be future)
+  // Vienu pereinimu: bendri totals + max per dieną (gradient bucket'ams).
   let totalWater = 0
   let totalFert = 0
+  let maxWater  = 0
+  let maxFert   = 0
   for (const week of grid) {
     for (const day of week) {
       if (day.isFuture) continue
       totalWater += day.watering
-      totalFert += day.fertilizing
+      totalFert  += day.fertilizing
+      if (day.watering > maxWater)   maxWater   = day.watering
+      if (day.fertilizing > maxFert) maxFert    = day.fertilizing
     }
   }
 
@@ -156,7 +173,7 @@ export default function CareHeatmapWidget({ data }) {
                     <div
                       key={day.dateISO}
                       title={cellTooltip(day)}
-                      className={`w-[15px] h-[15px] rounded-[3px] ${cellColor(day)} ${
+                      className={`w-[15px] h-[15px] rounded-[3px] ${cellColor(day, maxWater, maxFert)} ${
                         day.isToday ? 'ring-[1.5px] ring-sage-700 ring-offset-0' : ''
                       }`}
                     />
