@@ -22,15 +22,34 @@ function DotScore({ value, max = 3, color }) {
 }
 
 function CareCircle({ checked, waterOverdue, fertOverdue }) {
-  const base = 'w-7 h-7 rounded-full flex items-center justify-center border-2 shadow-md'
-  if (checked) {
-    if (fertOverdue)  return <div className={`${base} bg-amber-400 border-amber-400`}><FlaskConical size={14} className="text-white" /></div>
-    if (waterOverdue) return <div className={`${base} bg-sky-400 border-sky-400`}><Droplets size={14} className="text-white" /></div>
-    return <div className={`${base} bg-sage-400 border-sage-400`}><Check size={13} className="text-white" /></div>
+  const baseSize = 'w-7 h-7 rounded-full border-2 shadow-md'
+  const single   = `${baseSize} flex items-center justify-center`
+
+  // BOTH overdue — pusinis-pusinis split (sky kairė, amber dešinė).
+  // Border lieka neutralus (white), kad nesikonkuruotų su vidaus spalvomis.
+  if (waterOverdue && fertOverdue) {
+    const split = `${baseSize} overflow-hidden flex ${checked ? 'border-white' : 'border-white/80'}`
+    return (
+      <div className={split}>
+        <div className={`w-1/2 flex items-center justify-center ${checked ? 'bg-sky-400' : 'bg-sky-400/30'}`}>
+          <Droplets size={10} className={checked ? 'text-white' : 'text-sky-500'} />
+        </div>
+        <div className={`w-1/2 flex items-center justify-center ${checked ? 'bg-amber-400' : 'bg-amber-400/30'}`}>
+          <FlaskConical size={10} className={checked ? 'text-white' : 'text-amber-500'} />
+        </div>
+      </div>
+    )
   }
-  if (fertOverdue)  return <div className={`${base} border-amber-400 bg-amber-400/20`}><FlaskConical size={12} className="text-amber-400" /></div>
-  if (waterOverdue) return <div className={`${base} border-sky-400 bg-sky-400/20`}><Droplets size={12} className="text-sky-400" /></div>
-  return <div className={`${base} border-white/80 bg-black/30`} />
+
+  // Single overdue (fert ARBA water ARBA nei)
+  if (checked) {
+    if (fertOverdue)  return <div className={`${single} bg-amber-400 border-amber-400`}><FlaskConical size={14} className="text-white" /></div>
+    if (waterOverdue) return <div className={`${single} bg-sky-400 border-sky-400`}><Droplets size={14} className="text-white" /></div>
+    return <div className={`${single} bg-sage-400 border-sage-400`}><Check size={13} className="text-white" /></div>
+  }
+  if (fertOverdue)  return <div className={`${single} border-amber-400 bg-amber-400/20`}><FlaskConical size={12} className="text-amber-400" /></div>
+  if (waterOverdue) return <div className={`${single} border-sky-400 bg-sky-400/20`}><Droplets size={12} className="text-sky-400" /></div>
+  return <div className={`${single} border-white/80 bg-black/30`} />
 }
 
 const PlantCard = memo(function PlantCard({
