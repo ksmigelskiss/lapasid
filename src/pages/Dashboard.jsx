@@ -14,6 +14,7 @@ import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getWateringForecast, shouldShowWateringAlert } from '../utils/wateringForecast'
 import { buildDashboardSystemPrompt } from '../utils/collectionChatContext'
 import { aggregateConfidence, bucketCounts, moodFromCounts, computeWateringDelta } from '../utils/careBuckets'
+import AccuracySprite from '../components/AccuracySprite'
 import { CARE_COPY, pick, fillTemplate } from '../constants/careCopy'
 import { SORT_OPTIONS, sortPlants } from '../utils/plantSort'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
@@ -542,16 +543,15 @@ export default function Dashboard({ plants, allPlants = [], zones = [], onTap, o
                 onClick={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
                 className={`relative transition-colors rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px] ${careMode ? 'bg-sage-500 active:bg-sage-600' : 'bg-white border border-gray-200 active:bg-surface'}`}
               >
-                <Sprout size={20} className={careMode ? 'text-white' : 'text-sage-500'} />
+                {careMode
+                  ? <Sprout size={20} className="text-white" />
+                  : <AccuracySprite pct={Math.round(careConfidence * 100)} size={20} />}
                 <span className={`text-[10px] font-medium mt-0.5 ${careMode ? 'text-white' : 'text-sage-500'}`}>priežiūra</span>
-                {/* Confidence badge — rodomas tik išėjus iš care mode'o ir kai turime duomenų */}
+                {/* Procentas badge'e — tas pats kaip seniau, bet sprite'as jau pats rodo
+                    augimo stadiją (gray → amber → sage → bloom), todėl badge tik su skaičium */}
                 {!careMode && mainPlants.length > 0 && careConfidence > 0 && (
-                  <div className={`absolute -top-1.5 -right-1.5 px-1.5 h-[16px] flex items-center justify-center rounded-full shadow-sm ${
-                    careConfidence >= 0.66 ? 'bg-sage-500' :
-                    careConfidence >= 0.33 ? 'bg-amber-400' :
-                    'bg-gray-300'
-                  }`}>
-                    <span className="text-[9px] font-bold leading-none text-white">{Math.round(careConfidence * 100)}%</span>
+                  <div className="absolute -top-1.5 -right-1.5 px-1.5 h-[16px] flex items-center justify-center rounded-full shadow-sm bg-white border border-gray-200">
+                    <span className="text-[9px] font-bold leading-none text-gray-700">{Math.round(careConfidence * 100)}%</span>
                   </div>
                 )}
               </button>
