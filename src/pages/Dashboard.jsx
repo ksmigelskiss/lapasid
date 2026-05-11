@@ -46,18 +46,18 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
   return (
     <div ref={containerRef} className="mb-3">
       <div className="w-full flex items-center gap-2 py-2">
-        <button onClick={() => setOpen(v => !v)} className="flex items-center gap-1.5 min-w-0">
-          <ShieldAlert size={13} className="text-red-400 flex-shrink-0" />
-          <span className="text-sm font-bold text-red-600">Karantinas</span>
-          <span className="text-xs text-red-300 flex-shrink-0">{plants.length}</span>
+        <button onClick={() => setOpen(v => !v)} className="flex items-center gap-2 min-w-0">
+          <ShieldAlert size={11} className="text-terracotta flex-shrink-0" />
+          <span className="font-mono text-[10.5px] font-medium uppercase tracking-[0.18em] text-terracotta-600">Karantinas</span>
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-terracotta-400 flex-shrink-0">· {plants.length}</span>
         </button>
-        <div className="flex-1 h-px bg-gradient-to-r from-red-200/70 to-transparent ml-2" />
+        <div className="flex-1 h-px bg-gradient-to-r from-terracotta-200/70 to-transparent ml-2" />
         <button onClick={() => setOpen(v => !v)} className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-          {open ? <ChevronUp size={14} className="text-red-300" /> : <ChevronDown size={14} className="text-red-300" />}
+          {open ? <ChevronUp size={14} className="text-terracotta-300" /> : <ChevronDown size={14} className="text-terracotta-300" />}
         </button>
       </div>
       {open && (
-        <div className="bg-red-50 rounded-2xl p-1.5">
+        <div className="bg-terracotta-50 rounded-2xl p-1.5">
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
             {orderedPlants.map(plant => (
               <PlantCard
@@ -97,23 +97,23 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
   return (
     <div ref={containerRef} className="mb-3">
       <div className="w-full flex items-center gap-2 py-2">
-        <button onClick={() => setOpen(v => !v)} className="flex items-center gap-1.5 min-w-0">
-          <MapPin size={13} className="text-sage-400 flex-shrink-0" />
-          <span className="text-sm font-bold text-gray-700 truncate">{zone.name}</span>
-          <span className="text-xs text-gray-400 flex-shrink-0">{plants.length}</span>
+        <button onClick={() => setOpen(v => !v)} className="flex items-center gap-2 min-w-0">
+          <MapPin size={11} className="text-forest-400 flex-shrink-0" />
+          <span className="font-mono text-[10.5px] font-medium uppercase tracking-[0.18em] text-forest-700 truncate">{zone.name}</span>
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-forest-400 flex-shrink-0">· {plants.length}</span>
         </button>
-        <div className="flex-1 h-px bg-gradient-to-r from-sage-200/70 to-transparent ml-2" />
+        <div className="flex-1 h-px bg-gradient-to-r from-forest-200/70 to-transparent ml-2" />
         <button onClick={() => setOpen(v => !v)} className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-          {open ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
+          {open ? <ChevronUp size={14} className="text-forest-300" /> : <ChevronDown size={14} className="text-forest-300" />}
         </button>
       </div>
       {open && (
         <div className="space-y-3">
           {sickPlants.length > 0 && (
-            <div className="bg-amber-50 rounded-2xl p-1.5">
+            <div className="bg-terracotta-50/60 rounded-2xl p-1.5">
               <div className="flex items-center gap-1.5 mb-2 px-1">
-                <Thermometer size={12} className="text-amber-500" />
-                <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wide">Dėmesio</span>
+                <Thermometer size={11} className="text-terracotta-400" />
+                <span className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-terracotta-500">Dėmesio</span>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
                 {sickPlants.map(plant => (
@@ -687,15 +687,15 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
             {unzonedPlants.length > 0 && (
               <div ref={unzonedRef} className="mb-3">
                 <div className="flex items-center gap-2 py-2">
-                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-shrink-0">Nepriskirti</p>
-                  <div className="flex-1 h-px bg-gradient-to-r from-gray-200 to-transparent" />
+                  <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-forest-400 flex-shrink-0">Nepriskirti</p>
+                  <div className="flex-1 h-px bg-gradient-to-r from-forest-200/70 to-transparent" />
                 </div>
                 <div className="space-y-3">
                   {pinChecked(unzonedPlants.filter(p => p.status === 'sick'), careMode, careChecked).length > 0 && (
-                    <div className="bg-amber-50 rounded-2xl p-1.5">
+                    <div className="bg-terracotta-50/60 rounded-2xl p-1.5">
                       <div className="flex items-center gap-1.5 mb-2 px-1">
-                        <Thermometer size={12} className="text-amber-500" />
-                        <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wide">Dėmesio</span>
+                        <Thermometer size={11} className="text-terracotta-400" />
+                        <span className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-terracotta-500">Dėmesio</span>
                       </div>
                       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
                         {pinChecked(unzonedPlants.filter(p => p.status === 'sick'), careMode, careChecked).map(plant => (
