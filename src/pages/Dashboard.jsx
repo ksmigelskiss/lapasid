@@ -57,7 +57,7 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
         </button>
       </div>
       {open && (
-        <div className="bg-terracotta-50 rounded-2xl p-1.5">
+        <div className="bg-white/55 backdrop-blur-xl border-2 border-terracotta/50 rounded-2xl p-1.5">
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
             {orderedPlants.map(plant => (
               <PlantCard
@@ -110,10 +110,10 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
       {open && (
         <div className="space-y-3">
           {sickPlants.length > 0 && (
-            <div className="bg-terracotta-50/60 rounded-2xl p-1.5">
+            <div className="bg-white/55 backdrop-blur-xl border border-forest-300/50 rounded-2xl p-1.5">
               <div className="flex items-center gap-1.5 mb-2 px-1">
-                <Thermometer size={11} className="text-terracotta-400" />
-                <span className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-terracotta-500">Dėmesio</span>
+                <Thermometer size={11} className="text-forest-500" />
+                <span className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-600">Dėmesio</span>
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
                 {sickPlants.map(plant => (
@@ -692,10 +692,10 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                 </div>
                 <div className="space-y-3">
                   {pinChecked(unzonedPlants.filter(p => p.status === 'sick'), careMode, careChecked).length > 0 && (
-                    <div className="bg-terracotta-50/60 rounded-2xl p-1.5">
+                    <div className="bg-white/55 backdrop-blur-xl border border-forest-300/50 rounded-2xl p-1.5">
                       <div className="flex items-center gap-1.5 mb-2 px-1">
-                        <Thermometer size={11} className="text-terracotta-400" />
-                        <span className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-terracotta-500">Dėmesio</span>
+                        <Thermometer size={11} className="text-forest-500" />
+                        <span className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-600">Dėmesio</span>
                       </div>
                       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
                         {pinChecked(unzonedPlants.filter(p => p.status === 'sick'), careMode, careChecked).map(plant => (
