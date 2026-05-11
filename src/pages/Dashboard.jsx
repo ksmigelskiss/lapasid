@@ -477,124 +477,9 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
             transition={{ duration: 0.22, ease: 'easeOut' }}
             style={{ overflow: 'hidden' }}
           >
-      {/* Header — desktop'e slepiama (DesktopHeader perima collection name + priežiūra + augalai count) */}
-      {!hideInnerHeader && <div className="px-5 pb-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
-        <div className="flex items-center justify-between">
-          <div className="relative">
-            {/* Kolekcijos etiketė. Avatar mygtukas perkeltas į MobileHeader toolbar'ą. */}
-            <div className="flex items-center gap-2 mb-0.5">
-              {/* Kolekcijų switcher — rodomas kai > 1 kolekcija su augalais */}
-              {(() => {
-                const switcher = allCollections.filter(c => c.hasPlants !== false)
-                return switcher.length > 1 ? (
-                  <button
-                    onClick={() => setShowSwitcher(v => !v)}
-                    className="flex items-center gap-1 active:opacity-70"
-                  >
-                    <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em]">
-                      {allCollections.find(c => c.id === collectionId)?.name ?? 'Mano augalai'}
-                    </p>
-                    <ChevronDown size={11} className="text-sage-400" />
-                  </button>
-                ) : (
-                  <p className="text-[11px] font-semibold text-sage-400 uppercase tracking-[0.12em]">Mano kolekcija</p>
-                )
-              })()}
-            </div>
-
-            {/* Kolekcijos pavadinimas — inline edit owner'iui */}
-            {editingName ? (
-              <input
-                autoFocus
-                value={nameInput}
-                onChange={e => setNameInput(e.target.value)}
-                onBlur={() => {
-                  if (nameInput.trim()) onRenameCollection?.(collectionId, nameInput.trim())
-                  setEditingName(false)
-                }}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') e.target.blur()
-                  if (e.key === 'Escape') { setEditingName(false) }
-                }}
-                className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight bg-transparent outline-none border-b-2 border-sage-400 w-full"
-              />
-            ) : (
-              <div className="flex items-center gap-2">
-                <h1 className="text-[28px] font-extrabold text-gray-900 leading-tight tracking-tight">
-                  {allCollections.find(c => c.id === collectionId)?.name ?? 'Mano augalai'}
-                </h1>
-                {role === 'owner' && (
-                  <button
-                    onClick={() => {
-                      setNameInput(allCollections.find(c => c.id === collectionId)?.name ?? 'Mano augalai')
-                      setEditingName(true)
-                    }}
-                    className="opacity-40 active:opacity-80 mt-1"
-                  >
-                    <Pencil size={14} className="text-gray-500" />
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* Switcher dropdown */}
-            {showSwitcher && allCollections.filter(c => c.hasPlants !== false).length > 1 && (
-              <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-lg border border-gray-100 z-10 min-w-[200px] overflow-hidden">
-                {allCollections.filter(c => c.hasPlants !== false).map(c => (
-                  <button
-                    key={c.id}
-                    onClick={() => { onSwitchCollection?.(c.id); setShowSwitcher(false) }}
-                    className={`w-full flex items-center gap-2.5 px-4 py-3 text-left text-sm transition-colors ${c.id === collectionId ? 'bg-sage-50 font-semibold text-sage-700' : 'text-gray-700 active:bg-surface'}`}
-                  >
-                    {c.id === collectionId && <Check size={14} className="text-sage-500 flex-shrink-0" />}
-                    <span className={c.id === collectionId ? '' : 'ml-[22px]'}>{c.name}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            {/* Top row: laistymas + augalai */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
-                className={`relative transition-colors rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px] ${careMode ? 'bg-sage-500 active:bg-sage-600' : 'bg-white border border-gray-200 active:bg-surface'}`}
-              >
-                {careMode
-                  ? <Sprout size={20} className="text-white" />
-                  : <AccuracySprite pct={Math.round(careConfidence * 100)} size={20} />}
-                <span className={`text-[10px] font-medium mt-0.5 ${careMode ? 'text-white' : 'text-sage-500'}`}>priežiūra</span>
-                {/* Procentas badge'e — tas pats kaip seniau, bet sprite'as jau pats rodo
-                    augimo stadiją (gray → amber → sage → bloom), todėl badge tik su skaičium */}
-                {!careMode && mainPlants.length > 0 && careConfidence > 0 && (
-                  <div className="absolute -top-1.5 -right-1.5 px-1.5 h-[16px] flex items-center justify-center rounded-full shadow-sm bg-white border border-gray-200">
-                    <span className="text-[9px] font-bold leading-none text-gray-700">{Math.round(careConfidence * 100)}%</span>
-                  </div>
-                )}
-              </button>
-              <div className="border border-gray-300 rounded-2xl px-3.5 py-2 flex flex-col items-center justify-center h-[58px]">
-                <span className="text-2xl font-extrabold text-gray-700 leading-none">{plants.length}</span>
-                <span className="text-[10px] text-gray-500 font-medium mt-0.5">augal{plants.length === 1 ? 'as' : 'ai'}</span>
-              </div>
-            </div>
-            {/* Secondary row: foto */}
-            {missingCount > 0 && (
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={onFetchAllImages}
-                  disabled={fetchingAll}
-                  className="flex items-center gap-1.5 bg-white hover:bg-gray-50 disabled:opacity-60 transition-colors rounded-xl px-2.5 py-1.5"
-                >
-                  {fetchingAll ? <Loader2 size={14} className="animate-spin" /> : <ImageIcon size={14} />}
-                  <span className="text-xs font-medium text-sage-600">
-                    {fetchingAll ? 'Kraunama...' : `+${missingCount} foto`}
-                  </span>
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>}
+      {/* Senas mobile inner header (collection switcher + care toggle + plants count + foto)
+          pašalintas. Greeting + AccuracyButton dabar visada renderinami žemiau (per
+          CareOverview mode="greeting" bigGreeting), t.y. tas pats modulis kaip ir desktop'e. */}
 
       {/* Search row content — extractintas, kad reuse'intume tiek mobile (atskira eilutė),
           tiek desktop (inline su greeting'u). Kiekvienas vaikas turi flex hint'us. */}
@@ -657,22 +542,19 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
 
         return (
           <>
-            {/* Desktop: tik greeting full-width su AccuracyButton inline (search perkelta į toolbar) */}
-            {hideInnerHeader && (
-              <div className="px-5 pt-4 pb-3">
-                <CareOverview
-                  plants={mainPlants}
-                  user={user}
-                  mode="greeting"
-                  bigGreeting
-                  careMode={careMode}
-                  careConfidence={careConfidence}
-                  onCareToggle={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
-                />
-              </div>
-            )}
-
-            {/* Mobile search row pašalintas — search ikona dabar MobileHeader toolbar'e. */}
+            {/* Greeting + AccuracyButton — vienodas modulis tiek mobile, tiek desktop'e
+                (CareOverview greeting two-column composition: kairė kreipinys, dešinė pill). */}
+            <div className="px-5 pt-4 pb-3" style={hideInnerHeader ? undefined : { paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
+              <CareOverview
+                plants={mainPlants}
+                user={user}
+                mode="greeting"
+                bigGreeting
+                careMode={careMode}
+                careConfidence={careConfidence}
+                onCareToggle={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
+              />
+            </div>
           </>
         )
       })()}
