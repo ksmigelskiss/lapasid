@@ -14,7 +14,7 @@
   }
 
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-app text-gray-900;
     overscroll-behavior: none;
   }
 
@@ -22,7 +22,7 @@
     max-width: 430px;
     margin: 0 auto;
     min-height: 100dvh;
-    @apply bg-white relative overflow-hidden;
+    @apply bg-app relative overflow-hidden;
   }
 
   /* Desktop (≥1024px): nuimam mobile column constraint, kad DesktopLayout galetų užpildyti viso ekrano plotį (split panel). */

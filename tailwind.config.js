@@ -5,7 +5,7 @@
 //  After editing, restart the dev server once.
 // ══════════════════════════════════════════════════════
 const P = {
-  appBg:     '#ffffff',   // page background (Dashboard)
+  appBg:     '#f1ebdd',   // page background — Bone (Brandbook v1.0 paper tone)
   libBg:     '#f2f2f7',   // Biblioteka — iOS "grouped" bg (slightly darker)
   surface:   '#f2f2f7',   // cards, sections  — iOS secondary system bg
   surface2:  '#e8e8ed',   // inputs, chips    — iOS tertiary system bg
