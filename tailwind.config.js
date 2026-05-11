@@ -11,9 +11,9 @@ const P = {
   surface2:  '#e8e8ed',   // inputs, chips    — iOS tertiary system bg
   border:    '#d1d1d6',   // hairline borders — iOS separator
 
-  primary:   '#2e7d52',   // Nature green — buttons, active tab, CTAs
-  primaryDk: '#1e5c3a',   // darker shade for hover / pressed
-  primaryLt: '#eaf4ef',   // very light tint for pill backgrounds
+  primary:   '#2e5238',   // Forest mid — buttons, active tab, CTAs
+  primaryDk: '#1c3a2a',   // Forest INK — darker shade for hover / pressed
+  primaryLt: '#e8efe9',   // very light forest tint for pill backgrounds
 
   navBg:     '#ffffff',   // tab bar background (same everywhere)
   navActive: '#2e7d52',   // active tab icon + label
@@ -40,17 +40,20 @@ export default {
         accent:  { DEFAULT: P.primary, deep: P.primaryDk },
 
         // ── Green scale ────────────────────────────────
+        // Sage class'ės lieka (zero migration risk), bet jų reikšmės suvedamos
+        // į Forest scale'ą (Brandbook v1.0). Visa app'a iškart pereina į Forest
+        // tonus be class name pakeitimų.
         sage: {
-          50:  '#edf5f0',
-          100: '#d0e8da',
-          200: '#a3d1b7',
-          300: '#6db592',
-          400: '#479970',
-          500: P.primary,    // Nature green
-          600: '#256843',
-          700: P.primaryDk,
-          800: '#164530',
-          900: '#0d2e1f',
+          50:  '#e8efe9',
+          100: '#c7d6c9',
+          200: '#9bb7a0',
+          300: '#6e9778',
+          400: '#456d52',
+          500: P.primary,    // Forest mid #2e5238
+          600: '#264530',
+          700: P.primaryDk,  // Forest INK #1c3a2a
+          800: '#142b1f',
+          900: '#0c1c14',
         },
 
         // ── LapasID Brandbook (v1.0 · 2026) ─────────────
