@@ -24,67 +24,96 @@ function pickInterval(laistymasIntervalas) {
     : (laistymasIntervalas.vasara ?? laistymasIntervalas.ziema ?? null)
 }
 
-function WateringStatus({ snapshot, watered }) {
-  const interval = pickInterval(snapshot.laistymasIntervalas)
-  if (!interval) return null
+// ── Editorial status block (Laistymas / Tręšimas) ──────────────
+// Brandbook v1.0: mono caps section header + label/value rows (no colored
+// bg). Overdue accent via terracotta border-l. Recently-done accent via
+// forest border-l.
 
-  // Jei ką tik palaistyta šiame session — rodome "✓" būseną
-  const lastDate  = watered
-    ? new Date().toISOString().split('T')[0]
-    : snapshot.lastWatered
-
-  const since = daysSince(lastDate)
-  const until = since != null ? interval - since : null
-
-  if (since == null) {
-    return (
-      <div className="bg-sky-50 border border-sky-100 rounded-2xl px-4 py-3 flex gap-3">
-        <Droplets size={22} className="flex-shrink-0 text-sky-400 mt-0.5" />
-        <div>
-          <p className="text-sm font-semibold text-sky-700">Laistymo duomenų nėra</p>
-          <p className="text-[11px] text-sky-600 mt-0.5">{interval}d intervalas</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (until <= 0) {
-    return (
-      <div className="bg-sky-50 border border-sky-100 rounded-2xl px-4 py-3 flex gap-3">
-        <Droplets size={22} className="flex-shrink-0 text-sky-400 mt-0.5" />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-sky-700">
-            {watered ? 'Palaistyta šiandien ✓' : `Laistymas vėluoja ${Math.abs(until)} d.!`}
-          </p>
-          <p className="text-[11px] text-sky-600 mt-0.5">
-            Paskutinis: {fmtDate(lastDate)} · {interval}d intervalas
-          </p>
-        </div>
-      </div>
-    )
-  }
+function StatusBlock({ icon, title, lastDate, intervalDays, nextDate, daysUntil, isOverdue, isDone, tone }) {
+  // tone: 'forest' (water) | 'terracotta' (fert)
+  const accentColor = isOverdue ? 'border-terracotta' : isDone ? 'border-forest-500' : 'border-bone-400/60'
+  const titleColor = tone === 'terracotta' ? 'text-terracotta-600' : 'text-forest-700'
+  const iconColor  = tone === 'terracotta' ? 'text-terracotta-500' : 'text-forest-500'
 
   return (
-    <div className="bg-green-50 border border-green-100 rounded-2xl px-4 py-3 flex gap-3">
-      <Droplets size={20} className="flex-shrink-0 text-green-400 mt-0.5" />
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-green-700">
-          Kitas laistymas: {fmtDate(
-            new Date(new Date(lastDate + 'T00:00:00').getTime() + interval * 86400000)
-              .toISOString().split('T')[0]
-          )}
-        </p>
-        <p className="text-[11px] text-green-600 mt-0.5">
-          {until === 0 ? 'Šiandien!' : `Po ${until} d.`} · {interval}d intervalas
-        </p>
+    <div className="space-y-2.5">
+      <div className="flex items-center gap-2">
+        <div className={iconColor}>{icon}</div>
+        <h3 className={`font-display text-base font-semibold tracking-tight ${titleColor}`}>{title}</h3>
+      </div>
+      <div className={`pl-3 border-l-2 ${accentColor} space-y-1`}>
+        {isDone && (
+          <p className="text-sm font-semibold text-forest-700">✓ Šiandien</p>
+        )}
+        {isOverdue && !isDone && daysUntil != null && (
+          <p className="text-sm font-semibold text-terracotta-600">Vėluoja {Math.abs(daysUntil)} d.</p>
+        )}
+        {lastDate && (
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Paskutinis</span>
+            <span className="text-sm text-forest-700 tabular-nums">{fmtDate(lastDate)}</span>
+          </div>
+        )}
+        {intervalDays != null && (
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Rekomenduojama</span>
+            <span className="text-sm text-forest-700 tabular-nums">kas {intervalDays} d.</span>
+          </div>
+        )}
+        {nextDate && !isOverdue && !isDone && (
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Kitas</span>
+            <span className="text-sm text-forest-700 tabular-nums">
+              {daysUntil === 0 ? 'šiandien' : `po ${daysUntil} d.`} · {fmtDate(nextDate)}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
+function WateringStatus({ snapshot, watered }) {
+  const interval = pickInterval(snapshot.laistymasIntervalas)
+  if (!interval) return null
+
+  const lastDate = watered
+    ? new Date().toISOString().split('T')[0]
+    : snapshot.lastWatered
+
+  if (!lastDate) {
+    return (
+      <StatusBlock
+        icon={<Droplets size={20} />}
+        title="Laistymas"
+        intervalDays={interval}
+        tone="forest"
+      />
+    )
+  }
+
+  const since = daysSince(lastDate)
+  const until = since != null ? interval - since : null
+  const nextIso = new Date(new Date(lastDate + 'T00:00:00').getTime() + interval * 86400000)
+    .toISOString().split('T')[0]
+
+  return (
+    <StatusBlock
+      icon={<Droplets size={20} />}
+      title="Laistymas"
+      lastDate={lastDate}
+      intervalDays={interval}
+      nextDate={nextIso}
+      daysUntil={until}
+      isOverdue={until <= 0 && !watered}
+      isDone={watered}
+      tone="forest"
+    />
+  )
+}
+
 function FertilizingStatus({ snapshot, fertilized }) {
   const interval = snapshot.laistymasIntervalas?.tresimasIntervalas ?? null
-  // Bandome iš vanduo arba prieziura jei nėra specifinio
   const fertInterval = interval ?? snapshot.fertIntervalas ?? null
   if (!fertInterval && !snapshot.lastFertilized) return null
 
@@ -92,46 +121,28 @@ function FertilizingStatus({ snapshot, fertilized }) {
     ? new Date().toISOString().split('T')[0]
     : snapshot.lastFertilized
 
-  const since = daysSince(lastDate)
-  const until = (since != null && fertInterval) ? fertInterval - since : null
-
   if (!lastDate) return null
 
-  if (until != null && until <= 0) {
-    return (
-      <div className="bg-orange-50 border border-orange-200 rounded-2xl px-4 py-3 flex gap-3">
-        <Leaf size={22} className="flex-shrink-0 text-orange-400 mt-0.5" />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-orange-700">
-            {fertilized ? 'Patręšta šiandien ✓' : `Pamaitink augalėlį — vėluoja ${Math.abs(until)} d.!`}
-          </p>
-          <p className="text-[11px] text-orange-600 mt-0.5">
-            Paskutinis: {fmtDate(lastDate)}{fertInterval ? ` · ${fertInterval}d intervalas` : ''}
-          </p>
-        </div>
-      </div>
-    )
-  }
+  const since = daysSince(lastDate)
+  const until = (since != null && fertInterval) ? fertInterval - since : null
+  const nextIso = fertInterval
+    ? new Date(new Date(lastDate + 'T00:00:00').getTime() + fertInterval * 86400000)
+        .toISOString().split('T')[0]
+    : null
 
-  if (lastDate) {
-    return (
-      <div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 flex gap-3">
-        <Leaf size={20} className="flex-shrink-0 text-amber-400 mt-0.5" />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-amber-700">
-            {fertilized ? 'Patręšta šiandien ✓' : `Paskutinis tręšimas: ${fmtDate(lastDate)}`}
-          </p>
-          {until != null && (
-            <p className="text-[11px] text-amber-600 mt-0.5">
-              Kitas po {until} d.
-            </p>
-          )}
-        </div>
-      </div>
-    )
-  }
-
-  return null
+  return (
+    <StatusBlock
+      icon={<Leaf size={20} />}
+      title="Tręšimas"
+      lastDate={lastDate}
+      intervalDays={fertInterval}
+      nextDate={nextIso}
+      daysUntil={until}
+      isOverdue={until != null && until <= 0 && !fertilized}
+      isDone={fertilized}
+      tone="terracotta"
+    />
+  )
 }
 
 /**
@@ -294,68 +305,61 @@ export default function PlantCareCard({ passport, plantId, user }) {
   }
 
   return (
-    <div className="min-h-dvh bg-white flex flex-col">
+    <div className="min-h-dvh bg-app flex flex-col">
 
-      {/* ── Hero ─────────────────────────────────────────────────── */}
-      <div
-        className="relative w-full flex-shrink-0"
-        style={{ height: '40dvh', maxHeight: '320px' }}
-      >
-        {s.image ? (
-          <img
-            src={s.image}
-            alt={s.lietuviškas}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full bg-sage-100 flex items-center justify-center text-8xl">
-            {s.emoji ?? '🪴'}
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-5">
-          <div className="min-w-0">
-            <h1 className="text-2xl font-bold text-white leading-tight">
-              {s.lietuviškas}
-            </h1>
-            {s.lotyniskas && (
-              <p className="text-sm text-white/70 italic mt-0.5">{s.lotyniskas}</p>
-            )}
-          </div>
+      {/* ── Hero — editorial: clean photo (3:2), title block ant bone. ── */}
+      {s.image ? (
+        <div className="w-full aspect-[3/2] overflow-hidden bg-bone-300 flex-shrink-0">
+          <img src={s.image} alt={s.lietuviškas} className="w-full h-full object-cover" />
         </div>
-      </div>
+      ) : (
+        <div className="w-full aspect-[3/2] flex items-center justify-center text-8xl bg-bone-300 flex-shrink-0">
+          {s.emoji ?? '🪴'}
+        </div>
+      )}
 
       {/* ── Content ───────────────────────────────────────────────── */}
-      <div className="flex-1 px-4 pt-5 pb-10 space-y-4 max-w-[430px] mx-auto w-full">
+      <div className="flex-1 px-5 pt-5 pb-10 space-y-5 max-w-[430px] mx-auto w-full">
 
-        {/* Priežiūros pilulės */}
-        <div className="flex flex-wrap gap-2">
-          {s.sviesa?.lygis && (
-            <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 rounded-xl px-3 py-1.5 text-xs font-medium">
-              <Sun size={13} className="text-amber-500" />
-              {s.sviesa.lygis}
-            </span>
-          )}
-          {s.vanduo?.lygis && (
-            <span className="inline-flex items-center gap-1.5 bg-sky-50 text-sky-700 rounded-xl px-3 py-1.5 text-xs font-medium">
-              <Droplets size={13} className="text-sky-500" />
-              {s.vanduo.lygis}
-            </span>
-          )}
-          {s.laistymasIntervalas?.vasara && (
-            <span className="inline-flex items-center gap-1.5 bg-surface text-gray-600 rounded-xl px-3 py-1.5 text-xs font-medium">
-              <Droplets size={13} className="text-sky-400" />
-              Kas {s.laistymasIntervalas.vasara} d.
-            </span>
+        {/* Title block */}
+        <div>
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-forest-800 leading-tight">
+            {s.lietuviškas}
+          </h1>
+          {s.lotyniskas && (
+            <p className="text-sm text-forest-500 italic mt-1">{s.lotyniskas}</p>
           )}
         </div>
+
+        {/* Care pills — brand'iškai: Sun terracotta, Water forest, Interval bone-50 mono */}
+        {(s.sviesa?.lygis || s.vanduo?.lygis || s.laistymasIntervalas?.vasara) && (
+          <div className="flex flex-wrap gap-2">
+            {s.sviesa?.lygis && (
+              <span className="inline-flex items-center gap-1.5 bg-terracotta-50 text-terracotta-600 rounded-full px-3 py-1 text-xs font-semibold">
+                <Sun size={12} className="text-terracotta-400" />
+                {s.sviesa.lygis}
+              </span>
+            )}
+            {s.vanduo?.lygis && (
+              <span className="inline-flex items-center gap-1.5 bg-forest-50 text-forest-700 rounded-full px-3 py-1 text-xs font-semibold">
+                <Droplets size={12} className="text-forest-500" />
+                {s.vanduo.lygis}
+              </span>
+            )}
+            {s.laistymasIntervalas?.vasara && (
+              <span className="inline-flex items-center gap-1.5 bg-bone-50 text-forest-600 rounded-full px-3 py-1 font-mono text-[10.5px] font-medium uppercase tracking-[0.14em] border border-bone-400/40">
+                kas {s.laistymasIntervalas.vasara} d.
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Aprašymas */}
         {s.aprasymas && (
-          <p className="text-sm text-gray-600 leading-relaxed">{s.aprasymas}</p>
+          <p className="text-sm text-forest-600 leading-relaxed">{s.aprasymas}</p>
         )}
 
-        {/* Forecast widgetai */}
+        {/* Status blokai — editorial */}
         <WateringStatus snapshot={s} watered={watered} />
         <FertilizingStatus snapshot={s} fertilized={fertilized} />
 
@@ -367,23 +371,23 @@ export default function PlantCareCard({ passport, plantId, user }) {
           ) : (
           <div className="flex gap-3">
 
-            {/* Laistymas */}
+            {/* Laistymas — forest brand */}
             <button
               onClick={onWaterTap}
               disabled={watered}
-              className={`flex-1 h-12 flex items-center justify-center gap-1.5 rounded-xl font-bold text-sm transition-colors active:bg-sky-600 ${
+              className={`flex-1 h-12 flex items-center justify-center gap-1.5 rounded-2xl font-bold text-sm transition-colors ${
                 watered
-                  ? 'bg-green-50 text-green-600'
+                  ? 'bg-forest-100 text-forest-700'
                   : confirmType === 'watering'
-                  ? 'bg-sky-700 text-white'
-                  : 'bg-sky-500 text-white'
+                  ? 'bg-forest-700 text-bone active:bg-forest-800'
+                  : 'bg-forest-600 text-bone active:bg-forest-700'
               }`}
             >
               {watered ? (
                 <span>✓ Laistyta</span>
               ) : (
                 <>
-                  <Droplets size={16} className="text-white" />
+                  <Droplets size={16} />
                   <span>
                     {confirmType === 'watering' ? `Tikrai? (${countdown})` : 'Laistyti'}
                   </span>
@@ -391,24 +395,24 @@ export default function PlantCareCard({ passport, plantId, user }) {
               )}
             </button>
 
-            {/* Trąšos — tik auth vartotojams */}
+            {/* Trąšos — terracotta brand. Tik auth vartotojams */}
             {user && (
               <button
                 onClick={onFertilizeTap}
                 disabled={fertilized}
-                className={`flex-1 h-12 flex items-center justify-center gap-1.5 rounded-xl font-bold text-sm transition-colors active:bg-amber-600 ${
+                className={`flex-1 h-12 flex items-center justify-center gap-1.5 rounded-2xl font-bold text-sm transition-colors ${
                   fertilized
-                    ? 'bg-green-50 text-green-600'
+                    ? 'bg-forest-100 text-forest-700'
                     : confirmType === 'fertilizing'
-                    ? 'bg-amber-700 text-white'
-                    : 'bg-amber-500 text-white'
+                    ? 'bg-terracotta-600 text-bone active:bg-terracotta-600'
+                    : 'bg-terracotta text-bone active:bg-terracotta-500'
                 }`}
               >
                 {fertilized ? (
                   <span>✓ Patręšta</span>
                 ) : (
                   <>
-                    <FlaskConical size={16} className="text-white" />
+                    <FlaskConical size={16} />
                     <span>
                       {confirmType === 'fertilizing' ? `Tikrai? (${countdown})` : 'Tręšti'}
                     </span>
@@ -419,16 +423,16 @@ export default function PlantCareCard({ passport, plantId, user }) {
           </div>
           )}
 
-          {/* Klaida */}
+          {/* Klaida — terracotta accent */}
           {error && (
-            <p className="text-xs text-red-500 text-center">{error}</p>
+            <p className="text-xs text-terracotta-600 text-center">{error}</p>
           )}
 
           {/* Auth: atidaryti pilną kortelę */}
           {user && (
             <button
               onClick={openInApp}
-              className="w-full py-3 rounded-2xl border border-gray-200 text-gray-600 text-sm font-medium flex items-center justify-center gap-1.5 active:bg-gray-50 transition-colors"
+              className="w-full py-3 rounded-2xl border border-bone-400/50 text-forest-600 text-sm font-semibold flex items-center justify-center gap-1.5 active:bg-bone-300/40 transition-colors"
             >
               <Sprout size={14} /> Atidaryti kortelę <ChevronRight size={14} />
             </button>
@@ -436,7 +440,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
 
           {/* Be auth: diskretus footer */}
           {!user && (
-            <p className="text-center text-xs text-gray-400 pt-2">lapasid.lt</p>
+            <p className="text-center font-mono text-[10px] uppercase tracking-[0.18em] text-forest-400 pt-2">lapasid.lt</p>
           )}
         </div>
       </div>
