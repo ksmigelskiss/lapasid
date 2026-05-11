@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { X, ChevronUp, ChevronDown, ChevronLeft, Trash2, Plus, Settings, Check } from 'lucide-react'
+import { X, ChevronUp, ChevronDown, Trash2, Plus, Settings, Check } from 'lucide-react'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
 
@@ -167,49 +167,27 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
     <div className={useDesktopPanel
       ? "absolute inset-0 z-[5] flex items-end justify-center"
       : "fixed inset-0 z-[95] flex items-end justify-center"}>
-      {/* Backdrop — tik mobile (desktop'e panel uždangstomas pačios ZonePicker'io kortelės) */}
-      {!useDesktopPanel && (
-        <motion.div
-          className="absolute inset-0 bg-forest-800/55 backdrop-blur-sm"
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }} onPointerDown={onClose}
-        />
-      )}
+      {/* Backdrop — forest INK; desktop'e covers only the panel, mobile'e full screen */}
       <motion.div
-        className={useDesktopPanel
-          ? "relative w-full h-full bg-white/55 backdrop-blur-xl border-l border-bone-400/40 shadow-[-8px_0_24px_rgba(28,58,42,0.10)] px-5 pt-4 pb-6 overflow-y-auto"
-          : "relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl rounded-t-4xl px-5 pt-3 pb-10 border-t border-bone-400/40"}
-        {...(useDesktopPanel
-          ? { initial: { x: '100%' }, animate: { x: 0 }, exit: { x: '100%' } }
-          : { initial: { y: '100%' }, animate: { y: 0 }, exit: { y: '100%' } })}
+        className="absolute inset-0 bg-forest-800/55 backdrop-blur-sm"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }} onPointerDown={onClose}
+      />
+      {/* Sheet — bottom sheet pattern abu (desktop + mobile), unifikuotas su
+          Delete/Death/Duplicate/Photo modalais. Atgal arrow nebenaudojamas — X close. */}
+      <motion.div
+        className="relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl rounded-t-4xl px-5 pt-3 pb-8 border-t border-bone-400/40"
+        initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}
       >
-        {/* Header: mobile drag handle, desktop back button */}
-        {useDesktopPanel ? (
-          <div className="flex items-center justify-between mb-5">
-            <button
-              onClick={onClose}
-              className="inline-flex items-center gap-1.5 px-2 py-1.5 -ml-2 rounded-lg text-forest-700 hover:bg-bone-300/50 transition-colors"
-            >
-              <ChevronLeft size={16} />
-              <span className="font-display text-sm font-semibold tracking-tight">Atgal</span>
-            </button>
-            <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em]">
-              Pasirinkti zoną
-            </p>
-            <span className="w-[72px]" />
-          </div>
-        ) : (
-          <>
-            <div className="flex justify-center pb-3">
-              <div className="w-10 h-1 bg-bone-400/60 rounded-full" />
-            </div>
-            <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] text-center mb-4">
-              Pasirinkti zoną
-            </p>
-          </>
-        )}
+        {/* Handle (mobile-ish, bet ir desktop'e palaikom konsistenciją) */}
+        <div className="flex justify-center pb-3">
+          <div className="w-10 h-1 bg-bone-400/60 rounded-full" />
+        </div>
+        <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] text-center mb-4">
+          Pasirinkti zoną
+        </p>
 
         {/* Zone list */}
         <div className="space-y-1.5">
