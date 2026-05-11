@@ -357,7 +357,7 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
       {/* Node on the line */}
       <button
         onClick={onToggle}
-        className="absolute left-0 top-4 w-7 h-7 bg-white border-2 border-forest-300 rounded-full flex items-center justify-center shadow-sm z-10 -translate-x-3 text-forest-500"
+        className="absolute left-0 top-4 w-7 h-7 bg-bone-50 border-2 border-forest-300 rounded-full flex items-center justify-center shadow-sm z-10 -translate-x-3 text-forest-500"
       >
         <Camera size={13} />
       </button>

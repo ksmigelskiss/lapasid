@@ -82,7 +82,7 @@ export default function DesktopHeader({
               onClick={() => onTabChange(t.id)}
               className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-btn-sm text-[13.5px] font-medium transition-colors ${
                 isActive
-                  ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
+                  ? 'bg-bone-50 text-forest-700 shadow-[0_1px_2px_rgba(28,58,42,0.06),0_0_0_1px_rgba(28,58,42,0.04)]'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >

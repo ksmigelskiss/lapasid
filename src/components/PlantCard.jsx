@@ -80,7 +80,7 @@ function CareCircle({ checked, waterOverdue, fertOverdue }) {
 }
 
 const PlantCard = memo(function PlantCard({
-  plant, section, onTap, cardBg = 'bg-white',
+  plant, section, onTap, cardBg = 'bg-bone-50',
   showDashboardBadge = false, zoneName,
   careMode = false, checked = false, onToggle, onCareInfo,
 }) {

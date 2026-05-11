@@ -800,7 +800,7 @@ function NotesContent({ plant, onUzrasaiSave, onSaveToZinynas, onChatAbout }) {
 
 function TabBar({ active, onChange, noteCount = 0 }) {
   return (
-    <div className="flex border-b border-warm-border px-5 flex-shrink-0 bg-app">
+    <div className="flex border-b border-bone-400/40 px-5 flex-shrink-0">
       {[
         { key: 'profile',  label: 'Augalas' },
         { key: 'timeline', label: 'Istorija' },

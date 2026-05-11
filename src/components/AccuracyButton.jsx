@@ -28,10 +28,10 @@ export default function AccuracyButton({ careConfidence = 0, careMode = false, o
     ? 'bg-forest-700 shadow-[0_4px_14px_rgba(28,58,42,0.32)]'
     : 'shadow-[0_1px_2px_rgba(28,58,42,0.06)] lg:hover:shadow-[0_3px_10px_rgba(28,58,42,0.12)]'
 
-  // Kairė (Priežiūra) — frosted glass kaip neaktyvūs widget'ai.
+  // Kairė (Priežiūra) — bone-50 elevated paper (3-tier system).
   const ctaCls = careMode
     ? 'bg-transparent text-bone'
-    : 'bg-white/55 backdrop-blur-xl text-forest-700 border-r border-bone-400/40'
+    : 'bg-bone-50 text-forest-700 border-r border-bone-400/40'
 
   // Dešinė (Tikslumas) — dinaminis forest gradient'as pagal stage.
   // Nuo forest-50 (Mokomės) iki forest-300 (Tobula). Visa žalia paletė.
