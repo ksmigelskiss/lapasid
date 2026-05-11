@@ -90,27 +90,32 @@ function computeGaps(events) {
   return gaps
 }
 
+// Brandbook v1.0 — visi events tik forest + terracotta + bone tonais.
+// Water=forest (gyvybė), fert/repot/treatment=terracotta (žemė/warmth),
+// note/photo/move/inspection=neutral bone+forest.
 const EVENT_META = {
-  watering:     { icon: <Droplets size={13} />,    label: 'Laistymas',    color: 'bg-blue-50',   border: 'border-blue-100',   text: 'text-blue-600' },
-  fertilizing:  { icon: <FlaskConical size={13} />, label: 'Trąšos',      color: 'bg-purple-50', border: 'border-purple-100', text: 'text-purple-600' },
-  repotting:    { icon: <Sprout size={13} />,      label: 'Persodinimas', color: 'bg-amber-50',  border: 'border-amber-100',  text: 'text-amber-700' },
-  treatment:    { icon: <Stethoscope size={13} />, label: 'Gydymas',      color: 'bg-red-50',    border: 'border-red-100',    text: 'text-red-600' },
-  note:         { icon: <FileText size={13} />,    label: 'Pastaba',      color: 'bg-surface',   border: 'border-warm-border',   text: 'text-gray-600' },
-  photo:        { icon: <Camera size={13} />,      label: 'Nuotrauka',    color: 'bg-sage-50',   border: 'border-sage-100',   text: 'text-sage-600' },
-  statusChange: { icon: <RefreshCw size={13} />,   label: 'Būsena',       color: 'bg-surface',   border: 'border-warm-border',   text: 'text-gray-500' },
-  move:         { icon: <MapPin size={13} />,      label: 'Perkėlimas',   color: 'bg-sage-50',   border: 'border-sage-100',   text: 'text-sage-600' },
-  inspection:   { icon: <Check size={13} />,       label: 'Patikrinta',   color: 'bg-green-50',  border: 'border-green-100',  text: 'text-green-700' },
+  watering:     { icon: <Droplets size={13} />,     label: 'Laistymas',    color: 'bg-forest-50',     border: 'border-forest-100',     text: 'text-forest-600' },
+  fertilizing:  { icon: <FlaskConical size={13} />, label: 'Trąšos',       color: 'bg-terracotta-50', border: 'border-terracotta-100', text: 'text-terracotta-600' },
+  repotting:    { icon: <Sprout size={13} />,       label: 'Persodinimas', color: 'bg-terracotta-50', border: 'border-terracotta-100', text: 'text-terracotta-600' },
+  treatment:    { icon: <Stethoscope size={13} />,  label: 'Gydymas',      color: 'bg-terracotta-50', border: 'border-terracotta-200', text: 'text-terracotta-600' },
+  note:         { icon: <FileText size={13} />,     label: 'Pastaba',      color: 'bg-bone-300/40',   border: 'border-bone-400/40',    text: 'text-forest-600' },
+  photo:        { icon: <Camera size={13} />,       label: 'Nuotrauka',    color: 'bg-forest-50',     border: 'border-forest-100',     text: 'text-forest-600' },
+  statusChange: { icon: <RefreshCw size={13} />,    label: 'Būsena',       color: 'bg-bone-300/40',   border: 'border-bone-400/40',    text: 'text-forest-500' },
+  move:         { icon: <MapPin size={13} />,       label: 'Perkėlimas',   color: 'bg-forest-50',     border: 'border-forest-100',     text: 'text-forest-600' },
+  inspection:   { icon: <Check size={13} />,        label: 'Patikrinta',   color: 'bg-forest-50',     border: 'border-forest-100',     text: 'text-forest-700' },
 }
 
+// Status periods — sick (terracotta light) vs quarantine (terracotta solid).
 const STATUS_PERIOD_META = {
-  sick:       { line: 'bg-orange-300', bg: 'bg-orange-50/50', border: 'border-orange-200' },
-  quarantine: { line: 'bg-red-300',    bg: 'bg-red-50/50',    border: 'border-red-200' },
+  sick:       { line: 'bg-terracotta-200', bg: 'bg-terracotta-50/40', border: 'border-terracotta-200/60' },
+  quarantine: { line: 'bg-terracotta',     bg: 'bg-terracotta-50/60', border: 'border-terracotta/40' },
 }
 
+// Status changes — healthy=forest (good), sick=terracotta light, quarantine=terracotta solid.
 const STATUS_CHANGE_META = {
-  healthy:    { icon: <Leaf size={13} />,        label: 'Pasveiko',   bg: 'bg-green-50',  border: 'border-green-200',  text: 'text-green-700',  line: 'bg-green-300' },
-  sick:       { icon: <Thermometer size={13} />, label: 'Dėmesio',   bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', line: 'bg-orange-300' },
-  quarantine: { icon: <ShieldAlert size={13} />, label: 'Karantinas', bg: 'bg-red-50',    border: 'border-red-200',    text: 'text-red-700',    line: 'bg-red-300' },
+  healthy:    { icon: <Leaf size={13} />,        label: 'Pasveiko',   bg: 'bg-forest-50',     border: 'border-forest-200',     text: 'text-forest-700',     line: 'bg-forest-300' },
+  sick:       { icon: <Thermometer size={13} />, label: 'Dėmesio',    bg: 'bg-terracotta-50', border: 'border-terracotta-200', text: 'text-terracotta-600', line: 'bg-terracotta-200' },
+  quarantine: { icon: <ShieldAlert size={13} />, label: 'Karantinas', bg: 'bg-terracotta-50', border: 'border-terracotta/40',  text: 'text-terracotta-600', line: 'bg-terracotta' },
 }
 
 // Compute period status for each event (newest-first array)
@@ -154,7 +159,7 @@ function GhostEvent({ prediction }) {
     >
       {/* Pulsing ghost node */}
       <div className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-7 h-7 rounded-full border-2 border-dashed flex items-center justify-center text-sm
-        animate-pulse ${overdue ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-white'}`}
+        animate-pulse ${overdue ? 'border-terracotta/60 bg-terracotta-50' : 'border-bone-400 bg-bone'}`}
       >
         {meta.icon}
       </div>
@@ -162,17 +167,17 @@ function GhostEvent({ prediction }) {
       {/* Ghost pill */}
       <div className={`flex items-center gap-2 border border-dashed rounded-xl px-3 py-2 opacity-70
         ${overdue
-          ? 'bg-red-50/60 border-red-200'
-          : 'bg-surface/60 border-gray-200'
+          ? 'bg-terracotta-50/60 border-terracotta-200'
+          : 'bg-bone-300/40 border-bone-400/60'
         }`}
       >
-        <span className={`text-xs font-semibold ${overdue ? 'text-red-500' : 'text-gray-400'}`}>
+        <span className={`text-xs font-semibold ${overdue ? 'text-terracotta-600' : 'text-forest-500'}`}>
           {meta.label}
         </span>
-        <span className={`text-xs ${overdue ? 'text-red-400' : 'text-gray-400'}`}>
+        <span className={`text-xs ${overdue ? 'text-terracotta-500' : 'text-forest-400'}`}>
           · {timeLabel}
         </span>
-        <span className="text-[10px] text-gray-400 ml-auto">
+        <span className="font-mono text-[10px] text-forest-400 ml-auto">
           ~kas {prediction.avgInterval} d.
         </span>
       </div>
@@ -200,15 +205,15 @@ function StatusChangeEvent({ event, index, inPeriod }) {
       {/* Banner — no own bg when inside a period wrapper */}
       <div className={inPeriod ? 'px-3 py-2' : `${meta.bg} border ${meta.border} rounded-xl px-3 py-2`}>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-gray-800">{meta.label}</span>
-          {fromMeta && <span className="text-[10px] text-gray-400">← {fromMeta.label}</span>}
-          <span className="text-[10px] text-gray-400 ml-auto">{formatDateShort(event.date)}</span>
+          <span className={`text-xs font-bold ${meta.text}`}>{meta.label}</span>
+          {fromMeta && <span className="font-mono text-[10px] text-forest-400">← {fromMeta.label}</span>}
+          <span className="font-mono text-[10px] text-forest-400 ml-auto">{formatDateShort(event.date)}</span>
         </div>
         {(event.disease || event.issue) && (
-          <p className="text-[11px] text-gray-600 mt-0.5">{event.disease || event.issue}</p>
+          <p className="text-[11px] text-forest-600 mt-0.5">{event.disease || event.issue}</p>
         )}
         {event.isolated != null && (
-          <p className="text-[10px] text-gray-400 mt-0.5">{event.isolated ? '✓ Izoliuotas' : '✗ Neizoliuotas'}</p>
+          <p className="text-[10px] text-forest-500 mt-0.5">{event.isolated ? '✓ Izoliuotas' : '✗ Neizoliuotas'}</p>
         )}
       </div>
     </motion.div>
@@ -225,24 +230,24 @@ function DeathEvent({ event, index }) {
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.04, duration: 0.3, ease: 'easeOut' }}
     >
-      {/* Node */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center border-2 border-white shadow-sm z-10 text-white">
+      {/* Node — forest INK (final, gravity) */}
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-7 h-7 rounded-full bg-forest-800 flex items-center justify-center border-2 border-bone shadow-sm z-10 text-bone">
         <Ghost size={13} />
       </div>
-      {/* Wide banner */}
-      <div className="bg-gray-900 rounded-2xl px-4 py-3.5">
+      {/* Wide banner — Forest INK, like brandbook Cover */}
+      <div className="bg-forest-800 rounded-2xl px-4 py-3.5">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-sm font-bold text-white">Augalas numirė</span>
-          <span className="text-[10px] text-gray-400">{formatDateShort(event.date)}</span>
+          <span className="font-display text-sm font-bold text-bone tracking-tight">Augalas numirė</span>
+          <span className="font-mono text-[10px] text-bone/55 uppercase tracking-[0.14em]">{formatDateShort(event.date)}</span>
         </div>
         {event.deathReason && (
-          <p className="text-xs text-gray-400 leading-snug">
-            <span className="text-gray-500">Priežastis: </span>{event.deathReason}
+          <p className="text-xs text-bone/75 leading-snug">
+            <span className="font-mono text-[10px] text-bone/55 uppercase tracking-[0.14em]">Priežastis: </span>{event.deathReason}
           </p>
         )}
         {event.lesson && (
-          <p className="text-xs text-gray-400 mt-1 leading-snug">
-            <span className="text-gray-500">Pamoka: </span>{event.lesson}
+          <p className="text-xs text-bone/75 mt-1 leading-snug">
+            <span className="font-mono text-[10px] text-bone/55 uppercase tracking-[0.14em]">Pamoka: </span>{event.lesson}
           </p>
         )}
       </div>
@@ -274,18 +279,18 @@ function Tooltip({ event, onDelete, zones = [] }) {
           </span>
           <button
             onClick={onDelete}
-            className="text-gray-400 hover:text-red-400 transition-colors"
+            className="text-forest-400 hover:text-terracotta-500 transition-colors"
           >
             <Trash2 size={13} />
           </button>
         </div>
-        <p className="text-xs text-gray-500">{formatDate(event.date)}</p>
-        {event.note && <p className="text-xs text-gray-700 mt-1 leading-snug">{event.note}</p>}
-        {event.type !== 'watering' && event.amount && <p className="text-xs text-gray-600 mt-0.5">{event.amount}</p>}
-        {event.fertilizer && <p className="text-xs text-gray-600 mt-0.5">🧪 {event.fertilizer}</p>}
-        {event.potSize && <p className="text-xs text-gray-600 mt-0.5">📏 {event.potSize}</p>}
-        {event.preparatas && <p className="text-xs text-gray-600 mt-0.5">💊 {event.preparatas}</p>}
-        {event.tikslas && <p className="text-xs text-gray-600 mt-0.5">🎯 {event.tikslas}</p>}
+        <p className="font-mono text-[10px] text-forest-500 uppercase tracking-[0.14em]">{formatDate(event.date)}</p>
+        {event.note && <p className="text-xs text-forest-700 mt-1 leading-snug">{event.note}</p>}
+        {event.type !== 'watering' && event.amount && <p className="text-xs text-forest-600 mt-0.5">{event.amount}</p>}
+        {event.fertilizer && <p className="text-xs text-forest-600 mt-0.5">🧪 {event.fertilizer}</p>}
+        {event.potSize && <p className="text-xs text-forest-600 mt-0.5">📏 {event.potSize}</p>}
+        {event.preparatas && <p className="text-xs text-forest-600 mt-0.5">💊 {event.preparatas}</p>}
+        {event.tikslas && <p className="text-xs text-forest-600 mt-0.5">🎯 {event.tikslas}</p>}
         {event.metodas && <p className="text-xs text-gray-600 mt-0.5">🔧 {event.metodas}</p>}
         {event.disease && <p className="text-xs text-gray-600 mt-0.5">🦠 {event.disease}</p>}
         {event.issue && <p className="text-xs text-gray-600 mt-0.5">⚠️ {event.issue}</p>}
@@ -293,7 +298,7 @@ function Tooltip({ event, onDelete, zones = [] }) {
           <p className="text-xs text-gray-600 mt-0.5">{event.isolated ? '✓ Izoliuotas' : '✗ Neizoliuotas'}</p>
         )}
         {event.type === 'move' && (
-          <p className="text-xs text-sage-700 mt-1">
+          <p className="text-xs text-forest-700 mt-1">
             {event.fromZoneId ? (zones.find(z => z.id === event.fromZoneId)?.name ?? '?') : 'Nepriskirta'}
             {' → '}
             {event.toZoneId ? (zones.find(z => z.id === event.toZoneId)?.name ?? '?') : 'Nepriskirta'}
@@ -352,7 +357,7 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
       {/* Node on the line */}
       <button
         onClick={onToggle}
-        className="absolute left-0 top-4 w-7 h-7 bg-white border-2 border-sage-300 rounded-full flex items-center justify-center shadow-sm z-10 -translate-x-3 text-sage-500"
+        className="absolute left-0 top-4 w-7 h-7 bg-white border-2 border-forest-300 rounded-full flex items-center justify-center shadow-sm z-10 -translate-x-3 text-forest-500"
       >
         <Camera size={13} />
       </button>
@@ -398,7 +403,7 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
                 onClick={handleSetAsProfile}
                 className={`flex items-center gap-1 rounded-lg px-2 py-0.5 text-[11px] font-semibold transition-colors ${
                   setAsProfileDone
-                    ? 'bg-sage-500 text-white'
+                    ? 'bg-forest-500 text-white'
                     : 'bg-black/40 text-white/90 active:bg-black/60'
                 }`}
               >
@@ -410,11 +415,11 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
         </div>
       ) : (
         <div
-          className="bg-sage-50 border border-sage-100 rounded-2xl px-4 py-3 cursor-pointer"
+          className="bg-forest-50 border border-forest-100 rounded-2xl px-4 py-3 cursor-pointer"
           onClick={onToggle}
         >
-          <p className="text-sm text-sage-600 font-medium">
-            Nuotrauka{daysSince != null && <span className="text-sage-400 font-normal"> ({formatDays(daysSince)})</span>}
+          <p className="text-sm text-forest-600 font-medium">
+            Nuotrauka{daysSince != null && <span className="text-forest-400 font-normal"> ({formatDays(daysSince)})</span>}
           </p>
           {event.note && <p className="text-xs text-gray-500 mt-0.5">{event.note}</p>}
         </div>
@@ -467,15 +472,15 @@ function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete,
   const meta = EVENT_META[event.type] ?? EVENT_META.note
   const isToday = event.date === today()
 
-  // Pill stilius: today highlight > period wrapper > default
+  // Pill stilius: today highlight (forest) > period wrapper > default (bone)
   const pillClass = isToday
-    ? 'bg-green-50 border border-green-200'
+    ? 'bg-forest-50 border border-forest-200'
     : inPeriod
       ? 'bg-transparent'
-      : 'bg-white border border-warm-border'
+      : 'bg-bone border border-bone-400/40'
 
-  // Node border'as: today → green
-  const nodeBorder = isToday ? 'border-green-300' : 'border-gray-200'
+  // Node border'as: today → forest
+  const nodeBorder = isToday ? 'border-forest-300' : 'border-bone-400/60'
 
   return (
     <motion.div
@@ -487,7 +492,7 @@ function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete,
       {/* Node */}
       <button
         onClick={onToggle}
-        className={`absolute left-0 top-1/2 -translate-y-1/2 w-7 h-7 bg-white border-2 ${nodeBorder} rounded-full flex items-center justify-center text-sm shadow-sm z-10 -translate-x-3 active:scale-90 transition-transform`}
+        className={`absolute left-0 top-1/2 -translate-y-1/2 w-7 h-7 bg-bone border-2 ${nodeBorder} rounded-full flex items-center justify-center text-sm shadow-sm z-10 -translate-x-3 active:scale-90 transition-transform ${meta.text}`}
       >
         {meta.icon}
       </button>
@@ -510,26 +515,26 @@ function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete,
         className={`flex items-center gap-2 rounded-xl px-3 py-2 cursor-pointer active:opacity-70 transition-opacity ${pillClass}`}
         onClick={onToggle}
       >
-        <span className="text-xs font-semibold text-gray-700">
+        <span className={`text-xs font-semibold ${meta.text}`}>
           {meta.icon} {meta.label}
           {daysSince != null && (
-            <span className="font-normal ml-1 text-gray-400">({formatDays(daysSince)})</span>
+            <span className="font-normal ml-1 text-forest-400">({formatDays(daysSince)})</span>
           )}
         </span>
-        {event.amount && <span className="text-xs text-gray-400">· {event.amount}</span>}
-        {event.fertilizer && <span className="text-xs text-gray-400">· {event.fertilizer}</span>}
-        {event.potSize && <span className="text-xs text-gray-400">· {event.potSize}</span>}
-        {event.preparatas && <span className="text-xs text-gray-400">· {event.preparatas}</span>}
-        {event.tikslas && !event.preparatas && <span className="text-xs text-gray-400">· {event.tikslas}</span>}
+        {event.amount && <span className="text-xs text-forest-400">· {event.amount}</span>}
+        {event.fertilizer && <span className="text-xs text-forest-400">· {event.fertilizer}</span>}
+        {event.potSize && <span className="text-xs text-forest-400">· {event.potSize}</span>}
+        {event.preparatas && <span className="text-xs text-forest-400">· {event.preparatas}</span>}
+        {event.tikslas && !event.preparatas && <span className="text-xs text-forest-400">· {event.tikslas}</span>}
         {event.type === 'move' && (
-          <span className="text-xs text-gray-400 truncate max-w-[140px]">
+          <span className="text-xs text-forest-400 truncate max-w-[140px]">
             · {event.fromZoneId ? (zones.find(z => z.id === event.fromZoneId)?.name ?? '?') : '—'}
             {' → '}
             {event.toZoneId ? (zones.find(z => z.id === event.toZoneId)?.name ?? '?') : '—'}
           </span>
         )}
         {event.note && !event.amount && !event.fertilizer && !event.potSize && !event.preparatas && event.type !== 'move' && (
-          <span className="text-xs text-gray-400 truncate max-w-[120px]">· {event.note}</span>
+          <span className="text-xs text-forest-400 truncate max-w-[120px]">· {event.note}</span>
         )}
       </div>
     </motion.div>
@@ -605,7 +610,7 @@ function groupWaterings(rendered, eventPeriods) {
 
 function WateringRun({ run, expanded, onToggle, gaps, activeTooltip, onTooltipToggle, onDeleteEvent, inPeriod }) {
   const pill = (content) => (
-    <div className={`flex items-center gap-2 rounded-xl px-3 py-2 ${inPeriod ? 'bg-transparent' : 'bg-white border border-warm-border'}`}>
+    <div className={`flex items-center gap-2 rounded-xl px-3 py-2 ${inPeriod ? 'bg-transparent' : 'bg-bone border border-bone-400/40'}`}>
       {content}
     </div>
   )
@@ -618,19 +623,19 @@ function WateringRun({ run, expanded, onToggle, gaps, activeTooltip, onTooltipTo
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.25 }}
       >
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-7 h-7 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center text-sm shadow-sm z-10">
-          💧
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 w-7 h-7 bg-bone border-2 border-bone-400/60 rounded-full flex items-center justify-center text-sm shadow-sm z-10 text-forest-600">
+          <Droplets size={13} />
         </div>
         <button className="w-full text-left" onClick={onToggle}>
           {pill(
             <>
-              <span className="text-xs font-semibold text-gray-700">
-                💧 Laistymas
-                <span className="font-normal text-gray-400 ml-1">
+              <span className="text-xs font-semibold text-forest-600">
+                <Droplets size={11} className="inline mr-1 align-text-bottom" /> Laistymas
+                <span className="font-normal text-forest-400 ml-1">
                   · {formatDateShort(run.dateOldest)} – {formatDateShort(run.dateNewest)} · {run.count}×
                 </span>
               </span>
-              <span className="ml-auto text-gray-400 text-xs">▾</span>
+              <span className="ml-auto text-forest-400 text-xs">▾</span>
             </>
           )}
         </button>
@@ -646,7 +651,7 @@ function WateringRun({ run, expanded, onToggle, gaps, activeTooltip, onTooltipTo
           return (
             <motion.div key={item.key} className="relative pl-10 mb-2 mt-4"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
-              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+              <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em]">
                 {formatDateShort(item.date)}
               </span>
             </motion.div>
@@ -666,7 +671,7 @@ function WateringRun({ run, expanded, onToggle, gaps, activeTooltip, onTooltipTo
         )
       })}
       <div className="relative pl-10 mb-3">
-        <button onClick={onToggle} className="text-[11px] text-gray-400 hover:text-gray-600 transition-colors">
+        <button onClick={onToggle} className="font-mono text-[10px] text-forest-400 hover:text-forest-600 uppercase tracking-[0.14em] transition-colors">
           ▴ Sutraukti
         </button>
       </div>
@@ -706,11 +711,11 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetA
       {events.length === 0 ? (
         /* Empty state */
         <div className="flex-1 flex flex-col items-center justify-center py-16 px-8 text-center gap-3">
-          <Sprout size={48} className="text-sage-300" />
+          <Sprout size={48} className="text-forest-300" />
           <div>
-            <p className="text-base font-semibold text-gray-700">Istorija tuščia</p>
-            <p className="text-sm text-gray-400 mt-1 leading-snug">
-              Pradėkite nuo persodinimo — paspauskite <span className="font-semibold text-sage-500">+</span> apačioje
+            <p className="font-display text-base font-bold text-forest-700 tracking-tight">Istorija tuščia</p>
+            <p className="text-sm text-forest-500 mt-1 leading-snug">
+              Pradėkite nuo persodinimo — paspauskite <span className="font-semibold text-forest-600">+</span> apačioje
             </p>
           </div>
         </div>
@@ -722,7 +727,7 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetA
               <button
                 onClick={() => setPhotosOnly(v => !v)}
                 className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors ${
-                  photosOnly ? 'bg-sage-500 text-white' : 'bg-surface-2 text-gray-500'
+                  photosOnly ? 'bg-forest-600 text-bone' : 'bg-bone-300/60 text-forest-600'
                 }`}
               >
                 <Camera size={12} />
@@ -732,13 +737,13 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetA
           )}
 
           {/* Vertical timeline line */}
-          <div className="absolute left-8 top-0 bottom-0 w-px bg-sage-100" />
+          <div className="absolute left-8 top-0 bottom-0 w-px bg-forest-100" />
 
           {/* ── Ghost events (predictions) ── */}
           {predictions.length > 0 && (
             <>
               <div className="relative pl-10 mb-2">
-                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em]">
                   ✦ Prognozė
                 </span>
               </div>
@@ -747,11 +752,11 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetA
               ))}
               {/* "Today" divider */}
               <div className="relative pl-10 mt-3 mb-4 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-sage-400 absolute left-0 -translate-x-[3px]" />
-                <span className="text-[11px] font-bold text-sage-400 uppercase tracking-widest">
+                <div className="w-1.5 h-1.5 rounded-full bg-forest-500 absolute left-0 -translate-x-[3px]" />
+                <span className="font-mono text-[10px] font-medium text-forest-600 uppercase tracking-[0.18em]">
                   Šiandien
                 </span>
-                <div className="flex-1 h-px bg-sage-100" />
+                <div className="flex-1 h-px bg-forest-200/60" />
               </div>
             </>
           )}
@@ -805,8 +810,8 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetA
             }
 
             const PERIOD_WRAP = {
-              sick:       'bg-orange-50 border border-orange-100 rounded-2xl -mx-1 px-1 pt-3 mb-3',
-              quarantine: 'bg-red-50 border border-red-100 rounded-2xl -mx-1 px-1 pt-3 mb-3',
+              sick:       'bg-terracotta-50/40 border border-terracotta-200/50 rounded-2xl -mx-1 px-1 pt-3 mb-3',
+              quarantine: 'bg-terracotta-50/60 border border-terracotta/30 rounded-2xl -mx-1 px-1 pt-3 mb-3',
             }
 
             const renderSeparator = (sep) => (
@@ -817,7 +822,7 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetA
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.25 }}
               >
-                <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+                <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em]">
                   {formatDateShort(sep.date)}
                 </span>
               </motion.div>

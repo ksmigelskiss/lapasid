@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
-import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronRight, Share2, Copy, Check } from 'lucide-react'
+import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronRight, Share2, Copy, Check, Link2 } from 'lucide-react'
 import { doc, setDoc } from 'firebase/firestore'
 import { db } from '../utils/firebase'
 import { ZonePicker } from './ZoneManager'
@@ -98,7 +98,7 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
             <button
               onClick={onToggleHistoryPhoto}
               className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition-colors ${
-                useHistory ? 'bg-sage-500 text-white' : 'bg-surface-2 text-gray-600'
+                useHistory ? 'bg-forest-600 text-bone' : 'bg-surface-2 text-gray-600'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -170,7 +170,7 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
               </div>
               <button
                 onClick={() => { onSave(current); onClose() }}
-                className="w-full py-3 rounded-2xl text-sm font-semibold text-white bg-sage-500"
+                className="w-full py-3 rounded-2xl text-sm font-semibold text-bone bg-forest-600"
               >
                 Naudoti šią nuotrauką
               </button>
@@ -276,24 +276,24 @@ function PassportSection({ plant, collectionId, onToggle }) {
   }
 
   return (
-    <div className="bg-surface rounded-2xl p-4 space-y-3">
+    <div className="border border-bone-400/40 rounded-2xl p-4 space-y-3">
       {/* Toggle row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <span className="text-lg">🔗</span>
+          <Link2 size={16} className="text-forest-400 flex-shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-gray-800">Augalo pasas</p>
-            <p className="text-[11px] text-gray-400">Viešas profilis su priežiūros info</p>
+            <p className="font-display text-sm font-bold text-forest-700 tracking-tight">Augalo pasas</p>
+            <p className="font-mono text-[10px] text-forest-500 uppercase tracking-[0.14em] mt-0.5">Viešas profilis · priežiūros info</p>
           </div>
         </div>
         <button
           onClick={handleToggle}
           disabled={saving}
           className={`relative w-11 h-6 rounded-full transition-colors duration-200 flex-shrink-0 ${
-            isPublic ? 'bg-sage-500' : 'bg-gray-200'
+            isPublic ? 'bg-forest-600' : 'bg-bone-400'
           } ${saving ? 'opacity-50' : ''}`}
         >
-          <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${
+          <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-bone rounded-full shadow-sm transition-transform duration-200 ${
             isPublic ? 'translate-x-5' : 'translate-x-0'
           }`} />
         </button>
@@ -302,18 +302,18 @@ function PassportSection({ plant, collectionId, onToggle }) {
       {/* URL + share — tik kai įjungta */}
       {isPublic && (
         <div className="space-y-2">
-          <div className="flex items-center gap-2 bg-white rounded-xl px-3 py-2 border border-gray-100">
-            <span className="text-xs text-gray-500 flex-1 truncate font-mono">{passportUrl}</span>
-            <button onClick={copyUrl} className="flex-shrink-0 p-1 rounded-lg active:bg-gray-100 transition-colors">
+          <div className="flex items-center gap-2 bg-bone-50 rounded-xl px-3 py-2 border border-bone-400/40">
+            <span className="font-mono text-xs text-forest-600 flex-1 truncate">{passportUrl}</span>
+            <button onClick={copyUrl} className="flex-shrink-0 p-1 rounded-lg active:bg-bone-300 transition-colors">
               {copied
-                ? <Check size={14} className="text-sage-500" />
-                : <Copy size={14} className="text-gray-400" />
+                ? <Check size={14} className="text-forest-600" />
+                : <Copy size={14} className="text-forest-400" />
               }
             </button>
           </div>
           <button
             onClick={share}
-            className="w-full flex items-center justify-center gap-2 py-2.5 bg-sage-500 text-white rounded-xl text-sm font-medium"
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-forest-600 text-bone rounded-xl text-sm font-bold"
           >
             <Share2 size={14} />
             Dalintis nuoroda
@@ -551,13 +551,13 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
         <div className="flex flex-col gap-2 pt-1">
           {section === 'nori' && (
             <button onClick={() => onAction('buy', plant)}
-              className="w-full py-3.5 rounded-2xl text-sm font-medium text-white bg-sage-500 hover:bg-sage-600 transition-colors">
+              className="w-full py-3.5 rounded-2xl text-sm font-medium text-white bg-forest-600 hover:bg-forest-700 transition-colors">
               Pirkau, turiu!
             </button>
           )}
           {section === 'istorija' && (<>
             <button onClick={() => { onAction('tryAgain', plant); onClose() }}
-              className="w-full py-3.5 rounded-2xl text-sm font-medium text-white bg-sage-500 hover:bg-sage-600 transition-colors">
+              className="w-full py-3.5 rounded-2xl text-sm font-medium text-white bg-forest-600 hover:bg-forest-700 transition-colors">
               Bandyti vėl
             </button>
             <button onClick={() => { onAction('wantAgain', plant); onClose() }}
@@ -582,13 +582,13 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
 function NoteCard({ note, expanded, onToggle, onEdit, onDelete, onShare, onToggleStar, onChat }) {
   return (
     <motion.div
-      className="bg-surface rounded-2xl px-4 py-3.5 cursor-pointer active:bg-surface-2 transition-colors"
+      className="border border-bone-400/40 rounded-2xl px-4 py-3.5 cursor-pointer active:bg-bone-300/40 transition-colors"
       onClick={onToggle}
       layout
       transition={{ duration: 0.2 }}
     >
       <div className="flex items-start gap-2">
-        <p className={`flex-1 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap ${expanded ? '' : 'line-clamp-3'}`}>
+        <p className={`flex-1 text-sm text-forest-700 leading-relaxed whitespace-pre-wrap ${expanded ? '' : 'line-clamp-3'}`}>
           {note.text}
         </p>
         <button
@@ -596,34 +596,34 @@ function NoteCard({ note, expanded, onToggle, onEdit, onDelete, onShare, onToggl
           className="flex-shrink-0 text-base leading-none mt-0.5 transition-transform active:scale-90"
         >
           {note.starred
-            ? <Star size={14} className="text-amber-400 fill-amber-400" />
-            : <Star size={14} className="text-gray-400" />
+            ? <Star size={14} className="text-terracotta-400 fill-terracotta-400" />
+            : <Star size={14} className="text-forest-300" />
           }
         </button>
       </div>
       {expanded && (
-        <div className="flex gap-4 mt-2.5 pt-2 border-t border-gray-200">
+        <div className="flex gap-4 mt-2.5 pt-2 border-t border-bone-400/40">
           <button
             onClick={e => { e.stopPropagation(); onEdit() }}
-            className="flex items-center gap-1 text-xs text-sage-600 hover:text-sage-800 font-medium transition-colors"
+            className="flex items-center gap-1 text-xs text-forest-600 hover:text-forest-800 font-medium transition-colors"
           >
             <Pencil size={11} /> Redaguoti
           </button>
           <button
             onClick={e => { e.stopPropagation(); onChat() }}
-            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-800 font-medium transition-colors"
+            className="flex items-center gap-1 text-xs text-forest-500 hover:text-forest-700 font-medium transition-colors"
           >
             <MessageCircle size={11} /> Aptarti
           </button>
           <button
             onClick={e => { e.stopPropagation(); onShare() }}
-            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 font-medium transition-colors"
+            className="flex items-center gap-1 text-xs text-forest-500 hover:text-forest-700 font-medium transition-colors"
           >
             <Globe size={11} /> Į žinyną
           </button>
           <button
             onClick={e => { e.stopPropagation(); onDelete() }}
-            className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 font-medium transition-colors ml-auto"
+            className="flex items-center gap-1 text-xs text-terracotta-500 hover:text-terracotta-600 font-medium transition-colors ml-auto"
           >
             <Trash2 size={11} /> Ištrinti
           </button>
@@ -694,7 +694,7 @@ function NotesContent({ plant, onUzrasaiSave, onSaveToZinynas, onChatAbout }) {
               <button onClick={() => setEditingId(null)}
                 className="flex-1 py-2.5 rounded-2xl text-sm text-gray-500 bg-surface-2">Atšaukti</button>
               <button onClick={saveEdit} disabled={!editText.trim()}
-                className="flex-1 py-2.5 rounded-2xl text-sm text-white bg-sage-500 disabled:opacity-40">Išsaugoti</button>
+                className="flex-1 py-2.5 rounded-2xl text-sm text-bone bg-forest-600 disabled:opacity-40">Išsaugoti</button>
             </div>
           </div>
         ) : (
@@ -718,26 +718,26 @@ function NotesContent({ plant, onUzrasaiSave, onSaveToZinynas, onChatAbout }) {
       {adding ? (
         <div className="space-y-2">
           <textarea
-            className="w-full bg-surface rounded-2xl px-4 py-3 text-sm text-gray-800 placeholder-gray-400 outline-none resize-none border border-transparent focus:border-sage-300 transition-colors"
+            className="w-full bg-bone-50 rounded-2xl px-4 py-3 text-sm text-forest-700 placeholder-forest-400 outline-none resize-none border border-bone-400/40 focus:border-forest-400 transition-colors"
             rows={5} value={newText} onChange={e => setNewText(e.target.value)}
             placeholder="Nauja mintis..." autoFocus
           />
           <div className="flex gap-2">
             <button onClick={() => { setAdding(false); setNewText('') }}
-              className="flex-1 py-2.5 rounded-2xl text-sm text-gray-500 bg-surface-2">Atšaukti</button>
+              className="flex-1 py-2.5 rounded-2xl text-sm text-forest-600 bg-bone-300/60">Atšaukti</button>
             <button onClick={addNote} disabled={!newText.trim()}
-              className="flex-1 py-2.5 rounded-2xl text-sm text-white bg-sage-500 disabled:opacity-40">Išsaugoti</button>
+              className="flex-1 py-2.5 rounded-2xl text-sm font-bold text-bone bg-forest-600 disabled:opacity-40">Išsaugoti</button>
           </div>
         </div>
       ) : (
         <button onClick={() => setAdding(true)}
-          className="w-full py-3 rounded-2xl text-sm text-sage-500 bg-sage-50 hover:bg-sage-100 transition-colors">
+          className="w-full py-3 rounded-2xl text-sm font-semibold text-forest-600 border border-bone-400/40 hover:bg-bone-300/40 transition-colors">
           + Pridėti mintį
         </button>
       )}
 
       {notes.length === 0 && !adding && (
-        <p className="text-xs text-gray-500 text-center leading-relaxed px-4 pt-1">
+        <p className="text-xs text-forest-500 text-center leading-relaxed px-4 pt-1">
           Išsaugokite stebėjimus arba mintį iš pokalbio su AI spausdami <Bookmark size={12} className="inline align-text-bottom mx-0.5" />
         </p>
       )}
@@ -773,7 +773,7 @@ function TabBar({ active, onChange, noteCount = 0 }) {
           {active === tab.key && (
             <motion.div
               layoutId="tab-underline"
-              className="absolute bottom-0 left-0 right-0 h-0.5 bg-sage-500 rounded-full"
+              className="absolute bottom-0 left-0 right-0 h-0.5 bg-forest-600 rounded-full"
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             />
           )}
