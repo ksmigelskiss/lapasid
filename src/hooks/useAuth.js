@@ -9,7 +9,7 @@ import {
   signOut as firebaseSignOut,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc, getDocs, collection, query, limit } from 'firebase/firestore'
-import { auth, db, googleProvider } from '../utils/firebase'
+import { auth, db, googleProvider, facebookProvider } from '../utils/firebase'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { acceptInvite } from '../components/ProfileSheet'
 import { isMockMode, MOCK_USER, MOCK_COLLECTION_ID, MOCK_COLLECTION_NAME } from '../utils/mockData'
@@ -337,18 +337,22 @@ export function useAuth() {
     return unsub
   }, [])
 
-  const signIn = async () => {
+  // Generic provider sign-in (Google, Facebook). signInWithPopup veikia visur:
+  // naršyklė, Android PWA, iOS 14.5+ PWA (SFSafariViewController popup).
+  // Popup blokuotas/uždarytas → fallback į Firebase redirect.
+  const signInWithProvider = async (provider) => {
     setState(s => ({ ...s, authError: null }))
     try {
-      // signInWithPopup veikia visur: naršyklė, Android PWA, iOS 14.5+ PWA (SFSafariViewController popup)
-      await signInWithPopup(auth, googleProvider)
+      await signInWithPopup(auth, provider)
     } catch (e) {
-      // Popup blokuotas arba uždarytas — fallback į Firebase redirect
       const popupFallback = ['auth/popup-blocked', 'auth/popup-closed-by-user', 'auth/cancelled-popup-request']
-      if (popupFallback.includes(e?.code)) return signInWithRedirect(auth, googleProvider)
+      if (popupFallback.includes(e?.code)) return signInWithRedirect(auth, provider)
       setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' }))
     }
   }
+
+  const signInGoogle   = () => signInWithProvider(googleProvider)
+  const signInFacebook = () => signInWithProvider(facebookProvider)
 
   // Perjungia aktyvią kolekciją
   const switchCollection = async (colId) => {
@@ -383,5 +387,5 @@ export function useAuth() {
     return firebaseSignOut(auth)
   }
 
-  return { ...state, signIn, signOut, switchCollection, renameCollection }
+  return { ...state, signInGoogle, signInFacebook, signOut, switchCollection, renameCollection }
 }

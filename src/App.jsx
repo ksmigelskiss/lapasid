@@ -14,6 +14,7 @@ import DesktopHeader from './components/desktop/DesktopHeader'
 import MobileHeader from './components/MobileHeader'
 import { DetailHostProvider } from './contexts/DetailHostContext'
 import LoginScreen from './components/LoginScreen'
+import BrandLoader from './components/brand/BrandLoader'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
 
 // ChunkLoadError (senas SW aptarnauja seną HTML su naujais chunk hash'ais) → force reload.
@@ -49,7 +50,7 @@ export default function App() {
     user, collectionId, role, ownCollectionId, allCollections,
     loading: authLoading, authError, loadingMessage,
     viewerToken,
-    signIn, signOut, switchCollection, renameCollection,
+    signInGoogle, signInFacebook, signOut, switchCollection, renameCollection,
   } = useAuth()
 
   const isDesktop = useIsDesktop()
@@ -304,16 +305,16 @@ export default function App() {
   // ── Auth gate ─────────────────────────────────────────────────
   if (authLoading) {
     return (
-      <div className="fixed inset-0 bg-app flex flex-col items-center justify-center gap-3">
-        <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />
+      <div className="fixed inset-0 bg-app flex flex-col items-center justify-center gap-4">
+        <BrandLoader />
         {loadingMessage && (
-          <p className="text-sm text-gray-400">{loadingMessage}</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-forest-500">{loadingMessage}</p>
         )}
       </div>
     )
   }
   if (!user && !viewerToken) {
-    return <LoginScreen onSignIn={signIn} error={authError} />
+    return <LoginScreen onSignInGoogle={signInGoogle} onSignInFacebook={signInFacebook} error={authError} />
   }
   // Vartotojas prisijungęs, bet kolekcija nesukurta (Firestore rules klaida arba tinklas)
   if (!collectionId) {
