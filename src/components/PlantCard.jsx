@@ -236,10 +236,11 @@ const PlantCard = memo(function PlantCard({
           </div>
         )}
 
-        {/* Toxic pill — designer'io spec: red full-pill, white uppercase, bold, soft shadow */}
+        {/* Toxic pill — Brandbook v1.0: terracotta callout (vietoj red).
+            Skull ikona + uppercase mono-feel išlieka. */}
         {plant.toksiskas && (
           <div className="absolute top-2.5 left-2.5 z-[2]">
-            <span className="inline-flex items-center gap-1 bg-red-500 text-white text-[10.5px] font-extrabold uppercase tracking-[0.06em] rounded-full px-2.5 py-1 shadow-[0_2px_8px_rgba(239,68,68,0.35)]">
+            <span className="inline-flex items-center gap-1 bg-terracotta text-bone text-[10.5px] font-extrabold uppercase tracking-[0.06em] rounded-full px-2.5 py-1 shadow-[0_2px_8px_rgba(184,106,58,0.35)]">
               <Skull size={11} /> Toksiška
             </span>
           </div>
@@ -257,8 +258,8 @@ const PlantCard = memo(function PlantCard({
           <div className="absolute bottom-2.5 left-2.5 flex flex-col gap-1.5 items-start z-[2]">
             {zoneName && (
               <span className="inline-flex items-center gap-1.5 bg-black/55 backdrop-blur-md rounded-full px-2.5 py-1">
-                <MapPin size={11} className="text-emerald-300 flex-shrink-0" />
-                <span className="text-[11.5px] text-white font-semibold tracking-tight leading-none">{zoneName}</span>
+                <MapPin size={11} className="text-forest-200 flex-shrink-0" />
+                <span className="text-[11.5px] text-bone font-semibold tracking-tight leading-none">{zoneName}</span>
               </span>
             )}
             {dormFC && (
