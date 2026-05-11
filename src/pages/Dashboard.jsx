@@ -17,6 +17,7 @@ import AccuracySprite from '../components/AccuracySprite'
 import { CARE_COPY, pick, fillTemplate } from '../constants/careCopy'
 import { SORT_OPTIONS, sortPlants } from '../utils/plantSort'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
+import { useScrollDirection } from '../hooks/useScrollDirection'
 import { makeId, today } from '../utils/plantTransform'
 
 const GARDENER = '/gardener.png'
@@ -451,6 +452,8 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
     return allPlants.filter(p => matchesQuery(p, query))
   }, [allPlants, query])
   const { pullY, refreshing } = usePullToRefresh(scrollRef, onRefresh ?? (() => {}))
+  // Greeting auto-hide kai scroll'inasi žemyn — atstato kai scroll'inasi atgal arba prie viršaus.
+  const hideGreeting = useScrollDirection(scrollRef)
 
   const sortedPlants = useMemo(() => sortPlants(mainPlants, sortKey), [mainPlants, sortKey])
 
@@ -543,18 +546,26 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
         return (
           <>
             {/* Greeting + AccuracyButton — vienodas modulis tiek mobile, tiek desktop'e
-                (CareOverview greeting two-column composition: kairė kreipinys, dešinė pill). */}
-            <div className="px-5 pt-4 pb-3" style={hideInnerHeader ? undefined : { paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
-              <CareOverview
-                plants={mainPlants}
-                user={user}
-                mode="greeting"
-                bigGreeting
-                careMode={careMode}
-                careConfidence={careConfidence}
-                onCareToggle={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
-              />
-            </div>
+                (CareOverview greeting two-column composition: kairė kreipinys, dešinė pill).
+                Auto-hide animuotai kai scroll'inasi žemyn (kad daugiau vietos grid'ui),
+                grįžta kai scroll'inasi atgal arba prie viršaus. */}
+            <motion.div
+              animate={{ height: hideGreeting ? 0 : 'auto', opacity: hideGreeting ? 0 : 1 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+              style={{ overflow: 'hidden' }}
+            >
+              <div className="px-5 pt-4 pb-3" style={hideInnerHeader ? undefined : { paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
+                <CareOverview
+                  plants={mainPlants}
+                  user={user}
+                  mode="greeting"
+                  bigGreeting
+                  careMode={careMode}
+                  careConfidence={careConfidence}
+                  onCareToggle={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
+                />
+              </div>
+            </motion.div>
           </>
         )
       })()}
