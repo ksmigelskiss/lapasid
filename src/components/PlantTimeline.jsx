@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost, ImageIcon, MapPin, X, Check } from 'lucide-react'
+import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost, ImageIcon, MapPin, X, Check, Activity } from 'lucide-react'
 import { makeId, today } from '../utils/plantTransform'
 export { AddEventSheet, FAB } from './AddEventSheet'
 
@@ -21,6 +21,32 @@ function daysBetween(newerIso, olderIso) {
   const a = new Date(newerIso + 'T00:00:00')
   const b = new Date(olderIso + 'T00:00:00')
   return Math.round((a - b) / (1000 * 60 * 60 * 24))
+}
+
+// „PRIEŠ N DIENŲ" tipo accusative — naudojama timeline'o section header'iuose.
+// 1 → dieną, 2-9 → dienas, 10-19 / 0 / 20+ → dienų, 21 → dieną (etc.)
+function plDayAcc(n) {
+  const lastTwo = n % 100
+  const last = n % 10
+  if (lastTwo >= 11 && lastTwo <= 19) return 'DIENŲ'
+  if (last === 1) return 'DIENĄ'
+  if (last >= 2 && last <= 9) return 'DIENAS'
+  return 'DIENŲ'
+}
+
+// Relative date label timeline'o section header'iams. Grąžina null jei diena per
+// sena reliatyvinei išraiškai — tada caller'is rodo tik datą.
+//   0 → ŠIANDIEN, 1 → VAKAR, 2 → UŽVAKAR, 3-6 → PRIEŠ N DIENŲ.
+function relativeDateLabel(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00')
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
+  const diff = Math.round((now - d) / 86400000)
+  if (diff === 0) return 'ŠIANDIEN'
+  if (diff === 1) return 'VAKAR'
+  if (diff === 2) return 'UŽVAKAR'
+  if (diff >= 3 && diff <= 6) return `PRIEŠ ${diff} ${plDayAcc(diff)}`
+  return null
 }
 
 function formatDays(n) {
@@ -98,7 +124,7 @@ const EVENT_META = {
   fertilizing:  { icon: <FlaskConical size={13} />, label: 'Trąšos',       color: 'bg-terracotta-50', border: 'border-terracotta-100', text: 'text-terracotta-600' },
   repotting:    { icon: <Sprout size={13} />,       label: 'Persodinimas', color: 'bg-terracotta-50', border: 'border-terracotta-100', text: 'text-terracotta-600' },
   treatment:    { icon: <Stethoscope size={13} />,  label: 'Gydymas',      color: 'bg-terracotta-50', border: 'border-terracotta-200', text: 'text-terracotta-600' },
-  note:         { icon: <FileText size={13} />,     label: 'Pastaba',      color: 'bg-bone-300/40',   border: 'border-bone-400/40',    text: 'text-forest-600' },
+  note:         { icon: <FileText size={13} />,     label: 'Užrašas',      color: 'bg-bone-300/40',   border: 'border-bone-400/40',    text: 'text-forest-600' },
   photo:        { icon: <Camera size={13} />,       label: 'Nuotrauka',    color: 'bg-forest-50',     border: 'border-forest-100',     text: 'text-forest-600' },
   statusChange: { icon: <RefreshCw size={13} />,    label: 'Būsena',       color: 'bg-bone-300/40',   border: 'border-bone-400/40',    text: 'text-forest-500' },
   move:         { icon: <MapPin size={13} />,       label: 'Perkėlimas',   color: 'bg-forest-50',     border: 'border-forest-100',     text: 'text-forest-600' },
@@ -261,6 +287,7 @@ function Tooltip({ event, onDelete, zones = [] }) {
   const meta = EVENT_META[event.type] ?? EVENT_META.note
   return (
     <motion.div
+      data-event-tooltip
       className="w-52"
       initial={{ opacity: 0, scale: 0.88, y: -6 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -468,19 +495,19 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
   )
 }
 
-function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, inPeriod, zones = [] }) {
+// ── Pivotal event card (editorial layout) ────────────────────
+// „Žaibo įvykiai" — persodinimas, gydymas, perkėlimas, užrašas. Skirtingai nei
+// rutinis laistymas/tręšimas (kompaktiški pill'ai), šie įvykiai pasakoja istoriją
+// ir turi prasmingo turinio. Editorial card pattern: bone-50 elevated card su
+// mono caps header'iu, daysSince meta dešinėje, body specifinis kiekvienam tipui.
+
+function PivotalEvent({ event, index, daysSince, onDelete, inPeriod, zones = [] }) {
   const meta = EVENT_META[event.type] ?? EVENT_META.note
-  const isToday = event.date === today()
+  const Icon = EVENT_ICON_MAP[event.type] ?? FileText
 
-  // Pill stilius: today highlight (forest) > period wrapper > default (bone)
-  const pillClass = isToday
-    ? 'bg-forest-50 border border-forest-200'
-    : inPeriod
-      ? 'bg-transparent'
-      : 'bg-bone border border-bone-400/40'
-
-  // Node border'as: today → forest
-  const nodeBorder = isToday ? 'border-forest-300' : 'border-bone-400/60'
+  const cardClass = inPeriod
+    ? 'bg-white/55 backdrop-blur-xl border border-bone-400/40 rounded-2xl'
+    : 'bg-bone-50 border border-bone-400/40 rounded-2xl'
 
   return (
     <motion.div
@@ -489,53 +516,222 @@ function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete,
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.04, duration: 0.3, ease: 'easeOut' }}
     >
-      {/* Node */}
+      <div className={`absolute left-0 top-5 -translate-x-3 w-7 h-7 bg-bone border-2 border-bone-400/60 rounded-full flex items-center justify-center shadow-sm z-10 ${meta.text}`}>
+        <Icon size={13} />
+      </div>
+
+      <div className={`${cardClass} px-4 py-3`}>
+        {/* Header — type label + daysSince meta */}
+        <div className="flex items-baseline justify-between gap-3 mb-2">
+          <p className={`font-mono text-[10px] font-medium uppercase tracking-[0.18em] ${meta.text}`}>
+            {meta.label}
+          </p>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {daysSince != null && (
+              <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-400">
+                PO {daysSince}D
+              </p>
+            )}
+            <button
+              onClick={() => onDelete(event.id)}
+              className="text-forest-300 hover:text-terracotta-500 transition-colors"
+              aria-label="Ištrinti"
+            >
+              <Trash2 size={11} />
+            </button>
+          </div>
+        </div>
+
+        {/* Body — type-specific content */}
+        <PivotalBody event={event} zones={zones} />
+      </div>
+    </motion.div>
+  )
+}
+
+function PivotalBody({ event, zones }) {
+  switch (event.type) {
+    case 'repotting': {
+      const fields = []
+      if (event.potSize) fields.push(['Vazono dydis', event.potSize])
+      return (
+        <div className="space-y-1.5">
+          {fields.length > 0 && (
+            <dl className="space-y-0.5">
+              {fields.map(([k, v]) => (
+                <div key={k} className="flex items-baseline gap-2">
+                  <dt className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-400 flex-shrink-0">{k}</dt>
+                  <dd className="text-[13px] text-forest-700">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          {event.note && <p className="text-[13px] text-forest-700 leading-snug">{event.note}</p>}
+        </div>
+      )
+    }
+
+    case 'treatment': {
+      const fields = []
+      if (event.preparatas) fields.push(['Preparatas', event.preparatas])
+      if (event.tikslas)    fields.push(['Tikslas',    event.tikslas])
+      if (event.metodas)    fields.push(['Metodas',    event.metodas])
+      return (
+        <div className="space-y-1.5">
+          {fields.length > 0 && (
+            <dl className="space-y-0.5">
+              {fields.map(([k, v]) => (
+                <div key={k} className="flex items-baseline gap-2">
+                  <dt className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-400 flex-shrink-0">{k}</dt>
+                  <dd className="text-[13px] text-forest-700">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          {event.note && <p className="text-[13px] text-forest-700 leading-snug">{event.note}</p>}
+        </div>
+      )
+    }
+
+    case 'move': {
+      const from = event.fromZoneId ? (zones.find(z => z.id === event.fromZoneId)?.name ?? 'Nepriskirta') : 'Nepriskirta'
+      const to   = event.toZoneId   ? (zones.find(z => z.id === event.toZoneId)?.name   ?? 'Nepriskirta') : 'Nepriskirta'
+      return (
+        <div className="flex items-center gap-2 text-[13px] text-forest-700">
+          <span className="text-forest-500">{from}</span>
+          <span className="text-forest-300">→</span>
+          <span className="font-medium">{to}</span>
+        </div>
+      )
+    }
+
+    case 'note':
+    default:
+      return event.note ? (
+        <p className="text-[13px] text-forest-700 leading-relaxed whitespace-pre-wrap">{event.note}</p>
+      ) : null
+  }
+}
+
+// Map event types to Lucide icons (kelis turim per EVENT_META.icon kaip React node,
+// bet PivotalEvent reikia Icon komponento — atskira mapa kad nereiktų cloneElement'inti)
+const EVENT_ICON_MAP = {
+  repotting:   Sprout,
+  treatment:   Stethoscope,
+  move:        MapPin,
+  note:        FileText,
+  inspection:  Check,
+}
+
+const PIVOTAL_TYPES = new Set(['repotting', 'treatment', 'move', 'note'])
+
+function ActionEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, inPeriod, zones = [] }) {
+  const meta = EVENT_META[event.type] ?? EVENT_META.note
+  const expanded = showTooltip
+
+  // Pill stilius: period wrapper (sick/quarantine bg) ar default bone.
+  // Inline expand pattern'as (mobile-first) — vietoj floating tooltip'o pill'as
+  // pats išauga, parodydamas datą + papildomus laukus + delete mygtuką.
+  const pillClass = inPeriod
+    ? 'bg-transparent'
+    : 'bg-bone border border-bone-400/40'
+
+  return (
+    <motion.div
+      className="relative pl-10 mb-3"
+      initial={{ opacity: 0, x: -12 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.04, duration: 0.3, ease: 'easeOut' }}
+    >
+      {/* Node — kompaktiškas circle ant timeline linijos */}
       <button
         onClick={onToggle}
-        className={`absolute left-0 top-1/2 -translate-y-1/2 w-7 h-7 bg-bone border-2 ${nodeBorder} rounded-full flex items-center justify-center text-sm shadow-sm z-10 -translate-x-3 active:scale-90 transition-transform ${meta.text}`}
+        className={`absolute left-0 top-4 w-7 h-7 bg-bone border-2 border-bone-400/60 rounded-full flex items-center justify-center text-sm shadow-sm z-10 -translate-x-3 active:scale-90 transition-transform ${meta.text}`}
+        aria-label={meta.label}
       >
         {meta.icon}
       </button>
 
-      {/* Tooltip — vertically centered on the pill */}
-      <AnimatePresence>
-        {showTooltip && (
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 z-20">
-            <Tooltip
-              event={event}
-              onDelete={() => { onDelete(event.id); onToggle() }}
-              zones={zones}
-            />
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* Pill */}
+      {/* Pill — auga downward, kai expanded.
+          data-event-tooltip — žymeklis, kad outside-click handler'is
+          NEUŽDARYTŲ pill'o spaudžiant į jo vidų (delete mygtukas veikia). */}
       <div
-        className={`flex items-center gap-2 rounded-xl px-3 py-2 cursor-pointer active:opacity-70 transition-opacity ${pillClass}`}
+        data-event-tooltip
+        className={`rounded-xl cursor-pointer active:opacity-70 transition-opacity ${pillClass}`}
         onClick={onToggle}
       >
-        <span className={`text-xs font-semibold ${meta.text}`}>
-          {meta.icon} {meta.label}
-          {daysSince != null && (
-            <span className="font-normal ml-1 text-forest-400">({formatDays(daysSince)})</span>
-          )}
-        </span>
-        {event.amount && <span className="text-xs text-forest-400">· {event.amount}</span>}
-        {event.fertilizer && <span className="text-xs text-forest-400">· {event.fertilizer}</span>}
-        {event.potSize && <span className="text-xs text-forest-400">· {event.potSize}</span>}
-        {event.preparatas && <span className="text-xs text-forest-400">· {event.preparatas}</span>}
-        {event.tikslas && !event.preparatas && <span className="text-xs text-forest-400">· {event.tikslas}</span>}
-        {event.type === 'move' && (
-          <span className="text-xs text-forest-400 truncate max-w-[140px]">
-            · {event.fromZoneId ? (zones.find(z => z.id === event.fromZoneId)?.name ?? '?') : '—'}
-            {' → '}
-            {event.toZoneId ? (zones.find(z => z.id === event.toZoneId)?.name ?? '?') : '—'}
+        {/* Kompaktiška eilutė — visada matoma */}
+        <div className="flex items-center gap-2 px-3 py-2 flex-wrap">
+          <span className={`text-xs font-semibold ${meta.text}`}>
+            {meta.icon} {meta.label}
+            {daysSince != null && (
+              <span className="font-normal ml-1 text-forest-400">({formatDays(daysSince)})</span>
+            )}
           </span>
-        )}
-        {event.note && !event.amount && !event.fertilizer && !event.potSize && !event.preparatas && event.type !== 'move' && (
-          <span className="text-xs text-forest-400 truncate max-w-[120px]">· {event.note}</span>
-        )}
+          {/* Inline meta when COLLAPSED — paslepiam kai expanded, nes detalės jau matomos žemiau */}
+          {!expanded && (
+            <>
+              {event.amount && <span className="text-xs text-forest-400">· {event.amount}</span>}
+              {event.fertilizer && <span className="text-xs text-forest-400">· {event.fertilizer}</span>}
+              {event.potSize && <span className="text-xs text-forest-400">· {event.potSize}</span>}
+              {event.preparatas && <span className="text-xs text-forest-400">· {event.preparatas}</span>}
+              {event.tikslas && !event.preparatas && <span className="text-xs text-forest-400">· {event.tikslas}</span>}
+              {event.type === 'move' && (
+                <span className="text-xs text-forest-400 truncate max-w-[140px]">
+                  · {event.fromZoneId ? (zones.find(z => z.id === event.fromZoneId)?.name ?? '?') : '—'}
+                  {' → '}
+                  {event.toZoneId ? (zones.find(z => z.id === event.toZoneId)?.name ?? '?') : '—'}
+                </span>
+              )}
+              {event.note && !event.amount && !event.fertilizer && !event.potSize && !event.preparatas && event.type !== 'move' && (
+                <span className="text-xs text-forest-400 truncate max-w-[120px]">· {event.note}</span>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* Expanded detail — data, pilni laukai, delete */}
+        <AnimatePresence initial={false}>
+          {expanded && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="px-3 pb-2.5 pt-1 space-y-1 border-t border-bone-400/40 mt-px">
+                <div className="flex items-center justify-between gap-2 pt-1.5">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-forest-400">
+                    {formatDate(event.date)}
+                  </p>
+                  <button
+                    onClick={e => { e.stopPropagation(); onDelete(event.id); onToggle() }}
+                    className="font-mono text-[10px] uppercase tracking-[0.16em] text-terracotta-500 hover:text-terracotta-600 inline-flex items-center gap-1"
+                    aria-label="Ištrinti"
+                  >
+                    <Trash2 size={11} /> Ištrinti
+                  </button>
+                </div>
+                {event.amount      && <p className="text-[13px] text-forest-700">{event.amount}</p>}
+                {event.fertilizer  && <p className="text-[13px] text-forest-700"><span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-400 mr-1.5">Trąšos</span>{event.fertilizer}</p>}
+                {event.potSize     && <p className="text-[13px] text-forest-700"><span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-400 mr-1.5">Vazonas</span>{event.potSize}</p>}
+                {event.preparatas  && <p className="text-[13px] text-forest-700"><span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-400 mr-1.5">Preparatas</span>{event.preparatas}</p>}
+                {event.tikslas     && <p className="text-[13px] text-forest-700"><span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-400 mr-1.5">Tikslas</span>{event.tikslas}</p>}
+                {event.metodas     && <p className="text-[13px] text-forest-700"><span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-400 mr-1.5">Metodas</span>{event.metodas}</p>}
+                {event.type === 'move' && (
+                  <p className="text-[13px] text-forest-700">
+                    <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-400 mr-1.5">Iš → į</span>
+                    {event.fromZoneId ? (zones.find(z => z.id === event.fromZoneId)?.name ?? '?') : 'Nepriskirta'}
+                    {' → '}
+                    {event.toZoneId ? (zones.find(z => z.id === event.toZoneId)?.name ?? '?') : 'Nepriskirta'}
+                  </p>
+                )}
+                {event.note && <p className="text-[13px] text-forest-700 leading-snug">{event.note}</p>}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   )
@@ -679,20 +875,92 @@ function WateringRun({ run, expanded, onToggle, gaps, activeTooltip, onTooltipTo
   )
 }
 
+// ── View segmented control (brandbook tab-nav pattern) ────────
+// Tik 2 mode'ai timeline filtrui — grafikas atsiranda automatiškai hero zonoje
+// kai aktyvuojama Istorija tab'a (žiūr. PlantDetail hero swap).
+
+const VIEW_MODES = [
+  { key: 'events',  label: 'Įvykiai',     Icon: Activity },
+  { key: 'photos',  label: 'Nuotraukos',  Icon: Camera },
+]
+
+function ViewSegmentedControl({ mode, onChange }) {
+  return (
+    <div className="inline-flex p-1 rounded-btn bg-forest-700/[0.05]">
+      {VIEW_MODES.map(m => {
+        const isActive = mode === m.key
+        return (
+          <button
+            key={m.key}
+            onClick={() => onChange(m.key)}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-btn-sm font-mono text-[10px] font-medium uppercase tracking-[0.16em] transition-colors ${
+              isActive
+                ? 'bg-bone-50 text-forest-700 shadow-[0_1px_2px_rgba(28,58,42,0.06)]'
+                : 'text-forest-500 hover:text-forest-700'
+            }`}
+            aria-pressed={isActive}
+          >
+            <m.Icon size={11} />
+            <span>{m.label}</span>
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 // ── Main timeline component ────────────────────────────────────
 
-export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetAsProfilePhoto, zones = [] }) {
+export default function PlantTimeline({
+  plant,
+  mode = 'events',          // 'events' | 'photos' — timeline filtras (lifted į PlantDetail)
+  onModeChange,
+  onAddEvent,
+  onDeleteEvent,
+  onSetAsProfilePhoto,
+  zones = [],
+}) {
   const [activeTooltip, setActiveTooltip] = useState(null) // one at a time
   const [runExpanded, setRunExpanded]     = useState({})   // runKey → bool override
-  const [photosOnly, setPhotosOnly]       = useState(false)
   const allEvents = plant.timeline ?? []
-  const events = photosOnly ? allEvents.filter(e => e.type === 'photo') : allEvents
+  // 'photos' mode'as filtruoja timeline'ą iki tik nuotraukų. BarcodeLifeline
+  // grafikas hero zonoje gyvena PlantDetail'e ir atsiranda automatiškai
+  // aktyvavus Istorija tab'ą — nepriklauso nuo šio filter mode'o.
+  const events = mode === 'photos' ? allEvents.filter(e => e.type === 'photo') : allEvents
   const gaps = computeGaps(events)
   const predictions = computePredictions(events)
   const eventPeriods = computeEventPeriods(events)
 
   const toggleTooltip = (id) =>
     setActiveTooltip(prev => (prev === id ? null : id))
+
+  // Outside click + Escape — uždarom aktyvų tooltip'ą.
+  //   - Pointerdown'as capture phase'e fire'inasi PO useEffect setup'o
+  //     (useEffect runs AFTER render, kai atidarymo click jau pabaigtas), todėl
+  //     suppressFirst guard'as nereikalingas — pirmas outside click iškart uždaro.
+  //   - ESC paspaudus, taip pat blur'inam aktyvų element'ą, kad nebeliktų focus
+  //     ring'o ant trigger button'o (browser default orange outline matomas po
+  //     to, kai tooltip dingsta).
+  useEffect(() => {
+    if (!activeTooltip) return
+    const onPointerDown = (e) => {
+      // Click'as tooltip viduje — paliekam atvirą (delete/copy mygtukai veikia).
+      if (e.target instanceof Element && e.target.closest('[data-event-tooltip]')) return
+      setActiveTooltip(null)
+    }
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return
+      setActiveTooltip(null)
+      const el = document.activeElement
+      if (el && el !== document.body && typeof el.blur === 'function') el.blur()
+    }
+    document.addEventListener('pointerdown', onPointerDown, true)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown, true)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [activeTooltip])
 
   // Group events by date for separators
   const rendered = []
@@ -706,10 +974,14 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetA
     rendered.push({ kind: 'event', event, key: event.id, index: i })
   })
 
+  // True empty (allEvents == 0) skiriasi nuo filtered empty (events == 0 dėl mode).
+  const isTrulyEmpty = allEvents.length === 0
+  const isFilterEmpty = !isTrulyEmpty && events.length === 0
+
   return (
     <div className="relative min-h-full flex flex-col">
-      {events.length === 0 ? (
-        /* Empty state */
+      {isTrulyEmpty ? (
+        /* True empty state — augalas dar visiškai be istorijos */
         <div className="flex-1 flex flex-col items-center justify-center py-16 px-8 text-center gap-3">
           <Sprout size={48} className="text-forest-300" />
           <div>
@@ -721,18 +993,23 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetA
         </div>
       ) : (
         <div className="flex-1 px-5 pt-4 pb-6 relative">
-          {/* Photo filter toggle */}
-          {allEvents.some(e => e.type === 'photo') && (
-            <div className="flex justify-end mb-3">
-              <button
-                onClick={() => setPhotosOnly(v => !v)}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors ${
-                  photosOnly ? 'bg-forest-600 text-bone' : 'bg-bone-300/60 text-forest-600'
-                }`}
-              >
-                <Camera size={12} />
-                Tik nuotraukos
-              </button>
+          {/* Mode segmented control — Įvykiai / Nuotraukos / Grafikas.
+              Visada matomas kai allEvents>0, kad vartotojas galėtų grįžti į
+              kitą mode'ą net kai filtras grąžina 0 rezultatų. */}
+          {onModeChange && (
+            <div className="flex justify-end mb-4">
+              <ViewSegmentedControl mode={mode} onChange={onModeChange} />
+            </div>
+          )}
+
+          {/* Filter empty state — nuotraukų nėra mode='photos' atveju */}
+          {isFilterEmpty && (
+            <div className="py-12 text-center">
+              <Camera size={32} className="text-forest-300 mx-auto" />
+              <p className="font-display text-sm font-semibold text-forest-700 tracking-tight mt-3">Nuotraukų nėra</p>
+              <p className="text-xs text-forest-500 mt-1 leading-snug">
+                Pridėk nuotrauką per <span className="font-semibold text-forest-600">+</span> apačioje
+              </p>
             </div>
           )}
 
@@ -750,14 +1027,11 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetA
               {predictions.map(p => (
                 <GhostEvent key={p.type} prediction={p} />
               ))}
-              {/* "Today" divider */}
-              <div className="relative pl-10 mt-3 mb-4 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-forest-500 absolute left-0 -translate-x-[3px]" />
-                <span className="font-mono text-[10px] font-medium text-forest-600 uppercase tracking-[0.18em]">
-                  Šiandien
-                </span>
-                <div className="flex-1 h-px bg-forest-200/60" />
-              </div>
+              {/* Atskiro „Šiandien" divider'io nebėra — date separator'iai dabar rodo
+                  „ŠIANDIEN · 05-12" pattern'u, kuris atlieka tą patį darbą natūraliai
+                  (žiūr. renderSeparator + relativeDateLabel). Kai šiandien nėra įvykių,
+                  „šiandien" yra implicit'inis tarpas tarp prognozių ir paskutinio
+                  separator'io — vartotojas mato „prognozė → ankstesni event'ai". */}
             </>
           )}
 
@@ -814,19 +1088,30 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetA
               quarantine: 'bg-terracotta-50/60 border border-terracotta/30 rounded-2xl -mx-1 px-1 pt-3 mb-3',
             }
 
-            const renderSeparator = (sep) => (
-              <motion.div
-                key={sep.key}
-                className="relative pl-10 mb-2 mt-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.25 }}
-              >
-                <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em]">
-                  {formatDateShort(sep.date)}
-                </span>
-              </motion.div>
-            )
+            const renderSeparator = (sep) => {
+              const isToday = sep.date === today()
+              const relative = relativeDateLabel(sep.date)
+              const dateShort = formatDateShort(sep.date)
+              const label = relative ? `${relative} · ${dateShort}` : dateShort
+              return (
+                <motion.div
+                  key={sep.key}
+                  className="relative pl-10 mb-2 mt-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className={`font-mono text-[10px] font-medium uppercase tracking-[0.18em] flex-shrink-0 ${
+                      isToday ? 'text-forest-700' : 'text-forest-500'
+                    }`}>
+                      {label}
+                    </span>
+                    <div className={`flex-1 h-px ${isToday ? 'bg-forest-200/60' : 'bg-bone-400/40'}`} />
+                  </div>
+                </motion.div>
+              )
+            }
 
             return segments.map((seg, si) => {
               const { period, items } = seg
@@ -870,6 +1155,16 @@ export default function PlantTimeline({ plant, onAddEvent, onDeleteEvent, onSetA
                       onDelete={onDeleteEvent}
                       onSetAsProfile={onSetAsProfilePhoto}
                       inPeriod={inPeriod}
+                    />
+                  )
+                }
+                if (PIVOTAL_TYPES.has(event.type)) {
+                  return (
+                    <PivotalEvent key={item.key} event={event} index={index}
+                      daysSince={gaps[event.id]}
+                      onDelete={onDeleteEvent}
+                      inPeriod={inPeriod}
+                      zones={zones}
                     />
                   )
                 }

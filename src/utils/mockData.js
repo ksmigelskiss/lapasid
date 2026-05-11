@@ -48,10 +48,14 @@ export const MOCK_PLANTS = [
     toksiskas: false,
     data_prideta: daysAgo(120),
     timeline: [
-      { id: 'p1w1', type: 'watering', date: daysAgo(2) },
-      { id: 'p1w2', type: 'watering', date: daysAgo(12) },
-      { id: 'p1w3', type: 'watering', date: daysAgo(22) },
-      { id: 'p1w4', type: 'watering', date: daysAgo(33) },
+      { id: 'p1w1', type: 'watering',  date: daysAgo(2) },
+      { id: 'p1n1', type: 'note',      date: daysAgo(8), note: 'Pradėjo geltonuoti apatinis lapas, gali būti per drėgna.\nPamiršau patikrinti grunto sausumą prieš laistant.' },
+      { id: 'p1w2', type: 'watering',  date: daysAgo(12) },
+      { id: 'p1t1', type: 'treatment', date: daysAgo(18), preparatas: 'Confidor', tikslas: 'amarai', metodas: 'lapų purškimas', note: 'Pastebėjau amarus apatiniame lapelyje. Profilaktiškas purškimas.' },
+      { id: 'p1w3', type: 'watering',  date: daysAgo(22) },
+      { id: 'p1m1', type: 'move',      date: daysAgo(28), fromZoneId: 'zone-svetaine', toZoneId: 'zone-virtuve' },
+      { id: 'p1w4', type: 'watering',  date: daysAgo(33) },
+      { id: 'p1r1', type: 'repotting', date: daysAgo(60), potSize: '14 cm', note: 'Perkėliau į didesnį vazoną — šaknys jau išlindo per dugno skylę.' },
     ],
   },
   {

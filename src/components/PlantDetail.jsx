@@ -8,6 +8,7 @@ import { doc, setDoc } from 'firebase/firestore'
 import { db } from '../utils/firebase'
 import { ZonePicker } from './ZoneManager'
 import PlantTimeline, { FAB, AddEventSheet } from './PlantTimeline'
+import BarcodeLifeline from './brand/BarcodeLifeline'
 import { getWateringForecast } from '../utils/wateringForecast'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
@@ -644,7 +645,34 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
 
 // ── Notes tab content ──────────────────────────────────────────
 
+// Pirma non-empty eilutė kaip title (su markdown žymeklių stripping'u).
+// Tas pats pattern'as kaip Zinynas.jsx — vientisas note display'us per visą app'ą.
+function extractNoteTitle(text) {
+  if (!text) return ''
+  const firstLine = text.split('\n').find(l => l.trim().length > 0) || ''
+  return firstLine
+    .replace(/^#+\s*/, '')           // ## heading marks
+    .replace(/\*\*(.+?)\*\*/g, '$1') // bold
+    .replace(/\*(.+?)\*/g, '$1')     // italic
+    .replace(/`(.+?)`/g, '$1')       // code
+    .replace(/^[-*]\s+/, '')         // list bullet
+    .trim()
+    .slice(0, 120)
+}
+
+// Body = visas tekstas po pirmos non-empty eilutės (su išlaikytais line breaks).
+function extractNoteBody(text) {
+  if (!text) return ''
+  const lines = text.split('\n')
+  const firstNonEmptyIdx = lines.findIndex(l => l.trim().length > 0)
+  if (firstNonEmptyIdx < 0) return ''
+  return lines.slice(firstNonEmptyIdx + 1).join('\n').trim()
+}
+
 function NoteCard({ note, expanded, onToggle, onEdit, onDelete, onShare, onToggleStar, onChat }) {
+  const title = extractNoteTitle(note.text) || '(tuščia)'
+  const body  = extractNoteBody(note.text)
+
   return (
     <motion.div
       className="border border-bone-400/40 rounded-2xl px-4 py-3.5 cursor-pointer active:bg-bone-300/40 transition-colors"
@@ -653,9 +681,16 @@ function NoteCard({ note, expanded, onToggle, onEdit, onDelete, onShare, onToggl
       transition={{ duration: 0.2 }}
     >
       <div className="flex items-start gap-2">
-        <p className={`flex-1 text-sm text-forest-700 leading-relaxed whitespace-pre-wrap ${expanded ? '' : 'line-clamp-3'}`}>
-          {note.text}
-        </p>
+        <div className="flex-1 min-w-0">
+          <p className={`font-display text-sm font-semibold tracking-tight text-forest-800 leading-snug ${expanded ? '' : 'truncate'}`}>
+            {title}
+          </p>
+          {body && (
+            <p className={`text-[13px] text-forest-600 leading-relaxed whitespace-pre-wrap mt-1 ${expanded ? '' : 'line-clamp-2'}`}>
+              {body}
+            </p>
+          )}
+        </div>
         <button
           onClick={e => { e.stopPropagation(); onToggleStar() }}
           className="flex-shrink-0 text-base leading-none mt-0.5 transition-transform active:scale-90"
@@ -1088,6 +1123,7 @@ export default function PlantDetail({
   }, [useDesktopPanel, visible]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const [activeTab, setActiveTab]           = useState('profile')
+  const [timelineMode, setTimelineMode]     = useState('events') // 'events' | 'photos' — timeline filtras
   const [heroError, setHeroError]           = useState(false)
   const [showPhotoSheet, setShowPhoto]      = useState(false)
   const [showChat, setShowChat]             = useState(false)
@@ -1349,27 +1385,24 @@ export default function PlantDetail({
             </button>
           </div>
 
-          {/* Photo — clean rectangle, no overlay. Emoji fallback if no image. */}
-          {plant.image && !heroError ? (
-            <button
-              onClick={() => setShowPhoto(true)}
-              className="block w-full aspect-[3/2] overflow-hidden bg-bone-300"
-              aria-label="Pakeisti nuotrauką"
-            >
+          {/* Hero zone — Istorija tab'as automatiškai rodo BarcodeLifeline vietoj
+              nuotraukos (data-tab'as = data-hero'is). Kitose tab'ose — clean foto
+              (jokio overlay'aus, jokio interaktyvumo — photo selection per
+              toolbar'o „…" mygtuką). Brandbook editorial pattern. */}
+          {activeTab === 'timeline' ? (
+            <BarcodeLifeline events={plant.timeline ?? []} />
+          ) : plant.image && !heroError ? (
+            <div className="block w-full aspect-[3/2] overflow-hidden bg-bone-300">
               <img
                 src={plant.image} alt={plant.lietuviškas}
                 className="w-full h-full object-cover"
                 onError={() => setHeroError(true)}
               />
-            </button>
+            </div>
           ) : (
-            <button
-              onClick={() => setShowPhoto(true)}
-              className="w-full aspect-[3/2] flex items-center justify-center text-8xl bg-bone-300"
-              aria-label="Pridėti nuotrauką"
-            >
+            <div className="w-full aspect-[3/2] flex items-center justify-center text-8xl bg-bone-300">
               {plant.emoji ?? '🌿'}
-            </button>
+            </div>
           )}
         </div>
 
@@ -1409,6 +1442,8 @@ export default function PlantDetail({
               >
                 <PlantTimeline
                   plant={plant}
+                  mode={timelineMode}
+                  onModeChange={setTimelineMode}
                   onAddEvent={event => onAddTimelineEvent?.(plant.id, event)}
                   onDeleteEvent={eventId => onDeleteTimelineEvent?.(plant.id, eventId)}
                   onSetAsProfilePhoto={url => onImageSave?.(plant.id, url)}
