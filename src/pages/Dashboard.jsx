@@ -17,7 +17,6 @@ import AccuracySprite from '../components/AccuracySprite'
 import { CARE_COPY, pick, fillTemplate } from '../constants/careCopy'
 import { SORT_OPTIONS, sortPlants } from '../utils/plantSort'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
-import { useScrollDirection } from '../hooks/useScrollDirection'
 import { makeId, today } from '../utils/plantTransform'
 
 const GARDENER = '/gardener.png'
@@ -452,8 +451,6 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
     return allPlants.filter(p => matchesQuery(p, query))
   }, [allPlants, query])
   const { pullY, refreshing } = usePullToRefresh(scrollRef, onRefresh ?? (() => {}))
-  // Greeting auto-hide kai scroll'inasi žemyn — atstato kai scroll'inasi atgal arba prie viršaus.
-  const hideGreeting = useScrollDirection(scrollRef)
 
   const sortedPlants = useMemo(() => sortPlants(mainPlants, sortKey), [mainPlants, sortKey])
 
@@ -543,32 +540,8 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
           </>
         )
 
-        return (
-          <>
-            {/* Greeting + AccuracyButton — instant show/hide pagal scroll kryptį
-                (be height/opacity animacijos, kuri mobile'e patempdavo grid'o
-                content'ą su savim). Elevation gradient'as eina iškart po juo. */}
-            {!hideGreeting && (
-              <>
-                <div className="px-5 pt-4 pb-3" style={hideInnerHeader ? undefined : { paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
-                  <CareOverview
-                    plants={mainPlants}
-                    user={user}
-                    mode="greeting"
-                    bigGreeting
-                    careMode={careMode}
-                    careConfidence={careConfidence}
-                    onCareToggle={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
-                  />
-                </div>
-                <div
-                  aria-hidden
-                  className="h-2 relative z-10 bg-gradient-to-b from-[rgba(20,40,30,0.08)] via-[rgba(20,40,30,0.04)] to-transparent"
-                />
-              </>
-            )}
-          </>
-        )
+        return null  // Greeting'as perkeltas Į scrollable container'į žemiau —
+                     // natural scroll be JS scroll-direction logikos.
       })()}
 
 
@@ -660,10 +633,29 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
       {/* Scrollable content */}
       {!searching && <div ref={scrollRef} className={`flex-1 overflow-y-auto scrollbar-none px-5 ${role === 'viewer' ? 'pb-8' : 'pb-28'}`}>
 
-        {/* CareOverview santrauka pašalinta. Tiek desktop'e, tiek mobile'e priežiūros
-            santrauka dabar pasiekiama tik per bell popup'ą toolbar'e (DesktopHeader /
-            MobileHeader). Greeting'as desktop'e renderinamas hideInnerHeader branch'e
-            top'e; mobile'e jis natūraliai nereikalingas (toolbar'e brand + tabs). */}
+        {/* Greeting + AccuracyButton — natūraliai slidasi su content'u
+            (be JS scroll-direction logikos). Scroll'inant žemyn — natūraliai
+            išslydsta į viršų; atgal — natūraliai parodomas. careMode'e
+            slepiamas (kad augalų grid'as gautų visą ekraną). */}
+        {!careMode && (
+          <>
+            <div className="-mx-5 px-5 pt-4 pb-3" style={hideInnerHeader ? undefined : { paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
+              <CareOverview
+                plants={mainPlants}
+                user={user}
+                mode="greeting"
+                bigGreeting
+                careMode={careMode}
+                careConfidence={careConfidence}
+                onCareToggle={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
+              />
+            </div>
+            <div
+              aria-hidden
+              className="h-2 -mx-5 mb-2 bg-gradient-to-b from-[rgba(20,40,30,0.08)] via-[rgba(20,40,30,0.04)] to-transparent"
+            />
+          </>
+        )}
 
         {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (
