@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { Ghost, Lightbulb } from 'lucide-react'
@@ -8,6 +8,13 @@ import { useDetailHost } from '../contexts/DetailHostContext'
 export default function DeathModal({ plant, onConfirm, onClose }) {
   const [reason, setReason] = useState('')
   const [lesson, setLesson] = useState('')
+  const reasonRef = useRef(null)
+
+  // Focus textarea su preventScroll — kad PlantDetail panel'ės scroll
+  // pozicija nepasislinktų aukštyn (autoFocus atribut'as šito nedaro).
+  useEffect(() => {
+    reasonRef.current?.focus({ preventScroll: true })
+  }, [])
 
   const isDesktop = useIsDesktop()
   const host = useDetailHost()
@@ -76,12 +83,12 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
               <Ghost size={12} /> Kodėl numirė?
             </label>
             <textarea
+              ref={reasonRef}
               className="w-full bg-bone-50 rounded-2xl px-4 py-3 text-sm text-forest-700 placeholder-forest-400 outline-none resize-none border border-bone-400/40 focus:border-terracotta/40 transition-colors"
               rows={2}
               placeholder="Pvz. Perlaisčiau, sušalo šaknys..."
               value={reason}
               onChange={e => setReason(e.target.value)}
-              autoFocus
             />
           </div>
           <div>

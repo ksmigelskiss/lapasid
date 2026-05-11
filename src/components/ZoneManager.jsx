@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X, ChevronUp, ChevronDown, Trash2, Plus, Settings, Check } from 'lucide-react'
@@ -10,6 +10,13 @@ import { useDetailHost } from '../contexts/DetailHostContext'
 function ZoneForm({ initial, onSave, onCancel, submitLabel = 'Išsaugoti' }) {
   const [name, setName] = useState(initial?.name ?? '')
   const valid = name.trim().length > 0
+  const inputRef = useRef(null)
+
+  // Focus su preventScroll — kad portal'inant į PlantDetail panel'ę
+  // (per ZonePicker) panel'ės scroll pozicija neklaidžiotų.
+  useEffect(() => {
+    inputRef.current?.focus({ preventScroll: true })
+  }, [])
 
   return (
     <div className="space-y-4">
@@ -18,11 +25,11 @@ function ZoneForm({ initial, onSave, onCancel, submitLabel = 'Išsaugoti' }) {
           Zonos pavadinimas
         </label>
         <input
+          ref={inputRef}
           type="text"
           placeholder="pvz. Virtuvės oranžerija"
           value={name}
           onChange={e => setName(e.target.value)}
-          autoFocus
           className="w-full bg-bone-50 rounded-2xl px-4 py-3 text-sm text-forest-700 placeholder-forest-400 outline-none border border-bone-400/40 focus:border-forest-400/60 transition-colors"
         />
       </div>
