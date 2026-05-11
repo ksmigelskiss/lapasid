@@ -24,27 +24,22 @@ export default function RightPanel({ plantsForChart = [] }) {
   const heatmapData = aggregateCareGrid(plantsForChart, 8)
 
   return (
-    <aside className="w-[430px] flex-shrink-0 border-l border-gray-200 bg-bone relative overflow-hidden flex flex-col">
-      {/* Background layer — VISADA renderintas, neslepiamas, kai atsidaro modal'as.
-          Modal'as portal'inasi į absolute z-20 target'ą virš jo, tad slide-in
-          animacija užvažiuoja ant widgetų, ne juos pakeičia. */}
+    <aside className="w-[430px] flex-shrink-0 border-l border-forest-600/40 bg-forest-700 relative overflow-hidden flex flex-col">
+      {/* Background layer — VISADA renderintas, neslepiamas, kai atsidaro modal'as. */}
       <>
-        {/* Leaf decor */}
-        <svg className="absolute -top-5 -right-8 w-44 h-44 text-sage-100 pointer-events-none" viewBox="0 0 200 200" fill="currentColor">
+        {/* Leaf decor — subtilūs tamsesni lapai ant tamsaus fono */}
+        <svg className="absolute -top-5 -right-8 w-44 h-44 text-forest-600 pointer-events-none" viewBox="0 0 200 200" fill="currentColor">
           <path d="M40 160 C 40 60, 100 30, 180 20 C 170 100, 130 160, 40 160 Z" />
         </svg>
-        <svg className="absolute -bottom-10 -left-8 w-40 h-40 text-sage-100 pointer-events-none" viewBox="0 0 200 200" fill="currentColor">
+        <svg className="absolute -bottom-10 -left-8 w-40 h-40 text-forest-600 pointer-events-none" viewBox="0 0 200 200" fill="currentColor">
           <path d="M180 40 C 180 140, 120 170, 40 180 C 50 100, 90 40, 180 40 Z" />
         </svg>
 
-        {/* Brand center — ABSOLUTE pozicija, didelis T4Mark + T4Word kaip
-            background image. Widgetai sluoksnyje virš jo, pro permatomus
-            glass card'us „prasimato". pointer-events:none — clicks pereina pro
-            brand'ą į widget'us. */}
+        {/* Brand center — bone mark ant tamsaus forest fono */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-0">
-          <T4Mark size={140} />
-          <T4Word size={32} className="text-forest-700 mt-5" />
-          <p className="text-sm text-forest-500 mt-2 opacity-70">tavo augalų dienoraštis</p>
+          <T4Mark size={140} ink="#f1ebdd" paper="#1c3a2a" />
+          <T4Word size={32} className="text-bone mt-5" />
+          <p className="text-sm text-bone/40 mt-2">tavo augalų dienoraštis</p>
         </div>
 
         {/* Widgets — flex column, layer'inasi virš brand'o. Tarpas viduryje
