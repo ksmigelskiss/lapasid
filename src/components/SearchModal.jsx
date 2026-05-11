@@ -11,6 +11,7 @@ import { getCatalogEntry, saveToCatalog } from '../utils/catalog'
 import { ProfileContent } from './PlantDetail'
 import { auth } from '../utils/firebase'
 import PaywallSheet from './PaywallSheet'
+import BrandLoader from './brand/BrandLoader'
 
 // Calls server-side proxy — Anthropic API key never in browser
 // Throws { code: 'limit_reached', limitType } when free tier is exhausted
@@ -453,7 +454,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             style={{ width: 52, height: 52 }}
           >
             {loading
-              ? <img src="/plant_pot.png" className="w-7 h-7 object-contain animate-spin" alt="" />
+              ? <BrandLoader inline size={28} />
               : <Search size={18} />
             }
           </button>
@@ -475,7 +476,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
           <div className="flex flex-col items-center gap-3 py-8 text-center">
             {previewUrl
               ? <img src={previewUrl} alt="" className="w-28 h-28 object-cover rounded-2xl opacity-70" />
-              : <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />
+              : <BrandLoader />
             }
             <p className="text-sm text-forest-600 font-medium">{statusMsg}{dots}</p>
             {!previewUrl && <p className="text-xs text-forest-400 italic">{query}</p>}
@@ -740,7 +741,7 @@ function SavingOverlay() {
         exit={{ scale: 0.88, opacity: 0 }}
         transition={{ type: 'spring', damping: 24, stiffness: 280 }}
       >
-        <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />
+        <BrandLoader />
         <div className="text-center">
           <p className="font-display text-base font-semibold tracking-tight text-forest-800">Kantrybės...</p>
           <AnimatePresence mode="wait">
