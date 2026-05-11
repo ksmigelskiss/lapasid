@@ -18,9 +18,15 @@ export default function AccuracyButton({ careConfidence = 0, careMode = false, o
   const label = accuracyLabel(pct)
   const stage = pct < 25 ? 0 : pct < 50 ? 1 : pct < 75 ? 2 : 3
 
+  // inactive — šiltas sage tint'as su sage-tinted lifted shadow,
+  //            kad mygtukas atrodytų kaip aktyvi kortelė (ne flat info chip);
+  //            desktop'e papildomas hover lift'as
+  // active careMode — solid sage-700 (be hover, jau "selected" state'as)
   const wrapperCls = careMode
     ? 'bg-sage-700 shadow-[0_4px_14px_rgba(46,125,82,0.32)]'
-    : 'bg-white shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
+    : 'bg-sage-50/70 ring-1 ring-sage-200/70 shadow-[0_4px_14px_rgba(46,125,82,0.12)] ' +
+      'lg:hover:-translate-y-px lg:hover:shadow-[0_6px_18px_rgba(46,125,82,0.18)] ' +
+      'active:translate-y-px active:shadow-[0_1px_4px_rgba(46,125,82,0.10)]'
 
   const ctaCls = careMode
     ? 'bg-transparent text-white'
