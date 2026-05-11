@@ -27,7 +27,7 @@ function ZoneForm({ initial, onSave, onCancel, submitLabel = 'Išsaugoti' }) {
         />
       </div>
       <div className="flex gap-2 pt-1">
-        <button onClick={onCancel} className="flex-1 h-11 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300/60 hover:bg-bone-400/50 transition-colors">
+        <button onClick={onCancel} className="flex-1 h-11 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300 hover:bg-bone-400/70 transition-colors">
           Atšaukti
         </button>
         <button onClick={() => valid && onSave({ name: name.trim() })} disabled={!valid}
@@ -45,8 +45,17 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
   const [creating, setCreating] = useState(false)
   const [editingId, setEditingId] = useState(null)
 
-  return (
-    <div className="fixed inset-0 flex items-end justify-center" style={{ zIndex }}>
+  const isDesktop = useIsDesktop()
+  const host = useDetailHost()
+  const useDesktopPanel = isDesktop && !!host?.container
+
+  const tree = (
+    <div
+      className={useDesktopPanel
+        ? "absolute inset-0 flex items-end justify-center"
+        : "fixed inset-0 flex items-end justify-center"}
+      style={{ zIndex }}
+    >
       <motion.div
         className="absolute inset-0 bg-forest-800/55 backdrop-blur-sm"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -64,7 +73,7 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
 
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-display text-base font-semibold tracking-tight text-forest-800">Zonos</h2>
-          <button onClick={onClose} className="w-9 h-9 flex items-center justify-center rounded-btn bg-bone-300/60 hover:bg-bone-400/60 text-forest-700 transition-colors">
+          <button onClick={onClose} className="w-9 h-9 flex items-center justify-center rounded-btn bg-bone-300 hover:bg-bone-400/70 text-forest-700 transition-colors">
             <X size={16} />
           </button>
         </div>
@@ -74,7 +83,7 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
             const plantCount = plants.filter(p => p.zonaId === zone.id).length
 
             return editingId === zone.id ? (
-              <div key={zone.id} className="bg-bone-300/40 border border-bone-400/40 rounded-2xl p-4">
+              <div key={zone.id} className="bg-bone-50 border border-bone-400/40 rounded-2xl p-4">
                 <ZoneForm
                   initial={zone}
                   onSave={data => { onUpdate(zone.id, data); setEditingId(null) }}
@@ -83,7 +92,7 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
                 />
               </div>
             ) : (
-              <div key={zone.id} className="bg-bone-300/40 border border-bone-400/40 rounded-2xl px-4 py-3 flex items-center gap-3">
+              <div key={zone.id} className="bg-bone-50 border border-bone-400/40 rounded-2xl px-4 py-3 flex items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <p className="font-display text-sm font-semibold tracking-tight text-forest-800 truncate">{zone.name}</p>
                   <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.14em] mt-0.5">{plantCount} augal{plantCount === 1 ? 'as' : 'ai'}</p>
@@ -115,7 +124,7 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
         </div>
 
         {creating ? (
-          <div className="bg-bone-300/40 border border-bone-400/40 rounded-2xl p-4">
+          <div className="bg-bone-50 border border-bone-400/40 rounded-2xl p-4">
             <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] mb-3">Nauja zona</p>
             <ZoneForm
               onSave={data => { onAdd(data); setCreating(false) }}
@@ -133,6 +142,9 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
       </motion.div>
     </div>
   )
+
+  if (useDesktopPanel) return createPortal(tree, host.container)
+  return tree
 }
 
 // ── Zone + spot picker for PlantDetail ────────────────────────
@@ -196,7 +208,7 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
             className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-colors ${
               !currentZoneId
                 ? 'bg-forest-100 text-forest-700'
-                : 'hover:bg-bone-300/50 text-forest-500'
+                : 'hover:bg-bone-300 text-forest-500'
             }`}
           >
             <span className="font-display text-sm font-semibold tracking-tight flex-1 text-left">Nepriskirta</span>
@@ -209,7 +221,7 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
               className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-colors ${
                 currentZoneId === zone.id
                   ? 'bg-forest-100 text-forest-700'
-                  : 'hover:bg-bone-300/50 text-forest-700'
+                  : 'hover:bg-bone-300 text-forest-700'
               }`}
             >
               <span className="font-display text-sm font-semibold tracking-tight flex-1 text-left">{zone.name}</span>

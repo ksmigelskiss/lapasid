@@ -1,10 +1,17 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { Ghost, Lightbulb } from 'lucide-react'
+import { useIsDesktop } from '../hooks/useIsDesktop'
+import { useDetailHost } from '../contexts/DetailHostContext'
 
 export default function DeathModal({ plant, onConfirm, onClose }) {
   const [reason, setReason] = useState('')
   const [lesson, setLesson] = useState('')
+
+  const isDesktop = useIsDesktop()
+  const host = useDetailHost()
+  const useDesktopPanel = isDesktop && !!host?.container
 
   const dragControls = useDragControls()
   const y = useMotionValue(0)
@@ -17,8 +24,10 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
     }
   }
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+  const tree = (
+    <div className={useDesktopPanel
+      ? "absolute inset-0 z-[90] flex items-end justify-center"
+      : "fixed inset-0 z-50 flex items-end justify-center"}>
       <motion.div
         className="absolute inset-0 bg-forest-800/55 backdrop-blur-sm"
         initial={{ opacity: 0 }}
@@ -92,7 +101,7 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 h-12 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300/60 hover:bg-bone-400/50 transition-colors"
+            className="flex-1 h-12 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300 hover:bg-bone-400/70 transition-colors"
           >
             Atšaukti
           </button>
@@ -106,4 +115,7 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
       </motion.div>
     </div>
   )
+
+  if (useDesktopPanel) return createPortal(tree, host.container)
+  return tree
 }

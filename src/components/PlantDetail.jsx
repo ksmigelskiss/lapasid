@@ -54,6 +54,10 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
   const [loading, setLoading]   = useState(false)
   const [searched, setSearched] = useState(false)
 
+  const isDesktop = useIsDesktop()
+  const host = useDetailHost()
+  const useDesktopPanel = isDesktop && !!host?.container
+
   const handleFile = async (file) => {
     if (!file) return
     onClose()
@@ -74,8 +78,10 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
   const hasPrev = idx > 0
   const hasNext = idx < photos.length - 1
 
-  return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center">
+  const tree = (
+    <div className={useDesktopPanel
+      ? "absolute inset-0 z-[80] flex items-end justify-center"
+      : "fixed inset-0 z-[80] flex items-end justify-center"}>
       <motion.div
         className="absolute inset-0 bg-forest-800/55 backdrop-blur-sm"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -212,7 +218,7 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
           </label>
 
           <button
-            className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300/60 hover:bg-bone-400/50 transition-colors"
+            className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300 hover:bg-bone-400/70 transition-colors"
             onClick={onClose}
           >
             Atšaukti
@@ -221,6 +227,9 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
       </motion.div>
     </div>
   )
+
+  if (useDesktopPanel) return createPortal(tree, host.container)
+  return tree
 }
 
 function Section({ title, children, id }) {

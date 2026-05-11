@@ -1,14 +1,25 @@
 import { motion } from 'framer-motion'
+import { createPortal } from 'react-dom'
+import { useIsDesktop } from '../hooks/useIsDesktop'
+import { useDetailHost } from '../contexts/DetailHostContext'
 
 /**
  * section === 'auginama'  → asks WHY (numirė / kita)
  * section === 'library'   → simple "are you sure?"
+ *
+ * Context-aware portal: jei PlantDetail panel atviras desktop'e — modal'as
+ * iškyla kortelės viduje. Kitaip — fullscreen overlay.
  */
 export default function DeleteModal({ plant, section, onDied, onMoveToLibrary, onDeleteForever, onClose }) {
   const isDashboard = section === 'auginama'
+  const isDesktop = useIsDesktop()
+  const host = useDetailHost()
+  const useDesktopPanel = isDesktop && !!host?.container
 
-  return (
-    <div className="fixed inset-0 z-[90] flex items-end justify-center">
+  const tree = (
+    <div className={useDesktopPanel
+      ? "absolute inset-0 z-[90] flex items-end justify-center"
+      : "fixed inset-0 z-[90] flex items-end justify-center"}>
       {/* Backdrop — forest INK (brand) */}
       <motion.div
         className="absolute inset-0 bg-forest-800/55 backdrop-blur-sm"
@@ -51,7 +62,7 @@ export default function DeleteModal({ plant, section, onDied, onMoveToLibrary, o
           <div className="space-y-2">
             <button
               onClick={onDied}
-              className="w-full bg-bone-300/40 hover:bg-bone-300/70 rounded-2xl px-4 py-4 transition-colors text-left"
+              className="w-full bg-bone-50 hover:bg-bone-300 rounded-2xl px-4 py-4 transition-colors text-left"
             >
               <p className="font-display text-sm font-semibold tracking-tight text-forest-800">Numirė</p>
               <p className="text-xs text-forest-500 mt-0.5">Įrašysime į istoriją su priežastimi</p>
@@ -59,7 +70,7 @@ export default function DeleteModal({ plant, section, onDied, onMoveToLibrary, o
 
             <button
               onClick={onMoveToLibrary}
-              className="w-full bg-bone-300/40 hover:bg-bone-300/70 rounded-2xl px-4 py-4 transition-colors text-left"
+              className="w-full bg-bone-50 hover:bg-bone-300 rounded-2xl px-4 py-4 transition-colors text-left"
             >
               <p className="font-display text-sm font-semibold tracking-tight text-forest-800">Kita priežastis</p>
               <p className="text-xs text-forest-500 mt-0.5">Augalas lieka bibliotekoje kaip įrašas</p>
@@ -81,11 +92,14 @@ export default function DeleteModal({ plant, section, onDied, onMoveToLibrary, o
 
         <button
           onClick={onClose}
-          className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300/60 hover:bg-bone-400/50 transition-colors mt-1"
+          className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300 hover:bg-bone-400/70 transition-colors mt-1"
         >
           Atšaukti
         </button>
       </motion.div>
     </div>
   )
+
+  if (useDesktopPanel) return createPortal(tree, host.container)
+  return tree
 }
