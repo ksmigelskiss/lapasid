@@ -49,10 +49,10 @@ export default function AccuracyButton({ careConfidence = 0, careMode = false, o
     : 'text-sage-800'
 
   return (
-    <span className="inline-flex p-1 rounded-[20px] bg-gray-900/[0.05]">
+    <span className="inline-flex p-1 rounded-btn bg-gray-900/[0.05]">
       <button
         onClick={onClick}
-        className={`inline-flex items-stretch rounded-2xl overflow-hidden transition-all active:scale-[0.97] ${wrapperCls}`}
+        className={`inline-flex items-stretch rounded-btn-sm overflow-hidden transition-all active:scale-[0.97] ${wrapperCls}`}
         title={careMode ? 'Išeiti iš priežiūros režimo' : `Priežiūra · ${label} ${pct}%`}
       >
         {/* Kairė sekcija: sprite viršuj, „Priežiūra" apačioj */}

@@ -71,6 +71,11 @@ export default {
         '2xl': '1rem',
         '3xl': '1.5rem',
         '4xl': '2rem',
+        // Brand button shape — staciakampis užapvalintas (panašus į logo/ikonos
+        // proporcijas), naudojamas vietoj rounded-full ant action mygtukų.
+        // Pill forma (rounded-full) lieka avatarams, status pill'ams ir badge'ams.
+        'btn':    '0.875rem',  // 14px — toolbar/tab/modal action buttons
+        'btn-sm': '0.625rem',  // 10px — small icon-only buttons (search, bell, close)
       },
       boxShadow: {
         ios:       '0 2px 12px rgba(0,0,0,0.06)',

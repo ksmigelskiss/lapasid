@@ -74,14 +74,14 @@ export default function DesktopHeader({
       </div>
 
       {/* Tabs — absolute pozicija viewport-centered (brand cluster plotis fiksuotas) */}
-      <nav className="absolute left-1/2 -translate-x-1/2 flex bg-gray-900/[0.04] rounded-full p-1 gap-0.5">
+      <nav className="absolute left-1/2 -translate-x-1/2 flex bg-gray-900/[0.04] rounded-btn p-1 gap-0.5">
         {visibleTabs.map(t => {
           const isActive = active === t.id
           return (
             <button
               key={t.id}
               onClick={() => onTabChange(t.id)}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[13.5px] font-medium transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-btn-sm text-[13.5px] font-medium transition-colors ${
                 isActive
                   ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
                   : 'text-gray-600 hover:text-gray-900'
