@@ -66,10 +66,11 @@ export default function DesktopHeader({
 
   return (
     <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-bone/85 backdrop-blur-xl z-30 relative">
-      {/* Brand — T4Icon inverted ("antspaudas": bone mark on forest square) + wordmark */}
+      {/* Brand — T4Icon inverted ("antspaudas": bone mark on forest square) + wordmark.
+          h-16 header (64px) → T4Icon 38px palieka 13px tarpą iš viršaus/apačios. */}
       <div className="flex items-center gap-2.5 flex-shrink-0">
-        <T4Icon size={32} ink="#f1ebdd" paper="#1c3a2a" />
-        <T4Word size={20} className="text-forest-700" />
+        <T4Icon size={38} ink="#f1ebdd" paper="#1c3a2a" />
+        <T4Word size={23} className="text-forest-700" />
       </div>
 
       {/* Tabs — absolute pozicija viewport-centered */}
@@ -139,9 +140,10 @@ export default function DesktopHeader({
             <span className="text-[11px] font-bold tabular-nums leading-none">{careFertCount}</span>
           </button>
 
-          {/* Popup */}
+          {/* Popup — fixed pozicija nuo viewport'o kraštinės, kad nepriklausytų nuo
+              trigger pill'ų vietos header'yje (atskiri matavimai mobile/desktop'e). */}
           {showCarePopup && (
-            <div className="absolute top-full right-0 mt-2 w-[360px] max-h-[70vh] overflow-y-auto bg-bone rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/60 z-50 p-3">
+            <div className="fixed top-[72px] right-6 w-[360px] max-h-[70vh] overflow-y-auto bg-bone rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/60 z-50 p-3">
               <div className="flex items-center gap-2 px-1 pb-2 mb-1 border-b border-bone-400/40">
                 <p className="font-display text-sm font-bold text-forest-700 flex-1 tracking-tight">Priežiūros santrauka</p>
                 <span className="font-mono text-[10px] font-medium text-forest-400 uppercase tracking-[0.18em]">{careNotificationCount}</span>

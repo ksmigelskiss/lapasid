@@ -45,10 +45,11 @@ export default function MobileHeader({
       className="h-12 flex-shrink-0 flex items-center px-4 gap-2 bg-bone/85 backdrop-blur-xl z-30 relative"
       style={{ paddingTop: 'env(safe-area-inset-top)', height: 'calc(48px + env(safe-area-inset-top))' }}
     >
-      {/* Brand — T4Icon inverted (antspaudas: bone mark on forest square) + wordmark */}
+      {/* Brand — T4Icon inverted (antspaudas: bone mark on forest square) + wordmark.
+          h-12 header (48px) → T4Icon 32px palieka 8px tarpą iš viršaus/apačios. */}
       <div className="flex items-center gap-2 flex-shrink-0">
-        <T4Icon size={26} ink="#f1ebdd" paper="#1c3a2a" />
-        <T4Word size={17} className="text-forest-700" />
+        <T4Icon size={32} ink="#f1ebdd" paper="#1c3a2a" />
+        <T4Word size={20} className="text-forest-700" />
       </div>
 
       {/* Action cluster: search + care pills + avatar */}
@@ -90,9 +91,14 @@ export default function MobileHeader({
             <span className="text-[11px] font-bold tabular-nums leading-none">{careFertCount}</span>
           </button>
 
-          {/* Popup — priežiūros santrauka */}
+          {/* Popup — priežiūros santrauka. Fixed pozicija nuo viewport'o, kad nepriklausytų
+              nuo trigger pill'ų pozicijos (anksčiau right-0 nuo fert pill'o overflow'indavo į
+              kairę, nes avataras dešinėje nustumdavo popup'ą už ekrano krašto). */}
           {showCarePopup && (
-            <div className="absolute top-full right-0 mt-2 w-[calc(100vw-2rem)] max-w-[360px] max-h-[70vh] overflow-y-auto bg-bone rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/60 z-50 p-3">
+            <div
+              className="fixed right-4 w-[calc(100vw-2rem)] max-w-[360px] max-h-[70vh] overflow-y-auto bg-bone rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/60 z-50 p-3"
+              style={{ top: 'calc(48px + env(safe-area-inset-top) + 8px)' }}
+            >
               <div className="flex items-center gap-2 px-1 pb-2 mb-1 border-b border-bone-400/40">
                 <p className="font-display text-sm font-bold text-forest-700 flex-1 tracking-tight">Priežiūros santrauka</p>
                 <span className="font-mono text-[10px] font-medium text-forest-400 uppercase tracking-[0.18em]">{careNotificationCount}</span>

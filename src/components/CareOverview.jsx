@@ -21,7 +21,7 @@ function Section({ bg, labelColor, chipBg, chipText, badgeColor, icon, label, pl
             onClick={() => withList ? onTap(p, plants) : onTap(p)}
             className={`flex items-center gap-1 ${chipBg} rounded-xl px-2.5 py-1 active:opacity-70 transition-opacity`}
           >
-            <span className={`text-[11px] font-medium max-w-[90px] truncate ${chipText}`}>{p.lietuviškas}</span>
+            <span className={`text-[11px] font-medium max-w-[140px] truncate ${chipText}`}>{p.lietuviškas}</span>
             {renderBadge && (
               <span className={`text-[10px] font-semibold ml-0.5 ${badgeColor}`}>{renderBadge(p)}</span>
             )}
@@ -69,19 +69,23 @@ function buildSublineParts(waterCount, fertCount) {
   return parts
 }
 
-// Subline render'is — flex-wrap su mid-dot separator'iais. Tuščio state'o atveju
-// rodom „Visi augalai laimingi" pranešimą.
+// Subline render'is — inline tekstas su mid-dot separator'iais. Tuščio state'o
+// atveju rodom „Visi augalai laimingi" pranešimą.
+//
+// Naudojam `<p>` su inline `<span>` (ne flex/inline-flex), kad ilgi sakiniai
+// natūraliai wrap'intųsi tarp žodžių per dvi/tris eilutes vietoj to, kad
+// nustumtų gretimą AccuracyButton'ą į kitą eilutę (žiūr. greeting layout).
 function Subline({ parts, className }) {
   if (parts.length === 0) return <p className={className}>Visi augalai laimingi 🌿</p>
   return (
-    <div className={`flex flex-wrap gap-x-2 gap-y-0.5 ${className}`}>
+    <p className={className}>
       {parts.map((part, i) => (
-        <span key={i} className="inline-flex items-center gap-2">
-          {i > 0 && <span aria-hidden className="text-gray-300">·</span>}
+        <span key={i}>
+          {i > 0 && <span aria-hidden className="text-forest-300 mx-2">·</span>}
           {part}
         </span>
       ))}
-    </div>
+    </p>
   )
 }
 
@@ -195,19 +199,23 @@ export default function CareOverview({
       <div className={bigGreeting ? '' : 'mb-4'}>
         {bigGreeting ? (
           // Two-column kompozicija (designer'io .overview pattern):
-          //   kairė: greeting h1 + subline stacked
-          //   dešinė: AccuracyButton pill, vertikaliai centruotas
-          // flex-wrap saugiklis siauresniam viewport'ui — pill'as užšoks
-          // po greeting block'u (vis dar dešinėje per ml-auto savo eilutėj).
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex-shrink min-w-0">
-              <h1 className="text-[28px] sm:text-[32px] font-extrabold text-gray-950 leading-tight tracking-tight">
+          //   kairė: greeting h1 + subline stacked, FLEX-1 (užima likusią vietą, gali shrink'inti)
+          //   dešinė: AccuracyButton pill, FLEX-SHRINK-0 (visada to paties dydžio)
+          //
+          // Anksčiau outer'is buvo `flex-wrap` — kai subline ilgas, AccuracyButton
+          // krisdavo į kitą eilutę. Dabar wrap'as įvyksta subline'o viduje (per dvi
+          // eilutes), o AccuracyButton lieka inline visada.
+          <div className="flex items-center gap-3">
+            <div className="flex-1 min-w-0">
+              <h1 className="font-display text-[26px] sm:text-3xl font-semibold tracking-tight text-forest-800 leading-tight truncate">
                 <span className="hidden sm:inline">{greetPrefix}</span>{firstName}
               </h1>
-              <Subline parts={sublineParts} className="text-sm text-gray-500 mt-1" />
+              <Subline parts={sublineParts} className="text-[12px] sm:text-sm text-forest-500 mt-1 leading-snug" />
             </div>
             {onCareToggle && (
-              <AccuracyButton careConfidence={careConfidence} careMode={careMode} onClick={onCareToggle} />
+              <div className="flex-shrink-0">
+                <AccuracyButton careConfidence={careConfidence} careMode={careMode} onClick={onCareToggle} />
+              </div>
             )}
           </div>
         ) : (
