@@ -721,7 +721,10 @@ function SavingOverlay() {
     { label: 'Išsaugota',  done: false },
   ]
 
-  return (
+  // createPortal į document.body — kitaip overlay rendinasi inside RightPanel
+  // (per SearchModal'os portal'ą) ir jo z-[90] yra TIK RightPanel'io stacking
+  // context'e (auto), todėl DesktopHeader (z-30) lieka virš overlay'aus.
+  return createPortal(
     <motion.div
       className="fixed inset-0 z-[90] flex items-center justify-center bg-black/50 backdrop-blur-sm"
       initial={{ opacity: 0 }}
@@ -775,7 +778,8 @@ function SavingOverlay() {
           ))}
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body
   )
 }
 
