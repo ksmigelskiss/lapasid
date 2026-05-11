@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import T4Mark from './brand/T4Mark'
+import T4Word from './brand/T4Word'
 
 export default function LoginScreen({ onSignIn, loading = false, error = null }) {
   const [signingIn, setSigningIn] = useState(false)
@@ -23,14 +25,14 @@ export default function LoginScreen({ onSignIn, loading = false, error = null })
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
       >
-        {/* Logo */}
+        {/* Logo — T4Mark + T4Word (Brandbook v1.0) */}
         <div className="flex flex-col items-center gap-3">
-          <img src="/plant_pot.png" alt="" className="w-20 h-20 object-contain" />
+          <T4Mark size={88} />
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900">LapasID</h1>
+            <T4Word size={28} className="text-forest-700" />
             {isMember
-              ? <p className="text-sm text-gray-500 mt-1">Prisijunk prie kolekcijos</p>
-              : <p className="text-sm text-gray-500 mt-1">Tavo augalų kolekcija</p>
+              ? <p className="text-sm text-gray-500 mt-2">Prisijunk prie kolekcijos</p>
+              : <p className="text-sm text-gray-500 mt-2">Tavo augalų kolekcija</p>
             }
           </div>
         </div>

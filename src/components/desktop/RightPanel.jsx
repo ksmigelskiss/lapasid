@@ -1,4 +1,5 @@
-import { Leaf } from 'lucide-react'
+import T4Mark from '../brand/T4Mark'
+import T4Word from '../brand/T4Word'
 import { useDetailHost } from '../../contexts/DetailHostContext'
 import { useWeather } from '../../hooks/useWeather'
 import { aggregateCareGrid } from '../../utils/careWeekStats'
@@ -36,15 +37,14 @@ export default function RightPanel({ plantsForChart = [] }) {
           <path d="M180 40 C 180 140, 120 170, 40 180 C 50 100, 90 40, 180 40 Z" />
         </svg>
 
-        {/* Brand center — ABSOLUTE pozicija, kaip background image. Didelis
-            logo, widgetai sluoksnyje virš jo. pointer-events:none — clicks
-            pereina pro brand'ą į widget'us. */}
+        {/* Brand center — ABSOLUTE pozicija, didelis T4Mark + T4Word kaip
+            background image. Widgetai sluoksnyje virš jo, pro permatomus
+            glass card'us „prasimato". pointer-events:none — clicks pereina pro
+            brand'ą į widget'us. */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-0">
-          <div className="w-28 h-28 rounded-[2rem] bg-sage-500 flex items-center justify-center shadow-[0_8px_32px_rgba(46,125,82,0.25)]">
-            <Leaf size={56} className="text-white" />
-          </div>
-          <h2 className="text-3xl font-extrabold text-sage-700 tracking-tight mt-4">LapasID</h2>
-          <p className="text-sm text-sage-600 mt-1">tavo augalų dienoraštis</p>
+          <T4Mark size={140} />
+          <T4Word size={32} className="text-forest-700 mt-5" />
+          <p className="text-sm text-forest-500 mt-2 opacity-70">tavo augalų dienoraštis</p>
         </div>
 
         {/* Widgets — flex column, layer'inasi virš brand'o. Tarpas viduryje

@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
-import { Bell, Leaf, Search } from 'lucide-react'
+import { Bell, Search } from 'lucide-react'
 import { CareSummaryList } from './CareOverview'
+import T4Mark from './brand/T4Mark'
+import T4Word from './brand/T4Word'
 
 /**
  * MobileHeader — top toolbar mobile'e (<1024px).
@@ -43,12 +45,10 @@ export default function MobileHeader({
       className="h-12 flex-shrink-0 flex items-center px-4 gap-2 bg-white/85 backdrop-blur border-b border-gray-200/80 z-30 relative"
       style={{ paddingTop: 'env(safe-area-inset-top)', height: 'calc(48px + env(safe-area-inset-top))' }}
     >
-      {/* Brand cluster — kompaktiškas mobile variantas */}
+      {/* Brand cluster — T4Mark + T4Word, kompaktiškas mobile variantas */}
       <div className="flex items-center gap-2 flex-shrink-0">
-        <div className="w-6 h-6 rounded-md bg-sage-500 flex items-center justify-center text-white">
-          <Leaf size={14} />
-        </div>
-        <span className="text-[16px] font-bold text-sage-700 tracking-tight">LapasID</span>
+        <T4Mark size={26} />
+        <T4Word size={17} className="text-forest-700" />
       </div>
 
       {/* Action cluster — search, bell, avatar (ml-auto stumia į dešinį kraštą) */}

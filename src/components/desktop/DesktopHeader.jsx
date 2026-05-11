@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
-import { Bell, Leaf, Search } from 'lucide-react'
+import { Bell, Search } from 'lucide-react'
 import { CareSummaryList } from '../CareOverview'
+import T4Mark from '../brand/T4Mark'
+import T4Word from '../brand/T4Word'
 
 /**
  * DesktopHeader — top juosta desktop'e (≥1024px), pakeičia mobile bottom
@@ -63,14 +65,10 @@ export default function DesktopHeader({
 
   return (
     <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-white/85 backdrop-blur border-b border-gray-200/80 z-30 relative">
-      {/* Brand cluster: tik logo (AccuracyButton perkeltas į CareOverview greeting'ą) */}
-      <div className="flex items-center gap-3.5 flex-shrink-0">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-sage-500 flex items-center justify-center text-white">
-            <Leaf size={18} />
-          </div>
-          <span className="text-[19px] font-bold text-sage-700 tracking-tight">LapasID</span>
-        </div>
+      {/* Brand cluster — T4Mark + T4Word (AccuracyButton perkeltas į CareOverview greeting'ą) */}
+      <div className="flex items-center gap-2.5 flex-shrink-0">
+        <T4Mark size={32} />
+        <T4Word size={20} className="text-forest-700" />
       </div>
 
       {/* Tabs — absolute pozicija viewport-centered (brand cluster plotis fiksuotas) */}
