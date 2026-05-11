@@ -77,7 +77,7 @@ export default function App() {
     markAsDied, moveToDashboard,
     updateComment, updateImage, updateStatus, updatePlant, deletePlant,
     addTimelineEvent, deleteTimelineEvent, updateChat,
-    zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred,
+    zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred, updateZinynasTitle,
     updateUzrasai,
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
   } = usePlants(collectionId, viewerToken)
@@ -358,6 +358,7 @@ export default function App() {
           onAdd={addToZinynas}
           onDelete={deleteFromZinynas}
           onToggleStar={toggleZinynasStarred}
+          onUpdateTitle={updateZinynasTitle}
           plants={dashboard}
         />
       </Suspense>

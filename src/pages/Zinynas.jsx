@@ -96,6 +96,12 @@ function ZinynasCard({ entry, expanded, onToggle, onDelete, onToggleStar, onChat
   )
 }
 
+// Title priority — explicit `entry.title` jei vartotojas jį override'ino,
+// kitu atveju auto-extract iš pirmos eilutės.
+function displayTitle(entry) {
+  return entry.title?.trim() || extractTitle(entry.text)
+}
+
 // ── Desktop sidebar list item (kompaktiškai — tik title + meta) ───
 function ZinynasListItem({ entry, selected, onSelect }) {
   return (
@@ -110,7 +116,7 @@ function ZinynasListItem({ entry, selected, onSelect }) {
       <div className="flex items-start gap-2">
         <div className="flex-1 min-w-0">
           <p className={`text-sm font-semibold truncate ${selected ? 'text-sage-900' : 'text-gray-900'}`}>
-            {extractTitle(entry.text)}
+            {displayTitle(entry)}
           </p>
           <div className="flex items-center gap-1.5 mt-0.5">
             {entry.plantName && (
@@ -128,8 +134,17 @@ function ZinynasListItem({ entry, selected, onSelect }) {
 }
 
 // ── Desktop detail pane (full content + actions) ─────────────────
-function ZinynasDetail({ entry, onDelete, onToggleStar, onChat, query }) {
+function ZinynasDetail({ entry, onDelete, onToggleStar, onChat, onUpdateTitle, query }) {
   const [copied, setCopied] = useState(false)
+  const [editingTitle, setEditingTitle] = useState(false)
+  const [titleDraft, setTitleDraft]     = useState('')
+
+  // Kai pasirenkama kita žinutė — uždarom title edit režimą (kad nepasiliktų
+  // stale draft'as iš ankstesnės)
+  useEffect(() => {
+    setEditingTitle(false)
+    setTitleDraft('')
+  }, [entry?.id])
 
   if (!entry) {
     return (
@@ -146,12 +161,48 @@ function ZinynasDetail({ entry, onDelete, onToggleStar, onChat, query }) {
     setTimeout(() => setCopied(false), 1500)
   }
 
+  const startEdit = () => {
+    setTitleDraft(displayTitle(entry))
+    setEditingTitle(true)
+  }
+
+  const saveTitle = () => {
+    const trimmed = titleDraft.trim()
+    const current = displayTitle(entry)
+    // Jeigu vartotojas grąžino į auto-extract'o tekstą, paliekam title null
+    // (kad ateity, pasikeitus pirmai eilutei, title atsinaujintų natūraliai).
+    const newTitle = !trimmed || trimmed === extractTitle(entry.text) ? null : trimmed
+    if (newTitle !== (entry.title ?? null)) onUpdateTitle?.(entry.id, newTitle)
+    setEditingTitle(false)
+    setTitleDraft('')
+  }
+
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
       {/* Detail header — title + meta + actions */}
       <div className="flex items-start gap-3 px-8 py-5 border-b border-gray-100 flex-shrink-0">
         <div className="flex-1 min-w-0">
-          <h2 className="text-xl font-bold text-gray-900 leading-tight">{extractTitle(entry.text)}</h2>
+          {editingTitle ? (
+            <input
+              autoFocus
+              value={titleDraft}
+              onChange={e => setTitleDraft(e.target.value)}
+              onBlur={saveTitle}
+              onKeyDown={e => {
+                if (e.key === 'Enter') { e.preventDefault(); e.target.blur() }
+                if (e.key === 'Escape') { setEditingTitle(false); setTitleDraft('') }
+              }}
+              className="w-full text-xl font-bold text-gray-900 leading-tight bg-transparent outline-none border-b-2 border-sage-400 pb-0.5"
+            />
+          ) : (
+            <h2
+              onClick={startEdit}
+              className="text-xl font-bold text-gray-900 leading-tight cursor-text hover:text-gray-700 transition-colors"
+              title="Spustelėk redaguoti pavadinimą"
+            >
+              {displayTitle(entry)}
+            </h2>
+          )}
           <div className="flex items-center gap-1.5 mt-1.5">
             {entry.plantName && (
               <span className="text-xs text-gray-500">{entry.plantName} ·</span>
@@ -195,7 +246,7 @@ function ZinynasDetail({ entry, onDelete, onToggleStar, onChat, query }) {
   )
 }
 
-export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, plants }) {
+export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, onUpdateTitle, plants }) {
   const isDesktop = useIsDesktop()
   const [selectedId, setSelected]  = useState(null)
   const [adding, setAdding]        = useState(false)
@@ -343,6 +394,7 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, plants
             onDelete={() => handleDelete(selectedEntry.id)}
             onToggleStar={() => onToggleStar(selectedEntry.id)}
             onChat={() => setChatEntry(selectedEntry)}
+            onUpdateTitle={onUpdateTitle}
             query={query}
           />
         </div>

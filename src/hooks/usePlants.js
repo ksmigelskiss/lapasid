@@ -283,6 +283,17 @@ export function usePlants(collectionId, viewerToken = null) {
     }))
   }, [update])
 
+  // Title field gali būti tuščias — tada UI fallback'inasi į auto-extract'ą iš
+  // pirmos eilutės. Vartotojas gali jį override'inti per Žinynas detail pane'ę.
+  const updateZinynasTitle = useCallback((id, title) => {
+    update(prev => ({
+      ...prev,
+      zinynas: (prev.zinynas ?? []).map(e =>
+        e.id === id ? { ...e, title: title?.trim() || null } : e
+      ),
+    }))
+  }, [update])
+
   const updateImage = useCallback((id, image, fromHistory = false) => {
     updatePlant(id, { image, ...(fromHistory ? {} : { useHistoryPhoto: false }) })
   }, [updatePlant])
@@ -437,7 +448,7 @@ export function usePlants(collectionId, viewerToken = null) {
     updateComment, updateImage, updateStatus, updatePlant, deletePlant,
     addTimelineEvent, deleteTimelineEvent, clearTimeline, updateChat,
     library, archive,
-    zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred,
+    zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred, updateZinynasTitle,
     updateUzrasai,
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
     settings, updateSettings,
