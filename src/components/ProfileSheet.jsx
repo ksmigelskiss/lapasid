@@ -43,15 +43,19 @@ async function loadMembers(collectionId, currentUid) {
   if (!uids.length) return []
 
   return Promise.all(uids.map(async uid => {
+    let userData = {}
     try {
       const snap = await getDoc(doc(db, 'users', uid))
-      if (snap.exists()) {
-        const { displayName, email } = snap.data()
-        return { uid, displayName: displayName || email?.split('@')[0] || 'Narys', email: email || '', role: roles[uid] ?? 'member' }
-      }
+      if (snap.exists()) userData = snap.data()
     } catch {}
-    const p = profiles[uid]
-    return { uid, displayName: p?.displayName || p?.email?.split('@')[0] || 'Narys', email: p?.email || '', role: roles[uid] ?? 'member' }
+    // Kombinuojam — users/{uid} primary, memberProfiles[uid] (atnaujinama
+    // kiekvieno login'o useAuth'e) kaip fallback'as. Vienam laukui tuščiam,
+    // kitas dažnai turi reikšmę (pvz. seni narių dokumentai be email'o).
+    const profileFallback = profiles[uid] ?? {}
+    const displayName = userData.displayName || profileFallback.displayName || ''
+    const email       = userData.email       || profileFallback.email       || ''
+    const finalName   = displayName || email.split('@')[0] || 'Narys'
+    return { uid, displayName: finalName, email, role: roles[uid] ?? 'member' }
   }))
 }
 

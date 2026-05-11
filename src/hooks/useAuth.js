@@ -193,8 +193,16 @@ async function getOrCreateCollection(uid) {
     setDoc(doc(db, 'collections', activeColId), {
       [`memberProfiles.${uid}`]: { displayName: name, email },
     }, { merge: true }).catch(() => {})
-    if (!d.displayName && name) {
-      setDoc(doc(db, 'users', uid), { displayName: name, email }, { merge: true }).catch(() => {})
+    // Atnaujinam users/{uid} jei trūksta arba displayName, arba email
+    // (anksčiau condition'as tikrindavo TIK displayName, todėl seni narių
+    // dokumentai su tuščiu email niekada neatsinaujindavo).
+    if ((!d.displayName || !d.email) && (name || email)) {
+      const patch = {}
+      if (!d.displayName && name)  patch.displayName = name
+      if (!d.email       && email) patch.email       = email
+      if (Object.keys(patch).length) {
+        setDoc(doc(db, 'users', uid), patch, { merge: true }).catch(() => {})
+      }
     }
 
     const colIds  = d.collections ?? [activeColId]
