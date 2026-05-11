@@ -402,10 +402,10 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       : "fixed inset-0 z-50 overflow-hidden flex justify-center"}>
     <motion.div
       className={useDesktopPanel ? "w-full h-full max-w-full flex flex-col bg-app" : "w-full max-w-[430px] flex flex-col bg-app"}
-      initial={useDesktopPanel ? { x: '100%' } : { y: '100%' }}
-      animate={useDesktopPanel ? { x: 0 } : { y: 0 }}
-      exit={useDesktopPanel ? { x: '100%' } : { y: '100%' }}
-      transition={{ type: 'spring', damping: 36, stiffness: 280 }}
+      initial={{ x: '100%' }}
+      animate={{ x: 0 }}
+      exit={{ x: '100%' }}
+      transition={{ type: 'tween', duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
       style={{ touchAction: 'pan-y' }}
     >
       {/* Header — X close top-right */}
