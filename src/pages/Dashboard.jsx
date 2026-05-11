@@ -817,11 +817,11 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                 }}
                 disabled={careChecked.size === 0}
                 className={`flex-1 h-10 flex items-center justify-center gap-1.5 rounded-btn-sm disabled:opacity-40 transition-colors ${
-                  confirmType === 'watering' ? 'bg-sky-700 active:bg-sky-800' : 'bg-sky-500 active:bg-sky-600'
+                  confirmType === 'watering' ? 'bg-forest-700 active:bg-forest-800' : 'bg-forest-500 active:bg-forest-600'
                 }`}
               >
-                <Droplets size={16} className="text-white" />
-                <span className="text-sm font-bold text-white">
+                <Droplets size={16} className="text-bone" />
+                <span className="text-sm font-bold text-bone">
                   {confirmType === 'watering'
                     ? `Tikrai? (${countdown})`
                     : `Laistyti${careChecked.size > 0 ? ` (${careChecked.size})` : ''}`}
@@ -836,12 +836,12 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                 disabled={role === 'viewer' || careChecked.size === 0}
                 className={`flex-1 h-10 flex items-center justify-center gap-1.5 rounded-btn-sm transition-colors ${
                   role === 'viewer'
-                    ? 'bg-amber-500 opacity-25 cursor-not-allowed'
-                    : `disabled:opacity-40 ${confirmType === 'fertilizing' ? 'bg-amber-700 active:bg-amber-800' : 'bg-amber-500 active:bg-amber-600'}`
+                    ? 'bg-terracotta opacity-25 cursor-not-allowed'
+                    : `disabled:opacity-40 ${confirmType === 'fertilizing' ? 'bg-terracotta-600 active:bg-terracotta-600' : 'bg-terracotta active:bg-terracotta-500'}`
                 }`}
               >
-                <FlaskConical size={16} className="text-white" />
-                <span className="text-sm font-bold text-white">
+                <FlaskConical size={16} className="text-bone" />
+                <span className="text-sm font-bold text-bone">
                   {role !== 'viewer' && confirmType === 'fertilizing'
                     ? `Tikrai? (${countdown})`
                     : `Tręšti${role !== 'viewer' && careChecked.size > 0 ? ` (${careChecked.size})` : ''}`}

@@ -43,7 +43,7 @@ function DotScore({ value, max = 3, color }) {
   return (
     <div className="flex gap-[3px] items-center">
       {Array.from({ length: max }).map((_, i) => (
-        <div key={i} className={`w-1.5 h-1.5 rounded-full ${i < value ? color : 'bg-gray-300'}`} />
+        <div key={i} className={`w-1.5 h-1.5 rounded-full ${i < value ? color : 'bg-bone-400'}`} />
       ))}
     </div>
   )
@@ -53,29 +53,29 @@ function CareCircle({ checked, waterOverdue, fertOverdue }) {
   const baseSize = 'w-7 h-7 rounded-full border-2 shadow-md'
   const single   = `${baseSize} flex items-center justify-center`
 
-  // BOTH overdue — kapsulė su split border'iu. Kiekvienas pusinis turi
-  // savo border'ą atitinkančia spalvą (sky kairė, amber dešinė) + ikoną.
+  // BOTH overdue — split kapsulė. Brand'iškai: water=forest (gyvybė),
+  // fert=terracotta (žemė/ruduo). Ikonos atskiria semantiką.
   if (waterOverdue && fertOverdue) {
     return (
       <div className="w-12 h-7 rounded-full shadow-md flex">
-        <div className={`w-1/2 flex items-center justify-center border-2 border-r-0 rounded-l-full ${checked ? 'bg-sky-400 border-sky-400' : 'bg-sky-400/30 border-sky-400'}`}>
-          <Droplets size={11} className={checked ? 'text-white' : 'text-sky-500'} />
+        <div className={`w-1/2 flex items-center justify-center border-2 border-r-0 rounded-l-full ${checked ? 'bg-forest-500 border-forest-500' : 'bg-forest-500/30 border-forest-500'}`}>
+          <Droplets size={11} className={checked ? 'text-bone' : 'text-forest-600'} />
         </div>
-        <div className={`w-1/2 flex items-center justify-center border-2 border-l-0 rounded-r-full ${checked ? 'bg-amber-400 border-amber-400' : 'bg-amber-400/30 border-amber-400'}`}>
-          <FlaskConical size={11} className={checked ? 'text-white' : 'text-amber-500'} />
+        <div className={`w-1/2 flex items-center justify-center border-2 border-l-0 rounded-r-full ${checked ? 'bg-terracotta border-terracotta' : 'bg-terracotta/30 border-terracotta'}`}>
+          <FlaskConical size={11} className={checked ? 'text-bone' : 'text-terracotta-500'} />
         </div>
       </div>
     )
   }
 
-  // Single overdue (fert ARBA water ARBA nei) su ikonomis
+  // Single overdue su ikonomis
   if (checked) {
-    if (fertOverdue)  return <div className={`${single} bg-amber-400 border-amber-400`}><FlaskConical size={14} className="text-white" /></div>
-    if (waterOverdue) return <div className={`${single} bg-sky-400 border-sky-400`}><Droplets size={14} className="text-white" /></div>
-    return <div className={`${single} bg-sage-400 border-sage-400`}><Check size={13} className="text-white" /></div>
+    if (fertOverdue)  return <div className={`${single} bg-terracotta border-terracotta`}><FlaskConical size={14} className="text-bone" /></div>
+    if (waterOverdue) return <div className={`${single} bg-forest-500 border-forest-500`}><Droplets size={14} className="text-bone" /></div>
+    return <div className={`${single} bg-forest-400 border-forest-400`}><Check size={13} className="text-bone" /></div>
   }
-  if (fertOverdue)  return <div className={`${single} border-amber-400 bg-amber-400/20`}><FlaskConical size={12} className="text-amber-400" /></div>
-  if (waterOverdue) return <div className={`${single} border-sky-400 bg-sky-400/20`}><Droplets size={12} className="text-sky-400" /></div>
+  if (fertOverdue)  return <div className={`${single} border-terracotta bg-terracotta/20`}><FlaskConical size={12} className="text-terracotta" /></div>
+  if (waterOverdue) return <div className={`${single} border-forest-500 bg-forest-500/20`}><Droplets size={12} className="text-forest-500" /></div>
   return <div className={`${single} border-white/80 bg-black/30`} />
 }
 
@@ -194,18 +194,18 @@ const PlantCard = memo(function PlantCard({
         {section === 'auginama' && (
           <div className="absolute top-2 right-2 flex flex-col gap-1 items-end z-[2]">
             <div className="inline-flex items-center gap-1 bg-black/35 backdrop-blur-sm rounded-lg px-1.5 py-1">
-              <Droplets size={12} className={waterOverdue ? 'text-sky-300 fill-sky-300' : 'text-white/60'} />
+              <Droplets size={12} className={waterOverdue ? 'text-forest-200 fill-forest-200' : 'text-white/60'} />
               {waterDaysUntil != null && (
-                <span className={`text-[10px] font-bold leading-none ${waterOverdue ? 'text-sky-200' : 'text-white/70'}`}>
+                <span className={`text-[10px] font-bold leading-none ${waterOverdue ? 'text-forest-100' : 'text-white/70'}`}>
                   {waterDaysUntil}d
                 </span>
               )}
             </div>
             {fertFC?.intervalDays != null && (
               <div className="inline-flex items-center gap-1 bg-black/35 backdrop-blur-sm rounded-lg px-1.5 py-1">
-                <FlaskConical size={12} className={fertOverdue ? 'text-amber-300 fill-amber-300' : 'text-white/60'} />
+                <FlaskConical size={12} className={fertOverdue ? 'text-terracotta-200 fill-terracotta-200' : 'text-white/60'} />
                 {fertDaysUntil != null && (
-                  <span className={`text-[10px] font-bold leading-none ${fertOverdue ? 'text-amber-200' : 'text-white/70'}`}>
+                  <span className={`text-[10px] font-bold leading-none ${fertOverdue ? 'text-terracotta-100' : 'text-white/70'}`}>
                     {fertDaysUntil}d
                   </span>
                 )}
@@ -264,9 +264,9 @@ const PlantCard = memo(function PlantCard({
             )}
             {dormFC && (
               <span className={`inline-flex items-center gap-1.5 backdrop-blur-md rounded-full px-2.5 py-1 ${
-                dormFC.window === 'active' ? 'bg-blue-500/85' :
-                dormFC.window === 'waking' ? 'bg-green-500/85' :
-                                             'bg-amber-500/85'
+                dormFC.window === 'active' ? 'bg-forest-700/85' :
+                dormFC.window === 'waking' ? 'bg-forest-500/85' :
+                                             'bg-terracotta/85'
               }`}>
                 {dormFC.window === 'active'
                   ? <><Moon size={11} className="text-white" /><span className="text-[11px] text-white font-bold leading-none">Miega</span></>
@@ -295,14 +295,14 @@ const PlantCard = memo(function PlantCard({
             const urgent = waterOverdue || daysRemaining <= 1
             return (
               <div className="flex items-center gap-1.5 mt-2">
-                <Droplets size={11} className={urgent ? 'text-red-500' : 'text-sky-400'} />
-                <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                <Droplets size={11} className={urgent ? 'text-terracotta' : 'text-forest-400'} />
+                <div className="flex-1 h-1.5 bg-bone-300 rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all ${urgent ? 'bg-red-400' : 'bg-sky-400'}`}
+                    className={`h-full rounded-full transition-all ${urgent ? 'bg-terracotta' : 'bg-forest-400'}`}
                     style={{ width: `${pctFull}%` }}
                   />
                 </div>
-                <span className={`text-[10px] font-semibold ${urgent ? 'text-red-500' : 'text-gray-600'}`}>
+                <span className={`text-[10px] font-semibold ${urgent ? 'text-terracotta-500' : 'text-forest-500'}`}>
                   {daysRemaining >= 0 ? `${daysRemaining}d` : `+${Math.abs(daysRemaining)}d`}
                 </span>
               </div>
@@ -313,20 +313,20 @@ const PlantCard = memo(function PlantCard({
         <div className="flex items-center gap-2.5 mt-2">
           {plant.sviesa?.taskai != null && (
             <div className="flex items-center gap-1">
-              <Sun size={12} className="text-amber-400" />
-              <DotScore value={plant.sviesa.taskai} color="bg-amber-400" />
+              <Sun size={12} className="text-terracotta-400" />
+              <DotScore value={plant.sviesa.taskai} color="bg-terracotta-400" />
             </div>
           )}
           {plant.vanduo?.taskai != null && (
             <div className="flex items-center gap-1">
-              <Droplets size={12} className="text-blue-400" />
-              <DotScore value={plant.vanduo.taskai} color="bg-blue-400" />
+              <Droplets size={12} className="text-forest-400" />
+              <DotScore value={plant.vanduo.taskai} color="bg-forest-400" />
             </div>
           )}
           {plant.sunkumas != null && (
             <div className="flex items-center gap-1">
-              <Star size={11} className="text-amber-400 fill-amber-400" />
-              <span className="text-[10px] font-semibold text-gray-700">{plant.sunkumas}/5</span>
+              <Star size={11} className="text-terracotta-400 fill-terracotta-400" />
+              <span className="text-[10px] font-semibold text-forest-600">{plant.sunkumas}/5</span>
             </div>
           )}
         </div>
