@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
-import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronRight, Share2, Copy, Check, Link2 } from 'lucide-react'
+import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronRight, ChevronDown, Share2, Copy, Check, Link2 } from 'lucide-react'
 import { doc, setDoc } from 'firebase/firestore'
 import { db } from '../utils/firebase'
 import { ZonePicker } from './ZoneManager'
@@ -15,7 +15,7 @@ import { getPlantMood } from '../utils/plantMood'
 import PlantChat from './PlantChat'
 import { PlantAvatar } from './icons/ChatIcons'
 import { WateringCard, FertilizingCard, DormancyCard } from './ForecastCards'
-import { StatusButton, StatusMenu } from './StatusPicker'
+import { StatusButton, StatusMenu, STATUS_ICON } from './StatusPicker'
 import { STATUS_OPTIONS, getStatusMeta } from '../constants/plant'
 
 // ── Small helpers ──────────────────────────────────────────────
@@ -1212,189 +1212,153 @@ export default function PlantDetail({
           </div>
         )}
 
-        {/* ── Hero ── */}
-        {plant.image && !heroError ? (
-          <div className="relative flex-shrink-0 overflow-hidden" style={{ height: 'calc(17rem + env(safe-area-inset-top))' }}>
-            <img
-              src={plant.image} alt={plant.lietuviškas}
-              className="w-full h-full object-cover"
-              onError={() => setHeroError(true)}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-            <div className="absolute left-0 right-0 flex items-center justify-between px-4 z-30" style={{ top: 'max(1rem, env(safe-area-inset-top))' }}>
-              <button
-                onClick={() => setShowPhoto(true)}
-                className="flex items-center justify-center text-bone/80 active:text-bone transition-colors px-1 py-2"
-              >
-                <MoreHorizontal size={20} />
-              </button>
-              <div className="flex items-center gap-2">
+        {/* ── Hero — editorial layout: toolbar / photo / text block on bone ── */}
+        <div className="flex-shrink-0">
+          {/* Top toolbar — kompaktiškas, ant bone, virš foto */}
+          <div
+            className="flex items-center justify-between px-4 pb-2"
+            style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
+          >
+            <button
+              onClick={() => setShowPhoto(true)}
+              className="flex items-center justify-center text-forest-400 active:text-forest-700 transition-colors px-1 py-2"
+              aria-label="Pakeisti nuotrauką"
+            >
+              <MoreHorizontal size={20} />
+            </button>
+            <button
+              onClick={onClose}
+              className="w-10 h-10 bg-bone-300/60 hover:bg-bone-400/60 rounded-btn flex items-center justify-center text-forest-700 transition-colors"
+              aria-label="Uždaryti"
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          {/* Photo — clean rectangle, no overlay. Emoji fallback if no image. */}
+          {plant.image && !heroError ? (
+            <button
+              onClick={() => setShowPhoto(true)}
+              className="block w-full aspect-[4/3] overflow-hidden bg-bone-300"
+              aria-label="Pakeisti nuotrauką"
+            >
+              <img
+                src={plant.image} alt={plant.lietuviškas}
+                className="w-full h-full object-cover"
+                onError={() => setHeroError(true)}
+              />
+            </button>
+          ) : (
+            <button
+              onClick={() => setShowPhoto(true)}
+              className="w-full aspect-[4/3] flex items-center justify-center text-8xl bg-bone-300"
+              aria-label="Pridėti nuotrauką"
+            >
+              {plant.emoji ?? '🌿'}
+            </button>
+          )}
+
+          {/* Editorial title block — ant bone, magazine ritmu */}
+          <div className="px-5 pt-4 pb-4">
+            {/* Metadata row: lokacija + status (mono caps) */}
+            <div className="flex items-center gap-2.5 flex-wrap">
+              {section === 'auginama' && zones.length > 0 && (
                 <button
-                  onClick={onClose}
-                  className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-btn flex items-center justify-center text-bone"
-                  aria-label="Uždaryti"
+                  onClick={() => setShowZonePicker(v => !v)}
+                  className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 hover:text-forest-700 transition-colors"
                 >
-                  <X size={16} />
+                  <MapPin size={11} className="text-forest-400" />
+                  {currentZone ? currentZone.name : 'Nepriskirta'}
                 </button>
-              </div>
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 p-4">
-              <div className="flex items-end justify-between gap-2">
-                <div className="min-w-0">
-                  {section === 'auginama' && zones.length > 0 && (
-                    <button
-                      onClick={() => setShowZonePicker(v => !v)}
-                      className="inline-flex items-center gap-1.5 mb-2 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md hover:bg-black/55 transition-colors"
-                    >
-                      <MapPin size={10} className="text-forest-200" />
-                      <span className="font-mono text-[9.5px] font-medium uppercase tracking-[0.16em] text-bone">
-                        {currentZone ? currentZone.name : 'Nepriskirta'}
-                      </span>
-                    </button>
-                  )}
-                  {editingName ? (
-                    <input
-                      autoFocus
-                      value={nameVal}
-                      onChange={e => setNameVal(e.target.value)}
-                      onBlur={() => { onUpdateNames?.(plant.id, { 'lietuviškas': nameVal.trim() || plant.lietuviškas }); setEditingName(false) }}
-                      onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditingName(false) }}
-                      className="font-display text-2xl font-semibold tracking-tight leading-tight bg-white/20 text-bone rounded-lg px-2 py-0.5 outline-none w-full"
+              )}
+              {section === 'auginama' && zones.length > 0 && (
+                <span className="text-forest-300" aria-hidden>·</span>
+              )}
+              {section === 'auginama' && (
+                <div className="relative">
+                  <button
+                    onClick={() => setStatusMenu(v => !v)}
+                    className={`inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] transition-colors ${
+                      status === 'quarantine' || status === 'sick'
+                        ? 'text-terracotta-600 hover:text-terracotta-700'
+                        : status === 'numire'
+                          ? 'text-forest-800 hover:text-forest-900'
+                          : 'text-forest-600 hover:text-forest-700'
+                    }`}
+                  >
+                    {(() => {
+                      const StatusIcon = STATUS_ICON[status]
+                      return StatusIcon ? <StatusIcon size={11} /> : null
+                    })()}
+                    {getStatusMeta(status).label}
+                    <ChevronDown size={10} className="opacity-60" />
+                  </button>
+                  {showStatusMenu && (
+                    <StatusMenu
+                      status={status}
+                      section={section}
+                      onClose={() => setStatusMenu(false)}
+                      onSelect={key => {
+                        setStatusMenu(false)
+                        if (key === 'numire') { onAction?.('died', plant); onClose?.() }
+                        else setPendingStatus({ newStatus: key, fromStatus: status })
+                      }}
                     />
-                  ) : (
-                    <h2
-                      className="font-display text-2xl font-semibold tracking-tight text-bone leading-tight cursor-text"
-                      onClick={() => { setNameVal(plant.lietuviškas); setEditingName(true) }}
-                    >{plant.lietuviškas}</h2>
-                  )}
-                  <p className="text-sm text-bone/70 italic mt-1">{plant.lotyniskas}</p>
-                  {(plant.inatLtName || plant.sinonimai?.length > 0 || plant.englishNames?.length > 0) && (
-                    <div className="flex flex-wrap gap-1.5 mt-2">
-                      {plant.inatLtName && plant.inatLtName !== plant.lietuviškas && (
-                        <span className="font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-bone/85 bg-white/10 backdrop-blur-sm border border-white/15 rounded px-1.5 py-0.5">{plant.inatLtName}</span>
-                      )}
-                      {plant.sinonimai?.filter(s => s !== plant.inatLtName).map((s, i) => (
-                        <span key={i} className="font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-bone/85 bg-white/10 backdrop-blur-sm border border-white/15 rounded px-1.5 py-0.5">{s}</span>
-                      ))}
-                      {plant.englishNames?.map((n, i) => (
-                        <span key={i} className="font-mono text-[9px] uppercase tracking-[0.14em] text-bone/60 bg-white/5 border border-white/10 rounded px-1.5 py-0.5">{n}</span>
-                      ))}
-                    </div>
                   )}
                 </div>
-                {section === 'auginama' && (
-                  <div className="relative flex-shrink-0">
-                    <StatusButton status={status} variant="dark" onClick={() => setStatusMenu(v => !v)} />
-                    {showStatusMenu && (
-                      <StatusMenu
-                        status={status}
-                        section={section}
-                        onClose={() => setStatusMenu(false)}
-                        onSelect={key => {
-                          setStatusMenu(false)
-                          if (key === 'numire') { onAction?.('died', plant); onClose?.() }
-                          else setPendingStatus({ newStatus: key, fromStatus: status })
-                        }}
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
+              )}
             </div>
-          </div>
-        ) : (
-          <div className={`flex-shrink-0 px-5 pb-4 ${
-            section === 'istorija' ? 'bg-surface-2' :
-            section === 'nori'     ? 'bg-blush-50' : 'bg-sage-50'
-          }`} style={{ paddingTop: 'max(1.75rem, env(safe-area-inset-top))' }}>
-            <div className="flex items-center justify-between mb-3">
-              <button
-                onClick={() => setShowPhoto(true)}
-                className="flex items-center justify-center text-gray-400 active:text-gray-600 transition-colors px-1 py-2"
-              >
-                <MoreHorizontal size={20} />
-              </button>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={onClose}
-                  className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-btn flex items-center justify-center text-gray-700 transition-colors"
-                  aria-label="Uždaryti"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 bg-white/80 rounded-2xl flex items-center justify-center text-3xl shadow-ios flex-shrink-0">
-                {plant.emoji ?? '🌿'}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    {/* Zone chip — toks pat patternas kaip foto hero (clickable, ZonePicker trigger) */}
-                    {section === 'auginama' && zones.length > 0 && (
-                      <button
-                        onClick={() => setShowZonePicker(v => !v)}
-                        className="inline-flex items-center gap-1 mb-1 px-2 py-0.5 rounded-lg bg-sage-100 hover:bg-sage-200 transition-colors"
-                      >
-                        <MapPin size={9} className="text-sage-600" />
-                        <span className="text-[10px] text-sage-700 font-medium">
-                          {currentZone ? currentZone.name : 'Nepriskirta'}
-                        </span>
-                      </button>
-                    )}
-                    {editingName ? (
-                      <input
-                        autoFocus
-                        value={nameVal}
-                        onChange={e => setNameVal(e.target.value)}
-                        onBlur={() => { onUpdateNames?.(plant.id, { 'lietuviškas': nameVal.trim() || plant.lietuviškas }); setEditingName(false) }}
-                        onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditingName(false) }}
-                        className="text-lg font-bold text-gray-900 leading-tight bg-surface-2 rounded-lg px-2 py-0.5 outline-none w-full"
-                      />
-                    ) : (
-                      <h2
-                        className="text-lg font-bold text-gray-900 leading-tight cursor-text"
-                        onClick={() => { setNameVal(plant.lietuviškas); setEditingName(true) }}
-                      >{plant.lietuviškas}</h2>
-                    )}
-                    <p className="text-xs text-gray-500 italic mt-0.5">{plant.lotyniskas}</p>
-                  </div>
-                  {section === 'auginama' && (
-                    <div className="relative flex-shrink-0">
-                      <StatusButton status={status} variant="colored" onClick={() => setStatusMenu(v => !v)} />
-                      {showStatusMenu && (
-                        <StatusMenu
-                          status={status}
-                          section={section}
-                          onClose={() => setStatusMenu(false)}
-                          onSelect={key => {
-                            setStatusMenu(false)
-                            if (key === 'numire') { onAction?.('died', plant); onClose?.() }
-                            else setPendingStatus({ newStatus: key, fromStatus: status })
-                          }}
-                        />
-                      )}
-                    </div>
-                  )}
-                </div>
-                {(plant.inatLtName || plant.sinonimai?.length > 0 || plant.englishNames?.length > 0) && (
-                  <div className="flex flex-wrap gap-1 mt-1.5">
-                    {plant.inatLtName && plant.inatLtName !== plant.lietuviškas && (
-                      <span className="text-[10px] text-sage-700 bg-sage-100 rounded px-1.5 py-0.5">{plant.inatLtName}</span>
-                    )}
-                    {plant.sinonimai?.filter(s => s !== plant.inatLtName).map((s, i) => (
-                      <span key={i} className="text-[10px] text-sage-700 bg-sage-100 rounded px-1.5 py-0.5">{s}</span>
+
+            {/* Title — Bricolage 600 ant bone, scaled */}
+            {editingName ? (
+              <input
+                autoFocus
+                value={nameVal}
+                onChange={e => setNameVal(e.target.value)}
+                onBlur={() => { onUpdateNames?.(plant.id, { 'lietuviškas': nameVal.trim() || plant.lietuviškas }); setEditingName(false) }}
+                onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditingName(false) }}
+                className="font-display text-2xl font-semibold tracking-tight leading-tight text-forest-800 bg-bone-300/40 rounded-lg px-2 py-0.5 outline-none w-full mt-2"
+              />
+            ) : (
+              <h2
+                className="font-display text-2xl font-semibold tracking-tight text-forest-800 leading-tight cursor-text mt-2"
+                onClick={() => { setNameVal(plant.lietuviškas); setEditingName(true) }}
+              >{plant.lietuviškas}</h2>
+            )}
+            {plant.lotyniskas && (
+              <p className="text-sm text-forest-500 italic mt-1">{plant.lotyniskas}</p>
+            )}
+
+            {/* Synonyms — inline editorial, ne chips (žymiai readable'esnis) */}
+            {(plant.inatLtName || plant.sinonimai?.length > 0 || plant.englishNames?.length > 0) && (
+              (() => {
+                const ltSyns = [
+                  plant.inatLtName && plant.inatLtName !== plant.lietuviškas ? plant.inatLtName : null,
+                  ...(plant.sinonimai?.filter(s => s !== plant.inatLtName) ?? []),
+                ].filter(Boolean)
+                const enSyns = plant.englishNames ?? []
+                return (
+                  <p className="text-[12.5px] text-forest-400 mt-3 leading-relaxed">
+                    Taip pat:{' '}
+                    {ltSyns.map((s, i) => (
+                      <span key={`lt-${i}`}>
+                        {i > 0 && ', '}
+                        <span className="text-forest-600">{s}</span>
+                      </span>
                     ))}
-                    {plant.englishNames?.map((n, i) => (
-                      <span key={i} className="text-[10px] text-gray-500 bg-white border border-gray-200 rounded px-1.5 py-0.5 italic">{n}</span>
+                    {ltSyns.length > 0 && enSyns.length > 0 && ' · '}
+                    {enSyns.map((n, i) => (
+                      <span key={`en-${i}`}>
+                        {i > 0 && ', '}
+                        <span className="text-forest-500 italic">{n}</span>
+                      </span>
                     ))}
-                  </div>
-                )}
-              </div>
-            </div>
+                  </p>
+                )
+              })()
+            )}
           </div>
-        )}
+        </div>
 
         {/* Tab bar */}
         <TabBar active={activeTab} onChange={setActiveTab} noteCount={loadNotes(plant).length} />

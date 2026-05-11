@@ -3,7 +3,8 @@ import { STATUS_OPTIONS, STATUS, getStatusMeta } from '../constants/plant'
 
 // Semantinės ikonos vietoj generic spalvotų dot'ų (brandbook vocabulary).
 // Tie patys ikonai naudojami timeline status changes — vientisas patternas.
-const STATUS_ICON = {
+// Export'inta, kad PlantDetail hero galėtų naudoti tas pačias ikonas inline.
+export const STATUS_ICON = {
   [STATUS.HEALTHY]:    Leaf,
   [STATUS.SICK]:       Thermometer,
   [STATUS.QUARANTINE]: ShieldAlert,
