@@ -553,11 +553,6 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
               animate={{ height: hideGreeting ? 0 : 'auto', opacity: hideGreeting ? 0 : 1 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
               style={{ overflow: 'hidden' }}
-              // Material/iOS elevation pattern — thin hairline + soft glow,
-              // kad juosta vizualiai išsiskirtų nuo grid'o žemiau (pakelta
-              // virš content'o, kaip app bar). Kai motion height → 0,
-              // shadow natūraliai irgi pranyksta su elementu.
-              className="relative z-10 bg-app shadow-[0_1px_0_rgba(20,40,30,0.10),0_8px_16px_-4px_rgba(20,40,30,0.10)]"
             >
               <div className="px-5 pt-4 pb-3" style={hideInnerHeader ? undefined : { paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
                 <CareOverview
@@ -571,6 +566,15 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                 />
               </div>
             </motion.div>
+            {/* Elevation hairline + soft glow PO greeting'o (atskirai nuo motion.div,
+                kad outer wrapper'io overflow:hidden neiškirptų). Slepiasi kartu
+                su greeting'u (auto-hide on scroll), kad nesimaišytų be konteksto. */}
+            {!hideGreeting && (
+              <div
+                aria-hidden
+                className="h-2 -mt-px relative z-10 bg-gradient-to-b from-[rgba(20,40,30,0.08)] via-[rgba(20,40,30,0.04)] to-transparent"
+              />
+            )}
           </>
         )
       })()}
