@@ -5,12 +5,13 @@ import { createPortal } from 'react-dom'
 import { CARE_COPY, plPlantsInstr, pick } from '../constants/careCopy'
 import { moodFromCounts } from '../utils/careBuckets'
 
-// Bucket meta — vienas šaltinis vizualams
+// Bucket meta — Brandbook'iškai: forest gradient'as nuo perfect (geriausia)
+// iki waylate (blogiausia), su terracotta įvykdomame `late`/`waylate` rate.
 const BUCKET_META = {
-  perfect: { Icon: Sprout,   color: 'text-sage-600' },
-  early:   { Icon: Droplets, color: 'text-sky-500'  },
-  late:    { Icon: Clock,    color: 'text-amber-500' },
-  waylate: { Icon: Heart,    color: 'text-rose-500'  },
+  perfect: { Icon: Sprout,   color: 'text-forest-600'    },
+  early:   { Icon: Droplets, color: 'text-forest-400'    },
+  late:    { Icon: Clock,    color: 'text-terracotta-400' },
+  waylate: { Icon: Heart,    color: 'text-terracotta-600' },
 }
 
 function totalIn(c) {
@@ -26,8 +27,8 @@ function BucketRow({ counts }) {
         return (
           <div key={key} className="flex items-center gap-1.5">
             <Icon size={15} className={color} />
-            <span className="text-sm font-bold text-gray-800">{count}</span>
-            <span className="text-sm text-gray-500">{CARE_COPY.bulk.label[key]}</span>
+            <span className="text-sm font-bold text-forest-700">{count}</span>
+            <span className="text-sm text-forest-500">{CARE_COPY.bulk.label[key]}</span>
           </div>
         )
       })}
@@ -99,40 +100,40 @@ export default function CareSessionSummary({ session, confidence = 0, onDismiss 
           <X size={16} />
         </button>
 
-        {/* Confidence + sesijos delta. Delta — didesnis ir amber, nes vizualus
-            reward yra GAIN (ne static būsena). Bazinis % — sage-600, ramus. */}
+        {/* Confidence + sesijos delta — Brandbook'iškai: bazinis % forest-600
+            ramus, delta gain — forest-700 didesnis (POSITIVE = forest). */}
         <div className="text-center">
           <p className="leading-none tabular-nums">
-            <span className="text-[22px] font-bold text-sage-600">{confPct}%</span>
+            <span className="text-[22px] font-bold text-forest-600">{confPct}%</span>
             {session.deltaPct > 0 && (
-              <span className="ml-2 text-[28px] font-extrabold text-amber-500 align-middle">+{session.deltaPct}</span>
+              <span className="ml-2 text-[28px] font-extrabold text-forest-700 align-middle">+{session.deltaPct}</span>
             )}
           </p>
-          <p className="text-[10px] font-semibold text-gray-400 mt-1.5 uppercase tracking-wider">Prognozių tikslumas</p>
+          <p className="text-[10px] font-semibold text-forest-400 mt-1.5 uppercase tracking-wider font-mono">Prognozių tikslumas</p>
         </div>
 
-        {/* Headline — pagrindinis akcentas: didžiausias, drąsiausias, tamsus */}
-        <h2 className="text-[28px] font-extrabold text-gray-900 text-center mt-5 leading-[1.15] tracking-tight">{headline}</h2>
-        <p className="text-sm text-gray-500 text-center mt-2">
+        {/* Headline — drąsiausias akcentas */}
+        <h2 className="text-[28px] font-extrabold text-forest-800 text-center mt-5 leading-[1.15] tracking-tight">{headline}</h2>
+        <p className="text-sm text-forest-500 text-center mt-2">
           Pasirūpinai {uniquePlants} {plPlantsInstr(uniquePlants)}
         </p>
 
         {/* Sections */}
         <div className="mt-5 space-y-3">
           {wT > 0 && (
-            <div className="bg-gray-50 rounded-2xl p-4">
+            <div className="bg-forest-50 rounded-2xl p-4">
               <div className="flex items-center gap-2">
-                <Droplets size={16} className="text-sky-500" />
-                <span className="text-sm font-bold text-gray-800">{wateringVerb} {wT}</span>
+                <Droplets size={16} className="text-forest-500" />
+                <span className="text-sm font-bold text-forest-700">{wateringVerb} {wT}</span>
               </div>
               <BucketRow counts={session.watering} />
             </div>
           )}
           {fT > 0 && (
-            <div className="bg-gray-50 rounded-2xl p-4">
+            <div className="bg-terracotta-50 rounded-2xl p-4">
               <div className="flex items-center gap-2">
-                <FlaskConical size={16} className="text-amber-500" />
-                <span className="text-sm font-bold text-gray-800">{fertilizingVerb} {fT}</span>
+                <FlaskConical size={16} className="text-terracotta-500" />
+                <span className="text-sm font-bold text-forest-700">{fertilizingVerb} {fT}</span>
               </div>
               <BucketRow counts={session.fertilizing} />
             </div>

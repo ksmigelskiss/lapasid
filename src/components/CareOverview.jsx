@@ -110,7 +110,7 @@ export function CareSummaryList({ plants, onTap, onWaterTap }) {
   return (
     <div className="space-y-2">
       <Section
-        bg="bg-sky-50" labelColor="text-sky-600" chipBg="bg-sky-100" chipText="text-sky-900" badgeColor="text-sky-500"
+        bg="bg-forest-50" labelColor="text-forest-600" chipBg="bg-forest-100" chipText="text-forest-800" badgeColor="text-forest-500"
         icon={<Droplets size={11} />}
         label="Patikrink ar ne sausi"
         plants={lists.wateringList}
@@ -119,7 +119,7 @@ export function CareSummaryList({ plants, onTap, onWaterTap }) {
         withList
       />
       <Section
-        bg="bg-amber-50" labelColor="text-amber-600" chipBg="bg-amber-100" chipText="text-amber-900" badgeColor="text-amber-500"
+        bg="bg-terracotta-50" labelColor="text-terracotta-600" chipBg="bg-terracotta-100" chipText="text-terracotta-600" badgeColor="text-terracotta-500"
         icon={<FlaskConical size={11} />}
         label="Pamaitink augalėlį"
         plants={lists.fertList}
@@ -128,21 +128,21 @@ export function CareSummaryList({ plants, onTap, onWaterTap }) {
         withList
       />
       <Section
-        bg="bg-gray-50" labelColor="text-green-700" chipBg="bg-white" chipText="text-gray-800" badgeColor="text-gray-400"
+        bg="bg-bone-300/50" labelColor="text-forest-600" chipBg="bg-bone" chipText="text-forest-700" badgeColor="text-forest-400"
         icon={<Sprout size={11} />}
         label="Palengva žadink"
         plants={lists.wakingList}
         onTap={onTap}
       />
       <Section
-        bg="bg-gray-50" labelColor="text-blue-600" chipBg="bg-white" chipText="text-gray-800" badgeColor="text-gray-400"
+        bg="bg-bone-300/50" labelColor="text-forest-700" chipBg="bg-bone" chipText="text-forest-700" badgeColor="text-forest-400"
         icon={<Moon size={11} />}
         label="Miega"
         plants={lists.dormingList}
         onTap={onTap}
       />
       <Section
-        bg="bg-gray-50" labelColor="text-orange-500" chipBg="bg-white" chipText="text-gray-800" badgeColor="text-gray-400"
+        bg="bg-bone-300/50" labelColor="text-terracotta-500" chipBg="bg-bone" chipText="text-forest-700" badgeColor="text-terracotta-400"
         icon={<Snowflake size={11} />}
         label="Ruošiasi miegui"
         plants={lists.approachList}

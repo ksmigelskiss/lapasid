@@ -19,10 +19,10 @@ export default function CareCircuitToast({ message }) {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -20, opacity: 0 }}
       transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-      className="bg-sage-500 rounded-2xl shadow-xl px-4 py-3 flex items-center gap-2.5"
+      className="bg-forest-600 rounded-2xl shadow-xl px-4 py-3 flex items-center gap-2.5"
     >
-      <Check size={20} className="text-white flex-shrink-0" />
-      <span className="text-[15px] font-bold text-white leading-tight">{message}</span>
+      <Check size={20} className="text-bone flex-shrink-0" />
+      <span className="text-[15px] font-bold text-bone leading-tight">{message}</span>
     </motion.div>
   )
 }

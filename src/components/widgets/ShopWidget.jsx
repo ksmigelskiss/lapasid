@@ -143,14 +143,14 @@ function OfferCard({ offer }) {
         <div className="flex gap-1 mt-1.5">
           <button
             type="button"
-            className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 active:scale-[0.97] transition-all text-[10.5px] font-semibold"
+            className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1 rounded-lg bg-terracotta-50 text-terracotta-600 hover:bg-terracotta-100 active:scale-[0.97] transition-all text-[10.5px] font-semibold"
             title="(Demo) Į biblioteką"
           >
             <Heart size={11} />Noriu
           </button>
           <button
             type="button"
-            className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1 rounded-lg bg-sage-500 text-white hover:bg-sage-600 active:scale-[0.97] transition-all text-[10.5px] font-semibold"
+            className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1 rounded-lg bg-forest-500 text-bone hover:bg-forest-600 active:scale-[0.97] transition-all text-[10.5px] font-semibold"
             title="(Demo) Pirkti pas tiekėją"
           >
             <ShoppingBag size={11} />Pirkti
@@ -180,21 +180,21 @@ export default function ShopWidget() {
         className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/30 transition-colors"
         aria-expanded={!collapsed}
       >
-        <p className="inline-flex items-center gap-1.5 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
-          <Sparkles size={12} className="text-amber-500" />
+        <p className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em]">
+          <Sparkles size={12} className="text-terracotta" />
           Parduotuvių naujienos
         </p>
         <div className="inline-flex items-center gap-2.5">
           {!collapsed && (
             <span
               onClick={next}
-              className="text-[11px] font-semibold text-sage-600 hover:text-sage-700 inline-flex items-center gap-0.5 cursor-pointer"
+              className="text-[11px] font-semibold text-forest-600 hover:text-forest-700 inline-flex items-center gap-0.5 cursor-pointer"
               title="Sekantys pasiūlymai"
             >
               Kitas <ChevronRight size={12} />
             </span>
           )}
-          <ChevronDown size={14} className={`text-gray-400 transition-transform ${collapsed ? '' : 'rotate-180'}`} />
+          <ChevronDown size={14} className={`text-forest-400 transition-transform ${collapsed ? '' : 'rotate-180'}`} />
         </div>
       </button>
 

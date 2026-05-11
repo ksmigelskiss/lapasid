@@ -40,14 +40,14 @@ function bucket(value, max) {
   return 4
 }
 
-const SKY_TONES   = ['', 'bg-sky-100',   'bg-sky-300',   'bg-sky-500',   'bg-sky-700']
-const AMBER_TONES = ['', 'bg-amber-100', 'bg-amber-300', 'bg-amber-500', 'bg-amber-700']
+// Brandbook v1.0 — Water=forest, Fert=terracotta. Intensity per quartile.
+const FOREST_TONES    = ['', 'bg-forest-100',     'bg-forest-300',     'bg-forest-500', 'bg-forest-700']
+const TERRACOTTA_TONES = ['', 'bg-terracotta-100', 'bg-terracotta-200', 'bg-terracotta',  'bg-terracotta-600']
 
 function cellColor(day, maxWater, maxFert) {
-  // Tręšimas wins (rečiau, vizualiai svarbiau) — bet su gradient ne vienu tonu.
-  if (day.fertilizing > 0) return AMBER_TONES[bucket(day.fertilizing, maxFert)]
-  if (day.watering > 0)    return SKY_TONES[bucket(day.watering, maxWater)]
-  return 'bg-gray-100'
+  if (day.fertilizing > 0) return TERRACOTTA_TONES[bucket(day.fertilizing, maxFert)]
+  if (day.watering > 0)    return FOREST_TONES[bucket(day.watering, maxWater)]
+  return 'bg-bone-300'
 }
 
 function cellTooltip(day) {
@@ -92,32 +92,30 @@ export default function CareHeatmapWidget({ data }) {
         className="w-full flex items-center justify-between gap-3 px-4 py-3 hover:bg-white/30 transition-colors rounded-2xl"
         aria-expanded={!collapsed}
       >
-        <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">
+        <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em]">
           Priežiūros istorija
         </p>
         <div className="flex items-center gap-2.5">
           {collapsed ? (
-            // Collapsed — tik total skaičiai pakaitalui
             <span className="inline-flex items-center gap-2 text-[10.5px] font-semibold">
-              <span className="inline-flex items-center gap-1 text-sky-700 tabular-nums">
-                <span className="w-2 h-2 rounded-sm bg-sky-400" />{totalWater}
+              <span className="inline-flex items-center gap-1 text-forest-700 tabular-nums">
+                <span className="w-2 h-2 rounded-sm bg-forest-500" />{totalWater}
               </span>
-              <span className="inline-flex items-center gap-1 text-amber-700 tabular-nums">
-                <span className="w-2 h-2 rounded-sm bg-amber-400" />{totalFert}
+              <span className="inline-flex items-center gap-1 text-terracotta-600 tabular-nums">
+                <span className="w-2 h-2 rounded-sm bg-terracotta" />{totalFert}
               </span>
             </span>
           ) : (
-            // Expanded — legenda
-            <div className="flex items-center gap-2 text-[10.5px] text-gray-500">
+            <div className="flex items-center gap-2 text-[10.5px] text-forest-500">
               <span className="inline-flex items-center gap-1">
-                <span className="w-2 h-2 rounded-sm bg-sky-400" />Laist.
+                <span className="w-2 h-2 rounded-sm bg-forest-500" />Laist.
               </span>
               <span className="inline-flex items-center gap-1">
-                <span className="w-2 h-2 rounded-sm bg-amber-400" />Tręš.
+                <span className="w-2 h-2 rounded-sm bg-terracotta" />Tręš.
               </span>
             </div>
           )}
-          <ChevronDown size={14} className={`text-gray-400 transition-transform ${collapsed ? '' : 'rotate-180'}`} />
+          <ChevronDown size={14} className={`text-forest-400 transition-transform ${collapsed ? '' : 'rotate-180'}`} />
         </div>
       </button>
 
@@ -125,7 +123,7 @@ export default function CareHeatmapWidget({ data }) {
         <div className="px-4 pb-3.5">
 
       {/* Mėnesio žymekliai virš grid'o */}
-      <div className="flex pl-7 pb-1 text-[9.5px] font-semibold text-gray-400 uppercase tracking-wider relative h-3.5">
+      <div className="flex pl-7 pb-1 font-mono text-[9px] font-medium text-forest-400 uppercase tracking-[0.18em] relative h-3.5">
         {monthMarkers.map(m => (
           <span
             key={`${m.weekIndex}-${m.label}`}
@@ -144,7 +142,7 @@ export default function CareHeatmapWidget({ data }) {
           {DAY_LABELS.map((label, i) => (
             <span
               key={i}
-              className="text-[9px] font-medium text-gray-400 leading-none w-4 h-[15px] flex items-center"
+              className="font-mono text-[9px] font-medium text-forest-400 leading-none w-4 h-[15px] flex items-center"
             >
               {label}
             </span>
@@ -160,7 +158,7 @@ export default function CareHeatmapWidget({ data }) {
                 {/* Vertikalus divider — plonas linijos virš -gap pozicijoj */}
                 {isMonthDivider && (
                   <div
-                    className="absolute top-0 bottom-0 w-px bg-gray-300/70"
+                    className="absolute top-0 bottom-0 w-px bg-bone-400/70"
                     style={{ left: '-2px' }}
                   />
                 )}
@@ -174,7 +172,7 @@ export default function CareHeatmapWidget({ data }) {
                       key={day.dateISO}
                       title={cellTooltip(day)}
                       className={`w-[15px] h-[15px] rounded-[3px] ${cellColor(day, maxWater, maxFert)} ${
-                        day.isToday ? 'ring-[1.5px] ring-sage-700 ring-offset-0' : ''
+                        day.isToday ? 'ring-[1.5px] ring-forest-700 ring-offset-0' : ''
                       }`}
                     />
                   )
@@ -185,15 +183,15 @@ export default function CareHeatmapWidget({ data }) {
         </div>
       </div>
 
-      {/* Total summary — kontekstas */}
-      <div className="flex items-center justify-between text-[10.5px] text-gray-500 mt-3 pt-2 border-t border-gray-200/60">
+      {/* Total summary */}
+      <div className="flex items-center justify-between text-[10.5px] text-forest-500 mt-3 pt-2 border-t border-bone-400/60">
         <span>Iš viso (8 sav.):</span>
         <span className="inline-flex items-center gap-2 font-semibold">
-          <span className="inline-flex items-center gap-1 text-sky-700 tabular-nums">
-            <span className="w-2 h-2 rounded-sm bg-sky-400" />{totalWater}
+          <span className="inline-flex items-center gap-1 text-forest-700 tabular-nums">
+            <span className="w-2 h-2 rounded-sm bg-forest-500" />{totalWater}
           </span>
-          <span className="inline-flex items-center gap-1 text-amber-700 tabular-nums">
-            <span className="w-2 h-2 rounded-sm bg-amber-400" />{totalFert}
+          <span className="inline-flex items-center gap-1 text-terracotta-600 tabular-nums">
+            <span className="w-2 h-2 rounded-sm bg-terracotta" />{totalFert}
           </span>
         </span>
       </div>
