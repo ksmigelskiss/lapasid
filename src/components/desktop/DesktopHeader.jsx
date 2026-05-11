@@ -64,7 +64,7 @@ export default function DesktopHeader({
     .split(/[\s@]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase()
 
   return (
-    <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-white/85 backdrop-blur border-b border-gray-200/80 z-30 relative">
+    <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-bone/85 backdrop-blur-xl border-b border-bone-400/40 z-30 relative">
       {/* Brand — T4Icon inverted ("antspaudas": bone mark on forest square) + wordmark */}
       <div className="flex items-center gap-2.5 flex-shrink-0">
         <T4Icon size={32} ink="#f1ebdd" paper="#1c3a2a" />
