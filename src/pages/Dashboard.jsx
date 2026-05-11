@@ -791,7 +791,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
           >
             <div className="max-w-[430px] mx-auto px-4 pb-2">
             {postFertilizeFor ? (
-              <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-3">
+              <div className="bg-bone/85 backdrop-blur-xl rounded-2xl shadow-[0_8px_24px_rgba(28,58,42,0.14)] border border-bone-400/40 p-3">
                 <PostFertilizePrompt
                   count={postFertilizeFor.size}
                   onPalasciau={confirmPostFertWater}
@@ -799,15 +799,15 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                 />
               </div>
             ) : (
-            // Care action bar — rounded-btn match (suderinta su toolbar /
-            // AccuracyButton / Biblioteka filter stiliumi, brand rounded-rectangle)
-            <div className="bg-white rounded-btn shadow-[0_8px_24px_rgba(20,40,30,0.12),0_0_0_1px_rgba(20,40,30,0.04)] p-1.5 flex gap-1.5 items-center">
+            // Care action bar — frost glass (suderinta su header / widget'ai /
+            // Karantinas — visa frost language vieningai).
+            <div className="bg-bone/85 backdrop-blur-xl rounded-btn shadow-[0_8px_24px_rgba(28,58,42,0.14),0_0_0_1px_rgba(28,58,42,0.04)] p-1.5 flex gap-1.5 items-center">
               <button
                 onClick={exitCareMode}
-                className="w-10 h-10 flex items-center justify-center rounded-btn-sm bg-gray-100 active:bg-gray-200 flex-shrink-0"
+                className="w-10 h-10 flex items-center justify-center rounded-btn-sm bg-bone-300 active:bg-bone-400 flex-shrink-0"
                 aria-label="Išeiti iš priežiūros"
               >
-                <X size={18} className="text-gray-600" />
+                <X size={18} className="text-forest-600" />
               </button>
               <button
                 onClick={() => {

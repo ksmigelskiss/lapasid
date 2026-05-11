@@ -236,12 +236,11 @@ const PlantCard = memo(function PlantCard({
           </div>
         )}
 
-        {/* Toxic pill — Brandbook v1.0: terracotta callout (vietoj red).
-            Skull ikona + uppercase mono-feel išlieka. */}
+        {/* Toxic pill — sumažintas iki section-label mastelio (mono caps style). */}
         {plant.toksiskas && (
           <div className="absolute top-2.5 left-2.5 z-[2]">
-            <span className="inline-flex items-center gap-1 bg-terracotta text-bone text-[10.5px] font-extrabold uppercase tracking-[0.06em] rounded-full px-2.5 py-1 shadow-[0_2px_8px_rgba(184,106,58,0.35)]">
-              <Skull size={11} /> Toksiška
+            <span className="inline-flex items-center gap-0.5 bg-terracotta text-bone font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] rounded-full px-1.5 py-0.5 shadow-[0_1px_4px_rgba(184,106,58,0.3)]">
+              <Skull size={9} /> Toksiška
             </span>
           </div>
         )}
