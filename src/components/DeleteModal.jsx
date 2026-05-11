@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { Ghost, MoveRight } from 'lucide-react'
 
 /**
  * section === 'auginama'  → asks WHY (numirė / kita)
@@ -40,8 +39,8 @@ export default function DeleteModal({ plant, section, onDied, onMoveToLibrary, o
           isDashboard ? 'text-forest-500' : 'text-terracotta-600'
         }`}>
           {isDashboard
-            ? <>{plant.emoji ?? '🌿'} {plant.lietuviškas}</>
-            : <>Pavojinga · {plant.emoji ?? '🌿'} {plant.lietuviškas}</>
+            ? plant.lietuviškas
+            : <>Pavojinga · {plant.lietuviškas}</>
           }
         </p>
         <h3 className="font-display text-lg font-semibold tracking-tight text-forest-800 text-center mb-5">
@@ -52,28 +51,18 @@ export default function DeleteModal({ plant, section, onDied, onMoveToLibrary, o
           <div className="space-y-2">
             <button
               onClick={onDied}
-              className="w-full flex items-center gap-3 bg-bone-300/40 hover:bg-bone-300/70 rounded-2xl px-4 py-4 transition-colors text-left"
+              className="w-full bg-bone-300/40 hover:bg-bone-300/70 rounded-2xl px-4 py-4 transition-colors text-left"
             >
-              <span className="w-9 h-9 rounded-xl bg-bone-300 flex items-center justify-center flex-shrink-0">
-                <Ghost size={18} className="text-forest-500" />
-              </span>
-              <div>
-                <p className="font-display text-sm font-semibold tracking-tight text-forest-800">Numirė</p>
-                <p className="text-xs text-forest-500 mt-0.5">Įrašysime į istoriją su priežastimi</p>
-              </div>
+              <p className="font-display text-sm font-semibold tracking-tight text-forest-800">Numirė</p>
+              <p className="text-xs text-forest-500 mt-0.5">Įrašysime į istoriją su priežastimi</p>
             </button>
 
             <button
               onClick={onMoveToLibrary}
-              className="w-full flex items-center gap-3 bg-bone-300/40 hover:bg-bone-300/70 rounded-2xl px-4 py-4 transition-colors text-left"
+              className="w-full bg-bone-300/40 hover:bg-bone-300/70 rounded-2xl px-4 py-4 transition-colors text-left"
             >
-              <span className="w-9 h-9 rounded-xl bg-bone-300 flex items-center justify-center flex-shrink-0">
-                <MoveRight size={18} className="text-forest-500" />
-              </span>
-              <div>
-                <p className="font-display text-sm font-semibold tracking-tight text-forest-800">Kita priežastis</p>
-                <p className="text-xs text-forest-500 mt-0.5">Augalas lieka bibliotekoje kaip įrašas</p>
-              </div>
+              <p className="font-display text-sm font-semibold tracking-tight text-forest-800">Kita priežastis</p>
+              <p className="text-xs text-forest-500 mt-0.5">Augalas lieka bibliotekoje kaip įrašas</p>
             </button>
           </div>
         ) : (
