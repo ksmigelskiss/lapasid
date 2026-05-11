@@ -87,8 +87,8 @@ export default function DesktopHeader({
             >
               {t.label}
               {t.badge > 0 && (
-                <span className={`text-[11px] font-bold px-1.5 py-px rounded-full ${
-                  isActive ? 'bg-sage-100 text-sage-700' : 'bg-sky-100 text-sky-800'
+                <span className={`font-mono text-[10px] font-medium px-1.5 py-px rounded-full ${
+                  isActive ? 'bg-forest-100 text-forest-700' : 'bg-bone-300 text-forest-600'
                 }`}>
                   {t.badge}
                 </span>
