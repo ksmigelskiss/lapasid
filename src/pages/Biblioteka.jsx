@@ -67,7 +67,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
   // border-b + sage-500 active underline su layoutId animacija.
   const tabKeys = [{ key: null, label: 'Visi', count: counts.all }, ...KATEGORIJA_TABS.map(t => ({ ...t, count: counts[t.key] }))]
   const filterTabs = (
-    <div className="flex border-b border-warm-border flex-shrink-0">
+    <div className="flex border-b border-bone-400/40 flex-shrink-0">
       {tabKeys.map(({ key, label, Icon, count }) => {
         const active = kategorija === key
         return (
@@ -75,20 +75,20 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
             key={key ?? 'visi'}
             onClick={() => setKategorija(key)}
             className={`relative py-3 mr-5 text-sm font-semibold transition-colors flex items-center gap-1.5 ${
-              active ? 'text-sage-600' : 'text-gray-500 hover:text-gray-700'
+              active ? 'text-forest-700' : 'text-forest-500 hover:text-forest-700'
             }`}
           >
             {Icon && <Icon size={13} />}
             <span>{label}</span>
             {count > 0 && (
-              <span className={`text-[10px] font-bold rounded-full px-1.5 py-0.5 leading-none ${
-                active ? 'bg-sage-100 text-sage-600' : 'bg-gray-100 text-gray-400'
+              <span className={`font-mono text-[10px] font-medium rounded-full px-1.5 py-0.5 leading-none ${
+                active ? 'bg-forest-100 text-forest-700' : 'bg-bone-300 text-forest-500'
               }`}>{count}</span>
             )}
             {active && (
               <motion.div
                 layoutId="biblioteka-tab-underline"
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-sage-500 rounded-full"
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-forest-700 rounded-full"
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               />
             )}
@@ -99,8 +99,8 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
   )
 
   const searchRow = searching ? (
-    <div className="flex-1 flex items-center gap-2 bg-white border border-gray-300 rounded-2xl px-4 h-9 focus-within:border-gray-400 transition-colors">
-      <Search size={15} className="text-gray-400 flex-shrink-0" />
+    <div className="flex-1 flex items-center gap-2 bg-bone-50 border border-bone-400/40 rounded-2xl px-4 h-9 focus-within:border-forest-400/60 transition-colors">
+      <Search size={15} className="text-forest-400 flex-shrink-0" />
       <input
         ref={inputRef}
         type="text"
@@ -117,22 +117,22 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
           if (e.key === 'Escape') closeSearch()
         }}
         placeholder="Ieškoti augalo..."
-        className="flex-1 text-sm text-gray-800 placeholder-gray-400 outline-none bg-transparent"
+        className="flex-1 text-sm text-forest-700 placeholder-forest-400 outline-none bg-transparent"
       />
-      <button onClick={closeSearch} className="text-gray-400 text-xs">✕</button>
+      <button onClick={closeSearch} className="text-forest-400 text-xs">✕</button>
     </div>
   ) : (
     <button
       onClick={() => setSearching(true)}
-      className="flex-1 inline-flex items-center gap-2 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl px-4 h-9"
+      className="flex-1 inline-flex items-center gap-2 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 transition-colors rounded-2xl px-4 h-9"
     >
-      <Search size={15} className="text-gray-400" />
-      <span className="text-sm text-gray-500">Ieškoti augalo...</span>
+      <Search size={15} className="text-forest-400" />
+      <span className="text-sm text-forest-500">Ieškoti augalo...</span>
     </button>
   )
 
   return (
-    <div className="flex flex-col h-full bg-lib">
+    <div className="flex flex-col h-full bg-app">
       {/* Top row — tik filter tabs. Search perkelta į MobileHeader/DesktopHeader toolbar'ą. */}
       <div className="px-5 pb-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
         {filterTabs}
@@ -148,7 +148,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
       >
         <RefreshCw
           size={20}
-          className={`text-sage-400 ${refreshing ? 'animate-spin' : ''}`}
+          className={`text-forest-400 ${refreshing ? 'animate-spin' : ''}`}
           style={{ opacity: refreshing ? 1 : pullY / 48, transform: refreshing ? undefined : `rotate(${pullY * 4}deg)` }}
         />
       </div>
@@ -157,13 +157,13 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
       <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
         {visible.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
-            <div className="text-gray-300">
+            <div className="text-forest-300">
               {query ? <Search size={48} /> : <BookOpen size={48} />}
             </div>
-            <p className="text-sm font-semibold text-gray-600">
+            <p className="font-display text-sm font-semibold tracking-tight text-forest-700">
               {query ? `„${query}" nerasta bibliotekoje` : 'Biblioteka tuščia'}
             </p>
-            <p className="text-xs text-gray-400 max-w-[220px] leading-relaxed">
+            <p className="text-xs text-forest-500 max-w-[220px] leading-relaxed">
               {query
                 ? null
                 : 'Čia matysi augalus, kuriuos nori įsigyti, ir savo auginimo istoriją'}
@@ -171,14 +171,14 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
             {query ? (
               <button
                 onClick={launchFullSearch}
-                className="mt-1 px-6 py-3 bg-sage-500 active:bg-sage-600 text-white rounded-2xl text-sm font-medium"
+                className="mt-1 px-6 h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
               >
                 Ieškoti „{query}" naujų augalų
               </button>
             ) : kategorija == null && (
               <button
                 onClick={() => onSearch('')}
-                className="mt-1 px-6 py-3 bg-sage-500 active:bg-sage-600 text-white rounded-2xl text-sm font-medium"
+                className="mt-1 px-6 h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
               >
                 + Pridėti augalą
               </button>
@@ -193,14 +193,13 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
                   plant={plant}
                   section={plant.kategorija === 'istorija' ? 'istorija' : 'nori'}
                   onTap={() => onTap(plant)}
-                  cardBg="bg-white"
                 />
               ))}
             </div>
             {searching && query.trim() && (
               <button
                 onClick={launchFullSearch}
-                className="w-full mt-3 py-3 rounded-2xl text-sm text-gray-500 border border-dashed border-gray-300 hover:border-gray-400 hover:text-gray-700 transition-colors"
+                className="w-full mt-3 py-3 rounded-2xl text-sm text-forest-600 border border-dashed border-bone-400/60 hover:border-forest-400 hover:text-forest-700 transition-colors"
               >
                 Ieškoti „{query}" naujų augalų
               </button>
