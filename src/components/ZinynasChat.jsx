@@ -88,7 +88,7 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 bg-surface-2 rounded-full flex items-center justify-center text-gray-500 flex-shrink-0 mt-0.5"
+            className="w-8 h-8 bg-surface-2 rounded-btn flex items-center justify-center text-gray-500 flex-shrink-0 mt-0.5"
           >
             <X size={14} />
           </button>
@@ -151,7 +151,7 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
               <img src={pendingImage} className="h-16 w-16 object-cover rounded-xl" alt="" />
               <button
                 onClick={() => setPendingImage(null)}
-                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-700 text-white rounded-full flex items-center justify-center"
+                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-700 text-white rounded-btn-sm flex items-center justify-center"
               >
                 <X size={10} />
               </button>
@@ -163,7 +163,7 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
         <div className="flex items-center gap-2 px-4 py-3 border-t border-warm-border flex-shrink-0">
           <button
             onClick={() => fileRef.current?.click()}
-            className="w-9 h-9 flex-shrink-0 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-500 active:bg-surface transition-colors"
+            className="w-9 h-9 flex-shrink-0 bg-white border border-gray-200 rounded-btn flex items-center justify-center text-gray-500 active:bg-surface transition-colors"
           >
             <Camera size={16} />
           </button>
@@ -181,7 +181,7 @@ export default function ZinynasChat({ entry, allEntries, plants, onClose }) {
           <button
             onClick={handleSend}
             disabled={(!input.trim() && !pendingImage) || streaming}
-            className="w-9 h-9 bg-sage-500 disabled:opacity-40 rounded-full flex items-center justify-center text-white flex-shrink-0 transition-opacity"
+            className="w-9 h-9 bg-sage-500 disabled:opacity-40 rounded-btn flex items-center justify-center text-white flex-shrink-0 transition-opacity"
           >
             <ArrowUp size={16} strokeWidth={2.5} />
           </button>

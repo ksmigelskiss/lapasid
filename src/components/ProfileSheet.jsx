@@ -261,7 +261,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
               <p className="font-semibold text-gray-900 truncate">{user?.displayName || 'Vartotojas'}</p>
               <p className="text-xs text-gray-400 truncate">{user?.email || ''}</p>
             </div>
-            <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors flex-shrink-0" aria-label="Uždaryti">
+            <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-btn bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors flex-shrink-0" aria-label="Uždaryti">
               <X size={16} />
             </button>
           </div>
@@ -331,7 +331,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
                     {isOwner && (
                       <button
                         onClick={() => setRemoveTarget({ uid: m.uid, name: m.displayName })}
-                        className="w-7 h-7 flex items-center justify-center rounded-full active:bg-red-50 transition-colors flex-shrink-0"
+                        className="w-7 h-7 flex items-center justify-center rounded-btn-sm active:bg-red-50 transition-colors flex-shrink-0"
                       >
                         <Trash2 size={14} className="text-red-400" />
                       </button>

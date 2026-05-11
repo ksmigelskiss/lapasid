@@ -146,7 +146,7 @@ export default function CareWateringSheet({
         {onPrev && (
           <button
             onClick={onPrev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-black/45 transition-colors"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-black/30 backdrop-blur-sm rounded-btn flex items-center justify-center text-white active:bg-black/45 transition-colors"
             aria-label="Ankstesnis augalas"
           >
             <ChevronLeft size={20} />
@@ -155,7 +155,7 @@ export default function CareWateringSheet({
         {onNext && (
           <button
             onClick={onNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white active:bg-black/45 transition-colors"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-black/30 backdrop-blur-sm rounded-btn flex items-center justify-center text-white active:bg-black/45 transition-colors"
             aria-label="Sekantis augalas"
           >
             <ChevronRight size={20} />
@@ -178,7 +178,7 @@ export default function CareWateringSheet({
             <div className="absolute right-4 z-30" style={{ top: 'max(1rem, env(safe-area-inset-top))' }}>
               <button
                 onClick={onClose}
-                className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+                className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-btn flex items-center justify-center text-white"
                 aria-label="Uždaryti"
               >
                 <X size={16} />
@@ -202,7 +202,7 @@ export default function CareWateringSheet({
             <div className="flex items-center justify-end mb-3">
               <button
                 onClick={onClose}
-                className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-700 transition-colors"
+                className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-btn flex items-center justify-center text-gray-700 transition-colors"
                 aria-label="Uždaryti"
               >
                 <X size={16} />

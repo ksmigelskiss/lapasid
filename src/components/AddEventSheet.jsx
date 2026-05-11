@@ -167,7 +167,7 @@ export function AddEventSheet({ type, onSave, onClose }) {
                 <img src={imageUrl} alt="" className="w-full h-full object-cover" />
                 <button
                   onClick={() => setImageUrl(null)}
-                  className="absolute top-2 right-2 w-7 h-7 bg-black/40 rounded-full flex items-center justify-center text-white text-xs"
+                  className="absolute top-2 right-2 w-7 h-7 bg-black/40 rounded-btn-sm flex items-center justify-center text-white text-xs"
                 >
                   ✕
                 </button>
@@ -255,7 +255,7 @@ export function FAB({ onSelect }) {
       {/* Main FAB button */}
       <motion.button
         onClick={() => setOpen(v => !v)}
-        className="w-13 h-13 bg-sage-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl"
+        className="w-13 h-13 bg-sage-500 rounded-btn flex items-center justify-center shadow-lg text-white text-2xl"
         style={{ width: 52, height: 52 }}
         animate={{ rotate: open ? 45 : 0 }}
         transition={{ type: 'spring', damping: 18, stiffness: 280 }}

@@ -412,7 +412,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
         <h2 className="text-base font-semibold text-gray-900 flex-1">Rasti augalą</h2>
         <button
           onClick={onClose}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
+          className="w-10 h-10 flex items-center justify-center rounded-btn bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
           aria-label="Uždaryti"
         >
           <X size={16} />
@@ -521,14 +521,14 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                     <button
                       onClick={() => setPhotoIdx(i => Math.max(0, i - 1))}
                       disabled={photoIdx === 0}
-                      className="absolute left-3 top-1/2 -translate-y-[calc(50%+1.5rem)] w-8 h-8 bg-black/35 backdrop-blur-sm rounded-full flex items-center justify-center text-white disabled:opacity-20 transition-opacity active:scale-90"
+                      className="absolute left-3 top-1/2 -translate-y-[calc(50%+1.5rem)] w-8 h-8 bg-black/35 backdrop-blur-sm rounded-btn flex items-center justify-center text-white disabled:opacity-20 transition-opacity active:scale-90"
                     >
                       <ChevronLeft size={16} strokeWidth={2.5} />
                     </button>
                     <button
                       onClick={() => setPhotoIdx(i => Math.min((result.photos?.length ?? 1) - 1, i + 1))}
                       disabled={photoIdx >= (result.photos?.length ?? 1) - 1}
-                      className="absolute right-3 top-1/2 -translate-y-[calc(50%+1.5rem)] w-8 h-8 bg-black/35 backdrop-blur-sm rounded-full flex items-center justify-center text-white disabled:opacity-20 transition-opacity active:scale-90"
+                      className="absolute right-3 top-1/2 -translate-y-[calc(50%+1.5rem)] w-8 h-8 bg-black/35 backdrop-blur-sm rounded-btn flex items-center justify-center text-white disabled:opacity-20 transition-opacity active:scale-90"
                     >
                       <ChevronRight size={16} strokeWidth={2.5} />
                     </button>

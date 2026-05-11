@@ -236,7 +236,7 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, plants
       {!adding && (
         <button
           onClick={() => setAdding(true)}
-          className="absolute bottom-24 right-5 w-13 h-13 bg-sage-500 rounded-full flex items-center justify-center shadow-lg text-white text-2xl active:scale-90 transition-transform z-10"
+          className="absolute bottom-24 right-5 w-13 h-13 bg-sage-500 rounded-btn flex items-center justify-center shadow-lg text-white text-2xl active:scale-90 transition-transform z-10"
           style={{ width: 52, height: 52 }}
         >
           +

@@ -93,7 +93,7 @@ export default function CareSessionSummary({ session, confidence = 0, onDismiss 
             tap-anywhere + 10s auto-close, bet ne visiems aišku → eksplicit X. */}
         <button
           onClick={onDismiss}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-gray-100 active:bg-gray-200 flex items-center justify-center text-gray-500 transition-colors"
+          className="absolute top-3 right-3 w-8 h-8 rounded-btn bg-gray-100 active:bg-gray-200 flex items-center justify-center text-gray-500 transition-colors"
           aria-label="Uždaryti"
         >
           <X size={16} />

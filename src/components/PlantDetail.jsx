@@ -153,12 +153,12 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
                   <button
                     disabled={!hasPrev}
                     onClick={() => setIdx(i => i - 1)}
-                    className="w-9 h-9 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-base disabled:opacity-20"
+                    className="w-9 h-9 bg-black/40 backdrop-blur-sm rounded-btn flex items-center justify-center text-white text-base disabled:opacity-20"
                   >‹</button>
                   <button
                     disabled={!hasNext}
                     onClick={() => setIdx(i => i + 1)}
-                    className="w-9 h-9 bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-base disabled:opacity-20"
+                    className="w-9 h-9 bg-black/40 backdrop-blur-sm rounded-btn flex items-center justify-center text-white text-base disabled:opacity-20"
                   >›</button>
                 </div>
                 {/* Counter */}
@@ -1227,7 +1227,7 @@ export default function PlantDetail({
               <div className="flex items-center gap-2">
                 <button
                   onClick={onClose}
-                  className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+                  className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-btn flex items-center justify-center text-white"
                   aria-label="Uždaryti"
                 >
                   <X size={16} />
@@ -1313,7 +1313,7 @@ export default function PlantDetail({
               <div className="flex items-center gap-2">
                 <button
                   onClick={onClose}
-                  className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-700 transition-colors"
+                  className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-btn flex items-center justify-center text-gray-700 transition-colors"
                   aria-label="Uždaryti"
                 >
                   <X size={16} />

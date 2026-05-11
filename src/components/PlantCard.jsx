@@ -359,7 +359,7 @@ const PlantCard = memo(function PlantCard({
               {plant.lotyniskas && <p className="text-white/50 text-sm italic mt-0.5">{plant.lotyniskas}</p>}
             </div>
             <button
-              className="absolute top-14 right-4 w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+              className="absolute top-14 right-4 w-9 h-9 rounded-btn bg-white/10 flex items-center justify-center"
               onPointerDown={e => { e.stopPropagation(); setZoomed(false) }}
             >
               <X size={16} className="text-white" />
