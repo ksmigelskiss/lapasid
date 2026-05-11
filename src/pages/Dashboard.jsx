@@ -545,35 +545,27 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
 
         return (
           <>
-            {/* Greeting + AccuracyButton — vienodas modulis tiek mobile, tiek desktop'e
-                (CareOverview greeting two-column composition: kairė kreipinys, dešinė pill).
-                Auto-hide animuotai kai scroll'inasi žemyn (kad daugiau vietos grid'ui),
-                grįžta kai scroll'inasi atgal arba prie viršaus. */}
-            <motion.div
-              animate={{ height: hideGreeting ? 0 : 'auto', opacity: hideGreeting ? 0 : 1 }}
-              transition={{ duration: 0.22, ease: 'easeOut' }}
-              style={{ overflow: 'hidden' }}
-            >
-              <div className="px-5 pt-4 pb-3" style={hideInnerHeader ? undefined : { paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
-                <CareOverview
-                  plants={mainPlants}
-                  user={user}
-                  mode="greeting"
-                  bigGreeting
-                  careMode={careMode}
-                  careConfidence={careConfidence}
-                  onCareToggle={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
-                />
-              </div>
-            </motion.div>
-            {/* Elevation hairline + soft glow PO greeting'o (atskirai nuo motion.div,
-                kad outer wrapper'io overflow:hidden neiškirptų). Slepiasi kartu
-                su greeting'u (auto-hide on scroll), kad nesimaišytų be konteksto. */}
+            {/* Greeting + AccuracyButton — instant show/hide pagal scroll kryptį
+                (be height/opacity animacijos, kuri mobile'e patempdavo grid'o
+                content'ą su savim). Elevation gradient'as eina iškart po juo. */}
             {!hideGreeting && (
-              <div
-                aria-hidden
-                className="h-2 -mt-px relative z-10 bg-gradient-to-b from-[rgba(20,40,30,0.08)] via-[rgba(20,40,30,0.04)] to-transparent"
-              />
+              <>
+                <div className="px-5 pt-4 pb-3" style={hideInnerHeader ? undefined : { paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
+                  <CareOverview
+                    plants={mainPlants}
+                    user={user}
+                    mode="greeting"
+                    bigGreeting
+                    careMode={careMode}
+                    careConfidence={careConfidence}
+                    onCareToggle={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
+                  />
+                </div>
+                <div
+                  aria-hidden
+                  className="h-2 relative z-10 bg-gradient-to-b from-[rgba(20,40,30,0.08)] via-[rgba(20,40,30,0.04)] to-transparent"
+                />
+              </>
             )}
           </>
         )
