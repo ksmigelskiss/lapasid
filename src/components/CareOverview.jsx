@@ -160,7 +160,11 @@ export default function CareOverview({
   if (lists.total === 0 && mode !== 'greeting') return null
   // 'greeting' režimas — visada rodom kreipinį, net jei 0 augalų reikalauja priežiūros
 
-  const greeting = `${timeGreeting()}, ${userFirstName(user)}`
+  // Mobile'e — tik vardas (kad tilptų šalia AccuracyButton'o); desktop'e — pilnas kreipinys.
+  // Naudojam pure CSS (sm: breakpoint) vietoj JS sąlygos, kad nesukeltume re-render'ų.
+  const greetPrefix = `${timeGreeting()}, `
+  const firstName   = userFirstName(user)
+  const greetingFull = `${greetPrefix}${firstName}`
   const subline  = buildSubline(lists.wateringList.length, lists.fertList.length)
 
   // 'summary' režimas — tik sąrašas, be kortelės wrapper'io (popup'ui)
@@ -180,7 +184,9 @@ export default function CareOverview({
           // po greeting block'u (vis dar dešinėje per ml-auto savo eilutėj).
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div className="flex-shrink min-w-0">
-              <h1 className="text-[28px] sm:text-[32px] font-extrabold text-gray-950 leading-tight tracking-tight">{greeting}</h1>
+              <h1 className="text-[28px] sm:text-[32px] font-extrabold text-gray-950 leading-tight tracking-tight">
+                <span className="hidden sm:inline">{greetPrefix}</span>{firstName}
+              </h1>
               <p className="text-sm text-gray-500 mt-1">{subline}</p>
             </div>
             {onCareToggle && (
@@ -189,7 +195,7 @@ export default function CareOverview({
           </div>
         ) : (
           <>
-            <h2 className="text-base font-bold text-gray-900 leading-tight">{greeting}</h2>
+            <h2 className="text-base font-bold text-gray-900 leading-tight">{greetingFull}</h2>
             <p className="text-xs text-gray-500 mt-0.5">{subline}</p>
           </>
         )}
@@ -201,7 +207,7 @@ export default function CareOverview({
   return (
     <div className="mb-4 bg-white rounded-2xl overflow-hidden shadow-ios-card">
       <div className="px-4 pt-3 pb-2 border-b border-gray-100">
-        <h2 className="text-base font-bold text-gray-900 leading-tight">{greeting}</h2>
+        <h2 className="text-base font-bold text-gray-900 leading-tight">{greetingFull}</h2>
         <p className="text-xs text-gray-500 mt-0.5">{subline}</p>
       </div>
 
