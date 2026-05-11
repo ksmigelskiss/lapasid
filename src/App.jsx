@@ -16,13 +16,23 @@ import { DetailHostProvider } from './contexts/DetailHostContext'
 import LoginScreen from './components/LoginScreen'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
 
-// ChunkLoadError (senas SW aptarnauja seną HTML su naujais chunk hash'ais) → force reload
-// Kiti tinklo errori → retry kartą
+// ChunkLoadError (senas SW aptarnauja seną HTML su naujais chunk hash'ais) → force reload.
+// Prieš reload'ą išsaugom esamą tab'ą sessionStorage'e, kad po app restart'o
+// vartotojas grįžtų į tą patį tab'ą (Biblioteka/Žinynas), o ne į default Dashboard.
+// Kiti tinklo errori → retry kartą.
 function lazyWithRetry(factory) {
   return lazy(() =>
     factory().catch(err => {
       const isChunkErr = err?.name === 'ChunkLoadError' || /Loading chunk|Failed to fetch dynamically/i.test(err?.message ?? '')
-      if (isChunkErr) { window.location.reload(); return new Promise(() => {}) }
+      if (isChunkErr) {
+        // tab persistence — App.jsx skaito šitą per useState init'ą.
+        try {
+          const lastTab = sessionStorage.getItem('chunk-reload-tab')
+          if (!lastTab) sessionStorage.setItem('chunk-reload-tab', sessionStorage.getItem('current-tab') || 'dashboard')
+        } catch {}
+        window.location.reload()
+        return new Promise(() => {})
+      }
       return factory() // retry kartą
     })
   )
@@ -55,8 +65,20 @@ export default function App() {
     }
   }, [])
 
-  const [tab, setTab]                 = useState('dashboard')
-  const [mountedTabs, setMountedTabs] = useState(() => new Set(['dashboard']))
+  // Tab init — jei buvo chunk-reload (Biblioteka/Žinynas lazy import fail'ino,
+  // visa app reload'inosi), restore'inam pasirinktą tab'ą iš sessionStorage'o,
+  // kad vartotojas nepamatytų grąžinimo į Dashboard.
+  const [tab, setTab] = useState(() => {
+    try {
+      const reloadTab = sessionStorage.getItem('chunk-reload-tab')
+      if (reloadTab) {
+        sessionStorage.removeItem('chunk-reload-tab')
+        if (['dashboard', 'biblioteka', 'zinynas'].includes(reloadTab)) return reloadTab
+      }
+    } catch {}
+    return 'dashboard'
+  })
+  const [mountedTabs, setMountedTabs] = useState(() => new Set([tab]))
   const [dashCareMode, setDashCareMode] = useState(false)
   const [dashCareConfidence, setDashCareConfidence] = useState(0)
   const dashboardRef = useRef(null)
@@ -102,6 +124,9 @@ export default function App() {
     }
     setMountedTabs(prev => new Set([...prev, key]))
     setTab(key)
+    // Persist'inam einamąjį tab'ą — naudosime jeigu chunk lazy load fail'ins
+    // ir lazyWithRetry triger'ins window.location.reload()
+    try { sessionStorage.setItem('current-tab', key) } catch {}
   }
 
   const openDetail = (plant, section, scrollToCare = false) => {
