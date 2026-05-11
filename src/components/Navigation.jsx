@@ -27,7 +27,7 @@ export default function Navigation({ active, onChange, counts = {}, role = 'owne
         className="px-3 pt-2 pb-3"
         style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)' }}
       >
-        <div className="flex bg-white rounded-btn p-1 gap-0.5 shadow-[0_4px_16px_rgba(20,40,30,0.10),0_0_0_1px_rgba(20,40,30,0.04)]">
+        <div className="flex bg-bone-50/90 backdrop-blur-xl rounded-btn p-1 gap-0.5 border border-bone-400/40 shadow-[0_4px_16px_rgba(28,58,42,0.12),0_0_0_1px_rgba(28,58,42,0.04)]">
           {visibleTabs.map(({ id, label, countKey }) => {
             const isActive = active === id
             const count = counts[countKey] ?? 0
@@ -37,14 +37,14 @@ export default function Navigation({ active, onChange, counts = {}, role = 'owne
                 onClick={() => onChange(id)}
                 className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-btn-sm text-[13px] font-medium transition-colors ${
                   isActive
-                    ? 'bg-sage-50 text-sage-700'
-                    : 'text-gray-600 active:text-gray-900'
+                    ? 'bg-bone shadow-[0_1px_2px_rgba(28,58,42,0.06),0_0_0_1px_rgba(28,58,42,0.04)] text-forest-700'
+                    : 'text-forest-500 active:text-forest-700'
                 }`}
               >
                 {label}
                 {count > 0 && (
-                  <span className={`text-[11px] font-bold px-1.5 py-px rounded-full ${
-                    isActive ? 'bg-sage-100 text-sage-700' : 'bg-sky-100 text-sky-800'
+                  <span className={`font-mono text-[10px] font-medium px-1.5 py-px rounded-full ${
+                    isActive ? 'bg-forest-100 text-forest-700' : 'bg-bone-300 text-forest-600'
                   }`}>
                     {count}
                   </span>

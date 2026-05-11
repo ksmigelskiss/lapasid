@@ -1,25 +1,25 @@
 import { useState, useRef, useEffect } from 'react'
-import { Bell, Search } from 'lucide-react'
+import { Search, Droplets, FlaskConical } from 'lucide-react'
 import { CareSummaryList } from './CareOverview'
-import T4Mark from './brand/T4Mark'
+import T4Icon from './brand/T4Icon'
 import T4Word from './brand/T4Word'
 
 /**
  * MobileHeader — top toolbar mobile'e (<1024px).
  *
  * Layout:
- *   ┌──────────────────────────────────────┐
- *   │ [LapasID]              [🔍] [🔔] [Av] │
- *   └──────────────────────────────────────┘
+ *   ┌──────────────────────────────────────────────┐
+ *   │ [T4Icon LapasID]  [🔍] [💧N] [🧪N] [Avatar]  │
+ *   └──────────────────────────────────────────────┘
  *
- * Bell — toggle popup'as su priežiūros santrauka (CareSummaryList).
- * Tas pats pattern'as kaip DesktopHeader bell — mobile vartotojas pamato
- * notification count badge ir pataptelėjęs gauna pilną care summary,
- * vietoj kad summary nuolat užimtų vietos Dashboard'o virš grid'o.
+ * Vientisas su DesktopHeader: bone frost bg, T4Icon inverted (antspaudas)
+ * + T4Word wordmark; care notifications dviem brand pill'ais (water
+ * forest, fert terracotta) vietoj generic bell + raudonas badge.
  */
 export default function MobileHeader({
   user, onProfileClick, role = 'owner',
-  careNotificationCount = 0, carePopupPlants = [], onCareTap,
+  careNotificationCount = 0, careWaterCount = 0, careFertCount = 0,
+  carePopupPlants = [], onCareTap,
   onSearchClick,
 }) {
   const [showCarePopup, setShowCarePopup] = useState(false)
@@ -42,54 +42,60 @@ export default function MobileHeader({
 
   return (
     <header
-      className="h-12 flex-shrink-0 flex items-center px-4 gap-2 bg-white/85 backdrop-blur border-b border-gray-200/80 z-30 relative"
+      className="h-12 flex-shrink-0 flex items-center px-4 gap-2 bg-bone/85 backdrop-blur-xl z-30 relative"
       style={{ paddingTop: 'env(safe-area-inset-top)', height: 'calc(48px + env(safe-area-inset-top))' }}
     >
-      {/* Brand cluster — T4Mark + T4Word, kompaktiškas mobile variantas */}
+      {/* Brand — T4Icon inverted (antspaudas: bone mark on forest square) + wordmark */}
       <div className="flex items-center gap-2 flex-shrink-0">
-        <T4Mark size={26} />
+        <T4Icon size={26} ink="#f1ebdd" paper="#1c3a2a" />
         <T4Word size={17} className="text-forest-700" />
       </div>
 
-      {/* Action cluster — search, bell, avatar (ml-auto stumia į dešinį kraštą) */}
-      <div className="ml-auto flex items-center gap-1 flex-shrink-0">
+      {/* Action cluster: search + care pills + avatar */}
+      <div className="ml-auto flex items-center gap-1.5 flex-shrink-0">
         {role !== 'viewer' && (
           <button
             onClick={onSearchClick}
-            className="w-9 h-9 rounded-lg inline-flex items-center justify-center hover:bg-gray-900/[0.05] active:bg-gray-900/[0.08] transition-colors text-gray-600"
+            className="w-9 h-9 rounded-lg inline-flex items-center justify-center hover:bg-forest-700/[0.06] active:bg-forest-700/[0.10] transition-colors text-forest-600"
             title="Ieškoti augalo"
           >
             <Search size={18} />
           </button>
         )}
 
-        {/* Notifications bell — atidaro priežiūros santrauką popup'e */}
-        <div className="relative" ref={carePopupRef}>
+        {/* Care notifications — du pill'ai (water forest, fert terracotta) */}
+        <div className="relative flex items-center gap-1" ref={carePopupRef}>
           <button
             onClick={() => setShowCarePopup(v => !v)}
-            className={`w-9 h-9 rounded-lg inline-flex items-center justify-center transition-colors ${
-              showCarePopup ? 'bg-sage-100 text-sage-700' : 'hover:bg-gray-900/[0.05] active:bg-gray-900/[0.08] text-gray-600'
+            className={`inline-flex items-center gap-1 h-7 px-2 rounded-full transition-colors active:scale-95 ${
+              careWaterCount > 0
+                ? (showCarePopup ? 'bg-forest-200 text-forest-800' : 'bg-forest-100 text-forest-700 hover:bg-forest-200')
+                : 'bg-bone-300/60 text-forest-300 hover:bg-bone-300'
             }`}
-            title={careNotificationCount > 0
-              ? `Priežiūros santrauka (${careNotificationCount})`
-              : 'Visi augalai laimingi'}
+            title={careWaterCount > 0 ? `Laistyti: ${careWaterCount}` : 'Laistyti — viskas tvarkoj'}
           >
-            <Bell size={18} />
-            {careNotificationCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none flex items-center justify-center ring-2 ring-white">
-                {careNotificationCount > 99 ? '99+' : careNotificationCount}
-              </span>
-            )}
+            <Droplets size={12} />
+            <span className="text-[11px] font-bold tabular-nums leading-none">{careWaterCount}</span>
+          </button>
+          <button
+            onClick={() => setShowCarePopup(v => !v)}
+            className={`inline-flex items-center gap-1 h-7 px-2 rounded-full transition-colors active:scale-95 ${
+              careFertCount > 0
+                ? (showCarePopup ? 'bg-terracotta-200 text-terracotta-600' : 'bg-terracotta-100 text-terracotta-600 hover:bg-terracotta-200')
+                : 'bg-bone-300/60 text-forest-300 hover:bg-bone-300'
+            }`}
+            title={careFertCount > 0 ? `Tręšti: ${careFertCount}` : 'Tręšti — viskas tvarkoj'}
+          >
+            <FlaskConical size={12} />
+            <span className="text-[11px] font-bold tabular-nums leading-none">{careFertCount}</span>
           </button>
 
-          {/* Popup — priežiūros santrauka. Mobile'e pinasi nuo dešiniojo krašto,
-              max-w garantuoja, kad netampa už ekrano */}
+          {/* Popup — priežiūros santrauka */}
           {showCarePopup && (
-            <div className="absolute top-full right-0 mt-2 w-[calc(100vw-2rem)] max-w-[360px] max-h-[70vh] overflow-y-auto bg-white rounded-2xl shadow-[0_12px_32px_rgba(20,40,30,0.18)] border border-gray-100 z-50 p-3">
-              <div className="flex items-center gap-2 px-1 pb-2 mb-1 border-b border-gray-100">
-                <Bell size={14} className="text-sage-600" />
-                <p className="text-sm font-bold text-gray-800 flex-1">Priežiūros santrauka</p>
-                <span className="text-[11px] font-semibold text-gray-400">{careNotificationCount}</span>
+            <div className="absolute top-full right-0 mt-2 w-[calc(100vw-2rem)] max-w-[360px] max-h-[70vh] overflow-y-auto bg-bone rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/60 z-50 p-3">
+              <div className="flex items-center gap-2 px-1 pb-2 mb-1 border-b border-bone-400/40">
+                <p className="font-display text-sm font-bold text-forest-700 flex-1 tracking-tight">Priežiūros santrauka</p>
+                <span className="font-mono text-[10px] font-medium text-forest-400 uppercase tracking-[0.18em]">{careNotificationCount}</span>
               </div>
               {careNotificationCount > 0 ? (
                 <CareSummaryList
@@ -97,7 +103,7 @@ export default function MobileHeader({
                   onTap={(plant, list) => { onCareTap?.(plant, list); setShowCarePopup(false) }}
                 />
               ) : (
-                <p className="text-center text-sm text-gray-500 py-6">Visi augalai laimingi 🌿</p>
+                <p className="text-center text-sm text-forest-500 py-6">Visi augalai laimingi 🌿</p>
               )}
             </div>
           )}
@@ -106,12 +112,12 @@ export default function MobileHeader({
         {/* Avatar — atidaro ProfileSheet */}
         <button
           onClick={onProfileClick}
-          className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-white shadow-[0_0_0_1px_rgba(20,40,30,0.06)] active:scale-95 transition-transform ml-1"
+          className="w-8 h-8 rounded-full overflow-hidden ring-1 ring-bone-400/50 active:scale-95 transition-transform ml-1"
           title={user?.displayName || 'Vartotojas'}
         >
           {user?.photoURL
             ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
-            : <div className="w-full h-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-white text-[12px] font-semibold">
+            : <div className="w-full h-full bg-forest-500 flex items-center justify-center text-bone text-[12px] font-semibold">
                 {initials}
               </div>}
         </button>

@@ -453,6 +453,8 @@ export default function App() {
               role={role}
               onProfileClick={() => setShowProfile(v => !v)}
               careNotificationCount={careNotificationCount}
+              careWaterCount={careWaterCount}
+              careFertCount={careFertCount}
               carePopupPlants={carePopupPlants}
               onCareTap={(plant, list) => {
                 if (tab !== 'dashboard') {

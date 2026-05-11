@@ -160,7 +160,7 @@ export default function DesktopHeader({
         {/* Avatar */}
         <button
           onClick={onProfileClick}
-          className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-white shadow-[0_0_0_1px_rgba(20,40,30,0.06)] active:scale-95 transition-transform"
+          className="w-8 h-8 rounded-full overflow-hidden ring-1 ring-bone-400/50 active:scale-95 transition-transform"
           title={user?.displayName || 'Vartotojas'}
         >
           {user?.photoURL

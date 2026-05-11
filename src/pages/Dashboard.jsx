@@ -650,10 +650,6 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                 onCareToggle={() => { setCareMode(v => !v); setCareChecked(new Set()) }}
               />
             </div>
-            <div
-              aria-hidden
-              className="h-2 -mx-5 mb-2 bg-gradient-to-b from-[rgba(20,40,30,0.08)] via-[rgba(20,40,30,0.04)] to-transparent"
-            />
           </>
         )}
 
