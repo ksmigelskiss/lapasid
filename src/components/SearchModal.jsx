@@ -397,9 +397,11 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   })()
 
   const tree = (
-    <div className={useDesktopPanel ? "absolute inset-0 flex justify-center" : "fixed inset-0 z-50 flex justify-center"}>
+    <div className={useDesktopPanel
+      ? "absolute inset-0 overflow-hidden flex justify-center"
+      : "fixed inset-0 z-50 overflow-hidden flex justify-center"}>
     <motion.div
-      className={useDesktopPanel ? "w-full h-full flex flex-col bg-app" : "w-full max-w-[430px] flex flex-col bg-app"}
+      className={useDesktopPanel ? "w-full h-full max-w-full flex flex-col bg-app" : "w-full max-w-[430px] flex flex-col bg-app"}
       initial={{ x: '100%' }}
       animate={{ x: 0 }}
       exit={{ x: '100%' }}
