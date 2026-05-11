@@ -8,26 +8,79 @@ function fmtDate(str) {
   return new Date(str).toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
 }
 
+// ── Editorial blocks ──────────────────────────────────────────────
+// Brandbook v1.0 patternas: vietoj spalvotų kortelių — typografinis flow su
+// mono caps label + Bricolage Bold title + body. Callout'ai (overdue alerts)
+// išlieka kortelės — frost glass + brand border (terracotta = warning).
+
+function CalloutCard({ icon, label, title, body, hint, tone = 'terracotta' }) {
+  // tone: 'terracotta' = severe/overdue; 'forest' = info/urgent (light)
+  const isWarn = tone === 'terracotta'
+  return (
+    <div className={`bg-white/55 backdrop-blur-xl border-2 rounded-2xl px-4 py-3 flex gap-3 ${
+      isWarn ? 'border-terracotta/50' : 'border-forest-300/50'
+    }`}>
+      <div className={`flex-shrink-0 mt-0.5 ${isWarn ? 'text-terracotta' : 'text-forest-600'}`}>
+        {icon}
+      </div>
+      <div className="flex-1 min-w-0">
+        {label && (
+          <p className={`font-mono text-[10px] font-medium uppercase tracking-[0.16em] ${
+            isWarn ? 'text-terracotta-600' : 'text-forest-500'
+          }`}>{label}</p>
+        )}
+        <p className={`font-display text-sm font-bold tracking-tight mt-0.5 ${
+          isWarn ? 'text-terracotta-600' : 'text-forest-700'
+        }`}>{title}</p>
+        {body && <p className="text-[11.5px] text-forest-600 mt-1 leading-snug">{body}</p>}
+        {hint && <p className="text-[11px] text-forest-500 italic mt-1.5 leading-snug">{hint}</p>}
+      </div>
+    </div>
+  )
+}
+
+function EditorialBlock({ icon, label, title, body, hint }) {
+  return (
+    <div className="flex gap-3">
+      {icon && (
+        <div className="flex-shrink-0 mt-0.5 text-forest-500">{icon}</div>
+      )}
+      <div className="flex-1 min-w-0">
+        <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">{label}</p>
+        <p className="font-display text-sm font-bold text-forest-700 tracking-tight mt-0.5">{title}</p>
+        {body && <p className="text-[11.5px] text-forest-600 mt-1 leading-snug">{body}</p>}
+        {hint && <p className="text-[11px] text-forest-500 italic mt-1.5 leading-snug">{hint}</p>}
+      </div>
+    </div>
+  )
+}
+
+// ── Watering ──────────────────────────────────────────────────────
+
 export function WateringCard({ plant, section }) {
   if (section !== 'auginama') return null
   if (!shouldShowWateringAlert(plant)) return null
   const wc = getWateringForecast(plant)
   const days = Math.abs(wc.daysUntil)
   return (
-    <div className="bg-sky-50 border border-sky-100 rounded-2xl px-4 py-3 flex gap-3">
-      <Droplets size={24} className="flex-shrink-0 text-sky-400 mt-0.5" />
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-sky-700">Laistymas vėluoja {days} d.!</p>
-        <p className="text-[11px] text-sky-600 mt-0.5">
+    <CalloutCard
+      icon={<Droplets size={22} />}
+      label="Laistymas vėluoja"
+      title={`${days} d.`}
+      body={
+        <>
           Paskutinis: {fmtDate(wc.lastDate)}
           {wc.lastType === 'repotting' ? ' (persodinimas)' : ''}
           {' · '}{wc.intervalDays}d intervalas
-        </p>
-        {wc.metodas && <p className="text-[11px] text-sky-500 italic mt-1">{wc.metodas}</p>}
-      </div>
-    </div>
+        </>
+      }
+      hint={wc.metodas}
+      tone="terracotta"
+    />
   )
 }
+
+// ── Fertilizing ───────────────────────────────────────────────────
 
 export function FertilizingCard({ plant, section }) {
   if (section !== 'auginama') return null
@@ -35,98 +88,92 @@ export function FertilizingCard({ plant, section }) {
 
   if (fc.skipSeason) {
     return (
-      <div className="flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-2xl px-4 py-3">
-        <Snowflake size={20} className="flex-shrink-0 text-blue-400" />
-        <div>
-          <p className="text-sm font-semibold text-blue-700">Žiemą netręšiama</p>
-          <p className="text-[11px] text-blue-500 mt-0.5">{fc.fertilizerTip}</p>
-        </div>
-      </div>
+      <EditorialBlock
+        icon={<Snowflake size={18} />}
+        label="Tręšimas"
+        title="Žiemą netręšiama"
+        body={fc.fertilizerTip}
+      />
     )
   }
 
   if (fc.isOverdue) {
     const days = Math.abs(fc.daysUntil)
     return (
-      <div className="bg-orange-50 border border-orange-200 rounded-2xl px-4 py-3 flex gap-3">
-        <Leaf size={24} className="flex-shrink-0 text-orange-400 mt-0.5" />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-orange-700">Pamaitink augalėlį — vėluoja {days} d.!</p>
-          <p className="text-[11px] text-orange-600 mt-0.5">
+      <CalloutCard
+        icon={<Leaf size={22} />}
+        label="Pamaitink augalėlį — vėluoja"
+        title={`${days} d.`}
+        body={
+          <>
             Paskutinis: {fmtDate(fc.lastDate)}
             {fc.lastType === 'repotting' ? ' (persodinimas)' : ''}
             {' · '}{fc.intervalDays}d intervalas
-          </p>
-          <p className="text-[11px] text-orange-500 italic mt-1">{fc.fertilizerTip}</p>
-        </div>
-      </div>
+          </>
+        }
+        hint={fc.fertilizerTip}
+        tone="terracotta"
+      />
     )
   }
 
   const urgent = fc.daysUntil <= 7
   return (
-    <div className={`flex items-center gap-3 rounded-2xl px-4 py-3 ${
-      urgent ? 'bg-amber-50 border border-amber-100' : 'bg-green-50 border border-green-100'
-    }`}>
-      <Leaf size={20} className={`flex-shrink-0 mt-0.5 ${urgent ? 'text-amber-400' : 'text-green-400'}`} />
-      <div className="flex-1 min-w-0">
-        <p className={`text-sm font-semibold ${urgent ? 'text-amber-700' : 'text-green-700'}`}>
-          Kitas tręšimas: {fmtDate(fc.nextDate)}
-        </p>
-        <p className={`text-[11px] mt-0.5 ${urgent ? 'text-amber-600' : 'text-green-600'}`}>
-          {fc.daysUntil === 0 ? 'Šiandien!' : `Po ${fc.daysUntil} d.`}
-          {' · '}
+    <EditorialBlock
+      icon={<Leaf size={18} />}
+      label={`Kitas tręšimas · ${fmtDate(fc.nextDate)}`}
+      title={fc.daysUntil === 0 ? 'Šiandien!' : `Po ${fc.daysUntil} d.`}
+      body={
+        <span className="inline-flex items-center gap-1">
           {fc.season === 'vasara'
-            ? <><Sun size={11} className="inline align-text-bottom" /> Vasara</>
-            : <><Snowflake size={11} className="inline align-text-bottom" /> Žiema</>
+            ? <><Sun size={11} className="text-terracotta-400" /> Vasara</>
+            : <><Snowflake size={11} className="text-forest-500" /> Žiema</>
           }
           {fc.lastType === 'repotting' ? ' · nuo persodinimo' : ''}
-        </p>
-        <p className="text-[11px] text-gray-500 italic mt-1">{fc.fertilizerTip}</p>
-      </div>
-    </div>
+        </span>
+      }
+      hint={fc.fertilizerTip}
+    />
   )
 }
+
+// ── Dormancy ──────────────────────────────────────────────────────
 
 export function DormancyCard({ plant, section }) {
   if (section !== 'auginama') return null
   const df = getDormancyForecast(plant)
   if (!df) return null
 
+  // Visi dormancy state'ai — editorial flow (info, ne callout).
+  // Ikona + spalva atspindi „intensity":
+  //   approaching = terracotta (rudeniškas tonas, šiltas)
+  //   active      = forest-600 (gilus miegas)
+  //   waking      = forest-500 (vibrancy)
   const configs = {
     approaching: {
-      bg: 'bg-amber-50 border-amber-100',
-      icon: <Snowflake size={22} className="text-amber-400 flex-shrink-0 mt-0.5" />,
-      titleColor: 'text-amber-700', textColor: 'text-amber-600', subColor: 'text-amber-500',
+      icon: <Snowflake size={18} className="text-terracotta-400" />,
       title: df.daysUntilDormancy != null
         ? `Ruoškitės žiemos miegui — liko ${df.daysUntilDormancy} d.`
         : 'Ruoškitės žiemos miegui',
     },
     active: {
-      bg: 'bg-blue-50 border-blue-100',
-      icon: <Moon size={22} className="text-blue-400 flex-shrink-0 mt-0.5" />,
-      titleColor: 'text-blue-700', textColor: 'text-blue-600', subColor: 'text-blue-400',
+      icon: <Moon size={18} className="text-forest-600" />,
       title: df.type === 'full' ? 'Augalas žiemos miege' : 'Dalinis žiemos poilsis',
     },
     waking: {
-      bg: 'bg-green-50 border-green-100',
-      icon: <Sprout size={22} className="text-green-400 flex-shrink-0 mt-0.5" />,
-      titleColor: 'text-green-700', textColor: 'text-green-600', subColor: 'text-green-400',
+      icon: <Sprout size={18} className="text-forest-500" />,
       title: 'Laikas žadinti augalą!',
     },
   }
 
   const c = configs[df.window]
   return (
-    <div className={`border rounded-2xl px-4 py-3 flex gap-3 ${c.bg}`}>
-      {c.icon}
-      <div className="flex-1 min-w-0">
-        <p className={`text-sm font-bold ${c.titleColor}`}>{c.title}</p>
-        <p className={`text-[11px] mt-1 leading-snug ${c.textColor}`}>{df.action}</p>
-        {df.ziemojimas && df.window !== 'waking' && (
-          <p className={`text-[10px] mt-1.5 italic ${c.subColor}`}>{df.ziemojimas}</p>
-        )}
-      </div>
-    </div>
+    <EditorialBlock
+      icon={c.icon}
+      label="Dormancy"
+      title={c.title}
+      body={df.action}
+      hint={df.ziemojimas && df.window !== 'waking' ? df.ziemojimas : null}
+    />
   )
 }

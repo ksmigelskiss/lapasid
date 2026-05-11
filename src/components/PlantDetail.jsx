@@ -220,8 +220,11 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
 
 function Section({ title, children, id }) {
   return (
-    <div id={id} className="space-y-2">
-      <p className="text-[11px] font-bold text-gray-600 uppercase tracking-widest">{title}</p>
+    <div id={id} className="space-y-2.5">
+      <div className="flex items-center gap-3">
+        <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em]">{title}</p>
+        <div className="flex-1 h-px bg-bone-400/40" />
+      </div>
       {children}
     </div>
   )
@@ -230,11 +233,11 @@ function Section({ title, children, id }) {
 function InfoRow({ icon, label, value }) {
   if (!value) return null
   return (
-    <div className="flex gap-3 py-2.5 border-b border-gray-50 last:border-0">
-      <div className="w-6 flex-shrink-0 flex items-center justify-center text-gray-400">{icon}</div>
+    <div className="flex gap-3 py-2.5 border-b border-bone-400/30 last:border-0">
+      <div className="w-6 flex-shrink-0 flex items-center justify-center text-forest-400">{icon}</div>
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-wide">{label}</p>
-        <p className="text-sm text-gray-700 mt-0.5 leading-snug">{value}</p>
+        <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">{label}</p>
+        <p className="text-sm text-forest-700 mt-1 leading-snug">{value}</p>
       </div>
     </div>
   )
@@ -338,51 +341,52 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
       <DormancyCard plant={plant} section={section} />
 
 
-      {/* ── Toxicity warning ── */}
+      {/* ── Toxicity warning — Brandbook terracotta callout (severe). ── */}
       {plant.toksiskas && (
-        <div className="bg-red-50 border border-red-100 rounded-2xl p-3.5 flex gap-3">
-          <Skull size={22} className="flex-shrink-0 text-red-500 mt-0.5" />
+        <div className="bg-white/55 backdrop-blur-xl border-2 border-terracotta/50 rounded-2xl p-3.5 flex gap-3">
+          <Skull size={22} className="flex-shrink-0 text-terracotta mt-0.5" />
           <div>
-            <p className="text-sm font-bold text-red-600">Toksiška augalas!</p>
-            <p className="text-xs text-red-500 mt-0.5 leading-snug">{plant.toksiskumo_info}</p>
+            <p className="font-mono text-[10px] font-medium text-terracotta-600 uppercase tracking-[0.16em]">Pavojinga</p>
+            <p className="font-display text-sm font-bold text-terracotta-600 tracking-tight mt-0.5">Toksiška augalas!</p>
+            <p className="text-xs text-forest-600 mt-1 leading-snug">{plant.toksiskumo_info}</p>
           </div>
         </div>
       )}
 
-      {/* ── Quick stats card ── */}
-      <div className="bg-surface rounded-2xl p-4 space-y-3">
+      {/* ── Quick stats — editorial table (mono caps label + Bricolage value). ── */}
+      <div className="divide-y divide-bone-400/30">
         {plant.kilme && (
-          <div className="flex items-start gap-2">
-            <span className="flex items-center gap-1 text-xs font-semibold text-gray-700 w-20 flex-shrink-0"><MapPin size={12} className="text-gray-400" /> Kilmė</span>
-            <span className="text-xs text-gray-700 leading-snug">{plant.kilme}</span>
+          <div className="flex items-start gap-3 py-2.5">
+            <span className="flex items-center gap-1.5 font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0"><MapPin size={11} className="text-forest-400" /> Kilmė</span>
+            <span className="text-sm text-forest-700 leading-snug flex-1">{plant.kilme}</span>
           </div>
         )}
         {plant.tipas && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-gray-700 w-20 flex-shrink-0">Tipas</span>
-            <span className="text-xs text-gray-700">{plant.tipas}</span>
+          <div className="flex items-center gap-3 py-2.5">
+            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0">Tipas</span>
+            <span className="text-sm text-forest-700">{plant.tipas}</span>
           </div>
         )}
         {plant.augimo_greitis && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-gray-700 w-20 flex-shrink-0">Augimas</span>
-            <span className="text-xs text-gray-700">{plant.augimo_greitis}</span>
+          <div className="flex items-center gap-3 py-2.5">
+            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0">Augimas</span>
+            <span className="text-sm text-forest-700">{plant.augimo_greitis}</span>
           </div>
         )}
         {plant.sunkumas != null && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-gray-700 w-20 flex-shrink-0">Sunkumas</span>
+          <div className="flex items-center gap-3 py-2.5">
+            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0">Sunkumas</span>
             <Stars value={plant.sunkumas} />
           </div>
         )}
         {plant.sviesa?.taskai != null && (
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1 text-xs font-semibold text-gray-700 w-20 flex-shrink-0"><Sun size={12} className="text-gray-400" /> Šviesa</span>
+          <div className="flex items-center gap-3 py-2.5">
+            <span className="flex items-center gap-1.5 font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0"><Sun size={11} className="text-terracotta-400" /> Šviesa</span>
             <div className="flex items-center gap-2 flex-wrap">
-              <DotScore value={plant.sviesa.taskai} color="bg-amber-400" />
-              <span className="text-xs text-gray-500">{plant.sviesa.lygis}</span>
+              <DotScore value={plant.sviesa.taskai} color="bg-terracotta-400" />
+              <span className="text-sm text-forest-700">{plant.sviesa.lygis}</span>
               {plant.sviesa?.ppfd && (
-                <span className="text-[10px] font-medium text-amber-600 bg-amber-50 border border-amber-100 rounded-md px-1.5 py-0.5 leading-none">
+                <span className="font-mono text-[10px] font-medium text-terracotta-600 bg-terracotta-50 border border-terracotta-200/60 rounded-md px-1.5 py-0.5 leading-none">
                   {plant.sviesa.ppfd.min}–{plant.sviesa.ppfd.max} μmol/m²/s
                 </span>
               )}
@@ -390,20 +394,20 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
           </div>
         )}
         {plant.vanduo?.taskai != null && (
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1 text-xs font-semibold text-gray-700 w-20 flex-shrink-0"><Droplets size={12} className="text-gray-400" /> Vanduo</span>
+          <div className="flex items-center gap-3 py-2.5">
+            <span className="flex items-center gap-1.5 font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0"><Droplets size={11} className="text-forest-400" /> Vanduo</span>
             <div className="flex items-center gap-2">
-              <DotScore value={plant.vanduo.taskai} color="bg-blue-400" />
-              <span className="text-xs text-gray-500">{plant.vanduo.lygis}</span>
+              <DotScore value={plant.vanduo.taskai} color="bg-forest-400" />
+              <span className="text-sm text-forest-700">{plant.vanduo.lygis}</span>
             </div>
           </div>
         )}
       </div>
 
-      {/* ── Description + origin ── */}
+      {/* ── Description + external links ── */}
       {plant.aprasymas && (
         <Section title="Apie augalą">
-          <p className="text-sm text-gray-600 leading-relaxed">{plant.aprasymas}</p>
+          <p className="text-sm text-forest-700 leading-relaxed">{plant.aprasymas}</p>
           {plant.lotyniskas && (
             <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
               {(() => {
@@ -422,14 +426,13 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
                       ? `https://en.wikipedia.org/wiki/${encodeURIComponent(fullName)}`
                       : `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(genus)}`,
                   },
-                  // iNaturalist: only shown when API confirmed an exact taxon match
                   ...(plant.inatTaxonId
                     ? [{ label: 'iNaturalist', href: `https://www.inaturalist.org/taxa/${plant.inatTaxonId}` }]
                     : []),
                 ]
                 return links.map(({ label, href }) => (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-                    className="text-xs text-sage-500 hover:text-sage-700 underline underline-offset-2 transition-colors">
+                    className="font-mono text-[10px] uppercase tracking-[0.14em] text-forest-500 hover:text-forest-700 underline underline-offset-2 transition-colors">
                     {label}
                   </a>
                 ))
@@ -442,7 +445,7 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
       {/* ── Care ── */}
       {plant.prieziura && (
         <Section title="Priežiūra" id="prieziura-section">
-          <div className="bg-surface rounded-2xl divide-y divide-gray-100">
+          <div className="divide-y divide-bone-400/30">
             <InfoRow icon={<Sun size={15} />}         label="Šviesa"      value={plant.prieziura.sviesa} />
             <InfoRow icon={<Droplets size={15} />}    label="Laistymas"   value={plant.prieziura.laistymas} />
             <InfoRow icon={<Thermometer size={15} />} label="Temperatūra" value={plant.prieziura.temperatura} />
@@ -454,7 +457,7 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
       {/* ── Substrate / repotting / winter ── */}
       {(plant.substratas || plant.persodinimas || plant.ziemojimas) && (
         <Section title="Substratas ir sezoniškumas">
-          <div className="bg-surface rounded-2xl divide-y divide-gray-100">
+          <div className="divide-y divide-bone-400/30">
             <InfoRow icon={<Flower2 size={15} />}   label="Substratas"   value={plant.substratas} />
             <InfoRow icon={<RefreshCw size={15} />} label="Persodinimas" value={plant.persodinimas} />
             <InfoRow icon={<Snowflake size={15} />}  label="Žiemojimas"   value={plant.ziemojimas} />
@@ -462,38 +465,39 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
         </Section>
       )}
 
-      {/* ── Propagation ── */}
+      {/* ── Propagation — editorial bullets (be konteinerio fono). ── */}
       {plant.dauginimas?.length > 0 && (
         <Section title="Dauginimas">
-          <div className="space-y-1.5">
+          <ul className="space-y-2">
             {plant.dauginimas.map((d, i) => (
-              <div key={i} className="flex items-start gap-2.5 bg-sage-50 rounded-xl px-3 py-2.5">
-                <span className="text-sage-400 font-bold text-sm mt-0.5 flex-shrink-0">·</span>
-                <p className="text-sm text-gray-700">{d}</p>
-              </div>
+              <li key={i} className="flex items-start gap-3">
+                <span className="text-forest-400 font-bold text-sm mt-0.5 flex-shrink-0 leading-snug">·</span>
+                <p className="text-sm text-forest-700 leading-snug">{d}</p>
+              </li>
             ))}
-          </div>
+          </ul>
         </Section>
       )}
 
-      {/* ── Problems ── */}
+      {/* ── Problems — editorial diagnostic table. Mono caps labels +
+            Bricolage Bold symptom (terracotta = warning). ── */}
       {plant.problemos?.length > 0 && (
         <Section title="Problemų diagnostika">
-          <div className="space-y-2">
+          <div className="space-y-4">
             {plant.problemos.map((p, i) => (
-              <div key={i} className="bg-red-50/60 rounded-2xl overflow-hidden border border-red-100/60">
-                <div className="px-3 py-2 bg-red-50 border-b border-red-100/60">
-                  <p className="text-xs font-bold text-red-500 uppercase tracking-wide">Simptomas</p>
-                  <p className="text-sm font-semibold text-red-700 mt-0.5">{p.simptomas}</p>
+              <div key={i} className="space-y-2.5">
+                <div>
+                  <p className="font-mono text-[10px] font-medium text-terracotta-600 uppercase tracking-[0.16em]">Simptomas</p>
+                  <p className="font-display text-sm font-bold text-terracotta-600 tracking-tight mt-0.5">{p.simptomas}</p>
                 </div>
-                <div className="px-3 py-2 grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-4 pl-3 border-l-2 border-terracotta/30">
                   <div>
-                    <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wide">Priežastis</p>
-                    <p className="text-xs text-gray-600 mt-0.5 leading-snug">{p.priezastis}</p>
+                    <p className="font-mono text-[9.5px] font-medium text-forest-500 uppercase tracking-[0.16em]">Priežastis</p>
+                    <p className="text-[12.5px] text-forest-700 mt-1 leading-snug">{p.priezastis}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wide">Sprendimas</p>
-                    <p className="text-xs text-gray-600 mt-0.5 leading-snug">{p.sprendimas}</p>
+                    <p className="font-mono text-[9.5px] font-medium text-forest-500 uppercase tracking-[0.16em]">Sprendimas</p>
+                    <p className="text-[12.5px] text-forest-700 mt-1 leading-snug">{p.sprendimas}</p>
                   </div>
                 </div>
               </div>
@@ -502,34 +506,34 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
         </Section>
       )}
 
-      {/* ── Interesting facts ── */}
+      {/* ── Interesting facts — editorial bullets (be amber kortelės). ── */}
       {plant.idomybes?.length > 0 && (
         <Section title="Įdomybės">
-          <div className="space-y-2">
+          <ul className="space-y-2">
             {plant.idomybes.map((fact, i) => (
-              <div key={i} className="flex items-start gap-3 bg-amber-50 rounded-xl px-3 py-2.5">
-                <Leaf size={15} className="text-amber-400 flex-shrink-0 mt-0.5" />
-                <p className="text-sm text-amber-800 leading-snug">{fact}</p>
-              </div>
+              <li key={i} className="flex items-start gap-3">
+                <Leaf size={14} className="text-forest-500 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-forest-700 leading-snug">{fact}</p>
+              </li>
             ))}
-          </div>
+          </ul>
         </Section>
       )}
 
-      {/* ── History: death + lesson ── */}
+      {/* ── History: death + lesson — editorial blokai su terracotta accent. ── */}
       {section === 'istorija' && (
         <Section title="Augalo istorija">
-          <div className="space-y-2">
+          <div className="space-y-4">
             {plant.deathReason && (
-              <div className="bg-red-50 rounded-2xl p-3">
-                <p className="text-[10px] font-bold text-red-400 uppercase tracking-wider mb-1">Priežastis</p>
-                <p className="text-sm text-red-700">{plant.deathReason}</p>
+              <div className="pl-3 border-l-2 border-terracotta/40">
+                <p className="font-mono text-[10px] font-medium text-terracotta-600 uppercase tracking-[0.16em]">Priežastis</p>
+                <p className="text-sm text-forest-700 mt-1">{plant.deathReason}</p>
               </div>
             )}
             {plant.lesson && (
-              <div className="bg-amber-50 rounded-2xl p-3">
-                <p className="text-[10px] font-bold text-amber-500 uppercase tracking-wider mb-1">Pamoka</p>
-                <p className="text-sm text-amber-800">{plant.lesson}</p>
+              <div className="pl-3 border-l-2 border-forest-400/50">
+                <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Pamoka</p>
+                <p className="text-sm text-forest-700 mt-1">{plant.lesson}</p>
               </div>
             )}
           </div>
