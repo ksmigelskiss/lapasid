@@ -106,12 +106,27 @@ export default function CareHeatmapWidget({ data }) {
               </span>
             </span>
           ) : (
-            <div className="flex items-center gap-2 text-[10.5px] text-forest-500">
-              <span className="inline-flex items-center gap-1">
-                <span className="w-2 h-2 rounded-sm bg-forest-500" />Laist.
+            // Expanded legend — 4-swatch gradient'as parodo intensyvumo skalę
+            // (1-2-3-4 dienos veiksmų per dieną), kad vartotojui būtų aišku, ką
+            // tamsesni langeliai reiškia. Tos pačios spalvos kaip cellColor() bucket'ai.
+            <div className="flex items-center gap-2.5 text-[10.5px] text-forest-500">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex gap-px">
+                  <span className="w-[5px] h-2.5 rounded-[1px] bg-forest-100" />
+                  <span className="w-[5px] h-2.5 rounded-[1px] bg-forest-300" />
+                  <span className="w-[5px] h-2.5 rounded-[1px] bg-forest-500" />
+                  <span className="w-[5px] h-2.5 rounded-[1px] bg-forest-700" />
+                </span>
+                Laist.
               </span>
-              <span className="inline-flex items-center gap-1">
-                <span className="w-2 h-2 rounded-sm bg-terracotta" />Tręš.
+              <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex gap-px">
+                  <span className="w-[5px] h-2.5 rounded-[1px] bg-terracotta-100" />
+                  <span className="w-[5px] h-2.5 rounded-[1px] bg-terracotta-200" />
+                  <span className="w-[5px] h-2.5 rounded-[1px] bg-terracotta" />
+                  <span className="w-[5px] h-2.5 rounded-[1px] bg-terracotta-600" />
+                </span>
+                Tręš.
               </span>
             </div>
           )}
@@ -121,6 +136,11 @@ export default function CareHeatmapWidget({ data }) {
 
       {!collapsed && (
         <div className="px-4 pb-3.5">
+
+      {/* Scrollable wrapper — jei kada nors weeks count padidės arba widget'as
+          pateks į siauresnį kontekstą, horizontalus scroll'as išgelbės nuo
+          slapto clip'inimo. Šiuo metu 8 savaitės telpa RightPanel'yje (430px). */}
+      <div className="overflow-x-auto scrollbar-none -mx-1 px-1">
 
       {/* Mėnesio žymekliai virš grid'o */}
       <div className="flex pl-7 pb-1 font-mono text-[9px] font-medium text-forest-400 uppercase tracking-[0.18em] relative h-3.5">
@@ -136,7 +156,7 @@ export default function CareHeatmapWidget({ data }) {
       </div>
 
       {/* Grid: kairėj day labels, dešinėj 8 savaičių stulpeliai su divider'iais */}
-      <div className="flex gap-1.5">
+      <div className="flex gap-1.5 w-max">
         {/* Day labels (visi 7 matomi, 2-letter abbr — Pi, An, Tr, Ke, Pe, Še, Se) */}
         <div className="flex flex-col gap-[3px] pt-[1px]">
           {DAY_LABELS.map((label, i) => (
@@ -182,6 +202,8 @@ export default function CareHeatmapWidget({ data }) {
           })}
         </div>
       </div>
+
+      </div>{/* / scrollable wrapper */}
 
       {/* Total summary */}
       <div className="flex items-center justify-between text-[10.5px] text-forest-500 mt-3 pt-2 border-t border-bone-400/60">
