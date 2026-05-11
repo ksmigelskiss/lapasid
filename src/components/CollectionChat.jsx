@@ -270,7 +270,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
             transition={{ type: 'spring', damping: 32, stiffness: 320 }}
           >
             <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Išsaugoti į žinyną</p>
-            <p className="text-[11px] text-gray-500 mb-2">Sutrumpink iki svarbiausios minties</p>
+            <p className="text-[11px] text-gray-500 mb-2">Pirma eilutė taps pavadinimu — sutrumpink iki svarbiausios minties</p>
             <textarea
               className="w-full bg-white border border-gray-200 rounded-2xl px-3 py-2.5 text-sm text-gray-800 outline-none resize-none focus:border-sage-500 transition-colors"
               rows={4}
