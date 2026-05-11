@@ -1208,7 +1208,7 @@ export default function PlantDetail({
   const tree = (
     <div
       className={useDesktopPanel
-        ? "absolute inset-0 bg-app flex flex-col"
+        ? "absolute inset-0 flex flex-col"
         : "fixed inset-0 z-[70] flex items-end justify-center"}
       style={useDesktopPanel ? undefined : { pointerEvents: visible ? '' : 'none' }}
     >
@@ -1223,10 +1223,10 @@ export default function PlantDetail({
         />
       )}
 
-      {/* Sheet */}
+      {/* Sheet — desktop'e glass card (kaip widget'ai), mobile'e solid bone. */}
       <motion.div
         className={useDesktopPanel
-          ? "relative w-full h-full bg-app flex flex-col"
+          ? "relative w-full h-full bg-white/55 backdrop-blur-xl flex flex-col"
           : "relative w-full max-w-[430px] bg-app flex flex-col"}
         style={useDesktopPanel ? { height: '100%' } : { height: '100dvh', y }}
         {...(useDesktopPanel ? {
@@ -1339,7 +1339,7 @@ export default function PlantDetail({
           {plant.image && !heroError ? (
             <button
               onClick={() => setShowPhoto(true)}
-              className="block w-full aspect-[4/3] overflow-hidden bg-bone-300"
+              className="block w-full aspect-[3/2] overflow-hidden bg-bone-300"
               aria-label="Pakeisti nuotrauką"
             >
               <img
@@ -1351,7 +1351,7 @@ export default function PlantDetail({
           ) : (
             <button
               onClick={() => setShowPhoto(true)}
-              className="w-full aspect-[4/3] flex items-center justify-center text-8xl bg-bone-300"
+              className="w-full aspect-[3/2] flex items-center justify-center text-8xl bg-bone-300"
               aria-label="Pridėti nuotrauką"
             >
               {plant.emoji ?? '🌿'}
