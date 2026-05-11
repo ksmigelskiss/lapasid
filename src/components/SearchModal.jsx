@@ -405,7 +405,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       initial={{ x: '100%' }}
       animate={{ x: 0 }}
       exit={{ x: '100%' }}
-      transition={{ type: 'tween', duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+      transition={{ type: 'tween', duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
       style={{ touchAction: 'pan-y' }}
     >
       {/* Header — X close top-right */}
