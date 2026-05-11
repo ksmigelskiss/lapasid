@@ -10,3 +10,4 @@ dist
 
 # Editor
 .DS_Store
+.vercel
