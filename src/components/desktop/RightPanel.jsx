@@ -13,7 +13,7 @@ import ShopWidget from '../widgets/ShopWidget'
  * background image. Widget'ai sklendžia virš jo — jie permatomi (frosted
  * glass) tad brand'as „prasimato" pro juos.
  */
-export default function RightPanel({ plantsForChart = [], onAddToWishlist, onBuy }) {
+export default function RightPanel({ plantsForChart = [] }) {
   const host = useDetailHost()
   const isActive = host?.isActive ?? false
   const weather = useWeather()
@@ -53,7 +53,7 @@ export default function RightPanel({ plantsForChart = [], onAddToWishlist, onBuy
           <WeatherWidget weather={weather} />
           <div className="flex-1" />
           <CareHeatmapWidget data={heatmapData} />
-          <ShopWidget onAddToWishlist={onAddToWishlist} onBuy={onBuy} />
+          <ShopWidget />
         </div>
       </>
 

@@ -64,11 +64,12 @@ const LOCAL_OFFERS = [
 ]
 
 // Single compact offer card — naudojamas 2-grid'e ShopWidget'e.
-function OfferCard({ offer, onAddToWishlist, onBuy }) {
-  const handleBuy = () => {
-    if (onBuy) onBuy(offer)
-    else window.open(offer.shopUrl, '_blank', 'noopener')
-  }
+//
+// Mygtukai („Noriu" / „Pirkti") yra PURE MOCKUP — paspaudus reaguoja tik
+// vizualiai (active:scale + hover bg), bet nieko nepriduria į biblioteką
+// ir niekur neveda. Vėliau (kai bus realus partner integration), reikės
+// pridėti onClick handler'ius su tinkamu data flow'u.
+function OfferCard({ offer }) {
   return (
     <div className="bg-white/70 backdrop-blur rounded-xl overflow-hidden border border-white/40 flex flex-col">
       {/* Photo strip */}
@@ -90,21 +91,19 @@ function OfferCard({ offer, onAddToWishlist, onBuy }) {
           <span className="text-[9px] text-gray-400 truncate max-w-[80px]">{offer.supplier}</span>
         </div>
 
-        {/* Action buttons */}
+        {/* Mockup mygtukai — animuojasi, bet nieko nedaro */}
         <div className="flex gap-1 mt-2">
-          {onAddToWishlist && (
-            <button
-              onClick={() => onAddToWishlist(offer)}
-              className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors text-[10.5px] font-semibold"
-              title="Į biblioteką (norų sąrašą)"
-            >
-              <Heart size={11} />Noriu
-            </button>
-          )}
           <button
-            onClick={handleBuy}
-            className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1.5 rounded-lg bg-sage-500 text-white hover:bg-sage-600 transition-colors text-[10.5px] font-semibold"
-            title="Pirkti pas tiekėją"
+            type="button"
+            className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 active:scale-[0.97] transition-all text-[10.5px] font-semibold"
+            title="(Demo) Į biblioteką"
+          >
+            <Heart size={11} />Noriu
+          </button>
+          <button
+            type="button"
+            className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1.5 rounded-lg bg-sage-500 text-white hover:bg-sage-600 active:scale-[0.97] transition-all text-[10.5px] font-semibold"
+            title="(Demo) Pirkti pas tiekėją"
           >
             <ShoppingBag size={11} />Pirkti
           </button>
@@ -114,7 +113,7 @@ function OfferCard({ offer, onAddToWishlist, onBuy }) {
   )
 }
 
-export default function ShopWidget({ onAddToWishlist, onBuy }) {
+export default function ShopWidget() {
   const [collapsed, toggle] = useCollapsible('shop', false)
   const [idx, setIdx] = useState(0)
   const a = LOCAL_OFFERS[idx % LOCAL_OFFERS.length]
@@ -154,8 +153,8 @@ export default function ShopWidget({ onAddToWishlist, onBuy }) {
       {/* 2-grid — slepiamas kai collapsed */}
       {!collapsed && (
         <div className="grid grid-cols-2 gap-2 px-3 pb-3">
-          <OfferCard offer={a} onAddToWishlist={onAddToWishlist} onBuy={onBuy} />
-          <OfferCard offer={b} onAddToWishlist={onAddToWishlist} onBuy={onBuy} />
+          <OfferCard offer={a} />
+          <OfferCard offer={b} />
         </div>
       )}
     </div>

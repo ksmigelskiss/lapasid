@@ -413,17 +413,6 @@ export default function App() {
         <DesktopLayout
           header={desktopHeader}
           plantsForChart={library}
-          onAddToWishlist={(offer) => {
-            // Mock offer iš ShopWidget — sukuriam paprastą Plant objektą wishlist'ui.
-            // Realiai vėliau galėtų atidaryt SearchModal preset'intą su offer'io
-            // pavadinimu (kad gauti pilną AI info), bet pradžiai — paprastas add.
-            addToWishlist({
-              lietuviškas: offer.name,
-              lotyniskas:  offer.latin,
-              emoji:       offer.emoji,
-            })
-            setTabAndMount('biblioteka')
-          }}
         >{tabsArea}</DesktopLayout>
       ) : (
         <div className="flex flex-col h-dvh overflow-hidden">
