@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Bell, Search } from 'lucide-react'
+import { Search, Droplets, FlaskConical } from 'lucide-react'
 import { CareSummaryList } from '../CareOverview'
 import T4Icon from '../brand/T4Icon'
 import T4Word from '../brand/T4Word'
@@ -33,7 +33,8 @@ import T4Word from '../brand/T4Word'
 export default function DesktopHeader({
   active, onTabChange, counts = {},
   user, onProfileClick, role = 'owner',
-  careNotificationCount = 0, carePopupPlants = [], onCareTap,
+  careNotificationCount = 0, careWaterCount = 0, careFertCount = 0,
+  carePopupPlants = [], onCareTap,
   onSearchClick,
 }) {
   // Bell popup state — atidaroma su pranešimų count
@@ -64,7 +65,7 @@ export default function DesktopHeader({
     .split(/[\s@]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase()
 
   return (
-    <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-bone/85 backdrop-blur-xl border-b border-bone-400/40 z-30 relative">
+    <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-bone/85 backdrop-blur-xl z-30 relative">
       {/* Brand — T4Icon inverted ("antspaudas": bone mark on forest square) + wordmark */}
       <div className="flex items-center gap-2.5 flex-shrink-0">
         <T4Icon size={32} ink="#f1ebdd" paper="#1c3a2a" />
@@ -110,32 +111,40 @@ export default function DesktopHeader({
             <span className="text-sm font-medium">Ieškoti</span>
           </button>
         )}
-        {/* Notifications bell */}
-        <div className="relative" ref={carePopupRef}>
+        {/* Care notifications — du pill'ai vietoj bell (water forest, fert terracotta).
+            Vienodas onClick atidaro popup'ą su visu santrauku. */}
+        <div className="relative flex items-center gap-1.5" ref={carePopupRef}>
           <button
             onClick={() => setShowCarePopup(v => !v)}
-            className={`w-9 h-9 rounded-lg inline-flex items-center justify-center transition-colors ${
-              showCarePopup ? 'bg-sage-100 text-sage-700' : 'hover:bg-gray-900/[0.05] text-gray-600'
+            className={`inline-flex items-center gap-1 h-7 px-2 rounded-full transition-colors active:scale-95 ${
+              careWaterCount > 0
+                ? (showCarePopup ? 'bg-forest-200 text-forest-800' : 'bg-forest-100 text-forest-700 hover:bg-forest-200')
+                : 'bg-bone-300/60 text-forest-300 hover:bg-bone-300'
             }`}
-            title={careNotificationCount > 0
-              ? `Priežiūros santrauka (${careNotificationCount})`
-              : 'Visi augalai laimingi'}
+            title={careWaterCount > 0 ? `Laistyti: ${careWaterCount}` : 'Laistyti — viskas tvarkoj'}
           >
-            <Bell size={18} />
-            {careNotificationCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none flex items-center justify-center ring-2 ring-white">
-                {careNotificationCount > 99 ? '99+' : careNotificationCount}
-              </span>
-            )}
+            <Droplets size={12} />
+            <span className="text-[11px] font-bold tabular-nums leading-none">{careWaterCount}</span>
+          </button>
+          <button
+            onClick={() => setShowCarePopup(v => !v)}
+            className={`inline-flex items-center gap-1 h-7 px-2 rounded-full transition-colors active:scale-95 ${
+              careFertCount > 0
+                ? (showCarePopup ? 'bg-terracotta-200 text-terracotta-600' : 'bg-terracotta-100 text-terracotta-600 hover:bg-terracotta-200')
+                : 'bg-bone-300/60 text-forest-300 hover:bg-bone-300'
+            }`}
+            title={careFertCount > 0 ? `Tręšti: ${careFertCount}` : 'Tręšti — viskas tvarkoj'}
+          >
+            <FlaskConical size={12} />
+            <span className="text-[11px] font-bold tabular-nums leading-none">{careFertCount}</span>
           </button>
 
           {/* Popup */}
           {showCarePopup && (
-            <div className="absolute top-full right-0 mt-2 w-[360px] max-h-[70vh] overflow-y-auto bg-white rounded-2xl shadow-[0_12px_32px_rgba(20,40,30,0.18)] border border-gray-100 z-50 p-3">
-              <div className="flex items-center gap-2 px-1 pb-2 mb-1 border-b border-gray-100">
-                <Bell size={14} className="text-sage-600" />
-                <p className="text-sm font-bold text-gray-800 flex-1">Priežiūros santrauka</p>
-                <span className="text-[11px] font-semibold text-gray-400">{careNotificationCount}</span>
+            <div className="absolute top-full right-0 mt-2 w-[360px] max-h-[70vh] overflow-y-auto bg-bone rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/60 z-50 p-3">
+              <div className="flex items-center gap-2 px-1 pb-2 mb-1 border-b border-bone-400/40">
+                <p className="font-display text-sm font-bold text-forest-700 flex-1 tracking-tight">Priežiūros santrauka</p>
+                <span className="font-mono text-[10px] font-medium text-forest-400 uppercase tracking-[0.18em]">{careNotificationCount}</span>
               </div>
               {careNotificationCount > 0 ? (
                 <CareSummaryList
@@ -143,7 +152,7 @@ export default function DesktopHeader({
                   onTap={(plant, list) => { onCareTap?.(plant, list); setShowCarePopup(false) }}
                 />
               ) : (
-                <p className="text-center text-sm text-gray-500 py-6">Visi augalai laimingi 🌿</p>
+                <p className="text-center text-sm text-forest-500 py-6">Visi augalai laimingi 🌿</p>
               )}
             </div>
           )}

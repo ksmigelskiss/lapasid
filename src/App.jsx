@@ -278,7 +278,10 @@ export default function App() {
     () => dashboard.filter(p => p.status !== 'quarantine'),
     [dashboard]
   )
-  const careNotificationCount = useCareLists(carePopupPlants).total
+  const careLists = useCareLists(carePopupPlants)
+  const careNotificationCount = careLists.total
+  const careWaterCount = careLists.wateringList.length
+  const careFertCount  = careLists.fertList.length
 
   // Replace pattern desktop'e: bet kuris top-level modal'as uždaro kitus,
   // kad panel'ėje vienu metu būtų tik VIENAS view'as.
@@ -421,6 +424,8 @@ export default function App() {
       }}
       role={role}
       careNotificationCount={careNotificationCount}
+      careWaterCount={careWaterCount}
+      careFertCount={careFertCount}
       carePopupPlants={carePopupPlants}
       onCareTap={handleCarePopupTap}
       onSearchClick={() => {
