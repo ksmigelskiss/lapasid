@@ -23,7 +23,7 @@ export default function RightPanel({ plantsForChart = [] }) {
   const heatmapData = aggregateCareGrid(plantsForChart, 8)
 
   return (
-    <aside className="w-[430px] flex-shrink-0 border-l border-gray-200 bg-app-warm relative overflow-hidden flex flex-col">
+    <aside className="w-[430px] flex-shrink-0 border-l border-gray-200 bg-bone relative overflow-hidden flex flex-col">
       {/* Background layer — VISADA renderintas, neslepiamas, kai atsidaro modal'as.
           Modal'as portal'inasi į absolute z-20 target'ą virš jo, tad slide-in
           animacija užvažiuoja ant widgetų, ne juos pakeičia. */}
