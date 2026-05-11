@@ -52,11 +52,13 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
         </div>
 
         <div className="text-center pt-2">
-          <div className="text-4xl mb-2">{plant.emoji ?? '🌿'}</div>
+          <p className="font-mono text-[10px] font-medium text-terracotta-600 uppercase tracking-[0.18em] mb-1.5">
+            Numirė
+          </p>
           <h2 className="font-display text-lg font-semibold tracking-tight text-forest-800">
-            {plant.lietuviškas ?? plant.name} numirė
+            {plant.lietuviškas ?? plant.name}
           </h2>
-          <p className="text-sm text-forest-500 mt-1">Užfiksuokite priežastį ir pamoką ateičiai</p>
+          <p className="text-sm text-forest-500 mt-1.5">Užfiksuokite priežastį ir pamoką ateičiai</p>
         </div>
 
         <div className="space-y-3">

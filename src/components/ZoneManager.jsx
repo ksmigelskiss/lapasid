@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { X, ChevronUp, ChevronDown, ChevronLeft, Trash2, Plus, Settings } from 'lucide-react'
+import { X, ChevronUp, ChevronDown, ChevronLeft, Trash2, Plus, Settings, Check } from 'lucide-react'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
 
@@ -177,71 +177,82 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
       )}
       <motion.div
         className={useDesktopPanel
-          ? "relative w-full h-full bg-white/55 backdrop-blur-xl px-4 pt-3 pb-6 overflow-y-auto"
-          : "relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-4 pt-3 pb-10 border-t border-bone-400/40"}
+          ? "relative w-full h-full bg-bone-50 border-l border-bone-400/40 shadow-[-8px_0_24px_rgba(28,58,42,0.10)] px-5 pt-4 pb-6 overflow-y-auto"
+          : "relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-5 pt-3 pb-10 border-t border-bone-400/40"}
         {...(useDesktopPanel
           ? { initial: { x: '100%' }, animate: { x: 0 }, exit: { x: '100%' } }
           : { initial: { y: '100%' }, animate: { y: 0 }, exit: { y: '100%' } })}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}
       >
-        {/* Mobile — drag handle pill; desktop — back button */}
+        {/* Header: mobile drag handle, desktop back button */}
         {useDesktopPanel ? (
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-5">
             <button
               onClick={onClose}
-              className="inline-flex items-center gap-1 px-2 py-1 -ml-1 rounded-lg text-forest-700 hover:bg-bone-300/40 transition-colors"
+              className="inline-flex items-center gap-1.5 px-2 py-1.5 -ml-2 rounded-lg text-forest-700 hover:bg-bone-300/50 transition-colors"
             >
               <ChevronLeft size={16} />
-              <span className="text-sm font-medium">Atgal</span>
+              <span className="font-display text-sm font-semibold tracking-tight">Atgal</span>
             </button>
             <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em]">
               Pasirinkti zoną
             </p>
-            <span className="w-[64px]" />
+            <span className="w-[72px]" />
           </div>
         ) : (
           <>
             <div className="flex justify-center pb-3">
               <div className="w-10 h-1 bg-bone-400/60 rounded-full" />
             </div>
-            <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] text-center mb-3">
+            <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] text-center mb-4">
               Pasirinkti zoną
             </p>
           </>
         )}
-        <div className="space-y-2">
+
+        {/* Zone list */}
+        <div className="space-y-1.5">
           <button
             onClick={() => { onSelect(null); onClose() }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-colors ${
-              !currentZoneId ? 'bg-forest-100 text-forest-700' : 'bg-bone-300/60 text-forest-500'
+            className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-colors ${
+              !currentZoneId
+                ? 'bg-forest-100 text-forest-700'
+                : 'hover:bg-bone-300/50 text-forest-500'
             }`}
           >
-            <span className="font-display text-sm font-semibold tracking-tight">Nepriskirta</span>
-            {!currentZoneId && <span className="ml-auto text-forest-700 text-xs font-bold">✓</span>}
+            <span className="font-display text-sm font-semibold tracking-tight flex-1 text-left">Nepriskirta</span>
+            {!currentZoneId && <Check size={14} className="text-forest-700" />}
           </button>
           {zones.map(zone => (
             <button
               key={zone.id}
               onClick={() => { onSelect(zone.id); onClose() }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-colors ${
-                currentZoneId === zone.id ? 'bg-forest-100 text-forest-700' : 'bg-bone-300/60 text-forest-600 hover:bg-bone-400/40'
+              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-colors ${
+                currentZoneId === zone.id
+                  ? 'bg-forest-100 text-forest-700'
+                  : 'hover:bg-bone-300/50 text-forest-700'
               }`}
             >
               <span className="font-display text-sm font-semibold tracking-tight flex-1 text-left">{zone.name}</span>
-              {currentZoneId === zone.id && <span className="text-forest-700 text-xs font-bold">✓</span>}
+              {currentZoneId === zone.id && <Check size={14} className="text-forest-700" />}
             </button>
           ))}
-          {canManage && (
+        </div>
+
+        {/* Tvarkyti zonas — atskirtas hairline'u */}
+        {canManage && (
+          <>
+            <div className="h-px bg-bone-400/40 my-4" />
             <button
               onClick={() => setShowManager(true)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-btn font-display text-sm font-semibold text-forest-700 border border-bone-400/50 hover:bg-bone-300/40 transition-colors mt-2"
+              className="w-full flex items-center justify-center gap-2 h-11 rounded-btn font-display text-sm font-semibold text-forest-700 border border-bone-400/50 hover:bg-bone-300/40 transition-colors"
             >
               <Settings size={14} />
               Tvarkyti zonas
             </button>
-          )}
-        </div>
+          </>
+        )}
       </motion.div>
 
       <AnimatePresence>
