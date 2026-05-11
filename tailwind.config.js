@@ -53,6 +53,41 @@ export default {
           900: '#0d2e1f',
         },
 
+        // ── LapasID Brandbook (v1.0 · 2026) ─────────────
+        // T4 logo + Forest/Bone/Terracotta paletė. Greta sage scale'o
+        // (kuris liks transition periodu), gradually migruojam vizualius
+        // elementus į brand tokens'us.
+        forest: {
+          50:  '#e8efe9',
+          100: '#c7d6c9',
+          200: '#9bb7a0',
+          300: '#6e9778',
+          400: '#456d52',
+          500: '#2e5238',
+          600: '#264530',
+          700: '#1c3a2a',  // INK — pagrindinė brand spalva
+          800: '#142b1f',
+          900: '#0c1c14',
+        },
+        bone: {
+          DEFAULT: '#f1ebdd',  // PAPER — pagrindinis warm cream'as
+          50:      '#faf6ec',
+          100:     '#f4eedf',
+          200:     '#f1ebdd',  // = DEFAULT
+          300:     '#e7e0cf',  // browser chrome'ui ir kt
+          400:     '#d8cfb8',
+        },
+        terracotta: {
+          DEFAULT: '#b86a3a',  // ACCENT — sparingly, callouts only
+          50:      '#f8ece2',
+          100:     '#efd2bb',
+          200:     '#dba887',
+          300:     '#c88456',
+          400:     '#b86a3a',  // = DEFAULT
+          500:     '#9a5328',
+          600:     '#7c411f',
+        },
+
         // ── Warm accent (kept for timeline/badges) ─────
         caramel: {
           50:  '#fefae0',
