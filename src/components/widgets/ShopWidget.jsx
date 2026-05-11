@@ -1,6 +1,37 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ChevronRight, Sparkles, Heart, ShoppingBag, ChevronDown } from 'lucide-react'
 import { useCollapsible } from '../../hooks/useCollapsible'
+import { fetchBestPhoto } from '../../utils/imageService'
+
+// Modulinis cache — offer'iai pasikartoja per idx rotaciją, fetch'iname
+// kiekvienai latin name vienąkart per sesiją.
+const photoCache = new Map()  // latin -> string | Promise<string|null>
+
+function useOfferPhoto(latin) {
+  const [url, setUrl] = useState(() => {
+    const cached = photoCache.get(latin)
+    return typeof cached === 'string' ? cached : null
+  })
+
+  useEffect(() => {
+    if (!latin || url) return
+    let cached = photoCache.get(latin)
+    if (typeof cached === 'string') { setUrl(cached); return }
+    if (!cached) {
+      cached = fetchBestPhoto(latin).then(u => {
+        if (u) photoCache.set(latin, u)
+        else photoCache.delete(latin)  // leidžiam retry kitą sesiją
+        return u
+      })
+      photoCache.set(latin, cached)
+    }
+    let cancelled = false
+    cached.then(u => { if (!cancelled && u) setUrl(u) })
+    return () => { cancelled = true }
+  }, [latin, url])
+
+  return url
+}
 
 /**
  * ShopWidget — demo „pasiūlymas iš tiekėjo" kortelė. Rodo augalų pasiūlymus,
@@ -70,16 +101,29 @@ const LOCAL_OFFERS = [
 // ir niekur neveda. Vėliau (kai bus realus partner integration), reikės
 // pridėti onClick handler'ius su tinkamu data flow'u.
 function OfferCard({ offer }) {
+  const photo = useOfferPhoto(offer.latin)
   return (
     <div className="bg-white/70 backdrop-blur rounded-xl overflow-hidden border border-white/40 flex flex-col">
-      {/* Photo strip */}
-      <div className="relative h-16" style={{ background: offer.bgGradient }}>
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 8px, rgba(0,0,0,0.04) 8px, rgba(0,0,0,0.04) 16px)',
-        }} />
-        <div className="absolute inset-0 flex items-center justify-center text-3xl mix-blend-luminosity opacity-90">
-          {offer.emoji}
-        </div>
+      {/* Photo strip — dynamic real photo (iNaturalist/Wikipedia per fetchBestPhoto)
+          su gradient + emoji placeholder, kol nuotrauka užkraunama. */}
+      <div className="relative h-20" style={{ background: offer.bgGradient }}>
+        {photo ? (
+          <img
+            src={photo}
+            alt={offer.name}
+            loading="lazy"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <>
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 8px, rgba(0,0,0,0.04) 8px, rgba(0,0,0,0.04) 16px)',
+            }} />
+            <div className="absolute inset-0 flex items-center justify-center text-3xl mix-blend-luminosity opacity-90">
+              {offer.emoji}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Body */}
@@ -134,7 +178,7 @@ export default function ShopWidget() {
       >
         <p className="inline-flex items-center gap-1.5 text-[11px] font-bold text-gray-500 uppercase tracking-wider">
           <Sparkles size={12} className="text-amber-500" />
-          Pasiūlymai
+          Parduotuvių naujienos
         </p>
         <div className="inline-flex items-center gap-2.5">
           {!collapsed && (
