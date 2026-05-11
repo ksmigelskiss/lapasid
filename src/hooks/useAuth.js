@@ -265,19 +265,29 @@ export function useAuth() {
     if (viewerToken) {
       localStorage.setItem('viewer-token', viewerToken) // cache refresh'ams be URL
 
-      getDoc(doc(db, 'invites', viewerToken)).then(snap => {
-        if (!snap.exists() || snap.data().active === false ||
-            (snap.data().expiresAt && new Date(snap.data().expiresAt) < new Date())) {
+      // Token validacija per /api/viewer (Admin SDK), nes Firestore rules
+      // reikalauja request.auth != null, o viewer'is NĖRA Firebase auth'intas.
+      // Endpoint'as grąžina { colId } jeigu token aktyvus + neexpired,
+      // arba 4xx/5xx status'ą jei revoked/expired/invalid.
+      fetch(`/api/viewer?token=${encodeURIComponent(viewerToken)}`)
+        .then(r => r.ok ? r.json() : Promise.reject(r.status))
+        .then(({ colId }) => {
+          if (!colId) {
+            localStorage.removeItem('viewer-token')
+            setState(s => ({ ...s, loading: false }))
+            return
+          }
+          setState({
+            user: null, collectionId: colId, role: 'viewer',
+            ownCollectionId: null, allCollections: [], loading: false,
+            authError: null, loadingMessage: null, viewerToken,
+          })
+        })
+        .catch(e => {
+          console.warn('[viewer] token validation failed:', e)
           localStorage.removeItem('viewer-token')
           setState(s => ({ ...s, loading: false }))
-          return
-        }
-        setState({
-          user: null, collectionId: snap.data().colId, role: 'viewer',
-          ownCollectionId: null, allCollections: [], loading: false,
-          authError: null, loadingMessage: null, viewerToken,
         })
-      }).catch(() => setState(s => ({ ...s, loading: false })))
 
       return // Skip Firebase auth entirely for viewers
     }
