@@ -6,7 +6,7 @@ const PLANS = [
   {
     name: 'Nemokamas',
     price: '€0',
-    color: 'bg-gray-50 border-gray-200',
+    color: 'bg-bone-300/40 border-bone-400/50',
     badge: null,
     features: [
       { icon: Search,         label: `${FREE_LIMITS.searches} AI paieška` },
@@ -16,7 +16,7 @@ const PLANS = [
   {
     name: 'Starter',
     price: '€2 / mėn',
-    color: 'bg-brand/5 border-brand/30',
+    color: 'bg-forest-50 border-forest-200/60',
     badge: 'Netrukus',
     features: [
       { icon: Search,         label: '20 paieškų / mėn' },
@@ -26,7 +26,7 @@ const PLANS = [
   {
     name: 'Pro',
     price: '€5 / mėn',
-    color: 'bg-brand/10 border-brand/40',
+    color: 'bg-forest-100 border-forest-300/60',
     badge: 'Netrukus',
     features: [
       { icon: Search,         label: 'Neribota paieška' },
@@ -54,30 +54,30 @@ export default function PaywallSheet({ open, limitType, onClose }) {
             onClick={onClose}
           />
           <motion.div
-            className="fixed bottom-0 inset-x-0 z-50 bg-white rounded-t-3xl px-5 pt-5 pb-10 max-h-[85dvh] overflow-y-auto"
+            className="fixed bottom-0 inset-x-0 z-50 bg-bone-50 rounded-t-3xl px-5 pt-5 pb-10 max-h-[85dvh] overflow-y-auto border-t border-bone-400/40"
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
           >
             {/* Handle */}
-            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
+            <div className="w-10 h-1 bg-bone-400/60 rounded-full mx-auto mb-4" />
 
             {/* Header */}
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-2xl bg-brand/10 flex items-center justify-center">
-                  <Sparkles size={18} className="text-brand" />
+            <div className="flex items-start justify-between mb-5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-2xl bg-forest-100 flex items-center justify-center">
+                  <Sparkles size={18} className="text-forest-700" />
                 </div>
                 <div>
-                  <h2 className="text-base font-bold text-gray-900">Pasiektas limitas</h2>
-                  <p className="text-xs text-gray-500">
-                    {LIMIT_LABELS[limitType] ?? 'AI funkcija'} — nemokamas planas
+                  <h2 className="font-display text-base font-semibold tracking-tight text-forest-800">Pasiektas limitas</h2>
+                  <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] mt-0.5">
+                    {LIMIT_LABELS[limitType] ?? 'AI funkcija'} · nemokamas planas
                   </p>
                 </div>
               </div>
-              <button onClick={onClose} className="p-1.5 rounded-xl active:bg-gray-100">
-                <X size={18} className="text-gray-500" />
+              <button onClick={onClose} className="w-9 h-9 flex items-center justify-center rounded-btn bg-bone-300/60 hover:bg-bone-400/60 text-forest-700 transition-colors">
+                <X size={16} />
               </button>
             </div>
 
@@ -89,20 +89,20 @@ export default function PaywallSheet({ open, limitType, onClose }) {
                   className={`rounded-2xl border p-4 ${plan.color}`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-semibold text-gray-900">{plan.name}</span>
+                    <span className="font-display text-sm font-semibold tracking-tight text-forest-800">{plan.name}</span>
                     <div className="flex items-center gap-2">
                       {plan.badge && (
-                        <span className="text-[10px] font-medium text-brand bg-brand/10 px-2 py-0.5 rounded-full">
+                        <span className="font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-forest-700 bg-bone-50 border border-forest-200/50 px-2 py-0.5 rounded-full">
                           {plan.badge}
                         </span>
                       )}
-                      <span className="text-sm font-bold text-gray-700">{plan.price}</span>
+                      <span className="text-sm font-bold text-forest-700 tabular-nums">{plan.price}</span>
                     </div>
                   </div>
                   <div className="space-y-1">
                     {plan.features.map(({ icon: Icon, label }) => (
-                      <div key={label} className="flex items-center gap-1.5 text-xs text-gray-600">
-                        <Icon size={12} className="text-gray-400 shrink-0" />
+                      <div key={label} className="flex items-center gap-1.5 text-xs text-forest-600">
+                        <Icon size={12} className="text-forest-400 shrink-0" />
                         {label}
                       </div>
                     ))}
@@ -114,11 +114,11 @@ export default function PaywallSheet({ open, limitType, onClose }) {
             {/* CTA */}
             <a
               href="mailto:kestutis@okone.lt?subject=LapasID prenumerata"
-              className="block w-full py-3.5 bg-brand text-white text-sm font-semibold text-center rounded-2xl"
+              className="block w-full h-12 leading-[3rem] bg-forest-700 hover:bg-forest-800 text-bone text-sm font-display font-semibold text-center rounded-btn transition-colors"
             >
               Susisiekti dėl prenumeratos
             </a>
-            <p className="text-xs text-gray-400 text-center mt-3">
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-forest-400 text-center mt-3">
               Mokėjimai bus pridėti netrukus
             </p>
           </motion.div>

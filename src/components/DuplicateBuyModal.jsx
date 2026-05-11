@@ -10,40 +10,40 @@ export default function DuplicateBuyModal({ plant, onAddAnother, onViewExisting,
         onPointerDown={onClose}
       />
       <motion.div
-        className="relative w-full max-w-[430px] bg-white rounded-t-3xl px-5 pt-4 pb-8 safe-bottom"
+        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-3xl px-5 pt-4 pb-8 safe-bottom border-t border-bone-400/40"
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}
       >
         <div className="flex justify-center mb-4">
-          <div className="w-10 h-1 bg-gray-200 rounded-full" />
+          <div className="w-10 h-1 bg-bone-400/60 rounded-full" />
         </div>
 
         <div className="flex justify-center mb-3">
           <span className="text-4xl">{plant.emoji ?? '🌿'}</span>
         </div>
-        <h3 className="text-base font-bold text-gray-900 text-center mb-1">Jau augini šį augalą</h3>
-        <p className="text-sm text-gray-500 text-center mb-6">
-          <span className="font-medium">{plant.lietuviškas ?? plant.lotyniskas}</span> jau yra kolekcijoje.
+        <h3 className="font-display text-base font-semibold tracking-tight text-forest-800 text-center mb-1">Jau augini šį augalą</h3>
+        <p className="text-sm text-forest-500 text-center mb-6">
+          <span className="font-medium text-forest-700">{plant.lietuviškas ?? plant.lotyniskas}</span> jau yra kolekcijoje.
           Pridėti antrą egzempliorių?
         </p>
 
         <div className="space-y-2">
           <button
             onClick={onAddAnother}
-            className="w-full py-3.5 rounded-2xl text-sm font-semibold text-white bg-sage-500 active:bg-sage-600 transition-colors"
+            className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
           >
             Pridėti dar vieną
           </button>
           <button
             onClick={onViewExisting}
-            className="w-full py-3.5 rounded-2xl text-sm font-semibold text-gray-700 bg-surface active:bg-surface-2 transition-colors"
+            className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-700 bg-bone-300/60 hover:bg-bone-400/50 transition-colors"
           >
             Peržiūrėti esamą
           </button>
           <button
             onClick={onClose}
-            className="w-full py-3.5 rounded-2xl text-sm font-medium text-gray-400 bg-surface-2"
+            className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-500 bg-transparent hover:bg-bone-300/30 transition-colors"
           >
             Atšaukti
           </button>

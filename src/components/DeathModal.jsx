@@ -29,7 +29,7 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
       />
 
       <motion.div
-        className="relative w-full max-w-[430px] bg-app rounded-t-4xl px-5 py-6 space-y-5"
+        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-5 py-6 space-y-5 border-t border-bone-400/40"
         style={{ y }}
         drag="y"
         dragControls={dragControls}
@@ -48,24 +48,24 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
           className="absolute top-0 left-0 right-0 flex justify-center pt-2.5 pb-2 cursor-grab active:cursor-grabbing select-none"
           style={{ touchAction: 'none' }}
         >
-          <div className="w-10 h-1 bg-gray-200 rounded-full" />
+          <div className="w-10 h-1 bg-bone-400/60 rounded-full" />
         </div>
 
         <div className="text-center pt-2">
           <div className="text-4xl mb-2">{plant.emoji ?? '🌿'}</div>
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="font-display text-lg font-semibold tracking-tight text-forest-800">
             {plant.lietuviškas ?? plant.name} numirė
           </h2>
-          <p className="text-sm text-gray-500 mt-1">Užfiksuokite priežastį ir pamoką ateičiai</p>
+          <p className="text-sm text-forest-500 mt-1">Užfiksuokite priežastį ir pamoką ateičiai</p>
         </div>
 
         <div className="space-y-3">
           <div>
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-              <Ghost size={13} /> Kodėl numirė?
+            <label className="font-mono text-[10px] font-medium text-terracotta-600 uppercase tracking-[0.16em] mb-1.5 flex items-center gap-1.5">
+              <Ghost size={12} /> Kodėl numirė?
             </label>
             <textarea
-              className="w-full bg-surface rounded-2xl px-4 py-3 text-sm text-gray-800 placeholder-gray-400 outline-none resize-none border border-transparent focus:border-red-200 transition-colors"
+              className="w-full bg-bone-50 rounded-2xl px-4 py-3 text-sm text-forest-700 placeholder-forest-400 outline-none resize-none border border-bone-400/40 focus:border-terracotta/40 transition-colors"
               rows={2}
               placeholder="Pvz. Perlaisčiau, sušalo šaknys..."
               value={reason}
@@ -74,11 +74,11 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
             />
           </div>
           <div>
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1.5 flex items-center gap-1.5">
-              <Lightbulb size={13} /> Pamoka ateičiai
+            <label className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] mb-1.5 flex items-center gap-1.5">
+              <Lightbulb size={12} /> Pamoka ateičiai
             </label>
             <textarea
-              className="w-full bg-surface rounded-2xl px-4 py-3 text-sm text-gray-800 placeholder-gray-400 outline-none resize-none border border-transparent focus:border-amber-200 transition-colors"
+              className="w-full bg-bone-50 rounded-2xl px-4 py-3 text-sm text-forest-700 placeholder-forest-400 outline-none resize-none border border-bone-400/40 focus:border-forest-400/50 transition-colors"
               rows={2}
               placeholder="Pvz. Žiemą laistyti rečiau..."
               value={lesson}
@@ -90,13 +90,13 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 py-3.5 rounded-2xl text-sm font-medium text-gray-600 bg-surface-2"
+            className="flex-1 h-12 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300/60 hover:bg-bone-400/50 transition-colors"
           >
             Atšaukti
           </button>
           <button
             onClick={() => onConfirm(reason, lesson)}
-            className="flex-1 py-3.5 rounded-2xl text-sm font-medium text-white bg-red-400 hover:bg-red-500 transition-colors"
+            className="flex-1 h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-800 hover:bg-forest-900 transition-colors"
           >
             Patvirtinti
           </button>

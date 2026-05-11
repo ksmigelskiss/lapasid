@@ -14,7 +14,7 @@ function ZoneForm({ initial, onSave, onCancel, submitLabel = 'Išsaugoti' }) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">
+        <label className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] block mb-1.5">
           Zonos pavadinimas
         </label>
         <input
@@ -23,15 +23,15 @@ function ZoneForm({ initial, onSave, onCancel, submitLabel = 'Išsaugoti' }) {
           value={name}
           onChange={e => setName(e.target.value)}
           autoFocus
-          className="w-full bg-surface rounded-2xl px-4 py-3 text-sm outline-none border border-transparent focus:border-sage-300 transition-colors"
+          className="w-full bg-bone-50 rounded-2xl px-4 py-3 text-sm text-forest-700 placeholder-forest-400 outline-none border border-bone-400/40 focus:border-forest-400/60 transition-colors"
         />
       </div>
       <div className="flex gap-2 pt-1">
-        <button onClick={onCancel} className="flex-1 py-3 rounded-2xl text-sm text-gray-500 bg-surface-2">
+        <button onClick={onCancel} className="flex-1 h-11 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300/60 hover:bg-bone-400/50 transition-colors">
           Atšaukti
         </button>
         <button onClick={() => valid && onSave({ name: name.trim() })} disabled={!valid}
-          className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white bg-sage-500 disabled:opacity-40">
+          className="flex-1 h-11 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 disabled:opacity-40 transition-colors">
           {submitLabel}
         </button>
       </div>
@@ -53,19 +53,19 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
         transition={{ duration: 0.2 }} onPointerDown={onClose}
       />
       <motion.div
-        className="relative w-full max-w-[430px] bg-white rounded-t-4xl px-4 pt-3 pb-10 max-h-[85dvh] overflow-y-auto"
+        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-4 pt-3 pb-10 max-h-[85dvh] overflow-y-auto border-t border-bone-400/40"
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}
       >
         <div className="flex justify-center pb-3">
-          <div className="w-10 h-1 bg-gray-200 rounded-full" />
+          <div className="w-10 h-1 bg-bone-400/60 rounded-full" />
         </div>
 
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold text-gray-900">Zonos</h2>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center text-gray-400">
-            <X size={18} />
+          <h2 className="font-display text-base font-semibold tracking-tight text-forest-800">Zonos</h2>
+          <button onClick={onClose} className="w-9 h-9 flex items-center justify-center rounded-btn bg-bone-300/60 hover:bg-bone-400/60 text-forest-700 transition-colors">
+            <X size={16} />
           </button>
         </div>
 
@@ -74,7 +74,7 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
             const plantCount = plants.filter(p => p.zonaId === zone.id).length
 
             return editingId === zone.id ? (
-              <div key={zone.id} className="bg-surface rounded-2xl p-4">
+              <div key={zone.id} className="bg-bone-300/40 border border-bone-400/40 rounded-2xl p-4">
                 <ZoneForm
                   initial={zone}
                   onSave={data => { onUpdate(zone.id, data); setEditingId(null) }}
@@ -83,25 +83,25 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
                 />
               </div>
             ) : (
-              <div key={zone.id} className="bg-surface rounded-2xl px-4 py-3 flex items-center gap-3">
+              <div key={zone.id} className="bg-bone-300/40 border border-bone-400/40 rounded-2xl px-4 py-3 flex items-center gap-3">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-800 truncate">{zone.name}</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">{plantCount} augal{plantCount === 1 ? 'as' : 'ai'}</p>
+                  <p className="font-display text-sm font-semibold tracking-tight text-forest-800 truncate">{zone.name}</p>
+                  <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.14em] mt-0.5">{plantCount} augal{plantCount === 1 ? 'as' : 'ai'}</p>
                 </div>
                 <div className="flex items-center gap-1 flex-shrink-0">
                   <button onClick={() => onReorder(zone.id, 'up')} disabled={i === 0}
-                    className="w-7 h-7 flex items-center justify-center text-gray-400 disabled:opacity-20">
+                    className="w-7 h-7 flex items-center justify-center text-forest-400 disabled:opacity-20 hover:text-forest-700 transition-colors">
                     <ChevronUp size={14} />
                   </button>
                   <button onClick={() => onReorder(zone.id, 'down')} disabled={i === zones.length - 1}
-                    className="w-7 h-7 flex items-center justify-center text-gray-400 disabled:opacity-20">
+                    className="w-7 h-7 flex items-center justify-center text-forest-400 disabled:opacity-20 hover:text-forest-700 transition-colors">
                     <ChevronDown size={14} />
                   </button>
-                  <button onClick={() => setEditingId(zone.id)} className="text-xs text-sage-500 font-medium px-2 py-1">
+                  <button onClick={() => setEditingId(zone.id)} className="font-mono text-[10px] font-medium text-forest-600 uppercase tracking-[0.14em] px-2 py-1 hover:text-forest-800 transition-colors">
                     Keisti
                   </button>
                   <button onClick={() => onDelete(zone.id)}
-                    className="w-7 h-7 flex items-center justify-center text-red-300 active:text-red-500">
+                    className="w-7 h-7 flex items-center justify-center text-terracotta-300 hover:text-terracotta-600 transition-colors">
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -110,13 +110,13 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
           })}
 
           {zones.length === 0 && !creating && (
-            <p className="text-sm text-gray-400 text-center py-4">Dar nėra zonų. Sukurkite pirmą!</p>
+            <p className="text-sm text-forest-400 text-center py-4">Dar nėra zonų. Sukurkite pirmą!</p>
           )}
         </div>
 
         {creating ? (
-          <div className="bg-surface rounded-2xl p-4">
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Nauja zona</p>
+          <div className="bg-bone-300/40 border border-bone-400/40 rounded-2xl p-4">
+            <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] mb-3">Nauja zona</p>
             <ZoneForm
               onSave={data => { onAdd(data); setCreating(false) }}
               onCancel={() => setCreating(false)}
@@ -125,7 +125,7 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
           </div>
         ) : (
           <button onClick={() => setCreating(true)}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl text-sm font-semibold text-sage-600 bg-sage-50 hover:bg-sage-100 transition-colors">
+            className="w-full flex items-center justify-center gap-2 h-11 rounded-btn font-display text-sm font-semibold text-forest-700 border border-bone-400/50 hover:bg-bone-300/40 transition-colors">
             <Plus size={16} />
             Nauja zona
           </button>
@@ -177,25 +177,25 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
       )}
       <motion.div
         className={useDesktopPanel
-          ? "relative w-full h-full bg-white px-4 pt-3 pb-6 overflow-y-auto"
-          : "relative w-full max-w-[430px] bg-white rounded-t-4xl px-4 pt-3 pb-10"}
+          ? "relative w-full h-full bg-white/55 backdrop-blur-xl px-4 pt-3 pb-6 overflow-y-auto"
+          : "relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-4 pt-3 pb-10 border-t border-bone-400/40"}
         {...(useDesktopPanel
           ? { initial: { x: '100%' }, animate: { x: 0 }, exit: { x: '100%' } }
           : { initial: { y: '100%' }, animate: { y: 0 }, exit: { y: '100%' } })}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}
       >
-        {/* Mobile — drag handle pill; desktop — back button (be backdrop'o nebūtų kaip uždaryti) */}
+        {/* Mobile — drag handle pill; desktop — back button */}
         {useDesktopPanel ? (
           <div className="flex items-center justify-between mb-3">
             <button
               onClick={onClose}
-              className="inline-flex items-center gap-1 px-2 py-1 -ml-1 rounded-lg text-sage-700 hover:bg-sage-50 transition-colors"
+              className="inline-flex items-center gap-1 px-2 py-1 -ml-1 rounded-lg text-forest-700 hover:bg-bone-300/40 transition-colors"
             >
               <ChevronLeft size={16} />
               <span className="text-sm font-medium">Atgal</span>
             </button>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em]">
               Pasirinkti zoną
             </p>
             <span className="w-[64px]" />
@@ -203,9 +203,9 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
         ) : (
           <>
             <div className="flex justify-center pb-3">
-              <div className="w-10 h-1 bg-gray-200 rounded-full" />
+              <div className="w-10 h-1 bg-bone-400/60 rounded-full" />
             </div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider text-center mb-3">
+            <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] text-center mb-3">
               Pasirinkti zoną
             </p>
           </>
@@ -214,28 +214,28 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
           <button
             onClick={() => { onSelect(null); onClose() }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-colors ${
-              !currentZoneId ? 'bg-sage-50 text-sage-700' : 'bg-surface-2 text-gray-500'
+              !currentZoneId ? 'bg-forest-100 text-forest-700' : 'bg-bone-300/60 text-forest-500'
             }`}
           >
-            <span className="text-sm font-medium">Nepriskirta</span>
-            {!currentZoneId && <span className="ml-auto text-sage-500 text-xs font-bold">✓</span>}
+            <span className="font-display text-sm font-semibold tracking-tight">Nepriskirta</span>
+            {!currentZoneId && <span className="ml-auto text-forest-700 text-xs font-bold">✓</span>}
           </button>
           {zones.map(zone => (
             <button
               key={zone.id}
               onClick={() => { onSelect(zone.id); onClose() }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-colors ${
-                currentZoneId === zone.id ? 'bg-sage-50 text-sage-700' : 'bg-surface-2 text-gray-600'
+                currentZoneId === zone.id ? 'bg-forest-100 text-forest-700' : 'bg-bone-300/60 text-forest-600 hover:bg-bone-400/40'
               }`}
             >
-              <span className="text-sm font-medium flex-1 text-left">{zone.name}</span>
-              {currentZoneId === zone.id && <span className="text-sage-500 text-xs font-bold">✓</span>}
+              <span className="font-display text-sm font-semibold tracking-tight flex-1 text-left">{zone.name}</span>
+              {currentZoneId === zone.id && <span className="text-forest-700 text-xs font-bold">✓</span>}
             </button>
           ))}
           {canManage && (
             <button
               onClick={() => setShowManager(true)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-sm font-medium text-gray-500 bg-surface hover:bg-surface-2 transition-colors mt-2"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-btn font-display text-sm font-semibold text-forest-700 border border-bone-400/50 hover:bg-bone-300/40 transition-colors mt-2"
             >
               <Settings size={14} />
               Tvarkyti zonas
