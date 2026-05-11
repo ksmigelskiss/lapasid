@@ -11,6 +11,7 @@ import { useAuth } from './hooks/useAuth'
 import { useIsDesktop } from './hooks/useIsDesktop'
 import DesktopLayout from './components/desktop/DesktopLayout'
 import DesktopHeader from './components/desktop/DesktopHeader'
+import MobileHeader from './components/MobileHeader'
 import { DetailHostProvider } from './contexts/DetailHostContext'
 import LoginScreen from './components/LoginScreen'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
@@ -59,7 +60,7 @@ export default function App() {
   const [dashCareMode, setDashCareMode] = useState(false)
   const [dashCareConfidence, setDashCareConfidence] = useState(0)
   const dashboardRef = useRef(null)
-  const [showDesktopProfile, setShowDesktopProfile] = useState(false)
+  const [showProfile, setShowProfile] = useState(false)
   const [showSearch, setShowSearch]   = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState('')
   const [searchAutoCamera, setSearchAutoCamera] = useState(false)
@@ -96,7 +97,7 @@ export default function App() {
     if (isDesktop) {
       setDetailPlant(null)
       setShowSearch(false)
-      setShowDesktopProfile(false)
+      setShowProfile(false)
       dashboardRef.current?.closeCareInfo?.()
     }
     setMountedTabs(prev => new Set([...prev, key]))
@@ -115,7 +116,7 @@ export default function App() {
     // PlantDetail būtų vienintelis aktyvus view'as.
     if (isDesktop) {
       setShowSearch(false)
-      setShowDesktopProfile(false)
+      setShowProfile(false)
       dashboardRef.current?.closeCareInfo?.()
     }
     setDetailPlant({ plant, section, scrollToCare })
@@ -259,7 +260,7 @@ export default function App() {
   const closeAllDesktopModals = useCallback(() => {
     setDetailPlant(null)
     setShowSearch(false)
-    setShowDesktopProfile(false)
+    setShowProfile(false)
     dashboardRef.current?.closeCareInfo?.()
   }, [])
 
@@ -388,9 +389,9 @@ export default function App() {
       counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }}
       user={user}
       onProfileClick={() => {
-        if (showDesktopProfile) { setShowDesktopProfile(false); return }
+        if (showProfile) { setShowProfile(false); return }
         closeAllDesktopModals()
-        setShowDesktopProfile(true)
+        setShowProfile(true)
       }}
       role={role}
       careNotificationCount={careNotificationCount}
@@ -426,6 +427,28 @@ export default function App() {
         >{tabsArea}</DesktopLayout>
       ) : (
         <div className="flex flex-col h-dvh overflow-hidden">
+          {role !== 'viewer' && !dashCareMode && (
+            <MobileHeader
+              user={user}
+              role={role}
+              onProfileClick={() => setShowProfile(v => !v)}
+              careNotificationCount={careNotificationCount}
+              carePopupPlants={carePopupPlants}
+              onCareTap={(plant, list) => {
+                if (tab !== 'dashboard') {
+                  setMountedTabs(prev => new Set([...prev, 'dashboard']))
+                  setTab('dashboard')
+                }
+                // Defer to next tick so Dashboard mount finishes before openCareInfo
+                setTimeout(() => dashboardRef.current?.openCareInfo?.(plant, list), 0)
+              }}
+              onSearchClick={() => {
+                setSearchAutoCamera(false)
+                setSearchInitialQuery('')
+                setShowSearch(true)
+              }}
+            />
+          )}
           {tabsArea}
         </div>
       )}
@@ -433,9 +456,9 @@ export default function App() {
       {/* Bottom navigation — tik mobile (desktop'e tabs gyvena DesktopHeader'yje) */}
       {!isDesktop && role !== 'viewer' && !dashCareMode && <Navigation active={tab} onChange={setTabAndMount} counts={{ dashboard: dashboard.length, biblioteka: archive.length, zinynas: zinynas.length }} role={role} isDesktop={isDesktop} />}
 
-      {/* Desktop ProfileSheet — kviečiamas iš DesktopHeader avatar/collection mygtukų.
-          Mobile turi savo ProfileSheet Dashboard'o vidury (per esamą flow). */}
-      {isDesktop && showDesktopProfile && (
+      {/* ProfileSheet — kviečiamas iš MobileHeader (mobile) ar DesktopHeader (desktop) avataro.
+          Renderinamas App lygmenyje, kad vienodai veiktų abiems variantams. */}
+      {showProfile && (
         <Suspense fallback={null}>
           <ProfileSheet
             user={user}
@@ -444,9 +467,9 @@ export default function App() {
             ownCollectionId={ownCollectionId}
             allCollections={allCollections}
             onSignOut={signOut}
-            onSwitchCollection={(id) => { switchCollection(id); setShowDesktopProfile(false) }}
+            onSwitchCollection={(id) => { switchCollection(id); setShowProfile(false) }}
             onRenameCollection={renameCollection}
-            onClose={() => setShowDesktopProfile(false)}
+            onClose={() => setShowProfile(false)}
           />
         </Suspense>
       )}

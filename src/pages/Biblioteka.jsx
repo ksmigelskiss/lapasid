@@ -133,23 +133,9 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
 
   return (
     <div className="flex flex-col h-full bg-lib">
-      {/* Top row: desktop'e tik filter tabs (search perkelta į DesktopHeader toolbar'ą),
-          mobile'e — filter + search + camera vienoj eilutėj. */}
-      <div className="px-5 pb-3 flex items-center gap-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
+      {/* Top row — tik filter tabs. Search perkelta į MobileHeader/DesktopHeader toolbar'ą. */}
+      <div className="px-5 pb-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
         {filterTabs}
-        {!isDesktop && (
-          <>
-            {searchRow}
-            {!searching && (
-              <button
-                onClick={() => onSearchByCamera ? onSearchByCamera() : onSearch('')}
-                className="flex-shrink-0 w-9 h-9 rounded-2xl flex items-center justify-center bg-white border border-gray-200 text-gray-600 active:bg-surface transition-colors"
-              >
-                <Camera size={16} />
-              </button>
-            )}
-          </>
-        )}
       </div>
 
       {/* Pull-to-refresh indicator */}
@@ -191,7 +177,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
               </button>
             ) : kategorija == null && (
               <button
-                onClick={() => setSearching(true)}
+                onClick={() => onSearch('')}
                 className="mt-1 px-6 py-3 bg-sage-500 active:bg-sage-600 text-white rounded-2xl text-sm font-medium"
               >
                 + Pridėti augalą

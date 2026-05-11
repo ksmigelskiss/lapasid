@@ -1,7 +1,6 @@
 import { useState, useMemo, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera, Check, UserCircle, Pencil, RefreshCw } from 'lucide-react'
-import ProfileSheet from '../components/ProfileSheet'
+import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera, Check, Pencil, RefreshCw } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
 import CollectionChat from '../components/CollectionChat'
 import CareOverview from '../components/CareOverview'
@@ -155,7 +154,6 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
   const [showChat, setShowChat]       = useState(false)
   const [searching, setSearching]     = useState(false)
   const [query, setQuery]             = useState('')
-  const [showProfile,    setShowProfile]    = useState(false)
   const [showSwitcher,   setShowSwitcher]   = useState(false)
   const [editingName,    setEditingName]    = useState(false)
   const [nameInput,      setNameInput]      = useState('')
@@ -483,21 +481,8 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
       {!hideInnerHeader && <div className="px-5 pb-3" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
         <div className="flex items-center justify-between">
           <div className="relative">
-            {/* Avatar + kolekcijos etiketė */}
+            {/* Kolekcijos etiketė. Avatar mygtukas perkeltas į MobileHeader toolbar'ą. */}
             <div className="flex items-center gap-2 mb-0.5">
-              {role !== 'viewer' && (
-                <button
-                  onClick={() => setShowProfile(true)}
-                  className="w-5 h-5 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 active:opacity-70 transition-opacity"
-                >
-                  {user?.photoURL
-                    ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
-                    : <div className="w-full h-full bg-sage-100 flex items-center justify-center">
-                        <UserCircle size={12} className="text-sage-500" />
-                      </div>
-                  }
-                </button>
-              )}
               {/* Kolekcijų switcher — rodomas kai > 1 kolekcija su augalais */}
               {(() => {
                 const switcher = allCollections.filter(c => c.hasPlants !== false)
@@ -687,10 +672,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
               </div>
             )}
 
-            {/* Mobile: search atskira full-width eilutė */}
-            {!hideInnerHeader && searchRow && (
-              <div className="px-5 mb-3 flex gap-2">{searchRow}</div>
-            )}
+            {/* Mobile search row pašalintas — search ikona dabar MobileHeader toolbar'e. */}
           </>
         )
       })()}
@@ -784,12 +766,10 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
       {/* Scrollable content */}
       {!searching && <div ref={scrollRef} className={`flex-1 overflow-y-auto scrollbar-none px-5 ${role === 'viewer' ? 'pb-8' : 'pb-28'}`}>
 
-        {/* Care overview — slepiama care mode'e (vartotojas jau dirba su augalais tiesiogiai).
-            onTap gauna (plant, list?) — list = sąrašas to skyrelio (pvz. wateringList),
-            kuris perduodamas openCareInfo navigacijai per CareWateringSheet strėles. */}
-        {/* Mobile only — desktop'e CareOverview greeting jau renderintas top'e + summary
-            perkeltas į bell popup'ą (DesktopHeader'yje). */}
-        {!careMode && !hideInnerHeader && <CareOverview plants={mainPlants} onTap={openCareInfo} user={user} />}
+        {/* CareOverview santrauka pašalinta. Tiek desktop'e, tiek mobile'e priežiūros
+            santrauka dabar pasiekiama tik per bell popup'ą toolbar'e (DesktopHeader /
+            MobileHeader). Greeting'as desktop'e renderinamas hideInnerHeader branch'e
+            top'e; mobile'e jis natūraliai nereikalingas (toolbar'e brand + tabs). */}
 
         {/* Karantinas pseudo-zone */}
         {quarantinePlants.length > 0 && (
@@ -1034,22 +1014,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {showProfile && (
-          <ProfileSheet
-            key="profile"
-            user={user}
-            collectionId={collectionId}
-            role={role}
-            ownCollectionId={ownCollectionId}
-            allCollections={allCollections}
-            onSignOut={onSignOut}
-            onClose={() => setShowProfile(false)}
-            onSwitchCollection={colId => { onSwitchCollection?.(colId); setShowProfile(false) }}
-            onRenameCollection={onRenameCollection}
-          />
-        )}
-      </AnimatePresence>
+      {/* ProfileSheet dabar valdomas App.jsx lygmenyje (atidaromas iš MobileHeader/DesktopHeader avataro). */}
     </div>
   )
 }

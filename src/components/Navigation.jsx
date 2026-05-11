@@ -1,32 +1,14 @@
-function LeafIcon({ className }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
-      <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
-    </svg>
-  )
-}
-
-function BookIcon({ className }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
-    </svg>
-  )
-}
-
-function SparkleIcon({ className }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
-    </svg>
-  )
-}
+/**
+ * Navigation — bottom tab juosta mobile'e.
+ *
+ * Stilius mirror'ina DesktopHeader pill-style tabs (sage active state),
+ * tik išdėstyta apačioj kaip iOS-style segmented control'as.
+ */
 
 const tabs = [
-  { id: 'dashboard',  label: 'Augalai',   Icon: LeafIcon,    countKey: 'dashboard' },
-  { id: 'biblioteka', label: 'Biblioteka', Icon: BookIcon,    countKey: 'biblioteka' },
-  { id: 'zinynas',   label: 'Žinynas',   Icon: SparkleIcon, countKey: 'zinynas' },
+  { id: 'dashboard',  label: 'Augalai',    countKey: 'dashboard'  },
+  { id: 'biblioteka', label: 'Biblioteka', countKey: 'biblioteka' },
+  { id: 'zinynas',    label: 'Žinynas',    countKey: 'zinynas'    },
 ]
 
 export default function Navigation({ active, onChange, counts = {}, role = 'owner', isDesktop = false }) {
@@ -35,36 +17,33 @@ export default function Navigation({ active, onChange, counts = {}, role = 'owne
   const navPos = isDesktop
     ? 'fixed bottom-0 left-0 right-[430px] z-40'
     : 'fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-40'
+
   return (
     <nav className={navPos}>
-      <div className="bg-white border-t border-gray-200 safe-bottom">
-        <div className="flex">
-          {visibleTabs.map(({ id, label, Icon, countKey }) => {
+      <div className="bg-white/85 backdrop-blur border-t border-gray-200/80 safe-bottom px-4 pt-2 pb-2">
+        {/* Pill container — toks pat pattern'as kaip DesktopHeader tabs */}
+        <div className="flex bg-gray-900/[0.04] rounded-full p-1 gap-0.5">
+          {visibleTabs.map(({ id, label, countKey }) => {
             const isActive = active === id
             const count = counts[countKey] ?? 0
             return (
               <button
                 key={id}
                 onClick={() => onChange(id)}
-                className="flex-1 flex flex-col items-center py-2 pt-2.5 gap-0.5 transition-colors duration-150 relative"
+                className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-full text-[13px] font-medium transition-colors ${
+                  isActive
+                    ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
+                    : 'text-gray-600 active:text-gray-900'
+                }`}
               >
-                <div className="relative">
-                  <Icon className={`w-6 h-6 transition-colors duration-150 ${
-                    isActive ? 'text-primary' : 'text-gray-400'
-                  }`} />
-                  {count > 0 && (
-                    <div className="absolute -top-1 -right-2.5 bg-primary text-white rounded-full min-w-[15px] h-[15px] flex items-center justify-center px-0.5">
-                      <span className="text-[9px] font-bold leading-none">
-                        {count > 99 ? '99+' : count}
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <span className={`text-[10px] font-medium transition-colors duration-150 ${
-                  isActive ? 'text-primary' : 'text-gray-400'
-                }`}>
-                  {label}
-                </span>
+                {label}
+                {count > 0 && (
+                  <span className={`text-[11px] font-bold px-1.5 py-px rounded-full ${
+                    isActive ? 'bg-sage-100 text-sage-700' : 'bg-sky-100 text-sky-800'
+                  }`}>
+                    {count}
+                  </span>
+                )}
               </button>
             )
           })}
