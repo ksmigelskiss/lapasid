@@ -4,13 +4,13 @@ export default function DuplicateBuyModal({ plant, onAddAnother, onViewExisting,
   return (
     <div className="fixed inset-0 z-[90] flex items-end justify-center">
       <motion.div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-forest-800/55 backdrop-blur-sm"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
         onPointerDown={onClose}
       />
       <motion.div
-        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-3xl px-5 pt-4 pb-8 safe-bottom border-t border-bone-400/40"
+        className="relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl rounded-t-3xl px-5 pt-4 pb-8 safe-bottom border-t border-bone-400/40"
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}

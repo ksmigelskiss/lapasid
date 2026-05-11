@@ -77,20 +77,22 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
   return (
     <div className="fixed inset-0 z-[80] flex items-end justify-center">
       <motion.div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-forest-800/55 backdrop-blur-sm"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }} onPointerDown={onClose}
       />
       <motion.div
-        className="relative w-full max-w-[430px] bg-white rounded-t-4xl px-4 pt-3 pb-8"
+        className="relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl rounded-t-4xl px-4 pt-3 pb-8 border-t border-bone-400/40"
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}
       >
         <div className="flex justify-center pb-3">
-          <div className="w-10 h-1 bg-gray-200 rounded-full" />
+          <div className="w-10 h-1 bg-bone-400/60 rounded-full" />
         </div>
-        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider text-center mb-3">Pakeisti nuotrauką</p>
+        <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] text-center mb-4">
+          Pakeisti nuotrauką
+        </p>
 
         <div className="space-y-2">
           {/* History auto-sync toggle */}
@@ -98,20 +100,20 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
             <button
               onClick={onToggleHistoryPhoto}
               className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition-colors ${
-                useHistory ? 'bg-forest-600 text-bone' : 'bg-surface-2 text-gray-600'
+                useHistory ? 'bg-forest-600 text-bone' : 'bg-bone-50 border border-bone-400/40 text-forest-700'
               }`}
             >
               <div className="flex items-center gap-3">
-                <Camera size={20} className={useHistory ? 'text-white' : 'text-gray-400'} />
+                <Camera size={20} className={useHistory ? 'text-bone' : 'text-forest-500'} />
                 <div className="text-left">
-                  <p className="text-sm font-semibold">Naudoti iš istorijos</p>
-                  <p className={`text-xs mt-0.5 ${useHistory ? 'text-white/70' : 'text-gray-400'}`}>
+                  <p className="font-display text-sm font-semibold tracking-tight">Naudoti iš istorijos</p>
+                  <p className={`text-xs mt-0.5 ${useHistory ? 'text-bone/70' : 'text-forest-500'}`}>
                     {useHistory ? 'Naujos istorijos nuotraukos → profilis' : 'Išjungta — profilis fiksuotas'}
                   </p>
                 </div>
               </div>
-              <div className={`w-10 h-6 rounded-full flex items-center transition-colors px-0.5 ${useHistory ? 'bg-white/30' : 'bg-gray-300'}`}>
-                <div className={`w-5 h-5 rounded-full bg-white shadow transition-transform ${useHistory ? 'translate-x-4' : 'translate-x-0'}`} />
+              <div className={`w-10 h-6 rounded-full flex items-center transition-colors px-0.5 ${useHistory ? 'bg-bone/30' : 'bg-bone-400'}`}>
+                <div className={`w-5 h-5 rounded-full bg-bone shadow transition-transform ${useHistory ? 'translate-x-4' : 'translate-x-0'}`} />
               </div>
             </button>
           )}
@@ -119,58 +121,58 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
           {/* Online photo browser */}
           {!searched && !loading && (
             <button
-              className="w-full flex items-center gap-4 bg-surface hover:bg-surface-2 rounded-2xl px-4 py-3.5"
+              className="w-full flex items-center gap-4 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 rounded-2xl px-4 py-3.5 transition-colors"
               onClick={handleSearch}
             >
-              <span className="text-gray-500"><Search size={22} /></span>
+              <span className="text-forest-500"><Search size={22} /></span>
               <div className="text-left flex-1">
-                <p className="text-sm font-medium text-gray-800">Rasti internete (iNaturalist)</p>
-                <p className="text-xs text-gray-500 italic">{plant.lotyniskas}</p>
+                <p className="font-display text-sm font-semibold tracking-tight text-forest-800">Rasti internete (iNaturalist)</p>
+                <p className="text-xs text-forest-500 italic mt-0.5">{plant.lotyniskas}</p>
               </div>
             </button>
           )}
 
           {loading && (
-            <div className="flex items-center gap-3 bg-surface rounded-2xl px-4 py-3.5">
-              <span className="text-gray-400"><Loader2 size={22} className="animate-spin" /></span>
-              <p className="text-sm text-gray-500">Ieškoma nuotraukų...</p>
+            <div className="flex items-center gap-3 bg-bone-50 border border-bone-400/40 rounded-2xl px-4 py-3.5">
+              <span className="text-forest-500"><Loader2 size={22} className="animate-spin" /></span>
+              <p className="text-sm text-forest-600">Ieškoma nuotraukų...</p>
             </div>
           )}
 
           {searched && photos.length === 0 && (
-            <div className="bg-red-50 rounded-2xl px-4 py-3 text-center">
-              <p className="text-sm text-red-500">Nerasta nuotraukų internete</p>
+            <div className="bg-terracotta-50 border border-terracotta-200/60 rounded-2xl px-4 py-3 text-center">
+              <p className="text-sm text-terracotta-600 font-semibold">Nerasta nuotraukų internete</p>
             </div>
           )}
 
           {searched && current && (
             <div className="space-y-2">
               {/* Preview */}
-              <div className="relative rounded-2xl overflow-hidden bg-surface-2" style={{ height: 200 }}>
+              <div className="relative rounded-2xl overflow-hidden bg-bone-300" style={{ height: 200 }}>
                 <img src={current} alt="" className="w-full h-full object-cover" />
                 {/* Prev / Next */}
                 <div className="absolute inset-0 flex items-center justify-between px-2">
                   <button
                     disabled={!hasPrev}
                     onClick={() => setIdx(i => i - 1)}
-                    className="w-9 h-9 bg-black/40 backdrop-blur-sm rounded-btn flex items-center justify-center text-white text-base disabled:opacity-20"
+                    className="w-9 h-9 bg-black/40 backdrop-blur-sm rounded-btn flex items-center justify-center text-bone text-base disabled:opacity-20"
                   >‹</button>
                   <button
                     disabled={!hasNext}
                     onClick={() => setIdx(i => i + 1)}
-                    className="w-9 h-9 bg-black/40 backdrop-blur-sm rounded-btn flex items-center justify-center text-white text-base disabled:opacity-20"
+                    className="w-9 h-9 bg-black/40 backdrop-blur-sm rounded-btn flex items-center justify-center text-bone text-base disabled:opacity-20"
                   >›</button>
                 </div>
                 {/* Counter */}
                 <div className="absolute bottom-2 left-0 right-0 flex justify-center">
-                  <span className="text-[10px] text-white bg-black/40 rounded-full px-2 py-0.5">
+                  <span className="font-mono text-[10px] text-bone bg-black/40 backdrop-blur-sm rounded-full px-2 py-0.5 tracking-[0.14em]">
                     {idx + 1} / {photos.length}
                   </span>
                 </div>
               </div>
               <button
                 onClick={() => { onSave(current); onClose() }}
-                className="w-full py-3 rounded-2xl text-sm font-semibold text-bone bg-forest-600"
+                className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
               >
                 Naudoti šią nuotrauką
               </button>
@@ -180,13 +182,13 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
           {/* From history */}
           {historyPhotos.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-1 mb-2 mt-1">Iš istorijos</p>
+              <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] px-1 mb-2 mt-2">Iš istorijos</p>
               <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
                 {historyPhotos.map(e => (
                   <button
                     key={e.id}
                     onClick={() => { onSave(e.imageUrl, true); onClose() }}
-                    className="flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 border-transparent active:border-sage-400 transition-all"
+                    className="flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 border-bone-400/40 hover:border-forest-400 active:border-forest-600 transition-all"
                   >
                     <img src={e.imageUrl} alt="" className="w-full h-full object-cover" />
                   </button>
@@ -196,20 +198,23 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
           )}
 
           {/* From camera / gallery */}
-          <label className="flex items-center gap-4 bg-surface hover:bg-surface-2 rounded-2xl px-4 py-3.5 cursor-pointer">
-            <span className="text-gray-500"><Camera size={22} /></span>
-            <span className="text-sm font-medium text-gray-800">Fotografuoti</span>
+          <label className="flex items-center gap-4 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 rounded-2xl px-4 py-3.5 cursor-pointer transition-colors">
+            <span className="text-forest-500"><Camera size={22} /></span>
+            <span className="font-display text-sm font-semibold tracking-tight text-forest-800">Fotografuoti</span>
             <input type="file" accept="image/*" capture="environment" className="hidden"
               onChange={e => { handleFile(e.target.files[0]); e.target.value = '' }} />
           </label>
-          <label className="flex items-center gap-4 bg-surface hover:bg-surface-2 rounded-2xl px-4 py-3.5 cursor-pointer">
-            <span className="text-gray-500"><ImageIcon size={22} /></span>
-            <span className="text-sm font-medium text-gray-800">Pasirinkti iš galerijos</span>
+          <label className="flex items-center gap-4 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 rounded-2xl px-4 py-3.5 cursor-pointer transition-colors">
+            <span className="text-forest-500"><ImageIcon size={22} /></span>
+            <span className="font-display text-sm font-semibold tracking-tight text-forest-800">Pasirinkti iš galerijos</span>
             <input type="file" accept="image/*" className="hidden"
               onChange={e => { handleFile(e.target.files[0]); e.target.value = '' }} />
           </label>
 
-          <button className="w-full py-3.5 rounded-2xl text-sm font-medium text-gray-500 bg-surface-2" onClick={onClose}>
+          <button
+            className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300/60 hover:bg-bone-400/50 transition-colors"
+            onClick={onClose}
+          >
             Atšaukti
           </button>
         </div>

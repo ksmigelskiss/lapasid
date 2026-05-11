@@ -48,12 +48,12 @@ export function ZoneManagerSheet({ zones, plants = [], onAdd, onUpdate, onDelete
   return (
     <div className="fixed inset-0 flex items-end justify-center" style={{ zIndex }}>
       <motion.div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-forest-800/55 backdrop-blur-sm"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }} onPointerDown={onClose}
       />
       <motion.div
-        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-4 pt-3 pb-10 max-h-[85dvh] overflow-y-auto border-t border-bone-400/40"
+        className="relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl rounded-t-4xl px-4 pt-3 pb-10 max-h-[85dvh] overflow-y-auto border-t border-bone-400/40"
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}
@@ -170,15 +170,15 @@ export function ZonePicker({ zones, plants = [], currentZoneId, onSelect, onClos
       {/* Backdrop — tik mobile (desktop'e panel uždangstomas pačios ZonePicker'io kortelės) */}
       {!useDesktopPanel && (
         <motion.div
-          className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          className="absolute inset-0 bg-forest-800/55 backdrop-blur-sm"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }} onPointerDown={onClose}
         />
       )}
       <motion.div
         className={useDesktopPanel
-          ? "relative w-full h-full bg-bone-50 border-l border-bone-400/40 shadow-[-8px_0_24px_rgba(28,58,42,0.10)] px-5 pt-4 pb-6 overflow-y-auto"
-          : "relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-5 pt-3 pb-10 border-t border-bone-400/40"}
+          ? "relative w-full h-full bg-white/55 backdrop-blur-xl border-l border-bone-400/40 shadow-[-8px_0_24px_rgba(28,58,42,0.10)] px-5 pt-4 pb-6 overflow-y-auto"
+          : "relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl rounded-t-4xl px-5 pt-3 pb-10 border-t border-bone-400/40"}
         {...(useDesktopPanel
           ? { initial: { x: '100%' }, animate: { x: 0 }, exit: { x: '100%' } }
           : { initial: { y: '100%' }, animate: { y: 0 }, exit: { y: '100%' } })}

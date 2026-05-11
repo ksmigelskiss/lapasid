@@ -20,7 +20,7 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       <motion.div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-forest-800/55 backdrop-blur-sm"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -29,7 +29,7 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
       />
 
       <motion.div
-        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-5 py-6 space-y-5 border-t border-bone-400/40"
+        className="relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl rounded-t-4xl px-5 py-6 space-y-5 border-t border-bone-400/40"
         style={{ y }}
         drag="y"
         dragControls={dragControls}
