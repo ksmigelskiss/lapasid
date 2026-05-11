@@ -326,10 +326,61 @@ function PassportSection({ plant, collectionId, onToggle }) {
 
 // ── Profile tab content ────────────────────────────────────────
 
-export function ProfileContent({ plant, section, onAction, onClose, collectionId, onTogglePassport, className }) {
+export function ProfileContent({ plant, section, onAction, onClose, collectionId, onTogglePassport, onUpdateNames, className }) {
+  const [editingName, setEditingName] = useState(false)
+  const [nameVal, setNameVal]         = useState('')
+
+  // Synonyms — inline editorial proza
+  const ltSyns = [
+    plant.inatLtName && plant.inatLtName !== plant.lietuviškas ? plant.inatLtName : null,
+    ...(plant.sinonimai?.filter(s => s !== plant.inatLtName) ?? []),
+  ].filter(Boolean)
+  const enSyns = plant.englishNames ?? []
+  const hasSyns = ltSyns.length > 0 || enSyns.length > 0
 
   return (
-    <div className={className ?? "px-5 pt-5 pb-10 space-y-6"}>
+    <div className={className ?? "px-5 pt-4 pb-10 space-y-6"}>
+
+      {/* ── Title block — Bricolage 600 + Latin + synonyms inline. Scroll'inasi
+            su content (vietoj static hero block — taupo scroll erdvę). ── */}
+      <div>
+        {editingName ? (
+          <input
+            autoFocus
+            value={nameVal}
+            onChange={e => setNameVal(e.target.value)}
+            onBlur={() => { onUpdateNames?.(plant.id, { 'lietuviškas': nameVal.trim() || plant.lietuviškas }); setEditingName(false) }}
+            onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditingName(false) }}
+            className="font-display text-2xl font-semibold tracking-tight leading-tight text-forest-800 bg-bone-300/40 rounded-lg px-2 py-0.5 outline-none w-full"
+          />
+        ) : (
+          <h2
+            className="font-display text-2xl font-semibold tracking-tight text-forest-800 leading-tight cursor-text"
+            onClick={() => { setNameVal(plant.lietuviškas); setEditingName(true) }}
+          >{plant.lietuviškas}</h2>
+        )}
+        {plant.lotyniskas && (
+          <p className="text-sm text-forest-500 italic mt-1">{plant.lotyniskas}</p>
+        )}
+        {hasSyns && (
+          <p className="text-[12.5px] text-forest-400 mt-3 leading-relaxed">
+            Taip pat:{' '}
+            {ltSyns.map((s, i) => (
+              <span key={`lt-${i}`}>
+                {i > 0 && ', '}
+                <span className="text-forest-600">{s}</span>
+              </span>
+            ))}
+            {ltSyns.length > 0 && enSyns.length > 0 && ' · '}
+            {enSyns.map((n, i) => (
+              <span key={`en-${i}`}>
+                {i > 0 && ', '}
+                <span className="text-forest-500 italic">{n}</span>
+              </span>
+            ))}
+          </p>
+        )}
+      </div>
 
       {/* ── Watering overdue reminder ── */}
       <WateringCard plant={plant} section={section} />
@@ -1030,8 +1081,6 @@ export default function PlantDetail({
   const [showStatusMenu, setStatusMenu]     = useState(false)
   const [pendingStatus, setPendingStatus]   = useState(null) // { newStatus, fromStatus }
   const [addingType, setAddingType]         = useState(null)
-  const [editingName, setEditingName]       = useState(false)
-  const [nameVal, setNameVal]               = useState('')
   const [showZonePicker, setShowZonePicker] = useState(false)
 
   // App.jsx laiko PlantDetail mount'intą per lastDetailRef (greitam reopen),
@@ -1045,7 +1094,6 @@ export default function PlantDetail({
       setShowPhoto(false)
       setStatusMenu(false)
       setShowChat(false)
-      setEditingName(false)
       setPendingStatus(null)
       setAddingType(null)
     }
@@ -1056,27 +1104,27 @@ export default function PlantDetail({
     setShowPhoto(false)
     setStatusMenu(false)
     setShowChat(false)
-    setEditingName(false)
     setPendingStatus(null)
     setAddingType(null)
   }, [plant.id])
 
   // ESC keyboard shortcut — uždaryti PlantDetail desktop'e. JEI atvertas sub-modal'as
-  // (ZonePicker, photo sheet, status menu, chat, editing, status transition, adding)
-  // — jo paties ESC handler'is uždaro jį, o mūsų handler'is praleidžia (kad nepasitiktų
-  // dvigubas close — top sub-modal first, parent second).
+  // ARBA fokusas ant input/textarea (name editing, notes editing) — praleidžiam,
+  // kad input'o local ESC handler'is suveiktų pirmas.
   useEffect(() => {
     if (!useDesktopPanel || !visible) return
     const handler = (e) => {
       if (e.key !== 'Escape') return
       const subModalOpen = showZonePicker || showPhotoSheet || showStatusMenu
-        || showChat || editingName || pendingStatus || addingType
+        || showChat || pendingStatus || addingType
       if (subModalOpen) return
+      const a = document.activeElement
+      if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable)) return
       onClose?.()
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [useDesktopPanel, visible, showZonePicker, showPhotoSheet, showStatusMenu, showChat, editingName, pendingStatus, addingType, onClose])
+  }, [useDesktopPanel, visible, showZonePicker, showPhotoSheet, showStatusMenu, showChat, pendingStatus, addingType, onClose])
 
   const status                              = plant.status ?? 'healthy'
   const currentZone                         = zones.find(z => z.id === plant.zonaId) ?? null
@@ -1212,23 +1260,75 @@ export default function PlantDetail({
           </div>
         )}
 
-        {/* ── Hero — editorial layout: toolbar / photo / text block on bone ── */}
+        {/* ── Hero — minimal: toolbar (su zone+status inline) + photo. Title
+            blokas perkeltas į „Augalas" tab content scrollable area. ── */}
         <div className="flex-shrink-0">
-          {/* Top toolbar — kompaktiškas, ant bone, virš foto */}
+          {/* Toolbar — zone + status inline mono caps, X dešinėje */}
           <div
-            className="flex items-center justify-between px-4 pb-2"
+            className="flex items-center gap-3 px-4 pb-2"
             style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
           >
             <button
               onClick={() => setShowPhoto(true)}
-              className="flex items-center justify-center text-forest-400 active:text-forest-700 transition-colors px-1 py-2"
+              className="flex items-center justify-center text-forest-400 active:text-forest-700 transition-colors px-1 py-2 flex-shrink-0"
               aria-label="Pakeisti nuotrauką"
             >
               <MoreHorizontal size={20} />
             </button>
+
+            {/* Zone — clickable, atidaro ZonePicker */}
+            {section === 'auginama' && zones.length > 0 && (
+              <button
+                onClick={() => setShowZonePicker(v => !v)}
+                className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 hover:text-forest-700 transition-colors min-w-0"
+              >
+                <MapPin size={11} className="text-forest-400 flex-shrink-0" />
+                <span className="truncate">{currentZone ? currentZone.name : 'Nepriskirta'}</span>
+              </button>
+            )}
+
+            {section === 'auginama' && zones.length > 0 && (
+              <span className="text-forest-300 flex-shrink-0" aria-hidden>·</span>
+            )}
+
+            {/* Status — clickable, atidaro StatusMenu */}
+            {section === 'auginama' && (
+              <div className="relative">
+                <button
+                  onClick={() => setStatusMenu(v => !v)}
+                  className={`inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] transition-colors ${
+                    status === 'quarantine' || status === 'sick'
+                      ? 'text-terracotta-600 hover:text-terracotta-700'
+                      : status === 'numire'
+                        ? 'text-forest-800 hover:text-forest-900'
+                        : 'text-forest-600 hover:text-forest-700'
+                  }`}
+                >
+                  {(() => {
+                    const StatusIcon = STATUS_ICON[status]
+                    return StatusIcon ? <StatusIcon size={11} /> : null
+                  })()}
+                  <span>{getStatusMeta(status).label}</span>
+                  <ChevronDown size={10} className="opacity-60" />
+                </button>
+                {showStatusMenu && (
+                  <StatusMenu
+                    status={status}
+                    section={section}
+                    onClose={() => setStatusMenu(false)}
+                    onSelect={key => {
+                      setStatusMenu(false)
+                      if (key === 'numire') { onAction?.('died', plant); onClose?.() }
+                      else setPendingStatus({ newStatus: key, fromStatus: status })
+                    }}
+                  />
+                )}
+              </div>
+            )}
+
             <button
               onClick={onClose}
-              className="w-10 h-10 bg-bone-300/60 hover:bg-bone-400/60 rounded-btn flex items-center justify-center text-forest-700 transition-colors"
+              className="ml-auto w-10 h-10 bg-bone-300/60 hover:bg-bone-400/60 rounded-btn flex items-center justify-center text-forest-700 transition-colors flex-shrink-0"
               aria-label="Uždaryti"
             >
               <X size={16} />
@@ -1257,107 +1357,6 @@ export default function PlantDetail({
               {plant.emoji ?? '🌿'}
             </button>
           )}
-
-          {/* Editorial title block — ant bone, magazine ritmu */}
-          <div className="px-5 pt-4 pb-4">
-            {/* Metadata row: lokacija + status (mono caps) */}
-            <div className="flex items-center gap-2.5 flex-wrap">
-              {section === 'auginama' && zones.length > 0 && (
-                <button
-                  onClick={() => setShowZonePicker(v => !v)}
-                  className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 hover:text-forest-700 transition-colors"
-                >
-                  <MapPin size={11} className="text-forest-400" />
-                  {currentZone ? currentZone.name : 'Nepriskirta'}
-                </button>
-              )}
-              {section === 'auginama' && zones.length > 0 && (
-                <span className="text-forest-300" aria-hidden>·</span>
-              )}
-              {section === 'auginama' && (
-                <div className="relative">
-                  <button
-                    onClick={() => setStatusMenu(v => !v)}
-                    className={`inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] transition-colors ${
-                      status === 'quarantine' || status === 'sick'
-                        ? 'text-terracotta-600 hover:text-terracotta-700'
-                        : status === 'numire'
-                          ? 'text-forest-800 hover:text-forest-900'
-                          : 'text-forest-600 hover:text-forest-700'
-                    }`}
-                  >
-                    {(() => {
-                      const StatusIcon = STATUS_ICON[status]
-                      return StatusIcon ? <StatusIcon size={11} /> : null
-                    })()}
-                    {getStatusMeta(status).label}
-                    <ChevronDown size={10} className="opacity-60" />
-                  </button>
-                  {showStatusMenu && (
-                    <StatusMenu
-                      status={status}
-                      section={section}
-                      onClose={() => setStatusMenu(false)}
-                      onSelect={key => {
-                        setStatusMenu(false)
-                        if (key === 'numire') { onAction?.('died', plant); onClose?.() }
-                        else setPendingStatus({ newStatus: key, fromStatus: status })
-                      }}
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Title — Bricolage 600 ant bone, scaled */}
-            {editingName ? (
-              <input
-                autoFocus
-                value={nameVal}
-                onChange={e => setNameVal(e.target.value)}
-                onBlur={() => { onUpdateNames?.(plant.id, { 'lietuviškas': nameVal.trim() || plant.lietuviškas }); setEditingName(false) }}
-                onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditingName(false) }}
-                className="font-display text-2xl font-semibold tracking-tight leading-tight text-forest-800 bg-bone-300/40 rounded-lg px-2 py-0.5 outline-none w-full mt-2"
-              />
-            ) : (
-              <h2
-                className="font-display text-2xl font-semibold tracking-tight text-forest-800 leading-tight cursor-text mt-2"
-                onClick={() => { setNameVal(plant.lietuviškas); setEditingName(true) }}
-              >{plant.lietuviškas}</h2>
-            )}
-            {plant.lotyniskas && (
-              <p className="text-sm text-forest-500 italic mt-1">{plant.lotyniskas}</p>
-            )}
-
-            {/* Synonyms — inline editorial, ne chips (žymiai readable'esnis) */}
-            {(plant.inatLtName || plant.sinonimai?.length > 0 || plant.englishNames?.length > 0) && (
-              (() => {
-                const ltSyns = [
-                  plant.inatLtName && plant.inatLtName !== plant.lietuviškas ? plant.inatLtName : null,
-                  ...(plant.sinonimai?.filter(s => s !== plant.inatLtName) ?? []),
-                ].filter(Boolean)
-                const enSyns = plant.englishNames ?? []
-                return (
-                  <p className="text-[12.5px] text-forest-400 mt-3 leading-relaxed">
-                    Taip pat:{' '}
-                    {ltSyns.map((s, i) => (
-                      <span key={`lt-${i}`}>
-                        {i > 0 && ', '}
-                        <span className="text-forest-600">{s}</span>
-                      </span>
-                    ))}
-                    {ltSyns.length > 0 && enSyns.length > 0 && ' · '}
-                    {enSyns.map((n, i) => (
-                      <span key={`en-${i}`}>
-                        {i > 0 && ', '}
-                        <span className="text-forest-500 italic">{n}</span>
-                      </span>
-                    ))}
-                  </p>
-                )
-              })()
-            )}
-          </div>
         </div>
 
         {/* Tab bar */}
@@ -1381,6 +1380,7 @@ export default function PlantDetail({
                   onClose={onClose}
                   collectionId={collectionId}
                   onTogglePassport={role !== 'viewer' && role !== 'member' ? togglePassport : null}
+                  onUpdateNames={onUpdateNames}
                 />
               </motion.div>
             )}
