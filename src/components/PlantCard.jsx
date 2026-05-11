@@ -280,10 +280,10 @@ const PlantCard = memo(function PlantCard({
 
       {/* Info */}
       <div className="px-2.5 pt-2 pb-2.5">
-        <h3 className="text-[13px] font-bold text-gray-950 leading-tight line-clamp-2">
+        <h3 className="font-display text-[13.5px] font-semibold text-forest-800 tracking-tight leading-tight line-clamp-2">
           {plant.lietuviškas}
         </h3>
-        <p className="text-[10px] text-gray-600 italic mt-0.5 truncate">{plant.lotyniskas}</p>
+        <p className="text-[10px] text-forest-500 italic mt-0.5 truncate">{plant.lotyniskas}</p>
 
         {/* Water meter — care mode'e, vietoj generic dot-scores rodom realią būklę */}
         {careMode && section === 'auginama' && waterFC?.intervalDays > 0 && (

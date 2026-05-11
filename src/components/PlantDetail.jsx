@@ -1224,14 +1224,14 @@ export default function PlantDetail({
             <div className="absolute left-0 right-0 flex items-center justify-between px-4 z-30" style={{ top: 'max(1rem, env(safe-area-inset-top))' }}>
               <button
                 onClick={() => setShowPhoto(true)}
-                className="flex items-center justify-center text-white/80 active:text-white transition-colors px-1 py-2"
+                className="flex items-center justify-center text-bone/80 active:text-bone transition-colors px-1 py-2"
               >
                 <MoreHorizontal size={20} />
               </button>
               <div className="flex items-center gap-2">
                 <button
                   onClick={onClose}
-                  className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-btn flex items-center justify-center text-white"
+                  className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-btn flex items-center justify-center text-bone"
                   aria-label="Uždaryti"
                 >
                   <X size={16} />
@@ -1244,10 +1244,10 @@ export default function PlantDetail({
                   {section === 'auginama' && zones.length > 0 && (
                     <button
                       onClick={() => setShowZonePicker(v => !v)}
-                      className="inline-flex items-center gap-1 mb-1 px-2 py-0.5 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                      className="inline-flex items-center gap-1.5 mb-2 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md hover:bg-black/55 transition-colors"
                     >
-                      <MapPin size={9} className="text-white/80" />
-                      <span className="text-[10px] text-white/90 font-medium">
+                      <MapPin size={10} className="text-forest-200" />
+                      <span className="font-mono text-[9.5px] font-medium uppercase tracking-[0.16em] text-bone">
                         {currentZone ? currentZone.name : 'Nepriskirta'}
                       </span>
                     </button>
@@ -1259,25 +1259,25 @@ export default function PlantDetail({
                       onChange={e => setNameVal(e.target.value)}
                       onBlur={() => { onUpdateNames?.(plant.id, { 'lietuviškas': nameVal.trim() || plant.lietuviškas }); setEditingName(false) }}
                       onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditingName(false) }}
-                      className="text-xl font-bold leading-tight bg-white/20 text-white rounded-lg px-2 py-0.5 outline-none w-full"
+                      className="font-display text-2xl font-semibold tracking-tight leading-tight bg-white/20 text-bone rounded-lg px-2 py-0.5 outline-none w-full"
                     />
                   ) : (
                     <h2
-                      className="text-xl font-bold text-white leading-tight cursor-text"
+                      className="font-display text-2xl font-semibold tracking-tight text-bone leading-tight cursor-text"
                       onClick={() => { setNameVal(plant.lietuviškas); setEditingName(true) }}
                     >{plant.lietuviškas}</h2>
                   )}
-                  <p className="text-xs text-white/70 italic mt-0.5">{plant.lotyniskas}</p>
+                  <p className="text-sm text-bone/70 italic mt-1">{plant.lotyniskas}</p>
                   {(plant.inatLtName || plant.sinonimai?.length > 0 || plant.englishNames?.length > 0) && (
-                    <div className="flex flex-wrap gap-1 mt-1.5">
+                    <div className="flex flex-wrap gap-1.5 mt-2">
                       {plant.inatLtName && plant.inatLtName !== plant.lietuviškas && (
-                        <span className="text-[10px] text-white/80 bg-white/15 rounded px-1.5 py-0.5">{plant.inatLtName}</span>
+                        <span className="font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-bone/85 bg-white/10 backdrop-blur-sm border border-white/15 rounded px-1.5 py-0.5">{plant.inatLtName}</span>
                       )}
                       {plant.sinonimai?.filter(s => s !== plant.inatLtName).map((s, i) => (
-                        <span key={i} className="text-[10px] text-white/80 bg-white/15 rounded px-1.5 py-0.5">{s}</span>
+                        <span key={i} className="font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-bone/85 bg-white/10 backdrop-blur-sm border border-white/15 rounded px-1.5 py-0.5">{s}</span>
                       ))}
                       {plant.englishNames?.map((n, i) => (
-                        <span key={i} className="text-[10px] text-white/60 bg-white/10 rounded px-1.5 py-0.5 italic">{n}</span>
+                        <span key={i} className="font-mono text-[9px] uppercase tracking-[0.14em] text-bone/60 bg-white/5 border border-white/10 rounded px-1.5 py-0.5">{n}</span>
                       ))}
                     </div>
                   )}

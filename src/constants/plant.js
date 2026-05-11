@@ -13,12 +13,14 @@ export const STATUS = {
   NUMIRE:     'numire',
 }
 
-// Status display metadata (used in PlantDetail, PlantCard, Dashboard)
+// Status display metadata — Brandbook v1.0 paletė.
+// Healthy = forest (good), Sick = terracotta light (warning), Quarantine =
+// terracotta solid (severe), Numirė = forest INK (final, like brandbook cover).
 export const STATUS_OPTIONS = [
-  { key: STATUS.HEALTHY,    dot: 'bg-green-400',  label: 'Sveikas',    bg: 'bg-green-100',  text: 'text-green-700' },
-  { key: STATUS.SICK,       dot: 'bg-orange-400', label: 'Dėmesio',    bg: 'bg-orange-100', text: 'text-orange-700' },
-  { key: STATUS.QUARANTINE, dot: 'bg-red-400',    label: 'Karantinas', bg: 'bg-red-100',    text: 'text-red-700' },
-  { key: STATUS.NUMIRE,     dot: '',              label: 'Numirė',     bg: 'bg-gray-800',   text: 'text-white',   hideDot: true },
+  { key: STATUS.HEALTHY,    dot: 'bg-forest-500',     label: 'Sveikas',    bg: 'bg-forest-100',     text: 'text-forest-700' },
+  { key: STATUS.SICK,       dot: 'bg-terracotta-300', label: 'Dėmesio',    bg: 'bg-terracotta-50',  text: 'text-terracotta-600' },
+  { key: STATUS.QUARANTINE, dot: 'bg-terracotta',     label: 'Karantinas', bg: 'bg-terracotta-100', text: 'text-terracotta-600' },
+  { key: STATUS.NUMIRE,     dot: '',                  label: 'Numirė',     bg: 'bg-forest-800',     text: 'text-bone',          hideDot: true },
 ]
 
 export function getStatusMeta(status) {

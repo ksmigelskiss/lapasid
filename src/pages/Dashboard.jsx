@@ -48,7 +48,7 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
       <div className="w-full flex items-center gap-2 py-2">
         <button onClick={() => setOpen(v => !v)} className="flex items-center gap-2 min-w-0">
           <ShieldAlert size={13} className="text-terracotta flex-shrink-0" />
-          <span className="font-display font-bold text-sm tracking-tight text-terracotta-600">Karantinas</span>
+          <span className="font-display font-semibold text-sm tracking-tight text-terracotta-600">Karantinas</span>
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-terracotta-400 flex-shrink-0">· {plants.length}</span>
         </button>
         <div className="flex-1 h-px bg-gradient-to-r from-terracotta-200/70 to-transparent ml-2" />
@@ -99,7 +99,7 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
       <div className="w-full flex items-center gap-2 py-2">
         <button onClick={() => setOpen(v => !v)} className="flex items-center gap-2 min-w-0">
           <MapPin size={13} className="text-forest-400 flex-shrink-0" />
-          <span className="font-display font-bold text-sm tracking-tight text-forest-700 truncate">{zone.name}</span>
+          <span className="font-display font-semibold text-sm tracking-tight text-forest-700 truncate">{zone.name}</span>
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-forest-400 flex-shrink-0">· {plants.length}</span>
         </button>
         <div className="flex-1 h-px bg-gradient-to-r from-forest-200/70 to-transparent ml-2" />
@@ -687,7 +687,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
             {unzonedPlants.length > 0 && (
               <div ref={unzonedRef} className="mb-3">
                 <div className="flex items-center gap-2 py-2">
-                  <p className="font-display font-bold text-sm tracking-tight text-forest-500 flex-shrink-0">Nepriskirti</p>
+                  <p className="font-display font-semibold text-sm tracking-tight text-forest-500 flex-shrink-0">Nepriskirti</p>
                   <div className="flex-1 h-px bg-gradient-to-r from-forest-200/70 to-transparent" />
                 </div>
                 <div className="space-y-3">
