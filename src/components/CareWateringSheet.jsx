@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, useDragControls, useMotionValue, animate } from 'framer-motion'
-import { Droplets, FlaskConical, Check, X, MapPin, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Droplets, FlaskConical, Check, X, MapPin, ChevronLeft, ChevronRight, Leaf } from 'lucide-react'
 import { getWateringForecast } from '../utils/wateringForecast'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import PostFertilizePrompt from './PostFertilizePrompt'
@@ -11,39 +11,111 @@ import { useDetailHost } from '../contexts/DetailHostContext'
 /**
  * CareWateringSheet — single-plant care kortelė.
  *
- * Atsiranda paspaudus augalą iš Priežiūros santraukos arba long-press
- * Dashboard care mode'e. Full-screen sheet pagal DESIGN.md "Full-screen
- * sheet pattern" konvenciją (drag handle viršuje, hero su nuotrauka,
- * X mygtukas kampe, action bar apačioje).
- *
- * 3 veiksmai:
- * - Laistyti → onAddEvent('watering') → onAfterAction (kuris auto-advance
- *   į kitą list'o augalą arba uždaro jei paskutinis)
- * - Tręšti → onAddEvent('fertilizing') → post-fert prompt → Palaisčiau/Nelaisčiau
- * - Patikrinau (snooze) → onAddEvent('inspection') → onAfterAction (rodoma
- *   tik kai watering vėluoja)
- *
- * Navigation (priežiūros santrauka kontekste):
- * - onPrev / onNext — strėlės šonuose, rodoma tik jei callback pateiktas
- * - navIndex / navTotal — opcionalus "1 / 5" indikatorius
- * - Long-press care mode'e nepateikia šių props — strėlių nėra
+ * Brandbook v1.0 editorial layout:
+ * - Clean photo 3:2 (be dark overlay)
+ * - Title block ant bone canvas
+ * - LAISTYMAS + TRĘŠIMAS editorial sekcijos su StatusBlock (mono caps header,
+ *   border-l accent rows label/value)
+ * - Action bar apačioje: Laistyti (forest) + Tręšti (terracotta) + opc.
+ *   Patikrinau (inspection snooze)
+ * - Nav arrows (prev/next per priežiūros santrauką) — kompaktiškos top
+ *   header'e, ne overlay'us ant photo
  *
  * Props:
- *   plant         — augalo objektas
- *   zones         — visos zonos (zone chip rendering'ui)
- *   onClose       — uždarymas (X mygtukas, drag down, backdrop)
- *   onAddEvent    — (type, extra) => void; type ∈ {watering, fertilizing, inspection}
- *   onAfterAction — (opcionalus) iškviečiamas po veiksmo. Default: onClose
- *   onPrev        — (opcionalus) ankstesnis augalas list'e (null jei nėra prev)
- *   onNext        — (opcionalus) sekantis augalas list'e (null jei nėra next)
- *   navIndex      — (opcionalus) dabartinio augalo indeksas (rodyklės indikatoriui)
- *   navTotal      — (opcionalus) bendras list'o ilgis
+ *   plant, zones, onClose, onAddEvent (type, extra), onAfterAction,
+ *   onPrev, onNext, navIndex, navTotal
  */
+
+function fmtDate(iso) {
+  if (!iso) return null
+  return new Date(iso + 'T00:00:00').toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
+}
+
+function daysSince(iso) {
+  if (!iso) return null
+  return Math.floor((Date.now() - new Date(iso + 'T00:00:00')) / 86400000)
+}
+
+// ── Editorial status block — vienas patternas Laistymui + Tręšimui ────────
+// Mono caps section header + border-l accent + label/value rows.
+
+function StatusBlock({ icon, title, description, methodHint, lastDate, intervalLabel, nextDate, daysUntil, isOverdue, isSnoozed, tone, snoozedUntil, lastInspectionDate }) {
+  // tone: 'forest' (water) | 'terracotta' (fert)
+  const accentColor = isOverdue
+    ? 'border-terracotta'
+    : isSnoozed
+      ? 'border-forest-400/60'
+      : 'border-bone-400/60'
+  const titleColor = tone === 'terracotta' ? 'text-terracotta-600' : 'text-forest-700'
+  const iconColor  = tone === 'terracotta' ? 'text-terracotta-500' : 'text-forest-500'
+
+  return (
+    <section className="space-y-2.5">
+      <div className="flex items-center gap-2">
+        <div className={iconColor}>{icon}</div>
+        <h3 className={`font-display text-base font-semibold tracking-tight ${titleColor}`}>{title}</h3>
+      </div>
+
+      {description && (
+        <p className="text-sm text-forest-600 leading-relaxed">{description}</p>
+      )}
+
+      <div className={`pl-3 border-l-2 ${accentColor} space-y-1.5`}>
+        {methodHint && (
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Metodas</span>
+            <span className="text-sm text-forest-700 text-right max-w-[60%]">{methodHint}</span>
+          </div>
+        )}
+        {lastDate && (
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Paskutinis</span>
+            <span className="text-sm text-forest-700 tabular-nums text-right">
+              {fmtDate(lastDate)}
+              {daysSince(lastDate) != null && (
+                <span className="text-forest-400 font-normal"> · {daysSince(lastDate)} d. atgal</span>
+              )}
+            </span>
+          </div>
+        )}
+        {intervalLabel && (
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Rekomenduojama</span>
+            <span className="text-sm text-forest-700 tabular-nums text-right">{intervalLabel}</span>
+          </div>
+        )}
+        {daysUntil != null && (
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">
+              {isOverdue ? 'Vėluoja' : 'Kitas'}
+            </span>
+            <span className={`text-sm font-bold tabular-nums text-right ${isOverdue ? 'text-terracotta-600' : 'text-forest-700'}`}>
+              {isOverdue
+                ? `${Math.abs(daysUntil)} d.`
+                : daysUntil === 0
+                  ? 'šiandien'
+                  : `po ${daysUntil} d.${nextDate ? ` · ${fmtDate(nextDate)}` : ''}`}
+            </span>
+          </div>
+        )}
+        {isSnoozed && snoozedUntil && (
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Patikrinta</span>
+            <span className="text-sm text-forest-700 text-right">
+              {fmtDate(lastInspectionDate)} · ramybė iki {fmtDate(snoozedUntil)}
+            </span>
+          </div>
+        )}
+      </div>
+    </section>
+  )
+}
+
 export default function CareWateringSheet({
   plant, zones = [], onClose, onAddEvent,
   onAfterAction, onPrev, onNext, navIndex, navTotal,
 }) {
-  // Desktop split panel — portal į RightPanel container'į vietoj document.body.
+  // Desktop split panel — portal į RightPanel container'į.
   const isDesktop = useIsDesktop()
   const host = useDetailHost()
   const useDesktopPanel = isDesktop && !!host?.container
@@ -64,28 +136,31 @@ export default function CareWateringSheet({
 
   const afterAction = onAfterAction || onClose
   const wc = getWateringForecast(plant)
+  const fc = getFertilizingForecast(plant)
   const hasImg = !!plant.image
   const intervals = plant.laistymasIntervalas
-  const desc = plant.prieziura?.laistymas
-  const hasFert = getFertilizingForecast(plant).intervalDays != null
+  const wateringDesc = plant.prieziura?.laistymas
+  const hasFert = fc.intervalDays != null || fc.lastDate
   const showInspect = wc.isOverdue && wc.lastType === 'watering'
   const currentZone = zones.find(z => z.id === plant.zonaId)
   const [postFert, setPostFert] = useState(false)
 
-  // Veiksmai naudoja afterAction (auto-advance į kitą list'o augalą arba close).
-  // Tręšti yra išimtis — neperžengia, post-fert prompt'as turi būti atsakytas.
+  // Actions
   const onWater     = () => { onAddEvent('watering');     afterAction() }
   const onFertilize = () => { onAddEvent('fertilizing'); setPostFert(true) }
   const onInspect   = () => { onAddEvent('inspection');   afterAction() }
   const onPalasciau = () => { onAddEvent('watering', { komentaras: 'Laistyta po tręšimo' }); afterAction() }
   const onNelasciau = () => { afterAction() }
 
-  const fmtDate = iso => iso
-    ? new Date(iso + 'T00:00:00').toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
-    : null
-  const daysSince = iso => iso
-    ? Math.floor((Date.now() - new Date(iso + 'T00:00:00')) / 86400000)
-    : null
+  // Watering status block data
+  const waterIntervalLabel = intervals?.vasara != null
+    ? `vasarą kas ${intervals.vasara} d.${intervals.ziema === null ? ' · žiemą nelaistoma' : intervals.ziema != null ? ` · žiemą kas ${intervals.ziema} d.` : ''}`
+    : wc.intervalDays != null
+      ? `kas ${wc.intervalDays} d.`
+      : null
+
+  // Fertilizing status block data
+  const fertIntervalLabel = fc.intervalDays != null ? `kas ${fc.intervalDays} d.` : null
 
   const dragControls = useDragControls()
   const y = useMotionValue(0)
@@ -96,7 +171,7 @@ export default function CareWateringSheet({
 
   return createPortal(
     <div className={useDesktopPanel
-      ? "absolute inset-0 bg-app flex flex-col"
+      ? "absolute inset-0 flex flex-col"
       : "fixed inset-0 z-[110] flex items-end justify-center"}>
       {/* Backdrop — tik mobile */}
       {!useDesktopPanel && (
@@ -108,14 +183,13 @@ export default function CareWateringSheet({
         />
       )}
 
-      {/* Sheet — full-screen mobile width, identiška PlantDetail struktūrai */}
+      {/* Sheet — desktop'e glass card (kaip PlantDetail), mobile'e solid bone */}
       <motion.div
         className={useDesktopPanel
-          ? "relative w-full h-full bg-app flex flex-col"
+          ? "relative w-full h-full bg-white/55 backdrop-blur-xl flex flex-col"
           : "relative w-full max-w-[430px] bg-app flex flex-col"}
         style={useDesktopPanel ? { height: '100%' } : { height: '100dvh', y }}
         {...(useDesktopPanel ? {
-          // Desktop'e — slide iš dešinės (kortelė įvažiuoja iš panel'ės krašto)
           initial: { x: '100%' }, animate: { x: 0 }, exit: { x: '100%' },
         } : {
           drag: 'y',
@@ -128,7 +202,7 @@ export default function CareWateringSheet({
         })}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
       >
-        {/* Drag handle — tik mobile (desktop'e uždarymas per X) */}
+        {/* Drag handle — tik mobile */}
         {!useDesktopPanel && (
           <div className="absolute top-0 left-0 right-0 z-20 flex justify-center pb-2 pointer-events-none select-none" style={{ paddingTop: 'max(0.625rem, env(safe-area-inset-top))' }}>
             <div
@@ -141,182 +215,113 @@ export default function CareWateringSheet({
           </div>
         )}
 
-        {/* Navigacijos strėlės — rodoma tik jei priežiūros santrauka pateikė
-            list (per onPrev/onNext callbacks). Long-press care mode'e — null. */}
-        {onPrev && (
-          <button
-            onClick={onPrev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-black/30 backdrop-blur-sm rounded-btn flex items-center justify-center text-white active:bg-black/45 transition-colors"
-            aria-label="Ankstesnis augalas"
-          >
-            <ChevronLeft size={20} />
-          </button>
-        )}
-        {onNext && (
-          <button
-            onClick={onNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-black/30 backdrop-blur-sm rounded-btn flex items-center justify-center text-white active:bg-black/45 transition-colors"
-            aria-label="Sekantis augalas"
-          >
-            <ChevronRight size={20} />
-          </button>
-        )}
-        {/* Indikatorius "2 / 5" — kompaktiškas pill po drag handle, jei nav aktyvi */}
-        {navIndex != null && navTotal != null && navTotal > 1 && (
-          <div className="absolute z-20 left-1/2 -translate-x-1/2" style={{ top: 'calc(env(safe-area-inset-top) + 1.5rem)' }}>
-            <div className="bg-black/30 backdrop-blur-sm rounded-full px-2.5 py-0.5">
-              <span className="text-[11px] font-semibold text-white tabular-nums">{navIndex + 1} / {navTotal}</span>
-            </div>
-          </div>
-        )}
-
-        {/* ── Hero ── identiška PlantDetail */}
-        {hasImg ? (
-          <div className="relative flex-shrink-0 overflow-hidden" style={{ height: 'calc(17rem + env(safe-area-inset-top))' }}>
-            <img src={plant.image} alt={plant.lietuviškas} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
-            <div className="absolute right-4 z-30" style={{ top: 'max(1rem, env(safe-area-inset-top))' }}>
+        {/* ── Top toolbar — kompaktiškas nav pager + close ── */}
+        <div
+          className="flex items-center gap-3 px-4 pb-2 flex-shrink-0"
+          style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
+        >
+          {/* Pager — kompaktiškas „‹ 2 / 5 ›" vietoj side overlay arrows */}
+          {(onPrev || onNext) && (
+            <div className="inline-flex items-center gap-1 bg-bone-300/50 rounded-full p-0.5">
               <button
-                onClick={onClose}
-                className="w-10 h-10 bg-black/30 backdrop-blur-sm rounded-btn flex items-center justify-center text-white"
-                aria-label="Uždaryti"
+                onClick={onPrev}
+                disabled={!onPrev}
+                className="w-7 h-7 flex items-center justify-center rounded-full text-forest-600 disabled:opacity-30 active:bg-bone-400/50 transition-colors"
+                aria-label="Ankstesnis"
               >
-                <X size={16} />
+                <ChevronLeft size={14} />
               </button>
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 p-4">
-              {currentZone && (
-                <div className="inline-flex items-center gap-1 mb-1 px-2 py-0.5 rounded-lg bg-white/20">
-                  <MapPin size={9} className="text-white/80" />
-                  <span className="text-[10px] text-white/90 font-medium">{currentZone.name}</span>
-                </div>
+              {navIndex != null && navTotal != null && navTotal > 1 && (
+                <span className="font-mono text-[10px] font-medium text-forest-600 uppercase tracking-[0.14em] px-1.5 tabular-nums">
+                  {navIndex + 1} / {navTotal}
+                </span>
               )}
-              <h2 className="text-xl font-bold text-white leading-tight">{plant.lietuviškas}</h2>
-              {plant.lotyniskas && (
-                <p className="text-xs text-white/70 italic mt-0.5">{plant.lotyniskas}</p>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="relative flex-shrink-0 px-5 pb-4 bg-sage-50" style={{ paddingTop: 'max(1.75rem, env(safe-area-inset-top))' }}>
-            <div className="flex items-center justify-end mb-3">
               <button
-                onClick={onClose}
-                className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-btn flex items-center justify-center text-gray-700 transition-colors"
-                aria-label="Uždaryti"
+                onClick={onNext}
+                disabled={!onNext}
+                className="w-7 h-7 flex items-center justify-center rounded-full text-forest-600 disabled:opacity-30 active:bg-bone-400/50 transition-colors"
+                aria-label="Sekantis"
               >
-                <X size={16} />
+                <ChevronRight size={14} />
               </button>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 bg-white/80 rounded-2xl flex items-center justify-center text-3xl shadow-ios flex-shrink-0">
-                {plant.emoji ?? '🌿'}
-              </div>
-              <div className="flex-1 min-w-0">
-                {currentZone && (
-                  <div className="inline-flex items-center gap-1 mb-1 px-2 py-0.5 rounded-lg bg-sage-100">
-                    <MapPin size={9} className="text-sage-600" />
-                    <span className="text-[10px] text-sage-700 font-medium">{currentZone.name}</span>
-                  </div>
-                )}
-                <h2 className="text-lg font-bold text-gray-900 leading-tight">{plant.lietuviškas}</h2>
-                {plant.lotyniskas && (
-                  <p className="text-xs text-gray-500 italic mt-0.5">{plant.lotyniskas}</p>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Scrollable content */}
-        <div className="overflow-y-auto flex-1 px-5 pt-4 pb-4 space-y-4">
-
-          {/* Description */}
-          {desc ? (
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Droplets size={15} className="text-sky-500" />
-                <p className="text-sm font-bold text-gray-800">Laistymas</p>
-              </div>
-              <p className="text-sm text-gray-600 leading-relaxed">{desc}</p>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Droplets size={15} className="text-sky-500" />
-              <p className="text-sm font-bold text-gray-800">Laistymas</p>
             </div>
           )}
 
-          {/* Method */}
-          {wc.metodas && (
-            <div className="bg-gray-50 rounded-2xl px-4 py-3">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Metodas</p>
-              <p className="text-sm text-gray-700">{wc.metodas}</p>
-            </div>
+          {/* Zone — clickable indicator */}
+          {currentZone && (
+            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500">
+              <MapPin size={11} className="text-forest-400" />
+              <span className="truncate">{currentZone.name}</span>
+            </span>
           )}
 
-          {/* Current status */}
-          <div className={`rounded-2xl px-4 py-3 ${wc.isOverdue ? 'bg-sky-50 border border-sky-100' : wc.isSnoozed ? 'bg-green-50 border border-green-100' : 'bg-gray-50'}`}>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2.5">Dabar</p>
-            <div className="space-y-2">
-              {wc.lastDate && (
-                <div className="flex justify-between items-baseline gap-2">
-                  <span className="text-sm text-gray-500 flex-shrink-0">Paskutinis</span>
-                  <span className="text-sm font-semibold text-gray-800 text-right">
-                    {fmtDate(wc.lastDate)}
-                    {daysSince(wc.lastDate) != null && (
-                      <span className="text-gray-400 font-normal"> · {daysSince(wc.lastDate)} d. atgal</span>
-                    )}
-                  </span>
-                </div>
-              )}
-              {(intervals?.vasara != null || wc.intervalDays != null) && (
-                <div className="flex justify-between items-baseline gap-2">
-                  <span className="text-sm text-gray-500 flex-shrink-0">Rekomenduojama</span>
-                  <span className="text-sm font-semibold text-gray-800 text-right">
-                    {intervals?.vasara != null
-                      ? `vasarą kas ${intervals.vasara} d.`
-                      : `kas ${wc.intervalDays} d.`}
-                    {intervals && (
-                      <span className="text-gray-400 font-normal">
-                        {' · '}
-                        {intervals.ziema === null
-                          ? 'žiemą neskaistoma'
-                          : intervals.ziema != null
-                            ? `žiemą kas ${intervals.ziema} d.`
-                            : ''}
-                      </span>
-                    )}
-                  </span>
-                </div>
-              )}
-              {wc.daysUntil != null && (
-                <div className="flex justify-between items-baseline gap-2">
-                  <span className="text-sm text-gray-500 flex-shrink-0">
-                    {wc.isOverdue ? 'Galimai vėluoja' : 'Kitas'}
-                  </span>
-                  <span className={`text-sm font-bold text-right ${wc.isOverdue ? 'text-sky-600' : 'text-gray-800'}`}>
-                    {wc.isOverdue
-                      ? `${Math.abs(wc.daysUntil)} d.`
-                      : `po ${wc.daysUntil} d.${wc.nextDate ? ` · ${fmtDate(wc.nextDate)}` : ''}`}
-                  </span>
-                </div>
-              )}
-              {wc.isSnoozed && wc.snoozedUntil && (
-                <div className="flex justify-between items-baseline gap-2">
-                  <span className="text-sm text-gray-500 flex-shrink-0">Patikrinta</span>
-                  <span className="text-sm font-semibold text-green-700 text-right">
-                    {fmtDate(wc.lastInspectionDate)} · ramybė iki {fmtDate(wc.snoozedUntil)}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-
+          <button
+            onClick={onClose}
+            className="ml-auto w-10 h-10 bg-bone-300/60 hover:bg-bone-400/60 rounded-btn flex items-center justify-center text-forest-700 transition-colors flex-shrink-0"
+            aria-label="Uždaryti"
+          >
+            <X size={16} />
+          </button>
         </div>
 
-        {/* Action bar — float apačioje, su safe-area pad */}
-        <div className="flex-shrink-0 px-4 pt-3 border-t border-gray-100 bg-white" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+        {/* ── Photo — clean 3:2 ── */}
+        {hasImg ? (
+          <div className="w-full aspect-[3/2] overflow-hidden bg-bone-300 flex-shrink-0">
+            <img src={plant.image} alt={plant.lietuviškas} className="w-full h-full object-cover" />
+          </div>
+        ) : (
+          <div className="w-full aspect-[3/2] flex items-center justify-center text-8xl bg-bone-300 flex-shrink-0">
+            {plant.emoji ?? '🌿'}
+          </div>
+        )}
+
+        {/* ── Scrollable content ── */}
+        <div className="overflow-y-auto flex-1 px-5 pt-4 pb-4 space-y-6">
+          {/* Title block */}
+          <div>
+            <h2 className="font-display text-2xl font-semibold tracking-tight text-forest-800 leading-tight">
+              {plant.lietuviškas}
+            </h2>
+            {plant.lotyniskas && (
+              <p className="text-sm text-forest-500 italic mt-1">{plant.lotyniskas}</p>
+            )}
+          </div>
+
+          {/* LAISTYMAS sekcija */}
+          <StatusBlock
+            icon={<Droplets size={18} />}
+            title="Laistymas"
+            description={wateringDesc}
+            methodHint={wc.metodas}
+            lastDate={wc.lastDate}
+            intervalLabel={waterIntervalLabel}
+            nextDate={wc.nextDate}
+            daysUntil={wc.daysUntil}
+            isOverdue={wc.isOverdue}
+            isSnoozed={wc.isSnoozed}
+            snoozedUntil={wc.snoozedUntil}
+            lastInspectionDate={wc.lastInspectionDate}
+            tone="forest"
+          />
+
+          {/* TRĘŠIMAS sekcija — rodoma tik jei augalas tręšiamas */}
+          {hasFert && (
+            <StatusBlock
+              icon={<Leaf size={18} />}
+              title="Tręšimas"
+              description={fc.fertilizerTip}
+              lastDate={fc.lastDate}
+              intervalLabel={fertIntervalLabel}
+              nextDate={fc.nextDate}
+              daysUntil={fc.daysUntil}
+              isOverdue={fc.isOverdue}
+              tone="terracotta"
+            />
+          )}
+        </div>
+
+        {/* ── Action bar — sticky bottom ── */}
+        <div className="flex-shrink-0 px-4 pt-3 border-t border-bone-400/40 bg-white/65 backdrop-blur-xl" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
           {postFert ? (
             <PostFertilizePrompt
               count={1}
@@ -328,28 +333,28 @@ export default function CareWateringSheet({
               <div className="flex gap-2 items-center">
                 <button
                   onClick={onWater}
-                  className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 active:bg-sky-600 transition-colors"
+                  className="flex-1 h-11 flex items-center justify-center gap-1.5 rounded-2xl bg-forest-600 active:bg-forest-700 transition-colors"
                 >
-                  <Droplets size={16} className="text-white" />
-                  <span className="text-sm font-bold text-white">Laistyti</span>
+                  <Droplets size={16} className="text-bone" />
+                  <span className="text-sm font-bold text-bone">Laistyti</span>
                 </button>
                 {hasFert && (
                   <button
                     onClick={onFertilize}
-                    className="flex-1 h-10 flex items-center justify-center gap-1.5 rounded-xl bg-amber-500 active:bg-amber-600 transition-colors"
+                    className="flex-1 h-11 flex items-center justify-center gap-1.5 rounded-2xl bg-terracotta active:bg-terracotta-500 transition-colors"
                   >
-                    <FlaskConical size={16} className="text-white" />
-                    <span className="text-sm font-bold text-white">Tręšti</span>
+                    <FlaskConical size={16} className="text-bone" />
+                    <span className="text-sm font-bold text-bone">Tręšti</span>
                   </button>
                 )}
               </div>
               {showInspect && (
                 <button
                   onClick={onInspect}
-                  className="mt-2 w-full h-10 flex items-center justify-center gap-1.5 rounded-xl bg-green-500 active:bg-green-600 transition-colors"
+                  className="mt-2 w-full h-10 flex items-center justify-center gap-1.5 rounded-2xl border border-forest-300 text-forest-700 active:bg-forest-50 transition-colors"
                 >
-                  <Check size={16} className="text-white" />
-                  <span className="text-sm font-bold text-white">Patikrinau — viskas tvarkoj</span>
+                  <Check size={16} />
+                  <span className="text-sm font-semibold">Patikrinau — viskas tvarkoj</span>
                 </button>
               )}
             </>
