@@ -1,67 +1,74 @@
 import AccuracySprite, { accuracyLabel } from './AccuracySprite'
 
 /**
- * AccuracyButton — Brandbook v1.0 unifikuotas dizainas.
+ * AccuracyButton — Brandbook v1.0 two-section model.
  *
- * Viena bone kortelė su forest border'iu, vidiniu vertical divider'iu
- * skiriančiu dvi sekcijas:
- *   Kairė:  sprite + „PRIEŽIŪRA" (mono uppercase metadata)
- *   Dešinė: N% (Bricolage extrabold) + „TIKSLUMAS" (mono uppercase)
+ * Du sklipusi staciakampiai įdėti į subtle outer pill (kaip tab nav rėmas).
+ *   Kairė (Priežiūra): frosted glass (bone-tinted backdrop blur) — neaktyvus
+ *                      vizualas, kaip widget'ai. Sprite + label.
+ *   Dešinė (Tikslumas): dinaminis forest gradient'as pagal stage'ą — nuo
+ *                       šviesaus (Mokomės) iki INK (Tobula). % skaičius +
+ *                       label. Spalva intensyvėja procentaliai.
  *
- * % skaičiaus spalva atspindi stage'ą (forest gerai, terracotta warning).
- * careMode metu — solid forest-700 + bone tekstas (INK rezimas).
+ * careMode metu — solid forest-700 + bone tekstas (rezimas paslepiamas
+ * dashboard'e care mode'e, bet šis kelis state'as palaikomas dėl konsistencijos).
+ *
+ * AccuracySprite naudoja default forest gradient (žr. AccuracySprite.jsx).
  */
 export default function AccuracyButton({ careConfidence = 0, careMode = false, onClick }) {
   const pct   = Math.round((careConfidence ?? 0) * 100)
   const label = accuracyLabel(pct)
   const stage = pct < 25 ? 0 : pct < 50 ? 1 : pct < 75 ? 2 : 3
 
+  // Outer pill — kaip tab nav konteineris, signalas „interaktyvu".
+  const outerCls = 'inline-flex p-1 rounded-btn bg-forest-700/[0.05]'
+
+  // Inner wrapper shadow/state.
   const wrapperCls = careMode
-    ? 'bg-forest-700 border-forest-800 shadow-[0_4px_14px_rgba(28,58,42,0.32)]'
-    : 'bg-bone border-bone-400/70 shadow-[0_1px_2px_rgba(28,58,42,0.04)] ' +
-      'lg:hover:bg-bone-50 lg:hover:border-forest-200/70 lg:hover:shadow-[0_3px_10px_rgba(28,58,42,0.10)]'
+    ? 'bg-forest-700 shadow-[0_4px_14px_rgba(28,58,42,0.32)]'
+    : 'shadow-[0_1px_2px_rgba(28,58,42,0.06)] lg:hover:shadow-[0_3px_10px_rgba(28,58,42,0.12)]'
 
-  const labelCls = careMode
-    ? 'text-bone/70'
-    : 'text-forest-500'
+  // Kairė (Priežiūra) — frosted glass kaip neaktyvūs widget'ai.
+  const ctaCls = careMode
+    ? 'bg-transparent text-bone'
+    : 'bg-white/55 backdrop-blur-xl text-forest-700 border-r border-bone-400/40'
 
-  const dividerCls = careMode
-    ? 'border-bone/15'
-    : 'border-bone-400/70'
+  // Dešinė (Tikslumas) — dinaminis forest gradient'as pagal stage.
+  // Nuo forest-50 (Mokomės) iki forest-300 (Tobula). Visa žalia paletė.
+  const metaCls = careMode
+    ? 'bg-white/12 text-bone border-l border-white/15'
+    : stage === 0 ? 'bg-forest-50 text-forest-500'
+    : stage === 1 ? 'bg-forest-100 text-forest-600'
+    : stage === 2 ? 'bg-forest-200 text-forest-700'
+    : 'bg-forest-300 text-forest-800'
 
+  // % skaičius — kontrastingesnis nei label, gilesnis stage'inis tonas.
   const pctNumberCls = careMode
     ? 'text-bone'
     : stage === 0 ? 'text-forest-700'
-    : stage === 1 ? 'text-terracotta-600'
-    : stage === 2 ? 'text-forest-700'
-    : 'text-forest-800'
+    : stage === 1 ? 'text-forest-800'
+    : stage === 2 ? 'text-forest-900'
+    : 'text-forest-900'
 
   return (
-    <button
-      onClick={onClick}
-      className={`inline-flex items-stretch rounded-btn overflow-hidden border transition-all active:scale-[0.97] ${wrapperCls}`}
-      title={careMode ? 'Išeiti iš priežiūros režimo' : `Priežiūra · ${label} ${pct}%`}
-    >
-      {/* Kairė: sprite + „PRIEŽIŪRA" mono metadata */}
-      <span className="inline-flex flex-col items-center justify-center gap-1.5 px-4 py-2.5 min-w-[76px]">
-        <AccuracySprite pct={pct} size={22} color={careMode ? '#f1ebdd' : '#1c3a2a'} />
-        <span className={`font-mono text-[9px] font-medium uppercase tracking-[0.18em] leading-none ${labelCls}`}>
-          Priežiūra
+    <span className={outerCls}>
+      <button
+        onClick={onClick}
+        className={`inline-flex items-stretch rounded-btn-sm overflow-hidden transition-all active:scale-[0.97] ${wrapperCls}`}
+        title={careMode ? 'Išeiti iš priežiūros režimo' : `Priežiūra · ${label} ${pct}%`}
+      >
+        {/* Kairė: sprite + „Priežiūra" — frosted */}
+        <span className={`inline-flex flex-col items-center justify-center gap-1 px-3.5 py-2 min-w-[68px] ${ctaCls}`}>
+          <AccuracySprite pct={pct} size={22} color={careMode ? '#f1ebdd' : undefined} />
+          <span className="text-[10.5px] font-semibold leading-none tracking-wide">Priežiūra</span>
         </span>
-      </span>
 
-      {/* Vertical divider */}
-      <span className={`border-l ${dividerCls} my-2`} />
-
-      {/* Dešinė: N% Bricolage + „TIKSLUMAS" mono */}
-      <span className="inline-flex flex-col items-center justify-center gap-1.5 px-4 py-2.5 min-w-[76px]">
-        <span className={`font-display text-[18px] font-extrabold leading-none tabular-nums tracking-tight ${pctNumberCls}`}>
-          {pct}%
+        {/* Dešinė: N% + „Tikslumas" — dinaminis forest gradient */}
+        <span className={`inline-flex flex-col items-center justify-center gap-1 px-3.5 py-2 min-w-[68px] ${metaCls}`}>
+          <span className={`text-[15px] font-extrabold leading-none tabular-nums ${pctNumberCls}`}>{pct}%</span>
+          <span className="text-[10.5px] font-medium leading-none">Tikslumas</span>
         </span>
-        <span className={`font-mono text-[9px] font-medium uppercase tracking-[0.18em] leading-none ${labelCls}`}>
-          Tikslumas
-        </span>
-      </span>
-    </button>
+      </button>
+    </span>
   )
 }

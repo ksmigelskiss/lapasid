@@ -2,23 +2,19 @@
  * AccuracySprite — augalas-spraitas, kuris auga vizualiai pagal
  * priežiūros tikslumo procentą (mūsų aggregateConfidence × 100).
  *
- * 4 stadijos:
- *  - 0–24%   stage 0: gray sprout            (#94a3a0) — „Mokomės"
- *  - 25–49%  stage 1: amber sprout + 2 leaf  (#f59e0b) — „Tikslumas"
- *  - 50–74%  stage 2: sage sprout + 3 leaf   (#2e7d52) — „Tikslu"
- *  - 75–100% stage 3: dark sage + bloom      (#1f5f3d) — „Tobula"
+ * Brandbook v1.0 — visi tones forest gradient'e (nuo šviesaus iki INK):
+ *  - 0–24%   stage 0: forest-200 (#9bb7a0)  — „Mokomės"   (light, just starting)
+ *  - 25–49%  stage 1: forest-300 (#6e9778)  — „Tikslumas" (growing)
+ *  - 50–74%  stage 2: forest-500 (#2e5238)  — „Tikslu"    (brand mid)
+ *  - 75–100% stage 3: forest-700 (#1c3a2a)  — „Tobula"    (INK peak)
  *
- * Designer'io exact SVG iš `/tmp/geliai-design/lapasid/project/components.jsx`.
- *
- * Default size 22px, header'yje. Galima skalei 32px+ (jei norėsim
- * parodyti kortelėse ar ant sprite'o atskirai).
+ * Default size 22px. Color prop'ą perduot tik jei reikia override (pvz.
+ * careMode tamsiame fone — bone spalva, kad būtų matomas).
  */
 export default function AccuracySprite({ pct = 0, size = 22, color }) {
   const stage = pct < 25 ? 0 : pct < 50 ? 1 : pct < 75 ? 2 : 3
-  // Stage tones — naudojami tik jei explicit `color` neperduotas. Default
-  // (žaliuojanti spalva) tinka mobile baltame fone; AccuracyButton (desktop
-  // greeting) kelia tamsų sage-700 fonu, todėl perduoda color="#fff".
-  const tones = ['#94a3a0', '#f59e0b', '#2e7d52', '#1f5f3d']
+  // Forest gradient — nuo šviesaus (stage 0) iki INK (stage 3).
+  const tones = ['#9bb7a0', '#6e9778', '#2e5238', '#1c3a2a']
   const tone = color ?? tones[stage]
   const stemTop = [16, 13, 10, 8][stage]
 
