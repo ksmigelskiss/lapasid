@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { ChevronRight, Sparkles, Heart, ShoppingBag, ChevronDown } from 'lucide-react'
 import { useCollapsible } from '../../hooks/useCollapsible'
-import { fetchBestPhoto } from '../../utils/imageService'
+import { fetchPhotos } from '../../utils/imageService'
 
 // Modulinis cache — offer'iai pasikartoja per idx rotaciją, fetch'iname
 // kiekvienai latin name vienąkart per sesiją.
@@ -18,7 +18,11 @@ function useOfferPhoto(latin) {
     let cached = photoCache.get(latin)
     if (typeof cached === 'string') { setUrl(cached); return }
     if (!cached) {
-      cached = fetchBestPhoto(latin).then(u => {
+      // fetchPhotos turi genus-level fallback'ą (svarbu cultivar'ams kaip
+      // „Philodendron Birkin", kurių pilno latin name'o nėra iNaturalist
+      // taxon'uose). Imam pirmą array elementą.
+      cached = fetchPhotos(latin).then(arr => {
+        const u = arr?.[0] ?? null
         if (u) photoCache.set(latin, u)
         else photoCache.delete(latin)  // leidžiam retry kitą sesiją
         return u
@@ -104,9 +108,9 @@ function OfferCard({ offer }) {
   const photo = useOfferPhoto(offer.latin)
   return (
     <div className="bg-white/70 backdrop-blur rounded-xl overflow-hidden border border-white/40 flex flex-col">
-      {/* Photo strip — dynamic real photo (iNaturalist/Wikipedia per fetchBestPhoto)
-          su gradient + emoji placeholder, kol nuotrauka užkraunama. */}
-      <div className="relative h-20" style={{ background: offer.bgGradient }}>
+      {/* Photo strip — dynamic real photo (iNaturalist/Wikipedia per fetchPhotos
+          su genus fallback'u) ant gradient + emoji placeholder'io. */}
+      <div className="relative h-16" style={{ background: offer.bgGradient }}>
         {photo ? (
           <img
             src={photo}
@@ -126,27 +130,27 @@ function OfferCard({ offer }) {
         )}
       </div>
 
-      {/* Body */}
-      <div className="px-2.5 pt-2 pb-2.5 flex-1 flex flex-col">
+      {/* Body — kompaktiški padding'ai/gap'ai, kad widget telptų vienoj eilutėj */}
+      <div className="px-2.5 pt-1.5 pb-2 flex-1 flex flex-col">
         <h4 className="text-[12px] font-bold text-gray-900 leading-tight line-clamp-1">{offer.name}</h4>
         <p className="text-[10px] text-gray-500 italic mt-0.5 line-clamp-1">{offer.latin}</p>
-        <div className="flex items-center justify-between mt-1.5">
+        <div className="flex items-center justify-between mt-1">
           <span className="text-[11px] font-bold text-gray-800 tabular-nums">{offer.price}</span>
           <span className="text-[9px] text-gray-400 truncate max-w-[80px]">{offer.supplier}</span>
         </div>
 
         {/* Mockup mygtukai — animuojasi, bet nieko nedaro */}
-        <div className="flex gap-1 mt-2">
+        <div className="flex gap-1 mt-1.5">
           <button
             type="button"
-            className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 active:scale-[0.97] transition-all text-[10.5px] font-semibold"
+            className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 active:scale-[0.97] transition-all text-[10.5px] font-semibold"
             title="(Demo) Į biblioteką"
           >
             <Heart size={11} />Noriu
           </button>
           <button
             type="button"
-            className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1.5 rounded-lg bg-sage-500 text-white hover:bg-sage-600 active:scale-[0.97] transition-all text-[10.5px] font-semibold"
+            className="flex-1 inline-flex items-center justify-center gap-1 px-1.5 py-1 rounded-lg bg-sage-500 text-white hover:bg-sage-600 active:scale-[0.97] transition-all text-[10.5px] font-semibold"
             title="(Demo) Pirkti pas tiekėją"
           >
             <ShoppingBag size={11} />Pirkti
