@@ -8,19 +8,24 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       devOptions: { enabled: false },
-      includeAssets: ['icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-180.png'],
+      includeAssets: [
+        'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-180.png',
+        'apple-touch-icon.png', 'favicon-32.png', 'favicon-16.png',
+      ],
       manifest: {
-        name: 'Gėlių žinynas',
-        short_name: 'Gėlės',
+        name: 'LapasID',
+        short_name: 'LapasID',
         description: 'Asmeninis augalų žinynas',
         start_url: '/',
         display: 'standalone',
-        background_color: '#ffffff',
-        theme_color: '#748962',
+        background_color: '#1c3a2a',  // Brandbook v1.0 Forest INK — splash background
+        theme_color: '#f1ebdd',        // Bone PAPER — naršyklės chrome (Android Chrome bar, iOS status)
         orientation: 'portrait',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
           { src: '/icons/icon-180.png', sizes: '180x180', type: 'image/png', purpose: 'any' },
         ],
       },
