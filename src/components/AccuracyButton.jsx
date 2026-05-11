@@ -28,9 +28,11 @@ export default function AccuracyButton({ careConfidence = 0, careMode = false, o
     : 'bg-white shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)] ' +
       'lg:hover:shadow-[0_3px_10px_rgba(20,40,30,0.12)]'
 
+  // Invertuota — kairė sekcija balta su sage tekstu/ikona (vietoj seno dark sage solid).
+  // Subtle sage divider tarp sekcijų atskiria nuo dešinės (kuri irgi šviesi tone'as).
   const ctaCls = careMode
     ? 'bg-transparent text-white'
-    : 'bg-sage-700 text-white'
+    : 'bg-white text-sage-700 border-r border-sage-100'
 
   const metaCls = careMode
     ? 'bg-white/12 text-white border-l border-white/15'
@@ -55,10 +57,10 @@ export default function AccuracyButton({ careConfidence = 0, careMode = false, o
       >
         {/* Kairė sekcija: sprite viršuj, „Priežiūra" apačioj */}
         <span className={`inline-flex flex-col items-center justify-center gap-1 px-3.5 py-2 min-w-[68px] ${ctaCls}`}>
-          {/* Sprite'as visada baltas — acc-cta fonas dark sage'as visomis stage'omis,
-              stage spalva (žalia) ant žalio nematoma. Spalvos progresą atspindi
-              acc-meta (Tikslumas N%) sekcija dešinėje. */}
-          <AccuracySprite pct={pct} size={22} color="#fff" />
+          {/* Sprite spalva: careMode (sage solid background) — baltas; inactive
+              (baltas background) — sage-700. Vienoda visiems stage'ams, nes
+              progresą jau atspindi acc-meta (Tikslumas N%) sekcija dešinėje. */}
+          <AccuracySprite pct={pct} size={22} color={careMode ? '#fff' : '#2e7d52'} />
           <span className="text-[10.5px] font-semibold leading-none tracking-wide">Priežiūra</span>
         </span>
 
