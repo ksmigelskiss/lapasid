@@ -408,13 +408,13 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       transition={{ type: 'spring', damping: 32, stiffness: 320 }}
       style={{ touchAction: 'pan-y' }}
     >
-      {/* Header — X close top-right (suvienodintas su kitais top-level modal'ais) */}
+      {/* Header — X close top-right */}
       <div className="safe-top" />
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-warm-border">
-        <h2 className="text-base font-semibold text-gray-900 flex-1">Rasti augalą</h2>
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-bone-400/40">
+        <h2 className="font-display text-base font-semibold tracking-tight text-forest-800 flex-1">Rasti augalą</h2>
         <button
           onClick={onClose}
-          className="w-10 h-10 flex items-center justify-center rounded-btn bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors"
+          className="w-10 h-10 flex items-center justify-center rounded-btn bg-bone-300/60 hover:bg-bone-400/60 text-forest-700 transition-colors"
           aria-label="Uždaryti"
         >
           <X size={16} />
@@ -424,8 +424,8 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-none px-4 py-5 space-y-5">
         {/* Search input + photo button */}
         <div className="flex gap-2">
-          <div className="flex-1 flex items-center bg-white border border-gray-200 rounded-2xl px-4 gap-2">
-            <Search size={18} className="text-gray-400 flex-shrink-0" />
+          <div className="flex-1 flex items-center bg-bone-50 border border-bone-400/40 rounded-2xl px-4 gap-2 focus-within:border-forest-400/60 transition-colors">
+            <Search size={18} className="text-forest-400 flex-shrink-0" />
             <input
               ref={inputRef}
               type="text"
@@ -435,7 +435,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
               value={query}
               onChange={e => { setPreview(null); setQuery(e.target.value); setResult(null); setError(null) }}
               onKeyDown={handleKeyDown}
-              className="flex-1 bg-transparent py-3.5 text-sm text-gray-800 placeholder-gray-500 outline-none"
+              className="flex-1 bg-transparent py-3.5 text-sm text-forest-800 placeholder-forest-400 outline-none"
               autoComplete="nope"
               autoCorrect="off"
               autoCapitalize="off"
@@ -443,13 +443,13 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
               autoFocus
             />
             {(query || previewUrl) && (
-              <button onClick={clear} className="text-gray-400 px-1 flex-shrink-0"><X size={14} /></button>
+              <button onClick={clear} className="text-forest-400 px-1 flex-shrink-0"><X size={14} /></button>
             )}
           </div>
           <button
             onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
             disabled={!query.trim() || loading}
-            className="flex-shrink-0 bg-sage-500 disabled:opacity-40 hover:bg-sage-600 transition-colors rounded-2xl flex items-center justify-center text-white"
+            className="flex-shrink-0 bg-forest-700 disabled:opacity-40 hover:bg-forest-800 transition-colors rounded-2xl flex items-center justify-center text-bone"
             style={{ width: 52, height: 52 }}
           >
             {loading
@@ -459,7 +459,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
           </button>
           <button
             onClick={() => fileRef.current?.click()}
-            className="flex-shrink-0 bg-white border border-gray-200 hover:bg-surface transition-colors rounded-2xl flex items-center justify-center text-gray-600"
+            className="flex-shrink-0 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 transition-colors rounded-2xl flex items-center justify-center text-forest-600"
             style={{ width: 52, height: 52 }}
           >
             <Camera size={22} />
@@ -477,17 +477,17 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
               ? <img src={previewUrl} alt="" className="w-28 h-28 object-cover rounded-2xl opacity-70" />
               : <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />
             }
-            <p className="text-sm text-gray-600 font-medium">{statusMsg}{dots}</p>
-            {!previewUrl && <p className="text-xs text-gray-400 italic">{query}</p>}
+            <p className="text-sm text-forest-600 font-medium">{statusMsg}{dots}</p>
+            {!previewUrl && <p className="text-xs text-forest-400 italic">{query}</p>}
           </div>
         )}
 
-        {/* Error */}
+        {/* Error — terracotta callout */}
         {error && !loading && (
-          <div className="bg-red-50 rounded-3xl p-5 text-center">
-            <div className="flex justify-center mb-2 text-red-300"><Search size={32} /></div>
-            <p className="text-sm text-red-600 font-medium">{error}</p>
-            <p className="text-xs text-red-400 mt-1">Bandykite kitą pavadinimą arba aiškesnę nuotrauką</p>
+          <div className="bg-terracotta-50 border border-terracotta-200/60 rounded-2xl p-5 text-center">
+            <div className="flex justify-center mb-2 text-terracotta-400"><Search size={32} /></div>
+            <p className="text-sm text-terracotta-600 font-semibold">{error}</p>
+            <p className="text-xs text-terracotta-500 mt-1">Bandykite kitą pavadinimą arba aiškesnę nuotrauką</p>
           </div>
         )}
 
@@ -541,36 +541,36 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                 )}
 
                 <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-xl font-bold text-white leading-tight">{result.name}</h3>
-                  <p className="text-xs text-white/70 italic mt-0.5">{result.latinName}</p>
+                  <h3 className="font-display text-xl font-semibold tracking-tight text-bone leading-tight">{result.name}</h3>
+                  <p className="text-sm text-bone/70 italic mt-1">{result.latinName}</p>
                   {(result.inatLtName || result.sinonimai?.length > 0 || result.englishNames?.length > 0) && (
-                    <div className="flex flex-wrap gap-1 mt-1.5">
+                    <div className="flex flex-wrap gap-1.5 mt-2">
                       {result.inatLtName && (
-                        <span className="text-[10px] text-white/80 bg-white/15 rounded px-1.5 py-0.5">{result.inatLtName}</span>
+                        <span className="font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-bone/85 bg-white/10 backdrop-blur-sm border border-white/15 rounded px-1.5 py-0.5">{result.inatLtName}</span>
                       )}
                       {result.sinonimai?.filter(s => s !== result.inatLtName).map((s, i) => (
-                        <span key={i} className="text-[10px] text-white/80 bg-white/15 rounded px-1.5 py-0.5">{s}</span>
+                        <span key={i} className="font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-bone/85 bg-white/10 backdrop-blur-sm border border-white/15 rounded px-1.5 py-0.5">{s}</span>
                       ))}
                       {result.englishNames?.map((n, i) => (
-                        <span key={i} className="text-[10px] text-white/60 bg-white/10 rounded px-1.5 py-0.5 italic">{n}</span>
+                        <span key={i} className="font-mono text-[9px] uppercase tracking-[0.14em] text-bone/60 bg-white/5 border border-white/10 rounded px-1.5 py-0.5">{n}</span>
                       ))}
                     </div>
                   )}
                 </div>
               </div>
             ) : (
-              <div className="bg-sage-50 rounded-3xl p-4 flex items-center gap-4 mb-0">
-                <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-4xl shadow-ios flex-shrink-0">
+              <div className="bg-bone-50 border border-bone-400/40 rounded-3xl p-4 flex items-center gap-4 mb-0">
+                <div className="w-16 h-16 rounded-2xl bg-bone-300 flex items-center justify-center text-4xl flex-shrink-0">
                   {result.emoji}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-gray-900 leading-tight">{result.name}</h3>
-                  <p className="text-xs text-sage-600 italic mt-0.5">{result.latinName}</p>
+                  <h3 className="font-display text-lg font-semibold tracking-tight text-forest-800 leading-tight">{result.name}</h3>
+                  <p className="text-sm text-forest-500 italic mt-1">{result.latinName}</p>
                   {(result.inatLtName || result.sinonimai?.length > 0) && (
-                    <div className="flex flex-wrap gap-1 mt-1.5">
-                      {result.inatLtName && <span className="text-[10px] text-sage-700 bg-sage-100 rounded px-1.5 py-0.5">{result.inatLtName}</span>}
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {result.inatLtName && <span className="font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-forest-600 bg-forest-100 rounded px-1.5 py-0.5">{result.inatLtName}</span>}
                       {result.sinonimai?.filter(s => s !== result.inatLtName).map((s, i) => (
-                        <span key={i} className="text-[10px] text-sage-600 bg-white border border-sage-200 rounded px-1.5 py-0.5">{s}</span>
+                        <span key={i} className="font-mono text-[9px] uppercase tracking-[0.14em] text-forest-600 bg-bone-50 border border-bone-400/40 rounded px-1.5 py-0.5">{s}</span>
                       ))}
                     </div>
                   )}
@@ -596,18 +596,20 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                 />
               ) : (
                 <>
+                  {/* Primary action — solid INK button per brandbook auth pattern */}
                   <SaveButton
                     label="Pirkau, turiu!"
                     result={result}
-                    className="w-full py-4 rounded-3xl text-sm font-semibold text-white bg-sage-500 hover:bg-sage-600 disabled:opacity-60 transition-colors shadow-ios"
+                    className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 disabled:opacity-60 transition-colors"
                     onSave={onAddToDashboard}
                     onClose={onClose}
                     onSavingChange={setSavingPhase2}
                   />
+                  {/* Secondary — bone-50 outline (mažesnis vizualinis svoris) */}
                   <SaveButton
                     label="Pridėti į biblioteką"
                     result={result}
-                    className="w-full py-4 rounded-3xl text-sm font-semibold text-blush-600 bg-blush-50 hover:bg-blush-100 disabled:opacity-60 transition-colors"
+                    className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 disabled:opacity-60 transition-colors"
                     onSave={onAddToWishlist}
                     onClose={onClose}
                     onSavingChange={setSavingPhase2}
@@ -622,7 +624,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             pirma rasti savus augalus, prieš einant ieškoti naujų internete). */}
         {!result && !loading && !error && query.trim() && localMatches.length > 0 && (
           <div className="space-y-2">
-            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider px-1">
+            <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] px-1">
               Tavo augalai ({localMatches.length})
             </p>
             <div className="space-y-1.5">
@@ -630,9 +632,9 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                 <button
                   key={p.id}
                   onClick={() => onViewPlant?.(p)}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 bg-white border border-gray-100 rounded-2xl text-left hover:bg-surface active:bg-surface-2 transition-colors"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 bg-bone-50 border border-bone-400/40 rounded-2xl text-left hover:bg-bone-300/40 transition-colors"
                 >
-                  <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 bg-sage-50">
+                  <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 bg-bone-300">
                     {p.image ? (
                       <img src={p.image} alt="" className="w-full h-full object-cover" />
                     ) : (
@@ -640,13 +642,13 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 truncate">{p.lietuviškas}</p>
-                    <p className="text-xs text-gray-500 italic truncate">{p.lotyniskas}</p>
+                    <p className="font-display text-sm font-semibold tracking-tight text-forest-800 truncate">{p.lietuviškas}</p>
+                    <p className="text-xs text-forest-500 italic truncate">{p.lotyniskas}</p>
                   </div>
-                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full flex-shrink-0 ${
-                    p.kategorija === 'auginama' ? 'bg-sage-100 text-sage-700' :
-                    p.kategorija === 'nori' ? 'bg-blush-100 text-blush-700' :
-                    'bg-gray-100 text-gray-500'
+                  <span className={`font-mono text-[10px] font-medium px-1.5 py-0.5 rounded-full flex-shrink-0 ${
+                    p.kategorija === 'auginama' ? 'bg-forest-100 text-forest-700' :
+                    p.kategorija === 'nori' ? 'bg-terracotta-100 text-terracotta-600' :
+                    'bg-bone-300 text-forest-500'
                   }`}>
                     {p.kategorija === 'auginama' ? 'Auginu' : p.kategorija === 'nori' ? 'Noriu' : 'Istorija'}
                   </span>
@@ -656,7 +658,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             {/* CTA — eit ieškoti naujų augalų internete */}
             <button
               onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
-              className="w-full mt-2 py-3 rounded-2xl text-sm text-sage-700 font-semibold border border-dashed border-sage-300 hover:border-sage-400 hover:bg-sage-50 transition-colors"
+              className="w-full mt-2 py-3 rounded-2xl text-sm text-forest-700 font-semibold border border-dashed border-forest-300 hover:border-forest-500 hover:bg-forest-50 transition-colors"
             >
               Ieškoti naujų augalų: „{query}"
             </button>
@@ -667,10 +669,10 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
         {!result && !loading && !error && query.trim() && localMatches.length === 0 && (
           <div className="text-center py-12 space-y-3">
             <img src="/plant_pot.png" className="w-14 h-14 object-contain mx-auto opacity-60" alt="" />
-            <p className="text-sm text-gray-500">Tavo kolekcijoje neradome „{query}"</p>
+            <p className="text-sm text-forest-500">Tavo kolekcijoje neradome „{query}"</p>
             <button
               onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
-              className="px-5 py-2.5 rounded-2xl text-sm font-semibold text-white bg-sage-500 hover:bg-sage-600 transition-colors shadow-ios"
+              className="px-5 py-2.5 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
             >
               Ieškoti internete
             </button>
@@ -681,8 +683,8 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
         {!result && !loading && !error && !query.trim() && (
           <div className="text-center py-16 space-y-3">
             <img src="/plant_pot.png" className="w-16 h-16 object-contain mx-auto animate-idle-float" alt="" />
-            <p className="text-sm text-gray-500">Įveskite augalo pavadinimą</p>
-            <p className="text-xs text-gray-400">paieška ras tavo augalus, arba galėsi ieškoti naujų internete</p>
+            <p className="text-sm text-forest-600">Įveskite augalo pavadinimą</p>
+            <p className="text-xs text-forest-400">paieška ras tavo augalus, arba galėsi ieškoti naujų internete</p>
           </div>
         )}
       </div>
@@ -726,13 +728,13 @@ function SavingOverlay() {
   // context'e (auto), todėl DesktopHeader (z-30) lieka virš overlay'aus.
   return createPortal(
     <motion.div
-      className="fixed inset-0 z-[90] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-[90] flex items-center justify-center bg-forest-800/55 backdrop-blur-sm"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="bg-white rounded-3xl p-8 mx-6 flex flex-col items-center gap-5 shadow-2xl w-full max-w-[300px]"
+        className="bg-bone-50 rounded-3xl p-8 mx-6 flex flex-col items-center gap-5 shadow-[0_12px_32px_rgba(28,58,42,0.24)] border border-bone-400/50 w-full max-w-[300px]"
         initial={{ scale: 0.88, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.88, opacity: 0 }}
@@ -740,11 +742,11 @@ function SavingOverlay() {
       >
         <img src="/plant_pot.png" className="w-16 h-16 object-contain animate-spin" alt="" />
         <div className="text-center">
-          <p className="text-base font-bold text-gray-900">Kantrybės...</p>
+          <p className="font-display text-base font-semibold tracking-tight text-forest-800">Kantrybės...</p>
           <AnimatePresence mode="wait">
             <motion.p
               key={msgIndex}
-              className="text-sm text-gray-500 mt-1.5 min-h-[20px]"
+              className="text-sm text-forest-500 mt-1.5 min-h-[20px]"
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -5 }}
@@ -755,24 +757,24 @@ function SavingOverlay() {
           </AnimatePresence>
         </div>
 
-        {/* Progress steps */}
+        {/* Progress steps — forest gradient'as */}
         <div className="flex items-center justify-center w-full">
           {steps.map((s, i) => (
             <div key={i} className="flex items-center">
               <div className="flex flex-col items-center gap-1.5">
                 <div className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                  s.done   ? 'bg-sage-500' :
-                  s.active ? 'bg-sage-300 animate-pulse' :
-                             'bg-gray-200'
+                  s.done   ? 'bg-forest-700' :
+                  s.active ? 'bg-forest-400 animate-pulse' :
+                             'bg-bone-400/60'
                 }`} />
-                <span className={`text-[10px] font-medium ${
-                  s.done   ? 'text-sage-600' :
-                  s.active ? 'text-sage-500' :
-                             'text-gray-400'
+                <span className={`font-mono text-[9.5px] font-medium uppercase tracking-[0.14em] ${
+                  s.done   ? 'text-forest-700' :
+                  s.active ? 'text-forest-600' :
+                             'text-forest-400'
                 }`}>{s.label}</span>
               </div>
               {i < steps.length - 1 && (
-                <div className={`w-10 h-px mb-3.5 mx-1 ${s.done ? 'bg-sage-200' : 'bg-gray-200'}`} />
+                <div className={`w-10 h-px mb-3.5 mx-1 ${s.done ? 'bg-forest-300' : 'bg-bone-400/60'}`} />
               )}
             </div>
           ))}
@@ -852,11 +854,11 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
   // ── nori: custom layout with 3 actions ──────────────────────────
   if (kategorija === 'nori') {
     return (
-      <div className="bg-blush-50 border border-blush-200 rounded-2xl p-4 space-y-2">
-        <p className="text-sm font-semibold text-blush-800">Jau norų sąraše</p>
+      <div className="bg-terracotta-50 border border-terracotta-200/60 rounded-2xl p-4 space-y-2">
+        <p className="font-mono text-[10px] font-medium text-terracotta-600 uppercase tracking-[0.16em]">Jau norų sąraše</p>
         <button
           onClick={() => { onPromote?.(duplicate.id); onClose() }}
-          className="w-full py-3 rounded-2xl text-sm font-semibold text-white bg-gray-800 active:bg-gray-900 transition-colors"
+          className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
         >
           Įsigijau!
         </button>
@@ -866,7 +868,7 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
               label="Atnaujinti įrašą"
               result={result}
               existingId={duplicate.id}
-              className="flex-1 py-2.5 rounded-2xl text-sm font-semibold text-gray-700 bg-white border border-gray-200 active:bg-surface disabled:opacity-50 transition-colors"
+              className="flex-1 py-2.5 rounded-btn font-display text-sm font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 disabled:opacity-50 transition-colors"
               onUpdate={onUpdatePlant}
               onClose={onClose}
               onSavingChange={onSavingChange}
@@ -874,7 +876,7 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
           )}
           <button
             onClick={() => { onViewPlant?.(duplicate) }}
-            className="flex-1 py-2.5 rounded-2xl text-sm font-semibold text-gray-700 bg-white border border-gray-200 active:bg-surface transition-colors"
+            className="flex-1 py-2.5 rounded-btn font-display text-sm font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 transition-colors"
           >
             Peržiūrėti
           </button>
@@ -885,12 +887,12 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
 
   const configs = {
     auginama: {
-      bg: 'bg-sage-50', border: 'border-sage-200', text: 'text-sage-800',
+      bg: 'bg-forest-50', border: 'border-forest-200/60', text: 'text-forest-700',
       message: `Jau augini šį augalą`,
       primary: { label: 'Pridėti dar vieną', onSave: onAddToDashboard },
     },
     istorija: {
-      bg: 'bg-surface', border: 'border-gray-200', text: 'text-gray-700',
+      bg: 'bg-bone-300/40', border: 'border-bone-400/60', text: 'text-forest-600',
       message: `Šis augalas pas tave mirė...`,
       primary: { label: 'Bandyti dar kartą', onSave: onAddToDashboard },
     },
@@ -900,13 +902,13 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
 
   return (
     <div className={`${cfg.bg} border ${cfg.border} rounded-2xl p-4 space-y-3`}>
-      <p className={`text-sm font-semibold ${cfg.text}`}>{cfg.message}</p>
+      <p className={`font-mono text-[10px] font-medium uppercase tracking-[0.16em] ${cfg.text}`}>{cfg.message}</p>
       <div className="flex gap-2">
         {cfg.primary.onSave ? (
           <SaveButton
             label={cfg.primary.label}
             result={result}
-            className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white bg-gray-800 active:bg-gray-900 disabled:opacity-60 transition-colors"
+            className="flex-1 h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 disabled:opacity-60 transition-colors"
             onSave={cfg.primary.onSave}
             onClose={onClose}
             onSavingChange={onSavingChange}
@@ -914,14 +916,14 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
         ) : (
           <button
             onClick={cfg.primary.action}
-            className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white bg-gray-800 active:bg-gray-900 transition-colors"
+            className="flex-1 h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
           >
             {cfg.primary.label}
           </button>
         )}
         <button
           onClick={() => { onViewPlant?.(duplicate) }}
-          className="flex-1 py-3 rounded-2xl text-sm font-semibold text-gray-700 bg-white border border-gray-200 active:bg-surface transition-colors"
+          className="flex-1 h-12 rounded-btn font-display text-sm font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 transition-colors"
         >
           Peržiūrėti
         </button>
