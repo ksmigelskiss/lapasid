@@ -20,9 +20,14 @@ export default function Navigation({ active, onChange, counts = {}, role = 'owne
 
   return (
     <nav className={navPos}>
-      <div className="bg-white/85 backdrop-blur border-t border-gray-200/80 safe-bottom px-4 pt-2 pb-2">
-        {/* Tab container — toks pat pattern'as kaip DesktopHeader tabs (rounded-btn token'as) */}
-        <div className="flex bg-gray-900/[0.04] rounded-btn p-1 gap-0.5">
+      {/* Floating capsule pattern (iOS Maps style) — tabs nubrenta nuo apatinio
+          krašto, gauna solid bg + lifted shadow, kad aiškiai atskirtų nuo
+          grid'o turinio žemiau ir nuo browser/iOS bottom area. */}
+      <div
+        className="px-3 pt-2 pb-3"
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)' }}
+      >
+        <div className="flex bg-white rounded-btn p-1 gap-0.5 shadow-[0_4px_16px_rgba(20,40,30,0.10),0_0_0_1px_rgba(20,40,30,0.04)]">
           {visibleTabs.map(({ id, label, countKey }) => {
             const isActive = active === id
             const count = counts[countKey] ?? 0
@@ -32,7 +37,7 @@ export default function Navigation({ active, onChange, counts = {}, role = 'owne
                 onClick={() => onChange(id)}
                 className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-btn-sm text-[13px] font-medium transition-colors ${
                   isActive
-                    ? 'bg-white text-sage-700 shadow-[0_1px_2px_rgba(20,40,30,0.06),0_0_0_1px_rgba(20,40,30,0.04)]'
+                    ? 'bg-sage-50 text-sage-700'
                     : 'text-gray-600 active:text-gray-900'
                 }`}
               >

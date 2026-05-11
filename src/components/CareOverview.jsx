@@ -60,12 +60,29 @@ function plAugal(n) {
 
 // Kvietikliškas subline'as: laistymas yra „gali būti", tręšimas — „prašo valgyti"
 //   (laistymo tikslumas priklauso nuo daug parametrų, tręšimas — aiški cikliška sistema).
-function buildSubline(waterCount, fertCount) {
-  if (waterCount === 0 && fertCount === 0) return 'Visi augalai laimingi 🌿'
+// Grąžina array of strings — render'is flex-wrap, kad natūraliai išsiplėstų į
+// multi-line kai segmentų atsiras daugiau ar pavadinimai bus ilgesni.
+function buildSublineParts(waterCount, fertCount) {
   const parts = []
   if (waterCount > 0) parts.push(`${waterCount} ${plAugal(waterCount)} gali būti ištroškę`)
   if (fertCount > 0)  parts.push(`${fertCount} ${plAugal(fertCount)} prašo valgyti`)
-  return parts.join(' · ')
+  return parts
+}
+
+// Subline render'is — flex-wrap su mid-dot separator'iais. Tuščio state'o atveju
+// rodom „Visi augalai laimingi" pranešimą.
+function Subline({ parts, className }) {
+  if (parts.length === 0) return <p className={className}>Visi augalai laimingi 🌿</p>
+  return (
+    <div className={`flex flex-wrap gap-x-2 gap-y-0.5 ${className}`}>
+      {parts.map((part, i) => (
+        <span key={i} className="inline-flex items-center gap-2">
+          {i > 0 && <span aria-hidden className="text-gray-300">·</span>}
+          {part}
+        </span>
+      ))}
+    </div>
+  )
 }
 
 /**
@@ -165,7 +182,7 @@ export default function CareOverview({
   const greetPrefix = `${timeGreeting()}, `
   const firstName   = userFirstName(user)
   const greetingFull = `${greetPrefix}${firstName}`
-  const subline  = buildSubline(lists.wateringList.length, lists.fertList.length)
+  const sublineParts = buildSublineParts(lists.wateringList.length, lists.fertList.length)
 
   // 'summary' režimas — tik sąrašas, be kortelės wrapper'io (popup'ui)
   if (mode === 'summary') {
@@ -187,7 +204,7 @@ export default function CareOverview({
               <h1 className="text-[28px] sm:text-[32px] font-extrabold text-gray-950 leading-tight tracking-tight">
                 <span className="hidden sm:inline">{greetPrefix}</span>{firstName}
               </h1>
-              <p className="text-sm text-gray-500 mt-1">{subline}</p>
+              <Subline parts={sublineParts} className="text-sm text-gray-500 mt-1" />
             </div>
             {onCareToggle && (
               <AccuracyButton careConfidence={careConfidence} careMode={careMode} onClick={onCareToggle} />
@@ -196,7 +213,7 @@ export default function CareOverview({
         ) : (
           <>
             <h2 className="text-base font-bold text-gray-900 leading-tight">{greetingFull}</h2>
-            <p className="text-xs text-gray-500 mt-0.5">{subline}</p>
+            <Subline parts={sublineParts} className="text-xs text-gray-500 mt-0.5" />
           </>
         )}
       </div>
@@ -208,7 +225,7 @@ export default function CareOverview({
     <div className="mb-4 bg-white rounded-2xl overflow-hidden shadow-ios-card">
       <div className="px-4 pt-3 pb-2 border-b border-gray-100">
         <h2 className="text-base font-bold text-gray-900 leading-tight">{greetingFull}</h2>
-        <p className="text-xs text-gray-500 mt-0.5">{subline}</p>
+        <Subline parts={sublineParts} className="text-xs text-gray-500 mt-0.5" />
       </div>
 
       <button
