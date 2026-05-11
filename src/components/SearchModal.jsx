@@ -757,27 +757,36 @@ function SavingOverlay() {
           </AnimatePresence>
         </div>
 
-        {/* Progress steps — forest gradient'as */}
-        <div className="flex items-center justify-center w-full">
-          {steps.map((s, i) => (
-            <div key={i} className="flex items-center">
-              <div className="flex flex-col items-center gap-1.5">
-                <div className={`w-2.5 h-2.5 rounded-full transition-colors ${
+        {/* Progress — segmented barcode (brand pattern, ne generic dot'ai).
+            3 ploni bar'ai = visual indicator. Tekstas apačioje su color
+            hierarchy: done vivid, active pulse, pending ghost. */}
+        <div className="w-full">
+          <div className="flex items-center gap-1.5 mb-2">
+            {steps.map((s, i) => (
+              <div
+                key={i}
+                className={`flex-1 h-1 rounded-full transition-colors ${
                   s.done   ? 'bg-forest-700' :
-                  s.active ? 'bg-forest-400 animate-pulse' :
-                             'bg-bone-400/60'
-                }`} />
-                <span className={`font-mono text-[9.5px] font-medium uppercase tracking-[0.14em] ${
+                  s.active ? 'bg-forest-500 animate-pulse' :
+                             'bg-bone-400/50'
+                }`}
+              />
+            ))}
+          </div>
+          <div className="flex items-center justify-between">
+            {steps.map((s, i) => (
+              <span
+                key={i}
+                className={`font-mono text-[9.5px] font-medium uppercase tracking-[0.16em] transition-colors ${
                   s.done   ? 'text-forest-700' :
-                  s.active ? 'text-forest-600' :
-                             'text-forest-400'
-                }`}>{s.label}</span>
-              </div>
-              {i < steps.length - 1 && (
-                <div className={`w-10 h-px mb-3.5 mx-1 ${s.done ? 'bg-forest-300' : 'bg-bone-400/60'}`} />
-              )}
-            </div>
-          ))}
+                  s.active ? 'text-forest-700 animate-pulse' :
+                             'text-forest-300'
+                }`}
+              >
+                {s.label}
+              </span>
+            ))}
+          </div>
         </div>
       </motion.div>
     </motion.div>,
