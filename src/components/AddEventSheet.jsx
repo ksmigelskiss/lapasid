@@ -9,7 +9,7 @@ const EVENT_LABELS = {
   fertilizing: { icon: <FlaskConical size={13} />, label: 'Trąšos' },
   repotting:   { icon: <Sprout size={13} />,      label: 'Persodinimas' },
   treatment:   { icon: <Stethoscope size={13} />, label: 'Gydymas' },
-  note:        { icon: <FileText size={13} />,    label: 'Pastaba' },
+  note:        { icon: <FileText size={13} />,    label: 'Užrašas' },
   photo:       { icon: <Camera size={13} />,      label: 'Nuotrauka' },
 }
 
@@ -191,7 +191,7 @@ export function AddEventSheet({ type, onSave, onClose }) {
         {/* Note — hidden for watering/fertilizing (auto-comment added) */}
         {type !== 'watering' && type !== 'fertilizing' && (
           <div>
-            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Pastaba (nebūtina)</label>
+            <label className="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-1.5">Užrašas (nebūtina)</label>
             <textarea
               placeholder="Papildoma informacija..."
               value={note} onChange={e => setNote(e.target.value)}
@@ -226,7 +226,7 @@ const FAB_ACTIONS = [
   { type: 'fertilizing', Icon: FlaskConical,  label: 'Trąšos' },
   { type: 'repotting',   Icon: Sprout,        label: 'Persodinimas' },
   { type: 'treatment',   Icon: Stethoscope,   label: 'Gydymas' },
-  { type: 'note',        Icon: FileText,      label: 'Pastaba' },
+  { type: 'note',        Icon: FileText,      label: 'Užrašas' },
 ]
 
 export function FAB({ onSelect }) {
