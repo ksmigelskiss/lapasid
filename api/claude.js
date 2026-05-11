@@ -8,7 +8,7 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  const { messages, system, maxTokens, tools, toolChoice, limitType } = req.body
+  const { messages, system, maxTokens, tools, toolChoice, limitType, temperature, topP } = req.body
 
   if (!messages || !Array.isArray(messages)) {
     return res.status(400).json({ error: 'messages array required' })
@@ -33,9 +33,11 @@ export default async function handler(req, res) {
     const response = await client.messages.create({
       model:      'claude-sonnet-4-6',
       max_tokens: maxTokens ?? 1024,
-      ...(system      ? { system }                    : {}),
-      ...(tools       ? { tools }                     : {}),
-      ...(toolChoice  ? { tool_choice: toolChoice }   : {}),
+      ...(system          ? { system }                    : {}),
+      ...(tools           ? { tools }                     : {}),
+      ...(toolChoice      ? { tool_choice: toolChoice }   : {}),
+      ...(temperature != null ? { temperature }          : {}),
+      ...(topP        != null ? { top_p: topP }          : {}),
       messages,
     })
 

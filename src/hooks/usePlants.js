@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { getDoc, getDocs, setDoc, deleteDoc, doc, collection as fsCol } from 'firebase/firestore'
 import { db } from '../utils/firebase'
-import { fromAIResult, makeId as _makeId, today as _today } from '../utils/plantTransform'
+import { fromAIResult, normalizeSavybes, makeId as _makeId, today as _today } from '../utils/plantTransform'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { saveToCatalog, catalogDocId } from '../utils/catalog'
 import { isMockMode, MOCK_DATA } from '../utils/mockData'
@@ -276,6 +276,30 @@ export function usePlants(collectionId, viewerToken = null) {
     updatePlant(id, { uzrasai })
   }, [updatePlant])
 
+  // „Atnaujinti per AI" — perpildo statinę plant info iš naujausio AI rezultato.
+  // Vartotojo daiktai (timeline, image, uzrasai, zonaId, status, kategorija,
+  // data_prideta, id, lietuviškas/lotyniskas) išsaugomi. Likę laukai (savybes,
+  // aprasymas, kilme, sviesa, vanduo, prieziura, idomybes ir t.t.) perrašomi.
+  const refreshPlantFromAIResult = useCallback((id, aiData) => {
+    // Whitelist'as laukų, kurie ATEINA iš AI ir perrašo esamus.
+    const aiFields = [
+      'tipas', 'augimo_greitis', 'sunkumas',
+      'toksiskas', 'toksiskumo_info',  // backward compat
+      'aprasymas', 'kilme',
+      'sviesa', 'vanduo', 'idomybes',
+    ]
+    const patch = {}
+    for (const k of aiFields) {
+      if (aiData[k] !== undefined) patch[k] = aiData[k]
+    }
+    // Savybes — normalizuojam per tą pačią funkciją kaip fromAIResult, kad
+    // nesaugotume raw AI struktūros (gali turėti netinkamus enum'us).
+    if (aiData.savybes !== undefined) {
+      patch.savybes = normalizeSavybes(aiData.savybes, aiData.toksiskas, aiData.toksiskumo_info)
+    }
+    updatePlant(id, patch)
+  }, [updatePlant])
+
   const toggleZinynasStarred = useCallback((id) => {
     update(prev => ({
       ...prev,
@@ -450,6 +474,7 @@ export function usePlants(collectionId, viewerToken = null) {
     library, archive,
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred, updateZinynasTitle,
     updateUzrasai,
+    refreshPlantFromAIResult,
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
     settings, updateSettings,
   }

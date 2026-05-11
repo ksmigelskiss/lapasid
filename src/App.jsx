@@ -102,6 +102,7 @@ export default function App() {
     addTimelineEvent, deleteTimelineEvent, updateChat,
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred, updateZinynasTitle,
     updateUzrasai,
+    refreshPlantFromAIResult,
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
   } = usePlants(collectionId, viewerToken)
 
@@ -509,6 +510,7 @@ export default function App() {
             onUzrasaiSave={(id, uzrasai) => updateUzrasai(id, uzrasai)}
             onStatusChange={(id, status, meta) => updateStatus(id, status, meta)}
             onUpdateNames={(id, patch) => updatePlant(id, patch)}
+            onRefreshFromAI={refreshPlantFromAIResult}
             onImageSave={async (id, url, fromHistory = false) => updateImage(id, await uploadImage(url, id), fromHistory)}
             onSaveChat={(id, msgs) => updateChat(id, msgs.map(({ imageUrl, ...m }) => m))}
             onSaveToZinynas={addToZinynas}

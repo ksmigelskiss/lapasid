@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
 import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight } from 'lucide-react'
-import { fetchPhotos, resizeImage } from '../utils/imageService'
+import { fetchPhotos, resizeImage, fetchWikipediaContext } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
 import { getCatalogEntry, saveToCatalog } from '../utils/catalog'
@@ -44,7 +44,7 @@ async function claudeCall(body) {
 }
 
 // ── Phase 1: fast preview (name, stats, description, facts) ──────
-const TOOL_PREVIEW = {
+export const TOOL_PREVIEW = {
   name: 'plant_preview',
   description: 'Pateik pagrindinę augalo informaciją greitai.',
   input_schema: {
@@ -56,8 +56,56 @@ const TOOL_PREVIEW = {
       tipas:           { type: 'string',  description: 'Augalo tipas (pvz. Sultingas, Tropinis daugiametis...)' },
       augimo_greitis:  { type: 'string',  enum: ['lėtas', 'vidutinis', 'greitas'] },
       sunkumas:        { type: 'integer', minimum: 1, maximum: 5 },
-      toksiskas:       { type: 'boolean' },
-      toksiskumo_info: { type: ['string', 'null'] },
+      toksiskas:       { type: 'boolean', description: 'Backward compat — TRUE jei yra bet koks pavojus' },
+      toksiskumo_info: { type: ['string', 'null'], description: 'Backward compat — savybes.pavojingumas.detales kopija' },
+      savybes: {
+        type: 'object',
+        description: 'Struktūruoti augalo savybės: pavojai (granuliariai), valgomumas, vaistinis.',
+        properties: {
+          pavojai: {
+            type: 'array',
+            description: 'GRANULIARŪS pavojai. Pildyk TIK kai TIKRAS dėl tipo+target+severity (literatūra/Wikipedia aiškiai nurodo). Jei žinai tik bendrai — palik tuščią ir pildyk pavojingumas.* saugiklį.',
+            items: {
+              type: 'object',
+              properties: {
+                tipas:    { type: 'string', enum: ['toksiskas', 'alergiskas', 'dirginantis'] },
+                target:   { type: 'string', enum: ['zmonems', 'gyvunams'] },
+                severity: { type: 'string', enum: ['silpnas', 'vidutinis', 'stiprus'] },
+              },
+              required: ['tipas', 'target', 'severity'],
+            },
+          },
+          pavojingumas: {
+            type: 'object',
+            description: 'SAUGIKLIS — visada pildyk, jei augalas yra bet kiek pavojingas, net jei pavojai[] tuščias.',
+            properties: {
+              yra:    { type: 'boolean' },
+              lygis:  { type: ['string', 'null'], enum: ['silpnas', 'vidutinis', 'stiprus', null] },
+              detales: { type: 'string', description: 'Free text Lt kalba: kokia medžiaga, kokiu būdu, kokiu kiekiu daro žalą. PRIVALOMAS dose kontekstas — pvz. „nurijus dideliais kiekiais", „ilgalaikiu kontaktu su oda".' },
+            },
+            required: ['yra', 'lygis', 'detales'],
+          },
+          valgomumas: {
+            type: 'object',
+            properties: {
+              statusas: { type: 'string', enum: ['none', 'dalinai', 'pilnai'] },
+              dalys:    { type: 'string', description: 'Pvz. „vaisiai", „lapai", „sėklos", „visas augalas". Tuščia jei none.' },
+              detales:  { type: 'string', description: 'Kontekstas. Pvz. „Tik prinokę vaisiai; lapai toksiški."' },
+            },
+            required: ['statusas', 'dalys', 'detales'],
+          },
+          vaistinis: {
+            type: 'object',
+            properties: {
+              statusas:  { type: 'string', enum: ['none', 'tradicine', 'moksline'], description: 'tradicine = liaudies medicina; moksline = klinikiniai įrodymai' },
+              naudojama: { type: 'string', description: 'Pvz. „odos uždegimams, virškinimui". Tuščia jei none.' },
+              detales:   { type: 'string' },
+            },
+            required: ['statusas', 'naudojama', 'detales'],
+          },
+        },
+        required: ['pavojai', 'pavojingumas', 'valgomumas', 'vaistinis'],
+      },
       aprasymas:       { type: 'string',  description: '4-6 sakinių aprašymas — kilmė, išvaizda, kodėl populiarus' },
       kilme:           { type: 'string' },
       sviesa: {
@@ -80,7 +128,7 @@ const TOOL_PREVIEW = {
       idomybes: { type: 'array', items: { type: 'string' }, description: '2-3 įdomūs faktai' },
     },
     required: ['name', 'latinName', 'emoji', 'tipas', 'augimo_greitis', 'sunkumas',
-               'toksiskas', 'aprasymas', 'kilme', 'sviesa', 'vanduo', 'idomybes'],
+               'toksiskas', 'savybes', 'aprasymas', 'kilme', 'sviesa', 'vanduo', 'idomybes'],
   },
 }
 
@@ -149,15 +197,72 @@ const TOOL_DETAILS = {
   },
 }
 
-const PLANT_SYSTEM = `Esi augalų ekspertas. Visada ieškok tiksliai nurodyto augalo.
+export const PLANT_SYSTEM = `Esi augalų ekspertas. Visada ieškok tiksliai nurodyto augalo. Rašyk LIETUVIŠKAI, natūraliai.
 
 SVARBU — laukas "name": PRIVALO būti tikras lietuviškas pavadinimas (žodynas/Vikipedija). NIEKADA lotyniškas ar angliškas. Hibridams be atskiro pavadinimo — naudok genties lietuvišką (pvz. Nepenthes → "Ąsotenė").
 
-Nuotraukų atpažinimas: identifikuok TIK pagrindinį nuotraukos augalą — tą, kuris užima daugiausiai kadro arba yra fokuse. Visiškai ignoruok fone ar šonuose matomus kitus augalus. Aprašyme ir visuose laukuose rašyk tik apie pagrindinį augalą.
+Nuotraukų atpažinimas: identifikuok TIK pagrindinį nuotraukos augalą — tą, kuris užima daugiausiai kadro arba yra fokuse. Visiškai ignoruok fone ar šonuose matomus kitus augalus.
 
 Šviesa: taskai 1 (žema) 50–150 μmol/m²/s; 2 (vidutinė) 150–400; 3 (ryški) 400–2000
 Vanduo: 1 (mažai) sultingi; 2 (vidutiniškai) tropiniai; 3 (daug) paparčiai
-Laistymas (dienomis): sultingi vasara 14–21, vidutiniai 7–14, paparčiai 3–7`
+Laistymas (dienomis): sultingi vasara 14–21, vidutiniai 7–14, paparčiai 3–7
+
+═════════════════════════════════════════════════════════
+SAVYBES — pavojai, valgomumas, vaistinis. KRITIŠKAI svarbu.
+═════════════════════════════════════════════════════════
+
+KAI VARTOTOJO MESSAGE'E PRIDEDAMI WIKIPEDIA ŠALTINIAI — naudok juos kaip
+PIRMINĮ AUTORITETĄ. Papildyk savo treniruotės žiniomis tik kur trūksta.
+Detalėse nurodyk "Wikipedia mini, kad ..." kai informacija iš ten.
+
+PAVOJAI[] (granuliarus) vs PAVOJINGUMAS (saugiklis):
+
+Pildyk pavojai[] TIK kai TIKRAS dėl visų trijų: tipas + target + severity.
+   ✓ "Pomidoras → toksiškas glikoalkaloidas solaninas; gyvūnams sukelia
+      virškinimo sutrikimus, neretai hospitalizacija" — TAIP, severity=stiprus
+   ✗ "Augalas turi alkaloidų" — nepildyk pavojai[], nes severity nežinomas
+
+JEI pavojai[] tuščias, BET žinai, kad augalas yra bet kiek pavojingas:
+  → pildyk pavojingumas.yra=true + spėk lygį + detalėse nurodyk kontekstą
+  → pvz. "Wikipedia mini, kad gyvūnams kenkia; konkrečių detalių nepateikia."
+
+NIEKADA nepildyk pavojai[] su pavyzdiniais skaičiais. Tuščias array OK.
+
+TWO-STEP REASONING toksiškumui (kai šaltiniuose nerasta tiesioginio įrašo):
+  1. Ar augale yra žinomas toksiškas junginys (alkaloidai, glikozidai,
+     oksalatai, saponinai, latexas)?
+  2. Ar AUGALUOSE (ne gryną laboratorijoje) tas junginys daro poveikį žinomu
+     kiekiu/būdu?
+
+  Jei abu „taip" — pildyk pavojai[] su severity NE AUKŠTESNIU NEI VIDUTINIS.
+  Detalėse PRIVALOMAI nurodyk:
+    - kokia medžiaga
+    - kokiu būdu žalą daro ("nurijus", "ilgalaikiu kontaktu su oda")
+    - apytikslis kiekis ("net mažais kiekiais", "tik dideliais kiekiais")
+
+  NIEKADA nepildyk severity=stiprus remdamasis vien junginio buvimu — tam
+  reikia konkretaus literatūros įrašo apie hospitalizacijos atvejus.
+
+DOSE KONTEKSTAS pavojingumas.detales lauke yra PRIVALOMAS:
+  ✓ "Sultys aitrios — sukelia odos dirginimą prisilietus; gerai nuplaunama
+     vandeniu. Vaikams ir gyvūnams pavojingiau."
+  ✓ "Sėklos turi cijanogeninių glikozidų — pavojingos NURIJUS DIDESNIAIS
+     KIEKIAIS (10+ sėklų). Vaisiai be sėklų saugūs."
+  ✗ "Augalas yra toksiškas." (be konteksto = gąsdina, ne informuoja)
+
+VALGOMUMAS:
+  - none = nevalgomas (rodom tik kaip "trūksta"; neignoruok jei yra)
+  - dalinai = kai kurios dalys (privalomai nurodyk dalys lauke)
+  - pilnai = visas augalas valgomas
+
+VAISTINIS:
+  - tradicine = liaudies medicina, žiniaraščių lygis
+  - moksline = klinikinis tyrimas patvirtino
+  - none = nevaistinis
+
+NIEKADA nepamiršk valgomų/vaistinių augalų — pomidoras, čiobreliai, citrina,
+papartis dažnai įvedami kaip kambariniai, bet jų atskiros dalys turi
+maistinę/vaistinę vertę. Tai stiprus app'o sell point — neignoruok.`
 
 
 
@@ -172,6 +277,8 @@ async function fetchDetails(latinName, name) {
 
   const r = await claudeCall({
     maxTokens:  2048,
+    temperature: 0.3,
+    topP:        0.8,
     system:     PLANT_SYSTEM,
     tools:      [TOOL_DETAILS],
     toolChoice: { type: 'tool', name: 'plant_details' },
@@ -205,6 +312,15 @@ async function enrich(parsed) {
     sinonimai:    namesData?.sinonimai    ?? [],
     englishNames: namesData?.englishNames ?? [],
   }
+}
+
+// Wikipedia RAG — Pasiima en.wikipedia.org abstract'ą ir formatuoja į user
+// message'o priedą. Naudojama prieš Claude call'ą savybes RAG'ui (toksiškumas,
+// valgomumas, vaistinis). null jei Wikipedia neturi straipsnio.
+async function buildWikipediaContextMessage(latinName) {
+  const ctx = await fetchWikipediaContext(latinName)
+  if (!ctx?.extract) return null
+  return `--- Wikipedia (en) šaltinis: ${ctx.title} ---\n${ctx.extract}\n--- pabaiga ---\n\nNaudok šį šaltinį kaip pirminį autoritetą savybėms (pavojai, valgomumas, vaistinis). Papildyk savo žiniomis kur trūksta. Detalėse paminėk "Wikipedia mini, kad ..." kai informacija iš ten.`
 }
 
 
@@ -295,11 +411,13 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     try {
       // ── Phase 1: fast preview ──────────────────────────────────
       const r1 = await claudeCall({
-        maxTokens:  1024,
-        system:     PLANT_SYSTEM,
-        tools:      [TOOL_PREVIEW],
-        toolChoice: { type: 'tool', name: 'plant_preview' },
-        messages:   [{ role: 'user', content: `Rask informaciją apie augalą: "${q}"` }],
+        maxTokens:   1536,
+        temperature: 0.3,
+        topP:        0.8,
+        system:      PLANT_SYSTEM,
+        tools:       [TOOL_PREVIEW],
+        toolChoice:  { type: 'tool', name: 'plant_preview' },
+        messages:    [{ role: 'user', content: `Rask informaciją apie augalą: "${q}"` }],
       })
       if (controller.signal.aborted) return
 
@@ -345,11 +463,13 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
 
       // ── Phase 1: fast preview ──────────────────────────────────
       const r1 = await claudeCall({
-        maxTokens:  1024,
-        system:     PLANT_SYSTEM,
-        tools:      [TOOL_PREVIEW],
-        toolChoice: { type: 'tool', name: 'plant_preview' },
-        messages:   [userMsg],
+        maxTokens:   1536,
+        temperature: 0.3,
+        topP:        0.8,
+        system:      PLANT_SYSTEM,
+        tools:       [TOOL_PREVIEW],
+        toolChoice:  { type: 'tool', name: 'plant_preview' },
+        messages:    [userMsg],
       })
 
       const previewBlock = r1.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')

@@ -54,6 +54,34 @@ async function fetchWikipediaPhoto(latinName) {
   }
 }
 
+/**
+ * Fetch Wikipedia summary text for RAG (Retrieval-Augmented Generation).
+ * Returns abstract paragraph + page URL — passed to Claude as authoritative
+ * factual source for toxicity/edibility/medicinal info, reducing hallucinations.
+ *
+ * Returns null if no Wikipedia article exists for that latinName.
+ */
+export async function fetchWikipediaContext(latinName) {
+  if (!latinName) return null
+  const title = latinName.trim().replace(/ /g, '_')
+  try {
+    const res = await fetch(
+      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`,
+      { headers: { Accept: 'application/json' } }
+    )
+    if (!res.ok) return null
+    const data = await res.json()
+    if (!data.extract) return null
+    return {
+      title:   data.title ?? null,
+      extract: data.extract,                                       // plain text abstract
+      url:     data.content_urls?.desktop?.page ?? null,
+    }
+  } catch {
+    return null
+  }
+}
+
 /** Single best photo — used for bulk Dashboard fetch */
 export async function fetchBestPhoto(latinName) {
   const photos = await fetchINaturalistPhotos(latinName)

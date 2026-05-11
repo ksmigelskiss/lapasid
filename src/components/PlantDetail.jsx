@@ -9,6 +9,10 @@ import { db } from '../utils/firebase'
 import { ZonePicker } from './ZoneManager'
 import PlantTimeline, { FAB, AddEventSheet } from './PlantTimeline'
 import BarcodeLifeline from './brand/BarcodeLifeline'
+import PlantSavybesPills, { PlantSafetyCallout } from './brand/PlantSavybesPills'
+import BrandLoader from './brand/BrandLoader'
+import { refreshPlantFromAI } from '../utils/plantAI'
+import { TOOL_PREVIEW, PLANT_SYSTEM } from './SearchModal'
 import { getWateringForecast } from '../utils/wateringForecast'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
@@ -341,9 +345,25 @@ function PassportSection({ plant, collectionId, onToggle }) {
 
 // ── Profile tab content ────────────────────────────────────────
 
-export function ProfileContent({ plant, section, onAction, onClose, collectionId, onTogglePassport, onUpdateNames, className }) {
+export function ProfileContent({ plant, section, onAction, onClose, collectionId, onTogglePassport, onUpdateNames, onRefreshFromAI, className }) {
   const [editingName, setEditingName] = useState(false)
   const [nameVal, setNameVal]         = useState('')
+  const [refreshing, setRefreshing]   = useState(false)
+  const [refreshError, setRefreshError] = useState(null)
+
+  const handleRefresh = async () => {
+    if (refreshing || !onRefreshFromAI) return
+    setRefreshing(true); setRefreshError(null)
+    try {
+      const aiData = await refreshPlantFromAI(plant, { tools: [TOOL_PREVIEW], system: PLANT_SYSTEM })
+      await onRefreshFromAI(plant.id, aiData)
+    } catch (e) {
+      console.error('[refresh] failed', e)
+      setRefreshError(e?.code === 'limit_reached' ? 'AI limitas pasiektas.' : 'Atnaujinimas nepavyko.')
+    } finally {
+      setRefreshing(false)
+    }
+  }
 
   // Synonyms — inline editorial proza
   const ltSyns = [
@@ -407,17 +427,12 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
       <DormancyCard plant={plant} section={section} />
 
 
-      {/* ── Toxicity warning — Brandbook terracotta callout (severe). ── */}
-      {plant.toksiskas && (
-        <div className="bg-white/55 backdrop-blur-xl border-2 border-terracotta/50 rounded-2xl p-3.5 flex gap-3">
-          <Skull size={22} className="flex-shrink-0 text-terracotta mt-0.5" />
-          <div>
-            <p className="font-mono text-[10px] font-medium text-terracotta-600 uppercase tracking-[0.16em]">Pavojinga</p>
-            <p className="font-display text-sm font-bold text-terracotta-600 tracking-tight mt-0.5">Toksiška augalas!</p>
-            <p className="text-xs text-forest-600 mt-1 leading-snug">{plant.toksiskumo_info}</p>
-          </div>
-        </div>
-      )}
+      {/* ── Savybes pill'ai (granuliariai toksiškumas + valgomumas + vaistinis).
+            Backward compat fallback'ina į seną `plant.toksiskas` boolean'ą. ── */}
+      <PlantSavybesPills plant={plant} />
+
+      {/* ── Stipraus toksiškumo žmonėms papildomas callout (kad neignoruotų). ── */}
+      <PlantSafetyCallout plant={plant} />
 
       {/* ── Quick stats — editorial table (mono caps label + Bricolage value). ── */}
       <div className="divide-y divide-bone-400/30">
@@ -631,6 +646,23 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
               Noriu nusipirkti vėl
             </button>
           </>)}
+          {/* Laikinas „Atnaujinti per AI" mygtukas — perpildo statinę info pagal
+              naujausią schema'ą (savybes su pavojai/valgomumas/vaistinis). Vartotojo
+              daiktai (timeline, image, uzrasai, zonaId, status) išsaugomi.
+              Pašalinsim kai visi augalai migruoti. */}
+          {onRefreshFromAI && plant.lotyniskas && section === 'auginama' && (
+            <>
+              <button onClick={handleRefresh} disabled={refreshing}
+                className="w-full py-3 rounded-btn text-sm font-display font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 disabled:opacity-60 transition-colors flex items-center justify-center gap-2">
+                {refreshing
+                  ? <><BrandLoader inline size={16} ink="forest" /><span>Atnaujinama per AI...</span></>
+                  : <span>✦ Atnaujinti per AI</span>}
+              </button>
+              {refreshError && (
+                <p className="text-xs text-terracotta-600 text-center">{refreshError}</p>
+              )}
+            </>
+          )}
           {(section === 'auginama' || section === 'nori' || section === 'istorija') && (
             <button onClick={() => onAction('delete', plant)}
               className="w-full py-3 rounded-2xl text-sm font-medium text-gray-400 hover:text-red-400 transition-colors">
@@ -1090,6 +1122,7 @@ export default function PlantDetail({
   onStatusChange,
   onUpdateNames,
   onImageSave,
+  onRefreshFromAI,
   onSaveChat,
   onSaveToZinynas,
   onAddTimelineEvent,
@@ -1428,6 +1461,7 @@ export default function PlantDetail({
                   collectionId={collectionId}
                   onTogglePassport={role !== 'viewer' && role !== 'member' ? togglePassport : null}
                   onUpdateNames={onUpdateNames}
+                  onRefreshFromAI={role !== 'viewer' ? onRefreshFromAI : null}
                 />
               </motion.div>
             )}
