@@ -553,6 +553,11 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
               animate={{ height: hideGreeting ? 0 : 'auto', opacity: hideGreeting ? 0 : 1 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
               style={{ overflow: 'hidden' }}
+              // Material/iOS elevation pattern — thin hairline + soft glow,
+              // kad juosta vizualiai išsiskirtų nuo grid'o žemiau (pakelta
+              // virš content'o, kaip app bar). Kai motion height → 0,
+              // shadow natūraliai irgi pranyksta su elementu.
+              className="relative z-10 bg-app shadow-[0_1px_0_rgba(20,40,30,0.06),0_4px_12px_rgba(20,40,30,0.05)]"
             >
               <div className="px-5 pt-4 pb-3" style={hideInnerHeader ? undefined : { paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
                 <CareOverview
