@@ -38,7 +38,7 @@ export default function BarcodeLifeline({ events = [] }) {
   const careCount = allEvents.filter(e => e.type === 'watering' || e.type === 'fertilizing').length
   if (careCount === 0) {
     return (
-      <div className="w-full aspect-[3/2] bg-bone flex flex-col items-center justify-center gap-2 px-6 text-center">
+      <div className="w-full aspect-[3/2] bg-bone-50 flex flex-col items-center justify-center gap-2 px-6 text-center">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-forest-400">
           Dar nėra priežiūros istorijos
         </p>
@@ -50,7 +50,7 @@ export default function BarcodeLifeline({ events = [] }) {
   }
 
   return (
-    <div className="w-full aspect-[3/2] bg-bone flex flex-col px-5 pt-4 pb-3">
+    <div className="w-full aspect-[3/2] bg-bone-50 flex flex-col px-5 pt-4 pb-3">
       <Row events={allEvents} type="watering"    tone="forest"     Icon={Droplets}     label="LAIKAS TARP LAISTYMŲ" />
       <div className="h-3 flex-shrink-0" />
       <Row events={allEvents} type="fertilizing" tone="terracotta" Icon={FlaskConical} label="LAIKAS TARP TRĘŠIMŲ" />

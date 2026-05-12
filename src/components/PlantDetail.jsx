@@ -386,11 +386,11 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
             onChange={e => setNameVal(e.target.value)}
             onBlur={() => { onUpdateNames?.(plant.id, { 'lietuviškas': nameVal.trim() || plant.lietuviškas }); setEditingName(false) }}
             onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditingName(false) }}
-            className="font-display text-2xl font-semibold tracking-tight leading-tight text-forest-800 bg-bone-300/40 rounded-lg px-2 py-0.5 outline-none w-full"
+            className="font-display text-2xl font-bold tracking-tight leading-tight text-forest-800 bg-bone-300/40 rounded-lg px-2 py-0.5 outline-none w-full"
           />
         ) : (
           <h2
-            className="font-display text-2xl font-semibold tracking-tight text-forest-800 leading-tight cursor-text"
+            className="font-display text-2xl font-bold tracking-tight text-forest-800 leading-tight cursor-text"
             onClick={() => { setNameVal(plant.lietuviškas); setEditingName(true) }}
           >{plant.lietuviškas}</h2>
         )}
@@ -949,7 +949,7 @@ function BottomSheet({ onClose, children }) {
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }} onClick={onClose} />
       <motion.div
-        className="relative w-full max-w-[430px] bg-app rounded-t-4xl px-5 pb-8 pt-3"
+        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-5 pb-8 pt-3"
         style={{ y }}
         drag="y" dragControls={dragControls} dragListener={false}
         dragConstraints={{ top: 0 }} dragElastic={{ top: 0, bottom: 0.25 }}
@@ -1310,7 +1310,7 @@ export default function PlantDetail({
       <motion.div
         className={useDesktopPanel
           ? "relative w-full h-full bg-white/55 backdrop-blur-xl flex flex-col"
-          : "relative w-full max-w-[430px] bg-app flex flex-col"}
+          : "relative w-full max-w-[430px] bg-bone-50 flex flex-col"}
         style={useDesktopPanel ? { height: '100%' } : { height: '100dvh', y }}
         {...(useDesktopPanel ? {
           // Desktop'e — slide iš dešinės (panel'ėje atrodo, kaip kad kortelė

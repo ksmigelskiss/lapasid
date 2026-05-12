@@ -442,7 +442,7 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
         </div>
       ) : (
         <div
-          className="bg-forest-50 border border-forest-100 rounded-2xl px-4 py-3 cursor-pointer"
+          className="bg-bone-50 border border-bone-400/40 rounded-2xl px-4 py-3 cursor-pointer"
           onClick={onToggle}
         >
           <p className="text-sm text-forest-600 font-medium">
