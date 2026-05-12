@@ -1,25 +1,39 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { AlertTriangle, Skull, Apple, BadgeCheck, Sprout } from 'lucide-react'
 
 /**
- * PlantSavybesPills — augalo savybės kaip horizontalūs pill'ai.
+ * PlantSavybesPills — augalo savybės kaip editorial sekcijos.
  *
- * Brandbook v1.0 logika:
- *   - Granuliarūs pavojai (savybes.pavojai[]) → specifiški pill'ai
- *   - Saugiklis (savybes.pavojingumas.yra=true bet pavojai[] tuščias) →
- *     generinis ATSARGIAI pill'as
- *   - Valgomumas / Vaistinis → atskiri brand pill'ai jei statusas != 'none'
+ * Brandbook v1.0 editorial pattern (DESIGN_SYSTEM.md sec 6):
+ *   Kiekviena savybes kategorija = mono caps section header + hairline +
+ *   pills + body detales paragrafas. Viskas matoma iškart, jokio tap-to-expand.
  *
- * Tap pill → expand'inasi inline detalių sekcija. 3 grupės (pavojai, valgomumas,
- * vaistinis) turi atskirus expand state'us — vienu metu atvira viena grupė.
+ * 3 sekcijos: PAVOJAI, VALGOMUMAS, VAISTINIS. Renderinama tik tos, kurios
+ * turi turinį (pvz. valgomumas=none → sekcija nerodoma).
  *
- * Backward compat: jei augalas neturi `savybes` lauko (senas plant'as), bet
- * yra `toksiskas: true` boolean'as — rodome bendrą ATSARGIAI pill'ą su
- * `toksiskumo_info` kaip detalės.
+ * Backward compat: senas plant'as su tik `toksiskas: true` boolean'u → rodom
+ * PAVOJAI sekciją su generiniu ATSARGIAI pill'u + `toksiskumo_info` kaip body.
  */
 
-// ── Builders ─────────────────────────────────────────────────
+// ── Section header — mono caps + hairline ────────────────────
+
+function SectionHeader({ Icon, label, tone = 'forest' }) {
+  const toneClasses = tone === 'terracotta'
+    ? { text: 'text-terracotta-600', iconColor: 'text-terracotta-500', line: 'bg-terracotta-200/60' }
+    : { text: 'text-forest-600',     iconColor: 'text-forest-500',     line: 'bg-bone-400/40' }
+  return (
+    <div className="flex items-center gap-3 mt-1">
+      <div className="flex items-center gap-1.5">
+        {Icon && <Icon size={11} className={`${toneClasses.iconColor} flex-shrink-0`} />}
+        <p className={`font-mono text-[10px] font-medium uppercase tracking-[0.18em] ${toneClasses.text}`}>
+          {label}
+        </p>
+      </div>
+      <div className={`flex-1 h-px ${toneClasses.line}`} />
+    </div>
+  )
+}
+
+// ── Pavojai pill ─────────────────────────────────────────────
 
 function pavojusLabel(p) {
   const tipasMap = {
@@ -46,41 +60,12 @@ function pavojusStyle(severity) {
   }
 }
 
-function valgomumasPill(v) {
-  if (!v || v.statusas === 'none') return null
-  const label = v.statusas === 'pilnai' ? 'VISAS VALGOMAS' : `VALGOMA${v.dalys ? ` · ${v.dalys.toUpperCase()}` : ''}`
-  return { label, bg: 'bg-forest-100', text: 'text-forest-700', Icon: Apple }
-}
-
-function vaistinisPill(v) {
-  if (!v || v.statusas === 'none') return null
-  if (v.statusas === 'moksline') {
-    return {
-      label: v.naudojama ? `VAISTINĖ · ${v.naudojama.toUpperCase()}` : 'VAISTINĖ · MOKSLIŠKAI',
-      bg: 'bg-forest-100', text: 'text-forest-800', Icon: BadgeCheck,
-    }
-  }
-  return {
-    label: v.naudojama ? `LIAUDIES VAISTINĖ · ${v.naudojama.toUpperCase()}` : 'LIAUDIES VAISTINĖ',
-    bg: 'bg-bone-300', text: 'text-forest-700', Icon: Sprout,
-  }
-}
-
-// ── Detail panel — bone-50 card po pill'ais ──────────────────
-
-function DetailPanel({ children }) {
+function Pill({ label, bg, text, Icon }) {
   return (
-    <motion.div
-      initial={{ height: 0, opacity: 0 }}
-      animate={{ height: 'auto', opacity: 1 }}
-      exit={{ height: 0, opacity: 0 }}
-      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-      className="overflow-hidden"
-    >
-      <div className="bg-bone-50 border border-bone-400/40 rounded-2xl px-4 py-3 mt-2 text-[13px] text-forest-700 leading-relaxed">
-        {children}
-      </div>
-    </motion.div>
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.14em] ${bg} ${text}`}>
+      {Icon && <Icon size={11} className="flex-shrink-0" />}
+      {label}
+    </span>
   )
 }
 
@@ -88,94 +73,108 @@ function DetailPanel({ children }) {
 
 export default function PlantSavybesPills({ plant }) {
   const s = plant.savybes
-  const [expanded, setExpanded] = useState(null) // 'pavojai' | 'valgomumas' | 'vaistinis' | null
 
-  const toggle = (key) => setExpanded(prev => prev === key ? null : key)
-
-  // Backward compat — senas plant'as be savybes, bet su toksiskas=true
-  const legacyFallback = !s && plant.toksiskas
-    ? [{
-        label: 'ATSARGIAI',
-        bg: 'bg-terracotta-100', text: 'text-terracotta-600',
-        Icon: AlertTriangle,
-        group: 'pavojai',
-      }]
-    : []
-
-  // Granuliarūs pavojai
-  const pavojuPills = (s?.pavojai ?? []).map(p => ({
-    label: `${pavojusLabel(p)} · ${p.severity}`,
-    ...pavojusStyle(p.severity),
-    group: 'pavojai',
-  }))
-
-  // Saugiklis
-  const safetyPill = !legacyFallback.length && s && (s.pavojai?.length ?? 0) === 0 && s.pavojingumas?.yra
-    ? [{
-        label: `ATSARGIAI${s.pavojingumas.lygis ? ` · ${s.pavojingumas.lygis}` : ''}`,
-        ...pavojusStyle(s.pavojingumas.lygis ?? 'silpnas'),
-        Icon: AlertTriangle,
-        group: 'pavojai',
-      }]
-    : []
-
-  // Valgomumas + vaistinis
-  const valg = valgomumasPill(s?.valgomumas)
-  const vais = vaistinisPill(s?.vaistinis)
-  if (valg) valg.group = 'valgomumas'
-  if (vais) vais.group = 'vaistinis'
-
-  const allPills = [...legacyFallback, ...pavojuPills, ...safetyPill, valg, vais].filter(Boolean)
-  if (allPills.length === 0) return null
-
-  // Detalės tekstai (kiekvienai grupei savo)
+  // ── PAVOJAI sekcija ──────────────────────────────────────
+  const pavojaiPills = []
+  if (s?.pavojai?.length) {
+    for (const p of s.pavojai) {
+      pavojaiPills.push({
+        label: `${pavojusLabel(p)} · ${p.severity}`,
+        ...pavojusStyle(p.severity),
+      })
+    }
+  } else if (s?.pavojingumas?.yra) {
+    pavojaiPills.push({
+      label: `ATSARGIAI${s.pavojingumas.lygis ? ` · ${s.pavojingumas.lygis}` : ''}`,
+      ...pavojusStyle(s.pavojingumas.lygis ?? 'silpnas'),
+      Icon: AlertTriangle,
+    })
+  } else if (!s && plant.toksiskas) {
+    // Legacy fallback — senas plant'as be savybes
+    pavojaiPills.push({
+      label: 'ATSARGIAI',
+      bg: 'bg-terracotta-100',
+      text: 'text-terracotta-600',
+      Icon: AlertTriangle,
+    })
+  }
   const pavojaiDetales = s?.pavojingumas?.detales || plant.toksiskumo_info || ''
-  const valgomumasDetales = s?.valgomumas?.detales || ''
-  const vaistinisDetales = s?.vaistinis?.detales || (s?.vaistinis?.naudojama && s.vaistinis.naudojama !== '' ? '' : '')
+
+  // ── VALGOMUMAS sekcija ───────────────────────────────────
+  const v = s?.valgomumas
+  const hasValgomumas = v && v.statusas !== 'none'
+  const valgomumasLabel = hasValgomumas
+    ? (v.statusas === 'pilnai'
+        ? 'VISAS VALGOMAS'
+        : `VALGOMA${v.dalys ? ` · ${v.dalys.toUpperCase()}` : ''}`)
+    : ''
+
+  // ── VAISTINIS sekcija ────────────────────────────────────
+  const m = s?.vaistinis
+  const hasVaistinis = m && m.statusas !== 'none'
+  const vaistinisLabel = hasVaistinis
+    ? (m.statusas === 'moksline'
+        ? (m.naudojama ? `VAISTINĖ · ${m.naudojama.toUpperCase()}` : 'VAISTINĖ · MOKSLIŠKAI')
+        : (m.naudojama ? `LIAUDIES VAISTINĖ · ${m.naudojama.toUpperCase()}` : 'LIAUDIES VAISTINĖ'))
+    : ''
+  const VaistinisIcon = hasVaistinis && m.statusas === 'moksline' ? BadgeCheck : Sprout
+
+  // Nothing to show?
+  if (pavojaiPills.length === 0 && !hasValgomumas && !hasVaistinis) return null
 
   return (
-    <div>
-      <div className="flex flex-wrap gap-1.5">
-        {allPills.map((p, i) => {
-          const hasDetail =
-            (p.group === 'pavojai'    && pavojaiDetales) ||
-            (p.group === 'valgomumas' && valgomumasDetales) ||
-            (p.group === 'vaistinis'  && vaistinisDetales)
-          const isExpanded = expanded === p.group
-          return (
-            <button
-              key={i}
-              onClick={() => hasDetail && toggle(p.group)}
-              disabled={!hasDetail}
-              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.14em] transition-opacity ${p.bg} ${p.text} ${
-                hasDetail ? 'cursor-pointer active:opacity-70' : 'cursor-default'
-              } ${isExpanded ? 'ring-2 ring-forest-300/50' : ''}`}
-            >
-              {p.Icon && <p.Icon size={11} className="flex-shrink-0" />}
-              {p.label}
-            </button>
-          )
-        })}
-      </div>
+    <div className="space-y-4">
+      {/* PAVOJAI */}
+      {pavojaiPills.length > 0 && (
+        <div className="space-y-2">
+          <SectionHeader Icon={AlertTriangle} label="Pavojai" tone="terracotta" />
+          <div className="flex flex-wrap gap-1.5">
+            {pavojaiPills.map((p, i) => <Pill key={i} {...p} />)}
+          </div>
+          {pavojaiDetales && (
+            <p className="text-[13px] text-forest-700 leading-relaxed">{pavojaiDetales}</p>
+          )}
+        </div>
+      )}
 
-      <AnimatePresence initial={false}>
-        {expanded === 'pavojai' && pavojaiDetales && (
-          <DetailPanel key="pavojai">{pavojaiDetales}</DetailPanel>
-        )}
-        {expanded === 'valgomumas' && valgomumasDetales && (
-          <DetailPanel key="valgomumas">{valgomumasDetales}</DetailPanel>
-        )}
-        {expanded === 'vaistinis' && vaistinisDetales && (
-          <DetailPanel key="vaistinis">{vaistinisDetales}</DetailPanel>
-        )}
-      </AnimatePresence>
+      {/* VALGOMUMAS */}
+      {hasValgomumas && (
+        <div className="space-y-2">
+          <SectionHeader Icon={Apple} label="Valgomumas" tone="forest" />
+          <div className="flex flex-wrap gap-1.5">
+            <Pill label={valgomumasLabel} bg="bg-forest-100" text="text-forest-700" Icon={Apple} />
+          </div>
+          {v.detales && (
+            <p className="text-[13px] text-forest-700 leading-relaxed">{v.detales}</p>
+          )}
+        </div>
+      )}
+
+      {/* VAISTINIS */}
+      {hasVaistinis && (
+        <div className="space-y-2">
+          <SectionHeader Icon={Sprout} label="Vaistinis" tone="forest" />
+          <div className="flex flex-wrap gap-1.5">
+            <Pill
+              label={vaistinisLabel}
+              bg={m.statusas === 'moksline' ? 'bg-forest-100' : 'bg-bone-300'}
+              text={m.statusas === 'moksline' ? 'text-forest-800' : 'text-forest-700'}
+              Icon={VaistinisIcon}
+            />
+          </div>
+          {m.detales && (
+            <p className="text-[13px] text-forest-700 leading-relaxed">{m.detales}</p>
+          )}
+        </div>
+      )}
     </div>
   )
 }
 
 // ── Detailed callout block ────────────────────────────────────
-// Kai augalas turi STIPRŲ toksiškumą žmonėms — rodome papildomą callout
-// block'ą po pill'ų, kad neignoruotų. Vidutinis/silpnas — tik pill'as pakanka.
+// Kai augalas turi STIPRŲ toksiškumą žmonėms — papildomas callout virš
+// editorial sekcijų, kad neignoruotų. Vidutinis/silpnas — neredundantiškas
+// dabar (sekcija ir taip viską parodo).
 
 export function PlantSafetyCallout({ plant }) {
   const s = plant.savybes
