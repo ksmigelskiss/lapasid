@@ -1,4 +1,4 @@
-import { AlertTriangle, Skull, Apple, BadgeCheck, Sprout, User, PawPrint } from 'lucide-react'
+import { AlertTriangle, Skull, Apple, BadgeCheck, Sprout, User, Cat } from 'lucide-react'
 
 /**
  * PlantSavybesPills — augalo savybės kaip editorial sekcijos.
@@ -43,7 +43,7 @@ const TIPAS_LABEL = {
 
 const TARGET_META = {
   zmonems:  { label: 'Žmonėms',  Icon: User },
-  gyvunams: { label: 'Gyvūnams', Icon: PawPrint },
+  gyvunams: { label: 'Gyvūnams', Icon: Cat },
 }
 
 function pavojusStyle(severity) {
