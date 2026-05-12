@@ -1,4 +1,4 @@
-import { AlertTriangle, Skull, Apple, BadgeCheck, Sprout } from 'lucide-react'
+import { AlertTriangle, Skull, Apple, BadgeCheck, Sprout, User, PawPrint } from 'lucide-react'
 
 /**
  * PlantSavybesPills — augalo savybės kaip editorial sekcijos.
@@ -35,17 +35,15 @@ function SectionHeader({ Icon, label, tone = 'forest' }) {
 
 // ── Pavojai pill ─────────────────────────────────────────────
 
-function pavojusLabel(p) {
-  const tipasMap = {
-    toksiskas:   'TOKSIŠKA',
-    alergiskas:  'ALERGIŠKA',
-    dirginantis: 'DIRGINA',
-  }
-  const targetMap = {
-    zmonems:  'ŽMONĖMS',
-    gyvunams: 'GYVŪNAMS',
-  }
-  return `${tipasMap[p.tipas] ?? p.tipas} ${targetMap[p.target] ?? p.target}`
+const TIPAS_LABEL = {
+  toksiskas:   'TOKSIŠKA',
+  alergiskas:  'ALERGIŠKA',
+  dirginantis: 'DIRGINA',
+}
+
+const TARGET_META = {
+  zmonems:  { label: 'Žmonėms',  Icon: User },
+  gyvunams: { label: 'Gyvūnams', Icon: PawPrint },
 }
 
 function pavojusStyle(severity) {
@@ -69,35 +67,65 @@ function Pill({ label, bg, text, Icon }) {
   )
 }
 
+// ── Target group — sub-section pavojaiams (Žmonėms / Gyvūnams) ──
+
+function TargetGroup({ target, pills }) {
+  const meta = TARGET_META[target]
+  if (!meta) return null
+  const { Icon, label } = meta
+  return (
+    <div className="flex items-start gap-2.5">
+      <div className="flex items-center gap-1.5 flex-shrink-0 pt-1">
+        <Icon size={11} className="text-forest-500" />
+        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-forest-500 w-[68px]">
+          {label}
+        </p>
+      </div>
+      <div className="flex flex-wrap gap-1.5 flex-1">
+        {pills.map((p, i) => <Pill key={i} {...p} />)}
+      </div>
+    </div>
+  )
+}
+
 // ── Component ─────────────────────────────────────────────────
 
 export default function PlantSavybesPills({ plant }) {
   const s = plant.savybes
 
-  // ── PAVOJAI sekcija ──────────────────────────────────────
-  const pavojaiPills = []
+  // ── PAVOJAI sekcija — grupuojama pagal target (Žmonėms/Gyvūnams) ──
+  // Tipas pill'e supaprastėja (TOKSIŠKA · vidutinis), nes target jau yra
+  // sub-section header'yje. Saugiklis (ATSARGIAI) lieka bendras be target'o.
+  const pavojaiByTarget = { zmonems: [], gyvunams: [] }
+  let safetyPill = null
+
   if (s?.pavojai?.length) {
     for (const p of s.pavojai) {
-      pavojaiPills.push({
-        label: `${pavojusLabel(p)} · ${p.severity}`,
+      const pill = {
+        label: `${TIPAS_LABEL[p.tipas] ?? p.tipas} · ${p.severity}`,
         ...pavojusStyle(p.severity),
-      })
+      }
+      if (pavojaiByTarget[p.target]) pavojaiByTarget[p.target].push(pill)
     }
   } else if (s?.pavojingumas?.yra) {
-    pavojaiPills.push({
+    safetyPill = {
       label: `ATSARGIAI${s.pavojingumas.lygis ? ` · ${s.pavojingumas.lygis}` : ''}`,
       ...pavojusStyle(s.pavojingumas.lygis ?? 'silpnas'),
       Icon: AlertTriangle,
-    })
+    }
   } else if (!s && plant.toksiskas) {
     // Legacy fallback — senas plant'as be savybes
-    pavojaiPills.push({
+    safetyPill = {
       label: 'ATSARGIAI',
       bg: 'bg-terracotta-100',
       text: 'text-terracotta-600',
       Icon: AlertTriangle,
-    })
+    }
   }
+  const hasPavojai =
+    pavojaiByTarget.zmonems.length > 0 ||
+    pavojaiByTarget.gyvunams.length > 0 ||
+    safetyPill !== null
   const pavojaiDetales = s?.pavojingumas?.detales || plant.toksiskumo_info || ''
 
   // ── VALGOMUMAS sekcija ───────────────────────────────────
@@ -120,19 +148,34 @@ export default function PlantSavybesPills({ plant }) {
   const VaistinisIcon = hasVaistinis && m.statusas === 'moksline' ? BadgeCheck : Sprout
 
   // Nothing to show?
-  if (pavojaiPills.length === 0 && !hasValgomumas && !hasVaistinis) return null
+  if (!hasPavojai && !hasValgomumas && !hasVaistinis) return null
 
   return (
     <div className="space-y-4">
-      {/* PAVOJAI */}
-      {pavojaiPills.length > 0 && (
+      {/* PAVOJAI — grupuojama pagal Žmonėms / Gyvūnams sub-sekcijomis */}
+      {hasPavojai && (
         <div className="space-y-2">
           <SectionHeader Icon={AlertTriangle} label="Pavojai" tone="terracotta" />
-          <div className="flex flex-wrap gap-1.5">
-            {pavojaiPills.map((p, i) => <Pill key={i} {...p} />)}
-          </div>
+
+          {/* Saugiklis (target nenurodytas) — be sub-grupės */}
+          {safetyPill && (
+            <div className="flex flex-wrap gap-1.5">
+              <Pill {...safetyPill} />
+            </div>
+          )}
+
+          {/* Žmonėms */}
+          {pavojaiByTarget.zmonems.length > 0 && (
+            <TargetGroup target="zmonems" pills={pavojaiByTarget.zmonems} />
+          )}
+
+          {/* Gyvūnams */}
+          {pavojaiByTarget.gyvunams.length > 0 && (
+            <TargetGroup target="gyvunams" pills={pavojaiByTarget.gyvunams} />
+          )}
+
           {pavojaiDetales && (
-            <p className="text-[13px] text-forest-700 leading-relaxed">{pavojaiDetales}</p>
+            <p className="text-[13px] text-forest-700 leading-relaxed pt-1">{pavojaiDetales}</p>
           )}
         </div>
       )}
