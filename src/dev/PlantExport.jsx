@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import { auth, db } from '../utils/firebase'
-import { doc as fsDoc, getDoc as fsGetDoc } from 'firebase/firestore'
+import { doc as fsDoc, getDoc as fsGetDoc, collection as fsCol, getDocs as fsGetDocs } from 'firebase/firestore'
 import { onAuthStateChanged as onAuth } from 'firebase/auth'
 
 export default function PlantExport() {
@@ -30,11 +30,23 @@ export default function PlantExport() {
       const colId    = userSnap.data()?.primaryCollection
       if (!colId) throw new Error('Vartotojas neturi primaryCollection.')
 
-      const colSnap = await fsGetDoc(fsDoc(db, 'collections', colId))
-      const plants  = colSnap.data()?.plants ?? []
+      // Augalai saugomi DVIEM vietom (legacy migracija):
+      //   1. collections/{cid}.plants[] array field
+      //   2. collections/{cid}/plants/{id} subcollection
+      // Sumerginam abu pagal id, subcollection laimi (naujesnis formatas).
+      const [colSnap, subSnap] = await Promise.all([
+        fsGetDoc(fsDoc(db, 'collections', colId)),
+        fsGetDocs(fsCol(db, 'collections', colId, 'plants')),
+      ])
+      const legacyArr = colSnap.data()?.plants ?? []
+      const subArr    = subSnap.docs.map(d => d.data())
+      const byId = new Map()
+      legacyArr.forEach(p => byId.set(p.id, p))   // legacy pirmiausia
+      subArr.forEach(p => byId.set(p.id, p))      // subcollection override'ina
+      const plants = [...byId.values()]
 
       if (plants.length === 0) {
-        setOutput('// Kolekcija tuščia — nėra augalų.')
+        setOutput(`// Kolekcija (${colId}) tuščia — nei array field, nei subcollection neturi augalų.`)
         return
       }
 
