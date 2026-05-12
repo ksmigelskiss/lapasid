@@ -1,7 +1,7 @@
 import { useState, useRef, memo } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, Ghost, FileText, MapPin, FlaskConical, Check, X } from 'lucide-react'
+import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, Skull, House, Ghost, FileText, MapPin, FlaskConical, Check, X, AlertTriangle } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
@@ -24,6 +24,51 @@ const PLANT_GRADIENTS = [
 ]
 
 // Stabilus djb2-style hash iš string'o → gradient index.
+// PlantCard hazard pill — rinkimas rimčiausio pavojaus iš savybes.pavojai[].
+// Hierarchija: severity (stiprus > vidutinis > silpnas), tada tipas (toksiskas
+// > alergiskas > dirginantis). Fallback į pavojingumas.yra saugiklį arba
+// legacy `toksiskas` boolean'ą.
+const HAZARD_SEVERITY_RANK = { stiprus: 3, vidutinis: 2, silpnas: 1 }
+const HAZARD_TIPAS_RANK    = { toksiskas: 3, alergiskas: 2, dirginantis: 1 }
+
+const HAZARD_TIPAS_LABEL = {
+  toksiskas:   'Toksiška',
+  alergiskas:  'Alergiška',
+  dirginantis: 'Dirgina',
+}
+
+function hazardPillStyle(severity) {
+  switch (severity) {
+    case 'stiprus':
+      return { bg: 'bg-terracotta',     text: 'text-bone',           Icon: Skull }
+    case 'vidutinis':
+      return { bg: 'bg-terracotta-100', text: 'text-terracotta-600', Icon: AlertTriangle }
+    case 'silpnas':
+    default:
+      return { bg: 'bg-terracotta-50',  text: 'text-terracotta-500', Icon: null }
+  }
+}
+
+function strongestHazardPill(plant) {
+  const s = plant.savybes
+  if (s?.pavojai?.length) {
+    const sorted = [...s.pavojai].sort((a, b) =>
+      (HAZARD_SEVERITY_RANK[b.severity] - HAZARD_SEVERITY_RANK[a.severity]) ||
+      (HAZARD_TIPAS_RANK[b.tipas] - HAZARD_TIPAS_RANK[a.tipas])
+    )
+    const top = sorted[0]
+    return { ...hazardPillStyle(top.severity), label: HAZARD_TIPAS_LABEL[top.tipas] ?? top.tipas }
+  }
+  if (s?.pavojingumas?.yra) {
+    return { ...hazardPillStyle(s.pavojingumas.lygis ?? 'silpnas'), label: 'Atsargiai' }
+  }
+  if (plant.toksiskas) {
+    // Legacy fallback — senas plant'as be savybes lauko
+    return { ...hazardPillStyle('stiprus'), label: 'Toksiška' }
+  }
+  return null
+}
+
 function gradientForPlant(id) {
   const s = String(id ?? '')
   let h = 5381
@@ -236,14 +281,21 @@ const PlantCard = memo(function PlantCard({
           </div>
         )}
 
-        {/* Toxic pill — sumažintas iki section-label mastelio (mono caps style). */}
-        {plant.toksiskas && (
-          <div className="absolute top-2.5 left-2.5 z-[2]">
-            <span className="inline-flex items-center gap-0.5 bg-terracotta text-bone font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] rounded-full px-1.5 py-0.5 shadow-[0_1px_4px_rgba(184,106,58,0.3)]">
-              <Skull size={9} /> Toksiška
-            </span>
-          </div>
-        )}
+        {/* Hazard pill — vienas, atspindintis rimčiausią pavojaus įrašą iš
+            savybes.pavojai[]. Hierarchija: severity (stiprus > vidutinis > silpnas),
+            tada tipas (toksiskas > alergiskas > dirginantis). Fallback į saugiklį
+            ATSARGIAI arba legacy `toksiskas` boolean'ą. */}
+        {(() => {
+          const pill = strongestHazardPill(plant)
+          if (!pill) return null
+          return (
+            <div className="absolute top-2.5 left-2.5 z-[2]">
+              <span className={`inline-flex items-center gap-0.5 ${pill.bg} ${pill.text} font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] rounded-full px-1.5 py-0.5 shadow-[0_1px_4px_rgba(184,106,58,0.3)]`}>
+                {pill.Icon && <pill.Icon size={9} />} {pill.label}
+              </span>
+            </div>
+          )
+        })()}
 
         {/* Care mode: selection circle — bottom-right */}
         {careMode && section === 'auginama' && (
