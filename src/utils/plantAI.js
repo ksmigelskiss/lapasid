@@ -67,7 +67,7 @@ export async function refreshPlantFromAI(plant, { tools, system }) {
   const r = await claudeCall({
     maxTokens:   2048,
     temperature: 0.3,
-    topP:        0.8,
+    // top_p NEnaudojamas — Sonnet 4.6 neleidžia abiejų temperature+top_p kartu
     system,
     tools:       [previewTool],
     toolChoice:  { type: 'tool', name: 'plant_preview' },

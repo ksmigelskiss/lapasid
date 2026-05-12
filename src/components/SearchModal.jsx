@@ -278,7 +278,6 @@ async function fetchDetails(latinName, name) {
   const r = await claudeCall({
     maxTokens:  2048,
     temperature: 0.3,
-    topP:        0.8,
     system:     PLANT_SYSTEM,
     tools:      [TOOL_DETAILS],
     toolChoice: { type: 'tool', name: 'plant_details' },
@@ -413,8 +412,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       const r1 = await claudeCall({
         maxTokens:   1536,
         temperature: 0.3,
-        topP:        0.8,
-        system:      PLANT_SYSTEM,
+            system:      PLANT_SYSTEM,
         tools:       [TOOL_PREVIEW],
         toolChoice:  { type: 'tool', name: 'plant_preview' },
         messages:    [{ role: 'user', content: `Rask informaciją apie augalą: "${q}"` }],
@@ -465,8 +463,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       const r1 = await claudeCall({
         maxTokens:   1536,
         temperature: 0.3,
-        topP:        0.8,
-        system:      PLANT_SYSTEM,
+            system:      PLANT_SYSTEM,
         tools:       [TOOL_PREVIEW],
         toolChoice:  { type: 'tool', name: 'plant_preview' },
         messages:    [userMsg],
