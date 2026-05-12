@@ -1,4 +1,4 @@
-import { AlertTriangle, Skull, Apple, BadgeCheck, Sprout, User, Cat } from 'lucide-react'
+import { Skull, Apple, BadgeCheck, Sprout, User, Cat, AlertTriangle } from 'lucide-react'
 
 /**
  * PlantSavybesPills — augalo savybės kaip editorial sekcijos.
@@ -46,22 +46,34 @@ const TARGET_META = {
   gyvunams: { label: 'Gyvūnams', Icon: Cat },
 }
 
-function pavojusStyle(severity) {
-  switch (severity) {
-    case 'stiprus':
-      return { bg: 'bg-terracotta',     text: 'text-bone',            Icon: Skull }
-    case 'vidutinis':
-      return { bg: 'bg-terracotta-100', text: 'text-terracotta-600',  Icon: AlertTriangle }
-    case 'silpnas':
-    default:
-      return { bg: 'bg-terracotta-50',  text: 'text-terracotta-500',  Icon: null }
-  }
+// TIPAS → bg gradient'as implicit'inei „toksiškumo mechanizmo" hierarchijai:
+//   toksiškas (apsinuodijimas) > alergiškas (imuninė reakcija) > dirginantis (lokalus dirgiklis)
+// Severity (silpnas/vidutinis/stiprus) toje pat ašyje koduojama SeverityBars indikatoriumi
+// (3-bar cellular-signal pattern), o ne bg saturation — du atskiri info dimensions.
+const TIPAS_STYLE = {
+  toksiskas:   { bg: 'bg-terracotta',     text: 'text-bone' },
+  alergiskas:  { bg: 'bg-terracotta-200', text: 'text-terracotta-600' },
+  dirginantis: { bg: 'bg-terracotta-50',  text: 'text-terracotta-600' },
 }
 
-function Pill({ label, bg, text, Icon }) {
+// SeverityBars — 3 vertikalūs barai augantys, kaip cellular signal indicator.
+// Filled count: silpnas=1, vidutinis=2, stiprus=3.
+// Spalva paveldima per `currentColor` iš pill'o teksto, opacity 0.3 unfilled'ams.
+function SeverityBars({ severity, className = '' }) {
+  const level = severity === 'stiprus' ? 3 : severity === 'vidutinis' ? 2 : 1
+  return (
+    <svg width="11" height="10" viewBox="0 0 12 10" className={`flex-shrink-0 ${className}`} fill="currentColor" aria-hidden>
+      <rect x="0"   y="6.5" width="2.5" height="3.5" rx="0.5" opacity={level >= 1 ? 1 : 0.3} />
+      <rect x="4.5" y="3.5" width="2.5" height="6.5" rx="0.5" opacity={level >= 2 ? 1 : 0.3} />
+      <rect x="9"   y="0"   width="2.5" height="10"  rx="0.5" opacity={level >= 3 ? 1 : 0.3} />
+    </svg>
+  )
+}
+
+function Pill({ label, bg, text, severity }) {
   return (
     <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.14em] ${bg} ${text}`}>
-      {Icon && <Icon size={11} className="flex-shrink-0" />}
+      <SeverityBars severity={severity} />
       {label}
     </span>
   )
@@ -99,22 +111,28 @@ export default function PlantSavybesPills({ plant }) {
   const pavojaiByTarget = { zmonems: [], gyvunams: [] }
   let safetyPill = null
 
-  // Severity koduojama per ikona + spalvą (silpnas: be ikonos + bg-50;
-  // vidutinis: AlertTriangle + bg-100; stiprus: Skull + solid). Pill'o
-  // label'e severity žodžio NĖRA — sutaupom vietos + mažiau triukšmo.
+  // Du info dimensions atskirai:
+  //   TIPAS    → bg gradient (TIPAS_STYLE map) — toksiškas solid → alergiškas
+  //              200 → dirgina 50, koduojant mechanizmo svorį.
+  //   SEVERITY → SeverityBars indicator (3-bar count, filled per lygis).
+  // Saugiklis ATSARGIAI gauna neutralu terracotta-100 (be tipas info) + bars per lygis.
   if (s?.pavojai?.length) {
     for (const p of s.pavojai) {
+      const tipasStyle = TIPAS_STYLE[p.tipas] ?? TIPAS_STYLE.dirginantis
       const pill = {
         label: TIPAS_LABEL[p.tipas] ?? p.tipas,
-        ...pavojusStyle(p.severity),
+        bg: tipasStyle.bg,
+        text: tipasStyle.text,
+        severity: p.severity,
       }
       if (pavojaiByTarget[p.target]) pavojaiByTarget[p.target].push(pill)
     }
   } else if (s?.pavojingumas?.yra) {
     safetyPill = {
       label: 'ATSARGIAI',
-      ...pavojusStyle(s.pavojingumas.lygis ?? 'silpnas'),
-      Icon: AlertTriangle,
+      bg: 'bg-terracotta-100',
+      text: 'text-terracotta-600',
+      severity: s.pavojingumas.lygis ?? 'silpnas',
     }
   } else if (!s && plant.toksiskas) {
     // Legacy fallback — senas plant'as be savybes
@@ -122,7 +140,7 @@ export default function PlantSavybesPills({ plant }) {
       label: 'ATSARGIAI',
       bg: 'bg-terracotta-100',
       text: 'text-terracotta-600',
-      Icon: AlertTriangle,
+      severity: 'vidutinis',
     }
   }
   const hasPavojai =
