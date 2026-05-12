@@ -8,6 +8,7 @@ import BrandLoader from './components/brand/BrandLoader.jsx'
 const PlantPassportPage = lazy(() => import('./pages/PlantPassportPage.jsx'))
 const LoaderPlayground = lazy(() => import('./dev/LoaderPlayground.jsx'))
 const LoginScreenDemo = lazy(() => import('./dev/LoginScreenDemo.jsx'))
+const PlantExport = lazy(() => import('./dev/PlantExport.jsx'))
 
 // Augalo paso URL: /p/{plantId} → PlantPassportPage (be pilno app)
 const passportMatch = window.location.pathname.match(/^\/p\/([^/]+)\/?$/)
@@ -17,6 +18,10 @@ const passportMatch = window.location.pathname.match(/^\/p\/([^/]+)\/?$/)
 const isMock = import.meta.env.VITE_USE_MOCK_USER === 'true'
 const playgroundType = isMock ? new URLSearchParams(window.location.search).get('playground') : null
 
+// PlantExport — veikia BE mock mode'o (reikia tikros auth + Firestore access).
+// Pasiekiama per ?export=plants kai vartotojas prisijungęs prie lapasid.lt.
+const exportMode = new URLSearchParams(window.location.search).get('export') === 'plants'
+
 const devFallback = (
   <div className="fixed inset-0 bg-bone flex items-center justify-center">
     <BrandLoader />
@@ -25,7 +30,9 @@ const devFallback = (
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {playgroundType === 'loaders' ? (
+    {exportMode ? (
+      <Suspense fallback={devFallback}><PlantExport /></Suspense>
+    ) : playgroundType === 'loaders' ? (
       <Suspense fallback={devFallback}><LoaderPlayground /></Suspense>
     ) : playgroundType === 'login' ? (
       <Suspense fallback={devFallback}><LoginScreenDemo /></Suspense>

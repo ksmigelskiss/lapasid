@@ -99,17 +99,20 @@ export default function PlantSavybesPills({ plant }) {
   const pavojaiByTarget = { zmonems: [], gyvunams: [] }
   let safetyPill = null
 
+  // Severity koduojama per ikona + spalvą (silpnas: be ikonos + bg-50;
+  // vidutinis: AlertTriangle + bg-100; stiprus: Skull + solid). Pill'o
+  // label'e severity žodžio NĖRA — sutaupom vietos + mažiau triukšmo.
   if (s?.pavojai?.length) {
     for (const p of s.pavojai) {
       const pill = {
-        label: `${TIPAS_LABEL[p.tipas] ?? p.tipas} · ${p.severity}`,
+        label: TIPAS_LABEL[p.tipas] ?? p.tipas,
         ...pavojusStyle(p.severity),
       }
       if (pavojaiByTarget[p.target]) pavojaiByTarget[p.target].push(pill)
     }
   } else if (s?.pavojingumas?.yra) {
     safetyPill = {
-      label: `ATSARGIAI${s.pavojingumas.lygis ? ` · ${s.pavojingumas.lygis}` : ''}`,
+      label: 'ATSARGIAI',
       ...pavojusStyle(s.pavojingumas.lygis ?? 'silpnas'),
       Icon: AlertTriangle,
     }
