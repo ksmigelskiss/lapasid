@@ -45,7 +45,7 @@ export default function DeathModal({ plant, onConfirm, onClose }) {
       />
 
       <motion.div
-        className="relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl rounded-t-4xl px-5 py-6 space-y-5 border-t border-bone-400/40"
+        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-5 py-6 space-y-5 border-t border-bone-400/40"
         style={{ y }}
         drag="y"
         dragControls={dragControls}

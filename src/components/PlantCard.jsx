@@ -5,6 +5,7 @@ import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileT
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
+import PlantImage from './brand/PlantImage'
 
 // Designer'io PlantPhoto gradient pool (paimta iš /tmp/geliai-design styles.css `.pp-*`).
 // Hash from plant.id deterministiškai parinka vieną iš 12 gradient'ų.
@@ -192,6 +193,7 @@ const PlantCard = memo(function PlantCard({
     <>
     <div
       className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card transition-all duration-200 cursor-pointer active:scale-[0.97] lg:hover:-translate-y-0.5 lg:hover:shadow-ios-lg ${doneToday ? 'opacity-50' : ''}`}
+      style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 320px' }}
       onClick={handleClick}
       onPointerDown={careMode ? onPressStart : undefined}
       onPointerMove={careMode ? onPressMove : undefined}
@@ -211,7 +213,7 @@ const PlantCard = memo(function PlantCard({
         onContextMenu={!careMode ? e => e.preventDefault() : undefined}
       >
         {hasImage ? (
-          <img src={plant.image} alt={plant.lietuviškas}
+          <PlantImage url={plant.image} alt={plant.lietuviškas} size="card"
             className="w-full h-full object-cover pointer-events-none"
             style={{ WebkitTouchCallout: 'none', userSelect: 'none' }}
             onError={() => setImgError(true)} />

@@ -16,15 +16,19 @@ import { Skull, Apple, BadgeCheck, Sprout, User, Cat, AlertTriangle } from 'luci
 
 // ── Section header — mono caps + hairline ────────────────────
 
+// Section header — Lygis 1 hierarchijoje. Sutampa su PlantDetail'o `Section`
+// komponentu (mono 11px semibold tracking-[0.18em] + hairline bone-400/60).
+// Tone'as keičiasi pagal semantiką (severity → terracotta-600), bet svoris
+// tas pats — savybes section'ai TOS PAČIOS kategorijos kaip APIE AUGALĄ etc.
 function SectionHeader({ Icon, label, tone = 'forest' }) {
   const toneClasses = tone === 'terracotta'
-    ? { text: 'text-terracotta-600', iconColor: 'text-terracotta-500', line: 'bg-terracotta-200/60' }
-    : { text: 'text-forest-600',     iconColor: 'text-forest-500',     line: 'bg-bone-400/40' }
+    ? { text: 'text-terracotta-600', iconColor: 'text-terracotta-500', line: 'bg-bone-400/60' }
+    : { text: 'text-forest-700',     iconColor: 'text-forest-500',     line: 'bg-bone-400/60' }
   return (
     <div className="flex items-center gap-3 mt-1">
       <div className="flex items-center gap-1.5">
-        {Icon && <Icon size={11} className={`${toneClasses.iconColor} flex-shrink-0`} />}
-        <p className={`font-mono text-[10px] font-medium uppercase tracking-[0.18em] ${toneClasses.text}`}>
+        {Icon && <Icon size={12} className={`${toneClasses.iconColor} flex-shrink-0`} />}
+        <p className={`font-mono text-[11px] font-semibold uppercase tracking-[0.18em] ${toneClasses.text}`}>
           {label}
         </p>
       </div>
@@ -250,7 +254,7 @@ export function PlantSafetyCallout({ plant }) {
   if (!detales) return null
 
   return (
-    <div className="bg-white/55 backdrop-blur-xl border-2 border-terracotta/50 rounded-2xl p-3.5 flex gap-3">
+    <div className="bg-bone-50 border-2 border-terracotta/50 rounded-2xl p-3.5 flex gap-3">
       <Skull size={22} className="flex-shrink-0 text-terracotta mt-0.5" />
       <div className="flex-1 min-w-0">
         <p className="font-mono text-[10px] font-medium text-terracotta-600 uppercase tracking-[0.16em]">Pavojinga</p>

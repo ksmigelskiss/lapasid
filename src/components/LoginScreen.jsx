@@ -25,7 +25,7 @@ export default function LoginScreen({ onSignInGoogle, onSignInFacebook, loading 
   return (
     <div className="fixed inset-0 bg-bone flex items-center justify-center px-6">
       <motion.div
-        className="w-full max-w-[340px] bg-white/55 backdrop-blur-xl border border-bone-400/50 rounded-2xl px-7 py-8 flex flex-col gap-6 shadow-[0_4px_24px_rgba(28,58,42,0.06)]"
+        className="w-full max-w-[340px] bg-bone-50 border border-bone-400/50 rounded-2xl px-7 py-8 flex flex-col gap-6 shadow-[0_4px_24px_rgba(28,58,42,0.06)]"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
@@ -68,7 +68,7 @@ export default function LoginScreen({ onSignInGoogle, onSignInFacebook, loading 
 
         {/* Error callout */}
         {error && !isLoading && (
-          <div className="bg-white/55 backdrop-blur-xl border-2 border-terracotta/50 rounded-xl px-4 py-3">
+          <div className="bg-bone-50 border-2 border-terracotta/50 rounded-xl px-4 py-3">
             <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-terracotta-600">Klaida</p>
             <p className="text-xs text-terracotta-600 mt-1 leading-relaxed">{error}</p>
           </div>

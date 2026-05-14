@@ -73,7 +73,7 @@ export default function LoaderPlayground() {
                 <BrandLoader size={size} duration={duration} ink={ink} inline={inline} />
               </SurfaceCard>
               <SurfaceCard label="glass on photo" style={{ background: 'linear-gradient(135deg, #5a7062 0%, #38483e 100%)' }}>
-                <div className="bg-white/55 backdrop-blur-xl rounded-2xl p-5 border border-white/40">
+                <div className="bg-bone-50 rounded-2xl p-5 border border-white/40">
                   <BrandLoader size={size} duration={duration} ink={ink} inline={inline} />
                 </div>
               </SurfaceCard>

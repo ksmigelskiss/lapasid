@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Camera, Droplets, FlaskConical, Sprout, Stethoscope, FileText, Trash2, RefreshCw, Leaf, Thermometer, ShieldAlert, Ghost, ImageIcon, MapPin, X, Check, Activity } from 'lucide-react'
 import { makeId, today } from '../utils/plantTransform'
+import PlantImage from './brand/PlantImage'
 export { AddEventSheet, FAB } from './AddEventSheet'
 
 // ── Helpers ────────────────────────────────────────────────────
@@ -377,6 +378,7 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
     <>
     <motion.div
       className="relative pl-10 mb-4"
+      style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 320px' }}
       initial={{ opacity: 0, x: -12 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.04, duration: 0.3, ease: 'easeOut' }}
@@ -413,8 +415,9 @@ function PhotoEvent({ event, index, daysSince, showTooltip, onToggle, onDelete, 
           onContextMenu={e => e.preventDefault()}
           style={NO_CALLOUT}
         >
-          <img
-            src={event.imageUrl}
+          <PlantImage
+            url={event.imageUrl}
+            size="detail"
             alt="augalo nuotrauka"
             className="w-full h-full object-cover pointer-events-none"
             style={NO_CALLOUT}
@@ -506,7 +509,7 @@ function PivotalEvent({ event, index, daysSince, onDelete, inPeriod, zones = [] 
   const Icon = EVENT_ICON_MAP[event.type] ?? FileText
 
   const cardClass = inPeriod
-    ? 'bg-white/55 backdrop-blur-xl border border-bone-400/40 rounded-2xl'
+    ? 'bg-bone-50 border border-bone-400/40 rounded-2xl'
     : 'bg-bone-50 border border-bone-400/40 rounded-2xl'
 
   return (

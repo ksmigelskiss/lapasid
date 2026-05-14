@@ -6,6 +6,7 @@ import { getWateringForecast } from '../utils/wateringForecast'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import PostFertilizePrompt from './PostFertilizePrompt'
 import { useIsDesktop } from '../hooks/useIsDesktop'
+import PlantImage from './brand/PlantImage'
 import { useDetailHost } from '../contexts/DetailHostContext'
 
 /**
@@ -186,7 +187,7 @@ export default function CareWateringSheet({
       {/* Sheet — desktop'e glass card (kaip PlantDetail), mobile'e solid bone */}
       <motion.div
         className={useDesktopPanel
-          ? "relative w-full h-full bg-white/55 backdrop-blur-xl flex flex-col"
+          ? "relative w-full h-full bg-bone-50 flex flex-col"
           : "relative w-full max-w-[430px] bg-app flex flex-col"}
         style={useDesktopPanel ? { height: '100%' } : { height: '100dvh', y }}
         {...(useDesktopPanel ? {
@@ -267,7 +268,7 @@ export default function CareWateringSheet({
         {/* ── Photo — clean 3:2 ── */}
         {hasImg ? (
           <div className="w-full aspect-[3/2] overflow-hidden bg-bone-300 flex-shrink-0">
-            <img src={plant.image} alt={plant.lietuviškas} className="w-full h-full object-cover" />
+            <PlantImage url={plant.image} alt={plant.lietuviškas} size="detail" eager className="w-full h-full object-cover" />
           </div>
         ) : (
           <div className="w-full aspect-[3/2] flex items-center justify-center text-8xl bg-bone-300 flex-shrink-0">
@@ -321,7 +322,7 @@ export default function CareWateringSheet({
         </div>
 
         {/* ── Action bar — sticky bottom ── */}
-        <div className="flex-shrink-0 px-4 pt-3 border-t border-bone-400/40 bg-white/65 backdrop-blur-xl" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+        <div className="flex-shrink-0 px-4 pt-3 border-t border-bone-400/40 bg-bone-50" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
           {postFert ? (
             <PostFertilizePrompt
               count={1}

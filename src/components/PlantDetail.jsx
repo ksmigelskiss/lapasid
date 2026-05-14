@@ -10,6 +10,7 @@ import { ZonePicker } from './ZoneManager'
 import PlantTimeline, { FAB, AddEventSheet } from './PlantTimeline'
 import BarcodeLifeline from './brand/BarcodeLifeline'
 import PlantSavybesPills, { PlantSafetyCallout } from './brand/PlantSavybesPills'
+import PlantImage from './brand/PlantImage'
 import BrandLoader from './brand/BrandLoader'
 import { refreshPlantFromAI } from '../utils/plantAI'
 import { TOOL_PREVIEW, PLANT_SYSTEM } from './SearchModal'
@@ -93,7 +94,7 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
         transition={{ duration: 0.2 }} onPointerDown={onClose}
       />
       <motion.div
-        className="relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl rounded-t-4xl px-4 pt-3 pb-8 border-t border-bone-400/40"
+        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-4 pt-3 pb-8 border-t border-bone-400/40"
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}
@@ -160,7 +161,7 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
             <div className="space-y-2">
               {/* Preview */}
               <div className="relative rounded-2xl overflow-hidden bg-bone-300" style={{ height: 200 }}>
-                <img src={current} alt="" className="w-full h-full object-cover" />
+                <PlantImage url={current} size="detail" eager alt="" className="w-full h-full object-cover" />
                 {/* Prev / Next */}
                 <div className="absolute inset-0 flex items-center justify-between px-2">
                   <button
@@ -201,7 +202,7 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
                     onClick={() => { onSave(e.imageUrl, true); onClose() }}
                     className="flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 border-bone-400/40 hover:border-forest-400 active:border-forest-600 transition-all"
                   >
-                    <img src={e.imageUrl} alt="" className="w-full h-full object-cover" />
+                    <PlantImage url={e.imageUrl} size="thumb" alt="" className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -949,7 +950,7 @@ function BottomSheet({ onClose, children }) {
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }} onClick={onClose} />
       <motion.div
-        className="relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl rounded-t-4xl px-5 pb-8 pt-3"
+        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-5 pb-8 pt-3"
         style={{ y }}
         drag="y" dragControls={dragControls} dragListener={false}
         dragConstraints={{ top: 0 }} dragElastic={{ top: 0, bottom: 0.25 }}
@@ -1158,6 +1159,7 @@ export default function PlantDetail({
   const [activeTab, setActiveTab]           = useState('profile')
   const [timelineMode, setTimelineMode]     = useState('events') // 'events' | 'photos' — timeline filtras
   const [heroError, setHeroError]           = useState(false)
+  const [heroCollapsed, setHeroCollapsed]   = useState(false)
   const [showPhotoSheet, setShowPhoto]      = useState(false)
   const [showChat, setShowChat]             = useState(false)
   const [chatInitialQuery, setChatQuery]    = useState('')
@@ -1256,6 +1258,37 @@ export default function PlantDetail({
     return () => clearTimeout(t)
   }, [scrollToCare, plant.id])
 
+  // Hero collapse — kai vartotojas scroll'ina content'ą per ~60px, foto/chart
+  // hero zona susikrečia iš aspect-3/2 į aspect-3/1 (atlaisvina ~33% teksto
+  // erdvės). Hysteresis (40/60) saugo nuo flickering'o ties threshold'u.
+  // requestAnimationFrame'as taupo paint'us — scroll event veikia <16ms.
+  useEffect(() => {
+    const el = scrollContainerRef.current
+    if (!el) return
+    let raf = null
+    const handler = () => {
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = null
+        const y = el.scrollTop
+        setHeroCollapsed(prev => prev ? y > 40 : y > 60)
+      })
+    }
+    el.addEventListener('scroll', handler, { passive: true })
+    return () => {
+      el.removeEventListener('scroll', handler)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [activeTab])
+
+  // Tab switch resetuoja scroll į viršų → expand'ina hero atgal
+  useEffect(() => {
+    const el = scrollContainerRef.current
+    if (!el) return
+    el.scrollTop = 0
+    setHeroCollapsed(false)
+  }, [activeTab])
+
   // Fetch iNaturalist names if not yet fetched for this plant
   useEffect(() => {
     if (fetchedRef.current) return
@@ -1306,11 +1339,12 @@ export default function PlantDetail({
         />
       )}
 
-      {/* Sheet — desktop'e glass card (kaip widget'ai), mobile'e solid bone. */}
+      {/* Sheet — abi platformos glass (Tier 3 frost), isolation izoliuoja
+          stacking context'ą kad backdrop-blur recomputes nelistų į page paint. */}
       <motion.div
         className={useDesktopPanel
-          ? "relative w-full h-full bg-white/55 backdrop-blur-xl flex flex-col"
-          : "relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl flex flex-col"}
+          ? "relative w-full h-full bg-bone-50 flex flex-col isolate"
+          : "relative w-full max-w-[430px] bg-bone-50 flex flex-col isolate"}
         style={useDesktopPanel ? { height: '100%' } : { height: '100dvh', y }}
         {...(useDesktopPanel ? {
           // Desktop'e — slide iš dešinės (panel'ėje atrodo, kaip kad kortelė
@@ -1419,24 +1453,34 @@ export default function PlantDetail({
           </div>
 
           {/* Hero zone — Istorija tab'as automatiškai rodo BarcodeLifeline vietoj
-              nuotraukos (data-tab'as = data-hero'is). Kitose tab'ose — clean foto
-              (jokio overlay'aus, jokio interaktyvumo — photo selection per
-              toolbar'o „…" mygtuką). Brandbook editorial pattern. */}
-          {activeTab === 'timeline' ? (
-            <BarcodeLifeline events={plant.timeline ?? []} />
-          ) : plant.image && !heroError ? (
-            <div className="block w-full aspect-[3/2] overflow-hidden bg-bone-300">
-              <img
-                src={plant.image} alt={plant.lietuviškas}
-                className="w-full h-full object-cover"
-                onError={() => setHeroError(true)}
-              />
-            </div>
-          ) : (
-            <div className="w-full aspect-[3/2] flex items-center justify-center text-8xl bg-bone-300">
-              {plant.emoji ?? '🌿'}
-            </div>
-          )}
+              nuotraukos. Kitose tab'ose — clean foto. Hero collapse'inasi
+              scroll'inant content'ą (aspect 3/2 → 3/1, atlaisvina vietos tekstui).
+              motion.div animuoja `aspectRatio` smooth'iai (Framer interpoliuoja
+              numeric ratio reikšmę). */}
+          <motion.div
+            className="w-full overflow-hidden"
+            initial={false}
+            animate={{ aspectRatio: heroCollapsed ? '3 / 1' : '3 / 2' }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {activeTab === 'timeline' ? (
+              <div className="w-full h-full">
+                <BarcodeLifeline events={plant.timeline ?? []} />
+              </div>
+            ) : plant.image && !heroError ? (
+              <div className="block w-full h-full overflow-hidden bg-bone-300">
+                <PlantImage
+                  url={plant.image} alt={plant.lietuviškas} size="detail" eager
+                  className="w-full h-full object-cover"
+                  onError={() => setHeroError(true)}
+                />
+              </div>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-8xl bg-bone-300">
+                {plant.emoji ?? '🌿'}
+              </div>
+            )}
+          </motion.div>
         </div>
 
         {/* Tab bar */}

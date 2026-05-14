@@ -15,7 +15,7 @@ export default function WeatherWidget({ weather }) {
   // Loading skeleton
   if (!weather) {
     return (
-      <div className="bg-white/55 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40 px-4 py-3.5">
+      <div className="bg-bone-50 rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40 px-4 py-3.5">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-4 h-4 rounded-full bg-gray-200 animate-pulse" />
           <div className="w-20 h-3.5 bg-gray-200 rounded animate-pulse" />
@@ -38,7 +38,7 @@ export default function WeatherWidget({ weather }) {
   const mm = String(now.getMinutes()).padStart(2, '0')
 
   return (
-    <div className="bg-white/55 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40">
+    <div className="bg-bone-50 rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40">
       {/* Header — visada matomas, click toggleina collapse */}
       <button
         onClick={toggle}

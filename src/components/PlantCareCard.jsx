@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Sun, Droplets, ChevronRight, FlaskConical, Leaf, Sprout } from 'lucide-react'
 import PostFertilizePrompt from './PostFertilizePrompt'
+import PlantImage from './brand/PlantImage'
 
 // ── Forecast helpers ──────────────────────────────────────────────
 
@@ -310,7 +311,7 @@ export default function PlantCareCard({ passport, plantId, user }) {
       {/* ── Hero — editorial: clean photo (3:2), title block ant bone. ── */}
       {s.image ? (
         <div className="w-full aspect-[3/2] overflow-hidden bg-bone-300 flex-shrink-0">
-          <img src={s.image} alt={s.lietuviškas} className="w-full h-full object-cover" />
+          <PlantImage url={s.image} alt={s.lietuviškas} size="detail" eager className="w-full h-full object-cover" />
         </div>
       ) : (
         <div className="w-full aspect-[3/2] flex items-center justify-center text-8xl bg-bone-300 flex-shrink-0">

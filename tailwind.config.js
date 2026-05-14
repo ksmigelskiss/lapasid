@@ -73,9 +73,9 @@ export default {
           900: '#0c1c14',
         },
         bone: {
-          DEFAULT: '#f1ebdd',  // PAPER — pagrindinis warm cream'as
-          50:      '#faf6ec',
-          100:     '#f4eedf',
+          DEFAULT: '#f1ebdd',  // PAPER — pagrindinis warm cream'as (page canvas)
+          50:      '#fefdfa',  // Tier 2 elevation — beveik baltas su minimaliu cream tint'u (modal/widget/card body)
+          100:     '#f7f1e3',  // header'iams (subtilus distinct'as nuo bone-50 elevation)
           200:     '#f1ebdd',  // = DEFAULT
           300:     '#e7e0cf',  // browser chrome'ui ir kt
           400:     '#d8cfb8',

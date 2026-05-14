@@ -27,7 +27,7 @@ export default function Navigation({ active, onChange, counts = {}, role = 'owne
         className="px-3 pt-2 pb-3"
         style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)' }}
       >
-        <div className="flex bg-bone-50/90 backdrop-blur-xl rounded-btn p-1 gap-0.5 border border-bone-400/40 shadow-[0_4px_16px_rgba(28,58,42,0.12),0_0_0_1px_rgba(28,58,42,0.04)]">
+        <div className="flex bg-bone-100/95 rounded-btn p-1 gap-0.5 border border-bone-400/40 shadow-[0_4px_16px_rgba(28,58,42,0.12),0_0_0_1px_rgba(28,58,42,0.04)]">
           {visibleTabs.map(({ id, label, countKey }) => {
             const isActive = active === id
             const count = counts[countKey] ?? 0

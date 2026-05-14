@@ -32,7 +32,7 @@ export default function DeleteModal({ plant, section, onDied, onMoveToLibrary, o
 
       {/* Sheet — glass card (kaip PlantDetail) */}
       <motion.div
-        className="relative w-full max-w-[430px] bg-white/55 backdrop-blur-xl rounded-t-3xl px-5 pt-4 pb-8 safe-bottom border-t border-bone-400/40"
+        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-3xl px-5 pt-4 pb-8 safe-bottom border-t border-bone-400/40"
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
         exit={{ y: '100%' }}

@@ -85,7 +85,7 @@ export default function CareHeatmapWidget({ data }) {
   )
 
   return (
-    <div className="bg-white/55 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40">
+    <div className="bg-bone-50 rounded-2xl shadow-[0_4px_24px_rgba(20,40,30,0.06)] border border-white/40">
       {/* Header — visada matomas, click toggleina collapse */}
       <button
         onClick={toggle}

@@ -17,7 +17,7 @@ function CalloutCard({ icon, label, title, body, hint, tone = 'terracotta' }) {
   // tone: 'terracotta' = severe/overdue; 'forest' = info/urgent (light)
   const isWarn = tone === 'terracotta'
   return (
-    <div className={`bg-white/55 backdrop-blur-xl border-2 rounded-2xl px-4 py-3 flex gap-3 ${
+    <div className={`bg-bone-50 border-2 rounded-2xl px-4 py-3 flex gap-3 ${
       isWarn ? 'border-terracotta/50' : 'border-forest-300/50'
     }`}>
       <div className={`flex-shrink-0 mt-0.5 ${isWarn ? 'text-terracotta' : 'text-forest-600'}`}>

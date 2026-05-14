@@ -9,6 +9,7 @@ const PlantPassportPage = lazy(() => import('./pages/PlantPassportPage.jsx'))
 const LoaderPlayground = lazy(() => import('./dev/LoaderPlayground.jsx'))
 const LoginScreenDemo = lazy(() => import('./dev/LoginScreenDemo.jsx'))
 const PlantExport = lazy(() => import('./dev/PlantExport.jsx'))
+const ThemeStudio = lazy(() => import('./dev/ThemeStudio.jsx'))
 
 // Augalo paso URL: /p/{plantId} → PlantPassportPage (be pilno app)
 const passportMatch = window.location.pathname.match(/^\/p\/([^/]+)\/?$/)
@@ -36,6 +37,8 @@ createRoot(document.getElementById('root')).render(
       <Suspense fallback={devFallback}><LoaderPlayground /></Suspense>
     ) : playgroundType === 'login' ? (
       <Suspense fallback={devFallback}><LoginScreenDemo /></Suspense>
+    ) : playgroundType === 'theme' ? (
+      <Suspense fallback={devFallback}><ThemeStudio /></Suspense>
     ) : passportMatch ? (
       <Suspense fallback={devFallback}>
         <PlantPassportPage plantId={passportMatch[1]} />
