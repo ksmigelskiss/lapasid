@@ -18,6 +18,7 @@ import { CARE_COPY, pick, fillTemplate } from '../constants/careCopy'
 import { SORT_OPTIONS, sortPlants } from '../utils/plantSort'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { makeId, today } from '../utils/plantTransform'
+import T4Icon from '../components/brand/T4Icon'
 
 const GARDENER = '/gardener.png'
 
@@ -662,14 +663,16 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
         {/* Plant grid */}
         {plants.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-            <img src="/plant_pot.png" className="h-16 w-auto object-contain opacity-50" alt="" />
+            <div className="opacity-50">
+              <T4Icon size={64} ink="#1c3a2a" paper="transparent" />
+            </div>
             <div>
-              <p className="text-base font-semibold text-gray-700">Dar nėra augalų</p>
-              <p className="text-sm text-gray-400 mt-1">Ieškokite augalo ir pridėkite į kolekciją</p>
+              <p className="font-display text-base font-semibold tracking-tight text-forest-700">Dar nėra augalų</p>
+              <p className="text-sm text-forest-500 mt-1">Ieškokite augalo ir pridėkite į kolekciją</p>
             </div>
             <button
               onClick={onSearch}
-              className="mt-2 px-6 py-3 bg-sage-500 text-white rounded-2xl text-sm font-medium"
+              className="mt-2 px-6 py-3 bg-forest-700 hover:bg-forest-800 text-bone-50 rounded-btn font-display text-sm font-semibold transition-colors"
             >
               + Pridėti pirmą augalą
             </button>

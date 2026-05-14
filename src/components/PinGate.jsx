@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { tryUnlock, isUnlocked } from '../utils/pinLock'
+import T4Icon from './brand/T4Icon'
 
 function PinUnlock({ onUnlocked }) {
   const [value, setValue]   = useState('')
@@ -37,9 +38,11 @@ function PinUnlock({ onUnlocked }) {
       >
         {/* Icon + title */}
         <div className="text-center space-y-1">
-          <img src="/plant_pot.png" className="w-14 h-14 object-contain mx-auto mb-3 opacity-80" alt="" />
-          <h1 className="text-xl font-bold text-gray-900">Įveskite PIN</h1>
-          <p className="text-sm text-gray-500">Šis įrenginys bus prisimenamas 7 dienas</p>
+          <div className="flex justify-center mb-3 opacity-80">
+            <T4Icon size={56} ink="#1c3a2a" paper="transparent" />
+          </div>
+          <h1 className="font-display text-xl font-semibold tracking-tight text-forest-800">Įveskite PIN</h1>
+          <p className="text-sm text-forest-500">Šis įrenginys bus prisimenamas 7 dienas</p>
         </div>
 
         {/* Dots */}

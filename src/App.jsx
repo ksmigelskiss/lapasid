@@ -15,6 +15,7 @@ import MobileHeader from './components/MobileHeader'
 import { DetailHostProvider } from './contexts/DetailHostContext'
 import LoginScreen from './components/LoginScreen'
 import BrandLoader from './components/brand/BrandLoader'
+import T4Icon from './components/brand/T4Icon'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
 
 // ChunkLoadError (senas SW aptarnauja seną HTML su naujais chunk hash'ais) → force reload.
@@ -321,15 +322,17 @@ export default function App() {
   if (!collectionId) {
     return (
       <div className="fixed inset-0 bg-app flex flex-col items-center justify-center gap-4 px-8">
-        <img src="/plant_pot.png" className="w-16 h-16 object-contain opacity-40" alt="" />
-        <p className="text-sm text-gray-500 text-center">Nepavyko įkelti kolekcijos.<br />Patikrink interneto ryšį ir bandyk iš naujo.</p>
+        <div className="opacity-50">
+          <T4Icon size={64} ink="#1c3a2a" paper="transparent" />
+        </div>
+        <p className="text-sm text-forest-500 text-center">Nepavyko įkelti kolekcijos.<br />Patikrink interneto ryšį ir bandyk iš naujo.</p>
         <button
           onClick={() => window.location.reload()}
-          className="px-6 py-2 bg-brand text-white rounded-xl text-sm font-medium"
+          className="px-6 py-2.5 bg-forest-700 hover:bg-forest-800 text-bone-50 rounded-btn text-sm font-display font-semibold transition-colors"
         >
           Bandyti iš naujo
         </button>
-        <button onClick={signOut} className="text-xs text-gray-400 underline">Atsijungti</button>
+        <button onClick={signOut} className="text-xs text-forest-400 hover:text-forest-600 underline transition-colors">Atsijungti</button>
       </div>
     )
   }
