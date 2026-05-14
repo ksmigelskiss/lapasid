@@ -250,14 +250,36 @@ function Section({ title, children, id }) {
   )
 }
 
+// Salvage'ina korumpuotus duomenis: kartais Firestore'e plant.substratas
+// (ar pan.) tampa indexed-char objektu `{"0":"P","1":"u",...}` (kažkur
+// per ankstesnę refresh iteraciją {...string} spread'as suskaldė).
+// Jei aptinkam šitą pattern'ą — surenkam atgal į string'ą display'ui.
+// Tikras fix'as — refresh'as overwrite'ina su nauja string vert. iš AI.
+function safeStringValue(v) {
+  if (v == null) return ''
+  if (typeof v === 'string') return v
+  if (typeof v === 'number' || typeof v === 'boolean') return String(v)
+  if (typeof v === 'object' && !Array.isArray(v)) {
+    const keys = Object.keys(v)
+    if (keys.length > 0 && keys.every(k => /^\d+$/.test(k))) {
+      // Indexed-char objektas — reconstruct'inam string'ą
+      const sorted = keys.map(Number).sort((a, b) => a - b)
+      return sorted.map(i => v[i]).join('')
+    }
+    return ''  // kitas objekto formatas — nerodom (nei JSON'o, nei [object Object])
+  }
+  return String(v)
+}
+
 function InfoRow({ icon, label, value }) {
-  if (!value) return null
+  const text = safeStringValue(value)
+  if (!text) return null
   return (
     <div className="flex gap-3 py-2.5 border-b border-bone-400/30 last:border-0">
       <div className="w-6 flex-shrink-0 flex items-center justify-center text-forest-400">{icon}</div>
       <div className="flex-1 min-w-0">
         <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">{label}</p>
-        <p className="text-sm text-forest-700 mt-1 leading-snug">{value}</p>
+        <p className="text-sm text-forest-700 mt-1 leading-snug">{text}</p>
       </div>
     </div>
   )

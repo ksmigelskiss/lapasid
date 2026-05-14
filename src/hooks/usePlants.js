@@ -376,16 +376,29 @@ export function usePlants(collectionId, viewerToken = null) {
   // aprasymas, kilme, sviesa, vanduo, prieziura, idomybes ir t.t.) perrašomi.
   const refreshPlantFromAIResult = useCallback((id, aiData) => {
     // Whitelist'as laukų, kurie ATEINA iš AI ir perrašo esamus.
+    // PRIDĖTI: substratas, persodinimas, ziemojimas, prieziura — anksčiau
+    // nebuvo whitelist'e, dėl ko korumpuoti laukai (indexed-char objektai)
+    // nebuvo overwrite'inami. Dabar Atnaujinti per AI taip pat juos
+    // atstato į švarią string'ą.
     const aiFields = [
       'tipas', 'augimo_greitis', 'sunkumas',
       'toksiskas', 'toksiskumo_info',  // backward compat
       'aprasymas', 'kilme',
       'sviesa', 'vanduo', 'idomybes',
+      'substratas', 'persodinimas', 'ziemojimas',
+      'prieziura', 'dauginimas', 'problemos',
+      'laistymasIntervalas', 'tresimas', 'dormancyInfo',
+      'sinonimai', 'englishNames', 'inatLtName',
     ]
     // Laukai, kurie PRIVALO būti array'ai — AI kartais grąžina string'ą arba
     // null'ą, dėl ko vėliau .map crash'ina. fromAIResult tai daro, refresh'ui
     // dabar irgi.
-    const ARRAY_FIELDS = new Set(['idomybes', 'dauginimas', 'problemos', 'sinonimai', 'englishNames'])
+    const ARRAY_FIELDS  = new Set(['idomybes', 'dauginimas', 'problemos', 'sinonimai', 'englishNames'])
+    // Laukai, kurie PRIVALO būti string'ai — apsauga nuo indexed-char object
+    // corruption'o ({0:"P",1:"u",...}). Jei AI grąžina ne-string, log'inam +
+    // skip'inam (kad neperrašytume gero string'o su sugadintu objektu).
+    const STRING_FIELDS = new Set(['aprasymas', 'kilme', 'tipas', 'augimo_greitis',
+      'toksiskumo_info', 'substratas', 'persodinimas', 'ziemojimas', 'inatLtName'])
     const patch = {}
     const filledFields = []
     const skippedFields = []
@@ -393,10 +406,20 @@ export function usePlants(collectionId, viewerToken = null) {
       if (aiData[k] === undefined) { skippedFields.push(k); continue }
       if (ARRAY_FIELDS.has(k)) {
         patch[k] = Array.isArray(aiData[k]) ? aiData[k] : []
+        filledFields.push(k)
+      } else if (STRING_FIELDS.has(k)) {
+        // String validation — AI turi grąžinti string'ą, kitaip skip'inam
+        if (typeof aiData[k] === 'string') {
+          patch[k] = aiData[k]
+          filledFields.push(k)
+        } else {
+          console.warn(`[refresh] field "${k}" expected string, got`, typeof aiData[k], '— skipped')
+          skippedFields.push(`${k} (bad type: ${typeof aiData[k]})`)
+        }
       } else {
         patch[k] = aiData[k]
+        filledFields.push(k)
       }
-      filledFields.push(k)
     }
     // Savybes — normalizuojam per tą pačią funkciją kaip fromAIResult, kad
     // nesaugotume raw AI struktūros (gali turėti netinkamus enum'us).
