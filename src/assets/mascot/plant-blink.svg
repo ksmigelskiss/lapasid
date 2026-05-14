@@ -1,0 +1,21 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="currentColor" role="img" aria-label="LapasID Animus — plant blinking" data-mascot="plant">
+  <g id="base">
+    <rect id="base-band" x="58" y="196" width="124" height="10" rx="2" opacity="0.55"></rect>
+    <path id="base-pot" d="M 64 206 L 176 206 L 166 226 L 74 226 Z" opacity="0.35"></path>
+  </g>
+  <g id="character">
+    <g id="body">
+      <path id="body-shape" d="M 120 52 C 82 52 64 96 64 138 C 64 178 88 200 120 200 C 152 200 176 178 176 138 C 176 96 158 52 120 52 Z"></path>
+    </g>
+    <g id="sprout">
+      <rect id="sprout-stem" x="118.5" y="22" width="3" height="34" rx="1.2"></rect>
+      <path id="sprout-leaf" d="M 121 26 C 119 14 132 4 152 2 C 149 16 138 26 124 27 C 122 27 121 26 121 26 Z"></path>
+      <path id="sprout-counter" d="M 119 30 C 113 28 105 30 102 34 C 106 38 114 38 118 34 Z"></path>
+    </g>
+    <g id="eye" fill="#f1ebdd">
+      
+      <rect id="eye-line" x="111" y="105" width="10" height="2" rx="1"></rect>
+    </g>
+  </g>
+</svg>

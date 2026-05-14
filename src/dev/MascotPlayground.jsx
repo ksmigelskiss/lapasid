@@ -1,10 +1,14 @@
-// MascotPlayground — T4Icon „living mark" variantai.
-// Available at /?playground=mascot kai VITE_USE_MOCK_USER=true.
+// MascotPlayground — du sluoksniai mascot variantų preview'ui.
 //
-// Demonstruoja, kaip T4Mark gali būti subtiliai animuotas pagal AI state'us:
-//   idle / sway / thinking / speaking / warning / success
+// 1) ANIMUS (NAUJAS, rekomenduojamas) — plant + gardener characters
+//    iš lapasid-brand/Animus paketo. Pilna character'ystė, brand-aligned.
 //
-// Kiekvienas variant'as su CSS keyframe animacija (no JS overhead).
+// 2) T4Icon „living mark" (ankstesnė idėja) — abstraktus brand mark'as
+//    su state-based animation'omis.
+//
+// Available at /?playground=mascot.
+
+import Mascot from '../components/brand/Mascot'
 
 const INK_FOREST = '#1c3a2a'
 const INK_LIGHT  = '#f1ebdd'
@@ -122,14 +126,78 @@ function Variant({ title, state, description, bg = 'bone' }) {
   )
 }
 
+function AnimusVariant({ title, type, state, description, hoverable = false }) {
+  return (
+    <div className="space-y-3">
+      <div className="bg-bone-100 rounded-2xl p-8 flex items-center justify-center aspect-square border border-bone-400/40">
+        <Mascot type={type} state={state} size={160} hoverable={hoverable} />
+      </div>
+      <div>
+        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500">{title}</p>
+        <p className="text-sm text-forest-700 mt-1">{description}</p>
+      </div>
+    </div>
+  )
+}
+
 export default function MascotPlayground() {
   return (
     <div className="min-h-screen bg-app p-8">
       <style>{STYLES}</style>
 
       <div className="max-w-5xl mx-auto">
+        {/* ═══════════ ANIMUS SECTION (NEW · recommended) ═══════════ */}
         <header className="mb-8">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 mb-1">Dev playground</p>
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-terracotta-500 mb-1">Animus mascot · NEW</p>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-forest-800">Plant + Gardener characters</h1>
+          <p className="text-sm text-forest-600 mt-3 max-w-2xl leading-relaxed">
+            Iš <span className="font-mono text-xs">lapasid-brand/Animus</span> design'o paketo. Du charakteriai — <strong>Plant</strong> (augalas pats kalba) ir <strong>Gardener</strong> (asistento balsas) — vienas vizualinis žodynas, skirtinga poza. „Wisp-like, ambient, modern" siela su brand-aligned forest + bone paletė. Random blink kas 3-7s palaiko gyvybingumą.
+          </p>
+        </header>
+
+        <h2 className="font-display text-xl font-semibold tracking-tight text-forest-800 mb-4">Plant — augalo balsas</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10">
+          <AnimusVariant title="Idle" type="plant" state="idle" description="Default. Breath + random blink + sprout sway. „Aš čia." Naudoti PlantCard hint'ams, plant chat avatar'ui." />
+          <AnimusVariant title="Happy" type="plant" state="happy" description="Body bounces taller, sprout perks. „Ačiū už vandenį!" Po sėkmingo watering'o ar achievement'o." />
+          <AnimusVariant title="Wilt" type="plant" state="wilt" description="Drooped + terracotta tint. „Praėjo 7 dienos…" Notification'uose kai augalas vėluoja." />
+          <AnimusVariant title="Think" type="plant" state="think" description="Thought bubble + pulse dots. „…" Kai AI generuoja patarimą apie šitą augalą." />
+          <AnimusVariant title="Hoverable idle" type="plant" state="idle" hoverable description="Idle su hover sway interakcija. Pelę užvedus — gentle sway. Click target'ams." />
+        </div>
+
+        <h2 className="font-display text-xl font-semibold tracking-tight text-forest-800 mb-4">Gardener — AI asistento balsas</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
+          <AnimusVariant title="Idle" type="gardener" state="idle" description="Default. Breath + random blink. „Klausau visos kolekcijos." Dashboard floating button, chat avatar." />
+          <AnimusVariant title="Tilt (listening)" type="gardener" state="tilt" description="Body leans -5°. „Klausau / mąstau." Kai user'is rašo chat'e (typing indicator)." />
+          <AnimusVariant title="Wave" type="gardener" state="wave" description="Dešinė ranka pakeltą — banguoja. „Sveiki!" Atidarius chat'ą pirmą kartą." />
+          <AnimusVariant title="Think" type="gardener" state="think" description="Thought bubble + pulse dots. AI generuoja atsakymą — loading indicator chat'e." />
+        </div>
+
+        {/* Usage matrix — Animus integration sites */}
+        <section className="bg-bone-50 rounded-2xl border border-bone-400/40 p-6 mb-12">
+          <h2 className="font-display text-lg font-semibold tracking-tight text-forest-800 mb-4">Integracija — kur kuris characteris</h2>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left border-b border-bone-400/40">
+                <th className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-forest-500 py-2">Vieta</th>
+                <th className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-forest-500 py-2">Character</th>
+                <th className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-forest-500 py-2">State</th>
+              </tr>
+            </thead>
+            <tbody className="text-forest-700">
+              <tr className="border-b border-bone-400/20"><td className="py-2">Dashboard floating AI button</td><td>gardener</td><td>idle (hoverable)</td></tr>
+              <tr className="border-b border-bone-400/20"><td className="py-2">Biblioteka floating AI button</td><td>gardener</td><td>idle (hoverable)</td></tr>
+              <tr className="border-b border-bone-400/20"><td className="py-2">Chat dialog avatar (Collection)</td><td>gardener</td><td>tilt → think (typing) → idle</td></tr>
+              <tr className="border-b border-bone-400/20"><td className="py-2">PlantChat avatar (single plant)</td><td>plant</td><td>idle → think kai AI atsako</td></tr>
+              <tr className="border-b border-bone-400/20"><td className="py-2">Watering reminder notification</td><td>plant</td><td>wilt</td></tr>
+              <tr className="border-b border-bone-400/20"><td className="py-2">Care done toast'as</td><td>plant</td><td>happy</td></tr>
+              <tr><td className="py-2">SearchModal empty state</td><td>gardener</td><td>wave (welcome)</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        {/* ═══════════ T4Icon SECTION (alt — original idea) ═══════════ */}
+        <header className="mb-8 mt-16 border-t border-bone-400/40 pt-8">
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 mb-1">Alternative — original idea</p>
           <h1 className="font-display text-3xl font-semibold tracking-tight text-forest-800">Mascot — „Living Mark" variantai</h1>
           <p className="text-sm text-forest-600 mt-3 max-w-2xl leading-relaxed">
             T4Icon kaip gyvas brand mark'as. Charakteris atsiranda per <strong className="font-semibold">animation + state</strong>, ne per veido bruožus.

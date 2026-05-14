@@ -1,0 +1,158 @@
+/* mascot.css
+   LapasID · Animus mascot · drop-in animation styles.
+   ─────────────────────────────────────────────────────
+   Pair this with mascot/plant-idle.svg and mascot/gardener-idle.svg.
+   The SVG ships in idle pose; this file drives every state.
+
+   Usage:
+     <link rel="stylesheet" href="mascot.css">
+     <svg data-mascot="plant" class="is-happy" ...><!-- plant-idle.svg --></svg>
+
+   States (add as a class on the SVG root element):
+     .is-blink   .is-wilt   .is-happy   .is-think     (plant)
+     .is-tilt    .is-wave   .is-think                 (gardener)
+
+   To re-theme, set `color:` on the SVG (or a parent). The eye is locked
+   to bone (#f1ebdd) inside the SVG for contrast.
+*/
+
+/* ─────────────────────────────────────────────────────────────────
+   CHARACTER — everything inside #character moves as one. The breath
+   anchors at the character's footprint so the body only rises.
+   ───────────────────────────────────────────────────────────────── */
+[data-mascot="plant"] #character {
+  transform-origin: 120px 200px;
+  transform-box: view-box;
+  animation: m-breath 3.6s ease-in-out infinite;
+}
+[data-mascot="gardener"] #character {
+  transform-origin: 120px 215px;
+  transform-box: view-box;
+  animation: m-breath 3.6s ease-in-out infinite;
+}
+@keyframes m-breath {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50%      { transform: scale(1.03, 1.04) translateY(-2px); }
+}
+
+/* EYE blink. Trigger by adding `.is-blink` to #eye-dot for ~180ms,
+   then remove. Repeat every 3-7s for an alive feel. */
+[data-mascot] #eye-dot {
+  transform-origin: center;
+  transform-box: fill-box;
+  transition: transform .12s cubic-bezier(.2,.7,.3,1);
+}
+[data-mascot] #eye-dot.is-blink { animation: m-blink .18s ease-in-out; }
+@keyframes m-blink {
+  0%, 100% { transform: scaleY(1); }
+  40%, 60% { transform: scaleY(0.08); }
+}
+
+/* SPROUT sway — composes with parent breath, never feels detached. */
+[data-mascot="plant"] #sprout {
+  transform-origin: 120px 56px;
+  transform-box: view-box;
+  animation: m-sprout-sway 5s ease-in-out infinite;
+}
+@keyframes m-sprout-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   STATES — apply to the SVG root so the whole creature moves together
+   ───────────────────────────────────────────────────────────────── */
+
+/* PLANT · wilt */
+[data-mascot="plant"].is-wilt { color: #b86a3a; }
+[data-mascot="plant"].is-wilt #character {
+  animation: m-wilt 2.6s ease-in-out infinite;
+}
+@keyframes m-wilt {
+  0%, 100% { transform: translateY(3px) rotate(-6deg) scaleY(0.96); }
+  50%      { transform: translateY(4px) rotate(-7deg) scaleY(0.94); }
+}
+[data-mascot="plant"].is-wilt #sprout {
+  animation: m-sprout-wilt 4s ease-in-out infinite;
+}
+@keyframes m-sprout-wilt {
+  0%, 100% { transform: rotate(28deg); }
+  50%      { transform: rotate(34deg); }
+}
+
+/* PLANT · happy */
+[data-mascot="plant"].is-happy #character {
+  animation: m-happy 1.2s cubic-bezier(.34,1.56,.64,1) infinite;
+}
+@keyframes m-happy {
+  0%, 100% { transform: scale(1.04, 1.10) translateY(-4px); }
+  50%      { transform: scale(1.02, 1.06) translateY(-1px); }
+}
+[data-mascot="plant"].is-happy #sprout {
+  animation: m-sprout-perk 1.2s cubic-bezier(.34,1.56,.64,1) infinite;
+}
+@keyframes m-sprout-perk {
+  0%, 100% { transform: rotate(-3deg) scale(1.08); }
+  50%      { transform: rotate(3deg)  scale(1.12); }
+}
+
+/* GARDENER · tilt (listening) */
+[data-mascot="gardener"].is-tilt #character {
+  animation: m-tilt-breath 3.6s ease-in-out infinite;
+}
+@keyframes m-tilt-breath {
+  0%, 100% { transform: rotate(-5deg) scale(1); }
+  50%      { transform: rotate(-5deg) scale(1.03); }
+}
+
+/* GARDENER · wave */
+[data-mascot="gardener"] #arm-right {
+  transform-origin: 178px 162px;
+  transform-box: view-box;
+}
+[data-mascot="gardener"].is-wave #arm-right {
+  animation: m-wave 1.2s ease-in-out infinite;
+}
+@keyframes m-wave {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-38deg); }
+  50%      { transform: rotate(-28deg); }
+  75%      { transform: rotate(-38deg); }
+}
+
+/* THOUGHT BUBBLE — floats independently of the character. Hidden by
+   default; appears when `.is-think` is set on the SVG root. */
+[data-mascot] #thought {
+  opacity: 0;
+  transition: opacity .3s ease;
+  transform-origin: 188px 28px;
+  transform-box: view-box;
+}
+[data-mascot].is-think #thought {
+  opacity: 1;
+  animation: m-thought-float 4s ease-in-out infinite;
+}
+@keyframes m-thought-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+[data-mascot] #thought-dot-1,
+[data-mascot] #thought-dot-2,
+[data-mascot] #thought-dot-3 {
+  animation: m-thought-dot 1.2s ease-in-out infinite;
+}
+[data-mascot] #thought-dot-2 { animation-delay: .15s; }
+[data-mascot] #thought-dot-3 { animation-delay: .30s; }
+@keyframes m-thought-dot {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+
+/* Optional: hover sway. Add the class `hoverable` to make it interactive. */
+[data-mascot].hoverable:hover #character {
+  animation: m-sway 2s ease-in-out infinite;
+}
+@keyframes m-sway {
+  0%, 100% { transform: rotate(-2deg) scale(1.02); }
+  50%      { transform: rotate(2deg)  scale(1.02); }
+}

@@ -1,0 +1,26 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="currentColor" role="img" aria-label="LapasID Animus — gardener thinking" data-mascot="gardener">
+  <g id="base">
+    <rect id="ground-line" x="40" y="216" width="160" height="2" rx="1" opacity="0.55"></rect>
+  </g>
+  <g id="character">
+    <g id="body">
+      <path id="body-shape" d="M 120 46 C 72 46 50 96 50 144 C 50 188 80 216 120 216 C 160 216 190 188 190 144 C 190 96 168 46 120 46 Z"></path>
+    </g>
+    <g id="arms">
+      <path id="arm-left" d="M 62 162 C 42 158 22 170 18 188 C 22 196 36 198 50 192 C 62 186 68 176 68 168 C 68 164 66 162 62 162 Z"></path>
+      <path id="arm-right" d="M 178 162 C 198 158 218 170 222 188 C 218 196 204 198 190 192 C 178 186 172 176 172 168 C 172 164 174 162 178 162 Z"></path>
+    </g>
+    <g id="eye" fill="#f1ebdd">
+      <circle id="eye-dot" cx="120" cy="106" r="6"></circle>
+    </g>
+  </g>
+  <g id="thought">
+    <circle id="thought-trail-1" cx="158" cy="62" r="2" opacity="0.55"></circle>
+    <circle id="thought-trail-2" cx="168" cy="48" r="3" opacity="0.75"></circle>
+    <ellipse id="thought-cloud" cx="188" cy="28" rx="24" ry="14"></ellipse>
+    <circle id="thought-dot-1" cx="178" cy="28" r="2" fill="#f1ebdd"></circle>
+    <circle id="thought-dot-2" cx="188" cy="28" r="2" fill="#f1ebdd"></circle>
+    <circle id="thought-dot-3" cx="198" cy="28" r="2" fill="#f1ebdd"></circle>
+  </g>
+</svg>
