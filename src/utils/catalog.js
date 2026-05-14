@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc, getDocs, collection, query, limit } from 'firebase/firestore'
 import { db } from './firebase'
 
 // Asmeniniai laukai — nekaupiami kataloge
@@ -52,6 +52,84 @@ export async function getCatalogEntry(lotyniskas) {
   }
 }
 
+// ── Bendrosios bibliotekos search'as ─────────────────────────────────
+// Visi catalog/ docs fetch'inami vienąkart per sesiją + 24h localStorage
+// cache'as. Client-side filter'is per visus name field'us (lotyniskas,
+// lietuviškas, sinonimai, englishNames). v1 implementacija — kai catalog
+// peraugs ~1000 įrašų, reikės server-side searchTerms index'o.
+let _catalogMem = null
+let _catalogMemAt = 0
+const CATALOG_TTL    = 24 * 60 * 60 * 1000 // 24h
+const CATALOG_LIMIT  = 500                  // hard limit per fetch
+const CATALOG_CACHE_KEY = 'catalog-cache-v1'
+
+async function loadAllCatalog() {
+  // 1) in-memory cache (per session)
+  if (_catalogMem && Date.now() - _catalogMemAt < CATALOG_TTL) return _catalogMem
+
+  // 2) localStorage cache (cross-session, 24h)
+  try {
+    const raw = localStorage.getItem(CATALOG_CACHE_KEY)
+    if (raw) {
+      const { data, at } = JSON.parse(raw)
+      if (Array.isArray(data) && Date.now() - at < CATALOG_TTL) {
+        _catalogMem = data
+        _catalogMemAt = at
+        return data
+      }
+    }
+  } catch {}
+
+  // 3) fresh fetch — full collection (limited)
+  try {
+    const snap = await getDocs(query(collection(db, 'catalog'), limit(CATALOG_LIMIT)))
+    const data = snap.docs.map(d => ({ ...d.data(), _id: d.id }))
+    _catalogMem = data
+    _catalogMemAt = Date.now()
+    try { localStorage.setItem(CATALOG_CACHE_KEY, JSON.stringify({ data, at: _catalogMemAt })) } catch {}
+    return data
+  } catch (e) {
+    console.warn('[catalog] load failed:', e)
+    return []
+  }
+}
+
+/**
+ * searchCatalog(query, excludeDocIds)
+ *   query         — search string (≥2 chars)
+ *   excludeDocIds — Set of catalogDocId'ų jau esančių vartotojo bibliotekoje
+ *
+ * Grąžina iki 6 catalog entry'ų su `_id` field'u (catalogDocId).
+ */
+export async function searchCatalog(q, excludeDocIds = new Set()) {
+  const trimmed = q?.trim()
+  if (!trimmed || trimmed.length < 2) return []
+  const all = await loadAllCatalog()
+  const lower = trimmed.toLowerCase()
+  return all
+    .filter(p => !excludeDocIds.has(p._id))
+    .filter(p => {
+      const pool = [p.lotyniskas, p.lietuviškas, p.inatLtName,
+        ...(p.sinonimai ?? []), ...(p.englishNames ?? [])]
+      return pool.some(c => c && c.toLowerCase().includes(lower))
+    })
+    .slice(0, 6)
+}
+
+/**
+ * catalogEntryToAIResult — pritaiko catalog entry shape'ą prie AI result
+ * shape'o, kad jį būtų galima paduoti į `onAddToWishlist`/`onAddToDashboard`
+ * (jie naudoja `fromAIResult`, kuris laukia `name`/`latinName` keys).
+ */
+export function catalogEntryToAIResult(entry) {
+  if (!entry) return null
+  return {
+    ...entry,
+    name:      entry.lietuviškas ?? entry.name ?? '',
+    latinName: entry.lotyniskas ?? entry.latinName ?? '',
+  }
+}
+
 /** Išsaugo augalo rūšinius duomenis į katalogą (merge — neperrašo). */
 export async function saveToCatalog(plant) {
   const id = catalogDocId(plant.lotyniskas ?? plant.latinName)
@@ -64,6 +142,10 @@ export async function saveToCatalog(plant) {
       { ...entry, updatedAt: new Date().toISOString() },
       { merge: true }
     )
+    // Cache bust — naujai pridėtas augalas iškart pasimato `searchCatalog'e
+    _catalogMem = null
+    _catalogMemAt = 0
+    try { localStorage.removeItem(CATALOG_CACHE_KEY) } catch {}
   } catch (e) {
     console.warn('[catalog] write failed:', e)
   }

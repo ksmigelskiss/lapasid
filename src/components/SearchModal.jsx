@@ -7,11 +7,12 @@ import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight } from 'lucide-
 import { fetchPhotos, resizeImage, fetchWikipediaContext } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
-import { getCatalogEntry, saveToCatalog } from '../utils/catalog'
+import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId } from '../utils/catalog'
 import { ProfileContent } from './PlantDetail'
 import { auth } from '../utils/firebase'
 import PaywallSheet from './PaywallSheet'
 import BrandLoader from './brand/BrandLoader'
+import PlantImage from './brand/PlantImage'
 
 // Calls server-side proxy — Anthropic API key never in browser
 // Throws { code: 'limit_reached', limitType } when free tier is exhausted
@@ -514,6 +515,43 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     }).slice(0, 8) // max 8 — kad nesusijungtų ilga lista
   })()
 
+  // ── Catalog (bendros bibliotekos) search — vartotojas → global → AI ────
+  // Debounced 200ms. Filtruoja iš rezultatų augalus, kuriuos vartotojas
+  // jau turi savo kolekcijoje (per catalogDocId match'ą).
+  const [catalogMatches, setCatalogMatches] = useState([])
+  const [catalogLoading, setCatalogLoading] = useState(false)
+  useEffect(() => {
+    const q = query.trim()
+    if (!q || q.length < 2 || result || loading) {
+      setCatalogMatches([])
+      return
+    }
+    let cancelled = false
+    setCatalogLoading(true)
+    const debounce = setTimeout(async () => {
+      const ownedIds = new Set(plants.map(p => catalogDocId(p.lotyniskas)).filter(Boolean))
+      const matches = await searchCatalog(q, ownedIds)
+      if (!cancelled) {
+        setCatalogMatches(matches)
+        setCatalogLoading(false)
+      }
+    }, 200)
+    return () => { cancelled = true; clearTimeout(debounce) }
+  }, [query, result, loading, plants])
+
+  // Catalog add — naudoja onAddToWishlist (kaip ir AI result), tik prieš tai
+  // catalog entry konvertuojamas į AI-result shape'ą.
+  const handleCatalogAdd = async (entry) => {
+    const aiShape = catalogEntryToAIResult(entry)
+    setSavingPhase2(true)
+    try {
+      await onAddToWishlist(aiShape)
+    } finally {
+      setSavingPhase2(false)
+      onClose?.()
+    }
+  }
+
   const tree = (
     <div className={useDesktopPanel
       ? "absolute inset-0 overflow-hidden flex justify-center"
@@ -754,7 +792,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                 >
                   <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 bg-bone-300">
                     {p.image ? (
-                      <img src={p.image} alt="" className="w-full h-full object-cover" />
+                      <PlantImage url={p.image} alt="" size="thumb" className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-xl">{p.emoji ?? '🌿'}</div>
                     )}
@@ -773,28 +811,72 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                 </button>
               ))}
             </div>
-            {/* CTA — eit ieškoti naujų augalų internete */}
-            <button
-              onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
-              className="w-full mt-2 py-3 rounded-2xl text-sm text-forest-700 font-semibold border border-dashed border-forest-300 hover:border-forest-500 hover:bg-forest-50 transition-colors"
-            >
-              Ieškoti naujų augalų: „{query}"
-            </button>
           </div>
         )}
 
-        {/* No local matches + query — siūlom AI lookup */}
-        {!result && !loading && !error && query.trim() && localMatches.length === 0 && (
-          <div className="text-center py-12 space-y-3">
-            <img src="/plant_pot.png" className="w-14 h-14 object-contain mx-auto opacity-60" alt="" />
-            <p className="text-sm text-forest-500">Tavo kolekcijoje neradome „{query}"</p>
+        {/* Catalog matches — bendros bibliotekos kandidatai (rodom po lokalių,
+            prieš AI button'ą). Vartotojas → global → AI hierarchija. */}
+        {!result && !loading && !error && query.trim() && catalogMatches.length > 0 && (
+          <div className="space-y-2">
+            <p className="font-mono text-[10px] font-medium text-terracotta-600 uppercase tracking-[0.18em] px-1">
+              Iš bendros bibliotekos ({catalogMatches.length})
+            </p>
+            <div className="space-y-1.5">
+              {catalogMatches.map(entry => (
+                <div
+                  key={entry._id}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 bg-bone-50 border border-bone-400/40 rounded-2xl"
+                >
+                  <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 bg-bone-300">
+                    {entry.image ? (
+                      <PlantImage url={entry.image} alt="" size="thumb" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-xl">{entry.emoji ?? '🌿'}</div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-display text-sm font-semibold tracking-tight text-forest-800 truncate">{entry.lietuviškas}</p>
+                    <p className="text-xs text-forest-500 italic truncate">{entry.lotyniskas}</p>
+                  </div>
+                  <button
+                    onClick={() => handleCatalogAdd(entry)}
+                    className="flex-shrink-0 inline-flex items-center gap-1 h-8 px-3 rounded-btn-sm bg-forest-700 hover:bg-forest-800 text-bone text-xs font-display font-semibold transition-colors"
+                    title="Pridėti į biblioteką"
+                  >
+                    + Pridėti
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* AI lookup CTA — rodom kai bent kažkas iš user/catalog mėginimų buvo,
+            arba kai NIEKAS nerasta. Centrinė pozicija po visomis aukštesnio
+            prioriteto vietomis (savi → bendra → internetas). */}
+        {!result && !loading && !error && query.trim() && (
+          (localMatches.length > 0 || catalogMatches.length > 0) ? (
             <button
               onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
-              className="px-5 py-2.5 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
+              className="w-full py-3 rounded-2xl text-sm text-forest-700 font-semibold border border-dashed border-forest-300 hover:border-forest-500 hover:bg-forest-50 transition-colors"
             >
-              Ieškoti internete
+              Ieškoti naujų augalų: „{query}"
             </button>
-          </div>
+          ) : (
+            /* No local + no catalog matches — pilna empty state su didesniu AI CTA */
+            !catalogLoading && (
+              <div className="text-center py-12 space-y-3">
+                <img src="/plant_pot.png" className="w-14 h-14 object-contain mx-auto opacity-60" alt="" />
+                <p className="text-sm text-forest-500">„{query}" — neradome nei tavo, nei bendroje bibliotekoje</p>
+                <button
+                  onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
+                  className="px-5 py-2.5 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
+                >
+                  Ieškoti internete
+                </button>
+              </div>
+            )
+          )
         )}
 
         {/* Empty state — be query */}
