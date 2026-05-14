@@ -370,11 +370,22 @@ export function useAuth() {
   }, [])
 
   // Generic provider sign-in (Google, Facebook).
-  // iOS PWA standalone mode'e signInWithPopup throw'ina `auth/internal-error`
-  // (Safari standalone'e window.open restricted), todėl prieš popup'ą
-  // detect'inam display-mode ir iškart einam į redirect'ą. Browser'iuose +
-  // Android PWA — popup veikia normaliai, fallback į redirect kai popup
-  // blokuotas/uždarytas (+ `auth/internal-error` kaip ekstra safety net'as).
+  //
+  // iOS PWA standalone mode'e Firebase signInWithRedirect turi storage
+  // partitioning problemą — auth iframe ant geliu-db.firebaseapp.com'o
+  // negali pasiekti session token'o kai grįžta į lapasid.lt. User'is
+  // patenka į auth loop'ą (po Google login redirect'as grįžta į login
+  // ekraną).
+  //
+  // Sprendimas: server-side OAuth flow per /api/auth/google-start (žiūr.
+  // tą endpoint'ą). Vercel function gauna code → keičia į ID token →
+  // redirect'ina į / su ?googleIdToken=... URL param'u. useAuth aukščiau
+  // aptinka tą param'ą ir kviečia signInWithCredential.
+  //
+  // Facebook: kol nėra server-side endpoint'o, naudojam signInWithRedirect
+  // (geriau nei popup, kuris standalone'e throw'ina auth/internal-error).
+  //
+  // Browser'iuose + Android PWA — Firebase signInWithPopup veikia normal.
   const signInWithProvider = async (provider) => {
     setState(s => ({ ...s, authError: null }))
 
@@ -385,6 +396,12 @@ export function useAuth() {
       window.matchMedia?.('(display-mode: standalone)').matches === true
 
     if (isStandalonePWA) {
+      // Google → server-side OAuth (bypass Firebase client redirect'ą)
+      if (provider?.providerId === 'google.com') {
+        window.location.href = '/api/auth/google-start'
+        return
+      }
+      // Facebook → vis dar Firebase redirect (kol nėra server-side)
       return signInWithRedirect(auth, provider)
     }
 

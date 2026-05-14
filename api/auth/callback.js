@@ -1,4 +1,12 @@
-// Google OAuth callback — keičia code į ID tokeną, grąžina į PWA
+// Google OAuth callback — keičia code į ID tokeną, grąžina į PWA per
+// /?googleIdToken=... URL param'ą. PWA useAuth aptinka ir kviečia
+// signInWithCredential.
+//
+// redirect_uri PRIVALO match'inti tą, kurį google-start.js naudojo +
+// kurį pridėjom į Google Cloud Console authorized redirect URIs sąrašą.
+// Dinamiškai imam iš x-forwarded-host (Vercel proxy) — vienodai veikia
+// production'e ir preview'uose.
+
 export default async function handler(req, res) {
   const { code, error } = req.query
 
@@ -12,6 +20,10 @@ export default async function handler(req, res) {
   const clientId     = process.env.GOOGLE_CLIENT_ID
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET
 
+  const proto  = req.headers['x-forwarded-proto'] ?? 'https'
+  const host   = req.headers['x-forwarded-host']  ?? req.headers.host
+  const origin = `${proto}://${host}`
+
   try {
     const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
       method:  'POST',
@@ -20,7 +32,7 @@ export default async function handler(req, res) {
         code,
         client_id:     clientId,
         client_secret: clientSecret,
-        redirect_uri:  'https://augalai.crazyeuropean.eu/api/auth/callback',
+        redirect_uri:  `${origin}/api/auth/callback`,
         grant_type:    'authorization_code',
       }),
     })
