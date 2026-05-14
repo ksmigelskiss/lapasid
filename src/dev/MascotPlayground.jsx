@@ -146,7 +146,7 @@ export default function MascotPlayground() {
           <Variant
             title="Sway (hover/ambient)"
             state="sway"
-            description="Lapas švelniai siūbuoja −3° (3.2s loop). „Aš čia, jei reikės" — gentle alive signal'as floating button'ams."
+            description={`Lapas švelniai siūbuoja −3° (3.2s loop). „Aš čia, jei reikės" — gentle alive signal'as floating button'ams.`}
           />
           <Variant
             title="Thinking (AI processing)"
@@ -156,7 +156,7 @@ export default function MascotPlayground() {
           <Variant
             title="Speaking (chat reply)"
             state="speaking"
-            description="Visa marka bob'inasi 2px vertikaliai (1.8s loop). „Kalbu su tavim" — kai chat message renderinasi."
+            description={`Visa marka bob'inasi 2px vertikaliai (1.8s loop). „Kalbu su tavim" — kai chat message renderinasi.`}
           />
           <Variant
             title="Warning (alert state)"
