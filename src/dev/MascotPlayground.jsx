@@ -157,19 +157,19 @@ export default function MascotPlayground() {
 
         <h2 className="font-display text-xl font-semibold tracking-tight text-forest-800 mb-4">Plant — augalo balsas</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-10">
-          <AnimusVariant title="Idle" type="plant" state="idle" description="Default. Breath + random blink + sprout sway. „Aš čia." Naudoti PlantCard hint'ams, plant chat avatar'ui." />
-          <AnimusVariant title="Happy" type="plant" state="happy" description="Body bounces taller, sprout perks. „Ačiū už vandenį!" Po sėkmingo watering'o ar achievement'o." />
-          <AnimusVariant title="Wilt" type="plant" state="wilt" description="Drooped + terracotta tint. „Praėjo 7 dienos…" Notification'uose kai augalas vėluoja." />
-          <AnimusVariant title="Think" type="plant" state="think" description="Thought bubble + pulse dots. „…" Kai AI generuoja patarimą apie šitą augalą." />
-          <AnimusVariant title="Hoverable idle" type="plant" state="idle" hoverable description="Idle su hover sway interakcija. Pelę užvedus — gentle sway. Click target'ams." />
+          <AnimusVariant title="Idle" type="plant" state="idle" description={`Default. Breath + random blink + sprout sway. „Aš čia." Naudoti PlantCard hint'ams, plant chat avatar'ui.`} />
+          <AnimusVariant title="Happy" type="plant" state="happy" description={`Body bounces taller, sprout perks. „Ačiū už vandenį!" Po sėkmingo watering'o ar achievement'o.`} />
+          <AnimusVariant title="Wilt" type="plant" state="wilt" description={`Drooped + terracotta tint. „Praėjo 7 dienos…" Notification'uose kai augalas vėluoja.`} />
+          <AnimusVariant title="Think" type="plant" state="think" description={`Thought bubble + pulse dots. „…" Kai AI generuoja patarimą apie šitą augalą.`} />
+          <AnimusVariant title="Hoverable idle" type="plant" state="idle" hoverable description={`Idle su hover sway interakcija. Pelę užvedus — gentle sway. Click target'ams.`} />
         </div>
 
         <h2 className="font-display text-xl font-semibold tracking-tight text-forest-800 mb-4">Gardener — AI asistento balsas</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-12">
-          <AnimusVariant title="Idle" type="gardener" state="idle" description="Default. Breath + random blink. „Klausau visos kolekcijos." Dashboard floating button, chat avatar." />
-          <AnimusVariant title="Tilt (listening)" type="gardener" state="tilt" description="Body leans -5°. „Klausau / mąstau." Kai user'is rašo chat'e (typing indicator)." />
-          <AnimusVariant title="Wave" type="gardener" state="wave" description="Dešinė ranka pakeltą — banguoja. „Sveiki!" Atidarius chat'ą pirmą kartą." />
-          <AnimusVariant title="Think" type="gardener" state="think" description="Thought bubble + pulse dots. AI generuoja atsakymą — loading indicator chat'e." />
+          <AnimusVariant title="Idle" type="gardener" state="idle" description={`Default. Breath + random blink. „Klausau visos kolekcijos." Dashboard floating button, chat avatar.`} />
+          <AnimusVariant title="Tilt (listening)" type="gardener" state="tilt" description={`Body leans -5°. „Klausau / mąstau." Kai user'is rašo chat'e (typing indicator).`} />
+          <AnimusVariant title="Wave" type="gardener" state="wave" description={`Dešinė ranka pakeltą — banguoja. „Sveiki!" Atidarius chat'ą pirmą kartą.`} />
+          <AnimusVariant title="Think" type="gardener" state="think" description={`Thought bubble + pulse dots. AI generuoja atsakymą — loading indicator chat'e.`} />
         </div>
 
         {/* Usage matrix — Animus integration sites */}
