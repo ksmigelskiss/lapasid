@@ -21,7 +21,14 @@
    <svg> turi overflow: hidden ir clip'ina. Leidžiam paint'inti už viewBox
    ribų — wrapper span'as turi width/height fixed, todėl layout'iškai
    nepasislenka, tik leaf'as gali šiek tiek peržengti vizualinį kraštą. */
-[data-mascot] { overflow: visible; }
+[data-mascot] {
+  overflow: visible;
+  /* Default friendly mid-tone (forest-600 = #264530). Parent'o text-* class'ė
+     overrid'ina per CSS inheritance. text-forest-700 = INK (almost black),
+     naudojama tik floating button'ams ant photo'ų, kur halo padeda contrast.
+     Chat dialog'uose, empty state'uose — šitas default'as tinka. */
+  color: #264530;
+}
 
 /* ─────────────────────────────────────────────────────────────────
    CHARACTER — everything inside #character moves as one. The breath

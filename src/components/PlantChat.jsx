@@ -180,7 +180,7 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
               po atsakymo; generuojant rodom plain think bubble). */}
           {streaming && !streamText && (
             <div className="flex justify-start">
-              <div className="mr-1.5 self-end mb-0.5 flex-shrink-0 text-forest-700">
+              <div className="mr-1.5 self-end mb-0.5 flex-shrink-0">
                 <Mascot type="plant" state="think" size={32} blink={false} />
               </div>
               <div className="bg-surface-2 rounded-2xl rounded-bl-sm px-4 py-3">
@@ -198,7 +198,7 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
           )}
           {streaming && streamText && (
             <div className="flex justify-start">
-              <div className="mr-1.5 self-end mb-0.5 flex-shrink-0 text-forest-700">
+              <div className="mr-1.5 self-end mb-0.5 flex-shrink-0">
                 <Mascot type="plant" state="think" size={32} blink={false} />
               </div>
               <div className="max-w-[78%] bg-surface-2 rounded-2xl rounded-bl-sm px-3.5 py-2 text-sm leading-snug text-gray-800">

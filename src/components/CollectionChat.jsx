@@ -172,7 +172,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, masc
           {messages.length === 0 && !streaming && (
             <div className="text-center py-10 space-y-2">
               <div className="flex justify-center">
-                {mascot ? renderMascot(70, 'wave') : (iconLg ?? icon ?? '🤖')}
+                {mascot ? renderMascot(64, 'wave') : (iconLg ?? icon ?? '🤖')}
               </div>
               <p className="text-sm text-gray-500">Užduok klausimą apie savo augalus</p>
             </div>
@@ -181,7 +181,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, masc
           {messages.map((m, i) => (
             <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {m.role === 'assistant' && (
-                <span className="mr-1.5 self-end mb-0.5 flex-shrink-0 text-forest-700">
+                <span className="mr-1.5 self-end mb-0.5 flex-shrink-0">
                   {mascot ? renderMascot(24, 'idle') : <span className="text-lg">{icon ?? '🤖'}</span>}
                 </span>
               )}
@@ -210,7 +210,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, masc
 
           {streaming && !streamText && (
             <div className="flex justify-start">
-              <span className="mr-1.5 self-end mb-0.5 text-forest-700">
+              <span className="mr-1.5 self-end mb-0.5">
                 {mascot ? renderMascot(24, 'think') : <span className="text-lg">{icon ?? '🤖'}</span>}
               </span>
               <div className="bg-surface-2 rounded-2xl rounded-bl-sm px-4 py-3">
@@ -225,7 +225,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, masc
           )}
           {streaming && streamText && (
             <div className="flex justify-start">
-              <span className="mr-1.5 self-end mb-0.5 text-forest-700">
+              <span className="mr-1.5 self-end mb-0.5">
                 {mascot ? renderMascot(24, 'think') : <span className="text-lg">{icon ?? '🤖'}</span>}
               </span>
               <div className="max-w-[78%] bg-surface-2 rounded-2xl rounded-bl-sm px-3.5 py-2 text-sm leading-snug text-gray-800">

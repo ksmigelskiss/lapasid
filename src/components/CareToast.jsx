@@ -24,7 +24,7 @@ export default function CareToast({ deltaPct, phrase }) {
       transition={{ type: 'spring', damping: 28, stiffness: 320 }}
       className="bg-bone-50 rounded-2xl shadow-xl border border-bone-400/60 px-4 py-3 flex items-center gap-3"
     >
-      <Mascot type="plant" state="happy" size={44} blink={false} className="flex-shrink-0 text-forest-700" />
+      <Mascot type="plant" state="happy" size={44} blink={false} className="flex-shrink-0" />
       <div className="flex-1 min-w-0">
         <span className="text-[20px] font-extrabold text-forest-700 tabular-nums leading-none">
           +{deltaPct}%
