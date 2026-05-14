@@ -745,7 +745,15 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
         <button
           onClick={() => setShowChat(true)}
           aria-label="Atidaryti AI asistentą"
-          className="absolute bottom-24 lg:bottom-5 right-4 active:scale-90 transition-transform z-10 text-forest-700 animate-idle-float-gardener lg:animate-idle-float drop-shadow"
+          className="absolute bottom-24 lg:bottom-5 right-4 active:scale-90 transition-transform z-10 text-forest-700 animate-idle-float-gardener lg:animate-idle-float"
+          /* Bone halo halo per drop-shadow filtrą — self-adjusting
+             visibility: ant tamsesnio fono (plant photos) bone glow'as
+             aplink mascot'ą jį iškart pakelia. Ant šviesaus bg'o halo
+             susimaišo su fonu, lieka tik subtilus elevation shadow'as.
+             „Wisp-like spirit" feel'as išlieka — jokio container'io. */
+          style={{
+            filter: 'drop-shadow(0 0 12px rgba(254, 253, 250, 0.85)) drop-shadow(0 4px 10px rgba(28, 58, 42, 0.22))',
+          }}
         >
           <Mascot type="gardener" state="idle" size={96} hoverable />
         </button>
