@@ -665,9 +665,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
         {/* Plant grid */}
         {plants.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-            <div className="opacity-50">
-              <T4Icon size={64} ink="#1c3a2a" paper="transparent" />
-            </div>
+            <Mascot type="gardener" state="wave" size={120} className="text-forest-700" />
             <div>
               <p className="font-display text-base font-semibold tracking-tight text-forest-700">Dar nėra augalų</p>
               <p className="text-sm text-forest-500 mt-1">Ieškokite augalo ir pridėkite į kolekciją</p>

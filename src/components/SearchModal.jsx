@@ -15,6 +15,7 @@ import PaywallSheet from './PaywallSheet'
 import BrandLoader from './brand/BrandLoader'
 import PlantImage from './brand/PlantImage'
 import T4Icon from './brand/T4Icon'
+import Mascot from './brand/Mascot'
 
 // Calls server-side proxy — Anthropic API key never in browser
 // Throws { code: 'limit_reached', limitType } when free tier is exhausted
@@ -897,9 +898,10 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                hero icon'u + tuo pačiu unified AI CTA. */
             !catalogLoading && (
               <div className="text-center py-8 space-y-4">
-                <div className="flex justify-center opacity-45">
-                  <T4Icon size={96} ink="#1c3a2a" paper="transparent" />
-                </div>
+                {/* Gardener tilt — „mąstau, ar atrasiu" empathetic momentas
+                    prieš AI fallback'ą. Wilt'as būtų per dramatiškas
+                    paprastam „neradome" momentui. */}
+                <Mascot type="gardener" state="tilt" size={96} className="text-forest-700 mx-auto opacity-90" />
                 <p className="text-sm text-forest-500">„{query}" — neradome nei tavo, nei bendroje bibliotekoje</p>
                 <button
                   onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
@@ -916,10 +918,8 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             animacijos — proporcingas dizaineris'kai centrinis statiškas
             brand mark'as. */}
         {!result && !loading && !error && !query.trim() && (
-          <div className="text-center py-12 space-y-4">
-            <div className="flex justify-center opacity-90">
-              <T4Icon size={160} ink="#1c3a2a" paper="transparent" />
-            </div>
+          <div className="text-center py-8 space-y-4">
+            <Mascot type="gardener" state="wave" size={140} className="text-forest-700 mx-auto" />
             <p className="font-display text-base font-semibold tracking-tight text-forest-700">Įveskite augalo pavadinimą</p>
             <p className="text-xs text-forest-400 max-w-[280px] mx-auto leading-relaxed">paieška ras tavo augalus, arba galėsi ieškoti naujų su AI</p>
           </div>

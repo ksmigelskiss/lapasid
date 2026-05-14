@@ -159,9 +159,11 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
       <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none px-5 pb-28">
         {visible.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center space-y-3">
-            <div className="text-forest-300">
-              {query ? <Search size={48} /> : <BookOpen size={48} />}
-            </div>
+            {query ? (
+              <div className="text-forest-300"><Search size={48} /></div>
+            ) : (
+              <Mascot type="gardener" state="idle" size={120} className="text-forest-700 opacity-80" />
+            )}
             <p className="font-display text-sm font-semibold tracking-tight text-forest-700">
               {query ? `„${query}" nerasta bibliotekoje` : 'Biblioteka tuščia'}
             </p>
