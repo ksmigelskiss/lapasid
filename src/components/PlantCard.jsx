@@ -1,7 +1,7 @@
 import { useState, useRef, memo } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileText, MapPin, FlaskConical, Check, X, Apple, ShieldPlus, User, Cat } from 'lucide-react'
+import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileText, MapPin, FlaskConical, Check, X, Apple, HeartPlus, User, Cat } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
@@ -103,10 +103,10 @@ function strongestBenefitPill(plant) {
   if (!s) return null
   if (s.valgomumas?.statusas === 'pilnai') return { ...BENEFIT_STYLE_STRONG, Icon: Apple, label: 'Valgoma' }
   if (s.valgomumas?.statusas === 'dalinai') return { ...BENEFIT_STYLE_SUBTLE, Icon: Apple, label: 'Valgoma' }
-  // ShieldPlus — medicinos krepšys, aiškiausias „vaistinė/healthcare"
+  // HeartPlus — medicinos krepšys, aiškiausias „vaistinė/healthcare"
   // signalas lucide setup'e (geresnis nei Pill/Sprout — iškart suprantamas).
-  if (s.vaistinis?.statusas === 'moksline')  return { ...BENEFIT_STYLE_STRONG, Icon: ShieldPlus, label: 'Vaistinis' }
-  if (s.vaistinis?.statusas === 'tradicine') return { ...BENEFIT_STYLE_SUBTLE, Icon: ShieldPlus, label: 'Vaistinis' }
+  if (s.vaistinis?.statusas === 'moksline')  return { ...BENEFIT_STYLE_STRONG, Icon: HeartPlus, label: 'Vaistinis' }
+  if (s.vaistinis?.statusas === 'tradicine') return { ...BENEFIT_STYLE_SUBTLE, Icon: HeartPlus, label: 'Vaistinis' }
   return null
 }
 
