@@ -19,8 +19,10 @@ import { SORT_OPTIONS, sortPlants } from '../utils/plantSort'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { makeId, today } from '../utils/plantTransform'
 import T4Icon from '../components/brand/T4Icon'
+import Mascot from '../components/brand/Mascot'
 
-const GARDENER = '/gardener.png'
+// GARDENER asset'as pakeistas <Mascot type="gardener"> komponentu.
+// Senas /gardener.png lieka public/ folder'yje kaip fallback'as.
 
 // Tuščia care session struktūra
 const emptySession = () => ({
@@ -742,9 +744,10 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
       {plants.length > 0 && !careMode && role !== 'viewer' && (
         <button
           onClick={() => setShowChat(true)}
-          className="absolute bottom-24 lg:bottom-5 right-4 active:scale-90 transition-transform z-10"
+          aria-label="Atidaryti AI asistentą"
+          className="absolute bottom-24 lg:bottom-5 right-4 active:scale-90 transition-transform z-10 text-forest-700 animate-idle-float-gardener lg:animate-idle-float drop-shadow"
         >
-          <img src={GARDENER} className="h-[96px] w-auto object-contain drop-shadow opacity-90 animate-idle-float-gardener lg:animate-idle-float" alt="" />
+          <Mascot type="gardener" state="idle" size={96} hoverable />
         </button>
       )}
 
@@ -892,8 +895,8 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
           <CollectionChat
             key="dashboard-chat"
             title="Kolekcijos asistentas"
-            icon={<img src={GARDENER} className="h-14 w-auto object-contain" alt="" />}
-            iconLg={<img src={GARDENER} className="h-[70px] w-auto object-contain" alt="" />}
+            icon={<Mascot type="gardener" state="idle" size={56} />}
+            iconLg={<Mascot type="gardener" state="idle" size={70} />}
             systemPrompt={buildDashboardSystemPrompt(plants, zones)}
             onClose={() => setShowChat(false)}
             onSaveToZinynas={onSaveToZinynas}

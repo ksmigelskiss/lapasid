@@ -7,6 +7,7 @@ import CollectionChat from '../components/CollectionChat'
 import { buildLibrarySystemPrompt } from '../utils/collectionChatContext'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
+import Mascot from '../components/brand/Mascot'
 
 // Pagrindinis kategorijos filtras (mutually exclusive). `null` = visi.
 // Bibliotekoje rodomi tik `nori` ir `istorija` augalai (`auginama` lieka Dashboard'e).
@@ -213,9 +214,10 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
       {plants.length > 0 && (
         <button
           onClick={() => setShowChat(true)}
-          className="absolute bottom-24 right-4 active:scale-90 transition-transform z-10"
+          aria-label="Atidaryti bibliotekos asistentą"
+          className="absolute bottom-24 right-4 active:scale-90 transition-transform z-10 text-forest-700 animate-idle-float-gardener drop-shadow"
         >
-          <img src="/gardener.png" className="h-[96px] w-auto object-contain drop-shadow opacity-90 animate-idle-float-gardener" alt="" />
+          <Mascot type="gardener" state="idle" size={96} hoverable />
         </button>
       )}
 
@@ -224,8 +226,8 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
           <CollectionChat
             key="library-chat"
             title="Bibliotekos asistentas"
-            icon={<img src="/gardener.png" className="h-14 w-auto object-contain" alt="" />}
-            iconLg={<img src="/gardener.png" className="h-[70px] w-auto object-contain" alt="" />}
+            icon={<Mascot type="gardener" state="idle" size={56} />}
+            iconLg={<Mascot type="gardener" state="idle" size={70} />}
             systemPrompt={buildLibrarySystemPrompt(plants)}
             onClose={() => setShowChat(false)}
             onSaveToZinynas={onSaveToZinynas}
