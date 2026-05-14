@@ -98,40 +98,52 @@ function parseBlocks(text, skipFirstHeading) {
 }
 
 // Inline parser — **bold**, *italic*, plus query highlight'as.
-// Greedy parse: ieško artimiausio bold/italic span'o, recurse'ina ant likučio.
+// Two-pass placeholder strategy (be regex lookbehind'o, kuris ant iOS
+// Safari <16.4 throw'ina SyntaxError → chunk load fail → lazyWithRetry
+// reload loop'as). Placeholder'iai naudoja Unicode Private Use Area chars
+// ( / ) kaip wrapper'ius, kad regex'as patikimai atskirtų nuo
+// user typed content'o (digits, etc).
+//   1) Replace **bold** spans →  N 
+//   2) Tada *italic* spans →  N 
+//   3) Split per placeholder'ius, render'inam atitinkamus React node'us
+const PH_BOLD = ''
+const PH_ITAL = ''
+const SPLIT_RE = new RegExp(`${PH_BOLD}(\\d+)${PH_BOLD}|${PH_ITAL}(\\d+)${PH_ITAL}`, 'g')
+
 function renderInline(text, query, keyPrefix = 'i') {
+  const boldChunks = []
+  const stage1 = String(text ?? '').replace(/\*\*(.+?)\*\*/g, (_, content) => {
+    boldChunks.push(content)
+    return `${PH_BOLD}${boldChunks.length - 1}${PH_BOLD}`
+  })
+
+  const italicChunks = []
+  const stage2 = stage1.replace(/\*([^*\n]+?)\*/g, (_, content) => {
+    italicChunks.push(content)
+    return `${PH_ITAL}${italicChunks.length - 1}${PH_ITAL}`
+  })
+
   const parts = []
-  let remaining = text
   let k = 0
   const safeKey = () => `${keyPrefix}-${k++}`
-
-  while (remaining) {
-    const bold = remaining.match(/\*\*(.+?)\*\*/)
-    const italic = remaining.match(/(?<!\*)\*(?!\*)([^*\n]+?)\*(?!\*)/)
-
-    let pick = null
-    if (bold && italic) {
-      pick = bold.index <= italic.index ? { kind: 'bold', m: bold } : { kind: 'italic', m: italic }
-    } else if (bold) {
-      pick = { kind: 'bold', m: bold }
-    } else if (italic) {
-      pick = { kind: 'italic', m: italic }
+  let lastIdx = 0
+  let m
+  SPLIT_RE.lastIndex = 0
+  while ((m = SPLIT_RE.exec(stage2)) !== null) {
+    if (m.index > lastIdx) {
+      parts.push(<Highlight key={safeKey()} text={stage2.slice(lastIdx, m.index)} query={query} />)
     }
-
-    if (!pick) {
-      parts.push(<Highlight key={safeKey()} text={remaining} query={query} />)
-      break
-    }
-
-    const before = remaining.slice(0, pick.m.index)
-    if (before) parts.push(<Highlight key={safeKey()} text={before} query={query} />)
-    const inner = pick.m[1]
-    if (pick.kind === 'bold') {
+    if (m[1] !== undefined) {
+      const inner = boldChunks[Number(m[1])]
       parts.push(<strong key={safeKey()} className="font-semibold text-forest-800"><Highlight text={inner} query={query} /></strong>)
     } else {
+      const inner = italicChunks[Number(m[2])]
       parts.push(<em key={safeKey()} className="italic text-forest-600"><Highlight text={inner} query={query} /></em>)
     }
-    remaining = remaining.slice(pick.m.index + pick.m[0].length)
+    lastIdx = m.index + m[0].length
+  }
+  if (lastIdx < stage2.length) {
+    parts.push(<Highlight key={safeKey()} text={stage2.slice(lastIdx)} query={query} />)
   }
   return <>{parts}</>
 }
