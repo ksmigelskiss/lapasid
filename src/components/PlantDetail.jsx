@@ -1607,7 +1607,7 @@ export default function PlantDetail({
             onClick={() => setShowChat(true)}
             className="absolute bottom-5 right-4 z-20 active:scale-90 transition-transform"
           >
-            <div className="animate-idle-float opacity-90">
+            <div className="animate-idle-float">
               <PlantAvatar mood={mood.mood} size={70} />
             </div>
           </button>
