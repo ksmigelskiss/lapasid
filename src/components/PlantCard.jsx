@@ -311,17 +311,17 @@ const PlantCard = memo(function PlantCard({
           const hazard  = strongestHazardPill(plant)
           if (!benefit && !hazard) return null
           return (
-            <div className="absolute top-2.5 left-2.5 z-[2] flex flex-col gap-1 items-start">
+            <div className="absolute top-2 left-2 z-[2] flex flex-col gap-[3px] items-start">
               {benefit && (
-                <span className={`inline-flex items-center gap-1 ${benefit.bg} ${benefit.text} font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] rounded-full px-1.5 py-0.5 shadow-[0_1px_4px_rgba(28,58,42,0.25)]`}>
-                  <benefit.Icon size={9} strokeWidth={2.5} />
+                <span className={`inline-flex items-center gap-[3px] ${benefit.bg} ${benefit.text} font-mono text-[8.5px] font-medium uppercase tracking-[0.10em] rounded-full px-1.5 py-[2px] leading-none shadow-[0_1px_3px_rgba(28,58,42,0.22)]`}>
+                  <benefit.Icon size={8} strokeWidth={2} />
                   {benefit.label}
                 </span>
               )}
               {hazard && (
-                <span className={`inline-flex items-center gap-1 ${hazard.bg} ${hazard.text} font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] rounded-full px-1.5 py-0.5 shadow-[0_1px_4px_rgba(184,106,58,0.3)]`}>
-                  {hazard.targets?.has('zmonems')  && <User size={9} strokeWidth={2.5} />}
-                  {hazard.targets?.has('gyvunams') && <Cat  size={9} strokeWidth={2.5} />}
+                <span className={`inline-flex items-center gap-[3px] ${hazard.bg} ${hazard.text} font-mono text-[8.5px] font-medium uppercase tracking-[0.10em] rounded-full px-1.5 py-[2px] leading-none shadow-[0_1px_3px_rgba(184,106,58,0.28)]`}>
+                  {hazard.targets?.has('zmonems')  && <User size={8} strokeWidth={2} />}
+                  {hazard.targets?.has('gyvunams') && <Cat  size={8} strokeWidth={2} />}
                   {hazard.label}
                 </span>
               )}
