@@ -495,8 +495,14 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, onUpda
     </div>
   )
 
+  // Widget treatment'as desktop'e — bone-50 elevated card'ai su rounded
+  // corners + subtle shadow, ant bg-app page background'o. Vientisas su
+  // dashboard widget'ais (PRIEŽIŪROS ISTORIJA, ORAI). Mobile lieka flat
+  // (single-column layout'as nereikalauja card separation'o).
+  const WIDGET = 'bg-bone-50 rounded-2xl border border-bone-400/40 shadow-[0_1px_3px_rgba(28,58,42,0.06),0_4px_14px_rgba(28,58,42,0.05)]'
+
   return (
-    <div className="flex flex-col h-full bg-bone">
+    <div className="flex flex-col h-full bg-app">
       {/* Header — visiems vienodas */}
       <div className="px-5 pb-3 flex-shrink-0" style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}>
         <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 mb-1">Sodininkystė</p>
@@ -504,15 +510,15 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, onUpda
       </div>
 
       {isDesktop ? (
-        // ─────── DESKTOP: 2-pane Notes pattern ───────
-        <div className="flex-1 flex min-h-0 border-t border-bone-400/40">
-          {/* Sidebar — titles + dates list */}
-          <div className="w-[320px] flex-shrink-0 flex flex-col border-r border-bone-400/40 bg-bone-50">
-            <div className="px-4 py-3 flex-shrink-0 space-y-2">
+        // ─────── DESKTOP: 2-pane Notes pattern su widget treatment'u ───
+        <div className="flex-1 flex min-h-0 gap-3 px-5 pb-5">
+          {/* Sidebar widget — titles + dates list */}
+          <div className={`w-[320px] flex-shrink-0 flex flex-col overflow-hidden ${WIDGET}`}>
+            <div className="px-4 py-3 flex-shrink-0 space-y-2 border-b border-bone-400/30">
               {searchInput}
               <button
                 onClick={() => setAdding(true)}
-                className="w-full py-2 rounded-btn inline-flex items-center justify-center gap-1.5 text-sm font-display font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 transition-colors"
+                className="w-full py-2 rounded-btn inline-flex items-center justify-center gap-1.5 text-sm font-display font-semibold text-forest-700 bg-bone-100 border border-bone-400/50 hover:bg-bone-300/40 transition-colors"
               >
                 <Plus size={14} /> Nauja žinutė
               </button>
@@ -546,15 +552,18 @@ export default function Zinynas({ entries, onAdd, onDelete, onToggleStar, onUpda
             </div>
           </div>
 
-          {/* Detail pane */}
-          <ZinynasDetail
-            entry={selectedEntry}
-            onDelete={() => handleDelete(selectedEntry.id)}
-            onToggleStar={() => onToggleStar(selectedEntry.id)}
-            onChat={() => setChatEntry(selectedEntry)}
-            onUpdateTitle={onUpdateTitle}
-            query={query}
-          />
+          {/* Detail pane widget — wrap'inam su overflow-hidden, kad
+              vidiniai border'iai (header/footer) būtų ribose. */}
+          <div className={`flex-1 flex flex-col min-w-0 overflow-hidden ${WIDGET}`}>
+            <ZinynasDetail
+              entry={selectedEntry}
+              onDelete={() => handleDelete(selectedEntry.id)}
+              onToggleStar={() => onToggleStar(selectedEntry.id)}
+              onChat={() => setChatEntry(selectedEntry)}
+              onUpdateTitle={onUpdateTitle}
+              query={query}
+            />
+          </div>
         </div>
       ) : (
         // ─────── MOBILE: esamas list/expand ─────────
