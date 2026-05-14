@@ -4,6 +4,7 @@ import { X, ArrowUp, Bookmark, Globe, Camera } from 'lucide-react'
 import { buildChatSystemPrompt } from '../utils/plantChatContext'
 import { getPlantMood } from '../utils/plantMood'
 import { PlantAvatar } from './icons/ChatIcons'
+import Mascot from './brand/Mascot'
 import { useChatStream } from '../hooks/useChatStream'
 import { resizeImage } from '../utils/imageService'
 import PaywallSheet from './PaywallSheet'
@@ -175,10 +176,13 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
             </div>
           ))}
 
-          {/* Streaming */}
+          {/* Streaming — plant mascot „think" state (mood įjungtas tik
+              po atsakymo; generuojant rodom plain think bubble). */}
           {streaming && !streamText && (
             <div className="flex justify-start">
-              <div className="mr-1.5 self-end mb-0.5 flex-shrink-0"><PlantAvatar mood={mood.mood} size={31} /></div>
+              <div className="mr-1.5 self-end mb-0.5 flex-shrink-0 text-forest-700">
+                <Mascot type="plant" state="think" size={32} blink={false} />
+              </div>
               <div className="bg-surface-2 rounded-2xl rounded-bl-sm px-4 py-3">
                 <div className="flex gap-1">
                   {[0, 1, 2].map(i => (
@@ -194,7 +198,9 @@ export default function PlantChat({ plant, onClose, onSaveChat, onSaveNote, onSa
           )}
           {streaming && streamText && (
             <div className="flex justify-start">
-              <div className="mr-1.5 self-end mb-0.5 flex-shrink-0"><PlantAvatar mood={mood.mood} size={31} /></div>
+              <div className="mr-1.5 self-end mb-0.5 flex-shrink-0 text-forest-700">
+                <Mascot type="plant" state="think" size={32} blink={false} />
+              </div>
               <div className="max-w-[78%] bg-surface-2 rounded-2xl rounded-bl-sm px-3.5 py-2 text-sm leading-snug text-gray-800">
                 {streamText}
                 <span className="inline-block w-0.5 h-3.5 bg-gray-400 ml-0.5 animate-pulse align-text-bottom" />

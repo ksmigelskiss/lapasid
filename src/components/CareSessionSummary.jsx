@@ -4,6 +4,18 @@ import { motion } from 'framer-motion'
 import { createPortal } from 'react-dom'
 import { CARE_COPY, plPlantsInstr, pick } from '../constants/careCopy'
 import { moodFromCounts } from '../utils/careBuckets'
+import Mascot from './brand/Mascot'
+
+// mood → mascot state mapping'as session summary'ui
+function moodToMascotState(mood) {
+  switch (mood) {
+    case 'perfect':
+    case 'good':    return 'happy'
+    case 'late':
+    case 'waylate': return 'wilt'   // apologetic — pripažinim, kad augalas kentėjo
+    default:        return 'idle'
+  }
+}
 
 // Bucket meta — Brandbook'iškai: forest gradient'as nuo perfect (geriausia)
 // iki waylate (blogiausia), su terracotta įvykdomame `late`/`waylate` rate.
@@ -112,8 +124,14 @@ export default function CareSessionSummary({ session, confidence = 0, onDismiss 
           <p className="text-[10px] font-semibold text-forest-400 mt-1.5 uppercase tracking-wider font-mono">Prognozių tikslumas</p>
         </div>
 
+        {/* Mascot — emocinis akcentas pagal session mood. Perfect/good →
+            happy (bounces, sprout perks); late/waylate → wilt (apologetic). */}
+        <div className="flex justify-center mt-4 text-forest-700">
+          <Mascot type="plant" state={moodToMascotState(mood)} size={88} blink={false} />
+        </div>
+
         {/* Headline — drąsiausias akcentas */}
-        <h2 className="text-[28px] font-extrabold text-forest-800 text-center mt-5 leading-[1.15] tracking-tight">{headline}</h2>
+        <h2 className="text-[28px] font-extrabold text-forest-800 text-center mt-3 leading-[1.15] tracking-tight">{headline}</h2>
         <p className="text-sm text-forest-500 text-center mt-2">
           Pasirūpinai {uniquePlants} {plPlantsInstr(uniquePlants)}
         </p>
