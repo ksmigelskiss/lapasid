@@ -235,14 +235,22 @@ const PlantCard = memo(function PlantCard({
     <>
     <div
       className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card transition-all duration-200 cursor-pointer active:scale-[0.97] lg:hover:-translate-y-0.5 lg:hover:shadow-ios-lg ${doneToday ? 'opacity-50' : ''}`}
-      style={{ contentVisibility: 'auto', containIntrinsicSize: 'auto 320px' }}
+      /* Vienas style prop'as su conditional merge'u — anksčiau buvo du
+         atskiri style props'ai (contentVisibility ir careMode style),
+         React laikė tik paskutinį, todėl contentVisibility off-screen
+         optimizacija būdavo prarandama → scroll'as jausdavosi „stuck"
+         su daug card'ų (visi pilnai rendered offscreen ir on-screen). */
+      style={{
+        contentVisibility: 'auto',
+        containIntrinsicSize: 'auto 320px',
+        ...(careMode ? { WebkitTouchCallout: 'none', userSelect: 'none' } : {}),
+      }}
       onClick={handleClick}
       onPointerDown={careMode ? onPressStart : undefined}
       onPointerMove={careMode ? onPressMove : undefined}
       onPointerUp={careMode ? onPressEnd : undefined}
       onPointerCancel={careMode ? onPressEnd : undefined}
       onContextMenu={careMode ? e => e.preventDefault() : undefined}
-      style={careMode ? { WebkitTouchCallout: 'none', userSelect: 'none' } : undefined}
     >
       {/* Image area */}
       <div
