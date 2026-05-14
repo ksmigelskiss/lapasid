@@ -294,12 +294,12 @@ export default function CareWateringSheet({
             motion.div su onPanEnd aptinka horizontalų swipe'ą
             (kairėn → next, dešinėn → prev). Vertical drag'as nereaguoja
             čia — ignore'inam jei |y| > |x|, kad nesimaišytų su parent
-            sheet'o swipe-down-to-close. Nav rodyklės top toolbar'e
-            lieka pagrindinis kontrolis; swipe'as — supplementinis.
-            Aktyvinamas TIK kai yra prev/next (carousel context'as). */}
+            sheet'o swipe-down-to-close.
+            Chevron'ai ant edge'ų — visual hint'as + backup tap target'ai
+            (iOS Photos.app pattern'as). */}
         {(onPrev || onNext) ? (
           <motion.div
-            className={`w-full aspect-[3/2] overflow-hidden bg-bone-300 flex-shrink-0 ${(onPrev || onNext) ? 'cursor-grab active:cursor-grabbing' : ''}`}
+            className="relative w-full aspect-[3/2] overflow-hidden bg-bone-300 flex-shrink-0 cursor-grab active:cursor-grabbing"
             onPanEnd={handlePhotoPanEnd}
             style={{ touchAction: 'pan-y' }}
           >
@@ -309,6 +309,27 @@ export default function CareWateringSheet({
               <div className="w-full h-full flex items-center justify-center text-8xl pointer-events-none select-none">
                 {plant.emoji ?? '🌿'}
               </div>
+            )}
+            {/* Edge chevron'ai — fade'inasi opacity-70, pakelia į 100 ant
+                hover/active. Tap'as iškviečia onPrev/onNext (backup'as
+                jei vartotojas neaptiko swipe). */}
+            {onPrev && (
+              <button
+                onClick={onPrev}
+                aria-label="Ankstesnis"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 inline-flex items-center justify-center rounded-full bg-black/35 backdrop-blur-sm text-white opacity-70 hover:opacity-100 active:scale-90 transition-all"
+              >
+                <ChevronLeft size={16} strokeWidth={2.5} />
+              </button>
+            )}
+            {onNext && (
+              <button
+                onClick={onNext}
+                aria-label="Sekantis"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 inline-flex items-center justify-center rounded-full bg-black/35 backdrop-blur-sm text-white opacity-70 hover:opacity-100 active:scale-90 transition-all"
+              >
+                <ChevronRight size={16} strokeWidth={2.5} />
+              </button>
             )}
           </motion.div>
         ) : (
