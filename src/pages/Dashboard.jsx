@@ -744,13 +744,13 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
           onClick={() => setShowChat(true)}
           aria-label="Atidaryti AI asistentą"
           className="absolute bottom-24 lg:bottom-3 right-4 lg:right-6 active:scale-90 transition-transform z-10 text-forest-700 animate-idle-float-gardener lg:animate-idle-float"
-          /* Bone halo halo per drop-shadow filtrą — self-adjusting
-             visibility: ant tamsesnio fono (plant photos) bone glow'as
-             aplink mascot'ą jį iškart pakelia. Ant šviesaus bg'o halo
-             susimaišo su fonu, lieka tik subtilus elevation shadow'as.
-             „Wisp-like spirit" feel'as išlieka — jokio container'io. */
+          /* Tik dark elevation shadow — mascot'as PATS yra forest INK
+             (#1c3a2a), beveik juodas, todėl ant photo card'ų automatiškai
+             kontrastuoja be bone halo. Anksčiau buvęs „bone glow" atrodė
+             kaip spotlight'as ant šviesesnių fonų. Grounded floating feel'as
+             be magic-glow cliché. */
           style={{
-            filter: 'drop-shadow(0 0 12px rgba(254, 253, 250, 0.85)) drop-shadow(0 4px 10px rgba(28, 58, 42, 0.22))',
+            filter: 'drop-shadow(0 4px 12px rgba(28, 58, 42, 0.35))',
           }}
         >
           <Mascot type="gardener" state="idle" size={82} hoverable />

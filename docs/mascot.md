@@ -196,18 +196,18 @@ small instance'ams.
 ## 8. Halo / contrast handling
 
 **Floating button'ai ant photo card'ų** (Dashboard + Biblioteka FAB) gauna
-**bone halo** per drop-shadow filtrą — self-adjusting visibility:
+**dark elevation shadow** — be bone halo:
 
 ```css
-filter:
-  drop-shadow(0 0 12px rgba(254, 253, 250, 0.85))  /* bone glow halo */
-  drop-shadow(0 4px 10px rgba(28, 58, 42, 0.22))   /* elevation shadow */
+filter: drop-shadow(0 4px 12px rgba(28, 58, 42, 0.35))
 ```
 
-- Ant **tamsesnio fono** (plant photos): bone glow aplink mascot path'us
-  sukuria šviesos halo'ą → instant kontrastas
-- Ant **šviesesnio bg** (page bg): halo susilieja, lieka tik subtilus
-  directional shadow
+- Mascot'o body PATS yra `text-forest-700` (#1c3a2a, INK = beveik juodas)
+- Ant photo card'ų INK natūraliai pop'ina prieš augalų lapus / podžius
+- Dark shadow duoda „floating" feel'ą be magic-glow cliché
+
+**Anksčiau** buvo bone halo glow (`drop-shadow(0 0 12px bone, 0.85)`),
+bet jis atrodė kaip projektorius ant šviesesnių fonų — drop'intas.
 
 **Plant mascot** — niekada halo'o nereikia (sėdi ant bone-50 cards'uose,
 natural kontrastas).
@@ -332,10 +332,10 @@ reikia visibility'ui ant photo bg'ų / dominuojantis presence'ui.
 <button
   className="absolute bottom-3 right-6 text-forest-700 active:scale-90"
   style={{
-    filter: 'drop-shadow(0 0 12px rgba(254, 253, 250, 0.85)) drop-shadow(0 4px 10px rgba(28, 58, 42, 0.22))',
+    filter: 'drop-shadow(0 4px 12px rgba(28, 58, 42, 0.35))',
   }}
 >
-  <Mascot type="gardener" state="idle" size={96} hoverable />
+  <Mascot type="gardener" state="idle" size={82} hoverable />
 </button>
 ```
 
