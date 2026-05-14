@@ -13,7 +13,7 @@ import PlantSavybesPills, { PlantSafetyCallout } from './brand/PlantSavybesPills
 import PlantImage from './brand/PlantImage'
 import BrandLoader from './brand/BrandLoader'
 import { refreshPlantFromAI } from '../utils/plantAI'
-import { TOOL_PREVIEW, PLANT_SYSTEM } from './SearchModal'
+import { TOOL_PREVIEW, TOOL_DETAILS, PLANT_SYSTEM } from './SearchModal'
 import { getWateringForecast } from '../utils/wateringForecast'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
@@ -379,7 +379,7 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
     setRefreshing(true); setRefreshError(null)
     try {
       console.log('[refresh] start for plant:', plant.lotyniskas, '(', plant.lietuviškas, ')')
-      const aiData = await refreshPlantFromAI(plant, { tools: [TOOL_PREVIEW], system: PLANT_SYSTEM })
+      const aiData = await refreshPlantFromAI(plant, { tools: [TOOL_PREVIEW, TOOL_DETAILS], system: PLANT_SYSTEM })
       console.log('[refresh] AI returned, keys:', Object.keys(aiData ?? {}).length)
       const summary = await onRefreshFromAI(plant.id, aiData)
       // Diagnostika: jei AI nepateikė turinio (tik timestamp atnaujėjo) —

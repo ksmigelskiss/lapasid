@@ -136,7 +136,7 @@ export const TOOL_PREVIEW = {
 }
 
 // ── Phase 2: full details (care, watering, problems, etc.) ────────
-const TOOL_DETAILS = {
+export const TOOL_DETAILS = {
   name: 'plant_details',
   description: 'Pateik išsamią augalo priežiūros informaciją.',
   input_schema: {

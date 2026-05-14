@@ -64,30 +64,39 @@ export async function refreshPlantFromAI(plant, { tools, system }) {
     `Atnaujink informaciją apie augalą „${lietuviškas}" (${lotyniskas}). Pildyk VISUS schema laukus, ypač atidžiai savybes (pavojai + pavojingumas + valgomumas + vaistinis) pagal confidence taisykles iš system prompt'o.`,
   ].filter(Boolean).join('\n\n')
 
-  // 2 · Claude call — abu tool'ai (preview + details) per vieną užklausą
-  const previewTool = tools.find(t => t.name === 'plant_preview')
-  console.log('[refresh/ai] calling Claude API...')
-  const r = await claudeCall({
-    maxTokens:   2048,
-    temperature: 0.3,
-    // top_p NEnaudojamas — Sonnet 4.6 neleidžia abiejų temperature+top_p kartu
-    system,
-    tools:       [previewTool],
-    toolChoice:  { type: 'tool', name: 'plant_preview' },
-    messages:    [{ role: 'user', content: userContent }],
-  })
-  console.log('[refresh/ai] Claude response stop_reason:', r.stop_reason, 'content blocks:', r.content?.length ?? 0)
-  console.log('[refresh/ai] content types:', r.content?.map(b => b.type).join(', '))
-
-  const block = r.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')
-  if (!block) {
-    // Diagnostika — jei Claude refuse'ino tool call'ą, gaunam text atsakymą
-    const textBlocks = r.content?.filter(b => b.type === 'text').map(b => b.text).join('\n')
-    console.error('[refresh/ai] NO tool_use block. Text response:', textBlocks || '(none)')
-    throw new Error(`Claude nepateikė rezultato. stop_reason=${r.stop_reason}. Text: ${textBlocks?.slice(0, 200) ?? '(none)'}`)
+  // 2 · Helper'is — vienas Claude call'as su konkrečiu tool'u
+  const callWithTool = async (tool, label) => {
+    console.log(`[refresh/ai] calling Claude API (${label})...`)
+    const r = await claudeCall({
+      maxTokens:   2048,
+      temperature: 0.3,
+      // top_p NEnaudojamas — Sonnet 4.6 neleidžia abiejų temperature+top_p kartu
+      system,
+      tools:       [tool],
+      toolChoice:  { type: 'tool', name: tool.name },
+      messages:    [{ role: 'user', content: userContent }],
+    })
+    console.log(`[refresh/ai] ${label} stop_reason:`, r.stop_reason, 'content blocks:', r.content?.length ?? 0)
+    const block = r.content.find(b => b.type === 'tool_use' && b.name === tool.name)
+    if (!block) {
+      const textBlocks = r.content?.filter(b => b.type === 'text').map(b => b.text).join('\n')
+      console.error(`[refresh/ai] ${label} NO tool_use block. Text:`, textBlocks || '(none)')
+      throw new Error(`${label}: Claude nepateikė rezultato. stop_reason=${r.stop_reason}.`)
+    }
+    console.log(`[refresh/ai] ${label} keys:`, Object.keys(block.input ?? {}))
+    return block.input
   }
-  console.log('[refresh/ai] tool_use input keys:', Object.keys(block.input ?? {}))
-  console.log('[refresh/ai] tool_use input full:', block.input)
 
-  return block.input
+  // 3 · Kviečiam preview + details PARALELIAI (greitis + visi laukai)
+  const previewTool = tools.find(t => t.name === 'plant_preview')
+  const detailsTool = tools.find(t => t.name === 'plant_details')
+  const calls = []
+  if (previewTool) calls.push(callWithTool(previewTool, 'preview'))
+  if (detailsTool) calls.push(callWithTool(detailsTool, 'details'))
+  if (calls.length === 0) throw new Error('Nepateikta nei vieno AI tool\'o.')
+
+  const results = await Promise.all(calls)
+  const merged = Object.assign({}, ...results)
+  console.log('[refresh/ai] merged keys:', Object.keys(merged))
+  return merged
 }
