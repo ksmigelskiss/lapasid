@@ -1,7 +1,7 @@
 import { useState, useRef, memo } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileText, MapPin, FlaskConical, Check, X, Apple, User, Cat } from 'lucide-react'
+import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileText, MapPin, FlaskConical, Check, X, Apple, Pill, User, Cat } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
@@ -59,6 +59,10 @@ function strongestHazardPill(plant) {
     // mato, ar plantas pavojingas žmonėms / gyvūnams / abiems. Vientisumas
     // su PlantSavybesPills.jsx (TARGET_META su User/Cat icons).
     const targets = new Set(s.pavojai.map(p => p.target).filter(Boolean))
+    // Jei target'ų nesurinkome (visi pavojai entry'ai be valid target field'o),
+    // severity bars be konteksto nieko nesako — slepiam pill'ą. Vartotojas
+    // gaus signalą tik kai duomenys pilni.
+    if (targets.size === 0) return null
     return {
       ...style,
       label: HAZARD_TIPAS_LABEL[top.tipas] ?? top.tipas, // tooltip + a11y
@@ -66,12 +70,10 @@ function strongestHazardPill(plant) {
       targets,
     }
   }
-  if (s?.pavojingumas?.yra) {
-    return { bg: 'bg-terracotta-100', text: 'text-terracotta-600', label: 'Atsargiai', severity: s.pavojingumas.lygis ?? 'silpnas', targets: new Set() }
-  }
-  if (plant.toksiskas) {
-    return { bg: 'bg-terracotta', text: 'text-bone', label: 'Toksiška', severity: 'stiprus', targets: new Set() }
-  }
+  // Legacy fallback'ai (pavojingumas.yra saugiklis + toksiskas boolean'as)
+  // dabar nerodo widget pill'o — be target info severity bars neinformatyvūs.
+  // Pilnas signalas atsiranda po AI refresh'o, kai užsipildo pavojai[] su
+  // target'ais. Detail view'e (PlantSavybesPills) saugiklis vis tiek matomas.
   return null
 }
 
@@ -101,8 +103,11 @@ function strongestBenefitPill(plant) {
   if (!s) return null
   if (s.valgomumas?.statusas === 'pilnai') return { ...BENEFIT_STYLE_STRONG, Icon: Apple, label: 'Valgoma' }
   if (s.valgomumas?.statusas === 'dalinai') return { ...BENEFIT_STYLE_SUBTLE, Icon: Apple, label: 'Valgoma' }
-  if (s.vaistinis?.statusas === 'moksline')  return { ...BENEFIT_STYLE_STRONG, Icon: Sprout, label: 'Vaistinis' }
-  if (s.vaistinis?.statusas === 'tradicine') return { ...BENEFIT_STYLE_SUBTLE, Icon: Sprout, label: 'Vaistinis' }
+  // Pill — universalus medicinos/vaistinės ikonas (lucide neturi caduceus
+  // „gyvatės ant taurės"). Atstoja Sprout (kuris vizualiai painiojosi su
+  // augalo gallery'inimu, ne medicinos signaliu).
+  if (s.vaistinis?.statusas === 'moksline')  return { ...BENEFIT_STYLE_STRONG, Icon: Pill, label: 'Vaistinis' }
+  if (s.vaistinis?.statusas === 'tradicine') return { ...BENEFIT_STYLE_SUBTLE, Icon: Pill, label: 'Vaistinis' }
   return null
 }
 
