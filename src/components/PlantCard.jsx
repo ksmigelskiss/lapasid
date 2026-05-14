@@ -83,7 +83,7 @@ function strongestHazardPill(plant) {
 function SeverityBars({ severity }) {
   const level = severity === 'stiprus' ? 3 : severity === 'vidutinis' ? 2 : 1
   return (
-    <svg width="9" height="8" viewBox="0 0 12 10" className="flex-shrink-0" fill="currentColor" aria-hidden>
+    <svg width="11" height="10" viewBox="0 0 12 10" className="flex-shrink-0" fill="currentColor" aria-hidden>
       <rect x="0"   y="6.5" width="2.5" height="3.5" rx="0.5" opacity={level >= 1 ? 1 : 0.35} />
       <rect x="4.5" y="3.5" width="2.5" height="6.5" rx="0.5" opacity={level >= 2 ? 1 : 0.35} />
       <rect x="9"   y="0"   width="2.5" height="10"  rx="0.5" opacity={level >= 3 ? 1 : 0.35} />
@@ -283,7 +283,7 @@ const PlantCard = memo(function PlantCard({
         {section === 'auginama' && (
           <div className="absolute top-2 right-2 flex flex-col gap-1 items-end z-[2]">
             <div className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-sm rounded-full px-2 h-[20px]">
-              <Droplets size={11} className={waterOverdue ? 'text-forest-200 fill-forest-200' : 'text-white/60'} />
+              <Droplets size={13} className={waterOverdue ? 'text-forest-200 fill-forest-200' : 'text-white/60'} />
               {waterDaysUntil != null && (
                 <span className={`text-[10px] font-semibold leading-none ${waterOverdue ? 'text-forest-100' : 'text-white/70'}`}>
                   {waterDaysUntil}d
@@ -292,7 +292,7 @@ const PlantCard = memo(function PlantCard({
             </div>
             {fertFC?.intervalDays != null && (
               <div className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-sm rounded-full px-2 h-[20px]">
-                <FlaskConical size={11} className={fertOverdue ? 'text-terracotta-200 fill-terracotta-200' : 'text-white/60'} />
+                <FlaskConical size={13} className={fertOverdue ? 'text-terracotta-200 fill-terracotta-200' : 'text-white/60'} />
                 {fertDaysUntil != null && (
                   <span className={`text-[10px] font-semibold leading-none ${fertOverdue ? 'text-terracotta-100' : 'text-white/70'}`}>
                     {fertDaysUntil}d
@@ -310,17 +310,17 @@ const PlantCard = memo(function PlantCard({
           <div className={`absolute ${section === 'auginama' ? 'top-[68px]' : 'top-2'} right-2 flex flex-col gap-1 items-center`}>
             {showDashboardBadge && (
               <div className="inline-flex items-center justify-center bg-forest-500/90 backdrop-blur-sm rounded-full w-[20px] h-[20px]">
-                <House size={11} className="text-white" />
+                <House size={13} className="text-white" />
               </div>
             )}
             {section === 'istorija' && (
               <div className="inline-flex items-center justify-center bg-black/55 backdrop-blur-sm rounded-full w-[20px] h-[20px]">
-                <Ghost size={11} className="text-white" />
+                <Ghost size={13} className="text-white" />
               </div>
             )}
             {noteCount > 0 && (
               <div className="inline-flex items-center gap-1 bg-black/55 backdrop-blur-sm rounded-full px-2 h-[20px]">
-                <FileText size={11} className="text-white" />
+                <FileText size={13} className="text-white" />
                 <span className="text-[10px] text-white font-semibold leading-none">{noteCount}</span>
               </div>
             )}
@@ -345,7 +345,7 @@ const PlantCard = memo(function PlantCard({
                   aria-label={benefit.label}
                   className={`inline-flex items-center justify-center ${benefit.bg} ${benefit.text} rounded-full w-[20px] h-[20px] shadow-[0_1px_3px_rgba(28,58,42,0.22)]`}
                 >
-                  <benefit.Icon size={11} strokeWidth={2.2} />
+                  <benefit.Icon size={13} strokeWidth={2.2} />
                 </span>
               )}
               {hazard && (
@@ -354,8 +354,8 @@ const PlantCard = memo(function PlantCard({
                   aria-label={hazard.label}
                   className={`inline-flex items-center gap-1 ${hazard.bg} ${hazard.text} rounded-full px-2 h-[20px] shadow-[0_1px_3px_rgba(184,106,58,0.28)]`}
                 >
-                  {hazard.targets?.has('zmonems')  && <User size={11} strokeWidth={2.2} />}
-                  {hazard.targets?.has('gyvunams') && <Cat  size={11} strokeWidth={2.2} />}
+                  {hazard.targets?.has('zmonems')  && <User size={13} strokeWidth={2.2} />}
+                  {hazard.targets?.has('gyvunams') && <Cat  size={13} strokeWidth={2.2} />}
                   <SeverityBars severity={hazard.severity} />
                 </span>
               )}
