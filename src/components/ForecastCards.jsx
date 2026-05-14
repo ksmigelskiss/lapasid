@@ -2,6 +2,7 @@ import { Sun, Droplets, Snowflake, Leaf, Moon, Sprout } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast, shouldShowWateringAlert } from '../utils/wateringForecast'
+import Mascot from './brand/Mascot'
 
 function fmtDate(str) {
   if (!str) return '—'
@@ -13,8 +14,10 @@ function fmtDate(str) {
 // mono caps label + Bricolage Bold title + body. Callout'ai (overdue alerts)
 // išlieka kortelės — frost glass + brand border (terracotta = warning).
 
-function CalloutCard({ icon, label, title, body, hint, tone = 'terracotta' }) {
+function CalloutCard({ icon, label, title, body, hint, tone = 'terracotta', mascot }) {
   // tone: 'terracotta' = severe/overdue; 'forest' = info/urgent (light)
+  // mascot: { type, state } — optional plant/gardener mascot dešinėje
+  //         pusėje, kaip emocinis akcentas šalia logical kontento
   const isWarn = tone === 'terracotta'
   return (
     <div className={`bg-bone-50 border-2 rounded-2xl px-4 py-3 flex gap-3 ${
@@ -35,6 +38,11 @@ function CalloutCard({ icon, label, title, body, hint, tone = 'terracotta' }) {
         {body && <p className="text-[11.5px] text-forest-600 mt-1 leading-snug">{body}</p>}
         {hint && <p className="text-[11px] text-forest-500 italic mt-1.5 leading-snug">{hint}</p>}
       </div>
+      {mascot && (
+        <div className={`flex-shrink-0 self-center ${isWarn ? 'text-terracotta-500' : 'text-forest-700'}`}>
+          <Mascot type={mascot.type} state={mascot.state ?? 'idle'} size={48} blink={false} />
+        </div>
+      )}
     </div>
   )
 }
@@ -76,6 +84,7 @@ export function WateringCard({ plant, section }) {
       }
       hint={wc.metodas}
       tone="terracotta"
+      mascot={{ type: 'plant', state: 'wilt' }}
     />
   )
 }
@@ -113,6 +122,7 @@ export function FertilizingCard({ plant, section }) {
         }
         hint={fc.fertilizerTip}
         tone="terracotta"
+        mascot={{ type: 'plant', state: 'wilt' }}
       />
     )
   }

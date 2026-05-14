@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import Mascot from './brand/Mascot'
 
 /**
  * Toast po care mode bulk action — minimalus reward'as.
@@ -6,6 +7,9 @@ import { motion } from 'framer-motion'
  *
  * Filosofija: trumpas „taškų gavimas" + sistema patobulėjo. Visa breakdown
  * info perkelta į session summary (kuris atsiranda išėjus iš care mode).
+ *
+ * Plant mascot (`happy` state) — visual reward'as: augalas pradžiunga
+ * po sėkmingo veiksmo. Body bounces taller, sprout perks up.
  *
  * Props:
  *   deltaPct: confidence prieaugis (procentais) — pagrindinis akcentas
@@ -18,14 +22,17 @@ export default function CareToast({ deltaPct, phrase }) {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -20, opacity: 0 }}
       transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-      className="bg-bone rounded-2xl shadow-xl border border-bone-400/60 px-4 py-3 flex items-center gap-3"
+      className="bg-bone-50 rounded-2xl shadow-xl border border-bone-400/60 px-4 py-3 flex items-center gap-3"
     >
-      <span className="text-[24px] font-extrabold text-forest-600 tabular-nums leading-none flex-shrink-0">
-        +{deltaPct}%
-      </span>
-      <span className="text-[14px] font-medium text-forest-700 leading-tight">
-        {phrase}
-      </span>
+      <Mascot type="plant" state="happy" size={44} blink={false} className="flex-shrink-0 text-forest-700" />
+      <div className="flex-1 min-w-0">
+        <span className="text-[20px] font-extrabold text-forest-700 tabular-nums leading-none">
+          +{deltaPct}%
+        </span>
+        <p className="text-[13px] font-medium text-forest-600 leading-tight mt-0.5">
+          {phrase}
+        </p>
+      </div>
     </motion.div>
   )
 }
