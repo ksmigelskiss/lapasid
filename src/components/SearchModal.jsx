@@ -13,6 +13,7 @@ import { auth } from '../utils/firebase'
 import PaywallSheet from './PaywallSheet'
 import BrandLoader from './brand/BrandLoader'
 import PlantImage from './brand/PlantImage'
+import T4Icon from './brand/T4Icon'
 
 // Calls server-side proxy — Anthropic API key never in browser
 // Throws { code: 'limit_reached', limitType } when free tier is exhausted
@@ -396,6 +397,18 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // Delayed input focus — kviečiama PO sheet animacijos pabaigos (spring
+  // ~320ms). Skip jei autoCamera (kamera atsidaro pirma) arba jei initialQuery
+  // jau yra (search'as triggerinasi automatiškai). iOS PWA fix'as: anksčiau
+  // input autoFocus triggerindavo keyboard'ą kartu su sheet slide animacija,
+  // dėl ko vyko coordinate shift mid-animation („overshoot į kairę").
+  useEffect(() => {
+    if (autoCamera || initialQuery.trim()) return
+    const t = setTimeout(() => inputRef.current?.focus(), 320)
+    return () => clearTimeout(t)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const handleKeyDown = e => {
     if (e.key === 'Enter' && query.trim() && !loading) searchByText(query.trim())
   }
@@ -557,11 +570,18 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       ? "absolute inset-0 overflow-hidden flex justify-center"
       : "fixed inset-0 z-50 overflow-hidden flex justify-center"}>
     <motion.div
-      className={useDesktopPanel ? "w-full h-full max-w-full flex flex-col bg-app" : "w-full max-w-[430px] flex flex-col bg-app"}
-      initial={{ x: '100%' }}
-      animate={{ x: 0 }}
-      exit={{ x: '100%' }}
-      transition={{ type: 'tween', duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+      className={useDesktopPanel ? "w-full h-full max-w-full flex flex-col bg-app" : "w-full max-w-[430px] h-full flex flex-col bg-app"}
+      /* iOS native pattern'as: mobile'e slide-from-bottom (y), desktop'e
+         slide-from-right (x). Slide-from-right ant iOS PWA su autoFocus'inančiu
+         input'u sukurdavo coordinate shift mid-animation (keyboard kyla
+         tuo pat metu kai sheet slenka horizontaliai → visual „overshoot").
+         Vertical slide su iOS keyboard'u eilinis pattern'as. */
+      {...(useDesktopPanel ? {
+        initial: { x: '100%' }, animate: { x: 0 }, exit: { x: '100%' },
+      } : {
+        initial: { y: '100%' }, animate: { y: 0 }, exit: { y: '100%' },
+      })}
+      transition={{ type: 'spring', damping: 32, stiffness: 320 }}
       style={{ touchAction: 'pan-y' }}
     >
       {/* Header — X close top-right */}
@@ -596,7 +616,10 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              autoFocus
+              /* autoFocus pašalintas — programatiškai focus'inam per useEffect
+                 PO sheet'o animacijos pabaigos (delay'as 320ms = spring
+                 settling). Anksčiau iOS PWA'e keyboard slide'as kildavo tuo
+                 pat metu kaip sheet slide'as → modal overshoot į kairę. */
             />
             {(query || previewUrl) && (
               <button onClick={clear} className="text-forest-400 px-1 flex-shrink-0"><X size={14} /></button>
@@ -866,7 +889,9 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             /* No local + no catalog matches — pilna empty state su didesniu AI CTA */
             !catalogLoading && (
               <div className="text-center py-12 space-y-3">
-                <img src="/plant_pot.png" className="w-14 h-14 object-contain mx-auto opacity-60" alt="" />
+                <div className="flex justify-center opacity-50">
+                  <T4Icon size={56} ink="#1c3a2a" paper="transparent" />
+                </div>
                 <p className="text-sm text-forest-500">„{query}" — neradome nei tavo, nei bendroje bibliotekoje</p>
                 <button
                   onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
@@ -882,7 +907,9 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
         {/* Empty state — be query */}
         {!result && !loading && !error && !query.trim() && (
           <div className="text-center py-16 space-y-3">
-            <img src="/plant_pot.png" className="w-16 h-16 object-contain mx-auto animate-idle-float" alt="" />
+            <div className="flex justify-center animate-idle-float">
+              <T4Icon size={64} ink="#1c3a2a" paper="transparent" />
+            </div>
             <p className="text-sm text-forest-600">Įveskite augalo pavadinimą</p>
             <p className="text-xs text-forest-400">paieška ras tavo augalus, arba galėsi ieškoti naujų internete</p>
           </div>
