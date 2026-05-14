@@ -10,14 +10,19 @@ const LoaderPlayground = lazy(() => import('./dev/LoaderPlayground.jsx'))
 const LoginScreenDemo = lazy(() => import('./dev/LoginScreenDemo.jsx'))
 const PlantExport = lazy(() => import('./dev/PlantExport.jsx'))
 const ThemeStudio = lazy(() => import('./dev/ThemeStudio.jsx'))
+const MascotPlayground = lazy(() => import('./dev/MascotPlayground.jsx'))
 
 // Augalo paso URL: /p/{plantId} → PlantPassportPage (be pilno app)
 const passportMatch = window.location.pathname.match(/^\/p\/([^/]+)\/?$/)
 
 // Dev playground: tik mock'inime režime (`VITE_USE_MOCK_USER=true`) + ?playground=loaders|login.
 // Lazy chunk'as — neateina į produkcijos bundle'ą be šio flag'o.
+//
+// Exception: `mascot` playground'as accessible visada (pure SVG/CSS preview'as,
+// be Firestore/auth touch'o) — kad galėtum žiūrėti production'e prieš shipping.
 const isMock = import.meta.env.VITE_USE_MOCK_USER === 'true'
-const playgroundType = isMock ? new URLSearchParams(window.location.search).get('playground') : null
+const rawPlayground = new URLSearchParams(window.location.search).get('playground')
+const playgroundType = (isMock || rawPlayground === 'mascot') ? rawPlayground : null
 
 // PlantExport — veikia BE mock mode'o (reikia tikros auth + Firestore access).
 // Pasiekiama per ?export=plants kai vartotojas prisijungęs prie lapasid.lt.
@@ -39,6 +44,8 @@ createRoot(document.getElementById('root')).render(
       <Suspense fallback={devFallback}><LoginScreenDemo /></Suspense>
     ) : playgroundType === 'theme' ? (
       <Suspense fallback={devFallback}><ThemeStudio /></Suspense>
+    ) : playgroundType === 'mascot' ? (
+      <Suspense fallback={devFallback}><MascotPlayground /></Suspense>
     ) : passportMatch ? (
       <Suspense fallback={devFallback}>
         <PlantPassportPage plantId={passportMatch[1]} />
