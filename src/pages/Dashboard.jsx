@@ -745,7 +745,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
         <button
           onClick={() => setShowChat(true)}
           aria-label="Atidaryti AI asistentą"
-          className="absolute bottom-24 lg:bottom-5 right-4 active:scale-90 transition-transform z-10 text-forest-700 animate-idle-float-gardener lg:animate-idle-float"
+          className="absolute bottom-24 lg:bottom-3 right-4 lg:right-6 active:scale-90 transition-transform z-10 text-forest-700 animate-idle-float-gardener lg:animate-idle-float"
           /* Bone halo halo per drop-shadow filtrą — self-adjusting
              visibility: ant tamsesnio fono (plant photos) bone glow'as
              aplink mascot'ą jį iškart pakelia. Ant šviesaus bg'o halo

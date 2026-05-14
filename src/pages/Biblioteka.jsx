@@ -215,7 +215,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
         <button
           onClick={() => setShowChat(true)}
           aria-label="Atidaryti bibliotekos asistentą"
-          className="absolute bottom-24 right-4 active:scale-90 transition-transform z-10 text-forest-700 animate-idle-float-gardener"
+          className="absolute bottom-24 lg:bottom-3 right-4 lg:right-6 active:scale-90 transition-transform z-10 text-forest-700 animate-idle-float-gardener"
           /* Self-adjusting bone halo — visibility ant photo card'ų. */
           style={{
             filter: 'drop-shadow(0 0 12px rgba(254, 253, 250, 0.85)) drop-shadow(0 4px 10px rgba(28, 58, 42, 0.22))',
