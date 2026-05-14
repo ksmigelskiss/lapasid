@@ -1,4 +1,4 @@
-import { Skull, Apple, BadgeCheck, BriefcaseMedical, User, Cat, AlertTriangle } from 'lucide-react'
+import { Skull, Apple, BadgeCheck, Ambulance, User, Cat, AlertTriangle } from 'lucide-react'
 
 /**
  * PlantSavybesPills — augalo savybės kaip editorial sekcijos.
@@ -173,7 +173,7 @@ export default function PlantSavybesPills({ plant }) {
   // BadgeCheck (mokslinis verifikuotas) vs Pill (tradicinis vaistas) —
   // medicinos kontekstas, Pill atstoja buvusį Sprout (kuris vizualiai
   // painiojosi su gallery'inimu, ne medicinos signaliu).
-  const VaistinisIcon = hasVaistinis && m.statusas === 'moksline' ? BadgeCheck : BriefcaseMedical
+  const VaistinisIcon = hasVaistinis && m.statusas === 'moksline' ? BadgeCheck : Ambulance
 
   // Nothing to show?
   if (!hasPavojai && !hasValgomumas && !hasVaistinis) return null
@@ -224,7 +224,7 @@ export default function PlantSavybesPills({ plant }) {
       {/* VAISTINIS */}
       {hasVaistinis && (
         <div className="space-y-2">
-          <SectionHeader Icon={BriefcaseMedical} label="Vaistinis" tone="forest" />
+          <SectionHeader Icon={Ambulance} label="Vaistinis" tone="forest" />
           <div className="flex flex-wrap gap-1.5">
             <Pill
               label={vaistinisLabel}
