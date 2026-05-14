@@ -1,7 +1,17 @@
 import { motion } from 'framer-motion'
 import { createPortal } from 'react-dom'
+import { User, Cat } from 'lucide-react'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
+
+// Surenka pavojaus target'ų set'ą iš plant.savybes.pavojai[]. Naudojama
+// vientisai signalizuoti kam augalas pavojingas (žmonėms / gyvūnams / abiems)
+// — toks pat patternas kaip PlantCard ir PlantSavybesPills.
+function hazardTargets(plant) {
+  const arr = plant?.savybes?.pavojai
+  if (!Array.isArray(arr)) return new Set()
+  return new Set(arr.map(p => p?.target).filter(Boolean))
+}
 
 /**
  * section === 'auginama'  → asks WHY (numirė / kita)
@@ -45,15 +55,27 @@ export default function DeleteModal({ plant, section, onDied, onMoveToLibrary, o
         </div>
 
         {/* Unifikuotas header pattern abiem variantam:
-            mono caps subtitle (kontekstas + plant name) → Bricolage title */}
-        <p className={`font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-center mb-1.5 ${
-          isDashboard ? 'text-forest-500' : 'text-terracotta-600'
-        }`}>
-          {isDashboard
-            ? plant.lietuviškas
-            : <>Pavojinga · {plant.lietuviškas}</>
-          }
-        </p>
+            mono caps subtitle (kontekstas + plant name) → Bricolage title.
+            Library variant'e — prie „Pavojinga" prepend'inam target icons
+            (User žmonėms / Cat gyvūnams) — vientisas signalas su PlantCard. */}
+        {(() => {
+          const targets = isDashboard ? new Set() : hazardTargets(plant)
+          return (
+            <p className={`inline-flex items-center justify-center gap-1.5 w-full font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-center mb-1.5 ${
+              isDashboard ? 'text-forest-500' : 'text-terracotta-600'
+            }`}>
+              {isDashboard ? (
+                plant.lietuviškas
+              ) : (
+                <>
+                  {targets.has('zmonems')  && <User size={11} strokeWidth={2.5} />}
+                  {targets.has('gyvunams') && <Cat  size={11} strokeWidth={2.5} />}
+                  <span>Pavojinga · {plant.lietuviškas}</span>
+                </>
+              )}
+            </p>
+          )
+        })()}
         <h3 className="font-display text-lg font-semibold tracking-tight text-forest-800 text-center mb-5">
           {isDashboard ? 'Kodėl šalini augalą?' : 'Ištrinti augalą?'}
         </h3>
