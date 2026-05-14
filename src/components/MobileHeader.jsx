@@ -42,7 +42,7 @@ export default function MobileHeader({
 
   return (
     <header
-      className="h-12 flex-shrink-0 flex items-center px-4 gap-2 bg-bone-100/95 z-30 relative"
+      className="h-12 flex-shrink-0 flex items-center px-4 gap-2 bg-app border-b border-bone-400/30 z-30 relative"
       style={{ paddingTop: 'env(safe-area-inset-top)', height: 'calc(48px + env(safe-area-inset-top))' }}
     >
       {/* Brand — T4Icon inverted (antspaudas: bone mark on forest square) + wordmark.

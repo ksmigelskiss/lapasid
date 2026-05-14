@@ -65,7 +65,7 @@ export default function DesktopHeader({
     .split(/[\s@]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase()
 
   return (
-    <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-bone-100/95 z-30 relative">
+    <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-app border-b border-bone-400/30 z-30 relative">
       {/* Brand — T4Icon inverted ("antspaudas": bone mark on forest square) + wordmark.
           h-16 header (64px) → T4Icon 38px palieka 13px tarpą iš viršaus/apačios. */}
       <div className="flex items-center gap-2.5 flex-shrink-0">
@@ -73,8 +73,11 @@ export default function DesktopHeader({
         <T4Word size={23} className="text-forest-700" />
       </div>
 
-      {/* Tabs — absolute pozicija viewport-centered */}
-      <nav className="absolute left-1/2 -translate-x-1/2 flex bg-gray-900/[0.04] rounded-btn p-1 gap-0.5">
+      {/* Tabs — absolute pozicija viewport-centered. Capsule bg-bone-100
+          (matches mobile Nav capsule), active tab bg-bone-50 (brighter,
+          elevated). Konsistentu su page bg-app < bone-100 < bone-50
+          hierarchija. */}
+      <nav className="absolute left-1/2 -translate-x-1/2 flex bg-bone-100 rounded-btn p-1 gap-0.5">
         {visibleTabs.map(t => {
           const isActive = active === t.id
           return (
@@ -84,7 +87,7 @@ export default function DesktopHeader({
               className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-btn-sm text-[13.5px] font-medium transition-colors ${
                 isActive
                   ? 'bg-bone-50 text-forest-700 shadow-[0_1px_2px_rgba(28,58,42,0.06),0_0_0_1px_rgba(28,58,42,0.04)]'
-                  : 'text-gray-600 hover:text-gray-900'
+                  : 'text-forest-500 hover:text-forest-700'
               }`}
             >
               {t.label}
@@ -105,7 +108,7 @@ export default function DesktopHeader({
         {role !== 'viewer' && (
           <button
             onClick={onSearchClick}
-            className="inline-flex items-center gap-2 h-9 px-3 rounded-lg hover:bg-gray-900/[0.05] transition-colors text-gray-600"
+            className="inline-flex items-center gap-2 h-9 px-3 rounded-lg hover:bg-forest-700/[0.06] transition-colors text-forest-600"
             title="Ieškoti augalo"
           >
             <Search size={16} />

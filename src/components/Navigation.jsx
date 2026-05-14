@@ -20,15 +20,15 @@ export default function Navigation({ active, onChange, counts = {}, role = 'owne
 
   return (
     <nav className={navPos}>
-      {/* Solid backdrop strip'as — anksčiau wrapper'is buvo transparent,
-          plant card'ai matydavosi UŽ capsule'o → vizualinis nešvarumas.
-          Dabar bg-bone-100 (matches header tone) + backdrop-blur duoda
-          coherent toolbar strip'ą. */}
+      {/* Solid backdrop strip'as — wrapper bg-app (matches page bg) +
+          border-t separation'ui. Tas pats pattern'as kaip Desktop/Mobile
+          Header'iuose — seamless toolbar tonai. Capsule viduje pakeltas
+          į bone-50 brighter shade, kad lieka aiškiai elevated. */}
       <div
-        className="px-3 pt-2 pb-3 bg-bone-100/95 backdrop-blur-md border-t border-bone-400/30"
+        className="px-3 pt-2 pb-3 bg-app border-t border-bone-400/30"
         style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)' }}
       >
-        <div className="flex bg-bone-100/95 rounded-btn p-1 gap-0.5 border border-bone-400/40 shadow-[0_4px_16px_rgba(28,58,42,0.12),0_0_0_1px_rgba(28,58,42,0.04)]">
+        <div className="flex bg-bone-100 rounded-btn p-1 gap-0.5 border border-bone-400/40 shadow-[0_4px_16px_rgba(28,58,42,0.12),0_0_0_1px_rgba(28,58,42,0.04)]">
           {visibleTabs.map(({ id, label, countKey }) => {
             const isActive = active === id
             const count = counts[countKey] ?? 0
