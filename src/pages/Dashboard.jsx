@@ -853,7 +853,12 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
       <AnimatePresence>
         {careInfoPlant && (
           <CareWateringSheet
-            key={careInfoPlant.id}
+            /* Stable key — kad navigation tarp augalų NEbe unmount/mount
+               (AnimatePresence exit+enter slide). Sheet'as lieka opened,
+               tik props update'ina turinį → instant switch be animacijos.
+               Sheet'o open/close animacija lieka per AnimatePresence
+               (kai careInfoPlant null'inasi). */
+            key="care-info"
             plant={careInfoPlant}
             zones={zones}
             onClose={closeCareInfo}

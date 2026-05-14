@@ -146,6 +146,13 @@ export default function CareWateringSheet({
   const currentZone = zones.find(z => z.id === plant.zonaId)
   const [postFert, setPostFert] = useState(false)
 
+  // Stable key per-Dashboard'o sheet'as gyvuoja keletą augalų — reset'inam
+  // internal state'ą kai keičiasi plant.id (kitaip postFert prompt'as
+  // persistina iš ankstesnio augalo).
+  useEffect(() => {
+    setPostFert(false)
+  }, [plant.id])
+
   // Actions
   const onWater     = () => { onAddEvent('watering');     afterAction() }
   const onFertilize = () => { onAddEvent('fertilizing'); setPostFert(true) }
