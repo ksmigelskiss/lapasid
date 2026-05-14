@@ -177,6 +177,24 @@ export default function CareWateringSheet({
     else animate(y, 0, { type: 'spring', stiffness: 400, damping: 30 })
   }
 
+  // Horizontal swipe nav ant photo area — supplementinis prev/next gesture.
+  // Aptinkam pan'ą tik horizontalų (|x| > |y|), kad nesimaišytų su parent
+  // sheet'o vertical drag-to-close. Threshold'as 60px arba velocity 300.
+  const handlePhotoPanEnd = (_, info) => {
+    const dx = info.offset.x
+    const dy = info.offset.y
+    const vx = info.velocity.x
+    // Pirma — patikriname kryptį: horizontalus pan'as (kitaip ignoruojam,
+    // gali būti netyčia uz dėl vertical drag'o ant kito element'o).
+    if (Math.abs(dx) <= Math.abs(dy)) return
+    // Threshold'as — paslinkti 60px arba greitas swipe'as (vx > 300).
+    const enoughSwipe = Math.abs(dx) > 60 || Math.abs(vx) > 300
+    if (!enoughSwipe) return
+    // Kryptis: kairėn → next, dešinėn → prev (kaip carousels'uose).
+    if (dx < 0 && onNext) onNext()
+    else if (dx > 0 && onPrev) onPrev()
+  }
+
   return createPortal(
     <div className={useDesktopPanel
       ? "absolute inset-0 flex flex-col"
@@ -272,15 +290,37 @@ export default function CareWateringSheet({
           </button>
         </div>
 
-        {/* ── Photo — clean 3:2 ── */}
-        {hasImg ? (
-          <div className="w-full aspect-[3/2] overflow-hidden bg-bone-300 flex-shrink-0">
-            <PlantImage url={plant.image} alt={plant.lietuviškas} size="detail" eager className="w-full h-full object-cover" />
-          </div>
+        {/* ── Photo — clean 3:2 + horizontal swipe nav ──
+            motion.div su onPanEnd aptinka horizontalų swipe'ą
+            (kairėn → next, dešinėn → prev). Vertical drag'as nereaguoja
+            čia — ignore'inam jei |y| > |x|, kad nesimaišytų su parent
+            sheet'o swipe-down-to-close. Nav rodyklės top toolbar'e
+            lieka pagrindinis kontrolis; swipe'as — supplementinis.
+            Aktyvinamas TIK kai yra prev/next (carousel context'as). */}
+        {(onPrev || onNext) ? (
+          <motion.div
+            className={`w-full aspect-[3/2] overflow-hidden bg-bone-300 flex-shrink-0 ${(onPrev || onNext) ? 'cursor-grab active:cursor-grabbing' : ''}`}
+            onPanEnd={handlePhotoPanEnd}
+            style={{ touchAction: 'pan-y' }}
+          >
+            {hasImg ? (
+              <PlantImage url={plant.image} alt={plant.lietuviškas} size="detail" eager className="w-full h-full object-cover pointer-events-none select-none" draggable={false} />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-8xl pointer-events-none select-none">
+                {plant.emoji ?? '🌿'}
+              </div>
+            )}
+          </motion.div>
         ) : (
-          <div className="w-full aspect-[3/2] flex items-center justify-center text-8xl bg-bone-300 flex-shrink-0">
-            {plant.emoji ?? '🌿'}
-          </div>
+          hasImg ? (
+            <div className="w-full aspect-[3/2] overflow-hidden bg-bone-300 flex-shrink-0">
+              <PlantImage url={plant.image} alt={plant.lietuviškas} size="detail" eager className="w-full h-full object-cover" />
+            </div>
+          ) : (
+            <div className="w-full aspect-[3/2] flex items-center justify-center text-8xl bg-bone-300 flex-shrink-0">
+              {plant.emoji ?? '🌿'}
+            </div>
+          )
         )}
 
         {/* ── Scrollable content ── */}
