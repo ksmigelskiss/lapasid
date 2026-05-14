@@ -44,15 +44,24 @@ const SearchModal = lazyWithRetry(() => import('./components/SearchModal'))
 const PlantDetail = lazyWithRetry(() => import('./components/PlantDetail'))
 const ProfileSheet = lazyWithRetry(() => import('./components/ProfileSheet'))
 const Biblioteka  = lazyWithRetry(() => import('./pages/Biblioteka'))
+const AdminPanel  = lazyWithRetry(() => import('./components/admin/AdminPanel'))
 const Zinynas     = lazyWithRetry(() => import('./pages/Zinynas'))
 
 export default function App() {
   const {
     user, collectionId, role, ownCollectionId, allCollections,
     loading: authLoading, authError, loadingMessage,
-    viewerToken,
+    viewerToken, isAdmin,
     signInGoogle, signInFacebook, signOut, switchCollection, renameCollection,
   } = useAuth()
+
+  // /admin route'as — gate'inta isAdmin flag'u. URL param patternas vienodas
+  // su dev playground'ais (?playground=loaders, ?export=plants). Lazy load'as
+  // — bundle'as auga tik admin'ams.
+  const [showAdmin, setShowAdmin] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return new URLSearchParams(window.location.search).get('admin') === '1'
+  })
 
   const isDesktop = useIsDesktop()
 
@@ -318,6 +327,27 @@ export default function App() {
   if (!user && !viewerToken) {
     return <LoginScreen onSignInGoogle={signInGoogle} onSignInFacebook={signInFacebook} error={authError} />
   }
+
+  // Admin panel — atskira modal'inė route'a per ?admin=1, gate'inta
+  // isAdmin flag'u. Rodome ANT app'o (preserve'ina kolekciją iš auth
+  // state'o), bet pati app'a nesirenderiina. Užsidaroma — back to app.
+  if (showAdmin && isAdmin) {
+    return (
+      <Suspense fallback={<BrandLoader />}>
+        <AdminPanel
+          currentUid={user?.uid}
+          onClose={() => {
+            setShowAdmin(false)
+            try {
+              const url = new URL(window.location.href)
+              url.searchParams.delete('admin')
+              window.history.replaceState({}, '', url.toString())
+            } catch {}
+          }}
+        />
+      </Suspense>
+    )
+  }
   // Vartotojas prisijungęs, bet kolekcija nesukurta (Firestore rules klaida arba tinklas)
   if (!collectionId) {
     return (
@@ -493,9 +523,11 @@ export default function App() {
             role={role}
             ownCollectionId={ownCollectionId}
             allCollections={allCollections}
+            isAdmin={isAdmin}
             onSignOut={signOut}
             onSwitchCollection={(id) => { switchCollection(id); setShowProfile(false) }}
             onRenameCollection={renameCollection}
+            onOpenAdmin={() => setShowAdmin(true)}
             onClose={() => setShowProfile(false)}
           />
         </Suspense>

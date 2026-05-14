@@ -99,7 +99,7 @@ export async function acceptInvite(uid, token, inviteData, userProfile = {}) {
   return colId
 }
 
-export default function ProfileSheet({ user, collectionId, role = 'owner', ownCollectionId, allCollections = [], onSignOut, onClose, onSwitchCollection, onRenameCollection }) {
+export default function ProfileSheet({ user, collectionId, role = 'owner', ownCollectionId, allCollections = [], isAdmin = false, onSignOut, onClose, onSwitchCollection, onRenameCollection, onOpenAdmin }) {
   // Desktop split panel: portaliuojam į RightPanel container'į.
   const isDesktop = useIsDesktop()
   const host = useDetailHost()
@@ -467,6 +467,17 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
             >
               <LogIn size={15} className="rotate-180" />
               {leaving ? 'Išeinama...' : 'Išeiti iš kolekcijos'}
+            </button>
+          )}
+
+          {/* Admin entry — matomas TIK su isAdmin=true (gate'inta App.jsx
+              per useAuth.isAdmin reading'ą iš users/{uid}.isAdmin). */}
+          {isAdmin && (
+            <button
+              onClick={() => { onClose?.(); onOpenAdmin?.() }}
+              className="w-full py-3 rounded-btn text-forest-700 text-sm font-medium flex items-center justify-center gap-2 border border-bone-400/60 bg-bone-50 hover:bg-bone-100 transition-colors mb-3"
+            >
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em]">✦ Admin Dashboard</span>
             </button>
           )}
 

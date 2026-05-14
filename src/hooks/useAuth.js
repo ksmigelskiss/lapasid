@@ -150,7 +150,13 @@ async function getOrCreateCollection(uid) {
     const role     = colData.roles?.[uid] ?? (colData.ownerId === uid ? 'owner' : 'member')
     const colIds   = userSnap.exists() ? (userSnap.data().collections ?? [inviteColId]) : [inviteColId]
     const allCols  = await loadAllCollections(uid, [...new Set([...colIds, inviteColId])])
-    return { colId: inviteColId, role, ownColId: userSnap.data()?.ownCollection ?? null, allCollections: allCols }
+    return {
+      colId: inviteColId, role,
+      ownColId: userSnap.data()?.ownCollection ?? null,
+      allCollections: allCols,
+      isAdmin: userSnap.data()?.isAdmin === true,
+      subscription: userSnap.data()?.subscription ?? { plan: 'free', validUntil: null },
+    }
   }
 
   if (userSnap.exists() && userSnap.data().primaryCollection) {
@@ -207,13 +213,23 @@ async function getOrCreateCollection(uid) {
 
     const colIds  = d.collections ?? [activeColId]
     const allCols = await loadAllCollections(uid, [...new Set(colIds)])
-    return { colId: activeColId, role, ownColId, allCollections: allCols }
+    return {
+      colId: activeColId, role, ownColId,
+      allCollections: allCols,
+      isAdmin: d.isAdmin === true,
+      subscription: d.subscription ?? { plan: 'free', validUntil: null },
+    }
   }
 
   // Naujas vartotojas — migracija
   const colId   = await runMigration(uid)
   const allCols = [{ id: colId, name: 'Mano augalai', role: 'owner', ownerId: uid }]
-  return { colId, role: 'owner', ownColId: colId, allCollections: allCols }
+  return {
+    colId, role: 'owner', ownColId: colId,
+    allCollections: allCols,
+    isAdmin: false,
+    subscription: { plan: 'free', validUntil: null },
+  }
 }
 
 /**
@@ -228,6 +244,8 @@ export function useAuth() {
     ownCollectionId: null, allCollections: [],
     loading: true, authError: null, loadingMessage: null,
     viewerToken: null,
+    isAdmin: false,
+    subscription: { plan: 'free', validUntil: null },
   })
 
   useEffect(() => {
@@ -245,6 +263,8 @@ export function useAuth() {
         authError: null,
         loadingMessage: null,
         viewerToken: null,
+        isAdmin: true, // mock mode'e visada admin — kad galėtum testuoti /admin lokaliai
+        subscription: { plan: 'premium', validUntil: null },
       })
       return
     }
@@ -317,11 +337,23 @@ export function useAuth() {
       }
       setState(s => ({ ...s, loading: true, loadingMessage: 'Ruošiama kolekcija…' }))
       try {
-        const { colId, role, ownColId, allCollections } = await getOrCreateCollection(user.uid)
-        setState({ user, collectionId: colId, role, ownCollectionId: ownColId, allCollections, loading: false, authError: null, loadingMessage: null })
+        const { colId, role, ownColId, allCollections, isAdmin, subscription } = await getOrCreateCollection(user.uid)
+        setState({
+          user, collectionId: colId, role,
+          ownCollectionId: ownColId, allCollections,
+          loading: false, authError: null, loadingMessage: null,
+          isAdmin: isAdmin ?? false,
+          subscription: subscription ?? { plan: 'free', validUntil: null },
+        })
       } catch (e) {
         console.error('[useAuth] profile error:', e)
-        setState({ user, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, authError: null, loadingMessage: null })
+        setState({
+          user, collectionId: null, role: 'owner',
+          ownCollectionId: null, allCollections: [],
+          loading: false, authError: null, loadingMessage: null,
+          isAdmin: false,
+          subscription: { plan: 'free', validUntil: null },
+        })
       }
     })
 
