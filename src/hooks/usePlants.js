@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { getDoc, getDocs, setDoc, deleteDoc, doc, collection as fsCol } from 'firebase/firestore'
+import { getDoc, getDocs, setDoc, deleteDoc, doc, collection as fsCol, onSnapshot } from 'firebase/firestore'
 import { db } from '../utils/firebase'
 import { fromAIResult, normalizeSavybes, makeId as _makeId, today as _today } from '../utils/plantTransform'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
@@ -11,6 +11,37 @@ export { fromAIResult }
 // localStorage key namespaced by collectionId — keli vartotojai viename įrenginyje
 function storageKey(collectionId) {
   return collectionId ? `geliu-db-${collectionId}` : 'geliu-db'
+}
+
+// Tombstones — lokaliai ištrintų augalų ID rinkinys. Naudojama kad
+// `syncFromRemote` neatgaivintų augalų, kuriuos `deleteDoc` dar nespėjo
+// nubrukt į Firestore (pvz. ad-blocker'is blokuoja Write/channel, network
+// down, race condition'as su parallel sync'u). Kiekvieno sync'o metu —
+// retry deleteDoc, sėkmingai ištrynus — pašalinam iš tombstones.
+function tombstoneKey(cid) {
+  return cid ? `geliu-db-${cid}-tombs` : null
+}
+function loadTombstones(cid) {
+  const key = tombstoneKey(cid)
+  if (!key) return new Set()
+  try {
+    const raw = localStorage.getItem(key)
+    return raw ? new Set(JSON.parse(raw)) : new Set()
+  } catch { return new Set() }
+}
+function saveTombstones(cid, set) {
+  const key = tombstoneKey(cid)
+  if (!key) return
+  try { localStorage.setItem(key, JSON.stringify([...set])) } catch {}
+}
+function addTombstone(cid, id) {
+  const t = loadTombstones(cid)
+  t.add(id)
+  saveTombstones(cid, t)
+}
+function removeTombstone(cid, id) {
+  const t = loadTombstones(cid)
+  if (t.delete(id)) saveTombstones(cid, t)
 }
 
 function loadLocal(colId) {
@@ -48,6 +79,11 @@ export function usePlants(collectionId, viewerToken = null) {
   const viewerTokenRef = useRef(viewerToken)
   useEffect(() => { viewerTokenRef.current = viewerToken })
 
+  // Legacy migration guard'as — `meta.plants[]` cleanup'as fire'ina TIK kartą
+  // per kolekcijos sesiją. Be jo onSnapshot'as gali retry'inti cleanup'ą
+  // kiekvienam snapshot'ui (jei pirmasis async setDoc'as dar nepraėjo).
+  const migrationDoneRef = useRef(new Set()) // Set<colId>: kuriose kolekcijose jau išvalyta
+
   // Išsaugo į localStorage + Firestore (fire-and-forget)
   const update = useCallback((updater) => {
     if (viewerTokenRef.current) return // viewers — no writes via this path
@@ -75,14 +111,21 @@ export function usePlants(collectionId, viewerToken = null) {
 
       for (const [id, plant] of nextMap) {
         if (prevMap.get(id) !== plant) {
+          // Re-add'as ID, kuris buvo tombstone'e (kraštinis atvejis) — atstatom
+          removeTombstone(cid, id)
           setDoc(doc(db, 'collections', cid, 'plants', id), plant)
             .catch(e => console.warn('[firestore] plant write:', e))
         }
       }
       for (const id of prevMap.keys()) {
         if (!nextMap.has(id)) {
+          // Pridedam tombstone'ą PRIEŠ deleteDoc — jei jis fail'ina (ad-blocker
+          // blokuoja Write/channel), syncFromRemote neatgaivins augalo iš
+          // Firestore'o, ir kitą kartą retry'sim deleteDoc.
+          addTombstone(cid, id)
           deleteDoc(doc(db, 'collections', cid, 'plants', id))
-            .catch(e => console.warn('[firestore] plant delete:', e))
+            .then(() => removeTombstone(cid, id))
+            .catch(e => console.warn('[firestore] plant delete (queued for retry):', e))
         }
       }
 
@@ -99,13 +142,142 @@ export function usePlants(collectionId, viewerToken = null) {
     })
   }, []) // stabilus — naudoja ref viduje
 
-  // Nuskaito iš Firestore — sulieja visus šaltinius (stabilus — naudoja ref)
-  const syncFromRemote = useCallback(() => {
-    if (isMockMode()) return // Mock mode — duomenys static, jokio sync
+  // Suliejame `meta` + `subPlants` į lokalų state'ą. Bendras kelias
+  // tiek real-time onSnapshot listener'iui (Etapas B), tiek vienkartiniam
+  // syncFromRemote (pull-to-refresh / viewer polling).
+  const applySnapshot = useCallback((meta, subPlants) => {
     const cid = colIdRef.current
     if (!cid) return
 
-    // Viewer — fetch via server API
+    const safeMeta = meta ?? {}
+    const tombs    = loadTombstones(cid)
+    const subIds   = new Set(subPlants.map(p => p.id))
+
+    // Tombstone retry — jei serveris vis dar turi įrašą, retry'nam delete.
+    // Jei serveris jau švarus — pašalinam tombstone'ą (cleanup).
+    for (const id of tombs) {
+      if (subIds.has(id)) {
+        deleteDoc(doc(db, 'collections', cid, 'plants', id))
+          .then(() => removeTombstone(cid, id))
+          .catch(() => {}) // bus retry'inta kitą snapshot'ą
+      } else {
+        removeTombstone(cid, id)
+      }
+    }
+
+    const liveSub = subPlants.filter(p => !tombs.has(p.id))
+
+    // Suliejame: meta.plants[] (legacy) + subkolekcija. Tombstones'ai
+    // jau išfiltruoti iš liveSub.
+    const byId = new Map()
+    if (safeMeta.plants?.length > 0) {
+      safeMeta.plants.forEach(p => { if (!tombs.has(p.id)) byId.set(p.id, p) })
+    }
+    liveSub.forEach(p => byId.set(p.id, p))
+
+    // Offline-write saugiklis: localStorage gali turėti augalų, kurių
+    // setDoc dar nepraėjo į Firestore (network down). Tombstone'ai
+    // prideda apsaugą — neatgaivinsim ištrintų. Pridedam tik LOKALIUS
+    // augalus, kurių nėra nei byId, nei tombstones'e.
+    try {
+      const local = JSON.parse(localStorage.getItem(storageKey(cid)) || '{}')
+      ;(local.plants ?? []).forEach(p => {
+        if (!byId.has(p.id) && !tombs.has(p.id)) byId.set(p.id, p)
+      })
+    } catch {}
+
+    const plants = [...byId.values()]
+    const next   = { plants, zinynas: safeMeta.zinynas ?? [], zones: safeMeta.zones ?? [], settings: safeMeta.settings ?? {} }
+    setData(next)
+    try { localStorage.setItem(storageKey(cid), JSON.stringify(next)) } catch {}
+
+    // Augalai, kurių dar nėra subkolekcijoje (legacy meta.plants[] arba
+    // pending-upload iš local) — push'inam. Tombstones'us jau išfiltravom.
+    const missing = plants.filter(p => !subIds.has(p.id))
+    if (missing.length > 0) {
+      console.log('[sync] pushing', missing.length, 'plants to subcollection')
+      missing.forEach(p => {
+        setDoc(doc(db, 'collections', cid, 'plants', p.id), p)
+          .catch(e => console.warn('[sync] plant push failed:', e))
+        if (p.lotyniskas) saveToCatalog(p).catch(() => {})
+      })
+    }
+
+    // Seną plants[] iš pagrindinio doc trinkame kai visi augalai jau subkolekcijoje.
+    // Ref-guard'as — paleidžiam TIK kartą per kolekciją (kitaip onSnapshot'as
+    // gali retry'inti tą patį setDoc'ą prieš tą asnnchroninį save'ą praeinant).
+    if (
+      safeMeta.plants?.length > 0 &&
+      missing.length === 0 &&
+      !migrationDoneRef.current.has(cid)
+    ) {
+      migrationDoneRef.current.add(cid)
+      const { plants: _, ...cleanMeta } = safeMeta
+      setDoc(doc(db, 'collections', cid), cleanMeta)
+        .catch(e => {
+          console.warn('[sync] cleanup failed:', e)
+          migrationDoneRef.current.delete(cid) // retry kitą snapshot'ą
+        })
+      console.log('[sync] migration complete — plants[] removed from main doc')
+    }
+  }, [])
+
+  // ── Real-time onSnapshot listener'iai (Etapas B) ─────────────────────
+  // Pakeičia polling-based sync'ą — server'is yra single source of truth,
+  // UI auto-update'inasi kai pokyčiai įvyksta. Mock'ams ir viewer'iams —
+  // skip (viewer'is naudoja /api/viewer polling'ą per syncFromRemote).
+  useEffect(() => {
+    if (isMockMode() || !collectionId || viewerToken) return
+    const cid = collectionId
+
+    let currentMeta      = null
+    let currentSubPlants = null
+    let metaLoaded       = false
+    let plantsLoaded     = false
+
+    // applySnapshot triggerinamas tik kai abu listener'iai bent kartą fire'ino —
+    // antraip pirmasis snapshot'as overwrite'intų state'ą be plants/meta dalies.
+    const tryApply = () => {
+      if (metaLoaded && plantsLoaded) {
+        applySnapshot(currentMeta, currentSubPlants)
+      }
+    }
+
+    const unsubMeta = onSnapshot(
+      doc(db, 'collections', cid),
+      snap => {
+        currentMeta = snap.exists() ? snap.data() : {}
+        metaLoaded  = true
+        tryApply()
+      },
+      e => console.warn('[snapshot] meta error:', e)
+    )
+
+    const unsubPlants = onSnapshot(
+      fsCol(db, 'collections', cid, 'plants'),
+      snap => {
+        currentSubPlants = snap.docs.map(d => d.data())
+        plantsLoaded     = true
+        tryApply()
+      },
+      e => console.warn('[snapshot] plants error:', e)
+    )
+
+    return () => {
+      unsubMeta()
+      unsubPlants()
+    }
+  }, [collectionId, viewerToken, applySnapshot])
+
+  // Vienkartinis refresh — pull-to-refresh + viewer polling. Listener'iai
+  // jau handle'ina realtime case'us, bet šis backup'as naudingas kai network
+  // atsigauna ar user'is force'ina manual refresh.
+  const syncFromRemote = useCallback(() => {
+    if (isMockMode()) return
+    const cid = colIdRef.current
+    if (!cid) return
+
+    // Viewer — fetch via server API (jokio Firebase auth'o, tad jokio listener'io)
     if (viewerTokenRef.current) {
       fetch(`/api/viewer?token=${encodeURIComponent(viewerTokenRef.current)}`)
         .then(r => r.ok ? r.json() : Promise.reject(r.status))
@@ -124,71 +296,13 @@ export function usePlants(collectionId, viewerToken = null) {
     ]).then(([metaSnap, plantsSnap]) => {
       const meta      = metaSnap.exists() ? metaSnap.data() : {}
       const subPlants = plantsSnap.docs.map(d => d.data())
-
-      // Suliejame visus šaltinius į vieną Map (subkolekcija turi aukščiausią prioritetą)
-      const byId = new Map()
-      if (meta.plants?.length > 0) meta.plants.forEach(p => byId.set(p.id, p)) // senas formatas
-      subPlants.forEach(p => byId.set(p.id, p))                                  // subkolekcija
-
-      // Saugiklis: localStorage gali turėti augalų dar nesinchronizuotų su Firestore
-      try {
-        const local = JSON.parse(localStorage.getItem(storageKey(cid)) || '{}')
-        if ((local.plants?.length ?? 0) > byId.size) {
-          local.plants.forEach(p => { if (!byId.has(p.id)) byId.set(p.id, p) })
-        }
-      } catch {}
-
-      const plants = [...byId.values()]
-      const remote = { plants, zinynas: meta.zinynas ?? [], zones: meta.zones ?? [], settings: meta.settings ?? {} }
-      setData(remote)
-      try { localStorage.setItem(storageKey(cid), JSON.stringify(remote)) } catch {}
-
-      // Augalai, kurių dar nėra subkolekcijoje — įrašome
-      const subIds = new Set(subPlants.map(p => p.id))
-      const missing = plants.filter(p => !subIds.has(p.id))
-      if (missing.length > 0) {
-        console.log('[sync] pushing', missing.length, 'plants to subcollection')
-        missing.forEach(p => {
-          setDoc(doc(db, 'collections', cid, 'plants', p.id), p)
-            .catch(e => console.warn('[sync] plant push failed:', e))
-          if (p.lotyniskas) saveToCatalog(p).catch(() => {})
-        })
-      }
-
-      // Seną plants[] iš pagrindinio doc trinkame kai visi augalai jau subkolekcijoje
-      if (meta.plants?.length > 0 && missing.length === 0) {
-        const { plants: _, ...cleanMeta } = meta
-        setDoc(doc(db, 'collections', cid), cleanMeta)
-          .catch(e => console.warn('[sync] cleanup failed:', e))
-        console.log('[sync] migration complete — plants[] removed from main doc')
-      }
+      applySnapshot(meta, subPlants)
     }).catch(e => console.warn('[firestore] load failed:', e))
-  }, []) // stabilus — naudoja ref viduje
+  }, [applySnapshot])
 
-  // Sinchronizacija kai collectionId tampa prieinamas (po auth) arba pasikeičia
-  const prevColId = useRef(null)
-  useEffect(() => {
-    if (collectionId && collectionId !== prevColId.current) {
-      prevColId.current = collectionId
-      syncFromRemote()
-    }
-  }, [collectionId, syncFromRemote])
-
-  // Grįžus iš fono — re-sync jei praėjo > 60s (iOS PWA)
-  useEffect(() => {
-    let hiddenAt = null
-    const handle = () => {
-      if (document.visibilityState === 'hidden') {
-        hiddenAt = Date.now()
-      } else if (document.visibilityState === 'visible') {
-        const away = hiddenAt ? Date.now() - hiddenAt : Infinity
-        hiddenAt = null
-        if (away > 60_000) syncFromRemote()
-      }
-    }
-    document.addEventListener('visibilitychange', handle)
-    return () => document.removeEventListener('visibilitychange', handle)
-  }, [syncFromRemote])
+  // (Pašalintas visibilitychange handler'is — su onSnapshot listener'iais
+  // Firebase SDK pats auto-reconnect'ina po network/PWA wake. Manual refresh
+  // lieka prieinamas per pull-to-refresh.)
 
   // Viewer polling — re-sync every 60s
   useEffect(() => {
