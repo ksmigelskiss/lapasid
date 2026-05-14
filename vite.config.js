@@ -32,6 +32,11 @@ export default defineConfig({
       workbox: {
         // Cache app shell + static assets
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        // /api/* — server functions (OAuth callback'as ir t.t.) NIEKADA
+        // neturi būti serv'inami iš cache'o. iOS PWA'e be šito service worker
+        // intercept'indavo /api/auth/callback navigation'ą ir grąžindavo cached
+        // index.html'ą be googleIdToken'o → login loop.
+        navigateFallbackDenylist: [/^\/api\//],
         // Firebase, Anthropic, image APIs — network-first so data stays fresh
         runtimeCaching: [
           {

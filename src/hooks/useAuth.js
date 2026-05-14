@@ -9,7 +9,7 @@ import {
   signOut as firebaseSignOut,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc, getDocs, collection, query, limit } from 'firebase/firestore'
-import { auth, db, googleProvider, facebookProvider } from '../utils/firebase'
+import { auth, db, googleProvider, facebookProvider, authReady } from '../utils/firebase'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { acceptInvite } from '../components/ProfileSheet'
 import { isMockMode, MOCK_USER, MOCK_COLLECTION_ID, MOCK_COLLECTION_NAME } from '../utils/mockData'
@@ -316,20 +316,57 @@ export function useAuth() {
     const googleIdToken  = urlParams.get('googleIdToken')
     const authErrorParam = urlParams.get('authError')
 
+    // ── Auth settle coordination ──────────────────────────────────────
+    // Trys async source'ai kalbasi su tuo pačiu user'iu:
+    //   1. signInWithCredential (jei turim googleIdToken URL'e)
+    //   2. getRedirectResult (jei Firebase atliko redirect — Facebook PWA)
+    //   3. onAuthStateChanged (visada — initial state + tolesni change'ai)
+    //
+    // PROBLEM: jei kuris nors iš (1)/(2) dar pending, o onAuthStateChanged
+    // fire'ina null user'iu (initial), neturim jokios indikacijos ar tai
+    // tikrai "logged out" ar "dar krauname". Anksčiau redirectDone flag'as
+    // dengė tik (2) — todėl (1) race'ino į logged out flash'ą.
+    //
+    // SPRENDIMAS: dvi flag'os, abi turi būti true prieš leidžiam onAuthStateChanged
+    // null'ui paskelbti logged out.
+    let redirectDone     = false
+    let credentialDone   = !googleIdToken  // true iškart jei nėra token'o
+    const settleLoggedOut = () => {
+      if (!redirectDone || !credentialDone) return
+      if (auth.currentUser) return
+      console.log('[auth] settled logged-out')
+      setState(s => ({ ...s, user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, loadingMessage: null }))
+    }
+
     if (googleIdToken) {
+      console.log('[auth] googleIdToken detected, awaiting persistence before signInWithCredential')
       window.history.replaceState({}, '', window.location.pathname)
-      signInWithCredential(auth, GoogleAuthProvider.credential(googleIdToken))
-        .catch(e => setState(s => ({ ...s, loading: false, authError: e.message ?? 'Prisijungimo klaida' })))
+      // AWAIT persistence — kitaip session prarandama PWA redirect'ams
+      authReady
+        .then(() => {
+          console.log('[auth] persistence ready, calling signInWithCredential')
+          return signInWithCredential(auth, GoogleAuthProvider.credential(googleIdToken))
+        })
+        .then(result => {
+          console.log('[auth] signInWithCredential success:', result?.user?.email)
+        })
+        .catch(e => {
+          console.error('[auth] signInWithCredential failed:', e?.code, e?.message)
+          setState(s => ({ ...s, loading: false, authError: e?.message ?? 'Prisijungimo klaida' }))
+        })
+        .finally(() => {
+          credentialDone = true
+          settleLoggedOut()
+        })
     }
     if (authErrorParam) {
       window.history.replaceState({}, '', window.location.pathname)
       setState(s => ({ ...s, loading: false, authError: decodeURIComponent(authErrorParam) }))
     }
 
-    let redirectDone = false
-
     const unsub = onAuthStateChanged(auth, async (user) => {
-      if (!user && !redirectDone) return
+      console.log('[auth] onAuthStateChanged:', user?.email ?? '(null)', 'redirectDone=', redirectDone, 'credentialDone=', credentialDone)
+      if (!user && (!redirectDone || !credentialDone)) return
       if (!user) {
         // authError paliekame — gali būti jau užpildytas signInWithCredential/.catch bloke
         setState(s => ({ ...s, user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, loadingMessage: null }))
@@ -362,8 +399,7 @@ export function useAuth() {
       .catch(e => { if (e?.code !== 'auth/null-user') setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' })) })
       .finally(() => {
         redirectDone = true
-        // authError paliekame — gali būti jau užpildytas signInWithCredential/.catch bloke
-        if (!auth.currentUser) setState(s => ({ ...s, user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, loadingMessage: null }))
+        settleLoggedOut()
       })
 
     return unsub

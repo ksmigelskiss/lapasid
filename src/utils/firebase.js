@@ -5,7 +5,7 @@ import {
   persistentMultipleTabManager,
   getFirestore,
 } from 'firebase/firestore'
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, setPersistence, browserLocalPersistence, signInAnonymously as _signInAnonymously, updateProfile } from 'firebase/auth'
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, setPersistence, indexedDBLocalPersistence, browserLocalPersistence, signInAnonymously as _signInAnonymously, updateProfile } from 'firebase/auth'
 import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
@@ -48,8 +48,16 @@ export const googleProvider   = new GoogleAuthProvider()
 export const facebookProvider = new FacebookAuthProvider()
 facebookProvider.addScope('email')
 
-// Explicit localStorage persistence — apsaugo nuo redirect session praradimo mobile
-setPersistence(auth, browserLocalPersistence).catch(() => {})
+// Explicit IndexedDB persistence — patikimesnis nei localStorage iOS PWA
+// standalone'e (kur localStorage kontekstas kartais izoliuotas tarp Safari
+// ir PWA web view'o). Fallback į localStorage jei IDB unavailable.
+//
+// authReady eksportuojamas, kad useAuth galėtų AWAIT'inti prieš
+// signInWithCredential — kitaip Firebase'as gali pradėti sign-in operaciją
+// dar nesusetinus persistence, ir token'as liktų tik memory'e.
+export const authReady = setPersistence(auth, indexedDBLocalPersistence)
+  .catch(() => setPersistence(auth, browserLocalPersistence))
+  .catch(() => {}) // Worst case: in-memory only
 
 export const signInAnonymously = () => _signInAnonymously(auth)
 export { updateProfile }
