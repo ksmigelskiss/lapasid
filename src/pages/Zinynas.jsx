@@ -24,6 +24,158 @@ function formatDateShort(iso) {
   return d.toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
 }
 
+function formatDateFull(iso) {
+  const d = new Date(iso + 'T00:00:00')
+  return d.toLocaleDateString('lt-LT', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+// ── Minimal custom markdown renderer ───────────────────────────────
+// Užtenkamai mūsų use case'ui (Zinynas + AI generuoti tekstai). Palaiko:
+//   ## H2  / ### H3 / # H1   → display heading'ai
+//   **bold** / *italic*       → inline emphasis
+//   - bullet / * bullet      → unordered list
+//   ---                       → horizontal rule
+//   Plain paragraphs su \n    → text
+// Search query highlight'as veikia per visus inline tekstus.
+//
+// Skip'inam pirmą heading'ą jei jis match'ina displayed title'ą — kad
+// nebūtų duplikato (sidebar + content abu rodo tą patį).
+
+function parseBlocks(text, skipFirstHeading) {
+  const lines = String(text ?? '').split('\n')
+  const blocks = []
+  let para = []
+  let list = null
+  let firstHeadingSkipped = !skipFirstHeading
+
+  const flushPara = () => {
+    if (para.length) {
+      blocks.push({ type: 'p', content: para.join('\n') })
+      para = []
+    }
+  }
+  const flushList = () => {
+    if (list) {
+      blocks.push({ type: 'ul', items: list })
+      list = null
+    }
+  }
+
+  for (const raw of lines) {
+    const trimmed = raw.trim()
+    if (!trimmed) { flushPara(); flushList(); continue }
+
+    if (trimmed === '---' || trimmed === '***' || trimmed === '___') {
+      flushPara(); flushList()
+      blocks.push({ type: 'hr' })
+      continue
+    }
+
+    const headingMatch = trimmed.match(/^(#{1,3})\s+(.+)$/)
+    if (headingMatch) {
+      flushPara(); flushList()
+      const level = headingMatch[1].length
+      if (level <= 2 && !firstHeadingSkipped) {
+        firstHeadingSkipped = true
+        continue // skip duplikat'ą su displayed title'u
+      }
+      blocks.push({ type: `h${level}`, content: headingMatch[2] })
+      continue
+    }
+
+    if (/^[-*]\s+/.test(trimmed)) {
+      flushPara()
+      if (!list) list = []
+      list.push(trimmed.replace(/^[-*]\s+/, ''))
+      continue
+    }
+
+    flushList()
+    para.push(raw)
+  }
+  flushPara(); flushList()
+  return blocks
+}
+
+// Inline parser — **bold**, *italic*, plus query highlight'as.
+// Greedy parse: ieško artimiausio bold/italic span'o, recurse'ina ant likučio.
+function renderInline(text, query, keyPrefix = 'i') {
+  const parts = []
+  let remaining = text
+  let k = 0
+  const safeKey = () => `${keyPrefix}-${k++}`
+
+  while (remaining) {
+    const bold = remaining.match(/\*\*(.+?)\*\*/)
+    const italic = remaining.match(/(?<!\*)\*(?!\*)([^*\n]+?)\*(?!\*)/)
+
+    let pick = null
+    if (bold && italic) {
+      pick = bold.index <= italic.index ? { kind: 'bold', m: bold } : { kind: 'italic', m: italic }
+    } else if (bold) {
+      pick = { kind: 'bold', m: bold }
+    } else if (italic) {
+      pick = { kind: 'italic', m: italic }
+    }
+
+    if (!pick) {
+      parts.push(<Highlight key={safeKey()} text={remaining} query={query} />)
+      break
+    }
+
+    const before = remaining.slice(0, pick.m.index)
+    if (before) parts.push(<Highlight key={safeKey()} text={before} query={query} />)
+    const inner = pick.m[1]
+    if (pick.kind === 'bold') {
+      parts.push(<strong key={safeKey()} className="font-semibold text-forest-800"><Highlight text={inner} query={query} /></strong>)
+    } else {
+      parts.push(<em key={safeKey()} className="italic text-forest-600"><Highlight text={inner} query={query} /></em>)
+    }
+    remaining = remaining.slice(pick.m.index + pick.m[0].length)
+  }
+  return <>{parts}</>
+}
+
+function MarkdownView({ text, query = '', skipFirstHeading = false, className = '' }) {
+  const blocks = parseBlocks(text, skipFirstHeading)
+  return (
+    <div className={`space-y-3.5 ${className}`}>
+      {blocks.map((block, i) => {
+        const key = `b-${i}`
+        switch (block.type) {
+          case 'h1':
+            return <h1 key={key} className="font-display text-xl font-semibold tracking-tight text-forest-800 mt-1">{renderInline(block.content, query, key)}</h1>
+          case 'h2':
+            return <h2 key={key} className="font-display text-lg font-semibold tracking-tight text-forest-800 mt-2">{renderInline(block.content, query, key)}</h2>
+          case 'h3':
+            return <h3 key={key} className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-forest-500 mt-3 mb-0.5">{renderInline(block.content, query, key)}</h3>
+          case 'hr':
+            return <hr key={key} className="border-bone-400/40 my-1" />
+          case 'ul':
+            return (
+              <ul key={key} className="space-y-1.5 pl-1">
+                {block.items.map((item, j) => (
+                  <li key={`${key}-${j}`} className="flex items-start gap-2 text-[14.5px] text-forest-700 leading-relaxed">
+                    <span className="text-forest-400 mt-[7px] flex-shrink-0 leading-none">•</span>
+                    <span className="flex-1">{renderInline(item, query, `${key}-${j}`)}</span>
+                  </li>
+                ))}
+              </ul>
+            )
+          case 'p':
+            return (
+              <p key={key} className="text-[14.5px] text-forest-700 leading-relaxed whitespace-pre-wrap">
+                {renderInline(block.content, query, key)}
+              </p>
+            )
+          default:
+            return null
+        }
+      })}
+    </div>
+  )
+}
+
 // Pirma non-empty eilutė kaip title (su markdown žymeklių stripping'u). Esamoms
 // žinutėms be explicit title field — auto-extract'as veikia kaip natural fallback.
 function extractTitle(text) {
@@ -58,9 +210,15 @@ function ZinynasCard({ entry, expanded, onToggle, onDelete, onToggleStar, onChat
       transition={{ duration: 0.2 }}
     >
       <div className="flex items-start gap-2">
-        <p className={`flex-1 text-sm text-forest-700 leading-relaxed whitespace-pre-wrap ${expanded ? '' : 'line-clamp-3'}`}>
-          <Highlight text={entry.text} query={query} />
-        </p>
+        <div className="flex-1 min-w-0">
+          {expanded ? (
+            <MarkdownView text={entry.text} query={query} />
+          ) : (
+            <p className="text-sm text-forest-700 leading-relaxed whitespace-pre-wrap line-clamp-3">
+              <Highlight text={entry.text} query={query} />
+            </p>
+          )}
+        </div>
         <button
           onClick={e => { e.stopPropagation(); onToggleStar() }}
           className="flex-shrink-0 text-base leading-none mt-0.5 transition-transform active:scale-90"
@@ -179,9 +337,15 @@ function ZinynasDetail({ entry, onDelete, onToggleStar, onChat, onUpdateTitle, q
 
   return (
     <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-      {/* Detail header — title + meta + actions */}
-      <div className="flex items-start gap-3 px-8 py-5 border-b border-bone-400/40 flex-shrink-0">
+      {/* Detail header — meta-label (data + augalas) + title + actions.
+          Editorial pattern'as: mono-caps meta'as virš title'o (toks pat
+          kaip PlantDetail'e), Bricolage title po juo. */}
+      <div className="flex items-start gap-3 px-8 pt-6 pb-5 border-b border-bone-400/40 flex-shrink-0">
         <div className="flex-1 min-w-0">
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-400 mb-1.5">
+            {formatDateFull(entry.date)}
+            {entry.plantName && <> · <span className="text-forest-500">{entry.plantName}</span></>}
+          </p>
           {editingTitle ? (
             <input
               autoFocus
@@ -192,27 +356,21 @@ function ZinynasDetail({ entry, onDelete, onToggleStar, onChat, onUpdateTitle, q
                 if (e.key === 'Enter') { e.preventDefault(); e.target.blur() }
                 if (e.key === 'Escape') { setEditingTitle(false); setTitleDraft('') }
               }}
-              className="w-full font-display text-xl font-semibold tracking-tight text-forest-800 leading-tight bg-transparent outline-none border-b-2 border-forest-400 pb-0.5"
+              className="w-full font-display text-2xl font-semibold tracking-tight text-forest-800 leading-tight bg-transparent outline-none border-b-2 border-forest-400 pb-0.5"
             />
           ) : (
             <h2
               onClick={startEdit}
-              className="font-display text-xl font-semibold tracking-tight text-forest-800 leading-tight cursor-text hover:text-forest-700 transition-colors"
+              className="font-display text-2xl font-semibold tracking-tight text-forest-800 leading-tight cursor-text hover:text-forest-700 transition-colors"
               title="Spustelėk redaguoti pavadinimą"
             >
               {displayTitle(entry)}
             </h2>
           )}
-          <div className="flex items-center gap-1.5 mt-1.5">
-            {entry.plantName && (
-              <span className="text-xs text-forest-500">{entry.plantName} ·</span>
-            )}
-            <span className="text-xs text-forest-400">{formatDateShort(entry.date)}</span>
-          </div>
         </div>
         <button
           onClick={onToggleStar}
-          className="flex-shrink-0 transition-transform active:scale-90 mt-1"
+          className="flex-shrink-0 transition-transform active:scale-90 mt-1 w-9 h-9 inline-flex items-center justify-center rounded-btn-sm hover:bg-bone-300/40"
           title={entry.starred ? 'Pašalinti iš mėgstamų' : 'Pridėti į mėgstamus'}
         >
           {entry.starred
@@ -222,11 +380,11 @@ function ZinynasDetail({ entry, onDelete, onToggleStar, onChat, onUpdateTitle, q
         </button>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto scrollbar-none px-8 py-5">
-        <p className="text-[15px] text-forest-700 leading-relaxed whitespace-pre-wrap">
-          <Highlight text={entry.text} query={query} />
-        </p>
+      {/* Content — markdown'as renderintas su typography hierarchy
+          (h2/h3, bold, italic, bullets, hr). Pirmas heading'as skip'inamas
+          jei match'ina displayed title'ą (kad nebūtų duplikato). */}
+      <div className="flex-1 overflow-y-auto scrollbar-none px-8 py-6">
+        <MarkdownView text={entry.text} query={query} skipFirstHeading />
       </div>
 
       {/* Actions bar */}
