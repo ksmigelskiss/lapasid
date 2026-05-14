@@ -180,7 +180,7 @@ išlieka bet kokia body spalva.
 | Context | Size (px) | Notes |
 |---|---|---|
 | **Hero** (welcome screens, empty states) | 120-140 | Dominuojantis vizualinis akcentas |
-| **FAB / floating button** | 96 | Standard'inis floating action button dydis |
+| **FAB / floating button** | 80-96 | Dashboard'e 82 (subtilesnis), Biblioteka'oj 96 |
 | **Modal accent** (DuplicateBuy, CareSession) | 64-88 | Decision moment'ams, summary cards |
 | **Toast / callout** | 36-48 | Inline su tekstu, kompaktiškas |
 | **Chat header** | 56 | Pakankamai prominent'as |

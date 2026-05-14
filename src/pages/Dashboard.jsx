@@ -753,7 +753,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
             filter: 'drop-shadow(0 0 12px rgba(254, 253, 250, 0.85)) drop-shadow(0 4px 10px rgba(28, 58, 42, 0.22))',
           }}
         >
-          <Mascot type="gardener" state="idle" size={96} hoverable />
+          <Mascot type="gardener" state="idle" size={82} hoverable />
         </button>
       )}
 
