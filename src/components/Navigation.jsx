@@ -20,12 +20,12 @@ export default function Navigation({ active, onChange, counts = {}, role = 'owne
 
   return (
     <nav className={navPos}>
-      {/* Solid backdrop strip'as — wrapper bg-app (matches page bg) +
-          border-t separation'ui. Tas pats pattern'as kaip Desktop/Mobile
-          Header'iuose — seamless toolbar tonai. Capsule viduje pakeltas
-          į bone-50 brighter shade, kad lieka aiškiai elevated. */}
+      {/* Floating capsule pattern — wrapper transparent, capsule pati
+          solid (bg-bone-100, ne /95) ir nereikalauja backdrop strip'o.
+          Page content scroll'inasi UŽ capsule'o; capsule'o solid bg
+          + heavy shadow nepraleidžia content'o per ją. */}
       <div
-        className="px-3 pt-2 pb-3 bg-app border-t border-bone-400/30"
+        className="px-3 pt-2 pb-3"
         style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)' }}
       >
         <div className="flex bg-bone-100 rounded-btn p-1 gap-0.5 border border-bone-400/40 shadow-[0_4px_16px_rgba(28,58,42,0.12),0_0_0_1px_rgba(28,58,42,0.04)]">
