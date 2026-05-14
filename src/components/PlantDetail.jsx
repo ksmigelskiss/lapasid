@@ -1291,13 +1291,17 @@ export default function PlantDetail({
     }
   }, [activeTab])
 
-  // Tab switch resetuoja scroll į viršų → expand'ina hero atgal
+  // Tab switch ARBA augalo pakeitimas resetuoja scroll į viršų → expand'ina
+  // hero atgal. Skip jei scrollToCare aktyvus — ten dedicated useEffect
+  // (aukščiau) smooth'iai scroll'ina į priežiūros sekciją, nereikia pirma
+  // flick'inti top'o.
   useEffect(() => {
+    if (scrollToCare) return
     const el = scrollContainerRef.current
     if (!el) return
     el.scrollTop = 0
     setHeroCollapsed(false)
-  }, [activeTab])
+  }, [activeTab, plant.id, scrollToCare])
 
   // Fetch iNaturalist names if not yet fetched for this plant
   useEffect(() => {
