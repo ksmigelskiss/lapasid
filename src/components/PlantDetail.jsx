@@ -548,7 +548,7 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
       )}
 
       {/* ── Propagation — editorial bullets (be konteinerio fono). ── */}
-      {plant.dauginimas?.length > 0 && (
+      {Array.isArray(plant.dauginimas) && plant.dauginimas.length > 0 && (
         <Section title="Dauginimas">
           <ul className="space-y-2">
             {plant.dauginimas.map((d, i) => (
@@ -563,7 +563,7 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
 
       {/* ── Problems — editorial diagnostic table. Mono caps labels +
             Bricolage Bold symptom (terracotta = warning). ── */}
-      {plant.problemos?.length > 0 && (
+      {Array.isArray(plant.problemos) && plant.problemos.length > 0 && (
         <Section title="Problemų diagnostika">
           <div className="space-y-4">
             {plant.problemos.map((p, i) => (
@@ -589,7 +589,7 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
       )}
 
       {/* ── Interesting facts — editorial bullets (be amber kortelės). ── */}
-      {plant.idomybes?.length > 0 && (
+      {Array.isArray(plant.idomybes) && plant.idomybes.length > 0 && (
         <Section title="Įdomybės">
           <ul className="space-y-2">
             {plant.idomybes.map((fact, i) => (

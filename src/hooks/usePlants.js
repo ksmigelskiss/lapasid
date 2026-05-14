@@ -402,9 +402,18 @@ export function usePlants(collectionId, viewerToken = null) {
       'aprasymas', 'kilme',
       'sviesa', 'vanduo', 'idomybes',
     ]
+    // Laukai, kurie PRIVALO būti array'ai — AI kartais grąžina string'ą arba
+    // null'ą, dėl ko vėliau .map crash'ina. fromAIResult tai daro, refresh'ui
+    // dabar irgi.
+    const ARRAY_FIELDS = new Set(['idomybes', 'dauginimas', 'problemos', 'sinonimai', 'englishNames'])
     const patch = {}
     for (const k of aiFields) {
-      if (aiData[k] !== undefined) patch[k] = aiData[k]
+      if (aiData[k] === undefined) continue
+      if (ARRAY_FIELDS.has(k)) {
+        patch[k] = Array.isArray(aiData[k]) ? aiData[k] : []
+      } else {
+        patch[k] = aiData[k]
+      }
     }
     // Savybes — normalizuojam per tą pačią funkciją kaip fromAIResult, kad
     // nesaugotume raw AI struktūros (gali turėti netinkamus enum'us).
