@@ -337,15 +337,34 @@ export function useAuth() {
     return unsub
   }, [])
 
-  // Generic provider sign-in (Google, Facebook). signInWithPopup veikia visur:
-  // naršyklė, Android PWA, iOS 14.5+ PWA (SFSafariViewController popup).
-  // Popup blokuotas/uždarytas → fallback į Firebase redirect.
+  // Generic provider sign-in (Google, Facebook).
+  // iOS PWA standalone mode'e signInWithPopup throw'ina `auth/internal-error`
+  // (Safari standalone'e window.open restricted), todėl prieš popup'ą
+  // detect'inam display-mode ir iškart einam į redirect'ą. Browser'iuose +
+  // Android PWA — popup veikia normaliai, fallback į redirect kai popup
+  // blokuotas/uždarytas (+ `auth/internal-error` kaip ekstra safety net'as).
   const signInWithProvider = async (provider) => {
     setState(s => ({ ...s, authError: null }))
+
+    // iOS PWA detect: navigator.standalone (Safari-specific) ARBA matchMedia
+    // display-mode: standalone (Chrome/Edge installed PWA spec'as).
+    const isStandalonePWA =
+      window.navigator?.standalone === true ||
+      window.matchMedia?.('(display-mode: standalone)').matches === true
+
+    if (isStandalonePWA) {
+      return signInWithRedirect(auth, provider)
+    }
+
     try {
       await signInWithPopup(auth, provider)
     } catch (e) {
-      const popupFallback = ['auth/popup-blocked', 'auth/popup-closed-by-user', 'auth/cancelled-popup-request']
+      const popupFallback = [
+        'auth/popup-blocked',
+        'auth/popup-closed-by-user',
+        'auth/cancelled-popup-request',
+        'auth/internal-error', // iOS Safari standalone edge case'as
+      ]
       if (popupFallback.includes(e?.code)) return signInWithRedirect(auth, provider)
       setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' }))
     }
