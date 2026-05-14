@@ -9,7 +9,7 @@ import {
   signOut as firebaseSignOut,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc, getDocs, collection, query, limit } from 'firebase/firestore'
-import { auth, db, googleProvider, facebookProvider, authReady } from '../utils/firebase'
+import { auth, db, googleProvider, facebookProvider } from '../utils/firebase'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { acceptInvite } from '../components/ProfileSheet'
 import { isMockMode, MOCK_USER, MOCK_COLLECTION_ID, MOCK_COLLECTION_NAME } from '../utils/mockData'
@@ -316,57 +316,20 @@ export function useAuth() {
     const googleIdToken  = urlParams.get('googleIdToken')
     const authErrorParam = urlParams.get('authError')
 
-    // ── Auth settle coordination ──────────────────────────────────────
-    // Trys async source'ai kalbasi su tuo pačiu user'iu:
-    //   1. signInWithCredential (jei turim googleIdToken URL'e)
-    //   2. getRedirectResult (jei Firebase atliko redirect — Facebook PWA)
-    //   3. onAuthStateChanged (visada — initial state + tolesni change'ai)
-    //
-    // PROBLEM: jei kuris nors iš (1)/(2) dar pending, o onAuthStateChanged
-    // fire'ina null user'iu (initial), neturim jokios indikacijos ar tai
-    // tikrai "logged out" ar "dar krauname". Anksčiau redirectDone flag'as
-    // dengė tik (2) — todėl (1) race'ino į logged out flash'ą.
-    //
-    // SPRENDIMAS: dvi flag'os, abi turi būti true prieš leidžiam onAuthStateChanged
-    // null'ui paskelbti logged out.
-    let redirectDone     = false
-    let credentialDone   = !googleIdToken  // true iškart jei nėra token'o
-    const settleLoggedOut = () => {
-      if (!redirectDone || !credentialDone) return
-      if (auth.currentUser) return
-      console.log('[auth] settled logged-out')
-      setState(s => ({ ...s, user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, loadingMessage: null }))
-    }
-
     if (googleIdToken) {
-      console.log('[auth] googleIdToken detected, awaiting persistence before signInWithCredential')
       window.history.replaceState({}, '', window.location.pathname)
-      // AWAIT persistence — kitaip session prarandama PWA redirect'ams
-      authReady
-        .then(() => {
-          console.log('[auth] persistence ready, calling signInWithCredential')
-          return signInWithCredential(auth, GoogleAuthProvider.credential(googleIdToken))
-        })
-        .then(result => {
-          console.log('[auth] signInWithCredential success:', result?.user?.email)
-        })
-        .catch(e => {
-          console.error('[auth] signInWithCredential failed:', e?.code, e?.message)
-          setState(s => ({ ...s, loading: false, authError: e?.message ?? 'Prisijungimo klaida' }))
-        })
-        .finally(() => {
-          credentialDone = true
-          settleLoggedOut()
-        })
+      signInWithCredential(auth, GoogleAuthProvider.credential(googleIdToken))
+        .catch(e => setState(s => ({ ...s, loading: false, authError: e.message ?? 'Prisijungimo klaida' })))
     }
     if (authErrorParam) {
       window.history.replaceState({}, '', window.location.pathname)
       setState(s => ({ ...s, loading: false, authError: decodeURIComponent(authErrorParam) }))
     }
 
+    let redirectDone = false
+
     const unsub = onAuthStateChanged(auth, async (user) => {
-      console.log('[auth] onAuthStateChanged:', user?.email ?? '(null)', 'redirectDone=', redirectDone, 'credentialDone=', credentialDone)
-      if (!user && (!redirectDone || !credentialDone)) return
+      if (!user && !redirectDone) return
       if (!user) {
         // authError paliekame — gali būti jau užpildytas signInWithCredential/.catch bloke
         setState(s => ({ ...s, user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, loadingMessage: null }))
@@ -399,7 +362,8 @@ export function useAuth() {
       .catch(e => { if (e?.code !== 'auth/null-user') setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' })) })
       .finally(() => {
         redirectDone = true
-        settleLoggedOut()
+        // authError paliekame — gali būti jau užpildytas signInWithCredential/.catch bloke
+        if (!auth.currentUser) setState(s => ({ ...s, user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, loadingMessage: null }))
       })
 
     return unsub
@@ -407,40 +371,16 @@ export function useAuth() {
 
   // Generic provider sign-in (Google, Facebook).
   //
-  // iOS PWA standalone mode'e Firebase signInWithRedirect turi storage
-  // partitioning problemą — auth iframe ant geliu-db.firebaseapp.com'o
-  // negali pasiekti session token'o kai grįžta į lapasid.lt. User'is
-  // patenka į auth loop'ą (po Google login redirect'as grįžta į login
-  // ekraną).
+  // signInWithPopup veikia visur: naršyklėje, Android PWA, iOS 14.5+ PWA
+  // (Firebase atidaro popup'ą per SFSafariViewController). Jei popup
+  // blokuotas/uždarytas — fallback į signInWithRedirect.
   //
-  // Sprendimas: server-side OAuth flow per /api/auth/google-start (žiūr.
-  // tą endpoint'ą). Vercel function gauna code → keičia į ID token →
-  // redirect'ina į / su ?googleIdToken=... URL param'u. useAuth aukščiau
-  // aptinka tą param'ą ir kviečia signInWithCredential.
-  //
-  // Facebook: kol nėra server-side endpoint'o, naudojam signInWithRedirect
-  // (geriau nei popup, kuris standalone'e throw'ina auth/internal-error).
-  //
-  // Browser'iuose + Android PWA — Firebase signInWithPopup veikia normal.
+  // (Pastaba: anksčiau čia buvo isStandalonePWA branch'as + server-side
+  // OAuth per /api/auth/google-start, bet geliu-db nuo kurios branchinom
+  // VEIKIA su paprastu popup'u → grįžom prie šio paprastesnio variant'o.
+  // Server-side endpoint'ai liko code'e kaip backup'as.)
   const signInWithProvider = async (provider) => {
     setState(s => ({ ...s, authError: null }))
-
-    // iOS PWA detect: navigator.standalone (Safari-specific) ARBA matchMedia
-    // display-mode: standalone (Chrome/Edge installed PWA spec'as).
-    const isStandalonePWA =
-      window.navigator?.standalone === true ||
-      window.matchMedia?.('(display-mode: standalone)').matches === true
-
-    if (isStandalonePWA) {
-      // Google → server-side OAuth (bypass Firebase client redirect'ą)
-      if (provider?.providerId === 'google.com') {
-        window.location.href = '/api/auth/google-start'
-        return
-      }
-      // Facebook → vis dar Firebase redirect (kol nėra server-side)
-      return signInWithRedirect(auth, provider)
-    }
-
     try {
       await signInWithPopup(auth, provider)
     } catch (e) {
@@ -448,7 +388,6 @@ export function useAuth() {
         'auth/popup-blocked',
         'auth/popup-closed-by-user',
         'auth/cancelled-popup-request',
-        'auth/internal-error', // iOS Safari standalone edge case'as
       ]
       if (popupFallback.includes(e?.code)) return signInWithRedirect(auth, provider)
       setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' }))
