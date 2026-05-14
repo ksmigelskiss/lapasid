@@ -387,23 +387,42 @@ export function usePlants(collectionId, viewerToken = null) {
     // dabar irgi.
     const ARRAY_FIELDS = new Set(['idomybes', 'dauginimas', 'problemos', 'sinonimai', 'englishNames'])
     const patch = {}
+    const filledFields = []
+    const skippedFields = []
     for (const k of aiFields) {
-      if (aiData[k] === undefined) continue
+      if (aiData[k] === undefined) { skippedFields.push(k); continue }
       if (ARRAY_FIELDS.has(k)) {
         patch[k] = Array.isArray(aiData[k]) ? aiData[k] : []
       } else {
         patch[k] = aiData[k]
       }
+      filledFields.push(k)
     }
     // Savybes — normalizuojam per tą pačią funkciją kaip fromAIResult, kad
     // nesaugotume raw AI struktūros (gali turėti netinkamus enum'us).
     if (aiData.savybes !== undefined) {
       patch.savybes = normalizeSavybes(aiData.savybes, aiData.toksiskas, aiData.toksiskumo_info)
+      filledFields.push('savybes')
+    } else {
+      skippedFields.push('savybes')
     }
+
+    // ── Diagnostika ───────────────────────────────────────────────
+    // Logujam visus aiData key'us + kiek užpildytų / praleistų laukų.
+    // Jei AI grąžina tuščią ar minimal tool_use — pamatysim konkrečiai.
+    console.log('[refresh] aiData keys:', Object.keys(aiData ?? {}))
+    console.log('[refresh] filled:', filledFields)
+    console.log('[refresh] skipped:', skippedFields)
+    console.log('[refresh] raw aiData:', aiData)
+
     // Timestamp'as — leidžia UI rodyti „paskutinį kartą atnaujinta YYYY-MM-DD"
     // ant mygtuko. Laikinai (kol „Atnaujinti per AI" yra dev tool'as).
     patch.aiRefreshedAt = today()
     updatePlant(id, patch)
+
+    // Grąžinam summary, kad caller (handleRefresh) galėtų rodyti useful
+    // klaidą, jei tik timestamp atnaujėjo be turinio.
+    return { filledFields, skippedFields, hasContentUpdate: filledFields.length > 0 }
   }, [updatePlant])
 
   const toggleZinynasStarred = useCallback((id) => {

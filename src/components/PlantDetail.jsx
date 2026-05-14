@@ -356,11 +356,28 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
     if (refreshing || !onRefreshFromAI) return
     setRefreshing(true); setRefreshError(null)
     try {
+      console.log('[refresh] start for plant:', plant.lotyniskas, '(', plant.lietuviškas, ')')
       const aiData = await refreshPlantFromAI(plant, { tools: [TOOL_PREVIEW], system: PLANT_SYSTEM })
-      await onRefreshFromAI(plant.id, aiData)
+      console.log('[refresh] AI returned, keys:', Object.keys(aiData ?? {}).length)
+      const summary = await onRefreshFromAI(plant.id, aiData)
+      // Diagnostika: jei AI nepateikė turinio (tik timestamp atnaujėjo) —
+      // rodom warning'ą, kad vartotojas nemanytų, jog viskas pavyko.
+      if (summary && !summary.hasContentUpdate) {
+        console.warn('[refresh] AI grąžino tuščią payload — content nepasikeitė')
+        setRefreshError(`AI negrąžino turinio (Crassula muscosa pavyzdys). Patikrink console'je „[refresh]" log'us.`)
+      } else if (summary) {
+        console.log('[refresh] done — atnaujinta', summary.filledFields.length, 'laukų:', summary.filledFields.join(', '))
+        if (summary.skippedFields.length > 0) {
+          console.warn('[refresh] praleisti laukai (AI negrąžino):', summary.skippedFields.join(', '))
+        }
+      }
     } catch (e) {
-      console.error('[refresh] failed', e)
-      setRefreshError(e?.code === 'limit_reached' ? 'AI limitas pasiektas.' : 'Atnaujinimas nepavyko.')
+      console.error('[refresh] failed:', e)
+      console.error('[refresh] error stack:', e?.stack)
+      const detail = e?.code === 'limit_reached'
+        ? 'AI limitas pasiektas.'
+        : `Atnaujinimas nepavyko: ${e?.message ?? 'unknown error'}`
+      setRefreshError(detail)
     } finally {
       setRefreshing(false)
     }

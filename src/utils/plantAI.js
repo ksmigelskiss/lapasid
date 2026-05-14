@@ -52,7 +52,9 @@ export async function refreshPlantFromAI(plant, { tools, system }) {
   if (!lotyniskas) throw new Error('Augalui trūksta lotyniškas pavadinimo — negaliu užklausti AI.')
 
   // 1 · Wikipedia RAG — paraleliai su Claude pasiruošimu
+  console.log('[refresh/ai] fetching Wikipedia for:', lotyniskas)
   const wikiCtx = await fetchWikipediaContext(lotyniskas)
+  console.log('[refresh/ai] wiki found:', !!wikiCtx?.extract, wikiCtx?.title ?? '(no entry)', 'extract len:', wikiCtx?.extract?.length ?? 0)
   const wikiBlock = wikiCtx?.extract
     ? `--- Wikipedia (en) šaltinis: ${wikiCtx.title} ---\n${wikiCtx.extract}\n--- pabaiga ---\n\nNaudok šį šaltinį kaip pirminį autoritetą savybėms. Papildyk savo žiniomis kur trūksta. Detalėse paminėk „Wikipedia mini, kad ..." kai informacija iš ten.`
     : null
@@ -64,6 +66,7 @@ export async function refreshPlantFromAI(plant, { tools, system }) {
 
   // 2 · Claude call — abu tool'ai (preview + details) per vieną užklausą
   const previewTool = tools.find(t => t.name === 'plant_preview')
+  console.log('[refresh/ai] calling Claude API...')
   const r = await claudeCall({
     maxTokens:   2048,
     temperature: 0.3,
@@ -73,9 +76,18 @@ export async function refreshPlantFromAI(plant, { tools, system }) {
     toolChoice:  { type: 'tool', name: 'plant_preview' },
     messages:    [{ role: 'user', content: userContent }],
   })
+  console.log('[refresh/ai] Claude response stop_reason:', r.stop_reason, 'content blocks:', r.content?.length ?? 0)
+  console.log('[refresh/ai] content types:', r.content?.map(b => b.type).join(', '))
 
   const block = r.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')
-  if (!block) throw new Error('Claude nepateikė rezultato.')
+  if (!block) {
+    // Diagnostika — jei Claude refuse'ino tool call'ą, gaunam text atsakymą
+    const textBlocks = r.content?.filter(b => b.type === 'text').map(b => b.text).join('\n')
+    console.error('[refresh/ai] NO tool_use block. Text response:', textBlocks || '(none)')
+    throw new Error(`Claude nepateikė rezultato. stop_reason=${r.stop_reason}. Text: ${textBlocks?.slice(0, 200) ?? '(none)'}`)
+  }
+  console.log('[refresh/ai] tool_use input keys:', Object.keys(block.input ?? {}))
+  console.log('[refresh/ai] tool_use input full:', block.input)
 
   return block.input
 }
