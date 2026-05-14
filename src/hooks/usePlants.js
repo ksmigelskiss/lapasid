@@ -3,45 +3,35 @@ import { getDoc, getDocs, setDoc, deleteDoc, doc, collection as fsCol, onSnapsho
 import { db } from '../utils/firebase'
 import { fromAIResult, normalizeSavybes, makeId as _makeId, today as _today } from '../utils/plantTransform'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
-import { saveToCatalog, catalogDocId } from '../utils/catalog'
+import { saveToCatalog } from '../utils/catalog'
 import { isMockMode, MOCK_DATA } from '../utils/mockData'
 
 export { fromAIResult }
 
-// localStorage key namespaced by collectionId — keli vartotojai viename įrenginyje
+// localStorage NEBESTANDA cache'inti augalų — Firestore SDK persistence
+// (firebase.js) per IndexedDB tvarko offline cache'ą + write queue'ą +
+// invalidaciją. Mūsų manualus localStorage layer'is buvo bug'ų šaltinis
+// (cross-device delete resurrection per safeguard'ą, tombstones'us, etc).
+//
+// Vienintelis liekantis localStorage naudojimas augalams — vienkartinė
+// migracija seniems vartotojams, kurių plant'ai TIK localStorage'e
+// (offline-added, niekada nepasiekė server'io). Po sėkmingos migracijos —
+// flag'as `geliu-db-${cid}-migrated-v2` užstabdo pakartotinį push'ą.
 function storageKey(collectionId) {
   return collectionId ? `geliu-db-${collectionId}` : 'geliu-db'
 }
-
-// Tombstones — lokaliai ištrintų augalų ID rinkinys. Naudojama kad
-// `syncFromRemote` neatgaivintų augalų, kuriuos `deleteDoc` dar nespėjo
-// nubrukt į Firestore (pvz. ad-blocker'is blokuoja Write/channel, network
-// down, race condition'as su parallel sync'u). Kiekvieno sync'o metu —
-// retry deleteDoc, sėkmingai ištrynus — pašalinam iš tombstones.
-function tombstoneKey(cid) {
-  return cid ? `geliu-db-${cid}-tombs` : null
+function migrationFlagKey(cid) {
+  return cid ? `geliu-db-${cid}-migrated-v2` : null
 }
-function loadTombstones(cid) {
-  const key = tombstoneKey(cid)
-  if (!key) return new Set()
-  try {
-    const raw = localStorage.getItem(key)
-    return raw ? new Set(JSON.parse(raw)) : new Set()
-  } catch { return new Set() }
+function isLocalMigrationDone(cid) {
+  const key = migrationFlagKey(cid)
+  if (!key) return true
+  try { return localStorage.getItem(key) === '1' } catch { return false }
 }
-function saveTombstones(cid, set) {
-  const key = tombstoneKey(cid)
+function markLocalMigrationDone(cid) {
+  const key = migrationFlagKey(cid)
   if (!key) return
-  try { localStorage.setItem(key, JSON.stringify([...set])) } catch {}
-}
-function addTombstone(cid, id) {
-  const t = loadTombstones(cid)
-  t.add(id)
-  saveTombstones(cid, t)
-}
-function removeTombstone(cid, id) {
-  const t = loadTombstones(cid)
-  if (t.delete(id)) saveTombstones(cid, t)
+  try { localStorage.setItem(key, '1') } catch {}
 }
 
 function loadLocal(colId) {
@@ -59,7 +49,6 @@ function loadLocal(colId) {
       if (old) return migrate(JSON.parse(old))
     }
   } catch {}
-  // Nauji vartotojai gauna tuščią kolekciją — initialData tik legacy fallback
   return { plants: [], zinynas: [], zones: [], settings: {} }
 }
 
@@ -84,10 +73,12 @@ export function usePlants(collectionId, viewerToken = null) {
   // kiekvienam snapshot'ui (jei pirmasis async setDoc'as dar nepraėjo).
   const migrationDoneRef = useRef(new Set()) // Set<colId>: kuriose kolekcijose jau išvalyta
 
-  // Išsaugo į localStorage + Firestore (fire-and-forget)
+  // Optimistic local update + write į Firestore. SDK su persistence
+  // (firebase.js) queues offline writes į IndexedDB ir auto-flush'ina kai
+  // network atsigauna. Jokio manualaus localStorage caching'o — server
+  // (per onSnapshot) yra single source of truth.
   const update = useCallback((updater) => {
     if (viewerTokenRef.current) return // viewers — no writes via this path
-    // Mock mode — atnaujina tik in-memory state, jokių DB rašymų
     if (isMockMode()) {
       setData(prev => {
         const safe = { plants: [], zinynas: [], zones: [], settings: {}, ...prev }
@@ -98,34 +89,25 @@ export function usePlants(collectionId, viewerToken = null) {
     setData(prev => {
       const safe = { plants: [], zinynas: [], zones: [], settings: {}, ...prev }
       const next = updater(safe)
-
-      // localStorage (visada — greitas fallback)
-      try { localStorage.setItem(storageKey(colIdRef.current), JSON.stringify(next)) } catch {}
-
       const cid = colIdRef.current
       if (!cid) return next
 
-      // Plants → subkolekcija (rašome tik pakeistus, pagal reference equality)
+      // Plants → subkolekcija (rašome tik pakeistus pagal reference equality).
+      // SDK su persistence queue'ina writes IDB'oje — jei offline, write'as
+      // pereis kai network atsigaus (be jokio mūsų retry logikos).
       const prevMap = new Map(safe.plants.map(p => [p.id, p]))
       const nextMap = new Map(next.plants.map(p => [p.id, p]))
 
       for (const [id, plant] of nextMap) {
         if (prevMap.get(id) !== plant) {
-          // Re-add'as ID, kuris buvo tombstone'e (kraštinis atvejis) — atstatom
-          removeTombstone(cid, id)
           setDoc(doc(db, 'collections', cid, 'plants', id), plant)
             .catch(e => console.warn('[firestore] plant write:', e))
         }
       }
       for (const id of prevMap.keys()) {
         if (!nextMap.has(id)) {
-          // Pridedam tombstone'ą PRIEŠ deleteDoc — jei jis fail'ina (ad-blocker
-          // blokuoja Write/channel), syncFromRemote neatgaivins augalo iš
-          // Firestore'o, ir kitą kartą retry'sim deleteDoc.
-          addTombstone(cid, id)
           deleteDoc(doc(db, 'collections', cid, 'plants', id))
-            .then(() => removeTombstone(cid, id))
-            .catch(e => console.warn('[firestore] plant delete (queued for retry):', e))
+            .catch(e => console.warn('[firestore] plant delete:', e))
         }
       }
 
@@ -150,62 +132,60 @@ export function usePlants(collectionId, viewerToken = null) {
     if (!cid) return
 
     const safeMeta = meta ?? {}
-    const tombs    = loadTombstones(cid)
     const subIds   = new Set(subPlants.map(p => p.id))
 
-    // Tombstone retry — jei serveris vis dar turi įrašą, retry'nam delete.
-    // Jei serveris jau švarus — pašalinam tombstone'ą (cleanup).
-    for (const id of tombs) {
-      if (subIds.has(id)) {
-        deleteDoc(doc(db, 'collections', cid, 'plants', id))
-          .then(() => removeTombstone(cid, id))
-          .catch(() => {}) // bus retry'inta kitą snapshot'ą
-      } else {
-        removeTombstone(cid, id)
-      }
-    }
-
-    const liveSub = subPlants.filter(p => !tombs.has(p.id))
-
-    // Suliejame: meta.plants[] (legacy) + subkolekcija. Tombstones'ai
-    // jau išfiltruoti iš liveSub.
+    // Suliejame: meta.plants[] (legacy) + subCol. SubCol turi prioritetą
+    // konflikt'ams (legacy data perrašoma fresh subCol data).
     const byId = new Map()
     if (safeMeta.plants?.length > 0) {
-      safeMeta.plants.forEach(p => { if (!tombs.has(p.id)) byId.set(p.id, p) })
+      safeMeta.plants.forEach(p => byId.set(p.id, p))
     }
-    liveSub.forEach(p => byId.set(p.id, p))
-
-    // Offline-write saugiklis: localStorage gali turėti augalų, kurių
-    // setDoc dar nepraėjo į Firestore (network down). Tombstone'ai
-    // prideda apsaugą — neatgaivinsim ištrintų. Pridedam tik LOKALIUS
-    // augalus, kurių nėra nei byId, nei tombstones'e.
-    try {
-      const local = JSON.parse(localStorage.getItem(storageKey(cid)) || '{}')
-      ;(local.plants ?? []).forEach(p => {
-        if (!byId.has(p.id) && !tombs.has(p.id)) byId.set(p.id, p)
-      })
-    } catch {}
+    subPlants.forEach(p => byId.set(p.id, p))
 
     const plants = [...byId.values()]
     const next   = { plants, zinynas: safeMeta.zinynas ?? [], zones: safeMeta.zones ?? [], settings: safeMeta.settings ?? {} }
     setData(next)
-    try { localStorage.setItem(storageKey(cid), JSON.stringify(next)) } catch {}
 
-    // Augalai, kurių dar nėra subkolekcijoje (legacy meta.plants[] arba
-    // pending-upload iš local) — push'inam. Tombstones'us jau išfiltravom.
+    // ── ONE-TIME localStorage → Firestore migration ─────────────────────
+    // Senesni vartotojai (prieš persistence enable'inimą) turi augalų
+    // localStorage'e, kurių setDoc'as galėjo nepasiekti server'io (offline,
+    // ad-blocker). Push'inam juos vieną kartą per device, paskui flag'as
+    // sustabdo. Po migration'o localStorage augalų DB tampa redundant'us
+    // (Firestore SDK persistence cache'ina pats per IDB).
+    if (!isLocalMigrationDone(cid)) {
+      try {
+        const localRaw = localStorage.getItem(storageKey(cid))
+        if (localRaw) {
+          const local = JSON.parse(localRaw)
+          let pushed = 0
+          ;(local.plants ?? []).forEach(p => {
+            if (p?.id && !byId.has(p.id)) {
+              setDoc(doc(db, 'collections', cid, 'plants', p.id), p)
+                .catch(e => console.warn('[migrate] push failed:', e))
+              if (p.lotyniskas) saveToCatalog(p).catch(() => {})
+              pushed++
+            }
+          })
+          if (pushed > 0) console.log(`[migrate] pushed ${pushed} orphan plants from localStorage`)
+        }
+      } catch (e) { console.warn('[migrate]', e) }
+      markLocalMigrationDone(cid)
+    }
+
+    // ── Legacy `meta.plants[]` → subCol migration (atskiras nuo localStorage) ─
+    // Old kolekcijos turi augalus pagrindinio doc.plants[] field'e, ne
+    // subCol'e. Push'inam į subCol, paskui clean'inam meta.plants.
     const missing = plants.filter(p => !subIds.has(p.id))
     if (missing.length > 0) {
-      console.log('[sync] pushing', missing.length, 'plants to subcollection')
       missing.forEach(p => {
         setDoc(doc(db, 'collections', cid, 'plants', p.id), p)
-          .catch(e => console.warn('[sync] plant push failed:', e))
+          .catch(e => console.warn('[migrate-meta] push failed:', e))
         if (p.lotyniskas) saveToCatalog(p).catch(() => {})
       })
     }
 
-    // Seną plants[] iš pagrindinio doc trinkame kai visi augalai jau subkolekcijoje.
-    // Ref-guard'as — paleidžiam TIK kartą per kolekciją (kitaip onSnapshot'as
-    // gali retry'inti tą patį setDoc'ą prieš tą asnnchroninį save'ą praeinant).
+    // Cleanup meta.plants[] kai jau viskas subCol'e (per-cid ref guard'as
+    // — kad onSnapshot'as nepradėtų pakartotinai cleanup'inti).
     if (
       safeMeta.plants?.length > 0 &&
       missing.length === 0 &&
@@ -215,10 +195,9 @@ export function usePlants(collectionId, viewerToken = null) {
       const { plants: _, ...cleanMeta } = safeMeta
       setDoc(doc(db, 'collections', cid), cleanMeta)
         .catch(e => {
-          console.warn('[sync] cleanup failed:', e)
-          migrationDoneRef.current.delete(cid) // retry kitą snapshot'ą
+          console.warn('[migrate-meta] cleanup failed:', e)
+          migrationDoneRef.current.delete(cid)
         })
-      console.log('[sync] migration complete — plants[] removed from main doc')
     }
   }, [])
 
@@ -277,14 +256,15 @@ export function usePlants(collectionId, viewerToken = null) {
     const cid = colIdRef.current
     if (!cid) return
 
-    // Viewer — fetch via server API (jokio Firebase auth'o, tad jokio listener'io)
+    // Viewer — fetch via server API (jokio Firebase auth'o, tad jokio listener'io).
+    // Viewer'iai naudoja /api/viewer polling'ą (Admin SDK) vietoj Firestore
+    // client'o, todėl persistence layer'is neegzistuoja. State'as held in
+    // memory; nepasaugomas localStorage'e (sesijos lygis tik).
     if (viewerTokenRef.current) {
       fetch(`/api/viewer?token=${encodeURIComponent(viewerTokenRef.current)}`)
         .then(r => r.ok ? r.json() : Promise.reject(r.status))
         .then(({ plants, zones }) => {
-          const remote = { plants: plants ?? [], zinynas: [], zones: zones ?? [], settings: {} }
-          setData(remote)
-          try { localStorage.setItem(storageKey(cid), JSON.stringify(remote)) } catch {}
+          setData({ plants: plants ?? [], zinynas: [], zones: zones ?? [], settings: {} })
         })
         .catch(e => console.warn('[viewer] fetch failed:', e))
       return
