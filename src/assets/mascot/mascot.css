@@ -16,6 +16,13 @@
    to bone (#f1ebdd) inside the SVG for contrast.
 */
 
+/* SVG ships su viewBox 240×240, bet sprout top'as ant y=2 — animacijos
+   (happy bounce, sprout sway) jį stumia per viršutinį kraštą. Default'iškai
+   <svg> turi overflow: hidden ir clip'ina. Leidžiam paint'inti už viewBox
+   ribų — wrapper span'as turi width/height fixed, todėl layout'iškai
+   nepasislenka, tik leaf'as gali šiek tiek peržengti vizualinį kraštą. */
+[data-mascot] { overflow: visible; }
+
 /* ─────────────────────────────────────────────────────────────────
    CHARACTER — everything inside #character moves as one. The breath
    anchors at the character's footprint so the body only rises.
