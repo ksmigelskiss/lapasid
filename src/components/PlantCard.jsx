@@ -271,24 +271,26 @@ const PlantCard = memo(function PlantCard({
           <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 border-white/60 bg-transparent shadow-sm" />
         )}
 
-        {/* Forecast pills (auginama only) — mobile pattern:
-            kompaktiškas dark bg pill, ikona SPALVINTA tik kai overdue
-            (kai dėmesio reikia), kitu metu — bespalvis white/60. */}
+        {/* Top-right pill stack (auginama only) — forecast'ai + badge'ai.
+            Vientisas tier'as: rounded-full, h-[20px], bg-black/40
+            backdrop-blur-sm, icon size 11px, text-[10px] font-semibold.
+            Vienoda forma su top-left savybes pill'ais; aukštis didesnis
+            (su tekstu + skaičiumi), bet siluetas tas pats. */}
         {section === 'auginama' && (
           <div className="absolute top-2 right-2 flex flex-col gap-1 items-end z-[2]">
-            <div className="inline-flex items-center gap-1 bg-black/35 backdrop-blur-sm rounded-lg px-1.5 py-1">
-              <Droplets size={12} className={waterOverdue ? 'text-forest-200 fill-forest-200' : 'text-white/60'} />
+            <div className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-sm rounded-full px-2 h-[20px]">
+              <Droplets size={11} className={waterOverdue ? 'text-forest-200 fill-forest-200' : 'text-white/60'} />
               {waterDaysUntil != null && (
-                <span className={`text-[10px] font-bold leading-none ${waterOverdue ? 'text-forest-100' : 'text-white/70'}`}>
+                <span className={`text-[10px] font-semibold leading-none ${waterOverdue ? 'text-forest-100' : 'text-white/70'}`}>
                   {waterDaysUntil}d
                 </span>
               )}
             </div>
             {fertFC?.intervalDays != null && (
-              <div className="inline-flex items-center gap-1 bg-black/35 backdrop-blur-sm rounded-lg px-1.5 py-1">
-                <FlaskConical size={12} className={fertOverdue ? 'text-terracotta-200 fill-terracotta-200' : 'text-white/60'} />
+              <div className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-sm rounded-full px-2 h-[20px]">
+                <FlaskConical size={11} className={fertOverdue ? 'text-terracotta-200 fill-terracotta-200' : 'text-white/60'} />
                 {fertDaysUntil != null && (
-                  <span className={`text-[10px] font-bold leading-none ${fertOverdue ? 'text-terracotta-100' : 'text-white/70'}`}>
+                  <span className={`text-[10px] font-semibold leading-none ${fertOverdue ? 'text-terracotta-100' : 'text-white/70'}`}>
                     {fertDaysUntil}d
                   </span>
                 )}
@@ -297,23 +299,25 @@ const PlantCard = memo(function PlantCard({
           </div>
         )}
 
-        {/* Right-side badge column */}
+        {/* Right-side badge column — vientisas siluetas su forecast'ais
+            (rounded-full, h-[20px], backdrop-blur-sm). Sage legacy
+            pakeistas į forest brand tone. */}
         {(showDashboardBadge || section === 'istorija' || noteCount > 0) && (
           <div className={`absolute ${section === 'auginama' ? 'top-[68px]' : 'top-2'} right-2 flex flex-col gap-1 items-center`}>
             {showDashboardBadge && (
-              <div className="bg-sage-500/90 backdrop-blur-sm rounded-lg p-1">
-                <House size={14} className="text-white" />
+              <div className="inline-flex items-center justify-center bg-forest-500/90 backdrop-blur-sm rounded-full w-[20px] h-[20px]">
+                <House size={11} className="text-white" />
               </div>
             )}
             {section === 'istorija' && (
-              <div className="bg-black/55 backdrop-blur-sm rounded-lg p-1">
-                <Ghost size={14} className="text-white" />
+              <div className="inline-flex items-center justify-center bg-black/55 backdrop-blur-sm rounded-full w-[20px] h-[20px]">
+                <Ghost size={11} className="text-white" />
               </div>
             )}
             {noteCount > 0 && (
-              <div className="bg-gray-700/75 backdrop-blur-sm rounded-lg px-1.5 py-1 flex items-center gap-0.5">
-                <FileText size={12} className="text-white" />
-                <span className="text-[10px] text-white font-bold leading-none">{noteCount}</span>
+              <div className="inline-flex items-center gap-1 bg-black/55 backdrop-blur-sm rounded-full px-2 h-[20px]">
+                <FileText size={11} className="text-white" />
+                <span className="text-[10px] text-white font-semibold leading-none">{noteCount}</span>
               </div>
             )}
           </div>
@@ -335,19 +339,19 @@ const PlantCard = memo(function PlantCard({
                 <span
                   title={benefit.label}
                   aria-label={benefit.label}
-                  className={`inline-flex items-center justify-center ${benefit.bg} ${benefit.text} rounded-full w-[18px] h-[18px] shadow-[0_1px_3px_rgba(28,58,42,0.22)]`}
+                  className={`inline-flex items-center justify-center ${benefit.bg} ${benefit.text} rounded-full w-[20px] h-[20px] shadow-[0_1px_3px_rgba(28,58,42,0.22)]`}
                 >
-                  <benefit.Icon size={10} strokeWidth={2.2} />
+                  <benefit.Icon size={11} strokeWidth={2.2} />
                 </span>
               )}
               {hazard && (
                 <span
                   title={hazard.label}
                   aria-label={hazard.label}
-                  className={`inline-flex items-center gap-1 ${hazard.bg} ${hazard.text} rounded-full px-1.5 h-[18px] shadow-[0_1px_3px_rgba(184,106,58,0.28)]`}
+                  className={`inline-flex items-center gap-1 ${hazard.bg} ${hazard.text} rounded-full px-2 h-[20px] shadow-[0_1px_3px_rgba(184,106,58,0.28)]`}
                 >
-                  {hazard.targets?.has('zmonems')  && <User size={10} strokeWidth={2.2} />}
-                  {hazard.targets?.has('gyvunams') && <Cat  size={10} strokeWidth={2.2} />}
+                  {hazard.targets?.has('zmonems')  && <User size={11} strokeWidth={2.2} />}
+                  {hazard.targets?.has('gyvunams') && <Cat  size={11} strokeWidth={2.2} />}
                   <SeverityBars severity={hazard.severity} />
                 </span>
               )}
