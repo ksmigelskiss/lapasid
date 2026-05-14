@@ -878,44 +878,50 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
           </div>
         )}
 
-        {/* AI lookup CTA — rodom kai bent kažkas iš user/catalog mėginimų buvo,
-            arba kai NIEKAS nerasta. Centrinė pozicija po visomis aukštesnio
-            prioriteto vietomis (savi → bendra → internetas). */}
+        {/* AI lookup CTA — UNIFIKUOTAS mygtukas visiems atvejams (su match'ais
+            ar be jų). Anksčiau buvo du skirtingi stiliai + label'iai —
+            dashed „Ieškoti naujų augalų: „query"" kai yra match'ai vs.
+            solid „Ieškoti internete" kai nieko nėra. Dabar vienas
+            patternas: ✦ Ieškoti su AI, solid bg-forest-700 full-width
+            (matches ✦ Atnaujinti per AI iš PlantDetail). */}
         {!result && !loading && !error && query.trim() && (
           (localMatches.length > 0 || catalogMatches.length > 0) ? (
             <button
               onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
-              className="w-full py-3 rounded-2xl text-sm text-forest-700 font-semibold border border-dashed border-forest-300 hover:border-forest-500 hover:bg-forest-50 transition-colors"
+              className="w-full py-3 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
             >
-              Ieškoti naujų augalų: „{query}"
+              ✦ Ieškoti su AI
             </button>
           ) : (
-            /* No local + no catalog matches — pilna empty state su didesniu AI CTA */
+            /* No local + no catalog matches — full empty state'as su
+               hero icon'u + tuo pačiu unified AI CTA. */
             !catalogLoading && (
-              <div className="text-center py-12 space-y-3">
-                <div className="flex justify-center opacity-50">
-                  <T4Icon size={56} ink="#1c3a2a" paper="transparent" />
+              <div className="text-center py-8 space-y-4">
+                <div className="flex justify-center opacity-45">
+                  <T4Icon size={96} ink="#1c3a2a" paper="transparent" />
                 </div>
                 <p className="text-sm text-forest-500">„{query}" — neradome nei tavo, nei bendroje bibliotekoje</p>
                 <button
                   onClick={() => { if (query.trim() && !loading) searchByText(query.trim()) }}
-                  className="px-5 py-2.5 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
+                  className="w-full py-3 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
                 >
-                  Ieškoti internete
+                  ✦ Ieškoti su AI
                 </button>
               </div>
             )
           )
         )}
 
-        {/* Empty state — be query */}
+        {/* Empty state — be query. Hero T4Icon 160px (3x prieš tai), be
+            animacijos — proporcingas dizaineris'kai centrinis statiškas
+            brand mark'as. */}
         {!result && !loading && !error && !query.trim() && (
-          <div className="text-center py-16 space-y-3">
-            <div className="flex justify-center animate-idle-float">
-              <T4Icon size={64} ink="#1c3a2a" paper="transparent" />
+          <div className="text-center py-12 space-y-4">
+            <div className="flex justify-center opacity-90">
+              <T4Icon size={160} ink="#1c3a2a" paper="transparent" />
             </div>
-            <p className="text-sm text-forest-600">Įveskite augalo pavadinimą</p>
-            <p className="text-xs text-forest-400">paieška ras tavo augalus, arba galėsi ieškoti naujų internete</p>
+            <p className="font-display text-base font-semibold tracking-tight text-forest-700">Įveskite augalo pavadinimą</p>
+            <p className="text-xs text-forest-400 max-w-[280px] mx-auto leading-relaxed">paieška ras tavo augalus, arba galėsi ieškoti naujų su AI</p>
           </div>
         )}
       </div>

@@ -588,29 +588,29 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
-                  <Search size={40} className="text-gray-300" />
-                  <p className="text-sm font-semibold text-gray-600">„{query}" nerasta bibliotekoje</p>
+                  <Search size={40} className="text-forest-300" />
+                  <p className="text-sm font-display font-semibold tracking-tight text-forest-700">„{query}" nerasta bibliotekoje</p>
                   <button
                     onClick={launchFullSearch}
-                    className="mt-1 px-6 py-3 bg-gray-800 text-white rounded-2xl text-sm font-medium"
+                    className="mt-1 px-6 py-3 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
                   >
-                    Ieškoti „{query}" naujų augalų
+                    ✦ Ieškoti su AI
                   </button>
                 </div>
               )}
               {searchResults.length > 0 && (
                 <button
                   onClick={launchFullSearch}
-                  className="w-full mt-3 py-3 rounded-2xl text-sm text-gray-500 border border-dashed border-gray-300 hover:border-gray-400 hover:text-gray-700 transition-colors"
+                  className="w-full mt-3 py-3 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
                 >
-                  Ieškoti „{query}" naujų augalų
+                  ✦ Ieškoti su AI
                 </button>
               )}
             </>
           ) : (
             <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
-              <Search size={40} className="text-gray-300" />
-              <p className="text-sm text-gray-400">Įveskite augalo pavadinimą</p>
+              <Search size={40} className="text-forest-300" />
+              <p className="text-sm text-forest-500">Įveskite augalo pavadinimą</p>
             </div>
           )}
         </div>

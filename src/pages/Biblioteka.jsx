@@ -174,7 +174,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
                 onClick={launchFullSearch}
                 className="mt-1 px-6 h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
               >
-                Ieškoti „{query}" naujų augalų
+                ✦ Ieškoti su AI
               </button>
             ) : kategorija == null && (
               <button
@@ -200,9 +200,9 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
             {searching && query.trim() && (
               <button
                 onClick={launchFullSearch}
-                className="w-full mt-3 py-3 rounded-2xl text-sm text-forest-600 border border-dashed border-bone-400/60 hover:border-forest-400 hover:text-forest-700 transition-colors"
+                className="w-full mt-3 py-3 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
               >
-                Ieškoti „{query}" naujų augalų
+                ✦ Ieškoti su AI
               </button>
             )}
           </>
