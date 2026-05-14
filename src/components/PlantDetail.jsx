@@ -657,7 +657,17 @@ export function ProfileContent({ plant, section, onAction, onClose, collectionId
                 className="w-full py-3 rounded-btn text-sm font-display font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 disabled:opacity-60 transition-colors flex items-center justify-center gap-2">
                 {refreshing
                   ? <><BrandLoader inline size={16} ink="forest" /><span>Atnaujinama per AI...</span></>
-                  : <span>✦ Atnaujinti per AI</span>}
+                  : (
+                    <>
+                      <span>✦ Atnaujinti per AI</span>
+                      {plant.aiRefreshedAt && (
+                        <span className="font-mono text-[10px] font-medium text-forest-400 tracking-[0.12em] uppercase">
+                          · {plant.aiRefreshedAt}
+                        </span>
+                      )}
+                    </>
+                  )
+                }
               </button>
               {refreshError && (
                 <p className="text-xs text-terracotta-600 text-center">{refreshError}</p>

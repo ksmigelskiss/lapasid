@@ -420,6 +420,9 @@ export function usePlants(collectionId, viewerToken = null) {
     if (aiData.savybes !== undefined) {
       patch.savybes = normalizeSavybes(aiData.savybes, aiData.toksiskas, aiData.toksiskumo_info)
     }
+    // Timestamp'as — leidžia UI rodyti „paskutinį kartą atnaujinta YYYY-MM-DD"
+    // ant mygtuko. Laikinai (kol „Atnaujinti per AI" yra dev tool'as).
+    patch.aiRefreshedAt = today()
     updatePlant(id, patch)
   }, [updatePlant])
 
