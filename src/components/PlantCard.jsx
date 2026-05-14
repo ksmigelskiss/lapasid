@@ -1,7 +1,7 @@
 import { useState, useRef, memo } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileText, MapPin, FlaskConical, Check, X } from 'lucide-react'
+import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileText, MapPin, FlaskConical, Check, X, Apple, User, Cat } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
@@ -55,16 +55,35 @@ function strongestHazardPill(plant) {
     )
     const top = sorted[0]
     const style = HAZARD_TIPAS_STYLE[top.tipas] ?? HAZARD_TIPAS_STYLE.dirginantis
-    return { ...style, label: HAZARD_TIPAS_LABEL[top.tipas] ?? top.tipas }
+    // Target'ai surinkti iš VISŲ pavojai[] (ne tik top'o) — vartotojas iškart
+    // mato, ar plantas pavojingas žmonėms / gyvūnams / abiems. Vientisumas
+    // su PlantSavybesPills.jsx (TARGET_META su User/Cat icons).
+    const targets = new Set(s.pavojai.map(p => p.target).filter(Boolean))
+    return { ...style, label: HAZARD_TIPAS_LABEL[top.tipas] ?? top.tipas, targets }
   }
   if (s?.pavojingumas?.yra) {
-    // Saugiklis ATSARGIAI — be tipas info, neutralus terracotta-100
-    return { bg: 'bg-terracotta-100', text: 'text-terracotta-600', label: 'Atsargiai' }
+    return { bg: 'bg-terracotta-100', text: 'text-terracotta-600', label: 'Atsargiai', targets: new Set() }
   }
   if (plant.toksiskas) {
-    // Legacy fallback — senas plant'as be savybes lauko, treat as toksiškas
-    return { bg: 'bg-terracotta', text: 'text-bone', label: 'Toksiška' }
+    return { bg: 'bg-terracotta', text: 'text-bone', label: 'Toksiška', targets: new Set() }
   }
+  return null
+}
+
+// ── Benefit pill — atsvara hazard'ui (valgoma/vaistinis su forest tonais).
+// Hierarchija: valgoma > vaistinis (valgomumas labiau action'iškas — "gali
+// kąsti, mediciniškai naudotis"). Tarp valgomumo lygių: pilnai > dalinai.
+// Tarp vaistinio: moksline (evidence-based) > tradicine (folk).
+const BENEFIT_STYLE_STRONG = { bg: 'bg-forest-700',  text: 'text-bone' }
+const BENEFIT_STYLE_SUBTLE = { bg: 'bg-forest-100', text: 'text-forest-700' }
+
+function strongestBenefitPill(plant) {
+  const s = plant.savybes
+  if (!s) return null
+  if (s.valgomumas?.statusas === 'pilnai') return { ...BENEFIT_STYLE_STRONG, Icon: Apple, label: 'Valgoma' }
+  if (s.valgomumas?.statusas === 'dalinai') return { ...BENEFIT_STYLE_SUBTLE, Icon: Apple, label: 'Valgoma' }
+  if (s.vaistinis?.statusas === 'moksline')  return { ...BENEFIT_STYLE_STRONG, Icon: Sprout, label: 'Vaistinis' }
+  if (s.vaistinis?.statusas === 'tradicine') return { ...BENEFIT_STYLE_SUBTLE, Icon: Sprout, label: 'Vaistinis' }
   return null
 }
 
@@ -281,18 +300,31 @@ const PlantCard = memo(function PlantCard({
           </div>
         )}
 
-        {/* Hazard pill — vienas, atspindintis rimčiausią pavojaus įrašą iš
-            savybes.pavojai[]. Hierarchija: severity (stiprus > vidutinis > silpnas),
-            tada tipas (toksiskas > alergiskas > dirginantis). Fallback į saugiklį
-            ATSARGIAI arba legacy `toksiskas` boolean'ą. */}
+        {/* Savybės stack — benefit pill (valgoma/vaistinis) virš hazard pill'o.
+            Benefit'as kaip atsvara „gasdinimui": iš karto matoma kad augalas
+            ne tik pavojingas, bet ir naudingas. Hazard pill'e — target icons
+            (User/Cat) prieš label'į: kam pavojingas (žmonėms, gyvūnams,
+            abiems). Visa logika konsoliduota strongestBenefitPill +
+            strongestHazardPill funkcijose. */}
         {(() => {
-          const pill = strongestHazardPill(plant)
-          if (!pill) return null
+          const benefit = strongestBenefitPill(plant)
+          const hazard  = strongestHazardPill(plant)
+          if (!benefit && !hazard) return null
           return (
-            <div className="absolute top-2.5 left-2.5 z-[2]">
-              <span className={`inline-flex items-center gap-0.5 ${pill.bg} ${pill.text} font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] rounded-full px-1.5 py-0.5 shadow-[0_1px_4px_rgba(184,106,58,0.3)]`}>
-                {pill.label}
-              </span>
+            <div className="absolute top-2.5 left-2.5 z-[2] flex flex-col gap-1 items-start">
+              {benefit && (
+                <span className={`inline-flex items-center gap-1 ${benefit.bg} ${benefit.text} font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] rounded-full px-1.5 py-0.5 shadow-[0_1px_4px_rgba(28,58,42,0.25)]`}>
+                  <benefit.Icon size={9} strokeWidth={2.5} />
+                  {benefit.label}
+                </span>
+              )}
+              {hazard && (
+                <span className={`inline-flex items-center gap-1 ${hazard.bg} ${hazard.text} font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] rounded-full px-1.5 py-0.5 shadow-[0_1px_4px_rgba(184,106,58,0.3)]`}>
+                  {hazard.targets?.has('zmonems')  && <User size={9} strokeWidth={2.5} />}
+                  {hazard.targets?.has('gyvunams') && <Cat  size={9} strokeWidth={2.5} />}
+                  {hazard.label}
+                </span>
+              )}
             </div>
           )
         })()}
