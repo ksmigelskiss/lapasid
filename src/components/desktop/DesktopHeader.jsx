@@ -65,7 +65,7 @@ export default function DesktopHeader({
     .split(/[\s@]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase()
 
   return (
-    <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-bone/85 backdrop-blur-xl z-30 relative">
+    <header className="h-16 flex-shrink-0 flex items-center px-6 gap-4 bg-bone-100/95 z-30 relative">
       {/* Brand — T4Icon inverted ("antspaudas": bone mark on forest square) + wordmark.
           h-16 header (64px) → T4Icon 38px palieka 13px tarpą iš viršaus/apačios. */}
       <div className="flex items-center gap-2.5 flex-shrink-0">
@@ -140,10 +140,10 @@ export default function DesktopHeader({
             <span className="text-[11px] font-bold tabular-nums leading-none">{careFertCount}</span>
           </button>
 
-          {/* Popup — fixed pozicija nuo viewport'o kraštinės, kad nepriklausytų nuo
-              trigger pill'ų vietos header'yje (atskiri matavimai mobile/desktop'e). */}
+          {/* Popup — anchor'ina nuo pill'ų cluster'io (.relative wrapper).
+              top-full = tiesiai po pill'ais, right-0 = lygiuojam su fert pill'o dešine. */}
           {showCarePopup && (
-            <div className="fixed top-[72px] right-6 w-[360px] max-h-[70vh] overflow-y-auto bg-bone rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/60 z-50 p-3">
+            <div className="absolute top-full right-0 mt-2 w-[360px] max-h-[70vh] overflow-y-auto bg-bone-50 rounded-2xl shadow-[0_16px_40px_rgba(28,58,42,0.28),0_0_0_1px_rgba(28,58,42,0.06)] border border-bone-400/60 z-[100] p-3">
               <div className="flex items-center gap-2 px-1 pb-2 mb-1 border-b border-bone-400/40">
                 <p className="font-display text-sm font-bold text-forest-700 flex-1 tracking-tight">Priežiūros santrauka</p>
                 <span className="font-mono text-[10px] font-medium text-forest-400 uppercase tracking-[0.18em]">{careNotificationCount}</span>
@@ -163,11 +163,11 @@ export default function DesktopHeader({
         <button
           onClick={onProfileClick}
           className="w-8 h-8 rounded-full overflow-hidden ring-1 ring-bone-400/50 active:scale-95 transition-transform"
-          title={user?.displayName || 'Vartotojas'}
+          title={user?.displayName || user?.email?.split('@')[0] || 'Vartotojas'}
         >
           {user?.photoURL
             ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
-            : <div className="w-full h-full bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center text-white text-[12px] font-semibold">
+            : <div className="w-full h-full bg-forest-700 flex items-center justify-center text-bone-50 text-[12px] font-semibold">
                 {initials}
               </div>}
         </button>

@@ -239,8 +239,8 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
       )}
       <motion.div
         className={useDesktopPanel
-          ? "absolute inset-0 z-20 bg-white overflow-y-auto"
-          : "fixed bottom-0 inset-x-0 z-50 bg-white rounded-t-3xl max-w-[430px] mx-auto"}
+          ? "absolute inset-0 z-20 bg-bone-50 overflow-y-auto"
+          : "fixed bottom-0 inset-x-0 z-50 bg-bone-50 rounded-t-3xl max-w-[430px] mx-auto"}
         {...(useDesktopPanel ? {
           // Desktop'e — slide iš dešinės (kortelė įvažiuoja iš panel'ės krašto)
           initial: { x: '100%' }, animate: { x: 0 }, exit: { x: '100%' },
@@ -251,21 +251,27 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
         })}
       >
         <div className="px-5 pt-5 pb-8 safe-bottom">
-          <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-5" />
+          {/* Drag handle — tik mobile (iOS bottom-sheet swipe-to-dismiss).
+              Desktop'e panelė slide'inasi iš dešinės, drag handle beprasmis. */}
+          {!useDesktopPanel && (
+            <div className="w-10 h-1 bg-bone-400/60 rounded-full mx-auto mb-5" />
+          )}
 
           {/* Einamasis vartotojas */}
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-5">
             {user?.photoURL
-              ? <img src={user.photoURL} alt="" className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
-              : <div className="w-12 h-12 rounded-full bg-sage-100 flex items-center justify-center text-sage-600 font-bold text-base flex-shrink-0">
+              ? <img src={user.photoURL} alt="" className="w-12 h-12 rounded-full object-cover flex-shrink-0 ring-1 ring-bone-400/50" />
+              : <div className="w-12 h-12 rounded-full bg-forest-700 flex items-center justify-center text-bone-50 font-display font-semibold text-base flex-shrink-0">
                   {initials(user?.displayName || user?.email)}
                 </div>
             }
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-gray-900 truncate">{user?.displayName || 'Vartotojas'}</p>
-              <p className="text-xs text-gray-400 truncate">{user?.email || ''}</p>
+              <p className="font-display font-semibold text-forest-700 truncate tracking-tight">
+                {user?.displayName || user?.email?.split('@')[0] || 'Vartotojas'}
+              </p>
+              <p className="text-xs text-forest-400 truncate">{user?.email || ''}</p>
             </div>
-            <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-btn bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors flex-shrink-0" aria-label="Uždaryti">
+            <button onClick={onClose} className="w-10 h-10 bg-bone-300/60 hover:bg-bone-400/60 rounded-btn flex items-center justify-center text-forest-700 transition-colors flex-shrink-0" aria-label="Uždaryti">
               <X size={16} />
             </button>
           </div>
@@ -277,17 +283,17 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
             if (switchable.length <= 1) {
               const cur = allCollections.find(c => c.id === collectionId)
               return cur ? (
-                <div className="bg-surface rounded-2xl px-4 py-3 mb-3 flex items-center gap-2.5">
-                  <span className="w-7 h-7 rounded-full bg-sage-100 text-sage-700 inline-flex items-center justify-center text-[12px] font-bold flex-shrink-0">
+                <div className="bg-bone-100 border border-bone-400/40 rounded-2xl px-4 py-3 mb-3 flex items-center gap-2.5">
+                  <span className="w-7 h-7 rounded-full bg-forest-100 text-forest-700 inline-flex items-center justify-center text-[12px] font-bold flex-shrink-0">
                     {(cur.name || 'L')[0].toUpperCase()}
                   </span>
-                  <span className="text-sm font-semibold text-gray-800 flex-1 truncate">{cur.name}</span>
+                  <span className="text-sm font-medium text-forest-700 flex-1 truncate">{cur.name}</span>
                 </div>
               ) : null
             }
             return (
-              <div className="bg-surface rounded-2xl px-4 py-3.5 mb-3">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2.5">Kolekcijos</p>
+              <div className="bg-bone-100 border border-bone-400/40 rounded-2xl px-4 py-3.5 mb-3">
+                <p className="font-mono text-[10px] font-medium text-forest-400 uppercase tracking-[0.18em] mb-2.5">Kolekcijos</p>
                 <div className="space-y-1">
                   {switchable.map(c => {
                     const isActive = c.id === collectionId
@@ -295,17 +301,17 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
                       <button
                         key={c.id}
                         onClick={() => { onSwitchCollection?.(c.id); onClose?.() }}
-                        className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-xl text-left transition-colors ${
-                          isActive ? 'bg-sage-50' : 'active:bg-white hover:bg-white/60'
+                        className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-btn-sm text-left transition-colors ${
+                          isActive ? 'bg-bone-50' : 'hover:bg-bone-50/60 active:bg-bone-50'
                         }`}
                       >
                         <span className={`w-7 h-7 rounded-full inline-flex items-center justify-center text-[12px] font-bold flex-shrink-0 ${
-                          isActive ? 'bg-sage-500 text-white' : 'bg-sage-100 text-sage-700'
+                          isActive ? 'bg-forest-700 text-bone-50' : 'bg-forest-100 text-forest-700'
                         }`}>
                           {(c.name || 'L')[0].toUpperCase()}
                         </span>
-                        <span className={`flex-1 text-sm truncate ${isActive ? 'font-semibold text-sage-700' : 'text-gray-800'}`}>{c.name}</span>
-                        {isActive && <Check size={15} className="text-sage-500 flex-shrink-0" />}
+                        <span className={`flex-1 text-sm truncate ${isActive ? 'font-semibold text-forest-700' : 'text-forest-600'}`}>{c.name}</span>
+                        {isActive && <Check size={15} className="text-forest-700 flex-shrink-0" />}
                       </button>
                     )
                   })}
@@ -316,28 +322,28 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
 
           {/* Nariai + prižiūrėtojų nuorodos — vienas sąrašas */}
           {hasPeople && (
-            <div className="bg-surface rounded-2xl px-4 py-3.5 mb-3">
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2.5">Dalijamasi su</p>
+            <div className="bg-bone-100 border border-bone-400/40 rounded-2xl px-4 py-3.5 mb-3">
+              <p className="font-mono text-[10px] font-medium text-forest-400 uppercase tracking-[0.18em] mb-2.5">Dalijamasi su</p>
               <div className="space-y-2.5">
                 {/* Firebase nariai */}
                 {members.map(m => (
                   <div key={m.uid} className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-sage-100 flex items-center justify-center text-sage-600 text-xs font-bold flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-forest-100 flex items-center justify-center text-forest-700 text-xs font-bold flex-shrink-0">
                       {initials(m.displayName || m.email)}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <p className="text-sm font-medium text-gray-800 truncate">{m.displayName}</p>
-                        {m.role === 'viewer' && <Eye size={12} className="text-gray-400 flex-shrink-0" />}
+                        <p className="text-sm font-medium text-forest-700 truncate">{m.displayName}</p>
+                        {m.role === 'viewer' && <Eye size={12} className="text-forest-400 flex-shrink-0" />}
                       </div>
-                      {m.email && <p className="text-xs text-gray-400 truncate">{m.email}</p>}
+                      {m.email && <p className="text-xs text-forest-400 truncate">{m.email}</p>}
                     </div>
                     {isOwner && (
                       <button
                         onClick={() => setRemoveTarget({ uid: m.uid, name: m.displayName })}
-                        className="w-7 h-7 flex items-center justify-center rounded-btn-sm active:bg-red-50 transition-colors flex-shrink-0"
+                        className="w-7 h-7 flex items-center justify-center rounded-btn-sm hover:bg-terracotta-50 active:bg-terracotta-100 transition-colors flex-shrink-0"
                       >
-                        <Trash2 size={14} className="text-red-400" />
+                        <Trash2 size={14} className="text-terracotta-500" />
                       </button>
                     )}
                   </div>
@@ -346,8 +352,8 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
                 {/* Viewer invite nuorodos */}
                 {viewerInvites.map(v => (
                   <div key={v.token} className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-                      <Eye size={14} className="text-gray-400" />
+                    <div className="w-8 h-8 rounded-full bg-bone-300/60 flex items-center justify-center flex-shrink-0">
+                      <Eye size={14} className="text-forest-500" />
                     </div>
                     <button
                       className="flex-1 min-w-0 text-left active:opacity-60"
@@ -356,13 +362,13 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
                         setInviteUrl(`${window.location.origin}?invite=${v.token}&role=viewer`)
                       }}
                     >
-                      <p className="text-sm font-medium text-gray-600">Svečias</p>
-                      <p className="text-xs text-gray-400 font-mono truncate">{v.token}</p>
+                      <p className="text-sm font-medium text-forest-600">Svečias</p>
+                      <p className="text-xs text-forest-400 font-mono truncate">{v.token}</p>
                     </button>
                     <button
                       onClick={() => handleRevokeViewer(v.token)}
                       disabled={revokingToken === v.token}
-                      className="text-xs text-red-400 font-medium active:text-red-600 disabled:opacity-50 flex-shrink-0 px-1"
+                      className="text-xs text-terracotta-500 font-medium active:text-terracotta-600 disabled:opacity-50 flex-shrink-0 px-1"
                     >
                       {revokingToken === v.token ? '...' : 'Atšaukti'}
                     </button>
@@ -374,28 +380,28 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
 
           {/* Kvietimo sekcija */}
           {(canInviteMember || canInviteViewer) && (
-            <div className="bg-surface rounded-2xl p-4 mb-3">
-              <p className="text-sm font-semibold text-gray-800 mb-3">Pakviesti</p>
+            <div className="bg-bone-100 border border-bone-400/40 rounded-2xl p-4 mb-3">
+              <p className="font-mono text-[10px] font-medium text-forest-400 uppercase tracking-[0.18em] mb-3">Pakviesti</p>
 
               {/* Rolės toggle — tik jei gali kviesti abu */}
               {showToggle && (
-                <div className="flex bg-white border border-gray-200 rounded-xl p-1 mb-3">
+                <div className="flex bg-bone-50 border border-bone-400/40 rounded-btn p-1 mb-3">
                   <button
                     onClick={() => setInviteRole('member')}
-                    className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex-1 py-1.5 rounded-btn-sm text-sm font-medium transition-colors ${
                       inviteRole === 'member'
-                        ? 'bg-sage-500 text-white shadow-sm'
-                        : 'text-gray-500'
+                        ? 'bg-forest-700 text-bone-50 shadow-[0_1px_2px_rgba(28,58,42,0.18)]'
+                        : 'text-forest-500 hover:text-forest-700'
                     }`}
                   >
                     Narys
                   </button>
                   <button
                     onClick={() => setInviteRole('viewer')}
-                    className={`flex-1 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${
+                    className={`flex-1 py-1.5 rounded-btn-sm text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${
                       inviteRole === 'viewer'
-                        ? 'bg-sage-500 text-white shadow-sm'
-                        : 'text-gray-500'
+                        ? 'bg-forest-700 text-bone-50 shadow-[0_1px_2px_rgba(28,58,42,0.18)]'
+                        : 'text-forest-500 hover:text-forest-700'
                     }`}
                   >
                     <Eye size={13} />
@@ -405,7 +411,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
               )}
 
               {/* Aprašymas */}
-              <p className="text-xs text-gray-400 mb-3">
+              <p className="text-xs text-forest-500 leading-relaxed mb-3">
                 {inviteRole === 'member'
                   ? 'Narys gali redaguoti augalus ir naudotis AI funkcijomis.'
                   : 'Svečias gali matyti augalus ir žymėti laistymą. Prieiga atšaukiama vienu mygtuku.'}
@@ -415,36 +421,36 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
                 <button
                   onClick={() => handleInvite(inviteRole)}
                   disabled={generating}
-                  className="w-full py-2.5 rounded-xl bg-sage-500 active:bg-sage-600 text-white text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50 transition-colors"
+                  className="w-full py-2.5 rounded-btn bg-forest-700 hover:bg-forest-800 active:bg-forest-800 text-bone-50 text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50 transition-colors"
                 >
                   {inviteRole === 'member' ? <UserPlus size={15} /> : <Eye size={15} />}
                   {generating ? 'Generuojama...' : inviteRole === 'member' ? 'Generuoti nuorodą' : 'Pakviesti svečią'}
                 </button>
               ) : (
                 <div className="space-y-3">
-                  <div className="flex justify-center bg-white rounded-xl p-4">
-                    <QRCodeSVG value={inviteUrl} size={160} />
+                  <div className="flex justify-center bg-bone-50 border border-bone-400/40 rounded-2xl p-4">
+                    <QRCodeSVG value={inviteUrl} size={160} bgColor="#fefdfa" fgColor="#1c3a2a" />
                   </div>
-                  <p className="text-xs text-gray-400 bg-white border border-gray-200 rounded-xl px-3 py-2 truncate">{inviteUrl}</p>
+                  <p className="text-xs text-forest-400 bg-bone-50 border border-bone-400/40 rounded-btn-sm px-3 py-2 truncate font-mono">{inviteUrl}</p>
                   <div className="flex gap-2">
                     <button
                       onClick={copyLink}
-                      className="flex-1 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-700 font-medium flex items-center justify-center gap-1.5 active:bg-surface transition-colors"
+                      className="flex-1 py-2.5 rounded-btn border border-bone-400/60 bg-bone-50 text-sm text-forest-700 font-medium flex items-center justify-center gap-1.5 hover:bg-bone-100 active:bg-bone-100 transition-colors"
                     >
-                      {copied ? <Check size={14} className="text-sage-500" /> : <Copy size={14} />}
+                      {copied ? <Check size={14} className="text-forest-700" /> : <Copy size={14} />}
                       {copied ? 'Nukopijuota' : 'Kopijuoti'}
                     </button>
                     {typeof navigator.share === 'function' && (
                       <button
                         onClick={() => handleInvite(inviteRole)}
-                        className="flex-1 py-2.5 rounded-xl bg-sage-500 active:bg-sage-600 text-white text-sm font-medium flex items-center justify-center gap-1.5 transition-colors"
+                        className="flex-1 py-2.5 rounded-btn bg-forest-700 hover:bg-forest-800 active:bg-forest-800 text-bone-50 text-sm font-medium flex items-center justify-center gap-1.5 transition-colors"
                       >
                         <Share2 size={14} />
                         Dalintis
                       </button>
                     )}
                   </div>
-                  <button onClick={() => setInviteUrl(null)} className="w-full text-xs text-gray-400 text-center py-1">
+                  <button onClick={() => setInviteUrl(null)} className="w-full text-xs text-forest-400 hover:text-forest-600 text-center py-1 transition-colors">
                     Nauja nuoroda
                   </button>
                 </div>
@@ -457,7 +463,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
             <button
               onClick={handleLeave}
               disabled={leaving}
-              className="w-full py-3 rounded-2xl text-orange-500 text-sm font-medium flex items-center justify-center gap-2 border border-orange-100 bg-orange-50 active:bg-orange-100 transition-colors mb-3"
+              className="w-full py-3 rounded-btn text-terracotta-500 text-sm font-medium flex items-center justify-center gap-2 border border-terracotta-200/60 bg-terracotta-50 hover:bg-terracotta-100 active:bg-terracotta-100 transition-colors mb-3"
             >
               <LogIn size={15} className="rotate-180" />
               {leaving ? 'Išeinama...' : 'Išeiti iš kolekcijos'}
@@ -467,7 +473,7 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
           {/* Atsijungimas */}
           <button
             onClick={onSignOut}
-            className="w-full py-3 rounded-2xl text-red-500 text-sm font-medium flex items-center justify-center gap-2 border border-red-100 bg-red-50 active:bg-red-100 transition-colors"
+            className="w-full py-3 rounded-btn text-terracotta-600 text-sm font-medium flex items-center justify-center gap-2 border border-terracotta-200/60 bg-terracotta-50 hover:bg-terracotta-100 active:bg-terracotta-100 transition-colors"
           >
             <LogOut size={15} />
             Atsijungti
@@ -480,27 +486,27 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
         {removeTarget && (
           <>
             <motion.div
-              className="fixed inset-0 bg-black/50 z-[60]"
+              className="fixed inset-0 bg-forest-900/50 z-[60]"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setRemoveTarget(null)}
             />
             <motion.div
-              className="fixed inset-x-4 z-[61] bg-white rounded-2xl p-5 max-w-[360px] mx-auto"
+              className="fixed inset-x-4 z-[61] bg-bone-50 border border-bone-400/60 rounded-2xl p-5 max-w-[360px] mx-auto shadow-[0_16px_40px_rgba(28,58,42,0.28)]"
               style={{ top: '50%', transform: 'translateY(-50%)' }}
               initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
             >
-              <p className="font-semibold text-gray-900 mb-1">Pašalinti narį?</p>
-              <p className="text-sm text-gray-500 mb-4">
-                <span className="font-medium text-gray-700">{removeTarget.name}</span> nebegalės peržiūrėti šios kolekcijos.
+              <p className="font-display font-semibold text-forest-700 tracking-tight mb-1">Pašalinti narį?</p>
+              <p className="text-sm text-forest-500 mb-4">
+                <span className="font-medium text-forest-700">{removeTarget.name}</span> nebegalės peržiūrėti šios kolekcijos.
               </p>
               <div className="flex gap-2">
-                <button onClick={() => setRemoveTarget(null)} className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-600 font-medium">
+                <button onClick={() => setRemoveTarget(null)} className="flex-1 py-2.5 rounded-btn border border-bone-400/60 bg-bone-50 hover:bg-bone-100 text-sm text-forest-600 font-medium transition-colors">
                   Atšaukti
                 </button>
                 <button
                   onClick={handleRemoveMember}
                   disabled={removing}
-                  className="flex-1 py-2.5 rounded-xl bg-red-500 active:bg-red-600 text-white text-sm font-medium disabled:opacity-50"
+                  className="flex-1 py-2.5 rounded-btn bg-terracotta-500 hover:bg-terracotta-600 active:bg-terracotta-600 text-bone-50 text-sm font-medium disabled:opacity-50 transition-colors"
                 >
                   {removing ? '...' : 'Pašalinti'}
                 </button>

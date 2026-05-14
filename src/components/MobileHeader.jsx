@@ -42,7 +42,7 @@ export default function MobileHeader({
 
   return (
     <header
-      className="h-12 flex-shrink-0 flex items-center px-4 gap-2 bg-bone/85 backdrop-blur-xl z-30 relative"
+      className="h-12 flex-shrink-0 flex items-center px-4 gap-2 bg-bone-100/95 z-30 relative"
       style={{ paddingTop: 'env(safe-area-inset-top)', height: 'calc(48px + env(safe-area-inset-top))' }}
     >
       {/* Brand — T4Icon inverted (antspaudas: bone mark on forest square) + wordmark.
@@ -52,8 +52,11 @@ export default function MobileHeader({
         <T4Word size={20} className="text-forest-700" />
       </div>
 
-      {/* Action cluster: search + care pills + avatar */}
-      <div className="ml-auto flex items-center gap-1.5 flex-shrink-0">
+      {/* Action cluster: search + care pills + avatar.
+          Wrapper'is `.relative` — popup'as anchor'ina nuo CLUSTER'IO dešinio
+          krašto (= header dešinio krašto), todėl visada tiksliai po trigger
+          pill'u, neatsižvelgiant į kitus content'us viewport'e. */}
+      <div className="ml-auto flex items-center gap-1.5 flex-shrink-0 relative" ref={carePopupRef}>
         {role !== 'viewer' && (
           <button
             onClick={onSearchClick}
@@ -65,7 +68,7 @@ export default function MobileHeader({
         )}
 
         {/* Care notifications — du pill'ai (water forest, fert terracotta) */}
-        <div className="relative flex items-center gap-1" ref={carePopupRef}>
+        <div className="flex items-center gap-1">
           <button
             onClick={() => setShowCarePopup(v => !v)}
             className={`inline-flex items-center gap-1 h-7 px-2 rounded-full transition-colors active:scale-95 ${
@@ -90,36 +93,13 @@ export default function MobileHeader({
             <FlaskConical size={12} />
             <span className="text-[11px] font-bold tabular-nums leading-none">{careFertCount}</span>
           </button>
-
-          {/* Popup — priežiūros santrauka. Fixed pozicija nuo viewport'o, kad nepriklausytų
-              nuo trigger pill'ų pozicijos (anksčiau right-0 nuo fert pill'o overflow'indavo į
-              kairę, nes avataras dešinėje nustumdavo popup'ą už ekrano krašto). */}
-          {showCarePopup && (
-            <div
-              className="fixed right-4 w-[calc(100vw-2rem)] max-w-[360px] max-h-[70vh] overflow-y-auto bg-bone rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/60 z-50 p-3"
-              style={{ top: 'calc(48px + env(safe-area-inset-top) + 8px)' }}
-            >
-              <div className="flex items-center gap-2 px-1 pb-2 mb-1 border-b border-bone-400/40">
-                <p className="font-display text-sm font-bold text-forest-700 flex-1 tracking-tight">Priežiūros santrauka</p>
-                <span className="font-mono text-[10px] font-medium text-forest-400 uppercase tracking-[0.18em]">{careNotificationCount}</span>
-              </div>
-              {careNotificationCount > 0 ? (
-                <CareSummaryList
-                  plants={carePopupPlants}
-                  onTap={(plant, list) => { onCareTap?.(plant, list); setShowCarePopup(false) }}
-                />
-              ) : (
-                <p className="text-center text-sm text-forest-500 py-6">Visi augalai laimingi 🌿</p>
-              )}
-            </div>
-          )}
         </div>
 
         {/* Avatar — atidaro ProfileSheet */}
         <button
           onClick={onProfileClick}
           className="w-8 h-8 rounded-full overflow-hidden ring-1 ring-bone-400/50 active:scale-95 transition-transform ml-1"
-          title={user?.displayName || 'Vartotojas'}
+          title={user?.displayName || user?.email?.split('@')[0] || 'Vartotojas'}
         >
           {user?.photoURL
             ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
@@ -127,6 +107,25 @@ export default function MobileHeader({
                 {initials}
               </div>}
         </button>
+
+        {/* Popup — anchor'ina nuo action cluster'io dešinio krašto (avatar'o
+            dešinė = header'io dešinė), atsiranda žemiau visų button'ų. */}
+        {showCarePopup && (
+          <div className="absolute top-full right-0 mt-2 w-[calc(100vw-2rem)] max-w-[360px] max-h-[70vh] overflow-y-auto bg-bone-50 rounded-2xl shadow-[0_16px_40px_rgba(28,58,42,0.28),0_0_0_1px_rgba(28,58,42,0.06)] border border-bone-400/60 z-[100] p-3">
+            <div className="flex items-center gap-2 px-1 pb-2 mb-1 border-b border-bone-400/40">
+              <p className="font-display text-sm font-bold text-forest-700 flex-1 tracking-tight">Priežiūros santrauka</p>
+              <span className="font-mono text-[10px] font-medium text-forest-400 uppercase tracking-[0.18em]">{careNotificationCount}</span>
+            </div>
+            {careNotificationCount > 0 ? (
+              <CareSummaryList
+                plants={carePopupPlants}
+                onTap={(plant, list) => { onCareTap?.(plant, list); setShowCarePopup(false) }}
+              />
+            ) : (
+              <p className="text-center text-sm text-forest-500 py-6">Visi augalai laimingi 🌿</p>
+            )}
+          </div>
+        )}
       </div>
     </header>
   )
