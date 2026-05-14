@@ -1,12 +1,13 @@
-import { Check } from 'lucide-react'
 import { motion } from 'framer-motion'
+import Mascot from './brand/Mascot'
 
 /**
  * Zone circuit toast — atsiranda kai care mode bulk veiksmas išvalo
  * paskutinį todo augalą zonoje. Reiškia: "ši zona pilnai pasirūpinta".
  *
- * Vizualas: sage-500 bg + Check ikona — celebration moment'as, skiriasi
- * nuo balto delta toast'o.
+ * Vizualas: forest-600 bg + plant happy mascot — celebration moment'as,
+ * augalas su sprout'u perks up'inasi po circuit complete'inimo.
+ * Forest fone bone-50 paper (inverted „antspaudas" style).
  *
  * Props:
  *   message: string — formatted iš CARE_COPY.circuit
@@ -19,9 +20,9 @@ export default function CareCircuitToast({ message }) {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: -20, opacity: 0 }}
       transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-      className="bg-forest-600 rounded-2xl shadow-xl px-4 py-3 flex items-center gap-2.5"
+      className="bg-forest-600 rounded-2xl shadow-xl px-4 py-3 flex items-center gap-3"
     >
-      <Check size={20} className="text-bone flex-shrink-0" />
+      <Mascot type="plant" state="happy" size={36} blink={false} className="flex-shrink-0 text-bone" />
       <span className="text-[15px] font-bold text-bone leading-tight">{message}</span>
     </motion.div>
   )

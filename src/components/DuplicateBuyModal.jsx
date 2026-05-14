@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { createPortal } from 'react-dom'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
+import Mascot from './brand/Mascot'
 
 export default function DuplicateBuyModal({ plant, onAddAnother, onViewExisting, onClose }) {
   const isDesktop = useIsDesktop()
@@ -28,8 +29,11 @@ export default function DuplicateBuyModal({ plant, onAddAnother, onViewExisting,
           <div className="w-10 h-1 bg-bone-400/60 rounded-full" />
         </div>
 
-        <div className="flex justify-center mb-3">
-          <span className="text-4xl">{plant.emoji ?? '🌿'}</span>
+        {/* Gardener tilt — „klausiu, ar tikrai?" momentas. Ne wave (per
+            entuziastiškas), ne idle (per neutralus); tilt'as tinkamai
+            perduoda „mąstau" tone'ą decision moment'e. */}
+        <div className="flex justify-center mb-3 text-forest-700">
+          <Mascot type="gardener" state="tilt" size={72} blink={false} />
         </div>
         <h3 className="font-display text-base font-semibold tracking-tight text-forest-800 text-center mb-1">Jau augini šį augalą</h3>
         <p className="text-sm text-forest-500 text-center mb-6">
