@@ -59,15 +59,34 @@ function strongestHazardPill(plant) {
     // mato, ar plantas pavojingas žmonėms / gyvūnams / abiems. Vientisumas
     // su PlantSavybesPills.jsx (TARGET_META su User/Cat icons).
     const targets = new Set(s.pavojai.map(p => p.target).filter(Boolean))
-    return { ...style, label: HAZARD_TIPAS_LABEL[top.tipas] ?? top.tipas, targets }
+    return {
+      ...style,
+      label: HAZARD_TIPAS_LABEL[top.tipas] ?? top.tipas, // tooltip + a11y
+      severity: top.severity,
+      targets,
+    }
   }
   if (s?.pavojingumas?.yra) {
-    return { bg: 'bg-terracotta-100', text: 'text-terracotta-600', label: 'Atsargiai', targets: new Set() }
+    return { bg: 'bg-terracotta-100', text: 'text-terracotta-600', label: 'Atsargiai', severity: s.pavojingumas.lygis ?? 'silpnas', targets: new Set() }
   }
   if (plant.toksiskas) {
-    return { bg: 'bg-terracotta', text: 'text-bone', label: 'Toksiška', targets: new Set() }
+    return { bg: 'bg-terracotta', text: 'text-bone', label: 'Toksiška', severity: 'stiprus', targets: new Set() }
   }
   return null
+}
+
+// Inline SeverityBars — 3 vertikalūs barai (silpnas=1, vidutinis=2, stiprus=3).
+// Toks pat patternas kaip PlantSavybesPills.jsx (currentColor su 0.3 opacity
+// unfilled'ams). Mažas variant'as ant widget'o — 9×8 viewport'as.
+function SeverityBars({ severity }) {
+  const level = severity === 'stiprus' ? 3 : severity === 'vidutinis' ? 2 : 1
+  return (
+    <svg width="9" height="8" viewBox="0 0 12 10" className="flex-shrink-0" fill="currentColor" aria-hidden>
+      <rect x="0"   y="6.5" width="2.5" height="3.5" rx="0.5" opacity={level >= 1 ? 1 : 0.35} />
+      <rect x="4.5" y="3.5" width="2.5" height="6.5" rx="0.5" opacity={level >= 2 ? 1 : 0.35} />
+      <rect x="9"   y="0"   width="2.5" height="10"  rx="0.5" opacity={level >= 3 ? 1 : 0.35} />
+    </svg>
+  )
 }
 
 // ── Benefit pill — atsvara hazard'ui (valgoma/vaistinis su forest tonais).
@@ -313,16 +332,23 @@ const PlantCard = memo(function PlantCard({
           return (
             <div className="absolute top-2 left-2 z-[2] flex flex-col gap-[3px] items-start">
               {benefit && (
-                <span className={`inline-flex items-center gap-[3px] ${benefit.bg} ${benefit.text} font-mono text-[8.5px] font-medium uppercase tracking-[0.10em] rounded-full px-1.5 py-[2px] leading-none shadow-[0_1px_3px_rgba(28,58,42,0.22)]`}>
-                  <benefit.Icon size={8} strokeWidth={2} />
-                  {benefit.label}
+                <span
+                  title={benefit.label}
+                  aria-label={benefit.label}
+                  className={`inline-flex items-center justify-center ${benefit.bg} ${benefit.text} rounded-full w-[18px] h-[18px] shadow-[0_1px_3px_rgba(28,58,42,0.22)]`}
+                >
+                  <benefit.Icon size={10} strokeWidth={2.2} />
                 </span>
               )}
               {hazard && (
-                <span className={`inline-flex items-center gap-[3px] ${hazard.bg} ${hazard.text} font-mono text-[8.5px] font-medium uppercase tracking-[0.10em] rounded-full px-1.5 py-[2px] leading-none shadow-[0_1px_3px_rgba(184,106,58,0.28)]`}>
-                  {hazard.targets?.has('zmonems')  && <User size={8} strokeWidth={2} />}
-                  {hazard.targets?.has('gyvunams') && <Cat  size={8} strokeWidth={2} />}
-                  {hazard.label}
+                <span
+                  title={hazard.label}
+                  aria-label={hazard.label}
+                  className={`inline-flex items-center gap-1 ${hazard.bg} ${hazard.text} rounded-full px-1.5 h-[18px] shadow-[0_1px_3px_rgba(184,106,58,0.28)]`}
+                >
+                  {hazard.targets?.has('zmonems')  && <User size={10} strokeWidth={2.2} />}
+                  {hazard.targets?.has('gyvunams') && <Cat  size={10} strokeWidth={2.2} />}
+                  <SeverityBars severity={hazard.severity} />
                 </span>
               )}
             </div>
