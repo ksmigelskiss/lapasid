@@ -8,6 +8,7 @@ import { fetchPhotos, resizeImage, fetchWikipediaContext } from '../utils/imageS
 import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
 import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId } from '../utils/catalog'
+import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
 import { auth } from '../utils/firebase'
 import PaywallSheet from './PaywallSheet'
@@ -517,15 +518,18 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
 
   // Local search: kol nėra AI result + nėra loading'o, filtruojam esamus
   // augalus (kad vartotojas pirma rastų savus, o AI lookup'ą darytume tik jei
-  // tikrai naujo augalo ieško). Match'as per visus žinomus pavadinimus.
+  // tikrai naujo augalo ieško). Match'as per fuzzy search'ą — handle'ina LT
+  // diacritic'us („raktazole" → „Raktažolė") + typo'us (1-3 char edit
+  // distance pagal žodžio ilgį).
   const localMatches = (() => {
-    const q = query.trim().toLowerCase()
+    const q = query.trim()
     if (!q || result || loading) return []
-    return plants.filter(p => {
-      const pool = [p.lietuviškas, p.lotyniskas, p.inatLtName,
-        ...(p.sinonimai ?? []), ...(p.englishNames ?? [])]
-      return pool.some(c => c && c.toLowerCase().includes(q))
-    }).slice(0, 8) // max 8 — kad nesusijungtų ilga lista
+    return plants
+      .map(p => ({ plant: p, score: plantFuzzyScore(p, q) }))
+      .filter(x => x.score !== Infinity)
+      .sort((a, b) => a.score - b.score)
+      .slice(0, 8)
+      .map(x => x.plant)
   })()
 
   // ── Catalog (bendros bibliotekos) search — vartotojas → global → AI ────

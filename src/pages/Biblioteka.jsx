@@ -6,6 +6,7 @@ import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import CollectionChat from '../components/CollectionChat'
 import { buildLibrarySystemPrompt } from '../utils/collectionChatContext'
 import { useIsDesktop } from '../hooks/useIsDesktop'
+import { plantFuzzyScore } from '../utils/fuzzySearch'
 
 // Pagrindinis kategorijos filtras (mutually exclusive). `null` = visi.
 // Bibliotekoje rodomi tik `nori` ir `istorija` augalai (`auginama` lieka Dashboard'e).
@@ -13,13 +14,6 @@ const KATEGORIJA_TABS = [
   { key: 'nori',     label: 'Norėčiau' },
   { key: 'istorija', label: 'Istorija', Icon: Ghost },
 ]
-
-function matchesQuery(plant, q) {
-  const lower = q.toLowerCase()
-  return [plant.lietuviškas, plant.lotyniskas, plant.inatLtName,
-    ...(plant.sinonimai ?? []), ...(plant.englishNames ?? [])]
-    .some(c => c && c.toLowerCase().includes(lower))
-}
 
 export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, onSaveToZinynas, onViewPlant, onRefresh }) {
   const isDesktop = useIsDesktop()
@@ -55,9 +49,16 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
     const filtered = kategorija == null
       ? plants
       : plants.filter(p => p.kategorija === kategorija)
-    const sorted = [...filtered].sort((a, b) => new Date(b.data_prideta) - new Date(a.data_prideta))
-    if (!query.trim()) return sorted
-    return sorted.filter(p => matchesQuery(p, query))
+    if (!query.trim()) {
+      return [...filtered].sort((a, b) => new Date(b.data_prideta) - new Date(a.data_prideta))
+    }
+    // Su query — fuzzy match'as (LT diacritic'ai + typo'ų toleravimas) +
+    // sort'as pagal score'ą (geriausi match'ai pirmiausiai), ne pagal datą.
+    return filtered
+      .map(p => ({ plant: p, score: plantFuzzyScore(p, query) }))
+      .filter(x => x.score !== Infinity)
+      .sort((a, b) => a.score - b.score)
+      .map(x => x.plant)
   }, [plants, kategorija, query])
 
   const closeSearch = () => { setSearching(false); setQuery('') }

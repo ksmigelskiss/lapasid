@@ -1,5 +1,6 @@
 import { doc, getDoc, setDoc, getDocs, collection, query, limit } from 'firebase/firestore'
 import { db } from './firebase'
+import { plantFuzzyScore } from './fuzzySearch'
 
 // Asmeniniai laukai — nekaupiami kataloge
 const PERSONAL_FIELDS = new Set([
@@ -105,15 +106,15 @@ export async function searchCatalog(q, excludeDocIds = new Set()) {
   const trimmed = q?.trim()
   if (!trimmed || trimmed.length < 2) return []
   const all = await loadAllCatalog()
-  const lower = trimmed.toLowerCase()
+  // Fuzzy match'as su LT diacritic'ais ir typo'ų toleravimu — best score'ai
+  // grąžinami pirmiausia. Iki 6 entry'ų (UI limit'as).
   return all
     .filter(p => !excludeDocIds.has(p._id))
-    .filter(p => {
-      const pool = [p.lotyniskas, p.lietuviškas, p.inatLtName,
-        ...(p.sinonimai ?? []), ...(p.englishNames ?? [])]
-      return pool.some(c => c && c.toLowerCase().includes(lower))
-    })
+    .map(p => ({ entry: p, score: plantFuzzyScore(p, trimmed) }))
+    .filter(x => x.score !== Infinity)
+    .sort((a, b) => a.score - b.score)
     .slice(0, 6)
+    .map(x => x.entry)
 }
 
 /**
