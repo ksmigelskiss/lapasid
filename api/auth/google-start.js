@@ -10,8 +10,13 @@
 //   5. Callback keičia code → ID token → redirect'ina į / su ?googleIdToken=...
 //   6. PWA useAuth aptinka URL param → signInWithCredential → user'is logged in
 //
-// Domain handled DYNAMICALLY iš request headers — veikia ant bet kurio
-// deploy'o (lapasid.lt production, *.vercel.app preview, localhost dev'e).
+// redirect_uri HARDCODED į production'ą — PRIVALO match'inti tikslų URL
+// Google Cloud Console authorized redirect URIs sąraše. Anksčiau bandėm
+// dinamiškai per x-forwarded-host, bet iOS PWA kartais resolve'ino į
+// `www.lapasid.lt` ar kitą hostą, kurio nebuvo GCC sąraše → 400 mismatch.
+// Override per OAUTH_REDIRECT_URI env jei reikia (preview / dev).
+
+const DEFAULT_REDIRECT_URI = 'https://lapasid.lt/api/auth/callback'
 
 export default function handler(req, res) {
   const clientId = process.env.GOOGLE_CLIENT_ID
@@ -20,14 +25,11 @@ export default function handler(req, res) {
     return
   }
 
-  // Origin'as iš headers — Vercel pridėda x-forwarded-* trust'ed
-  const proto  = req.headers['x-forwarded-proto'] ?? 'https'
-  const host   = req.headers['x-forwarded-host']  ?? req.headers.host
-  const origin = `${proto}://${host}`
+  const redirectUri = process.env.OAUTH_REDIRECT_URI || DEFAULT_REDIRECT_URI
 
   const params = new URLSearchParams({
     client_id:     clientId,
-    redirect_uri:  `${origin}/api/auth/callback`,
+    redirect_uri:  redirectUri,
     response_type: 'code',
     scope:         'openid email profile',
     prompt:        'select_account',

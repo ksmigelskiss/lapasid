@@ -2,10 +2,11 @@
 // /?googleIdToken=... URL param'ą. PWA useAuth aptinka ir kviečia
 // signInWithCredential.
 //
-// redirect_uri PRIVALO match'inti tą, kurį google-start.js naudojo +
+// redirect_uri PRIVALO match'inti tą, kurį google-start.js siuntė +
 // kurį pridėjom į Google Cloud Console authorized redirect URIs sąrašą.
-// Dinamiškai imam iš x-forwarded-host (Vercel proxy) — vienodai veikia
-// production'e ir preview'uose.
+// Hardcode'inta į production — žiūr. google-start.js paaiškinimą.
+
+const DEFAULT_REDIRECT_URI = 'https://lapasid.lt/api/auth/callback'
 
 export default async function handler(req, res) {
   const { code, error } = req.query
@@ -19,10 +20,7 @@ export default async function handler(req, res) {
 
   const clientId     = process.env.GOOGLE_CLIENT_ID
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET
-
-  const proto  = req.headers['x-forwarded-proto'] ?? 'https'
-  const host   = req.headers['x-forwarded-host']  ?? req.headers.host
-  const origin = `${proto}://${host}`
+  const redirectUri  = process.env.OAUTH_REDIRECT_URI || DEFAULT_REDIRECT_URI
 
   try {
     const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
@@ -32,7 +30,7 @@ export default async function handler(req, res) {
         code,
         client_id:     clientId,
         client_secret: clientSecret,
-        redirect_uri:  `${origin}/api/auth/callback`,
+        redirect_uri:  redirectUri,
         grant_type:    'authorization_code',
       }),
     })
