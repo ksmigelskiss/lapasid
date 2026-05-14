@@ -109,7 +109,10 @@ export default function DesktopHeader({
             title="Ieškoti augalo"
           >
             <Search size={16} />
-            <span className="text-sm font-medium">Ieškoti</span>
+            {/* „Ieškoti" tekstas rodomas tik nuo xl: (≥1280px) — narrow desktop'e
+                (1100-1279) liekam icon-only kad rightcluster'is netriumpos su
+                centered tabs. */}
+            <span className="hidden xl:inline text-sm font-medium">Ieškoti</span>
           </button>
         )}
         {/* Care notifications — du pill'ai vietoj bell (water forest, fert terracotta).
