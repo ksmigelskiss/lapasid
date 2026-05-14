@@ -1,4 +1,21 @@
 import { Droplets, Leaf, Thermometer, AlertTriangle, Moon, Sun } from 'lucide-react'
+import Mascot from '../brand/Mascot'
+
+// Mood → Mascot state mapping'as. Mascot expresses primary emotion via posture
+// (idle / wilt), badge overlay (žiūr. MOOD_BADGE) — specific signal kategorija
+// (thirsty=droplet, sleeping=moon, etc.).
+function moodToMascotState(mood) {
+  switch (mood) {
+    case 'thirsty':
+    case 'sad':
+    case 'sick':
+    case 'quarantine': return 'wilt'    // body posture rodo, kad augalui blogai
+    case 'happy':
+    case 'sleeping':
+    case 'waking':
+    default:           return 'idle'    // alive default; happy = pasitenkina breath'u
+  }
+}
 
 // ── PlantPersona ──────────────────────────────────────────────
 // Kawaii potted succulent icon (matches the reference image).
@@ -84,16 +101,23 @@ export function PlantPersona({ mood = 'happy', size = 40 }) {
 }
 
 // ── PlantAvatar ───────────────────────────────────────────────
-// PNG pot image + mood badge overlay (same system as PlantPersona).
+// Animus plant mascot (per <Mascot>) + mood badge overlay.
+// Mascot perteikia bendrą emotion (idle/wilt) per posture; badge overlay
+// pridėjus specific signalą (droplet=thirsty, moon=sleeping, etc.).
+//
+// Naudojama PlantChat'e (chat avatar header'iuose + per-message ikonas)
+// ir PlantDetail'e (mood indicator). Sukinti blink'ą OFF small size'uose
+// (≤32px) — animacija per smulkmena chat'o tankame faile.
 
 export function PlantAvatar({ mood = 'happy', size = 40 }) {
   const badge   = MOOD_BADGE[mood] ?? null
   const badgeSz = Math.max(8, Math.round(size * 0.30))
   const padSz   = Math.max(2, Math.round(size * 0.08))
+  const blink   = size > 32  // big avatar — blink'inam, small — nereikia
 
   return (
     <div className="relative inline-flex flex-shrink-0" style={{ width: size, height: size }}>
-      <img src="/plant_pot.png" width={size} height={size} className="object-contain" alt="" />
+      <Mascot type="plant" state={moodToMascotState(mood)} size={size} blink={blink} />
       {badge && (
         <div
           className="absolute flex items-center justify-center rounded-full shadow-sm"

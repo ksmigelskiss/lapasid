@@ -230,8 +230,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
           <CollectionChat
             key="library-chat"
             title="Bibliotekos asistentas"
-            icon={<Mascot type="gardener" state="idle" size={56} />}
-            iconLg={<Mascot type="gardener" state="idle" size={70} />}
+            mascot="gardener"
             systemPrompt={buildLibrarySystemPrompt(plants)}
             onClose={() => setShowChat(false)}
             onSaveToZinynas={onSaveToZinynas}

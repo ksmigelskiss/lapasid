@@ -903,8 +903,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
           <CollectionChat
             key="dashboard-chat"
             title="Kolekcijos asistentas"
-            icon={<Mascot type="gardener" state="idle" size={56} />}
-            iconLg={<Mascot type="gardener" state="idle" size={70} />}
+            mascot="gardener"
             systemPrompt={buildDashboardSystemPrompt(plants, zones)}
             onClose={() => setShowChat(false)}
             onSaveToZinynas={onSaveToZinynas}

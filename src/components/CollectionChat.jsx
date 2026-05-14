@@ -4,6 +4,7 @@ import { X, ArrowUp, Globe, Camera } from 'lucide-react'
 import { useChatStream } from '../hooks/useChatStream'
 import { resizeImage } from '../utils/imageService'
 import PaywallSheet from './PaywallSheet'
+import Mascot from './brand/Mascot'
 
 // Parses assistant message text and wraps matched plant names in clickable buttons
 function renderMessage(text, plants, onViewPlant) {
@@ -41,8 +42,18 @@ function renderMessage(text, plants, onViewPlant) {
 
 const DEFAULT_HEIGHT = '68dvh'
 
-export default function CollectionChat({ systemPrompt, title, icon, iconLg, onClose, onSaveToZinynas, plants, onViewPlant, desktopPopover = false }) {
+export default function CollectionChat({ systemPrompt, title, icon, iconLg, mascot, onClose, onSaveToZinynas, plants, onViewPlant, desktopPopover = false }) {
   const { messages, streaming, streamText, send, paywallOpen, paywallLimitType, closePaywall } = useChatStream({ maxTokens: 600, limitType: 'chats' })
+
+  // Mascot helper'is — kai `mascot` prop set'inta ('gardener' | 'plant'),
+  // CollectionChat pati renderiina Mascot komponentą su state'u pagal
+  // pozicija (header → idle/think pagal streaming, empty state → wave,
+  // past message → idle, streaming indicator → think). Backward compat:
+  // jei mascot nepateiktas, fallback'as į icon/iconLg props (legacy).
+  const renderMascot = (size, state = 'idle') => {
+    if (!mascot) return null
+    return <Mascot type={mascot} state={state} size={size} blink={size > 36} />
+  }
   const [input, setInput]         = useState('')
   const [savingText, setSavingText] = useState(null)
   const [noteText, setNoteText]   = useState('')
@@ -142,7 +153,7 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
         {/* Header */}
         <div className="flex items-center gap-3 px-4 pb-3 pt-1 border-b border-warm-border flex-shrink-0">
           <div className="flex-shrink-0">
-            {icon ?? '🤖'}
+            {mascot ? renderMascot(56, streaming ? 'think' : 'idle') : (icon ?? '🤖')}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-gray-800">{title}</p>
@@ -160,7 +171,9 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
         <div className="flex-1 overflow-y-auto scrollbar-none px-4 py-3 space-y-2.5">
           {messages.length === 0 && !streaming && (
             <div className="text-center py-10 space-y-2">
-              <div className="flex justify-center">{iconLg ?? icon ?? '🤖'}</div>
+              <div className="flex justify-center">
+                {mascot ? renderMascot(70, 'wave') : (iconLg ?? icon ?? '🤖')}
+              </div>
               <p className="text-sm text-gray-500">Užduok klausimą apie savo augalus</p>
             </div>
           )}
@@ -168,7 +181,9 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
           {messages.map((m, i) => (
             <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               {m.role === 'assistant' && (
-                <span className="text-lg mr-1.5 self-end mb-0.5 flex-shrink-0">{icon ?? '🤖'}</span>
+                <span className="mr-1.5 self-end mb-0.5 flex-shrink-0 text-forest-700">
+                  {mascot ? renderMascot(24, 'idle') : <span className="text-lg">{icon ?? '🤖'}</span>}
+                </span>
               )}
               <div className="flex flex-col items-start max-w-[78%]">
                 <div className={`rounded-2xl px-3.5 py-2 text-sm leading-snug w-full ${
@@ -195,7 +210,9 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
 
           {streaming && !streamText && (
             <div className="flex justify-start">
-              <span className="text-lg mr-1.5 self-end mb-0.5">{icon ?? '🤖'}</span>
+              <span className="mr-1.5 self-end mb-0.5 text-forest-700">
+                {mascot ? renderMascot(24, 'think') : <span className="text-lg">{icon ?? '🤖'}</span>}
+              </span>
               <div className="bg-surface-2 rounded-2xl rounded-bl-sm px-4 py-3">
                 <div className="flex gap-1">
                   {[0, 1, 2].map(i => (
@@ -208,7 +225,9 @@ export default function CollectionChat({ systemPrompt, title, icon, iconLg, onCl
           )}
           {streaming && streamText && (
             <div className="flex justify-start">
-              <span className="text-lg mr-1.5 self-end mb-0.5">{icon ?? '🤖'}</span>
+              <span className="mr-1.5 self-end mb-0.5 text-forest-700">
+                {mascot ? renderMascot(24, 'think') : <span className="text-lg">{icon ?? '🤖'}</span>}
+              </span>
               <div className="max-w-[78%] bg-surface-2 rounded-2xl rounded-bl-sm px-3.5 py-2 text-sm leading-snug text-gray-800">
                 {streamText}
                 <span className="inline-block w-0.5 h-3.5 bg-gray-400 ml-0.5 animate-pulse align-text-bottom" />
