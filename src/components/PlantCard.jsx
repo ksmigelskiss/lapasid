@@ -1,7 +1,7 @@
 import { useState, useRef, memo } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileText, MapPin, FlaskConical, Check, X, Apple, Pill, User, Cat } from 'lucide-react'
+import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileText, MapPin, FlaskConical, Check, X, Apple, BriefcaseMedical, User, Cat } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
@@ -103,11 +103,10 @@ function strongestBenefitPill(plant) {
   if (!s) return null
   if (s.valgomumas?.statusas === 'pilnai') return { ...BENEFIT_STYLE_STRONG, Icon: Apple, label: 'Valgoma' }
   if (s.valgomumas?.statusas === 'dalinai') return { ...BENEFIT_STYLE_SUBTLE, Icon: Apple, label: 'Valgoma' }
-  // Pill — universalus medicinos/vaistinės ikonas (lucide neturi caduceus
-  // „gyvatės ant taurės"). Atstoja Sprout (kuris vizualiai painiojosi su
-  // augalo gallery'inimu, ne medicinos signaliu).
-  if (s.vaistinis?.statusas === 'moksline')  return { ...BENEFIT_STYLE_STRONG, Icon: Pill, label: 'Vaistinis' }
-  if (s.vaistinis?.statusas === 'tradicine') return { ...BENEFIT_STYLE_SUBTLE, Icon: Pill, label: 'Vaistinis' }
+  // BriefcaseMedical — medicinos krepšys, aiškiausias „vaistinė/healthcare"
+  // signalas lucide setup'e (geresnis nei Pill/Sprout — iškart suprantamas).
+  if (s.vaistinis?.statusas === 'moksline')  return { ...BENEFIT_STYLE_STRONG, Icon: BriefcaseMedical, label: 'Vaistinis' }
+  if (s.vaistinis?.statusas === 'tradicine') return { ...BENEFIT_STYLE_SUBTLE, Icon: BriefcaseMedical, label: 'Vaistinis' }
   return null
 }
 
