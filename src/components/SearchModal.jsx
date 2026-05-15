@@ -469,16 +469,21 @@ async function enrich(parsed) {
     }
   }
 
-  // Cultivar / low-confidence path — bandom Wikidata main photo'ai.
-  // Wikidata turi structured entity'us populiariems cultivar'ams su image
-  // (P18) field'u — geriau nei niekas, ir TIKSLIAI to cultivar'o, ne
-  // laukinio giminaičio.
+  // Cultivar / low-confidence path — multi-source priority chain:
+  //   1. Wikidata P18 (free, jei entity yra)
+  //   2. Google Custom Search Image (paid ~$0.005, primary source)
+  //   3. Wikipedia direct + opensearch thumbnail (free)
+  // null jei visi miss → UI rodo plant card be photo.
   const wd = await fetchWikidataPlant(parsed.latinName)
+  let mainImage = wd?.imageUrl ?? null
+  if (!mainImage) mainImage = await fetchGoogleImage(parsed.latinName)
+  if (!mainImage) mainImage = await fetchWikiThumbnail(parsed.latinName)
+
   return {
     ...parsed,
     name:         parsed.name,
-    image:        wd?.imageUrl ?? null,
-    photos:       wd?.imageUrl ? [wd.imageUrl] : [],
+    image:        mainImage,
+    photos:       mainImage ? [mainImage] : [],
     wikidataId:   wd?.id ?? null,
     inatLtName:   null,
     inatTaxonId:  null,
@@ -505,6 +510,28 @@ function cleanLatinForSearch(latinName) {
     .replace(/[®™©]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
+}
+
+// Google Custom Search Image API — proxy'inta per /api/plant-image.
+// Cultivar'ams aukščiausia hit rate iš visų photo šaltinių (~80%+),
+// nes Search'inam configured plant authority sites (RHS, garden.org,
+// nursery'iai, Wikipedia, Commons).
+//
+// Cost: ~$0.005 per kvietimą, bet edge-cache'inta 30d → kartotinis užklausa
+// to paties cultivar'o = €0.
+async function fetchGoogleImage(latinName) {
+  if (!latinName) return null
+  const cleaned = cleanLatinForSearch(latinName)
+  if (!cleaned) return null
+  try {
+    const r = await fetch(`/api/plant-image?q=${encodeURIComponent(cleaned)}`)
+    if (!r.ok) return null
+    const data = await r.json()
+    return data.images?.[0]?.url ?? null
+  } catch (e) {
+    console.warn('[google-image] fetch failed:', e)
+    return null
+  }
 }
 
 // Wikidata SPARQL/Search — structured cultivar data + image. PIRMAS layer
@@ -642,12 +669,18 @@ async function fetchCommonsImage(latinName) {
   } catch { return null }
 }
 
-// Enrich'ina candidates su image URL'ais. Priority chain:
-//   1. AI parinko imageUrl iš savo web_search (best case)
-//   2. Wikidata SPARQL (structured cultivar entity → P18 image)
-//   3. Wikipedia REST API (direct + opensearch fallback)
-//   4. Wikimedia Commons (strict filter: title turi turėt ir genus, ir cultivar)
-//   5. null → UI fallback'ina į emoji
+// Enrich'ina candidates su image URL'ais. Priority chain (free → paid):
+//   1. AI parinko imageUrl iš savo web_search (free, retas hit)
+//   2. Wikidata SPARQL (free, populiarių cultivars entity'iai turi P18)
+//   3. Google Custom Search Image (paid ~$0.005, configured plant sites,
+//      high hit rate — primary source)
+//   4. Wikipedia REST direct + opensearch (free, retas hit cultivar'ams)
+//   5. Wikimedia Commons strict filter (free, occasional hit)
+//   6. null → UI fallback'ina į emoji
+//
+// Order'is: pirma bandom nemokamus (Wikidata) — jei pavyksta, taupom CSE
+// kvotą. Tada Google CSE kaip primary paid source. Wikipedia + Commons
+// last-resort fallback'ai (didelis miss rate, bet jei pavyksta — laimėjom).
 //
 // Kiekvienam kandidatui priority chain vykdoma sekvencialiai (early-exit
 // jei rastas image), bet TARP candidates — paraleliai per Promise.all.
@@ -659,11 +692,14 @@ async function enrichCandidates(candidates) {
     const wd = await fetchWikidataPlant(c.latinName)
     if (wd?.imageUrl) return { ...c, imageUrl: wd.imageUrl, wikidataId: wd.id }
 
+    const googleImg = await fetchGoogleImage(c.latinName)
+    if (googleImg) return { ...c, imageUrl: googleImg, wikidataId: wd?.id ?? null }
+
     const wikiImg = await fetchWikiThumbnail(c.latinName)
     if (wikiImg) return { ...c, imageUrl: wikiImg, wikidataId: wd?.id ?? null }
 
     const commonsImg = await fetchCommonsImage(c.latinName)
-    return { ...c, imageUrl: commonsImg, wikidataId: wd?.id ?? null }  // imageUrl gali likti null
+    return { ...c, imageUrl: commonsImg, wikidataId: wd?.id ?? null }  // gali likti null
   }))
 }
 
