@@ -2,73 +2,115 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper: ar request'o user'is yra admin'as? Tikriname users/{uid}.isAdmin field'ą.
+    // ──────────────────────────────────────────────────────────────
+    // ADMIN HELPER
+    // ──────────────────────────────────────────────────────────────
+    // Tikrina ar request.auth user'is turi `isAdmin: true` users/{uid}
+    // dokumente. Naudojama allow rules'uose kaip override'as visiems
+    // ribojimams. Tavo paskyrai (kestutis@okone.lt) reikia per Firebase
+    // Console rankiniu būdu pridėti `isAdmin: true` lauką users doc'e.
     function isAdmin() {
       return request.auth != null &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
     }
 
-    // Kiekvienas vartotojas skaito/rašo tik savo profilį. Admin'as skaito visus
-    // (admin panel'ui), gali update'inti (approve/role/plan), gali delete (soft delete).
+    // ──────────────────────────────────────────────────────────────
+    // USERS
+    // ──────────────────────────────────────────────────────────────
+    // Įprastai — tik savo doc'as.
+    // Admin'as — read'as (vartotojų sąrašas) + write'as (toggle
+    // isAdmin / beta / subscription / approved per AdminPanel) +
+    // delete (reject pending users'ams ir soft delete vartotojams).
     match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
-      allow read, update, delete: if isAdmin();
+      allow read, write, delete: if request.auth != null && (
+        request.auth.uid == uid ||
+        isAdmin()
+      );
     }
 
-    // Kolekcijų metaduomenys (zones, zinynas, settings, members)
+    // ──────────────────────────────────────────────────────────────
+    // COLLECTIONS
+    // ──────────────────────────────────────────────────────────────
+    // Read/write/delete — tik members'ams arba admin'ui.
+    // (Admin delete — soft delete user cascade'ui, kai trinam jo owned
+    // kolekcijas.)
+    // Create — bet kuriam auth'intam (naujos kolekcijos kūrimui).
+    // Update — papildomas case'as: ne-member gali update'inti tik jei
+    // prideda SAVE į members[] (accept invite flow'as) — ta logika
+    // palikta nepakitusi, plius admin override'as.
     match /collections/{colId} {
-      // Nariai gali skaityti ir keisti
-      allow read, write: if request.auth != null &&
-        request.auth.uid in resource.data.members;
-      // Naujos kolekcijos kūrimas (pirmasis prisijungimas)
+      allow read, write, delete: if request.auth != null && (
+        request.auth.uid in resource.data.members ||
+        isAdmin()
+      );
+
       allow create: if request.auth != null;
-      // Invite join: bet kuris auth vartotojas gali pridėti save prie members
-      // (tik arrayUnion su savo UID — serveris tikrina invite tokeną)
+
       allow update: if request.auth != null && (
         request.auth.uid in resource.data.members ||
-        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members']) &&
-         request.resource.data.members.hasAll(resource.data.members) &&
-         request.resource.data.members.hasAll([request.auth.uid]))
+        isAdmin() ||
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members']) &&
+          request.resource.data.members.hasAll(resource.data.members) &&
+          request.resource.data.members.hasAll([request.auth.uid])
+        )
       );
-      // Admin'as gali skaityti / delete'inti bet kurią kolekciją
-      allow read, delete: if isAdmin();
     }
 
-    // Augalai (subkolekcija)
+    // ──────────────────────────────────────────────────────────────
+    // COLLECTION PLANTS (subkolekcija)
+    // ──────────────────────────────────────────────────────────────
+    // Members'ai — pilnos teisės (read + write).
+    // Admin'as — TIK read (kolekcijos statistikai, plant count) ir
+    // TIK delete (cascade kai soft-delete user'į). NE write — tavo
+    // privatumo principas: admin'as plant content'o neredaguoja.
     match /collections/{colId}/plants/{plantId} {
-      allow read, write: if request.auth != null &&
-        request.auth.uid in
-          get(/databases/$(database)/documents/collections/$(colId)).data.members;
-      // Admin'as — pilnas access plantsubcol'ui
-      allow read, write, delete: if isAdmin();
-    }
-
-    // Bendra augalų katalogo DB — visi skaito, rašo tik serveris
-    match /catalog/{docId} {
-      allow read: if request.auth != null;
-      // Kol nėra serverio — leidžiame ir klientui rašyti (Phase 1 metu)
-      allow write: if request.auth != null;
-    }
-
-    // Kvietimai į kolekciją
-    match /invites/{token} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
-      // arrayUnion savęs prie narių — bet kuris auth vartotojas gali prisijungti
-      allow update: if request.auth != null;
-      // Admin'as gali delete'inti senus / piktnaudžiaujamus invite token'us
+      allow read: if request.auth != null && (
+        request.auth.uid in get(/databases/$(database)/documents/collections/$(colId)).data.members ||
+        isAdmin()
+      );
+      allow write: if request.auth != null &&
+        request.auth.uid in get(/databases/$(database)/documents/collections/$(colId)).data.members;
       allow delete: if isAdmin();
     }
 
-    // Augalo pasas — viešas skaitymas jei isPublic, rašo tik auth vartotojas
-    match /plant-passports/{plantId} {
-      allow read: if resource.data.isPublic == true || request.auth != null;
+    // ──────────────────────────────────────────────────────────────
+    // CATALOG (bendra rūšių žinių bazė)
+    // ──────────────────────────────────────────────────────────────
+    // Visi prisijungę gali skaityti ir rašyti (saveToCatalog
+    // automatiškai per syncFromRemote). Vėliau, kai pridėsim
+    // moderation'ą, write'us apribosim į admin/moderator.
+    match /catalog/{docId} {
+      allow read:  if request.auth != null;
       allow write: if request.auth != null;
     }
 
-    // Plant-sitter tokenai — skaito visi (token žinojimas = prieiga), rašo auth
+    // ──────────────────────────────────────────────────────────────
+    // INVITES (collection sharing token'ai)
+    // ──────────────────────────────────────────────────────────────
+    // Read/create/update — bet kuriam auth'intam (accept invite flow'as).
+    // Delete — tik admin'ui (invite cleanup tab admin panel'e).
+    match /invites/{token} {
+      allow read:   if request.auth != null;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null;
+      allow delete: if isAdmin();
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // PLANT PASSPORTS (viešos augalo „paso" puslapiai)
+    // ──────────────────────────────────────────────────────────────
+    match /plant-passports/{plantId} {
+      allow read:  if resource.data.isPublic == true || request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // PLANT SITTER TOKENS (viewer share link'ai be auth'o)
+    // ──────────────────────────────────────────────────────────────
     match /plant-sitter-tokens/{token} {
-      allow read: if true;
+      allow read:  if true;
       allow write: if request.auth != null;
     }
   }
