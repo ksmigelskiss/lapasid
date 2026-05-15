@@ -235,23 +235,27 @@ const PlantCard = memo(function PlantCard({
   const waterSoon = !waterOverdue && waterFC?.daysUntil != null && waterFC.daysUntil <= 2
   const fertSoon  = !fertOverdue  && fertFC?.daysUntil  != null && fertFC.daysUntil  <= 2
 
-  // Care mode'e — kortelė turinti overdue veiksmą gauna colored ring.
-  // Akimi iškart matosi „šis šaukia tave" be CareCircle small badge'o
-  // ieškojimo. Done-today turi prioritetą (kortelė nuima ring'ą).
-  const needsAction      = careMode && !doneToday && (waterOverdue || fertOverdue)
-  const actionRingClass  =
-    needsAction && fertOverdue && !waterOverdue
-      ? 'ring-2 ring-terracotta/70 shadow-lg shadow-terracotta/20'
-      : needsAction && waterOverdue
-      ? 'ring-2 ring-forest-500/70 shadow-lg shadow-forest-500/20'
-      : ''
+  // Care mode trijų-tier'ų hierarchija per opacity:
+  //   • Reikia priežiūros (overdue) → 100% — pop'ina (plius photo badges
+  //                                   ir CareCircle jau spalvotai signalizuoja)
+  //   • Nereikia priežiūros           → 65% — secondary, vis tiek matomas
+  //                                          jei nori bonus action
+  //   • Atlikta šiandien              → 40% — clearly „done" feel'as
+  //
+  // Anksčiau buvęs colored ring drop'intas — photo badges + CareCircle
+  // dengia signal'ą be ring-as-frame ambiguity'os.
+  const needsAction = careMode && !doneToday && (waterOverdue || fertOverdue)
+  const careOpacity = !careMode               ? ''
+                    : doneToday               ? 'opacity-40'
+                    : needsAction             ? ''          // full opacity
+                    : 'opacity-65'                          // neutral, dimmed
 
   const handleClick = () => { if (didLongPress.current) return; careMode ? onToggle?.() : onTap?.() }
 
   return (
     <>
     <div
-      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card transition-all duration-200 cursor-pointer active:scale-[0.97] lg:hover:-translate-y-0.5 lg:hover:shadow-ios-lg ${doneToday ? 'opacity-50' : ''} ${actionRingClass}`}
+      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card transition-all duration-200 cursor-pointer active:scale-[0.97] lg:hover:-translate-y-0.5 lg:hover:shadow-ios-lg ${careOpacity}`}
       /* Vienas style prop'as su conditional merge'u — anksčiau buvo du
          atskiri style props'ai (contentVisibility ir careMode style),
          React laikė tik paskutinį, todėl contentVisibility off-screen
