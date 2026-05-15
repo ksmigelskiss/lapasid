@@ -229,12 +229,29 @@ const PlantCard = memo(function PlantCard({
     fertLastDate === todayStr
   )
 
+  // „Soon" — likę ≤2 dienos iki kito laistymo/tręšimo. Pažymime widget
+  // badge'us photo'je viduriniu intensyvumu, kad kelias dienas anksto
+  // pamatyti kas artėja.
+  const waterSoon = !waterOverdue && waterFC?.daysUntil != null && waterFC.daysUntil <= 2
+  const fertSoon  = !fertOverdue  && fertFC?.daysUntil  != null && fertFC.daysUntil  <= 2
+
+  // Care mode'e — kortelė turinti overdue veiksmą gauna colored ring.
+  // Akimi iškart matosi „šis šaukia tave" be CareCircle small badge'o
+  // ieškojimo. Done-today turi prioritetą (kortelė nuima ring'ą).
+  const needsAction      = careMode && !doneToday && (waterOverdue || fertOverdue)
+  const actionRingClass  =
+    needsAction && fertOverdue && !waterOverdue
+      ? 'ring-2 ring-terracotta/70 shadow-lg shadow-terracotta/20'
+      : needsAction && waterOverdue
+      ? 'ring-2 ring-forest-500/70 shadow-lg shadow-forest-500/20'
+      : ''
+
   const handleClick = () => { if (didLongPress.current) return; careMode ? onToggle?.() : onTap?.() }
 
   return (
     <>
     <div
-      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card transition-all duration-200 cursor-pointer active:scale-[0.97] lg:hover:-translate-y-0.5 lg:hover:shadow-ios-lg ${doneToday ? 'opacity-50' : ''}`}
+      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card transition-all duration-200 cursor-pointer active:scale-[0.97] lg:hover:-translate-y-0.5 lg:hover:shadow-ios-lg ${doneToday ? 'opacity-50' : ''} ${actionRingClass}`}
       /* Vienas style prop'as su conditional merge'u — anksčiau buvo du
          atskiri style props'ai (contentVisibility ir careMode style),
          React laikė tik paskutinį, todėl contentVisibility off-screen
@@ -284,25 +301,50 @@ const PlantCard = memo(function PlantCard({
         )}
 
         {/* Top-right pill stack (auginama only) — forecast'ai + badge'ai.
-            Vientisas tier'as: rounded-full, h-[20px], bg-black/40
-            backdrop-blur-sm, icon size 11px, text-[10px] font-semibold.
-            Vienoda forma su top-left savybes pill'ais; aukštis didesnis
-            (su tekstu + skaičiumi), bet siluetas tas pats. */}
+            TIERED intensity: overdue → solid action color (forest/terracotta)
+            su bone tekstu; soon (≤2d) → semi-transparent action color;
+            normal → bg-black/40 backdrop-blur. Tikslas — akimirksniu matyti
+            kortelės statusą ne ieškant skaičių.
+            Forma: rounded-full, h-[20px], icon 13px, text-[10px]. */}
         {section === 'auginama' && (
           <div className="absolute top-2 right-2 flex flex-col gap-1 items-end z-[2]">
-            <div className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-sm rounded-full px-2 h-[20px]">
-              <Droplets size={13} className={waterOverdue ? 'text-forest-200 fill-forest-200' : 'text-white/60'} />
+            <div className={`inline-flex items-center gap-1 rounded-full px-2 h-[20px] ${
+              waterOverdue ? 'bg-forest-500 ring-1 ring-bone-50/30'
+              : waterSoon   ? 'bg-forest-500/70 backdrop-blur-sm'
+              : 'bg-black/40 backdrop-blur-sm'
+            }`}>
+              <Droplets size={13} className={
+                waterOverdue ? 'text-bone fill-bone'
+                : waterSoon   ? 'text-bone'
+                : 'text-white/60'
+              } />
               {waterDaysUntil != null && (
-                <span className={`text-[10px] font-semibold leading-none ${waterOverdue ? 'text-forest-100' : 'text-white/70'}`}>
+                <span className={`text-[10px] leading-none ${
+                  waterOverdue ? 'text-bone font-bold'
+                  : waterSoon   ? 'text-bone font-semibold'
+                  : 'text-white/70 font-semibold'
+                }`}>
                   {waterDaysUntil}d
                 </span>
               )}
             </div>
             {fertFC?.intervalDays != null && (
-              <div className="inline-flex items-center gap-1 bg-black/40 backdrop-blur-sm rounded-full px-2 h-[20px]">
-                <FlaskConical size={13} className={fertOverdue ? 'text-terracotta-200 fill-terracotta-200' : 'text-white/60'} />
+              <div className={`inline-flex items-center gap-1 rounded-full px-2 h-[20px] ${
+                fertOverdue ? 'bg-terracotta-500 ring-1 ring-bone-50/30'
+                : fertSoon   ? 'bg-terracotta-500/70 backdrop-blur-sm'
+                : 'bg-black/40 backdrop-blur-sm'
+              }`}>
+                <FlaskConical size={13} className={
+                  fertOverdue ? 'text-bone fill-bone'
+                  : fertSoon   ? 'text-bone'
+                  : 'text-white/60'
+                } />
                 {fertDaysUntil != null && (
-                  <span className={`text-[10px] font-semibold leading-none ${fertOverdue ? 'text-terracotta-100' : 'text-white/70'}`}>
+                  <span className={`text-[10px] leading-none ${
+                    fertOverdue ? 'text-bone font-bold'
+                    : fertSoon   ? 'text-bone font-semibold'
+                    : 'text-white/70 font-semibold'
+                  }`}>
                     {fertDaysUntil}d
                   </span>
                 )}
