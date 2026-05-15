@@ -50,12 +50,28 @@ async function claudeCall(body) {
 // ── Phase 1: fast preview (name, stats, description, facts) ──────
 export const TOOL_PREVIEW = {
   name: 'plant_preview',
-  description: 'Pateik pagrindinę augalo informaciją greitai.',
+  description: 'Pateik pagrindinę augalo informaciją greitai. SVARBU — privalomi confidence ir matchLevel laukai, kad galėtume rodyti vartotojui kai info nepatikima.',
   input_schema: {
     type: 'object',
     properties: {
+      // ── Confidence metadata (kritiškai svarbu — neleidžia AI tyliai
+      //    grąžinti artimiausią rūšį kaip atsakymą į cultivar užklausą) ─
+      confidence: {
+        type: 'string',
+        enum: ['high', 'medium', 'low'],
+        description: 'Tavo tikrumas, kad atsakymas atitinka užklausą. high = aiškiai žinai šitą tiksliai augalą; medium = žinai bendrai (pvz. gentį) bet ne tikslų cultivar/sub-species; low = nežinai konkrečiai, atsakymas yra spėjimas remiantis artimiausiu giminaičiu.',
+      },
+      matchLevel: {
+        type: 'string',
+        enum: ['cultivar', 'species', 'genus', 'unknown'],
+        description: 'Kokiu taksonomijos lygiu tikrai pataikei. cultivar = tikslus cultivar/hybrid identifikuotas; species = tik iki species lygio; genus = tik genties lygis; unknown = nesi tikras net dėl genties.',
+      },
+      uncertaintyReason: {
+        type: ['string', 'null'],
+        description: 'Jei confidence != high — paaiškink lietuviškai 1 sakiniu KODĖL nesi tikras. Pvz. „Šio cultivar (Clematis Boulevard) nėra mano žinių bazėje, pateikiu bendrą Clematis informaciją." arba „Nuotraukoje matomas neaiškus augalas, gali būti X arba Y." null jei confidence == high.',
+      },
       name:            { type: 'string',  description: 'Tikras lietuviškas pavadinimas. NIEKADA angliškas ar lotyniškas.' },
-      latinName:       { type: 'string',  description: 'Tikslus lotyniškas pavadinimas' },
+      latinName:       { type: 'string',  description: 'Tikslus lotyniškas pavadinimas (su cultivar žymeniu jei taikoma, pvz. „Clematis \'Boulevard\'")' },
       emoji:           { type: 'string',  description: 'Vienas emoji' },
       tipas:           { type: 'string',  description: 'Augalo tipas (pvz. Sultingas, Tropinis daugiametis...)' },
       augimo_greitis:  { type: 'string',  enum: ['lėtas', 'vidutinis', 'greitas'] },
@@ -131,7 +147,8 @@ export const TOOL_PREVIEW = {
       },
       idomybes: { type: 'array', items: { type: 'string' }, description: '2-3 įdomūs faktai' },
     },
-    required: ['name', 'latinName', 'emoji', 'tipas', 'augimo_greitis', 'sunkumas',
+    required: ['confidence', 'matchLevel', 'uncertaintyReason',
+               'name', 'latinName', 'emoji', 'tipas', 'augimo_greitis', 'sunkumas',
                'toksiskas', 'savybes', 'aprasymas', 'kilme', 'sviesa', 'vanduo', 'idomybes'],
   },
 }
@@ -202,6 +219,43 @@ export const TOOL_DETAILS = {
 }
 
 export const PLANT_SYSTEM = `Esi augalų ekspertas. Visada ieškok tiksliai nurodyto augalo. Rašyk LIETUVIŠKAI, natūraliai.
+
+═════════════════════════════════════════════════════════
+HONESTY REQUIREMENT — KRITIŠKAI SVARBU
+═════════════════════════════════════════════════════════
+
+PRIVALOMI laukai: confidence, matchLevel, uncertaintyReason.
+
+Augalų pasaulis turi tris taksonomijos lygius, kurie SKIRIASI priežiūra:
+  • Genus (gentis) — pvz. „Clematis"
+  • Species (rūšis) — pvz. „Clematis vitalba" (laukinė)
+  • Cultivar/Hybrid — pvz. „Clematis 'Boulevard'" (sodo hibridas, Raymond Evison serija)
+
+VISKAS skiriasi tarp lygmenų: laistymas, dirvožemis, ligos, atsparumas, kvapas, žiedų spalva.
+Hibrido priežiūra GALI būti dramatiškai kitokia nei laukinio giminaičio.
+
+DRAUDŽIAMA: tyliai grąžinti laukinę rūšį (pvz. Clematis vitalba), kai
+vartotojas paklausė konkretaus cultivar'o (pvz. Clematis 'Boulevard').
+
+TEISINGAS elgesys:
+  → Jei TIKRAI žinai konkrečiai šitą cultivar/hybrid →
+      confidence: "high", matchLevel: "cultivar"
+  → Jei žinai gentį/seriją bet ne tikslų cultivar →
+      confidence: "medium", matchLevel: "genus" arba "species",
+      uncertaintyReason: „Konkretus cultivar 'X' neidentifikuotas;
+      pateikiama bendra genties Y informacija."
+  → Jei nieko aiškaus nežinai →
+      confidence: "low", matchLevel: "unknown",
+      uncertaintyReason: „Augalas '…' nėra mano žinių bazėje."
+
+Niekada nemeluok confidence — geriau pasakyti „nežinau" nei pateikti
+neteisingą priežiūrą, kuri gali pakenkti augalui ar gyvūnui.
+
+latinName lauko formate IŠLAIKYK cultivar žymenį: jei vartotojas paklausė
+„Clematis 'Boulevard'", grąžink būtent „Clematis 'Boulevard'" (su quote'ais),
+NE „Clematis vitalba".
+
+═════════════════════════════════════════════════════════
 
 SVARBU — laukas "name": PRIVALO būti tikras lietuviškas pavadinimas (žodynas/Vikipedija). NIEKADA lotyniškas ar angliškas. Hibridams be atskiro pavadinimo — naudok genties lietuvišką (pvz. Nepenthes → "Ąsotenė").
 
@@ -304,16 +358,33 @@ async function enrich(parsed) {
     fetchPlantNames(parsed.latinName),
   ])
   const inatLtName = namesData?.inatLtName ?? null
+
+  // iNaturalist NETURI cultivar coverage'o — stripCultivar() vidiniame
+  // fetch'e nuima quotes prieš API call'ą, todėl grąžinama artimiausia
+  // RŪŠIS (pvz. „Gelsvoji raganė" Clematis 'Boulevard' užklausai).
+  //
+  // Apsauga: jei AI explicitly grąžino cultivar (matchLevel=='cultivar'
+  // arba latinName turi quote'us) — NEPERRAŠOM AI suggested name'o iNat
+  // species'o vardu. Tas pats — iNat photos atmetam, nes jos rodytų
+  // laukinę giminaitę vietoj sodo hibrido.
+  const isCultivar =
+    parsed.matchLevel === 'cultivar' ||
+    /['"][^'"]+['"]/.test(parsed.latinName ?? '')
+
+  // Low-confidence rezultatai — irgi atmetam iNat photo enrichment'ą, kad
+  // nemodellintume „Gelsvoji raganė" nuotraukos kaip Clematis 'Boulevard'
+  // augalo. Geriau be photo nei suklaidinanti photo.
+  const trustInat = !isCultivar && parsed.confidence !== 'low'
+
   return {
     ...parsed,
-    // iNaturalist Lithuanian names are curated — use as primary name if available
-    name:         inatLtName ?? parsed.name,
-    image:        photos[0] ?? null,
-    photos,
-    inatLtName,
-    inatTaxonId:  namesData?.inatTaxonId  ?? null,
-    sinonimai:    namesData?.sinonimai    ?? [],
-    englishNames: namesData?.englishNames ?? [],
+    name:         trustInat ? (inatLtName ?? parsed.name) : parsed.name,
+    image:        trustInat ? (photos[0] ?? null) : null,
+    photos:       trustInat ? photos : [],
+    inatLtName:   trustInat ? inatLtName : null,
+    inatTaxonId:  trustInat ? (namesData?.inatTaxonId ?? null) : null,
+    sinonimai:    trustInat ? (namesData?.sinonimai    ?? []) : [],
+    englishNames: trustInat ? (namesData?.englishNames ?? []) : [],
   }
 }
 
@@ -682,6 +753,51 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
           >
+            {/* Confidence banner — rodom kai AI confidence != 'high'. Augalo
+                priežiūros info gali būti netiksli; matchLevel padeda suprasti
+                ar tai tik genties lygis, ar visiškai nežinia. */}
+            {result.confidence && result.confidence !== 'high' && (
+              <div className={`rounded-2xl px-4 py-3 mb-3 border ${
+                result.confidence === 'low'
+                  ? 'bg-terracotta-50 border-terracotta-300/60'
+                  : 'bg-bone-100 border-bone-400/60'
+              }`}>
+                <div className="flex items-start gap-2.5">
+                  <span className={`text-base flex-shrink-0 mt-0.5 ${
+                    result.confidence === 'low' ? 'text-terracotta' : 'text-forest-500'
+                  }`}>
+                    {result.confidence === 'low' ? '⚠' : 'ℹ'}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-[13px] font-semibold ${
+                      result.confidence === 'low' ? 'text-terracotta-600' : 'text-forest-700'
+                    }`}>
+                      {result.confidence === 'low'
+                        ? 'AI nepatvirtina šio augalo'
+                        : 'Apytikrė informacija'}
+                      {result.matchLevel && result.matchLevel !== 'cultivar' && (
+                        <span className="ml-1.5 font-mono text-[10px] uppercase tracking-[0.14em] opacity-70">
+                          {result.matchLevel === 'genus' ? 'genties lygis'
+                            : result.matchLevel === 'species' ? 'rūšies lygis'
+                            : 'neaiškus'}
+                        </span>
+                      )}
+                    </p>
+                    {result.uncertaintyReason && (
+                      <p className={`text-xs leading-relaxed mt-1 ${
+                        result.confidence === 'low' ? 'text-terracotta-600/90' : 'text-forest-600'
+                      }`}>
+                        {result.uncertaintyReason}
+                      </p>
+                    )}
+                    <p className="text-[11px] text-forest-500 mt-1.5 italic">
+                      Priežiūros info gali būti netiksli — saugok kaip „nepatvirtinta" ir patikrink rankiniu būdu.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Hero gallery — mobile bleeds (-mx-4) iki ekrano krašto; desktop'e
                 lieka rounded card su parent padding'u (kad neišlystų už panel'ės) */}
             {result.image ? (

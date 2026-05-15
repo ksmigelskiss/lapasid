@@ -57,8 +57,20 @@ export function normalizeSavybes(s, legacyToksiskas, legacyInfo) {
 }
 
 export function fromAIResult(aiResult) {
+  // Verification status — visi AI rezultatai pradžioje yra `unverified`.
+  // Vėliau admin / botanikas gali pažymėti `expert-verified` (per admin panel).
+  // aiConfidence + aiMatchLevel + aiUncertaintyReason — užfiksuojam, kodėl
+  // ši būsena susidarė, kad galėtume rodyti UI badge'ą ir filtruoti admin'e.
+  const aiConfidence = aiResult.confidence ?? null
+  const verificationStatus = aiConfidence === 'high' ? 'auto-verified' : 'unverified'
+
   return {
     id: makeId(),
+    verificationStatus,
+    aiConfidence,
+    aiMatchLevel: aiResult.matchLevel ?? null,
+    aiUncertaintyReason: aiResult.uncertaintyReason ?? null,
+    aiVerifiedAt: new Date().toISOString(),
     lotyniskas:  aiResult.latinName ?? '',
     lietuviškas: aiResult.name ?? '',
     emoji:       aiResult.emoji ?? '🌿',
