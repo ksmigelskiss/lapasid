@@ -806,18 +806,26 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     return () => clearInterval(t)
   }, [loading])
 
-  // Cycle status messages during Phase 1 loading
-  useEffect(() => {
-    if (!loading) return
-    const steps = [
-      [1200, 'Renkuoju informaciją...'],
-      [3000, 'Tikrinu kilmę ir pavadinimą...'],
-      [5500, 'Žiūriu šviesos ir vandens poreikius...'],
-      [8000, 'Identifikuoju augalą...'],
-    ]
-    const timers = steps.map(([delay, msg]) => setTimeout(() => setStatusMsg(msg), delay))
-    return () => timers.forEach(clearTimeout)
-  }, [loading])
+  // Real-time progress tracking — vietoj fake timer cycling (kuris atrodo
+  // random nes nieko neatspindi), naudojam helper, kurį iškviečia konkretūs
+  // search flow žingsniai. Konsoleje log'inam timings, kad galim matyti
+  // kuris žingsnis lėtas ir optimizuoti.
+  const stepStartRef = useRef(null)
+  const trackStep = (label) => {
+    const now = Date.now()
+    if (stepStartRef.current) {
+      const prevLabel = stepStartRef.current.label
+      const elapsed   = ((now - stepStartRef.current.startedAt) / 1000).toFixed(2)
+      console.log(`[search] ✓ ${prevLabel} — ${elapsed}s`)
+    }
+    if (label) {
+      stepStartRef.current = { label, startedAt: now }
+      setStatusMsg(label)
+    } else {
+      stepStartRef.current = null
+      setStatusMsg('')
+    }
+  }
 
   // Auto-search if launched with a pre-filled query
   useEffect(() => {
@@ -856,7 +864,8 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     const controller = new AbortController()
     abortRef.current = controller
     setLoading(true); setResult(null); setError(null); setPreview(null)
-    setStatusMsg('Ieškau augalo...')
+    const totalStartedAt = Date.now()
+    trackStep('AI ieško augalo...')
 
     try {
       // ── Phase 1: AI preview su web_search tool'u ───────────────
@@ -880,7 +889,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       if (controller.signal.aborted) return
 
       const previewBlock = r1.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')
-      if (!previewBlock) { setError('Augalas nerastas'); setLoading(false); setStatusMsg(''); return }
+      if (!previewBlock) { setError('Augalas nerastas'); setLoading(false); trackStep(null); return }
 
       const aiResult = previewBlock.input
 
@@ -889,7 +898,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       // šitam latin name'ui — naudojam jį vietoj fresh AI rezultato.
       // Catalog yra source of truth verified info'ai. Skip'iname enrich
       // (iNat photo) — naudojam catalog saved photo.
-      setStatusMsg('Tikrinu bibliotekoje...')
+      trackStep('Tikrinu mūsų bibliotekoje...')
       const cached = await getCatalogEntry(aiResult.latinName)
       const trustCatalog = cached && (
         cached.verificationStatus === 'expert-verified' ||
@@ -899,13 +908,19 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       if (trustCatalog) {
         setResult({ ...catalogEntryToAIResult(cached), fromCatalog: true })
         setLoading(false)
-        setStatusMsg('')
+        trackStep(null)
+        console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (from catalog)`)
         return
       }
 
       // ── Catalog miss arba unverified — naudojam AI + enrich ─────
-      setStatusMsg('Ruošiu rezultatą...')
-      // Paraleliai — enrich AI result (iNat photo, names) + enrich candidates (Wikipedia thumbnails)
+      const hasCandidates = Array.isArray(aiResult.candidates) && aiResult.candidates.length > 0
+      trackStep(
+        hasCandidates
+          ? `Renku nuotraukas (${aiResult.candidates.length} kandidatams)...`
+          : 'Renku nuotrauką...'
+      )
+      // Paraleliai — enrich AI result (iNat photo, names) + enrich candidates (multi-source thumbnails)
       const [enriched, candidatesWithImages] = await Promise.all([
         enrich(aiResult),
         enrichCandidates(aiResult.candidates),
@@ -932,29 +947,32 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
 
       setResult(enriched)
       setLoading(false)
-      setStatusMsg('')
+      trackStep(null)
+      console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s`)
     } catch (e) {
       if (e.name === 'AbortError' || controller.signal.aborted) return
       if (e.code === 'limit_reached') {
-        setLoading(false); setStatusMsg('')
+        setLoading(false); trackStep(null)
         setPaywallLimitType(e.limitType); setPaywallOpen(true)
         return
       }
       console.error('[SearchModal] error:', e)
       setError('Klaida ieškant augalo.')
       setLoading(false)
-      setStatusMsg('')
+      trackStep(null)
     }
   }
 
   // ── Photo search — Phase 1 (preview) + Phase 2 (details) ───────
   const searchByPhoto = async (file) => {
     setLoading(true); setResult(null); setError(null); setQuery('')
-    setStatusMsg('Žiūriu į nuotrauką...')
+    const totalStartedAt = Date.now()
+    trackStep('Apdorojama nuotrauka...')
     try {
       const dataUrl = await resizeImage(file, 1200, 0.9)
       const base64  = dataUrl.split(',')[1]
       setPreview(dataUrl)
+      trackStep('AI identifikuoja augalą...')
 
       const userMsg = {
         role: 'user',
@@ -980,12 +998,12 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       })
 
       const previewBlock = r1.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')
-      if (!previewBlock) { setError('Nepavyko identifikuoti augalo.'); setLoading(false); setStatusMsg(''); return }
+      if (!previewBlock) { setError('Nepavyko identifikuoti augalo.'); setLoading(false); trackStep(null); return }
 
       const aiResult = previewBlock.input
 
       // Catalog-first override (žiūr. searchByText komentarą)
-      setStatusMsg('Tikrinu bibliotekoje...')
+      trackStep('Tikrinu mūsų bibliotekoje...')
       const cached = await getCatalogEntry(aiResult.latinName)
       const trustCatalog = cached && (
         cached.verificationStatus === 'expert-verified' ||
@@ -995,11 +1013,17 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       if (trustCatalog) {
         setResult({ ...catalogEntryToAIResult(cached), fromCatalog: true })
         setLoading(false)
-        setStatusMsg('')
+        trackStep(null)
+        console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (from catalog)`)
         return
       }
 
-      setStatusMsg('Ruošiu rezultatą...')
+      const hasCandidates = Array.isArray(aiResult.candidates) && aiResult.candidates.length > 0
+      trackStep(
+        hasCandidates
+          ? `Renku nuotraukas (${aiResult.candidates.length} kandidatams)...`
+          : 'Renku nuotrauką...'
+      )
       const [enriched, candidatesWithImages] = await Promise.all([
         enrich(aiResult),
         enrichCandidates(aiResult.candidates),
@@ -1020,17 +1044,18 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       }
       setResult(enriched)
       setLoading(false)
-      setStatusMsg('')
+      trackStep(null)
+      console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s`)
     } catch (e) {
       if (e.code === 'limit_reached') {
-        setLoading(false); setStatusMsg('')
+        setLoading(false); trackStep(null)
         setPaywallLimitType(e.limitType); setPaywallOpen(true)
         return
       }
       console.error('[SearchModal photo] error:', e)
       setError('Nepavyko identifikuoti augalo. Bandykite aiškesnę nuotrauką.')
       setLoading(false)
-      setStatusMsg('')
+      trackStep(null)
     }
   }
 
