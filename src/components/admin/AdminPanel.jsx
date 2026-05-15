@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
-import { getDocs, getDoc, collection, doc, updateDoc, query, orderBy } from 'firebase/firestore'
-import { Users, Database, X, Shield, Sparkles, BadgeCheck, Loader2, RefreshCw, ChevronRight } from 'lucide-react'
+import { getDocs, getDoc, collection, doc, updateDoc, deleteDoc, arrayRemove, deleteField, query, orderBy } from 'firebase/firestore'
+import { Users, Database, X, Shield, Sparkles, BadgeCheck, Loader2, RefreshCw, ChevronRight, Mail, Trash2, AlertTriangle, UserCheck } from 'lucide-react'
 import { db } from '../../utils/firebase'
 import T4Icon from '../brand/T4Icon'
 
@@ -35,6 +35,7 @@ export default function AdminPanel({ currentUid, onClose }) {
   const [tab, setTab] = useState('users')
   const [users, setUsers] = useState([])
   const [collections, setCollections] = useState([])
+  const [invites, setInvites] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [detail, setDetail] = useState(null) // { type: 'user'|'collection', data }
@@ -42,12 +43,15 @@ export default function AdminPanel({ currentUid, onClose }) {
   const loadAll = useCallback(async () => {
     setLoading(true); setError(null)
     try {
-      // Users
-      const usersSnap = await getDocs(collection(db, 'users'))
+      // Parallel loads
+      const [usersSnap, colsSnap, invitesSnap] = await Promise.all([
+        getDocs(collection(db, 'users')),
+        getDocs(collection(db, 'collections')),
+        getDocs(collection(db, 'invites')),
+      ])
       const usersList = usersSnap.docs.map(d => ({ uid: d.id, ...d.data() }))
 
       // Collections + plant counts (parallel)
-      const colsSnap = await getDocs(collection(db, 'collections'))
       const colsList = await Promise.all(colsSnap.docs.map(async d => {
         const data = d.data()
         let plantCount = 0
@@ -65,8 +69,11 @@ export default function AdminPanel({ currentUid, onClose }) {
         }
       }))
 
+      const invitesList = invitesSnap.docs.map(d => ({ token: d.id, ...d.data() }))
+
       setUsers(usersList.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')))
       setCollections(colsList.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')))
+      setInvites(invitesList.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')))
     } catch (e) {
       console.error('[admin] load failed:', e)
       setError(e?.message ?? 'Nepavyko įkelti duomenų. Patikrink Firestore Rules.')
@@ -101,8 +108,104 @@ export default function AdminPanel({ currentUid, onClose }) {
     } catch (e) { alert('Nepavyko: ' + e.message) }
   }
 
+  const approveUser = async (uid) => {
+    try {
+      await updateDoc(doc(db, 'users', uid), { approved: true, approvedAt: new Date().toISOString() })
+      setUsers(prev => prev.map(u => u.uid === uid ? { ...u, approved: true } : u))
+    } catch (e) { alert('Nepavyko patvirtinti: ' + e.message) }
+  }
+
+  /**
+   * Soft delete: ištrina users/{uid} + jo owned kolekcijas (+plants subcol)
+   * + pašalina iš kitų kolekcijų members[] + roles + memberProfiles.
+   * Firebase Auth account'as LIEKA — user'is gali vėl signin'tis, bet
+   * patenka į pending (per createPendingUser). Pilnam blokavimui reikia
+   * Admin SDK serveryje (Phase B).
+   */
+  const deleteUser = async (uid, label) => {
+    if (uid === currentUid) {
+      alert('Negalima ištrinti pačiam savęs.')
+      return
+    }
+    if (!window.confirm(
+      `Ištrinti vartotoją „${label}"?\n\n` +
+      `Bus ištrintos:\n` +
+      `• jo paskyra (users/${shortId(uid)})\n` +
+      `• jo collection'os ir VISI augalai\n` +
+      `• jo narystė kitose kolekcijose\n\n` +
+      `Firebase Auth account'as liks — jis galės prisijungti iš naujo (pateks į pending).`
+    )) return
+
+    try {
+      // 1. Find owned collections — delete them + plant subcol
+      const owned = collections.filter(c => c.ownerId === uid)
+      for (const c of owned) {
+        const plantsSnap = await getDocs(collection(db, 'collections', c.id, 'plants'))
+        await Promise.all(plantsSnap.docs.map(p => deleteDoc(p.ref)))
+        await deleteDoc(doc(db, 'collections', c.id))
+      }
+
+      // 2. Find shared collections — remove user from members/roles/memberProfiles
+      const sharedWithUser = collections.filter(c => (c.members ?? []).includes(uid) && c.ownerId !== uid)
+      for (const c of sharedWithUser) {
+        await updateDoc(doc(db, 'collections', c.id), {
+          members:             arrayRemove(uid),
+          [`roles.${uid}`]:    deleteField(),
+          [`memberProfiles.${uid}`]: deleteField(),
+        })
+      }
+
+      // 3. Delete user doc
+      await deleteDoc(doc(db, 'users', uid))
+
+      // 4. Local state refresh
+      setUsers(prev => prev.filter(u => u.uid !== uid))
+      setCollections(prev => prev
+        .filter(c => c.ownerId !== uid)
+        .map(c => (c.members ?? []).includes(uid)
+          ? { ...c, members: c.members.filter(m => m !== uid) }
+          : c
+        )
+      )
+      setDetail(null)
+    } catch (e) {
+      console.error('[admin] delete user failed:', e)
+      alert('Nepavyko ištrinti: ' + e.message)
+    }
+  }
+
+  const deleteInvite = async (token) => {
+    try {
+      await deleteDoc(doc(db, 'invites', token))
+      setInvites(prev => prev.filter(i => i.token !== token))
+    } catch (e) { alert('Nepavyko ištrinti invite: ' + e.message) }
+  }
+
+  const bulkDeleteExpiredInvites = async () => {
+    const now = Date.now()
+    const expired = invites.filter(i => {
+      // Expired = exp date praeitis ARBA used==true ARBA active==false
+      if (i.used === true) return true
+      if (i.active === false) return true
+      if (i.expiresAt && new Date(i.expiresAt).getTime() < now) return true
+      return false
+    })
+    if (expired.length === 0) {
+      alert('Nėra expired/used/inactive invite\'ų.')
+      return
+    }
+    if (!window.confirm(`Ištrinti ${expired.length} expired/used/inactive invite token'ų?`)) return
+    try {
+      await Promise.all(expired.map(i => deleteDoc(doc(db, 'invites', i.token))))
+      const tokensToRemove = new Set(expired.map(i => i.token))
+      setInvites(prev => prev.filter(i => !tokensToRemove.has(i.token)))
+    } catch (e) { alert('Nepavyko bulk delete: ' + e.message) }
+  }
+
   // ── Render ───────────────────────────────────────────────────────
   const userByUid = new Map(users.map(u => [u.uid, u]))
+  const colByCid  = new Map(collections.map(c => [c.id, c]))
+  const pendingCount = users.filter(u => u.approved === false).length
 
   return (
     <div className="fixed inset-0 z-50 bg-app flex flex-col">
@@ -131,18 +234,20 @@ export default function AdminPanel({ currentUid, onClose }) {
       </header>
 
       {/* Stats strip */}
-      <div className="px-6 py-3 flex gap-3 flex-shrink-0">
+      <div className="px-6 py-3 flex gap-3 flex-shrink-0 overflow-x-auto">
         <StatPill label="Vartotojai" value={users.length} Icon={Users} />
+        {pendingCount > 0 && <StatPill label="Pending" value={pendingCount} Icon={UserCheck} tone="terracotta" />}
         <StatPill label="Kolekcijos" value={collections.length} Icon={Database} />
         <StatPill label="Augalų viso" value={collections.reduce((s, c) => s + (c.plantCount ?? 0), 0)} Icon={Sparkles} />
-        <StatPill label="Admin'ai" value={users.filter(u => u.isAdmin).length} Icon={Shield} tone="terracotta" />
+        <StatPill label="Invitai" value={invites.length} Icon={Mail} />
       </div>
 
       {/* Tab switcher */}
-      <div className="px-6 flex-shrink-0">
+      <div className="px-6 flex-shrink-0 overflow-x-auto">
         <nav className="inline-flex bg-bone-100 rounded-btn p-1 gap-0.5">
           <TabBtn active={tab === 'users'} onClick={() => setTab('users')} Icon={Users} label="Vartotojai" count={users.length} />
           <TabBtn active={tab === 'collections'} onClick={() => setTab('collections')} Icon={Database} label="Kolekcijos" count={collections.length} />
+          <TabBtn active={tab === 'invites'} onClick={() => setTab('invites')} Icon={Mail} label="Invitai" count={invites.length} />
         </nav>
       </div>
 
@@ -166,13 +271,22 @@ export default function AdminPanel({ currentUid, onClose }) {
             onToggleAdmin={toggleAdmin}
             onToggleBeta={toggleBeta}
             onSetPlan={setPlan}
+            onApprove={approveUser}
             onSelect={u => setDetail({ type: 'user', data: u })}
           />
-        ) : (
+        ) : tab === 'collections' ? (
           <CollectionsTable
             collections={collections}
             userByUid={userByUid}
             onSelect={c => setDetail({ type: 'collection', data: c })}
+          />
+        ) : (
+          <InvitesTable
+            invites={invites}
+            colByCid={colByCid}
+            userByUid={userByUid}
+            onDelete={deleteInvite}
+            onBulkExpired={bulkDeleteExpiredInvites}
           />
         )}
       </div>
@@ -183,6 +297,8 @@ export default function AdminPanel({ currentUid, onClose }) {
           detail={detail}
           users={users}
           collections={collections}
+          currentUid={currentUid}
+          onDeleteUser={deleteUser}
           onClose={() => setDetail(null)}
         />
       )}
@@ -224,7 +340,7 @@ function TabBtn({ active, onClick, Icon, label, count }) {
   )
 }
 
-function UsersTable({ users, currentUid, collections, onToggleAdmin, onToggleBeta, onSetPlan, onSelect }) {
+function UsersTable({ users, currentUid, collections, onToggleAdmin, onToggleBeta, onSetPlan, onApprove, onSelect }) {
   if (!users.length) {
     return <p className="text-center text-forest-500 py-12">Nėra vartotojų</p>
   }
@@ -234,6 +350,7 @@ function UsersTable({ users, currentUid, collections, onToggleAdmin, onToggleBet
         <thead className="bg-bone-100 border-b border-bone-400/40">
           <tr className="text-left">
             <Th>Vartotojas</Th>
+            <Th center>Statusas</Th>
             <Th>Joined</Th>
             <Th>Own collection</Th>
             <Th>Member of</Th>
@@ -247,11 +364,25 @@ function UsersTable({ users, currentUid, collections, onToggleAdmin, onToggleBet
           {users.map(u => {
             const ownColCount = collections.filter(c => c.ownerId === u.uid).length
             const memberCount = (u.collections?.length ?? 0)
+            const isPending = u.approved === false
             return (
-              <tr key={u.uid} className="border-b border-bone-400/20 hover:bg-bone-100/50 transition-colors">
+              <tr key={u.uid} className={`border-b border-bone-400/20 hover:bg-bone-100/50 transition-colors ${isPending ? 'bg-terracotta-50/40' : ''}`}>
                 <Td>
                   <div className="font-medium text-forest-800">{u.displayName || u.email?.split('@')[0] || 'Vartotojas'}</div>
                   <div className="text-xs text-forest-400 font-mono">{u.email || shortId(u.uid)}</div>
+                </Td>
+                <Td center>
+                  {isPending ? (
+                    <button
+                      onClick={() => onApprove(u.uid)}
+                      className="inline-flex items-center gap-1 bg-terracotta text-bone text-[11px] font-semibold px-2 py-1 rounded-full hover:bg-terracotta-500 transition-colors"
+                      title="Patvirtinti — leisti prieigą"
+                    >
+                      <UserCheck size={11} /> Patvirtinti
+                    </button>
+                  ) : (
+                    <Badge tone="forest">approved</Badge>
+                  )}
                 </Td>
                 <Td><span className="text-xs text-forest-500">{formatDate(u.createdAt)}</span></Td>
                 <Td>{ownColCount > 0 ? <Badge tone="forest">{ownColCount}</Badge> : <span className="text-forest-300">—</span>}</Td>
@@ -366,7 +497,7 @@ function Badge({ children, tone = 'forest' }) {
 
 // ── Detail drawer (right-side sheet su drill-down info) ─────────────
 
-function DetailDrawer({ detail, users, collections, onClose }) {
+function DetailDrawer({ detail, users, collections, currentUid, onDeleteUser, onClose }) {
   const isUser = detail.type === 'user'
   const data   = detail.data
 
@@ -471,6 +602,24 @@ function DetailDrawer({ detail, users, collections, onClose }) {
         <div className="flex-1 overflow-y-auto p-5 space-y-5">
           {body}
         </div>
+
+        {/* Danger zone — soft delete user (Firebase Auth lieka, žiūr. deleteUser docstring'ą) */}
+        {isUser && data.uid !== currentUid && (
+          <div className="border-t border-terracotta-200/40 bg-terracotta-50/40 px-5 py-4 flex-shrink-0">
+            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-terracotta-600 mb-2 flex items-center gap-1.5">
+              <AlertTriangle size={11} /> Danger zone
+            </p>
+            <button
+              onClick={() => onDeleteUser(data.uid, data.displayName || data.email || data.uid)}
+              className="w-full inline-flex items-center justify-center gap-2 bg-terracotta hover:bg-terracotta-500 text-bone px-4 py-2.5 rounded-btn text-sm font-semibold transition-colors"
+            >
+              <Trash2 size={14} /> Ištrinti vartotoją + jo duomenis
+            </button>
+            <p className="text-[10px] text-terracotta-600 mt-2 text-center">
+              Firebase Auth account'as lieka — galės prisijungti iš naujo (pateks į pending).
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -500,6 +649,94 @@ function CollectionMini({ c, role }) {
         <div className="text-forest-400 font-mono text-[10px]">{shortId(c.id)} · {c.plantCount} augalai</div>
       </div>
       {role && <Badge tone={role === 'owner' ? 'forest' : 'bone'}>{role}</Badge>}
+    </div>
+  )
+}
+
+// ── Invites tab — sąrašas su delete + bulk cleanup ─────────────────────
+
+function InvitesTable({ invites, colByCid, userByUid, onDelete, onBulkExpired }) {
+  if (!invites.length) {
+    return <p className="text-center text-forest-500 py-12">Nėra invite token'ų</p>
+  }
+  const now = Date.now()
+  const expiredCount = invites.filter(i =>
+    i.used === true || i.active === false || (i.expiresAt && new Date(i.expiresAt).getTime() < now)
+  ).length
+
+  return (
+    <div className="space-y-3">
+      {/* Bulk action */}
+      {expiredCount > 0 && (
+        <div className={`${WIDGET} px-4 py-3 flex items-center justify-between gap-3`}>
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-terracotta-600">Bulk cleanup</p>
+            <p className="text-xs text-forest-700 mt-0.5">{expiredCount} expired / used / inactive invite'ų</p>
+          </div>
+          <button
+            onClick={onBulkExpired}
+            className="inline-flex items-center gap-1.5 bg-terracotta hover:bg-terracotta-500 text-bone text-xs font-semibold px-3 py-1.5 rounded-btn transition-colors"
+          >
+            <Trash2 size={12} /> Ištrinti visus
+          </button>
+        </div>
+      )}
+
+      <div className={`overflow-hidden ${WIDGET}`}>
+        <table className="w-full text-sm">
+          <thead className="bg-bone-100 border-b border-bone-400/40">
+            <tr className="text-left">
+              <Th>Token</Th>
+              <Th>Kolekcija</Th>
+              <Th>Role</Th>
+              <Th>Sukurtas</Th>
+              <Th>Expires</Th>
+              <Th center>Statusas</Th>
+              <Th></Th>
+            </tr>
+          </thead>
+          <tbody>
+            {invites.map(i => {
+              const col = colByCid.get(i.colId)
+              const creator = userByUid.get(i.createdBy)
+              const isExpired = i.expiresAt && new Date(i.expiresAt).getTime() < now
+              const isInactive = i.active === false || i.used === true
+              return (
+                <tr key={i.token} className={`border-b border-bone-400/20 hover:bg-bone-100/50 transition-colors ${isInactive || isExpired ? 'opacity-60' : ''}`}>
+                  <Td>
+                    <span className="font-mono text-[11px] text-forest-700">{i.token}</span>
+                    {creator && (
+                      <div className="text-[10px] text-forest-400 font-mono mt-0.5">by {creator.email?.split('@')[0] ?? shortId(i.createdBy)}</div>
+                    )}
+                  </Td>
+                  <Td>
+                    <div className="text-xs text-forest-700 truncate max-w-[140px]">{col?.name ?? '—'}</div>
+                    <div className="text-[10px] text-forest-400 font-mono">{shortId(i.colId)}</div>
+                  </Td>
+                  <Td><Badge tone={i.role === 'viewer' ? 'bone' : 'forest'}>{i.role ?? 'member'}</Badge></Td>
+                  <Td><span className="text-xs text-forest-500">{formatDate(i.createdAt)}</span></Td>
+                  <Td><span className={`text-xs ${isExpired ? 'text-terracotta-600' : 'text-forest-500'}`}>{formatDate(i.expiresAt)}</span></Td>
+                  <Td center>
+                    {i.used      ? <Badge tone="bone">used</Badge>     :
+                     !i.active   ? <Badge tone="bone">revoked</Badge>  :
+                     isExpired   ? <Badge tone="bone">expired</Badge>  :
+                                   <Badge tone="forest">active</Badge>}
+                  </Td>
+                  <Td>
+                    <button
+                      onClick={() => onDelete(i.token)}
+                      className="text-terracotta hover:text-terracotta-600 transition-colors"
+                      title="Ištrinti invite"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </Td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }
