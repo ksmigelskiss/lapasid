@@ -329,6 +329,13 @@ latinName lauko formate IŠLAIKYK cultivar žymenį: jei vartotojas paklausė
 „Clematis 'Boulevard'", grąžink būtent „Clematis 'Boulevard'" (su quote'ais),
 NE „Clematis vitalba".
 
+latinName PRIVALO būti GRYNAS taksonominis pavadinimas — be lietuviškų
+ar angliškų suffix'ų skliaustuose, be ® / ™ simbolių. Pavyzdžiai:
+  ✓ „Clematis 'Olympia'"
+  ✓ „Clematis 'Acropolis'"
+  ✗ „Clematis 'Olympia' (Boulevard® serija)" ← serija į description lauką, ne latinName
+  ✗ „Clematis 'Acropolis'® (Evison hybrid)"  ← trademark / komercinė info eina description'e
+
 ═════════════════════════════════════════════════════════
 
 SVARBU — laukas "name": PRIVALO būti tikras lietuviškas pavadinimas (žodynas/Vikipedija). NIEKADA lotyniškas ar angliškas. Hibridams be atskiro pavadinimo — naudok genties lietuvišką (pvz. Nepenthes → "Ąsotenė").
@@ -471,14 +478,29 @@ async function buildWikipediaContextMessage(latinName) {
   return `--- Wikipedia (en) šaltinis: ${ctx.title} ---\n${ctx.extract}\n--- pabaiga ---\n\nNaudok šį šaltinį kaip pirminį autoritetą savybėms (pavojai, valgomumas, vaistinis). Papildyk savo žiniomis kur trūksta. Detalėse paminėk "Wikipedia mini, kad ..." kai informacija iš ten.`
 }
 
-// Wikipedia REST API — thumbnail per latin name. Cultivar'ams kartais
-// veikia („Clematis_'Acropolis'" ar „Clematis_Acropolis_(Boulevard_Series)").
-// Bandom du URL variantus (su quote'ais ir be), grąžinam pirmą sėkmę.
+// Išvalo latin name'ą thumbnail search'ams — strip'inam ®/™/©, parenthetical
+// suffix'us („(Boulevard® serija)"), trim. Lieka švarus „Clematis 'Acropolis'".
+function cleanLatinForSearch(latinName) {
+  if (!latinName) return ''
+  return latinName
+    .replace(/\s*\([^)]*\)\s*/g, ' ')   // strip (...) suffix
+    .replace(/[®™©]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+// Wikipedia REST API — thumbnail per latin name. Cultivar'ams retas case'as
+// kad būtų atskiras article — todėl bandom kelis variantus + fallback į
+// opensearch API (Wikipedia full-text search).
 async function fetchWikiThumbnail(latinName) {
   if (!latinName) return null
+  const cleaned = cleanLatinForSearch(latinName)
+  if (!cleaned) return null
+
+  // Step 1: direct page summary su keliais slug variantais
   const variants = [
-    latinName.trim().replace(/\s+/g, '_'),                 // su quote'ais
-    latinName.trim().replace(/['"]/g, '').replace(/\s+/g, '_'), // be quote'ų
+    cleaned.replace(/\s+/g, '_'),                     // su quote'ais
+    cleaned.replace(/['"]/g, '').replace(/\s+/g, '_'), // be quote'ų
   ]
   for (const slug of variants) {
     try {
@@ -489,18 +511,62 @@ async function fetchWikiThumbnail(latinName) {
       if (url) return url
     } catch {}
   }
-  return null
+
+  // Step 2: opensearch fallback — Wikipedia search, take top hit's page summary
+  try {
+    const r = await fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(cleaned)}&limit=1&format=json&origin=*`)
+    if (!r.ok) return null
+    const [, titles] = await r.json()
+    if (!titles?.[0]) return null
+    const slug = titles[0].replace(/\s+/g, '_')
+    const r2 = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(slug)}`)
+    if (!r2.ok) return null
+    const data = await r2.json()
+    return data.thumbnail?.source ?? data.originalimage?.source ?? null
+  } catch { return null }
 }
 
-// Enrich'ina candidates su image URL'ais. Jei AI jau parinko `imageUrl`
-// iš web_search rezultatų — paliekam. Kitaip — paraleliai bandom Wikipedia
-// REST API per kiekvieną kandidatą. Tylus fallback'as į null jei neranda.
+// Wikimedia Commons — daug plačiau coverage'o cultivar photos'ams nei
+// Wikipedia articles. Search'inam File: namespace, paimam top hit thumbnail.
+async function fetchCommonsImage(latinName) {
+  if (!latinName) return null
+  const cleaned = cleanLatinForSearch(latinName)
+  if (!cleaned) return null
+  try {
+    // namespace 6 = File: namespace (visi paveikslėliai)
+    const searchUrl = `https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(cleaned)}&srnamespace=6&srlimit=1&format=json&origin=*`
+    const r = await fetch(searchUrl)
+    if (!r.ok) return null
+    const data = await r.json()
+    const title = data.query?.search?.[0]?.title  // "File:Clematis Acropolis 01.jpg"
+    if (!title) return null
+
+    // Gauti thumbnail URL'ą (200px wide)
+    const fileUrl = `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=imageinfo&iiprop=url&iiurlwidth=200&format=json&origin=*`
+    const r2 = await fetch(fileUrl)
+    if (!r2.ok) return null
+    const data2 = await r2.json()
+    const page = Object.values(data2.query?.pages ?? {})[0]
+    return page?.imageinfo?.[0]?.thumburl ?? null
+  } catch { return null }
+}
+
+// Enrich'ina candidates su image URL'ais. Priority chain:
+//   1. AI parinko imageUrl iš savo web_search (best case, free)
+//   2. Wikipedia REST API (direct + opensearch fallback)
+//   3. Wikimedia Commons (plačiausias plant photos coverage'as)
+//   4. null → UI fallback'ina į emoji
+//
+// Kiekvienam kandidatui priority chain vykdoma sekvencialiai (early-exit
+// jei rastas image), bet TARP candidates — paraleliai per Promise.all.
 async function enrichCandidates(candidates) {
   if (!Array.isArray(candidates) || candidates.length === 0) return candidates
   return Promise.all(candidates.map(async c => {
-    if (c.imageUrl) return c // AI jau parinko (iš web_search)
+    if (c.imageUrl) return c // AI jau parinko (best case)
     const wikiImg = await fetchWikiThumbnail(c.latinName)
-    return { ...c, imageUrl: wikiImg }
+    if (wikiImg) return { ...c, imageUrl: wikiImg }
+    const commonsImg = await fetchCommonsImage(c.latinName)
+    return { ...c, imageUrl: commonsImg }  // gali likti null
   }))
 }
 
