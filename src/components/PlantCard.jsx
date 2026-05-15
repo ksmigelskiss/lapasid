@@ -136,7 +136,10 @@ function DotScore({ value, max = 3, color }) {
 }
 
 function CareCircle({ checked, waterOverdue, fertOverdue }) {
-  const baseSize = 'w-7 h-7 rounded-full border-2 shadow-md'
+  // 1px border match'ina brand norm'ą (PlantDetail, DeathModal, CareToast'e —
+  // visi `border` 1px su /40-/60 alpha). `border-2` rezervuotas hover/active
+  // emphasizing. Smulkiam select ring'ui — elegantesnis 1px contour'as.
+  const baseSize = 'w-7 h-7 rounded-full border shadow-md'
   const single   = `${baseSize} flex items-center justify-center backdrop-blur-sm`
 
   // Unchecked (overdue) variantai naudoja BONE contour border'į vietoj
@@ -151,10 +154,10 @@ function CareCircle({ checked, waterOverdue, fertOverdue }) {
   if (waterOverdue && fertOverdue) {
     return (
       <div className="w-12 h-7 rounded-full shadow-md flex backdrop-blur-sm">
-        <div className={`w-1/2 flex items-center justify-center border-2 border-r-0 rounded-l-full ${checked ? 'bg-forest-500 border-forest-500' : 'bg-forest-500/50 border-bone-50/80'}`}>
+        <div className={`w-1/2 flex items-center justify-center border border-r-0 rounded-l-full ${checked ? 'bg-forest-500 border-forest-500' : 'bg-forest-500/50 border-bone-50/80'}`}>
           <Droplets size={11} className={checked ? 'text-bone' : 'text-bone fill-bone'} />
         </div>
-        <div className={`w-1/2 flex items-center justify-center border-2 border-l-0 rounded-r-full ${checked ? 'bg-terracotta border-terracotta' : 'bg-terracotta-500/50 border-bone-50/80'}`}>
+        <div className={`w-1/2 flex items-center justify-center border border-l-0 rounded-r-full ${checked ? 'bg-terracotta border-terracotta' : 'bg-terracotta-500/50 border-bone-50/80'}`}>
           <FlaskConical size={11} className={checked ? 'text-bone' : 'text-bone fill-bone'} />
         </div>
       </div>
