@@ -85,8 +85,9 @@ export const TOOL_PREVIEW = {
             ltName:                { type: ['string', 'null'], description: 'Lietuviškas pavadinimas jei žinai, kitaip null' },
             description:           { type: 'string', description: '1-2 sakiniai apie šitą cultivar/variantą — kilmė, serija, charakteringa ypatybė.' },
             distinguishingFeature: { type: 'string', description: 'KAIP user\'is gali atskirti šitą cultivar nuo kitų kandidatų vizualiai. Pvz. „Ryškiai pink žiedai su tamsesne pink juostele per centrą". Konkretu, ne abstraktu.' },
+            imageUrl:              { type: ['string', 'null'], description: 'Jei web_search rezultate matei aiškią photo URL (jpg/png/webp) šios cultivar — surašyk čia direct image URL. NIEKADA nehallucinink — pateik tik jei tikrai matei. null jei photo nematei.' },
           },
-          required: ['latinName', 'description', 'distinguishingFeature'],
+          required: ['latinName', 'description', 'distinguishingFeature', 'imageUrl'],
         },
       },
       name:            { type: 'string',  description: 'Tikras lietuviškas pavadinimas. NIEKADA angliškas ar lotyniškas.' },
@@ -470,6 +471,39 @@ async function buildWikipediaContextMessage(latinName) {
   return `--- Wikipedia (en) šaltinis: ${ctx.title} ---\n${ctx.extract}\n--- pabaiga ---\n\nNaudok šį šaltinį kaip pirminį autoritetą savybėms (pavojai, valgomumas, vaistinis). Papildyk savo žiniomis kur trūksta. Detalėse paminėk "Wikipedia mini, kad ..." kai informacija iš ten.`
 }
 
+// Wikipedia REST API — thumbnail per latin name. Cultivar'ams kartais
+// veikia („Clematis_'Acropolis'" ar „Clematis_Acropolis_(Boulevard_Series)").
+// Bandom du URL variantus (su quote'ais ir be), grąžinam pirmą sėkmę.
+async function fetchWikiThumbnail(latinName) {
+  if (!latinName) return null
+  const variants = [
+    latinName.trim().replace(/\s+/g, '_'),                 // su quote'ais
+    latinName.trim().replace(/['"]/g, '').replace(/\s+/g, '_'), // be quote'ų
+  ]
+  for (const slug of variants) {
+    try {
+      const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(slug)}`)
+      if (!r.ok) continue
+      const data = await r.json()
+      const url = data.thumbnail?.source ?? data.originalimage?.source ?? null
+      if (url) return url
+    } catch {}
+  }
+  return null
+}
+
+// Enrich'ina candidates su image URL'ais. Jei AI jau parinko `imageUrl`
+// iš web_search rezultatų — paliekam. Kitaip — paraleliai bandom Wikipedia
+// REST API per kiekvieną kandidatą. Tylus fallback'as į null jei neranda.
+async function enrichCandidates(candidates) {
+  if (!Array.isArray(candidates) || candidates.length === 0) return candidates
+  return Promise.all(candidates.map(async c => {
+    if (c.imageUrl) return c // AI jau parinko (iš web_search)
+    const wikiImg = await fetchWikiThumbnail(c.latinName)
+    return { ...c, imageUrl: wikiImg }
+  }))
+}
+
 
 export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose, plants = [], onViewPlant, onPromote, onUpdatePlant, initialQuery = '', autoCamera = false }) {
   // Desktop split panel: portaliuojam į RightPanel container'į.
@@ -614,7 +648,12 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
 
       // ── Catalog miss arba unverified — naudojam AI + enrich ─────
       setStatusMsg('Ruošiu rezultatą...')
-      const enriched = await enrich(aiResult)
+      // Paraleliai — enrich AI result (iNat photo, names) + enrich candidates (Wikipedia thumbnails)
+      const [enriched, candidatesWithImages] = await Promise.all([
+        enrich(aiResult),
+        enrichCandidates(aiResult.candidates),
+      ])
+      enriched.candidates = candidatesWithImages
       if (controller.signal.aborted) return
 
       // Auto-save į catalog TIK jei high confidence — nepilam šiukšlių į DB.
@@ -704,7 +743,11 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
       }
 
       setStatusMsg('Ruošiu rezultatą...')
-      const enriched = await enrich(aiResult)
+      const [enriched, candidatesWithImages] = await Promise.all([
+        enrich(aiResult),
+        enrichCandidates(aiResult.candidates),
+      ])
+      enriched.candidates = candidatesWithImages
       if (aiResult.confidence === 'high') {
         saveToCatalog({
           lotyniskas:          aiResult.latinName,
@@ -1009,9 +1052,24 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                         setQuery(c.latinName)
                         searchByText(c.latinName)
                       }}
-                      className="w-full text-left bg-bone-50 border border-bone-400/40 rounded-2xl px-4 py-3 hover:bg-bone-100 hover:border-forest-300/60 active:scale-[0.98] transition-all"
+                      className="w-full text-left bg-bone-50 border border-bone-400/40 rounded-2xl p-3 hover:bg-bone-100 hover:border-forest-300/60 active:scale-[0.98] transition-all"
                     >
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-3">
+                        {/* Thumbnail — Wikipedia photo arba placeholder emoji */}
+                        <div className="w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-bone-200 border border-bone-400/40 relative">
+                          {c.imageUrl ? (
+                            <img
+                              src={c.imageUrl}
+                              alt={c.ltName || c.latinName}
+                              className="w-full h-full object-cover"
+                              onError={(e) => { e.currentTarget.style.display = 'none' }}
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-2xl">
+                              🌿
+                            </div>
+                          )}
+                        </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-forest-800 text-[14px] leading-tight">
                             {c.ltName || c.latinName}
@@ -1021,7 +1079,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                               {c.latinName}
                             </p>
                           )}
-                          <p className="text-[12px] text-forest-600 mt-1.5 leading-relaxed">
+                          <p className="text-[12px] text-forest-600 mt-1 leading-relaxed">
                             {c.description}
                           </p>
                           {c.distinguishingFeature && (
@@ -1030,7 +1088,7 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                             </p>
                           )}
                         </div>
-                        <span className="text-forest-400 text-lg flex-shrink-0">›</span>
+                        <span className="text-forest-400 text-lg flex-shrink-0 self-center">›</span>
                       </div>
                     </button>
                   ))}
