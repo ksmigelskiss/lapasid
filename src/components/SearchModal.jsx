@@ -266,33 +266,55 @@ Jei web_search NIEKO neranda — confidence lieka „low", uncertaintyReason
 paaiškina kad cultivar net online nerandamas.
 
 ═════════════════════════════════════════════════════════
-DISAMBIGUATION — KANDIDATAI
+DISAMBIGUATION — KANDIDATAI (PRIVALOMA SĄLYGA)
 ═════════════════════════════════════════════════════════
 
-JEI confidence yra medium ar low IR yra plausibly identifikuojamų kandidatų
-(pvz. cultivar serijos nariai, vizualiai panašios rūšys), pildyk
-candidates lauką (array) su 2-5 įrašais.
+🛑 GRIEŽTA TAISYKLĖ — jei tavo uncertaintyReason arba description
+TEKSTE PAMINĖSI bet kuriuos KONKREČIUS cultivar pavadinimus (pvz.
+„Cézanne, Rebecca, Olympia, Chantilly"), tada VISI ŠITIE pavadinimai
+PRIVALO būti candidates array'uje su pilna informacija.
+
+Negali sakyti „yra cultivars X, Y, Z" tekste BE jų sąrašo candidates'e.
+Tai bug'as user'iui: jis mato problemą bet negali pasirinkti sprendimo.
 
 Kiekvienas kandidatas turi turėti:
-  • latinName — tikslus pavadinimas (su cultivar žymeniu)
+  • latinName — tikslus pavadinimas (su cultivar žymeniu, pvz „Clematis 'Cézanne'")
   • ltName — lietuviškas pavadinimas jei žinai, kitaip null
   • description — 1-2 sakiniai (serija, kilmė, charakteristika)
-  • distinguishingFeature — kaip užtikrintai atskirti VIZUALIAI/CHARAKTERIO
-    LYGIU nuo kitų kandidatų, ne abstrakti charakteristika
+  • distinguishingFeature — GRYNAI VIZUALUS aprašymas (žiedų spalva, forma)
+  • imageUrl — jei web_search rezultate matei photo URL, kitaip null
 
 User'is paspausta vieną kandidatą → nauja paieška su tikslesniu pavadinimu
 → high confidence rezultatas → saugomas į catalog.
 
-Pavyzdžiai kada PILDYTI candidates:
-  ✓ Užklausa: „Clematis 'Boulevard'" → Boulevard serija turi daug cultivars,
-    surašyk 4-5 populiariausius su distinguishing features (žiedų spalva)
-  ✓ Photo identifikacija: kažkoks raudonžiedis sukulent'as — surašyk plausibly
-    rūšis (Aeonium 'Schwarzkopf', Echeveria 'Black Prince', ir t.t.)
+KADA PILDYTI candidates (privaloma):
+  ✓ Užklausa: serijos pavadinimas („Clematis 'Boulevard'") → surašyk
+    bent 4-5 populiarius serijos narius
+  ✓ Photo identifikacija ne 100% tikra → surašyk top 3-5 plausibly rūšis
+  ✓ Tekste paminėjai konkrečių cultivar pavadinimų → visi į candidates
+  ✓ matchLevel == 'genus' arba 'species' kai pati genus turi cultivar'us
 
-NEpildyk candidates jei:
-  ✗ Confidence == „high" (tikrai žinai augalą)
-  ✗ Užklausa visiškai neaiški (pvz. „kažkoks žalias augalas") — kandidatų per daug,
-    geriau parodyt low confidence + uncertaintyReason
+NEPILDYK candidates TIK jei:
+  ✗ Confidence == 'high' (tikrai žinai augalą)
+  ✗ Užklausa visiškai neaiški („kažkoks žalias augalas") — per daug,
+    geriau low confidence + uncertaintyReason be konkrečių pavardžių
+
+PAVYZDYS — Clematis 'Boulevard' užklausa:
+  ✗ BLOGAI:
+    uncertaintyReason: „Boulevard serijoje yra Cézanne, Rebecca, Olympia"
+    candidates: []  ← NĖRA SĄRAŠO! User nemato sprendimo!
+
+  ✓ GERAI:
+    uncertaintyReason: „Boulevard yra cultivar serija, ne konkretus augalas."
+    candidates: [
+      { latinName: "Clematis 'Cézanne'", ltName: "Klematis Sezanas",
+        description: "Boulevard serijos narys, kompaktiškas",
+        distinguishingFeature: "Šviesiai mėlyni dideli žiedai su balta juostele",
+        imageUrl: null },
+      { latinName: "Clematis 'Rebecca'", ... },
+      { latinName: "Clematis 'Olympia'", ... },
+      ...
+    ]
 
 ═════════════════════════════════════════════════════════
 HONESTY REQUIREMENT — KRITIŠKAI SVARBU
