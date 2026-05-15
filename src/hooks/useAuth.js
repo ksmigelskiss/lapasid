@@ -441,6 +441,13 @@ export function useAuth() {
   // signInWithPopup veikia visur: naršyklėje, Android PWA, iOS 14.5+ PWA
   // (Firebase atidaro popup'ą per SFSafariViewController). Jei popup
   // blokuotas/uždarytas — fallback į signInWithRedirect.
+  //
+  // Account collision handling: jei email'as jau registruotas su kitu
+  // provider'iu, Firebase Console „Link accounts that use the same email"
+  // setting'as leidžia LATER linkint accounts, bet pirmasis attempt'as
+  // su nauju provider'iu vis tiek throw'ina account-exists klaidą. Mes ją
+  // pakeičiame į friendly LT message'ą — kad user'is suprastų grįžti prie
+  // pirmojo provider'io.
   const signInWithProvider = async (provider) => {
     setState(s => ({ ...s, authError: null }))
     try {
@@ -452,6 +459,16 @@ export function useAuth() {
         'auth/cancelled-popup-request',
       ]
       if (popupFallback.includes(e?.code)) return signInWithRedirect(auth, provider)
+
+      if (e?.code === 'auth/account-exists-with-different-credential') {
+        const email = e.customData?.email
+        setState(s => ({
+          ...s,
+          authError: `${email ? email + ' ' : ''}jau registruotas su kitu prisijungimo būdu. Pabandyk per kitą — Google arba Facebook.`,
+        }))
+        return
+      }
+
       setState(s => ({ ...s, authError: e?.message ?? 'Prisijungimo klaida' }))
     }
   }
