@@ -305,17 +305,19 @@ const PlantCard = memo(function PlantCard({
         )}
 
         {/* Top-right pill stack (auginama only) — forecast'ai + badge'ai.
-            TIERED intensity: overdue → solid action color (forest/terracotta)
-            su bone tekstu; soon (≤2d) → semi-transparent action color;
-            normal → bg-black/40 backdrop-blur. Tikslas — akimirksniu matyti
-            kortelės statusą ne ieškant skaičių.
+            TIERED intensity (švelnesnis variantas):
+              • Overdue → semi-transparent action color + bone contour
+                          ring + bone tekstas (lengvesnis nei pilnas solid,
+                          bet kontūras dar aiškiai matosi ant photo)
+              • Soon (≤2d) → semi-transparent /55 be ring'o
+              • Normal → bg-black/40 backdrop-blur
             Forma: rounded-full, h-[20px], icon 13px, text-[10px]. */}
         {section === 'auginama' && (
           <div className="absolute top-2 right-2 flex flex-col gap-1 items-end z-[2]">
-            <div className={`inline-flex items-center gap-1 rounded-full px-2 h-[20px] ${
-              waterOverdue ? 'bg-forest-500 ring-1 ring-bone-50/30'
-              : waterSoon   ? 'bg-forest-500/70 backdrop-blur-sm'
-              : 'bg-black/40 backdrop-blur-sm'
+            <div className={`inline-flex items-center gap-1 rounded-full px-2 h-[20px] backdrop-blur-sm ${
+              waterOverdue ? 'bg-forest-500/65 ring-1 ring-bone-50/80'
+              : waterSoon   ? 'bg-forest-500/55'
+              : 'bg-black/40'
             }`}>
               <Droplets size={13} className={
                 waterOverdue ? 'text-bone fill-bone'
@@ -333,10 +335,10 @@ const PlantCard = memo(function PlantCard({
               )}
             </div>
             {fertFC?.intervalDays != null && (
-              <div className={`inline-flex items-center gap-1 rounded-full px-2 h-[20px] ${
-                fertOverdue ? 'bg-terracotta-500 ring-1 ring-bone-50/30'
-                : fertSoon   ? 'bg-terracotta-500/70 backdrop-blur-sm'
-                : 'bg-black/40 backdrop-blur-sm'
+              <div className={`inline-flex items-center gap-1 rounded-full px-2 h-[20px] backdrop-blur-sm ${
+                fertOverdue ? 'bg-terracotta-500/65 ring-1 ring-bone-50/80'
+                : fertSoon   ? 'bg-terracotta-500/55'
+                : 'bg-black/40'
               }`}>
                 <FlaskConical size={13} className={
                   fertOverdue ? 'text-bone fill-bone'
