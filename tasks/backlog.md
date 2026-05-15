@@ -6,6 +6,38 @@ pain'as ar request'as. (Žiūr. lessons.md simplify default principą.)
 
 ---
 
+## Photo source'as cultivars'ams — backup options
+
+**Data:** 2026-05-15
+**Kontekstas:** Bandėm integruoti Google Custom Search Image API kaip
+primary photo source cultivars'ams. Google account-level blokuoja Custom
+Search JSON API naujiems projektams 2024-2025 (transition į Vertex AI
+Search). Net atskiras non-Firebase project'as su pilna setup'a gauna
+403 „project does not have the access".
+
+**Esamas state'as:** Wikidata + Wikipedia + Commons fallback chain.
+Coverage ~30-40% candidates. Likę — emoji placeholder.
+
+**Kelios opcijos jei reikės geresnio photo coverage:**
+
+1. **Manual admin photos** (priority — nieko nereikia kurti, jau galima
+   pridėti per PlantInfo edit). Tampa „verified by admin" trust signal.
+
+2. **Bing Image Search API** (Microsoft Azure, $3/1000 queries) — like
+   Google CSE bet neturi restrictions. Setup ~1 valanda jei prireiks.
+
+3. **PlantNet API** (free, plant-focused) — bet mostly species, cultivar
+   coverage silpna.
+
+4. **Garden.org / RHS scraping** — fragile (HTML keisis), bet free.
+   ~4-6 valandos darbo.
+
+**Kada implementuoti:** kai catalog turės 50+ verified entries IR vis dar
+matysim, kad photo coverage'as silpnas user'iams. Iki to — manual'us
+admin photos pakanka.
+
+---
+
 ## Auth account merge — Google ↔ Facebook ↔ Email
 
 **Data:** 2026-05-15
