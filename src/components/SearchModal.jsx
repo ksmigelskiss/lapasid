@@ -84,7 +84,7 @@ export const TOOL_PREVIEW = {
             latinName:             { type: 'string', description: 'Tikslus lotyniškas pavadinimas su cultivar žymeniu (pvz. „Clematis \'Acropolis\'")' },
             ltName:                { type: ['string', 'null'], description: 'Lietuviškas pavadinimas jei žinai, kitaip null' },
             description:           { type: 'string', description: '1-2 sakiniai apie šitą cultivar/variantą — kilmė, serija, charakteringa ypatybė.' },
-            distinguishingFeature: { type: 'string', description: 'KAIP user\'is gali atskirti šitą cultivar nuo kitų kandidatų vizualiai. Pvz. „Ryškiai pink žiedai su tamsesne pink juostele per centrą". Konkretu, ne abstraktu.' },
+            distinguishingFeature: { type: 'string', description: 'GRYNAI VIZUALUS aprašymas (žiedų spalva, dydis, forma, lapų formos), kuris padės user\'iui atskirti šitą cultivar nuo kitų kandidatų LYGINANT SU TIKRA AUGALO NUOTRAUKA. NEPRIDĖK serijos / sukūrimo metų / aukščio / žydėjimo periodo — tai eina į description. Pvz. „Ryškiai pink žvaigždiniai žiedai su tamsesne pink juostele per centrą; balti kuokeliai" gerai. „Pristatytas 2013m. Chelsea Flower Show, populiarus" — BLOGAI, eina į description.' },
             imageUrl:              { type: ['string', 'null'], description: 'Jei web_search rezultatuose APLANKEI puslapį, kuriame buvo direct image URL (formato https://.../something.jpg|png|webp) šios SPECIFINĖS cultivar nuotrauka, pateik čia. SVARBU: tik URL adresai, kuriuos tikrai matei web_search rezultate, ne spėjimai. Geriau null nei hallucinuotas URL. Idealiai iš RHS / nursery / Wikipedia article body, ne thumbnail.' },
           },
           required: ['latinName', 'description', 'distinguishingFeature', 'imageUrl'],
@@ -470,11 +470,13 @@ async function enrich(parsed) {
   }
 
   // Cultivar / low-confidence path — multi-source priority chain (visi free):
-  //   1. Wikidata P18 (jei entity yra)
-  //   2. Wikipedia direct + opensearch thumbnail
+  //   1. iNaturalist Taxa autocomplete (plant-focused, strict cultivar match)
+  //   2. Wikidata P18 (jei entity yra)
+  //   3. Wikipedia direct + opensearch thumbnail
   // null jei visi miss → UI rodo plant card be photo.
-  const wd = await fetchWikidataPlant(parsed.latinName)
-  let mainImage = wd?.imageUrl ?? null
+  let mainImage = await fetchInatCultivarImage(parsed.latinName)
+  const wd = !mainImage ? await fetchWikidataPlant(parsed.latinName) : null
+  if (!mainImage && wd?.imageUrl) mainImage = wd.imageUrl
   if (!mainImage) mainImage = await fetchWikiThumbnail(parsed.latinName)
 
   return {
@@ -510,14 +512,45 @@ function cleanLatinForSearch(latinName) {
     .trim()
 }
 
-// Wikidata SPARQL/Search — structured cultivar data + image. PIRMAS layer
-// prieš AI/Wikipedia/Commons. Free, ~200ms.
+// iNaturalist Taxa Autocomplete — plant-focused, free, no key. Garden
+// cultivars dažnai yra iNat taksonomijoje su default_photo field'u.
+//
+// CONSERVATIVE filter'is: grąžinam tik jei iNat taxon name turi BOTH
+// genus IR cultivar word'us (case-insensitive). Atmetam random Clematis
+// vitalba photos kai paklausta apie Clematis 'Acropolis'.
+async function fetchInatCultivarImage(latinName) {
+  if (!latinName) return null
+  const cleaned = cleanLatinForSearch(latinName)
+  const m = cleaned.match(/^(\S+)\s+(.+)$/)
+  if (!m) return null
+  const genus    = m[1].toLowerCase()
+  const cultivar = m[2].replace(/['"]/g, '').toLowerCase().split(/\s+/)[0]  // pirmas cultivar žodis
+  if (!cultivar) return null
+
+  try {
+    const r = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?q=${encodeURIComponent(cleaned)}&per_page=5`)
+    if (!r.ok) return null
+    const data = await r.json()
+    const match = data.results?.find(t => {
+      const name = (t.name ?? '').toLowerCase()
+      return name.includes(genus) && name.includes(cultivar)
+    })
+    return match?.default_photo?.medium_url
+        ?? match?.default_photo?.square_url
+        ?? null
+  } catch (e) {
+    console.warn('[inat-cultivar] failed:', e)
+    return null
+  }
+}
+
+// Wikidata SPARQL/Search — structured cultivar data + image. Free, ~200ms.
 //
 // (Pastaba: 2026-05 bandėm pridėti Google Custom Search Image API kaip
 // primary photo source. Google account-level apribojo Custom Search JSON
 // API naujiems projektams — net atskiras non-Firebase project'as gavo
 // 403 „This project does not have the access". Drop'inta. Likę šaltiniai:
-// Wikidata + Wikipedia + Commons + AI's web_search imageUrl.)
+// iNat + Wikidata + Wikipedia + Commons + AI's web_search imageUrl.)
 //
 // Returns: { id (Q-entity), label, description, imageUrl } | null
 //
@@ -652,17 +685,22 @@ async function fetchCommonsImage(latinName) {
 }
 
 // Enrich'ina candidates su image URL'ais. Priority chain (visi free):
-//   1. AI parinko imageUrl iš savo web_search (retas hit, bet nemokamas)
-//   2. Wikidata SPARQL (populiarių cultivars entity'iai turi P18 image)
-//   3. Wikipedia REST direct + opensearch (retas hit cultivar'ams)
-//   4. Wikimedia Commons strict filter (occasional hit)
-//   5. null → UI fallback'ina į emoji
+//   1. AI parinko imageUrl iš savo web_search (retas hit)
+//   2. iNaturalist Taxa Autocomplete (plant-focused, geras outdoor garden
+//      cultivars coverage'as su strict name match'u)
+//   3. Wikidata SPARQL (populiarių cultivars entity'iai turi P18 image)
+//   4. Wikipedia REST direct + opensearch (retas hit cultivar'ams)
+//   5. Wikimedia Commons strict filter (occasional hit)
+//   6. null → UI fallback'ina į emoji
 //
 // Per-candidate sekvencialiai (early-exit), tarp candidates paraleliai.
 async function enrichCandidates(candidates) {
   if (!Array.isArray(candidates) || candidates.length === 0) return candidates
   return Promise.all(candidates.map(async c => {
     if (c.imageUrl) return c // AI jau parinko (best case)
+
+    const inatImg = await fetchInatCultivarImage(c.latinName)
+    if (inatImg) return { ...c, imageUrl: inatImg }
 
     const wd = await fetchWikidataPlant(c.latinName)
     if (wd?.imageUrl) return { ...c, imageUrl: wd.imageUrl, wikidataId: wd.id }
@@ -1225,9 +1263,9 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                       }}
                       className="w-full text-left bg-bone-50 border border-bone-400/40 rounded-2xl p-3 hover:bg-bone-100 hover:border-forest-300/60 active:scale-[0.98] transition-all"
                     >
-                      <div className="flex items-start gap-3">
-                        {/* Thumbnail — Wikipedia photo arba placeholder emoji */}
-                        <div className="w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-bone-200 border border-bone-400/40 relative">
+                      <div className="flex items-center gap-3">
+                        {/* Thumbnail — photo iš multi-source chain, fallback emoji */}
+                        <div className="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-bone-200 border border-bone-400/40">
                           {c.imageUrl ? (
                             <img
                               src={c.imageUrl}
@@ -1236,30 +1274,29 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                               onError={(e) => { e.currentTarget.style.display = 'none' }}
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-2xl">
+                            <div className="w-full h-full flex items-center justify-center text-3xl">
                               🌿
                             </div>
                           )}
                         </div>
+                        {/* Minimalistinis tekstas — TIK pavadinimas + vizualus
+                            aprašymas. Disambiguation stadijoje user'iui
+                            nereikia istorinės info, serijos paaiškinimo, ar
+                            kilmės — tik kaip atskirti vizualiai. */}
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-forest-800 text-[14px] leading-tight">
-                            {c.ltName || c.latinName}
+                          <p className="font-semibold text-forest-800 text-[15px] leading-tight">
+                            {c.ltName || c.latinName.replace(/^[A-Z][a-z]+\s+['"]/, '').replace(/['"]$/, '')}
                           </p>
-                          {c.ltName && (
-                            <p className="font-mono italic text-[11px] text-forest-500 mt-0.5 truncate">
-                              {c.latinName}
-                            </p>
-                          )}
-                          <p className="text-[12px] text-forest-600 mt-1 leading-relaxed">
-                            {c.description}
+                          <p className="font-mono italic text-[11px] text-forest-500 mt-0.5 truncate">
+                            {c.latinName}
                           </p>
                           {c.distinguishingFeature && (
-                            <p className="text-[11px] text-forest-500 italic mt-1 leading-relaxed">
-                              ↪ {c.distinguishingFeature}
+                            <p className="text-[12px] text-forest-700 mt-1.5 leading-snug">
+                              {c.distinguishingFeature}
                             </p>
                           )}
                         </div>
-                        <span className="text-forest-400 text-lg flex-shrink-0 self-center">›</span>
+                        <span className="text-forest-400 text-lg flex-shrink-0">›</span>
                       </div>
                     </button>
                   ))}
