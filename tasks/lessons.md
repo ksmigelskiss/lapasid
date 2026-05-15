@@ -16,7 +16,16 @@ Patternai/klaidos, kurias darau, ir kaip jų išvengti ateityje.
 - Ar yra konkretus current pain'as ką tai sprendžia?
 - Ar atsakymas tik „kad ateityje galbūt..." / „kad būtų gražiau"?
 
-Jei taip į trečiąjį → **NEDARYTI**. Drop'inti scope'ą iki to, ko prašyta.
+Jei taip į trečiąjį → **NEDARYTI** tyliai. Drop'inti scope'ą iki to, ko prašyta.
+
+**NIUANSAS** (svarbu, 2026-05-15): jei matau ką nors verto, ko user'is gal nemato — **PASIŪLYTI atvirai**, ne pridėti tyliai prie scope'o. User'is sprend'i taip/ne. Skirtumas:
+
+| ❌ Smuggle scope | ✅ Propose ir discuss |
+|------------------|----------------------|
+| „Pridėjau ring'ą action-needed kortelėms" (be klausimo) | „Matau, kad ring'as galėtų pagelbėti — bet rizikuoja atrodyti kaip decoration. Bandom?" |
+| Tyliai įvest „soon" tier'ą prie badge'o | „Galiu pridėt vidurinį tier'ą artėjantiems poreikiams. Reikia?" |
+
+User'is vertina mano matymą, ko jis nemato. Tas svarbu išlaikyti. Bet jokio scope smuggling'o — visada paskelbiu intent'ą, leidžiu pasakyti „ne, paprasčiau".
 
 **Konkretūs pavyzdžiai šioje sesijoje:**
 - ✗ „Soon" tier'as widget badge'uose (≤2d iki sekančio → žalia bg) — user nepraše, kūrė vizualinę painiavą
