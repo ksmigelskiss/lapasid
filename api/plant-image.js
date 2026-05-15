@@ -43,8 +43,18 @@ export default async function handler(req, res) {
     const r = await fetch(url)
     if (!r.ok) {
       const errText = await r.text()
-      console.warn('[plant-image] CSE returned non-OK:', r.status, errText.slice(0, 200))
-      return res.status(r.status).json({ error: 'cse_failed', images: [] })
+      console.warn('[plant-image] CSE returned non-OK:', r.status, errText.slice(0, 500))
+      // Temporarily expose detailed error for setup debugging — drop after CSE works
+      let parsedErr = null
+      try { parsedErr = JSON.parse(errText) } catch {}
+      return res.status(r.status).json({
+        error: 'cse_failed',
+        status: r.status,
+        google_error: parsedErr?.error?.message ?? errText.slice(0, 300),
+        google_code: parsedErr?.error?.code,
+        google_reason: parsedErr?.error?.errors?.[0]?.reason,
+        images: [],
+      })
     }
     const data = await r.json()
     const images = (data.items ?? []).map(item => ({
