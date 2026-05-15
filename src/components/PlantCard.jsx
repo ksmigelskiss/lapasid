@@ -137,32 +137,39 @@ function DotScore({ value, max = 3, color }) {
 
 function CareCircle({ checked, waterOverdue, fertOverdue }) {
   const baseSize = 'w-7 h-7 rounded-full border-2 shadow-md'
-  const single   = `${baseSize} flex items-center justify-center`
+  const single   = `${baseSize} flex items-center justify-center backdrop-blur-sm`
 
-  // BOTH overdue — split kapsulė. Brand'iškai: water=forest (gyvybė),
-  // fert=terracotta (žemė/ruduo). Ikonos atskiria semantiką.
+  // Unchecked (overdue) variantai naudoja BONE contour border'į vietoj
+  // colored border'io — sukuria švarų „select ring" feel'ą su white-ish
+  // outline'u. Vidus — semi-transparent action color (forest / terracotta),
+  // ikona bone, kad būtų matoma virš bet kokio photo backgroundo. Match'ina
+  // photo badges contour style'ą (consistency).
+  //
+  // Checked variantai lieka solid colored — strong „selected" signal.
+
+  // BOTH overdue — split kapsulė.
   if (waterOverdue && fertOverdue) {
     return (
-      <div className="w-12 h-7 rounded-full shadow-md flex">
-        <div className={`w-1/2 flex items-center justify-center border-2 border-r-0 rounded-l-full ${checked ? 'bg-forest-500 border-forest-500' : 'bg-forest-500/30 border-forest-500'}`}>
-          <Droplets size={11} className={checked ? 'text-bone' : 'text-forest-600'} />
+      <div className="w-12 h-7 rounded-full shadow-md flex backdrop-blur-sm">
+        <div className={`w-1/2 flex items-center justify-center border-2 border-r-0 rounded-l-full ${checked ? 'bg-forest-500 border-forest-500' : 'bg-forest-500/50 border-bone-50/80'}`}>
+          <Droplets size={11} className={checked ? 'text-bone' : 'text-bone fill-bone'} />
         </div>
-        <div className={`w-1/2 flex items-center justify-center border-2 border-l-0 rounded-r-full ${checked ? 'bg-terracotta border-terracotta' : 'bg-terracotta/30 border-terracotta'}`}>
-          <FlaskConical size={11} className={checked ? 'text-bone' : 'text-terracotta-500'} />
+        <div className={`w-1/2 flex items-center justify-center border-2 border-l-0 rounded-r-full ${checked ? 'bg-terracotta border-terracotta' : 'bg-terracotta-500/50 border-bone-50/80'}`}>
+          <FlaskConical size={11} className={checked ? 'text-bone' : 'text-bone fill-bone'} />
         </div>
       </div>
     )
   }
 
-  // Single overdue su ikonomis
+  // Single overdue / neutral
   if (checked) {
     if (fertOverdue)  return <div className={`${single} bg-terracotta border-terracotta`}><FlaskConical size={14} className="text-bone" /></div>
     if (waterOverdue) return <div className={`${single} bg-forest-500 border-forest-500`}><Droplets size={14} className="text-bone" /></div>
     return <div className={`${single} bg-forest-400 border-forest-400`}><Check size={13} className="text-bone" /></div>
   }
-  if (fertOverdue)  return <div className={`${single} border-terracotta bg-terracotta/20`}><FlaskConical size={12} className="text-terracotta" /></div>
-  if (waterOverdue) return <div className={`${single} border-forest-500 bg-forest-500/20`}><Droplets size={12} className="text-forest-500" /></div>
-  return <div className={`${single} border-white/80 bg-black/30`} />
+  if (fertOverdue)  return <div className={`${single} border-bone-50/80 bg-terracotta-500/50`}><FlaskConical size={12} className="text-bone fill-bone" /></div>
+  if (waterOverdue) return <div className={`${single} border-bone-50/80 bg-forest-500/50`}><Droplets size={12} className="text-bone fill-bone" /></div>
+  return <div className={`${single} border-bone-50/80 bg-black/30`} />
 }
 
 const PlantCard = memo(function PlantCard({
