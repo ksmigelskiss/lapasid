@@ -239,12 +239,6 @@ const PlantCard = memo(function PlantCard({
     fertLastDate === todayStr
   )
 
-  // „Soon" — likę ≤2 dienos iki kito laistymo/tręšimo. Pažymime widget
-  // badge'us photo'je viduriniu intensyvumu, kad kelias dienas anksto
-  // pamatyti kas artėja.
-  const waterSoon = !waterOverdue && waterFC?.daysUntil != null && waterFC.daysUntil <= 2
-  const fertSoon  = !fertOverdue  && fertFC?.daysUntil  != null && fertFC.daysUntil  <= 2
-
   // Care mode trijų-tier'ų hierarchija per opacity:
   //   • Reikia priežiūros (overdue) → 100% — pop'ina (plius photo badges
   //                                   ir CareCircle jau spalvotai signalizuoja)
@@ -315,30 +309,20 @@ const PlantCard = memo(function PlantCard({
         )}
 
         {/* Top-right pill stack (auginama only) — forecast'ai + badge'ai.
-            TIERED intensity (švelnesnis variantas):
-              • Overdue → semi-transparent action color + bone contour
-                          ring + bone tekstas (lengvesnis nei pilnas solid,
-                          bet kontūras dar aiškiai matosi ant photo)
-              • Soon (≤2d) → semi-transparent /55 be ring'o
-              • Normal → bg-black/40 backdrop-blur
+            Du švarūs lygmenys:
+              • Overdue → semi-transparent action color + bone contour ring
+                          + bone tekstas; signalizuoja „reikia veiksmo dabar"
+              • Normal  → bg-black/40 backdrop-blur; neutralus statusas
             Forma: rounded-full, h-[20px], icon 13px, text-[10px]. */}
         {section === 'auginama' && (
           <div className="absolute top-2 right-2 flex flex-col gap-1 items-end z-[2]">
             <div className={`inline-flex items-center gap-1 rounded-full px-2 h-[20px] backdrop-blur-sm ${
-              waterOverdue ? 'bg-forest-500/65 ring-1 ring-bone-50/80'
-              : waterSoon   ? 'bg-forest-500/55'
-              : 'bg-black/40'
+              waterOverdue ? 'bg-forest-500/65 ring-1 ring-bone-50/80' : 'bg-black/40'
             }`}>
-              <Droplets size={13} className={
-                waterOverdue ? 'text-bone fill-bone'
-                : waterSoon   ? 'text-bone'
-                : 'text-white/60'
-              } />
+              <Droplets size={13} className={waterOverdue ? 'text-bone fill-bone' : 'text-white/60'} />
               {waterDaysUntil != null && (
                 <span className={`text-[10px] leading-none ${
-                  waterOverdue ? 'text-bone font-bold'
-                  : waterSoon   ? 'text-bone font-semibold'
-                  : 'text-white/70 font-semibold'
+                  waterOverdue ? 'text-bone font-bold' : 'text-white/70 font-semibold'
                 }`}>
                   {waterDaysUntil}d
                 </span>
@@ -346,20 +330,12 @@ const PlantCard = memo(function PlantCard({
             </div>
             {fertFC?.intervalDays != null && (
               <div className={`inline-flex items-center gap-1 rounded-full px-2 h-[20px] backdrop-blur-sm ${
-                fertOverdue ? 'bg-terracotta-500/65 ring-1 ring-bone-50/80'
-                : fertSoon   ? 'bg-terracotta-500/55'
-                : 'bg-black/40'
+                fertOverdue ? 'bg-terracotta-500/65 ring-1 ring-bone-50/80' : 'bg-black/40'
               }`}>
-                <FlaskConical size={13} className={
-                  fertOverdue ? 'text-bone fill-bone'
-                  : fertSoon   ? 'text-bone'
-                  : 'text-white/60'
-                } />
+                <FlaskConical size={13} className={fertOverdue ? 'text-bone fill-bone' : 'text-white/60'} />
                 {fertDaysUntil != null && (
                   <span className={`text-[10px] leading-none ${
-                    fertOverdue ? 'text-bone font-bold'
-                    : fertSoon   ? 'text-bone font-semibold'
-                    : 'text-white/70 font-semibold'
+                    fertOverdue ? 'text-bone font-bold' : 'text-white/70 font-semibold'
                   }`}>
                     {fertDaysUntil}d
                   </span>
