@@ -434,11 +434,9 @@ async function fetchDetails(latinName, name) {
 }
 
 async function enrich(parsed) {
-  const [photos, namesData] = await Promise.all([
-    fetchPhotos(parsed.latinName),
-    fetchPlantNames(parsed.latinName),
-  ])
-  const inatLtName = namesData?.inatLtName ?? null
+  const isCultivar =
+    parsed.matchLevel === 'cultivar' ||
+    /['"][^'"]+['"]/.test(parsed.latinName ?? '')
 
   // iNaturalist NETURI cultivar coverage'o — stripCultivar() vidiniame
   // fetch'e nuima quotes prieš API call'ą, todėl grąžinama artimiausia
@@ -448,24 +446,44 @@ async function enrich(parsed) {
   // arba latinName turi quote'us) — NEPERRAŠOM AI suggested name'o iNat
   // species'o vardu. Tas pats — iNat photos atmetam, nes jos rodytų
   // laukinę giminaitę vietoj sodo hibrido.
-  const isCultivar =
-    parsed.matchLevel === 'cultivar' ||
-    /['"][^'"]+['"]/.test(parsed.latinName ?? '')
-
-  // Low-confidence rezultatai — irgi atmetam iNat photo enrichment'ą, kad
-  // nemodellintume „Gelsvoji raganė" nuotraukos kaip Clematis 'Boulevard'
-  // augalo. Geriau be photo nei suklaidinanti photo.
+  //
+  // Low-confidence rezultatai — irgi atmetam iNat enrichment'ą.
   const trustInat = !isCultivar && parsed.confidence !== 'low'
 
+  if (trustInat) {
+    // Species-level — iNat path (greitas + photo + LT name iš inatLtName)
+    const [photos, namesData] = await Promise.all([
+      fetchPhotos(parsed.latinName),
+      fetchPlantNames(parsed.latinName),
+    ])
+    const inatLtName = namesData?.inatLtName ?? null
+    return {
+      ...parsed,
+      name:         inatLtName ?? parsed.name,
+      image:        photos[0] ?? null,
+      photos,
+      inatLtName,
+      inatTaxonId:  namesData?.inatTaxonId ?? null,
+      sinonimai:    namesData?.sinonimai    ?? [],
+      englishNames: namesData?.englishNames ?? [],
+    }
+  }
+
+  // Cultivar / low-confidence path — bandom Wikidata main photo'ai.
+  // Wikidata turi structured entity'us populiariems cultivar'ams su image
+  // (P18) field'u — geriau nei niekas, ir TIKSLIAI to cultivar'o, ne
+  // laukinio giminaičio.
+  const wd = await fetchWikidataPlant(parsed.latinName)
   return {
     ...parsed,
-    name:         trustInat ? (inatLtName ?? parsed.name) : parsed.name,
-    image:        trustInat ? (photos[0] ?? null) : null,
-    photos:       trustInat ? photos : [],
-    inatLtName:   trustInat ? inatLtName : null,
-    inatTaxonId:  trustInat ? (namesData?.inatTaxonId ?? null) : null,
-    sinonimai:    trustInat ? (namesData?.sinonimai    ?? []) : [],
-    englishNames: trustInat ? (namesData?.englishNames ?? []) : [],
+    name:         parsed.name,
+    image:        wd?.imageUrl ?? null,
+    photos:       wd?.imageUrl ? [wd.imageUrl] : [],
+    wikidataId:   wd?.id ?? null,
+    inatLtName:   null,
+    inatTaxonId:  null,
+    sinonimai:    [],
+    englishNames: [],
   }
 }
 
@@ -487,6 +505,62 @@ function cleanLatinForSearch(latinName) {
     .replace(/[®™©]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
+}
+
+// Wikidata SPARQL/Search — structured cultivar data + image. PIRMAS layer
+// prieš AI/Wikipedia/Commons. Free, ~200ms.
+//
+// Returns: { id (Q-entity), label, description, imageUrl } | null
+//
+// Coverage: gerokai geresnė nei Wikipedia article — Wikidata turi structured
+// entity'us populiariems cultivar'ams net jei nėra atskiro Wikipedia article'o.
+// Image (P18 property) → konvertuojamas į Commons Special:FilePath URL'ą.
+async function fetchWikidataPlant(latinName) {
+  if (!latinName) return null
+  const cleaned = cleanLatinForSearch(latinName)
+  if (!cleaned) return null
+
+  try {
+    // Step 1: search entities by label
+    const searchUrl = `https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${encodeURIComponent(cleaned)}&language=en&type=item&format=json&origin=*&limit=5`
+    const r = await fetch(searchUrl)
+    if (!r.ok) return null
+    const data = await r.json()
+    const hits = data.search ?? []
+    if (!hits.length) return null
+
+    // Filter — prefer plant-related descriptions (cultivar/plant/species/genus name)
+    const genus = cleaned.split(/\s+/)[0].toLowerCase()
+    const plantHit = hits.find(h => {
+      const desc = (h.description ?? '').toLowerCase()
+      return desc.includes('cultivar') ||
+             desc.includes(genus) ||
+             desc.includes('plant') ||
+             desc.includes('species') ||
+             desc.includes('hybrid')
+    }) ?? hits[0]
+
+    // Step 2: fetch full entity to extract image (P18)
+    const entityRes = await fetch(`https://www.wikidata.org/wiki/Special:EntityData/${plantHit.id}.json`)
+    if (!entityRes.ok) return { id: plantHit.id, label: plantHit.label, description: plantHit.description, imageUrl: null }
+    const entityData = await entityRes.json()
+    const entity = entityData.entities?.[plantHit.id]
+
+    const imageFilename = entity?.claims?.P18?.[0]?.mainsnak?.datavalue?.value
+    const imageUrl = imageFilename
+      ? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(imageFilename.replace(/ /g, '_'))}?width=300`
+      : null
+
+    return {
+      id: plantHit.id,
+      label: plantHit.label,
+      description: plantHit.description,
+      imageUrl,
+    }
+  } catch (e) {
+    console.warn('[wikidata] lookup failed:', e)
+    return null
+  }
 }
 
 // Wikipedia REST API — thumbnail per latin name. Cultivar'ams retas case'as
@@ -569,10 +643,11 @@ async function fetchCommonsImage(latinName) {
 }
 
 // Enrich'ina candidates su image URL'ais. Priority chain:
-//   1. AI parinko imageUrl iš savo web_search (best case, free)
-//   2. Wikipedia REST API (direct + opensearch fallback)
-//   3. Wikimedia Commons (plačiausias plant photos coverage'as)
-//   4. null → UI fallback'ina į emoji
+//   1. AI parinko imageUrl iš savo web_search (best case)
+//   2. Wikidata SPARQL (structured cultivar entity → P18 image)
+//   3. Wikipedia REST API (direct + opensearch fallback)
+//   4. Wikimedia Commons (strict filter: title turi turėt ir genus, ir cultivar)
+//   5. null → UI fallback'ina į emoji
 //
 // Kiekvienam kandidatui priority chain vykdoma sekvencialiai (early-exit
 // jei rastas image), bet TARP candidates — paraleliai per Promise.all.
@@ -580,10 +655,15 @@ async function enrichCandidates(candidates) {
   if (!Array.isArray(candidates) || candidates.length === 0) return candidates
   return Promise.all(candidates.map(async c => {
     if (c.imageUrl) return c // AI jau parinko (best case)
+
+    const wd = await fetchWikidataPlant(c.latinName)
+    if (wd?.imageUrl) return { ...c, imageUrl: wd.imageUrl, wikidataId: wd.id }
+
     const wikiImg = await fetchWikiThumbnail(c.latinName)
-    if (wikiImg) return { ...c, imageUrl: wikiImg }
+    if (wikiImg) return { ...c, imageUrl: wikiImg, wikidataId: wd?.id ?? null }
+
     const commonsImg = await fetchCommonsImage(c.latinName)
-    return { ...c, imageUrl: commonsImg }  // gali likti null
+    return { ...c, imageUrl: commonsImg, wikidataId: wd?.id ?? null }  // imageUrl gali likti null
   }))
 }
 
