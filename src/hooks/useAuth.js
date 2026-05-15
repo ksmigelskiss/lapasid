@@ -8,17 +8,35 @@ import {
   getRedirectResult,
   signOut as firebaseSignOut,
 } from 'firebase/auth'
-import { doc, getDoc, setDoc, updateDoc, getDocs, collection, query, limit } from 'firebase/firestore'
+import { doc, getDoc, setDoc, onSnapshot, updateDoc, getDocs, collection, query, limit } from 'firebase/firestore'
 import { auth, db, googleProvider, facebookProvider } from '../utils/firebase'
 import { acceptInvite } from '../components/ProfileSheet'
 import { isMockMode, MOCK_USER, MOCK_COLLECTION_ID, MOCK_COLLECTION_NAME } from '../utils/mockData'
 
-// Sukuria naują asmeninę kolekciją + users/{uid} dokumentą (pirmasis prisijungimas).
-// Anksčiau čia buvo 3 legacy fallback'ai (LEGACY_UID Firestore lookup'as, 'geliu-db'
-// localStorage import'as, LEGACY_KEYS v3-v5 loop) — iš 2023-2024 migracijų. Aktyvūs
-// user'iai jau seniai turi savo collections/{cid}, naujieji prisijungiantys nuo nuo
-// nulio gauna empty starter — fallback'ai buvo dead code.
-async function runMigration(uid) {
+// Sukuria users/{uid} dokumentą su pending arba auto-approved būsena.
+// BE collection'o — collection'as bus sukurtas atskirai kai admin'as approve'ins
+// (jei pending) arba iškart jei invite link'as auto-approve'ino.
+//
+// Iki 2026-05 buvo `runMigration` su 3 legacy fallback'ais (LEGACY_UID lookup,
+// 'geliu-db' localStorage import, LEGACY_KEYS v3-v5) — visi iš 2023-2024 migracijų,
+// drop'inti dead code'as. Dabar nauji user'iai gauna empty starter su approval gate'u.
+async function createPendingUser(uid, { autoApprove = false } = {}) {
+  await setDoc(doc(db, 'users', uid), {
+    approved:          autoApprove,
+    beta:              true,
+    aiUsage:           { searches: 0, chats: 0, fbPosts: 0 },
+    subscription:      { plan: 'free', validUntil: null, stripeCustomerId: null },
+    displayName:       auth.currentUser?.displayName ?? '',
+    email:             auth.currentUser?.email ?? '',
+    createdAt:         new Date().toISOString(),
+  })
+}
+
+// Kuria approved user'iui asmeninę collection'ą. Iškviečiama:
+//   • Pirmas approved login'as kai dar nėra primaryCollection
+//   • Invite-only flow'e (auto-approved invitee, bet pati invite collection liko inviter'io)
+//     → iškvies'iau ne čia, o invite flow'e tiesiogiai.
+async function createUserCollection(uid) {
   const collectionId = `col_${uid.slice(0, 8)}`
 
   await setDoc(doc(db, 'collections', collectionId), {
@@ -37,13 +55,7 @@ async function runMigration(uid) {
     primaryCollection: collectionId,
     ownCollection:     collectionId,
     collections:       [collectionId],
-    beta:              true,
-    aiUsage:           { searches: 0, chats: 0, fbPosts: 0 },
-    subscription:      { plan: 'free', validUntil: null, stripeCustomerId: null },
-    displayName:       auth.currentUser?.displayName ?? '',
-    email:             auth.currentUser?.email ?? '',
-    createdAt:         new Date().toISOString(),
-  })
+  }, { merge: true })
 
   return collectionId
 }
@@ -114,12 +126,33 @@ async function loadAllCollections(uid, colIds) {
   return results.filter(Boolean)
 }
 
-// Grąžina aktyvios kolekcijos info arba sukuria naują
+// Grąžina aktyvios kolekcijos info arba sukuria naują.
+// Jei user'is dar nepatvirtintas admin'o — grąžina { pendingApproval: true }.
 async function getOrCreateCollection(uid) {
   // Invite turi pirmenybę — net jei vartotojas jau egzistuoja
   const inviteColId = await processPendingInvite(uid)
 
-  const userSnap = await getDoc(doc(db, 'users', uid))
+  let userSnap = await getDoc(doc(db, 'users', uid))
+
+  // Pirmas prisijungimas — sukuriam users/{uid}. Jei užėjo per invite link'ą,
+  // auto-approve'inam (inviter'is jau vouch'ino); kitaip — pending.
+  if (!userSnap.exists()) {
+    const autoApprove = !!inviteColId
+    await createPendingUser(uid, { autoApprove })
+    userSnap = await getDoc(doc(db, 'users', uid))
+  }
+
+  // Approval gate — explicit false reiškia, kad user'is laukia admin patvirtinimo.
+  // (Senieji user'iai be `approved` field'o → undefined → treated as approved.)
+  // Edge case: pending user'is + invite link'as → auto-approve (inviter vouch'ino).
+  if (userSnap.data()?.approved === false) {
+    if (inviteColId) {
+      await updateDoc(doc(db, 'users', uid), { approved: true, approvedAt: new Date().toISOString() })
+      userSnap = await getDoc(doc(db, 'users', uid))
+    } else {
+      return { pendingApproval: true }
+    }
+  }
 
   if (inviteColId) {
     const colSnap  = await getDoc(doc(db, 'collections', inviteColId))
@@ -197,14 +230,15 @@ async function getOrCreateCollection(uid) {
     }
   }
 
-  // Naujas vartotojas — migracija
-  const colId   = await runMigration(uid)
-  const allCols = [{ id: colId, name: 'Mano augalai', role: 'owner', ownerId: uid }]
+  // Approved user'is be primaryCollection'o — pirmas load'as po patvirtinimo.
+  // Sukuriam asmeninę collection'ą dabar (collection nebuvo kuriama pending stage'e).
+  const colId   = await createUserCollection(uid)
+  const allCols = [{ id: colId, name: 'Mano augalai', role: 'owner', ownerId: uid, hasPlants: false }]
   return {
     colId, role: 'owner', ownColId: colId,
     allCollections: allCols,
-    isAdmin: false,
-    subscription: { plan: 'free', validUntil: null },
+    isAdmin: userSnap.data()?.isAdmin === true,
+    subscription: userSnap.data()?.subscription ?? { plan: 'free', validUntil: null },
   }
 }
 
@@ -222,6 +256,7 @@ export function useAuth() {
     viewerToken: null,
     isAdmin: false,
     subscription: { plan: 'free', validUntil: null },
+    pendingApproval: false, // naujas user'is laukiantis admin patvirtinimo
   })
 
   useEffect(() => {
@@ -304,22 +339,74 @@ export function useAuth() {
 
     let redirectDone = false
 
+    // Pending approval onSnapshot subscription — kai admin'as flip'ina
+    // approved: false → true, user'is real-time'u gauna pilną access'ą be reload'o.
+    let pendingApprovalUnsub = null
+
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (!user && !redirectDone) return
       if (!user) {
         // authError paliekame — gali būti jau užpildytas signInWithCredential/.catch bloke
-        setState(s => ({ ...s, user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, loadingMessage: null }))
+        if (pendingApprovalUnsub) { pendingApprovalUnsub(); pendingApprovalUnsub = null }
+        setState(s => ({ ...s, user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, loadingMessage: null, pendingApproval: false }))
         return
       }
       setState(s => ({ ...s, loading: true, loadingMessage: 'Ruošiama kolekcija…' }))
       try {
-        const { colId, role, ownColId, allCollections, isAdmin, subscription } = await getOrCreateCollection(user.uid)
+        const result = await getOrCreateCollection(user.uid)
+
+        // Pending approval — rodom waiting screen + listen for approval flip
+        if (result?.pendingApproval) {
+          setState(s => ({
+            ...s,
+            user,
+            collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [],
+            loading: false, authError: null, loadingMessage: null,
+            isAdmin: false,
+            subscription: { plan: 'free', validUntil: null },
+            pendingApproval: true,
+          }))
+          // Listen for approval — kai admin'as flip'ina approved: true → re-run flow.
+          // Reject case'as — admin'as deletina users/{uid} doc'ą → snap.exists() false →
+          // signOut'inam user'į, kad išmestų į login screen (jo Firebase Auth account
+          // dar yra, bet prisijungus vėl gautų pending status'ą).
+          pendingApprovalUnsub = onSnapshot(doc(db, 'users', user.uid), async (snap) => {
+            if (!snap.exists()) {
+              console.log('[auth] users doc deleted while pending — signing out')
+              pendingApprovalUnsub?.(); pendingApprovalUnsub = null
+              firebaseSignOut(auth).catch(() => {})
+              return
+            }
+            if (snap.data()?.approved !== true) return
+            // Approved! Re-fetch with full flow
+            pendingApprovalUnsub?.(); pendingApprovalUnsub = null
+            setState(s => ({ ...s, loading: true, loadingMessage: 'Ruošiama kolekcija…', pendingApproval: false }))
+            try {
+              const r = await getOrCreateCollection(user.uid)
+              setState({
+                user, collectionId: r.colId, role: r.role,
+                ownCollectionId: r.ownColId, allCollections: r.allCollections,
+                loading: false, authError: null, loadingMessage: null,
+                isAdmin: r.isAdmin ?? false,
+                subscription: r.subscription ?? { plan: 'free', validUntil: null },
+                pendingApproval: false,
+              })
+            } catch (e) {
+              console.error('[useAuth] post-approval load failed:', e)
+              setState(s => ({ ...s, loading: false, authError: 'Nepavyko įkelti kolekcijos' }))
+            }
+          })
+          return
+        }
+
+        const { colId, role, ownColId, allCollections, isAdmin, subscription } = result
         setState({
           user, collectionId: colId, role,
           ownCollectionId: ownColId, allCollections,
           loading: false, authError: null, loadingMessage: null,
           isAdmin: isAdmin ?? false,
           subscription: subscription ?? { plan: 'free', validUntil: null },
+          pendingApproval: false,
         })
       } catch (e) {
         console.error('[useAuth] profile error:', e)
@@ -329,6 +416,7 @@ export function useAuth() {
           loading: false, authError: null, loadingMessage: null,
           isAdmin: false,
           subscription: { plan: 'free', validUntil: null },
+          pendingApproval: false,
         })
       }
     })
@@ -342,7 +430,10 @@ export function useAuth() {
         if (!auth.currentUser) setState(s => ({ ...s, user: null, collectionId: null, role: 'owner', ownCollectionId: null, allCollections: [], loading: false, loadingMessage: null }))
       })
 
-    return unsub
+    return () => {
+      unsub()
+      pendingApprovalUnsub?.()
+    }
   }, [])
 
   // Generic provider sign-in (Google, Facebook).

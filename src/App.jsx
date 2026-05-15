@@ -14,6 +14,7 @@ import DesktopHeader from './components/desktop/DesktopHeader'
 import MobileHeader from './components/MobileHeader'
 import { DetailHostProvider } from './contexts/DetailHostContext'
 import LoginScreen from './components/LoginScreen'
+import PendingApprovalScreen from './components/PendingApprovalScreen'
 import BrandLoader from './components/brand/BrandLoader'
 import T4Icon from './components/brand/T4Icon'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
@@ -51,7 +52,7 @@ export default function App() {
   const {
     user, collectionId, role, ownCollectionId, allCollections,
     loading: authLoading, authError, loadingMessage,
-    viewerToken, isAdmin,
+    viewerToken, isAdmin, pendingApproval,
     signInGoogle, signInFacebook, signOut, switchCollection, renameCollection,
   } = useAuth()
 
@@ -328,6 +329,12 @@ export default function App() {
     return <LoginScreen onSignInGoogle={signInGoogle} onSignInFacebook={signInFacebook} error={authError} />
   }
 
+  // Pending admin approval — naujas user'is dar nepatvirtintas.
+  // useAuth.js onSnapshot real-time'u stebi approved flip'ą.
+  if (pendingApproval) {
+    return <PendingApprovalScreen user={user} />
+  }
+
   // Admin panel — atskira modal'inė route'a per ?admin=1, gate'inta
   // isAdmin flag'u. Rodome ANT app'o (preserve'ina kolekciją iš auth
   // state'o), bet pati app'a nesirenderiina. Užsidaroma — back to app.
@@ -458,6 +465,7 @@ export default function App() {
         setShowProfile(true)
       }}
       role={role}
+      isAdmin={isAdmin}
       careNotificationCount={careNotificationCount}
       careWaterCount={careWaterCount}
       careFertCount={careFertCount}
@@ -486,6 +494,7 @@ export default function App() {
             <MobileHeader
               user={user}
               role={role}
+              isAdmin={isAdmin}
               onProfileClick={() => setShowProfile(v => !v)}
               careNotificationCount={careNotificationCount}
               careWaterCount={careWaterCount}

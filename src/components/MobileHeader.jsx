@@ -3,6 +3,7 @@ import { Search, Droplets, FlaskConical } from 'lucide-react'
 import { CareSummaryList } from './CareOverview'
 import T4Icon from './brand/T4Icon'
 import T4Word from './brand/T4Word'
+import AdminPendingBadge from './admin/AdminPendingBadge'
 
 /**
  * MobileHeader — top toolbar mobile'e (<1024px).
@@ -17,7 +18,7 @@ import T4Word from './brand/T4Word'
  * forest, fert terracotta) vietoj generic bell + raudonas badge.
  */
 export default function MobileHeader({
-  user, onProfileClick, role = 'owner',
+  user, onProfileClick, role = 'owner', isAdmin = false,
   careNotificationCount = 0, careWaterCount = 0, careFertCount = 0,
   carePopupPlants = [], onCareTap,
   onSearchClick,
@@ -94,6 +95,9 @@ export default function MobileHeader({
             <span className="text-[11px] font-bold tabular-nums leading-none">{careFertCount}</span>
           </button>
         </div>
+
+        {/* Admin pending badge — rodo tik admin'ams kai yra nepatvirtintų user'ių */}
+        <AdminPendingBadge isAdmin={isAdmin} />
 
         {/* Avatar — atidaro ProfileSheet */}
         <button

@@ -3,6 +3,7 @@ import { Search, Droplets, FlaskConical } from 'lucide-react'
 import { CareSummaryList } from '../CareOverview'
 import T4Icon from '../brand/T4Icon'
 import T4Word from '../brand/T4Word'
+import AdminPendingBadge from '../admin/AdminPendingBadge'
 
 /**
  * DesktopHeader — top juosta desktop'e (≥1024px), pakeičia mobile bottom
@@ -32,7 +33,7 @@ import T4Word from '../brand/T4Word'
  */
 export default function DesktopHeader({
   active, onTabChange, counts = {},
-  user, onProfileClick, role = 'owner',
+  user, onProfileClick, role = 'owner', isAdmin = false,
   careNotificationCount = 0, careWaterCount = 0, careFertCount = 0,
   carePopupPlants = [], onCareTap,
   onSearchClick,
@@ -165,6 +166,8 @@ export default function DesktopHeader({
             </div>
           )}
         </div>
+        {/* Admin pending badge — rodo tik admin'ams kai yra nepatvirtintų user'ių */}
+        <AdminPendingBadge isAdmin={isAdmin} />
         {/* Avatar */}
         <button
           onClick={onProfileClick}

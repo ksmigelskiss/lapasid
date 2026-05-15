@@ -2,9 +2,17 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Kiekvienas vartotojas skaito/rašo tik savo profilį
+    // Helper: ar request'o user'is yra admin'as? Tikriname users/{uid}.isAdmin field'ą.
+    function isAdmin() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    // Kiekvienas vartotojas skaito/rašo tik savo profilį. Admin'as skaito visus
+    // (admin panel'ui), gali update'inti (approve/role/plan), gali delete (soft delete).
     match /users/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read, update, delete: if isAdmin();
     }
 
     // Kolekcijų metaduomenys (zones, zinynas, settings, members)
@@ -22,6 +30,8 @@ service cloud.firestore {
          request.resource.data.members.hasAll(resource.data.members) &&
          request.resource.data.members.hasAll([request.auth.uid]))
       );
+      // Admin'as gali skaityti / delete'inti bet kurią kolekciją
+      allow read, delete: if isAdmin();
     }
 
     // Augalai (subkolekcija)
@@ -29,6 +39,8 @@ service cloud.firestore {
       allow read, write: if request.auth != null &&
         request.auth.uid in
           get(/databases/$(database)/documents/collections/$(colId)).data.members;
+      // Admin'as — pilnas access plantsubcol'ui
+      allow read, write, delete: if isAdmin();
     }
 
     // Bendra augalų katalogo DB — visi skaito, rašo tik serveris
@@ -44,6 +56,8 @@ service cloud.firestore {
       allow create: if request.auth != null;
       // arrayUnion savęs prie narių — bet kuris auth vartotojas gali prisijungti
       allow update: if request.auth != null;
+      // Admin'as gali delete'inti senus / piktnaudžiaujamus invite token'us
+      allow delete: if isAdmin();
     }
 
     // Augalo pasas — viešas skaitymas jei isPublic, rašo tik auth vartotojas
