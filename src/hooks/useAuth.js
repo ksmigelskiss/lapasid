@@ -374,11 +374,6 @@ export function useAuth() {
   // signInWithPopup veikia visur: naršyklėje, Android PWA, iOS 14.5+ PWA
   // (Firebase atidaro popup'ą per SFSafariViewController). Jei popup
   // blokuotas/uždarytas — fallback į signInWithRedirect.
-  //
-  // (Pastaba: anksčiau čia buvo isStandalonePWA branch'as + server-side
-  // OAuth per /api/auth/google-start, bet geliu-db nuo kurios branchinom
-  // VEIKIA su paprastu popup'u → grįžom prie šio paprastesnio variant'o.
-  // Server-side endpoint'ai liko code'e kaip backup'as.)
   const signInWithProvider = async (provider) => {
     setState(s => ({ ...s, authError: null }))
     try {
