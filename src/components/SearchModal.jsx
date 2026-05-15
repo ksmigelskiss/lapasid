@@ -75,6 +75,20 @@ export const TOOL_PREVIEW = {
         items: { type: 'string' },
         description: 'Šaltiniai, iš kurių sėmesi info. Jei naudojai web_search tool — surašyk apsilankytus URL\'us (pvz. „https://www.rhs.org.uk/plants/...", „https://en.wikipedia.org/wiki/..."). Jei rėmeisi tik savo žiniomis — palik tuščią array.',
       },
+      candidates: {
+        type: 'array',
+        description: 'JEI confidence != "high" IR yra plausibly identifikuojamų kandidatų (cultivar serijos nariai, vizualiai panašios rūšys) — surašyk 2-5 kandidatus. User\'is paskui pasirinks vieną → nauja paieška su tiksliu pavadinimu → high confidence rezultatas. Tuščia array jei kandidatai neaišku arba confidence == high.',
+        items: {
+          type: 'object',
+          properties: {
+            latinName:             { type: 'string', description: 'Tikslus lotyniškas pavadinimas su cultivar žymeniu (pvz. „Clematis \'Acropolis\'")' },
+            ltName:                { type: ['string', 'null'], description: 'Lietuviškas pavadinimas jei žinai, kitaip null' },
+            description:           { type: 'string', description: '1-2 sakiniai apie šitą cultivar/variantą — kilmė, serija, charakteringa ypatybė.' },
+            distinguishingFeature: { type: 'string', description: 'KAIP user\'is gali atskirti šitą cultivar nuo kitų kandidatų vizualiai. Pvz. „Ryškiai pink žiedai su tamsesne pink juostele per centrą". Konkretu, ne abstraktu.' },
+          },
+          required: ['latinName', 'description', 'distinguishingFeature'],
+        },
+      },
       name:            { type: 'string',  description: 'Tikras lietuviškas pavadinimas. NIEKADA angliškas ar lotyniškas.' },
       latinName:       { type: 'string',  description: 'Tikslus lotyniškas pavadinimas (su cultivar žymeniu jei taikoma, pvz. „Clematis \'Boulevard\'")' },
       emoji:           { type: 'string',  description: 'Vienas emoji' },
@@ -152,7 +166,7 @@ export const TOOL_PREVIEW = {
       },
       idomybes: { type: 'array', items: { type: 'string' }, description: '2-3 įdomūs faktai' },
     },
-    required: ['confidence', 'matchLevel', 'uncertaintyReason', 'sources',
+    required: ['confidence', 'matchLevel', 'uncertaintyReason', 'sources', 'candidates',
                'name', 'latinName', 'emoji', 'tipas', 'augimo_greitis', 'sunkumas',
                'toksiskas', 'savybes', 'aprasymas', 'kilme', 'sviesa', 'vanduo', 'idomybes'],
   },
@@ -251,10 +265,39 @@ Jei web_search NIEKO neranda — confidence lieka „low", uncertaintyReason
 paaiškina kad cultivar net online nerandamas.
 
 ═════════════════════════════════════════════════════════
+DISAMBIGUATION — KANDIDATAI
+═════════════════════════════════════════════════════════
+
+JEI confidence yra medium ar low IR yra plausibly identifikuojamų kandidatų
+(pvz. cultivar serijos nariai, vizualiai panašios rūšys), pildyk
+candidates lauką (array) su 2-5 įrašais.
+
+Kiekvienas kandidatas turi turėti:
+  • latinName — tikslus pavadinimas (su cultivar žymeniu)
+  • ltName — lietuviškas pavadinimas jei žinai, kitaip null
+  • description — 1-2 sakiniai (serija, kilmė, charakteristika)
+  • distinguishingFeature — kaip užtikrintai atskirti VIZUALIAI/CHARAKTERIO
+    LYGIU nuo kitų kandidatų, ne abstrakti charakteristika
+
+User'is paspausta vieną kandidatą → nauja paieška su tikslesniu pavadinimu
+→ high confidence rezultatas → saugomas į catalog.
+
+Pavyzdžiai kada PILDYTI candidates:
+  ✓ Užklausa: „Clematis 'Boulevard'" → Boulevard serija turi daug cultivars,
+    surašyk 4-5 populiariausius su distinguishing features (žiedų spalva)
+  ✓ Photo identifikacija: kažkoks raudonžiedis sukulent'as — surašyk plausibly
+    rūšis (Aeonium 'Schwarzkopf', Echeveria 'Black Prince', ir t.t.)
+
+NEpildyk candidates jei:
+  ✗ Confidence == „high" (tikrai žinai augalą)
+  ✗ Užklausa visiškai neaiški (pvz. „kažkoks žalias augalas") — kandidatų per daug,
+    geriau parodyt low confidence + uncertaintyReason
+
+═════════════════════════════════════════════════════════
 HONESTY REQUIREMENT — KRITIŠKAI SVARBU
 ═════════════════════════════════════════════════════════
 
-PRIVALOMI laukai: confidence, matchLevel, uncertaintyReason, sources.
+PRIVALOMI laukai: confidence, matchLevel, uncertaintyReason, sources, candidates.
 
 Augalų pasaulis turi tris taksonomijos lygius, kurie SKIRIASI priežiūra:
   • Genus (gentis) — pvz. „Clematis"
@@ -946,6 +989,55 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                     </p>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* Kandidatai — pasirinkimo kortelės kai AI nepavyko 100%
+                identifikuoti, bet turi 2-5 plausibly atitinkančius cultivars.
+                User'is paspausta vieną → nauja paieška su tikslesniu pavadinimu
+                → high confidence + saved į catalog. */}
+            {Array.isArray(result.candidates) && result.candidates.length > 0 && !result.fromCatalog && (
+              <div className="mb-3">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-forest-500 mb-2 px-1">
+                  Galimi atitikmenys — pasirink savo augalą
+                </p>
+                <div className="space-y-1.5">
+                  {result.candidates.map((c, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setQuery(c.latinName)
+                        searchByText(c.latinName)
+                      }}
+                      className="w-full text-left bg-bone-50 border border-bone-400/40 rounded-2xl px-4 py-3 hover:bg-bone-100 hover:border-forest-300/60 active:scale-[0.98] transition-all"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-forest-800 text-[14px] leading-tight">
+                            {c.ltName || c.latinName}
+                          </p>
+                          {c.ltName && (
+                            <p className="font-mono italic text-[11px] text-forest-500 mt-0.5 truncate">
+                              {c.latinName}
+                            </p>
+                          )}
+                          <p className="text-[12px] text-forest-600 mt-1.5 leading-relaxed">
+                            {c.description}
+                          </p>
+                          {c.distinguishingFeature && (
+                            <p className="text-[11px] text-forest-500 italic mt-1 leading-relaxed">
+                              ↪ {c.distinguishingFeature}
+                            </p>
+                          )}
+                        </div>
+                        <span className="text-forest-400 text-lg flex-shrink-0">›</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-[11px] text-forest-400 italic mt-2 px-1">
+                  Arba apačioj pridėk su bendra (nepatvirtinta) info.
+                </p>
               </div>
             )}
 
