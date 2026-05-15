@@ -469,12 +469,14 @@ async function enrich(parsed) {
     }
   }
 
-  // Cultivar / low-confidence path — multi-source priority chain (visi free):
-  //   1. iNaturalist Taxa autocomplete (plant-focused, strict cultivar match)
-  //   2. Wikidata P18 (jei entity yra)
-  //   3. Wikipedia direct + opensearch thumbnail
+  // Cultivar / low-confidence path — multi-source priority chain:
+  //   1. Brave Image Search (paid primary, ~85-90% hit rate)
+  //   2. iNaturalist Taxa autocomplete (free, plant-focused)
+  //   3. Wikidata P18 (free)
+  //   4. Wikipedia direct + opensearch thumbnail (free)
   // null jei visi miss → UI rodo plant card be photo.
-  let mainImage = await fetchInatCultivarImage(parsed.latinName)
+  let mainImage = await fetchBraveImage(parsed.latinName)
+  if (!mainImage) mainImage = await fetchInatCultivarImage(parsed.latinName)
   const wd = !mainImage ? await fetchWikidataPlant(parsed.latinName) : null
   if (!mainImage && wd?.imageUrl) mainImage = wd.imageUrl
   if (!mainImage) mainImage = await fetchWikiThumbnail(parsed.latinName)
@@ -510,6 +512,49 @@ function cleanLatinForSearch(latinName) {
     .replace(/[®™©]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
+}
+
+// Brave Image Search API — proxy'inta per /api/plant-image. Primary
+// photo source (highest hit rate, ~85-90% populiariems cultivars'ams).
+// Free tier 2000 queries/mėn, paskui $3/1000.
+//
+// (Anksčiau bandėm Google Custom Search — Google account-level blokavo
+// naujiems projektams. Brave laisvesnis.)
+//
+// Strict filter'is: returned image title arba url privalo turėti BOTH
+// genus IR cultivar word'us. Atmetam random / unrelated photos.
+async function fetchBraveImage(latinName) {
+  if (!latinName) return null
+  const cleaned = cleanLatinForSearch(latinName)
+  if (!cleaned) return null
+  const genus    = cleaned.split(/\s+/)[0].toLowerCase()
+  const cultivar = cleaned.replace(/['"]/g, '').toLowerCase().split(/\s+/).slice(1).join(' ').split(/\s+/)[0]
+
+  try {
+    const r = await fetch(`/api/plant-image?q=${encodeURIComponent(cleaned)}`)
+    if (!r.ok) return null
+    const data = await r.json()
+    const candidates = data.images ?? []
+
+    // Strict filter — title arba source url turi turėti BOTH genus IR cultivar.
+    // Jei nei vienas neatitinka, grąžinam pirmą tik jei genus matosi
+    // (genus-level fallback be cultivar mention).
+    const strict = candidates.find(img => {
+      const haystack = `${img.title ?? ''} ${img.source ?? ''} ${img.url ?? ''}`.toLowerCase()
+      return haystack.includes(genus) && cultivar && haystack.includes(cultivar)
+    })
+    if (strict?.url) return strict.url
+
+    // Genus-only fallback — atmetam tikrą false positive (irrelevant photo)
+    const genusOnly = candidates.find(img => {
+      const haystack = `${img.title ?? ''} ${img.source ?? ''} ${img.url ?? ''}`.toLowerCase()
+      return haystack.includes(genus)
+    })
+    return genusOnly?.url ?? null
+  } catch (e) {
+    console.warn('[brave-image] fetch failed:', e)
+    return null
+  }
 }
 
 // iNaturalist Taxa Autocomplete — plant-focused, free, no key. Garden
@@ -684,20 +729,23 @@ async function fetchCommonsImage(latinName) {
   } catch { return null }
 }
 
-// Enrich'ina candidates su image URL'ais. Priority chain (visi free):
+// Enrich'ina candidates su image URL'ais. Priority chain:
 //   1. AI parinko imageUrl iš savo web_search (retas hit)
-//   2. iNaturalist Taxa Autocomplete (plant-focused, geras outdoor garden
-//      cultivars coverage'as su strict name match'u)
-//   3. Wikidata SPARQL (populiarių cultivars entity'iai turi P18 image)
-//   4. Wikipedia REST direct + opensearch (retas hit cultivar'ams)
-//   5. Wikimedia Commons strict filter (occasional hit)
-//   6. null → UI fallback'ina į emoji
+//   2. Brave Image Search (PAID primary, ~85-90% hit rate)
+//   3. iNaturalist Taxa Autocomplete (free, plant-focused fallback)
+//   4. Wikidata SPARQL (free)
+//   5. Wikipedia REST direct + opensearch (free)
+//   6. Wikimedia Commons strict filter (free)
+//   7. null → UI fallback'ina į emoji
 //
 // Per-candidate sekvencialiai (early-exit), tarp candidates paraleliai.
 async function enrichCandidates(candidates) {
   if (!Array.isArray(candidates) || candidates.length === 0) return candidates
   return Promise.all(candidates.map(async c => {
     if (c.imageUrl) return c // AI jau parinko (best case)
+
+    const braveImg = await fetchBraveImage(c.latinName)
+    if (braveImg) return { ...c, imageUrl: braveImg }
 
     const inatImg = await fetchInatCultivarImage(c.latinName)
     if (inatImg) return { ...c, imageUrl: inatImg }
