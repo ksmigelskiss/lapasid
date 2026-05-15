@@ -10,45 +10,22 @@ import {
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc, getDocs, collection, query, limit } from 'firebase/firestore'
 import { auth, db, googleProvider, facebookProvider } from '../utils/firebase'
-import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { acceptInvite } from '../components/ProfileSheet'
 import { isMockMode, MOCK_USER, MOCK_COLLECTION_ID, MOCK_COLLECTION_NAME } from '../utils/mockData'
 
-const LEGACY_UID = 'HdAOoLtEzUXqU2px2h3YmzLygCp1'
-
-// Sukuria naują asmeninę kolekciją ir users/{uid} dokumentą (pirmasis prisijungimas)
+// Sukuria naują asmeninę kolekciją + users/{uid} dokumentą (pirmasis prisijungimas).
+// Anksčiau čia buvo 3 legacy fallback'ai (LEGACY_UID Firestore lookup'as, 'geliu-db'
+// localStorage import'as, LEGACY_KEYS v3-v5 loop) — iš 2023-2024 migracijų. Aktyvūs
+// user'iai jau seniai turi savo collections/{cid}, naujieji prisijungiantys nuo nuo
+// nulio gauna empty starter — fallback'ai buvo dead code.
 async function runMigration(uid) {
-  let legacyData = null
-  try {
-    const legacySnap = await getDoc(doc(db, 'users', LEGACY_UID))
-    if (legacySnap.exists()) {
-      const d = legacySnap.data()
-      if (Array.isArray(d.plants) && !d.members) legacyData = d
-    }
-  } catch {}
-  if (!legacyData) {
-    try {
-      const stored = localStorage.getItem('geliu-db')
-      if (stored) legacyData = migrate(JSON.parse(stored))
-    } catch {}
-  }
-  if (!legacyData) {
-    try {
-      for (const key of LEGACY_KEYS) {
-        const old = localStorage.getItem(key)
-        if (old) { legacyData = migrate(JSON.parse(old)); break }
-      }
-    } catch {}
-  }
-
-  const data         = legacyData ?? { plants: [], zinynas: [], zones: [], settings: {} }
   const collectionId = `col_${uid.slice(0, 8)}`
 
   await setDoc(doc(db, 'collections', collectionId), {
-    plants:    data.plants   ?? [],
-    zinynas:   data.zinynas  ?? [],
-    zones:     data.zones    ?? [],
-    settings:  data.settings ?? {},
+    plants:    [],
+    zinynas:   [],
+    zones:     [],
+    settings:  {},
     members:   [uid],
     ownerId:   uid,
     roles:     { [uid]: 'owner' },
@@ -180,15 +157,14 @@ async function getOrCreateCollection(uid) {
         const cd = colSnap.data()
         role = cd.roles?.[uid] ?? (cd.ownerId === uid ? 'owner' : 'member')
 
-        // Fix: atstatome owner rolę jei:
-        // (a) sena kolekcija su legacy ownerId, arba
-        // (b) owner atsitiktinai pats sau priėmė viewer/member invite ir save downgradeino
-        if (role !== 'owner' && (cd.ownerId === uid || cd.ownerId === LEGACY_UID)) {
+        // Fix: atstatome owner rolę jei owner atsitiktinai pats sau priėmė
+        // viewer/member invite ir save downgrade'ino.
+        if (role !== 'owner' && cd.ownerId === uid) {
           role = 'owner'
           setDoc(doc(db, 'collections', activeColId), {
             ownerId:              uid,
             [`roles.${uid}`]:     'owner',
-          }, { merge: true }).catch(() => {})
+          }, { merge: true }).catch(e => console.warn('[auth] owner role restore failed:', e))
         }
       }
     }
@@ -198,7 +174,7 @@ async function getOrCreateCollection(uid) {
     const email = auth.currentUser?.email || ''
     setDoc(doc(db, 'collections', activeColId), {
       [`memberProfiles.${uid}`]: { displayName: name, email },
-    }, { merge: true }).catch(() => {})
+    }, { merge: true }).catch(e => console.warn('[auth] memberProfiles update failed:', e))
     // Atnaujinam users/{uid} jei trūksta arba displayName, arba email
     // (anksčiau condition'as tikrindavo TIK displayName, todėl seni narių
     // dokumentai su tuščiu email niekada neatsinaujindavo).
@@ -207,7 +183,7 @@ async function getOrCreateCollection(uid) {
       if (!d.displayName && name)  patch.displayName = name
       if (!d.email       && email) patch.email       = email
       if (Object.keys(patch).length) {
-        setDoc(doc(db, 'users', uid), patch, { merge: true }).catch(() => {})
+        setDoc(doc(db, 'users', uid), patch, { merge: true }).catch(e => console.warn('[auth] user displayName/email patch failed:', e))
       }
     }
 
