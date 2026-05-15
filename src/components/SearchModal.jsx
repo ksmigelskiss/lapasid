@@ -85,7 +85,7 @@ export const TOOL_PREVIEW = {
             ltName:                { type: ['string', 'null'], description: 'Lietuviškas pavadinimas jei žinai, kitaip null' },
             description:           { type: 'string', description: '1-2 sakiniai apie šitą cultivar/variantą — kilmė, serija, charakteringa ypatybė.' },
             distinguishingFeature: { type: 'string', description: 'KAIP user\'is gali atskirti šitą cultivar nuo kitų kandidatų vizualiai. Pvz. „Ryškiai pink žiedai su tamsesne pink juostele per centrą". Konkretu, ne abstraktu.' },
-            imageUrl:              { type: ['string', 'null'], description: 'Jei web_search rezultate matei aiškią photo URL (jpg/png/webp) šios cultivar — surašyk čia direct image URL. NIEKADA nehallucinink — pateik tik jei tikrai matei. null jei photo nematei.' },
+            imageUrl:              { type: ['string', 'null'], description: 'Jei web_search rezultatuose APLANKEI puslapį, kuriame buvo direct image URL (formato https://.../something.jpg|png|webp) šios SPECIFINĖS cultivar nuotrauka, pateik čia. SVARBU: tik URL adresai, kuriuos tikrai matei web_search rezultate, ne spėjimai. Geriau null nei hallucinuotas URL. Idealiai iš RHS / nursery / Wikipedia article body, ne thumbnail.' },
           },
           required: ['latinName', 'description', 'distinguishingFeature', 'imageUrl'],
         },
@@ -526,23 +526,40 @@ async function fetchWikiThumbnail(latinName) {
   } catch { return null }
 }
 
-// Wikimedia Commons — daug plačiau coverage'o cultivar photos'ams nei
-// Wikipedia articles. Search'inam File: namespace, paimam top hit thumbnail.
+// Wikimedia Commons — search File: namespace su STRICT title filter'iu.
+// Commons search'as match'ina pagal žodžius — be filtro grąžindavo
+// random false positives („Volunteer parade.jpg" už „Clematis Volunteer").
+//
+// Filtras: file title PRIVALO turėti BOTH genus name AND cultivar name
+// (case-insensitive). Atmetam kitką — geriau emoji nei klaidinanti photo.
 async function fetchCommonsImage(latinName) {
   if (!latinName) return null
   const cleaned = cleanLatinForSearch(latinName)
   if (!cleaned) return null
+
+  // Išskaidom į genus + cultivar (jei yra quote'uotas cultivar dalis)
+  const cultivarMatch = cleaned.match(/^(\w+)\s+['"]?([^'"]+?)['"]?$/)
+  const genus    = cultivarMatch?.[1]?.toLowerCase()
+  const cultivar = cultivarMatch?.[2]?.toLowerCase()
+  if (!genus || !cultivar) return null  // nesame cultivar — palieku null
+
   try {
-    // namespace 6 = File: namespace (visi paveikslėliai)
-    const searchUrl = `https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(cleaned)}&srnamespace=6&srlimit=1&format=json&origin=*`
+    // Bandom kelis search hit'us (ne tik top 1), kad rastume match'ą filter'iui
+    const searchUrl = `https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(`${genus} ${cultivar}`)}&srnamespace=6&srlimit=5&format=json&origin=*`
     const r = await fetch(searchUrl)
     if (!r.ok) return null
     const data = await r.json()
-    const title = data.query?.search?.[0]?.title  // "File:Clematis Acropolis 01.jpg"
-    if (!title) return null
+    const hits = data.query?.search ?? []
+
+    // Strict filter — title TURI turėti ir genus, ir cultivar name
+    const validHit = hits.find(h => {
+      const title = (h.title ?? '').toLowerCase()
+      return title.includes(genus) && title.includes(cultivar)
+    })
+    if (!validHit) return null
 
     // Gauti thumbnail URL'ą (200px wide)
-    const fileUrl = `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=imageinfo&iiprop=url&iiurlwidth=200&format=json&origin=*`
+    const fileUrl = `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(validHit.title)}&prop=imageinfo&iiprop=url&iiurlwidth=200&format=json&origin=*`
     const r2 = await fetch(fileUrl)
     if (!r2.ok) return null
     const data2 = await r2.json()
