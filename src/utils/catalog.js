@@ -10,12 +10,24 @@ const PERSONAL_FIELDS = new Set([
   // 'image' čia NĖRA — iNaturalist URL yra rūšinis, ne asmeninis; saugomas kataloge kaip referenceImage
 ])
 
-/** Normalizuotas lotyniškas pavadinimas → Firestore docId */
+/** Normalizuotas lotyniškas pavadinimas → Firestore docId.
+ *
+ * SVARBU: cultivar'ai IŠLAIKOMI (anksčiau buvo strip'inami, bet tai reiškė,
+ * kad „Clematis 'Boulevard Vicki'" ir „Clematis 'Boulevard Crystal Fountain'"
+ * mapuodavosi į tą patį `clematis` docId — visiškai skirtingi augalai
+ * susijungdavo į vieną catalog entry). Dabar quotes pašalinamos, bet
+ * cultivar tekstas išlaikomas ID'e.
+ *
+ * Pavyzdžiai:
+ *   Clematis 'Boulevard Vicki'   → clematis_boulevard_vicki
+ *   Clematis Boulevard Vicki     → clematis_boulevard_vicki  (be quotes — tas pats)
+ *   Codiaeum variegatum          → codiaeum_variegatum
+ */
 export function catalogDocId(lotyniskas) {
   if (!lotyniskas) return null
   return lotyniskas
     .toLowerCase()
-    .replace(/\s*'[^']*'/g, '')   // pašaliname kultivaro pavadinimus
+    .replace(/['"]/g, '')          // tik quotes pašalinam, cultivar tekstas lieka
     .trim()
     .replace(/\s+/g, '_')
     .replace(/[^a-z0-9_]/g, '')

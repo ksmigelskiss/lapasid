@@ -70,6 +70,11 @@ export const TOOL_PREVIEW = {
         type: ['string', 'null'],
         description: 'Jei confidence != high — paaiškink lietuviškai 1 sakiniu KODĖL nesi tikras. Pvz. „Šio cultivar (Clematis Boulevard) nėra mano žinių bazėje, pateikiu bendrą Clematis informaciją." arba „Nuotraukoje matomas neaiškus augalas, gali būti X arba Y." null jei confidence == high.',
       },
+      sources: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'Šaltiniai, iš kurių sėmesi info. Jei naudojai web_search tool — surašyk apsilankytus URL\'us (pvz. „https://www.rhs.org.uk/plants/...", „https://en.wikipedia.org/wiki/..."). Jei rėmeisi tik savo žiniomis — palik tuščią array.',
+      },
       name:            { type: 'string',  description: 'Tikras lietuviškas pavadinimas. NIEKADA angliškas ar lotyniškas.' },
       latinName:       { type: 'string',  description: 'Tikslus lotyniškas pavadinimas (su cultivar žymeniu jei taikoma, pvz. „Clematis \'Boulevard\'")' },
       emoji:           { type: 'string',  description: 'Vienas emoji' },
@@ -147,7 +152,7 @@ export const TOOL_PREVIEW = {
       },
       idomybes: { type: 'array', items: { type: 'string' }, description: '2-3 įdomūs faktai' },
     },
-    required: ['confidence', 'matchLevel', 'uncertaintyReason',
+    required: ['confidence', 'matchLevel', 'uncertaintyReason', 'sources',
                'name', 'latinName', 'emoji', 'tipas', 'augimo_greitis', 'sunkumas',
                'toksiskas', 'savybes', 'aprasymas', 'kilme', 'sviesa', 'vanduo', 'idomybes'],
   },
@@ -221,10 +226,35 @@ export const TOOL_DETAILS = {
 export const PLANT_SYSTEM = `Esi augalų ekspertas. Visada ieškok tiksliai nurodyto augalo. Rašyk LIETUVIŠKAI, natūraliai.
 
 ═════════════════════════════════════════════════════════
+WEB SEARCH — NAUDOJIMAS
+═════════════════════════════════════════════════════════
+
+Turi prieigą prie web_search tool'o. KADA jį naudoti:
+
+  ✓ Cultivar/hybrid užklausoms, kurių pavadinimu nesi 100% tikras
+    (pvz. „Clematis 'Boulevard Vicki'", „Coleus 'Wizard Velvet'")
+  ✓ Naujesniems augalams (po 2024) — gali būti ne tavo training'e
+  ✓ Specifikai cultivar serijos — patvirtink, kuriai serijai priklauso,
+    kuo skiriasi nuo kitų
+
+PIRMIAUSIA naudok web_search, paskui pildyk plant_preview tool'ą.
+
+Šaltiniai (priority order):
+  1. https://www.rhs.org.uk/plants/  (Royal Horticultural Society — autoritetas)
+  2. https://en.wikipedia.org/wiki/  (cross-reference, multilingual)
+  3. https://www.missouribotanicalgarden.org/PlantFinder/  (US horticulture)
+  4. https://garden.org/plants/  (user-curated cultivar files)
+
+Jei web_search patvirtina informaciją — confidence galima kelti į „high"
+ir privalomai surašyti sources lauką su apsilankytais URL'ais.
+Jei web_search NIEKO neranda — confidence lieka „low", uncertaintyReason
+paaiškina kad cultivar net online nerandamas.
+
+═════════════════════════════════════════════════════════
 HONESTY REQUIREMENT — KRITIŠKAI SVARBU
 ═════════════════════════════════════════════════════════
 
-PRIVALOMI laukai: confidence, matchLevel, uncertaintyReason.
+PRIVALOMI laukai: confidence, matchLevel, uncertaintyReason, sources.
 
 Augalų pasaulis turi tris taksonomijos lygius, kurie SKIRIASI priežiūra:
   • Genus (gentis) — pvz. „Clematis"
@@ -495,22 +525,71 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     setStatusMsg('Ieškau augalo...')
 
     try {
-      // ── Phase 1: fast preview ──────────────────────────────────
+      // ── Phase 1: AI preview su web_search tool'u ───────────────
+      // Web search'as įgalintas — Claude'as gali apsilankyti RHS, Wikipedia,
+      // MissouriBotanical, kai užklausa neaiški (cultivar, hybrid, recent
+      // introduction). max_uses=2 riboja latency + cost. tool_choice = auto
+      // (Anthropic API leidžia web_search server-side tool'ą veikti šalia
+      // forced tool'o; Claude'as gali iškviesti web_search prieš plant_preview).
       const r1 = await claudeCall({
-        maxTokens:   1536,
+        maxTokens:   3072,            // didesnis nei anksčiau — web search results gali padidinti context
         temperature: 0.3,
-            system:      PLANT_SYSTEM,
-        tools:       [TOOL_PREVIEW],
-        toolChoice:  { type: 'tool', name: 'plant_preview' },
-        messages:    [{ role: 'user', content: `Rask informaciją apie augalą: "${q}"` }],
+        system:      PLANT_SYSTEM,
+        tools: [
+          TOOL_PREVIEW,
+          { type: 'web_search_20250305', name: 'web_search', max_uses: 2 },
+        ],
+        // tool_choice = auto (Claude pati sprend'ia kada web_search; vis tiek
+        // turi galiausiai iškviesti plant_preview pildant final result)
+        messages:    [{ role: 'user', content: `Rask informaciją apie augalą: "${q}". Jei tai cultivar/hybrid, kurio nesi 100% tikras — naudok web_search.` }],
       })
       if (controller.signal.aborted) return
 
       const previewBlock = r1.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')
       if (!previewBlock) { setError('Augalas nerastas'); setLoading(false); setStatusMsg(''); return }
 
-      const enriched = await enrich(previewBlock.input)
+      const aiResult = previewBlock.input
+
+      // ── Catalog-first override ──────────────────────────────────
+      // Jei catalog'as turi expert-verified arba high-confidence entry'į
+      // šitam latin name'ui — naudojam jį vietoj fresh AI rezultato.
+      // Catalog yra source of truth verified info'ai. Skip'iname enrich
+      // (iNat photo) — naudojam catalog saved photo.
+      setStatusMsg('Tikrinu bibliotekoje...')
+      const cached = await getCatalogEntry(aiResult.latinName)
+      const trustCatalog = cached && (
+        cached.verificationStatus === 'expert-verified' ||
+        cached.aiConfidence === 'high'
+      )
+
+      if (trustCatalog) {
+        setResult({ ...catalogEntryToAIResult(cached), fromCatalog: true })
+        setLoading(false)
+        setStatusMsg('')
+        return
+      }
+
+      // ── Catalog miss arba unverified — naudojam AI + enrich ─────
+      setStatusMsg('Ruošiu rezultatą...')
+      const enriched = await enrich(aiResult)
       if (controller.signal.aborted) return
+
+      // Auto-save į catalog TIK jei high confidence — nepilam šiukšlių į DB.
+      // Low/medium confidence rezultatai ateina į catalog tik kai user'is
+      // juos išsaugo (per onAddToDashboard → fromAIResult → catalog write).
+      if (aiResult.confidence === 'high') {
+        saveToCatalog({
+          lotyniskas:          aiResult.latinName,
+          lietuviškas:         enriched.name,
+          ...aiResult,
+          image:               enriched.image,
+          verificationStatus:  'auto-verified',
+          aiConfidence:        aiResult.confidence,
+          aiMatchLevel:        aiResult.matchLevel,
+          aiUncertaintyReason: aiResult.uncertaintyReason,
+          aiVerifiedAt:        new Date().toISOString(),
+        }).catch(e => console.warn('[catalog] auto-save failed:', e))
+      }
 
       setResult(enriched)
       setLoading(false)
@@ -546,20 +625,56 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
         ],
       }
 
-      // ── Phase 1: fast preview ──────────────────────────────────
+      // ── Phase 1: AI preview su web_search ──────────────────────
+      // Photo search'ui irgi pridedam web_search — pvz. kai user'is įkelia
+      // cultivar'o nuotrauką iš augalų pirkliautojo, AI gali patvirtinti
+      // pavadinimą per RHS/Wikipedia.
       const r1 = await claudeCall({
-        maxTokens:   1536,
+        maxTokens:   3072,
         temperature: 0.3,
-            system:      PLANT_SYSTEM,
-        tools:       [TOOL_PREVIEW],
-        toolChoice:  { type: 'tool', name: 'plant_preview' },
+        system:      PLANT_SYSTEM,
+        tools: [
+          TOOL_PREVIEW,
+          { type: 'web_search_20250305', name: 'web_search', max_uses: 2 },
+        ],
         messages:    [userMsg],
       })
 
       const previewBlock = r1.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')
       if (!previewBlock) { setError('Nepavyko identifikuoti augalo.'); setLoading(false); setStatusMsg(''); return }
 
-      const enriched = await enrich(previewBlock.input)
+      const aiResult = previewBlock.input
+
+      // Catalog-first override (žiūr. searchByText komentarą)
+      setStatusMsg('Tikrinu bibliotekoje...')
+      const cached = await getCatalogEntry(aiResult.latinName)
+      const trustCatalog = cached && (
+        cached.verificationStatus === 'expert-verified' ||
+        cached.aiConfidence === 'high'
+      )
+
+      if (trustCatalog) {
+        setResult({ ...catalogEntryToAIResult(cached), fromCatalog: true })
+        setLoading(false)
+        setStatusMsg('')
+        return
+      }
+
+      setStatusMsg('Ruošiu rezultatą...')
+      const enriched = await enrich(aiResult)
+      if (aiResult.confidence === 'high') {
+        saveToCatalog({
+          lotyniskas:          aiResult.latinName,
+          lietuviškas:         enriched.name,
+          ...aiResult,
+          image:               enriched.image,
+          verificationStatus:  'auto-verified',
+          aiConfidence:        aiResult.confidence,
+          aiMatchLevel:        aiResult.matchLevel,
+          aiUncertaintyReason: aiResult.uncertaintyReason,
+          aiVerifiedAt:        new Date().toISOString(),
+        }).catch(e => console.warn('[catalog] auto-save failed:', e))
+      }
       setResult(enriched)
       setLoading(false)
       setStatusMsg('')
@@ -753,10 +868,46 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, ease: 'easeOut' }}
           >
+            {/* From catalog — žalia juostelė kai duomenys iš mūsų verified
+                biblioteckos (jokio AI hallucinacijos rizikos). */}
+            {result.fromCatalog && (
+              <div className="rounded-2xl px-4 py-2 mb-3 border bg-forest-50 border-forest-300/60 flex items-center gap-2">
+                <span className="text-forest-500">✓</span>
+                <p className="text-[12px] font-semibold text-forest-700">
+                  Iš mūsų patvirtintos bibliotekos
+                </p>
+                {result.aiVerifiedAt && (
+                  <span className="ml-auto font-mono text-[10px] text-forest-500">
+                    {new Date(result.aiVerifiedAt).toLocaleDateString('lt-LT')}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Sources chip — kai AI naudojo web_search ir surašė šaltinius.
+                Transparency vartotojui — kur info patikrinta. */}
+            {Array.isArray(result.sources) && result.sources.length > 0 && (
+              <div className="rounded-2xl px-4 py-2 mb-3 border bg-bone-50 border-bone-400/40">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-forest-500 mb-1">Šaltiniai</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {result.sources.slice(0, 4).map((s, i) => {
+                    let label = s
+                    try { label = new URL(s).hostname.replace(/^www\./, '') } catch {}
+                    return (
+                      <a key={i} href={s} target="_blank" rel="noreferrer"
+                         className="inline-flex items-center text-[11px] text-forest-600 bg-bone-100 border border-bone-400/40 rounded-full px-2 py-0.5 hover:bg-bone-200 transition-colors">
+                        {label}
+                      </a>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Confidence banner — rodom kai AI confidence != 'high'. Augalo
                 priežiūros info gali būti netiksli; matchLevel padeda suprasti
                 ar tai tik genties lygis, ar visiškai nežinia. */}
-            {result.confidence && result.confidence !== 'high' && (
+            {result.confidence && result.confidence !== 'high' && !result.fromCatalog && (
               <div className={`rounded-2xl px-4 py-3 mb-3 border ${
                 result.confidence === 'low'
                   ? 'bg-terracotta-50 border-terracotta-300/60'
