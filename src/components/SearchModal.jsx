@@ -1361,15 +1361,23 @@ NEPILDYK (per slow + per save'inama vėliau):
 • Savybes (toksiškumas, valgomumas, vaistinis) — null
 • Augimo greitis, tipas, sunkumas, lifecycle, hardiness — null
 
-🛑 KANDIDATAI — KRITIŠKAI SVARBU:
-Jei latinName turi cultivar seriją (pvz. „Rosa Knock Out", „Clematis Boulevard", „Hydrangea Endless Summer", „Petunia Wave", „Echinacea Sombrero") — candidates[] PRIVALO turėti BENT 4 narius, IDEALIAI VISUS žinomus iki 15. NĖRA priimtina:
+🛑 BE QUOTE'Ų = SERIJA, NE VIENAS CULTIVAR'AS:
+Tai esminis interpretation rule'as:
+  • „Clematis 'Acropolis'"  → quote'as → KONKRETUS CULTIVAR
+  • „Clematis Boulevard"     → BE quote'o → SERIJA (Boulevard yra serijos pavadinimas)
+  • „Rosa 'Radrazz'"          → quote'as → KONKRETUS CULTIVAR
+  • „Rosa Knock Out"          → BE quote'o → SERIJA (net jei žinai, kad „Knock Out" yra ir trademark vienam original cultivar'ui — vartotojas tikriausiai nori SERIJOS)
+  • „Hydrangea Endless Summer"→ BE quote'o → SERIJA
+  • „Petunia Wave"            → BE quote'o → SERIJA
+
+JEI užklausa be quote'ų IR latinName atitinka žinomos serijos pattern'ą → candidates[] PRIVALO turėti BENT 4 narius (iki 15 jei žinai). NĖRA priimtina:
   ❌ uncertaintyReason: „Knock Out yra serija su 13 cultivars" + candidates: []
   ❌ aprasymas: „Yra Pink Knock Out, Sunny Knock Out..." + candidates: []
-  ✅ uncertaintyReason: „Knock Out yra serija, pasirink konkretų cultivar" + candidates: [Knock Out 'Radrazz', Pink Knock Out 'Radcon', Sunny Knock Out 'Radsunny', Double Knock Out 'Radtko', ...]
+  ❌ Identifikuoji kaip vieną „Rosa 'Radrazz'" kai užklausa „Rosa Knock Out" → ne tas, ką vartotojas norėjo
+  ✅ uncertaintyReason: „Knock Out yra serija, pasirink konkretų cultivar" + candidates: [Knock Out 'Radrazz', Pink Knock Out 'Radcon', Sunny Knock Out 'Radsunny', Double Knock Out 'Radtko', Rainbow Knock Out, Coral Knock Out, ...]
 
 Jei tekste paminėsi cultivar pavadinimą — jis PRIVALO būti candidates'e.
-Jei nesi tikras dėl konkretaus cultivar — web_search RHS/Wikipedia/breeder, paskui surašyk juos.
-Web_search'as nereikalingas patvirtinti VISO serijos sąrašo — pakanka 4-15 populiariausių žinomų narių.
+Web_search'as nereikalingas patvirtinti VISO serijos sąrašo — pakanka 4-15 populiariausių žinomų narių iš training data.
 
 Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIES, TOOL_DETAILS).`,
         }],
