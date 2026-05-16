@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
-import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronRight, ChevronDown, Share2, Copy, Check, Link2 } from 'lucide-react'
+import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronLeft, ChevronRight, ChevronDown, Share2, Copy, Check, Link2 } from 'lucide-react'
 import { doc, setDoc } from 'firebase/firestore'
 import { db } from '../utils/firebase'
 import { ZonePicker } from './ZoneManager'
@@ -1209,6 +1209,10 @@ export default function PlantDetail({
   const [timelineMode, setTimelineMode]     = useState('events') // 'events' | 'photos' — timeline filtras
   const [heroError, setHeroError]           = useState(false)
   const [heroCollapsed, setHeroCollapsed]   = useState(false)
+  // Hero gallery cycling — naudoja plant.photos array'ą (discovery photos
+  // iš search'o: Brave + iNat + Wikidata + Wikipedia). Resetinasi į 0 kai
+  // pasikeičia plant.id (kitas augalas).
+  const [heroPhotoIdx, setHeroPhotoIdx]     = useState(0)
   const [showPhotoSheet, setShowPhoto]      = useState(false)
   const [showChat, setShowChat]             = useState(false)
   const [chatInitialQuery, setChatQuery]    = useState('')
@@ -1329,6 +1333,9 @@ export default function PlantDetail({
       if (raf) cancelAnimationFrame(raf)
     }
   }, [activeTab])
+
+  // Reset hero photo index kai pasikeičia augalas (per portalą)
+  useEffect(() => { setHeroPhotoIdx(0) }, [plant.id])
 
   // Tab switch ARBA augalo pakeitimas resetuoja scroll į viršų → expand'ina
   // hero atgal. Skip jei scrollToCare aktyvus — ten dedicated useEffect
@@ -1516,23 +1523,62 @@ export default function PlantDetail({
             animate={{ aspectRatio: heroCollapsed ? '3 / 1' : '3 / 2' }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            {activeTab === 'timeline' ? (
-              <div className="w-full h-full">
-                <BarcodeLifeline events={plant.timeline ?? []} />
-              </div>
-            ) : plant.image && !heroError ? (
-              <div className="block w-full h-full overflow-hidden bg-bone-300">
-                <PlantImage
-                  url={plant.image} alt={plant.lietuviškas} size="detail" eager
-                  className="w-full h-full object-cover"
-                  onError={() => setHeroError(true)}
-                />
-              </div>
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-8xl bg-bone-300">
-                {plant.emoji ?? '🌿'}
-              </div>
-            )}
+            {(() => {
+              if (activeTab === 'timeline') {
+                return (
+                  <div className="w-full h-full">
+                    <BarcodeLifeline events={plant.timeline ?? []} />
+                  </div>
+                )
+              }
+              // Discovery gallery — plant.image (primary) + plant.photos
+              // (alternative discovery sources). Dedupe, filter empty.
+              const gallery = [plant.image, ...(plant.photos ?? [])]
+                .filter(Boolean)
+                .filter((u, i, a) => a.indexOf(u) === i)
+              const hasGallery = gallery.length > 1
+              const currentPhoto = gallery[heroPhotoIdx] ?? plant.image
+
+              if (!currentPhoto || heroError) {
+                return (
+                  <div className="w-full h-full flex items-center justify-center text-8xl bg-bone-300">
+                    {plant.emoji ?? '🌿'}
+                  </div>
+                )
+              }
+              return (
+                <div className="block w-full h-full overflow-hidden bg-bone-300 relative">
+                  <PlantImage
+                    url={currentPhoto} alt={plant.lietuviškas} size="detail" eager
+                    className="w-full h-full object-cover"
+                    onError={() => setHeroError(true)}
+                  />
+                  {hasGallery && (
+                    <>
+                      <button
+                        onClick={() => setHeroPhotoIdx(i => Math.max(0, i - 1))}
+                        disabled={heroPhotoIdx === 0}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-sm text-white flex items-center justify-center disabled:opacity-30 transition"
+                        aria-label="Ankstesnė nuotrauka"
+                      >
+                        <ChevronLeft size={16} />
+                      </button>
+                      <button
+                        onClick={() => setHeroPhotoIdx(i => Math.min(gallery.length - 1, i + 1))}
+                        disabled={heroPhotoIdx >= gallery.length - 1}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-sm text-white flex items-center justify-center disabled:opacity-30 transition"
+                        aria-label="Kita nuotrauka"
+                      >
+                        <ChevronRight size={16} />
+                      </button>
+                      <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/45 backdrop-blur-sm">
+                        <span className="text-[11px] text-white/90 font-medium">{heroPhotoIdx + 1} / {gallery.length}</span>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )
+            })()}
           </motion.div>
         </div>
 

@@ -123,6 +123,11 @@ export function fromAIResult(aiResult) {
     komentaras:   '',
     data_prideta: today(),
     image:        aiResult.image ?? null,
+    // Discovery photos array iš search'o (Brave + iNat + Wikidata + Wikipedia
+    // + Commons). Naudojama PlantDetail hero gallery cycling'ui — vartotojas
+    // gali peržiūrėti alternativias nuotraukas net po save'o, ne tik prieš.
+    // Limit 10 — saugumo dėlei nuo bloated plant doc'o.
+    photos:       Array.isArray(aiResult.photos) ? aiResult.photos.slice(0, 10) : [],
     status:       'healthy',
     inatLtName:   aiResult.inatLtName   ?? null,
     inatTaxonId:  aiResult.inatTaxonId  ?? null,
