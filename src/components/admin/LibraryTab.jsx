@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { Search, X, ChevronRight, Trash2, AlertTriangle, Save, ImageOff, BookOpen, Layers } from 'lucide-react'
+import { useState, useMemo, useEffect } from 'react'
+import { Search, X, ChevronRight, ChevronDown, Trash2, AlertTriangle, Save, ImageOff, BookOpen, Layers } from 'lucide-react'
 import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS, LIFECYCLES } from '../../utils/taxonGroups'
 
 /**
@@ -88,6 +88,7 @@ export default function LibraryTab({
         <CultivarsTable
           rows={filteredCatalog}
           groupById={groupById}
+          searchQuery={search}
           onSelect={c => setEditing({ type: 'cultivar', entry: c })}
         />
       ) : (
@@ -135,54 +136,132 @@ export default function LibraryTab({
 
 // ── Tables ───────────────────────────────────────────────────────────
 
-function CultivarsTable({ rows, groupById, onSelect }) {
+/**
+ * CultivarsTable — grupavimas pagal seriją (taxonGroupId).
+ *
+ * Kiekviena serija — atskira expandable grupė su header'iu (pavadinimas + count).
+ * Standalone cultivar'ai (be `taxonGroupId`) — atskira grupė pabaigoje.
+ *
+ * Default'inis state: pirmos 3 grupės (didžiausios) išskleistos, likę
+ * suskleistos — kad sąrašas ne'overwhelm'intų. Kai vartotojas tipina search'ą,
+ * automatiškai išskleidžiam visas grupes su match'ais.
+ */
+function CultivarsTable({ rows, groupById, onSelect, searchQuery }) {
+  // Grupavimas: catalog → Map<groupId, items[]>. Standalone'us laikom su
+  // specialiu key'umi '__standalone__'.
+  const grouped = useMemo(() => {
+    const m = new Map()
+    for (const c of rows) {
+      const gid = c.taxonGroupId || '__standalone__'
+      if (!m.has(gid)) m.set(gid, [])
+      m.get(gid).push(c)
+    }
+    return m
+  }, [rows])
+
+  // Rūšiavimas: serijos pagal narių count desc → standalone gale
+  const sortedGroups = useMemo(() => {
+    const arr = Array.from(grouped.entries())
+    return arr.sort(([aId, aItems], [bId, bItems]) => {
+      if (aId === '__standalone__') return 1
+      if (bId === '__standalone__') return -1
+      return bItems.length - aItems.length
+    })
+  }, [grouped])
+
+  // Default expand state: pirmos 3 grupės išskleistos
+  const [expanded, setExpanded] = useState(() => {
+    const s = new Set()
+    sortedGroups.slice(0, 3).forEach(([gid]) => s.add(gid))
+    return s
+  })
+
+  // Auto-expand grupes su search hit'ais — kad search'inant nereiktų manually
+  // klikinti kiekvienos grupės header'į.
+  useEffect(() => {
+    if (!searchQuery.trim()) return
+    const next = new Set(expanded)
+    for (const [gid] of sortedGroups) next.add(gid)
+    setExpanded(next)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery])
+
+  const toggle = (gid) => {
+    setExpanded(prev => {
+      const next = new Set(prev)
+      if (next.has(gid)) next.delete(gid); else next.add(gid)
+      return next
+    })
+  }
+
   if (!rows.length) return <p className="text-center text-forest-500 py-12">Nėra įrašų</p>
+
   return (
-    <div className={`overflow-hidden ${WIDGET}`}>
-      <table className="w-full text-sm">
-        <thead className="bg-bone-100 border-b border-bone-400/40">
-          <tr className="text-left">
-            <Th>Image</Th>
-            <Th>Lotyniškas</Th>
-            <Th>Lietuviškas</Th>
-            <Th>Serija</Th>
-            <Th>Atnaujinta</Th>
-            <Th></Th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(c => {
-            const group = c.taxonGroupId ? groupById.get(c.taxonGroupId) : null
-            return (
-              <tr key={c.id} onClick={() => onSelect(c)} className="border-b border-bone-400/20 hover:bg-bone-100/50 cursor-pointer transition-colors">
-                <Td>
-                  {c.image ? (
-                    <img src={c.image} alt="" className="w-10 h-10 rounded-md object-cover bg-bone-200" loading="lazy" />
-                  ) : (
-                    <div className="w-10 h-10 rounded-md bg-bone-200 inline-flex items-center justify-center text-forest-300">
-                      <ImageOff size={14} />
-                    </div>
-                  )}
-                </Td>
-                <Td>
-                  <div className="font-medium text-forest-800 italic">{c.lotyniskas || '—'}</div>
-                  <div className="text-[10px] text-forest-400 font-mono">{c.id}</div>
-                </Td>
-                <Td><span className="text-forest-700">{c.lietuviskas || '—'}</span></Td>
-                <Td>
-                  {group ? (
-                    <Badge tone="forest">{group.genus} {group.name}</Badge>
-                  ) : (
-                    <span className="text-xs text-forest-300">standalone</span>
-                  )}
-                </Td>
-                <Td><span className="text-xs text-forest-500">{shortDate(c.updatedAt)}</span></Td>
-                <Td><ChevronRight size={16} className="text-forest-400" /></Td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+    <div className="space-y-3">
+      {sortedGroups.map(([gid, items]) => {
+        const isStandalone = gid === '__standalone__'
+        const group = isStandalone ? null : groupById.get(gid)
+        const isOpen = expanded.has(gid)
+        return (
+          <div key={gid} className={`overflow-hidden ${WIDGET}`}>
+            <button
+              onClick={() => toggle(gid)}
+              className="w-full flex items-center gap-2 px-4 py-3 bg-bone-100 hover:bg-bone-200/60 border-b border-bone-400/40 transition-colors text-left"
+            >
+              {isOpen ? <ChevronDown size={14} className="text-forest-500 flex-shrink-0" /> : <ChevronRight size={14} className="text-forest-500 flex-shrink-0" />}
+              <div className="flex-1 min-w-0">
+                {isStandalone ? (
+                  <p className="font-display text-sm font-semibold text-forest-700">Standalone — be serijos</p>
+                ) : group ? (
+                  <>
+                    <p className="font-display text-sm font-semibold text-forest-800 italic">{group.genus} {group.name}</p>
+                    <p className="text-[10px] text-forest-400 font-mono">{group.type} · {gid}</p>
+                  </>
+                ) : (
+                  <p className="font-display text-sm text-forest-500 italic">Negaliojantis taxonGroupId: {gid}</p>
+                )}
+              </div>
+              <Badge tone={isStandalone ? 'bone' : 'forest'}>{items.length}</Badge>
+            </button>
+
+            {isOpen && (
+              <table className="w-full text-sm">
+                <thead className="bg-bone-50 border-b border-bone-400/30">
+                  <tr className="text-left">
+                    <Th>Image</Th>
+                    <Th>Lotyniškas</Th>
+                    <Th>Lietuviškas</Th>
+                    <Th>Atnaujinta</Th>
+                    <Th></Th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map(c => (
+                    <tr key={c.id} onClick={() => onSelect(c)} className="border-b border-bone-400/20 hover:bg-bone-100/50 cursor-pointer transition-colors">
+                      <Td>
+                        {c.image ? (
+                          <img src={c.image} alt="" className="w-10 h-10 rounded-md object-cover bg-bone-200" loading="lazy" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-md bg-bone-200 inline-flex items-center justify-center text-forest-300">
+                            <ImageOff size={14} />
+                          </div>
+                        )}
+                      </Td>
+                      <Td>
+                        <div className="font-medium text-forest-800 italic">{c.lotyniskas || '—'}</div>
+                        <div className="text-[10px] text-forest-400 font-mono">{c.id}</div>
+                      </Td>
+                      <Td><span className="text-forest-700">{c.lietuviskas || '—'}</span></Td>
+                      <Td><span className="text-xs text-forest-500">{shortDate(c.updatedAt)}</span></Td>
+                      <Td><ChevronRight size={16} className="text-forest-400" /></Td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }

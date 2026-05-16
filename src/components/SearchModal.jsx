@@ -566,6 +566,12 @@ async function enrich(parsed) {
     parsed.matchLevel === 'cultivar' ||
     /['"][^'"]+['"]/.test(parsed.latinName ?? '')
 
+  // Wikidata verification — VISADA paraleliai (abiems branches), kad main
+  // result'as gautų ✓ badge'ą tokia pat tvarka kaip candidates. Hit'as ant
+  // structured entity'o = stiprus signal'as, kad augalas realiai egzistuoja
+  // (atmeta AI hallucinations).
+  const wdPromise = fetchWikidataPlant(parsed.latinName)
+
   // iNaturalist NETURI cultivar coverage'o — stripCultivar() vidiniame
   // fetch'e nuima quotes prieš API call'ą, todėl grąžinama artimiausia
   // RŪŠIS (pvz. „Gelsvoji raganė" Clematis 'Boulevard' užklausai).
@@ -580,20 +586,23 @@ async function enrich(parsed) {
 
   if (trustInat) {
     // Species-level — iNat path (greitas + photo + LT name iš inatLtName)
-    const [photos, namesData] = await Promise.all([
+    const [photos, namesData, wd] = await Promise.all([
       fetchPhotos(parsed.latinName),
       fetchPlantNames(parsed.latinName),
+      wdPromise,
     ])
     const inatLtName = namesData?.inatLtName ?? null
     return {
       ...parsed,
-      name:         inatLtName ?? parsed.name,
-      image:        photos[0] ?? null,
+      name:             inatLtName ?? parsed.name,
+      image:            photos[0] ?? null,
       photos,
       inatLtName,
-      inatTaxonId:  namesData?.inatTaxonId ?? null,
-      sinonimai:    namesData?.sinonimai    ?? [],
-      englishNames: namesData?.englishNames ?? [],
+      inatTaxonId:      namesData?.inatTaxonId ?? null,
+      sinonimai:        namesData?.sinonimai    ?? [],
+      englishNames:     namesData?.englishNames ?? [],
+      wikidataId:       wd?.id ?? null,
+      wikidataVerified: !!wd?.id,
     }
   }
 
@@ -605,20 +614,21 @@ async function enrich(parsed) {
   // null jei visi miss → UI rodo plant card be photo.
   let mainImage = await fetchBraveImage(parsed.latinName)
   if (!mainImage) mainImage = await fetchInatCultivarImage(parsed.latinName)
-  const wd = !mainImage ? await fetchWikidataPlant(parsed.latinName) : null
+  const wd = await wdPromise  // join — naudojam ir image fallback'ui ir verification'ui
   if (!mainImage && wd?.imageUrl) mainImage = wd.imageUrl
   if (!mainImage) mainImage = await fetchWikiThumbnail(parsed.latinName)
 
   return {
     ...parsed,
-    name:         parsed.name,
-    image:        mainImage,
-    photos:       mainImage ? [mainImage] : [],
-    wikidataId:   wd?.id ?? null,
-    inatLtName:   null,
-    inatTaxonId:  null,
-    sinonimai:    [],
-    englishNames: [],
+    name:             parsed.name,
+    image:            mainImage,
+    photos:           mainImage ? [mainImage] : [],
+    wikidataId:       wd?.id ?? null,
+    wikidataVerified: !!wd?.id,
+    inatLtName:       null,
+    inatTaxonId:      null,
+    sinonimai:        [],
+    englishNames:     [],
   }
 }
 
@@ -1092,11 +1102,19 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
         const cultId = catalogDocId(c.latinName)
         if (!cultId) { completed++; return }
 
-        // Image priority: AI candidates pre-fetched → Brave → iNat → Wiki → null
-        let imageUrl = initialImageMap.get(c.latinName) ?? null
-        if (!imageUrl) imageUrl = await fetchBraveImage(c.latinName)
-        if (!imageUrl) imageUrl = await fetchInatCultivarImage(c.latinName)
-        if (!imageUrl) imageUrl = await fetchWikiThumbnail(c.latinName)
+        // Image enrichment + Wikidata verification — paraleliai.
+        // Wikidata flag'ai saugomi catalog'e, kad library-first short-circuit'as
+        // grąžintų cultivar'us su ✓ badge'ais (kaip ir AI-served candidates).
+        const [imageUrl, wd] = await Promise.all([
+          (async () => {
+            let img = initialImageMap.get(c.latinName) ?? null
+            if (!img) img = await fetchBraveImage(c.latinName)
+            if (!img) img = await fetchInatCultivarImage(c.latinName)
+            if (!img) img = await fetchWikiThumbnail(c.latinName)
+            return img
+          })(),
+          fetchWikidataPlant(c.latinName),
+        ])
 
         await saveToCatalog({
           lotyniskas:            c.latinName,
@@ -1110,6 +1128,8 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
           taxonGroupId:          seriesId,
           schemaVersion:         CATALOG_SCHEMA_VERSION,
           verificationStatus:    'auto-verified',
+          wikidataId:            wd?.id ?? null,
+          wikidataVerified:      !!wd?.id,
           aiVerifiedAt:          new Date().toISOString(),
         }).catch(e => console.warn('[bulk] cultivar save failed:', c.latinName, e))
 
@@ -1142,15 +1162,22 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       // ir naudojami kaip kandidatai, kad UI'us veiktų identiškai kaip su AI.
       trackStep('Tikrinu mūsų bibliotekoje...')
       const ownedIds = new Set(plants.map(p => catalogDocId(p.lotyniskas)).filter(Boolean))
-      const catalogHits = await searchCatalog(q.trim(), ownedIds)
+      // Limit 20 — kad serijos search'as (Boulevard, kuri turi 15 cultivars)
+      // grąžintų visus narius vienu kartu. Autocomplete'as (line 1340 žemiau)
+      // lieka su default'iniu 6 — kompaktiškas dropdown'as.
+      const catalogHits = await searchCatalog(q.trim(), ownedIds, 20)
       if (controller.signal.aborted) return
 
       if (catalogHits.length > 0) {
-        // Catalog entry → candidate card shape (UI naudoja imageUrl / ltName)
+        // Catalog entry → candidate card shape (UI naudoja imageUrl / ltName).
+        // Wikidata flag'ai propaguojami iš catalog'o (saugomi per bulk save'ą)
+        // — kad library-first cultivar'ai gautų ✓ badge'us, ne tik AI-served.
         const candidates = catalogHits.map(c => ({
           ...catalogEntryToAIResult(c),
-          imageUrl: c.image ?? null,
-          ltName:   c.lietuviškas ?? c.name ?? null,
+          imageUrl:         c.image ?? null,
+          ltName:           c.lietuviškas ?? c.name ?? null,
+          wikidataVerified: !!c.wikidataVerified,
+          wikidataId:       c.wikidataId ?? null,
         }))
         // Single strong hit — set'inam kaip pagrindinį rezultatą.
         // Multiple — set'inam pirmąjį (best fuzzy score) + visus kaip candidates,
@@ -1254,6 +1281,24 @@ Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje
       ])
       enriched.candidates = candidatesWithImages
       if (controller.signal.aborted) return
+
+      // Reliability cross-check — jei AI'us drąsiai sakė „high", bet Wikidata
+      // neaptiko nei main result'o, nei nieko iš kandidatų, sąžiningai pažeminam
+      // confidence į „medium" ir pridedam uncertaintyReason. Wikidata yra
+      // structured human-curated source — jo absence reiškia: galimai reta
+      // cultivar (dar nekatalog'inta) arba AI spėjimas, ne tikras augalas.
+      // UI rodys confidence banner'į ir admin'as žinos, kad reikia žiūrėti
+      // atidžiau prieš save'inant į biblioteką.
+      const verifiedCount = (enriched.wikidataVerified ? 1 : 0) +
+        ((enriched.candidates ?? []).filter(c => c.wikidataVerified).length)
+      if (aiResult.confidence === 'high' && verifiedCount === 0) {
+        enriched.confidence = 'medium'
+        const wdNote = '(Wikidata neaptiko šio cultivar entity\'o — galimai reta registracija arba AI spėjimas.)'
+        enriched.uncertaintyReason = enriched.uncertaintyReason
+          ? `${enriched.uncertaintyReason} ${wdNote}`
+          : wdNote
+        console.log('[search] ⚠ AI sakė high bet Wikidata neverify\'no — downgrade į medium')
+      }
 
       // Auto-save į catalog TIK jei high confidence — nepilam šiukšlių į DB.
       // Low/medium confidence rezultatai ateina į catalog tik kai user'is

@@ -108,24 +108,27 @@ async function loadAllCatalog() {
 }
 
 /**
- * searchCatalog(query, excludeDocIds)
+ * searchCatalog(query, excludeDocIds, limit)
  *   query         — search string (≥2 chars)
  *   excludeDocIds — Set of catalogDocId'ų jau esančių vartotojo bibliotekoje
+ *   limit         — max returned entries (default 6 — autocomplete UI;
+ *                   admin/library-first kviečia su 20+, kad matytum visus
+ *                   serijos narius vienu kartu — Boulevard turi 15 cultivars).
  *
- * Grąžina iki 6 catalog entry'ų su `_id` field'u (catalogDocId).
+ * Grąžina iki `limit` catalog entry'ų su `_id` field'u (catalogDocId).
  */
-export async function searchCatalog(q, excludeDocIds = new Set()) {
+export async function searchCatalog(q, excludeDocIds = new Set(), limit = 6) {
   const trimmed = q?.trim()
   if (!trimmed || trimmed.length < 2) return []
   const all = await loadAllCatalog()
   // Fuzzy match'as su LT diacritic'ais ir typo'ų toleravimu — best score'ai
-  // grąžinami pirmiausia. Iki 6 entry'ų (UI limit'as).
+  // grąžinami pirmiausia.
   return all
     .filter(p => !excludeDocIds.has(p._id))
     .map(p => ({ entry: p, score: plantFuzzyScore(p, trimmed) }))
     .filter(x => x.score !== Infinity)
     .sort((a, b) => a.score - b.score)
-    .slice(0, 6)
+    .slice(0, limit)
     .map(x => x.entry)
 }
 
