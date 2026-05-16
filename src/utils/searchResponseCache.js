@@ -62,6 +62,15 @@ export function getCachedSearchResponse(query) {
  */
 export function setCachedSearchResponse(query, result, confidence) {
   if (confidence === 'low') return  // low-confidence neverta cache'inti
+
+  // Medium confidence + tuščia candidates = AI nedirbo gerai. Tai dažniausiai
+  // „dunno" atsakymas su uncertaintyReason'u, bet be sąrašo pasirinkimui.
+  // Cache'inus tokį — vartotojas niekada nepamatys naujo bandymo. Skip'iname.
+  if (confidence === 'medium' && (!result?.candidates || result.candidates.length === 0)) {
+    console.log('[cache] skipping low-quality result (medium conf, empty candidates) —', query)
+    return
+  }
+
   const k = normalize(query)
   if (!k || k.length < 2) return
   const m = loadMap()
