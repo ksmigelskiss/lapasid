@@ -38,3 +38,41 @@ User'is vertina mano matymą, ko jis nemato. Tas svarbu išlaikyti. Bet jokio sc
 Mažiau code'o = mažiau klausimų ką ir kada naudoti.
 
 ---
+
+## 2026-05-17 — LLM prompt engineering trap: overfitting ant vieno edge case'o
+
+**Konkretus pavyzdys:** Test'avime „Rosa Knock Out" search'as grąžino single plant + tuščius candidates'us, vietoj 13 serijos cultivars'ų. Pradėjau ciklą po ciklo stiprinti prompt'ą: explicit pavyzdžiai, ❌/✅ contrast'ai, quote interpretation rules, struktūrinis formatting'as su `═══` separator'iais, maxTokens 2500→4000, temperature 0.3→0.2, web_search max_uses 1→2.
+
+Šeši commit'ai per ~30 min, kiekvienas „šitas tikrai veiks". Vis dar fail'ino.
+
+**User'is sustabdė** klausdamas: „pasitikrinam ar tai ka darom nera kad uzsiciklinam vienai prolemai ir taip gadinam bendra logika ja overengineerindami?"
+
+**Realybės check'as po revert'o:** Claude Sonnet'as Rosa Knock Out cultivars'ų pavadinimų **GALIMAI tiesiog nežino su pakankama tikrumu**. Tai LLM training data riba. Joks prompt'o massaging'as šitos ribos neperžengs.
+
+**Pattern atpažinimas:**
+- AI grąžina blogą atsakymą
+- Mes pridedam prompt rules
+- AI vis vien blogai
+- Mes pridedam dar griežtesnių rules
+- AI ignoruoja
+- Mes lower'inam temperature
+- AI vis vien savo
+- Mes pridedam web_search
+- ...
+
+Tai **diminishing returns spiralė**. Kiekvienas pataisas turi neigiamą impactą **visoms** užklausoms (slower, more tokens, more cost), o nauda **vienai** edge case'o užklausai neaiški.
+
+**Big picture:**
+- AI yra augimo įrankis, ne visagalė
+- Edge case'us sprend'ia **MANUAL admin curation** (Library tab CRUD jau egzistuoja)
+- Vieną kartą admin'as įveda → visi user'iai gauna instant per library-first
+- LLM data ribos = REALYBĖ, ne fixable per prompt
+
+**Rule sau:**
+> Po **trijų** prompt iteracijų toje pačioje problemoje — STOP. Klausti: ar AI tiesiog nežino? Ar manual fallback yra teisingesnis sprendimas? Ar tobulinimas dabar kainuoja kitiems use case'ams?
+
+**Šitoje sesijoje:**
+- Pirmi 3 commit'ai (`33244a8` hero hide, `c1ce492` cache guard, `7eab2b1` quote rule) — general improvements, naudingi visiems. ✓
+- 4-tas (`d1743b9` token+temp+websearch+restructure) — over-tuning vienai problemai. **Revert'inta.**
+
+**NIUANSAS:** general improvements (hero hide, cache guard) kuriuos sukėlė viena problema — OK, jei jie naudingi platesniam kontekstui. Bet kai jie tampa „bet kokia kaina priversti AI sutikti dėl Rosa Knock Out" — stop'a.
