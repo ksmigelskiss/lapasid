@@ -1330,64 +1330,56 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       // (Anthropic API leidžia web_search server-side tool'ą veikti šalia
       // forced tool'o; Claude'as gali iškviesti web_search prieš plant_preview).
       const r1 = await claudeCall({
-        // 4000 token'ų — kad tikrai užteks 15 candidates'ų su distinguishing
-        // feature'iais + narrative info'ai. Anksciau 2500 galėjo nukirpti
-        // candidates sąrašą serijų užklausoms.
-        maxTokens:   4000,
-        temperature: 0.2,  // žemesnė — daugiau prompt-following, mažiau interpretacijos
+        // SLIM preview'ui užtenka mažiau token'ų — nepildom rich field'ų.
+        // 2500 = identification + iki 15 candidate'ų su distinguishingFeature
+        // (Boulevard serija turi ~25 cultivars, 15 yra praktinis preview limit'as).
+        maxTokens:   2500,
+        temperature: 0.3,
         system:      PLANT_SYSTEM,
         tools: [
           TOOL_PREVIEW,
-          // max_uses 2 — disambig užklausoms reikia daugiau research trip'ų
-          // (RHS + Wikipedia + breeder svetainė). Single specific cultivar
-          // užtenka 1, bet ambiguous serijos užklausa kartais reikalauja 2.
-          { type: 'web_search_20250305', name: 'web_search', max_uses: 2 },
+          // max_uses 2 → 1: identification'ui užtenka vieno verification trip'o.
+          // Rich research'as eina į bulk_series flow'ą su max_uses=3.
+          { type: 'web_search_20250305', name: 'web_search', max_uses: 1 },
         ],
         messages: [{
           role: 'user',
           content: `IDENTIFIKUOK augalą: "${q}".
 
-═══════════════════════════════════════════════════
-🛑 PRIORITY #1 — CANDIDATES PILDYMAS (privaloma):
-═══════════════════════════════════════════════════
+SLIM MODE — disambiguation + minimal info, NE pilnas user-facing preview:
 
-QUOTE INTERPRETATION RULE:
-  • Quote'as latinName'e ('Acropolis') → KONKRETUS CULTIVAR → candidates gali būti tuščia
-  • BE quote'o + žinomos serijos pattern → SERIJA → candidates PRIVALO turėti 4+ narius
+PRIVALOMA:
+• latinName, ltName, candidates[] (jei abejoji), confidence, sources
 
-Pavyzdžiai:
-  „Clematis 'Acropolis'"    → konkretus cultivar → candidates: []
-  „Clematis Boulevard"       → SERIJA → candidates: ['Acropolis', 'Cézanne', 'Olympia', 'Rebecca', ...]
-  „Rosa 'Radrazz'"           → konkretus cultivar → candidates: []
-  „Rosa Knock Out"           → SERIJA → candidates: ['Knock Out Radrazz', 'Pink Knock Out', 'Sunny Knock Out', 'Double Knock Out', 'Rainbow Knock Out', ...]
-  „Hydrangea Endless Summer" → SERIJA → candidates: ['Original Bailmer', 'Blushing Bride', 'BloomStruck', 'Twist-n-Shout', ...]
-  „Petunia Wave"             → SERIJA → candidates: ['Easy Wave Pink', 'Easy Wave Red Velour', 'Tidal Wave Silver', 'Shock Wave', ...]
+PILDYK (narrative info — GENUS lygmens, ne care):
+• aprasymas: 3-5 sakiniai apie GENUS-level augalą. Pvz. užklausai „Clematis 'Boulevard'" — apie KLEMATĮ kaip augalą (kaip atrodo, kur natūraliai auga, kodėl populiarus), NE apie 'Boulevard' seriją.
+• kilme: 1 sakinys apie GENUS kilmę
+• seriesNote: 1-2 sakiniai apie konkrečią seriją (Boulevard / Wave / Knock Out / etc.) JEI latinName turi seriją. null jei ne serija.
 
-⚠ BLOGA AI ELGSENA:
+NEPILDYK (per slow + per save'inama vėliau):
+• Care info: sviesa, vanduo, substratas, persodinimas, žiemojimas, tręšimas, priežiūra — null/tuščius
+• Savybes (toksiškumas, valgomumas, vaistinis) — null
+• Augimo greitis, tipas, sunkumas, lifecycle, hardiness — null
+
+🛑 BE QUOTE'Ų = SERIJA, NE VIENAS CULTIVAR'AS:
+Tai esminis interpretation rule'as:
+  • „Clematis 'Acropolis'"  → quote'as → KONKRETUS CULTIVAR
+  • „Clematis Boulevard"     → BE quote'o → SERIJA (Boulevard yra serijos pavadinimas)
+  • „Rosa 'Radrazz'"          → quote'as → KONKRETUS CULTIVAR
+  • „Rosa Knock Out"          → BE quote'o → SERIJA (net jei žinai, kad „Knock Out" yra ir trademark vienam original cultivar'ui — vartotojas tikriausiai nori SERIJOS)
+  • „Hydrangea Endless Summer"→ BE quote'o → SERIJA
+  • „Petunia Wave"            → BE quote'o → SERIJA
+
+JEI užklausa be quote'ų IR latinName atitinka žinomos serijos pattern'ą → candidates[] PRIVALO turėti BENT 4 narius (iki 15 jei žinai). NĖRA priimtina:
   ❌ uncertaintyReason: „Knock Out yra serija su 13 cultivars" + candidates: []
-     (paminėjai cultivars'ų egzistavimą, bet sąrašo nepadarei)
-  ❌ Interpretuoji „Rosa Knock Out" kaip vieną Rosa 'Radrazz' cultivar'ą
-     (be quote'o, vartotojas tikrai nori serijos pasirinkimo)
+  ❌ aprasymas: „Yra Pink Knock Out, Sunny Knock Out..." + candidates: []
+  ❌ Identifikuoji kaip vieną „Rosa 'Radrazz'" kai užklausa „Rosa Knock Out" → ne tas, ką vartotojas norėjo
+  ✅ uncertaintyReason: „Knock Out yra serija, pasirink konkretų cultivar" + candidates: [Knock Out 'Radrazz', Pink Knock Out 'Radcon', Sunny Knock Out 'Radsunny', Double Knock Out 'Radtko', Rainbow Knock Out, Coral Knock Out, ...]
 
-✅ GERA AI ELGSENA:
-  - Be quote'o + serijos pattern → vis tiek mėgink iš training data surinkti 4+ narius
-  - Net jei nesi 100% tikras dėl visų — geriau 4 žinomi nei 0 tuščia
+Jei tekste paminėsi cultivar pavadinimą — jis PRIVALO būti candidates'e.
+Web_search'as nereikalingas patvirtinti VISO serijos sąrašo — pakanka 4-15 populiariausių žinomų narių iš training data.
 
-Web_search RHS/Wikipedia/breeder, jei reikia patvirtinti narius. max_uses=2 — naudok.
-
-═══════════════════════════════════════════════════
-PRIORITY #2 — Narrative info (GENUS lygmens):
-═══════════════════════════════════════════════════
-  • aprasymas: 3-5 sakiniai apie GENUS-level augalą (Klematis kaip augalas, ne Boulevard serija)
-  • kilme: 1 sakinys apie GENUS kilmę
-  • seriesNote: 1-2 sakiniai apie konkrečią seriją (jei latinName turi seriją)
-
-═══════════════════════════════════════════════════
-NEPILDYK (skip, pildoma vėliau):
-═══════════════════════════════════════════════════
-  • Care info: sviesa, vanduo, substratas, persodinimas, žiemojimas, tręšimas, priežiūra
-  • Savybes: toksiškumas, valgomumas, vaistinis
-  • Augimo greitis, tipas, sunkumas, lifecycle, hardiness`,
+Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIES, TOOL_DETAILS).`,
         }],
       })
       if (controller.signal.aborted) return
