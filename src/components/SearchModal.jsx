@@ -1079,16 +1079,31 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
         }],
       })
       const block = r.content.find(b => b.type === 'tool_use' && b.name === 'bulk_series')
-      if (!block) throw new Error('AI negrąžino bulk_series struktūros')
+      if (!block) {
+        console.error('[bulk] AI response without bulk_series tool_use:', r.content)
+        throw new Error('AI neiškvietė bulk_series tool\'o — galimai užklausa neaiški')
+      }
 
       // Defensive — AI'us kartais nukrypsta nuo schema'os (object vietoj array,
       // null vietoj field'o). Normalize'inam viską į saugias reikšmes prieš naudojant.
       const series    = block.input?.series ?? {}
       const cultivars = Array.isArray(block.input?.cultivars) ? block.input.cultivars : []
-      if (cultivars.length === 0) throw new Error('AI grąžino tuščią cultivars sąrašą — bandyk dar kartą')
+
+      // Debug log — pamatom, ką tiksliai AI grąžino, jei kažkas nepilna
+      console.log('[bulk] AI response:', { seriesName: series.name, seriesType: series.type, cultivarsCount: cultivars.length })
+
+      if (cultivars.length === 0) {
+        // Pateikiam informatyvų error'ą su tuo, ką AI nustatė. Dažniausia
+        // priežastis: užklausa nėra cultivar serija (pvz. tipinis genus
+        // „Hosta" arba species „Hosta sieboldiana" be cultivar grupavimo).
+        const aiContext = series.name
+          ? `AI rado „${series.name}" (type: ${series.type ?? 'unknown'}), bet cultivar narių nesurinko.`
+          : 'AI negrąžino jokios serijos informacijos.'
+        throw new Error(`${aiContext} Galimos priežastys: užklausa nėra cultivar serija (pvz. tipinis genus arba species), AI'us neturi šios serijos žinių, arba web_search nieko nerado. Pabandyk tiksliau įvardinti seriją (pvz. „Clematis Boulevard" vietoj „Clematis").`)
+      }
 
       const seriesId = taxonGroupDocId({ genus: series.genus, name: series.name, type: series.type })
-      if (!seriesId) throw new Error('Negalima sukurti seriesId (trūksta genus/name)')
+      if (!seriesId) throw new Error(`Negalima sukurti seriesId (genus=„${series.genus}", name=„${series.name}")`)
 
       setBulkState({ phase: 'saving', msg: 'Saugomas serijos doc...', seriesName: series.name, total: cultivars.length, completed: 0 })
 
