@@ -1364,16 +1364,24 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
       // (iNat photo) — naudojam catalog saved photo.
       trackStep('Tikrinu mūsų bibliotekoje...')
       const cached = await getCatalogEntry(aiResult.latinName)
-      const trustCatalog = cached && (
-        cached.verificationStatus === 'expert-verified' ||
-        cached.aiConfidence === 'high'
+      // Jei catalog cultivar'as turi serija — merge'inam care info iš
+      // parent taxonGroup'o (paritetas su Phase 0 library-first + photo
+      // search post-AI).
+      let mergedCached = cached
+      if (cached?.taxonGroupId) {
+        const group = await getTaxonGroup(cached.taxonGroupId)
+        if (group) mergedCached = mergeWithSeries(cached, group)
+      }
+      const trustCatalog = mergedCached && (
+        mergedCached.verificationStatus === 'expert-verified' ||
+        mergedCached.aiConfidence === 'high'
       )
 
       if (trustCatalog) {
-        setResult({ ...catalogEntryToAIResult(cached), fromCatalog: true })
+        setResult({ ...catalogEntryToAIResult(mergedCached), fromCatalog: true })
         setLoading(false)
         trackStep(null)
-        console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (from catalog)`)
+        console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (from catalog${cached.taxonGroupId ? ', su taxonGroup merge' : ''})`)
         return
       }
 
@@ -1492,19 +1500,27 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
 
       const aiResult = previewBlock.input
 
-      // Catalog-first override (žiūr. searchByText komentarą)
+      // Catalog-first override + taxonGroup merge — paritetiškai su text search
+      // library-first short-circuit ir handleCatalogAdd path'ais. Anksciau
+      // photo post-AI grąžindavo catalog entry as-is, prarandamos care info
+      // iš parent taxonGroup'o (mergeWithSeries praleisdavo).
       trackStep('Tikrinu mūsų bibliotekoje...')
       const cached = await getCatalogEntry(aiResult.latinName)
-      const trustCatalog = cached && (
-        cached.verificationStatus === 'expert-verified' ||
-        cached.aiConfidence === 'high'
+      let mergedCached = cached
+      if (cached?.taxonGroupId) {
+        const group = await getTaxonGroup(cached.taxonGroupId)
+        if (group) mergedCached = mergeWithSeries(cached, group)
+      }
+      const trustCatalog = mergedCached && (
+        mergedCached.verificationStatus === 'expert-verified' ||
+        mergedCached.aiConfidence === 'high'
       )
 
       if (trustCatalog) {
-        setResult({ ...catalogEntryToAIResult(cached), fromCatalog: true })
+        setResult({ ...catalogEntryToAIResult(mergedCached), fromCatalog: true })
         setLoading(false)
         trackStep(null)
-        console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (from catalog)`)
+        console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (from catalog${cached.taxonGroupId ? ', su taxonGroup merge' : ''})`)
         return
       }
 
