@@ -1973,8 +1973,14 @@ Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje
               </div>
             )}
 
-            {/* Profile content — same component as PlantDetail, no extra padding */}
-            <ProfileContent plant={fromAIResult(result)} section="nori" onAction={null} onClose={onClose} className="pt-5 pb-2 space-y-6" />
+            {/* Profile content — rodom TIK kai result turi realios info.
+                Slim AI mode'as serijos disambiguation atvejais grąžina tik
+                latinName + candidates, BE aprašymo / kilmės / priežiūros —
+                tada info kortelės nereikia, vartotojas vis tiek turi pasirinkti
+                konkretų cultivar'ą iš kandidatų sąrašo viršuje. */}
+            {(result.aprasymas || result.kilme || result.sviesa || result.savybes || result.idomybes?.length > 0) && (
+              <ProfileContent plant={fromAIResult(result)} section="nori" onAction={null} onClose={onClose} className="pt-5 pb-2 space-y-6" />
+            )}
 
             {/* Actions */}
             <div className="space-y-3 pt-1 pb-4">
