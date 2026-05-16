@@ -76,7 +76,7 @@ service cloud.firestore {
     }
 
     // ──────────────────────────────────────────────────────────────
-    // CATALOG (bendra rūšių žinių bazė)
+    // CATALOG (bendra rūšių žinių bazė — cultivar / standalone records)
     // ──────────────────────────────────────────────────────────────
     // Visi prisijungę gali skaityti ir rašyti (saveToCatalog
     // automatiškai per syncFromRemote). Vėliau, kai pridėsim
@@ -84,6 +84,18 @@ service cloud.firestore {
     match /catalog/{docId} {
       allow read:  if request.auth != null;
       allow write: if request.auth != null;
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // TAXON GROUPS (cultivar serijos, species, hybrid'ai, genus-care
+    // ir kt. parent grouping'ai — shared care info per N cultivars)
+    // ──────────────────────────────────────────────────────────────
+    // Visi prisijungę skaito (user'iai mato seriją per merge'inta info).
+    // Write — tik admin'ams (kuris bulk save'ina ar update'ina shared
+    // care info). User'ių klientai negali sukurti / pakeisti tax grupių.
+    match /taxonGroups/{groupId} {
+      allow read:  if request.auth != null;
+      allow write: if isAdmin();
     }
 
     // ──────────────────────────────────────────────────────────────
