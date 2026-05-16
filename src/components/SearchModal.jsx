@@ -90,7 +90,8 @@ export const TOOL_PREVIEW = {
       },
       candidates: {
         type: 'array',
-        description: 'JEI confidence != "high" IR yra plausibly identifikuojamų kandidatų (cultivar serijos nariai, vizualiai panašios rūšys) — surašyk 2-5 kandidatus. User\'is paskui pasirinks vieną → nauja paieška su tiksliu pavadinimu → high confidence rezultatas. Tuščia array jei kandidatai neaišku arba confidence == high.',
+        description: 'JEI confidence != "high" IR yra plausibly identifikuojamų kandidatų — surašyk juos. Kiekiai: cultivar serijoms (Boulevard, Wave, Knock Out) — VISI žinomi nariai iki 15; vizualiai panašios rūšys disambiguation atveju — 2-5. Vartotojas paskui pasirinks vieną → nauja paieška su tiksliu pavadinimu → high confidence rezultatas. Tuščia array jei kandidatai neaišku arba confidence == high.',
+        maxItems: 15,
         items: {
           type: 'object',
           properties: {
@@ -1080,20 +1081,27 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       const block = r.content.find(b => b.type === 'tool_use' && b.name === 'bulk_series')
       if (!block) throw new Error('AI negrąžino bulk_series struktūros')
 
-      const { series, cultivars } = block.input
+      // Defensive — AI'us kartais nukrypsta nuo schema'os (object vietoj array,
+      // null vietoj field'o). Normalize'inam viską į saugias reikšmes prieš naudojant.
+      const series    = block.input?.series ?? {}
+      const cultivars = Array.isArray(block.input?.cultivars) ? block.input.cultivars : []
+      if (cultivars.length === 0) throw new Error('AI grąžino tuščią cultivars sąrašą — bandyk dar kartą')
+
       const seriesId = taxonGroupDocId({ genus: series.genus, name: series.name, type: series.type })
-      if (!seriesId) throw new Error('Negalima sukurti seriesId')
+      if (!seriesId) throw new Error('Negalima sukurti seriesId (trūksta genus/name)')
 
       setBulkState({ phase: 'saving', msg: 'Saugomas serijos doc...', seriesName: series.name, total: cultivars.length, completed: 0 })
 
-      // 2) Save series → taxonGroups
+      // 2) Save series → taxonGroups. Visi array field'ai (aliases, dauginimas,
+      // problemos, idomybes, sources) normalize'inami su Array.isArray check'u —
+      // kad AI grąžintas object/null nekirtų downstream'ui.
       await saveTaxonGroup({
         id:             seriesId,
         type:           series.type,
         name:           series.name,
         genus:          series.genus,
         breeder:        series.breeder ?? null,
-        aliases:        series.aliases ?? [],
+        aliases:        Array.isArray(series.aliases) ? series.aliases : [],
         aprasymas:      series.aprasymas,
         kilme:          series.kilme,
         tipas:          series.tipas,
@@ -1106,10 +1114,10 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
         typicalSpread:  series.typicalSpread,
         careInfo:       series.careInfo ?? {},
         savybes:        series.savybes ?? {},
-        dauginimas:     series.dauginimas ?? [],
-        problemos:      series.problemos ?? [],
-        idomybes:       series.idomybes ?? [],
-        sources:        series.sources ?? [],
+        dauginimas:     Array.isArray(series.dauginimas) ? series.dauginimas : [],
+        problemos:      Array.isArray(series.problemos)  ? series.problemos  : [],
+        idomybes:       Array.isArray(series.idomybes)   ? series.idomybes   : [],
+        sources:        Array.isArray(series.sources)    ? series.sources    : [],
         verificationStatus: 'auto-verified',
         aiVerifiedAt:   new Date().toISOString(),
       })
@@ -1118,8 +1126,13 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       setBulkState({ phase: 'images', msg: 'Renku nuotraukas ir saugau cultivars...', seriesName: series.name, total: cultivars.length, completed: 0 })
 
       let completed = 0
+      // Defensive — initialCandidates ateina iš result.candidates (caller passes
+      // SearchModal'io state'ą), kuris teoriškai jau masyvas po enrichCandidates
+      // normalizacijos. Bet jei kažkas pakeitė state'ą tarp render'o ir bulk save'o —
+      // nenorim cracked'inti čia.
+      const safeInitial = Array.isArray(initialCandidates) ? initialCandidates : []
       const initialImageMap = new Map(
-        (initialCandidates ?? []).map(c => [c.latinName, c.imageUrl ?? null])
+        safeInitial.map(c => [c.latinName, c.imageUrl ?? null])
       )
 
       await Promise.all(cultivars.map(async (c) => {
@@ -1241,8 +1254,9 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       // forced tool'o; Claude'as gali iškviesti web_search prieš plant_preview).
       const r1 = await claudeCall({
         // SLIM preview'ui užtenka mažiau token'ų — nepildom rich field'ų.
-        // 1500 = identification + iki 5 candidate'ų su distinguishingFeature.
-        maxTokens:   1500,
+        // 2500 = identification + iki 15 candidate'ų su distinguishingFeature
+        // (Boulevard serija turi ~25 cultivars, 15 yra praktinis preview limit'as).
+        maxTokens:   2500,
         temperature: 0.3,
         system:      PLANT_SYSTEM,
         tools: [
@@ -1258,7 +1272,7 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
 SLIM MODE — admin'o disambiguation use case'as, NE user-facing rich preview:
 • Užtenka: latinName, ltName, candidates[] (jei abejoji), confidence, sources
 • NEPILDYK: aprašymo, kilmės, priežiūros (sviesa/vanduo/substratas/...), savybių (toksiškumo/valgomumo/vaistinio), įdomybių, tipo, augimo greičio — palik null/tuščius
-• Jei tai cultivar serija → candidates[] su VISAIS žinomais nariais (iki 5 populiariausių)
+• Jei tai cultivar serija (Boulevard, Wave, Knock Out, Hosta sieboldiana ir t.t.) → candidates[] su VISAIS žinomais nariais, iki 15. Tai admin'o disambiguation prieš bulk save'ą — kuo daugiau, tuo geriau.
 • Jei abejoji konkrečiu cultivar — web_search vieną kartą RHS/Wikipedia, paskui grąžink kandidatus
 
 Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje per kitą tool'ą.`,
