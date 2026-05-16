@@ -1570,11 +1570,20 @@ Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje
   }, [query, result, loading, plants])
 
   // Catalog add — naudoja onAddToWishlist (kaip ir AI result), tik prieš tai
-  // catalog entry konvertuojamas į AI-result shape'ą.
+  // catalog entry sujungiamas su taxonGroup'o care info (kaip ir library-first
+  // short-circuit'as Phase 0 searchByText'e). Be šito merge'o, „+ Pridėti"
+  // iš autocomplete dropdown'o save'intų tik cultivar-specific info (image,
+  // distinguishingFeature) ir paliktų plant'ą be care info, nes mūsų DB
+  // struktūra normalize'inta — care info gyvena parent taxonGroup'e.
   const handleCatalogAdd = async (entry) => {
-    const aiShape = catalogEntryToAIResult(entry)
     setSavingPhase2(true)
     try {
+      let enriched = entry
+      if (entry.taxonGroupId) {
+        const group = await getTaxonGroup(entry.taxonGroupId)
+        if (group) enriched = mergeWithSeries(entry, group)
+      }
+      const aiShape = catalogEntryToAIResult(enriched)
       await onAddToWishlist(aiShape)
     } finally {
       setSavingPhase2(false)
