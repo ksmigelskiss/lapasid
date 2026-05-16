@@ -578,25 +578,45 @@ async function enrich(parsed) {
   //
   // Apsauga: jei AI explicitly grąžino cultivar (matchLevel=='cultivar'
   // arba latinName turi quote'us) — NEPERRAŠOM AI suggested name'o iNat
-  // species'o vardu. Tas pats — iNat photos atmetam, nes jos rodytų
-  // laukinę giminaitę vietoj sodo hibrido.
+  // species'o vardu. iNat lieka species'ams kaip:
+  //   - photo fallback'as (jei Brave neranda)
+  //   - gallery extras (kelios nuotraukos cycling'ui PhotoSheet'e)
+  //   - LT name + sinonimai + englishNames (per fetchPlantNames)
   //
-  // Low-confidence rezultatai — irgi atmetam iNat enrichment'ą.
+  // Low-confidence rezultatai — atmetam iNat enrichment'ą visiškai.
   const trustInat = !isCultivar && parsed.confidence !== 'low'
 
   if (trustInat) {
-    // Species-level — iNat path (greitas + photo + LT name iš inatLtName)
-    const [photos, namesData, wd] = await Promise.all([
+    // Species path. UNIFIED photo priority — Brave FIRST (gardener-style
+    // photos, ne wild collection nuotraukos), iNat fallback'as ir gallery.
+    // Visa keturi šaltiniai paraleliai — bendras laikas = max(brave, inat,
+    // names, wikidata), o ne suma.
+    const [bravePhoto, inatPhotos, namesData, wd] = await Promise.all([
+      fetchBraveImage(parsed.latinName),
       fetchPhotos(parsed.latinName),
       fetchPlantNames(parsed.latinName),
       wdPromise,
     ])
+
+    // Primary image priority chain:
+    //   1. Brave (gardener photo) → 2. iNat[0] (species photo) → 3. Wikidata P18
+    //   → 4. Wikipedia thumb (paskutinis fallback'as, sequential)
+    let mainImage = bravePhoto ?? inatPhotos[0] ?? wd?.imageUrl ?? null
+    if (!mainImage) mainImage = await fetchWikiThumbnail(parsed.latinName)
+
+    // Gallery — Brave pirma (jei yra), paskui iNat extras (deduped).
+    // Tai užtikrina cycling'ą PhotoSheet'e su Brave kaip default'iniu.
+    const gallery = [
+      ...(bravePhoto ? [bravePhoto] : []),
+      ...inatPhotos.filter(p => p && p !== bravePhoto),
+    ]
+
     const inatLtName = namesData?.inatLtName ?? null
     return {
       ...parsed,
       name:             inatLtName ?? parsed.name,
-      image:            photos[0] ?? null,
-      photos,
+      image:            mainImage,
+      photos:           gallery.length > 0 ? gallery : (mainImage ? [mainImage] : []),
       inatLtName,
       inatTaxonId:      namesData?.inatTaxonId ?? null,
       sinonimai:        namesData?.sinonimai    ?? [],
@@ -608,7 +628,7 @@ async function enrich(parsed) {
 
   // Cultivar / low-confidence path — multi-source priority chain:
   //   1. Brave Image Search (paid primary, ~85-90% hit rate)
-  //   2. iNaturalist Taxa autocomplete (free, plant-focused)
+  //   2. iNaturalist Taxa autocomplete (free, plant-focused, strict cultivar match)
   //   3. Wikidata P18 (free)
   //   4. Wikipedia direct + opensearch thumbnail (free)
   // null jei visi miss → UI rodo plant card be photo.
