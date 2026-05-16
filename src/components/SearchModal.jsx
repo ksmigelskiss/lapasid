@@ -48,10 +48,21 @@ async function claudeCall(body) {
   return res.json()
 }
 
-// ── Phase 1: fast preview (name, stats, description, facts) ──────
+// ── Phase 1: LEAN identification preview ─────────────────────────
+//
+// 2026-05 admin-use-case rewrite: preview'as dabar yra TIK identification +
+// disambiguation kandidatai. Anksčiau (žiūr. git tag `user-search-v1`) tas
+// pats tool'as grąžindavo aprasymas / idomybes / careInfo / savybes — bet
+// admin'ui to nereikia (jis daro Bulk save'ą kuris perpildo catalog'ą su
+// rich info per TOOL_BULK_SERIES).
+//
+// Slim'inimas duoda ~70% mažiau token'ų ir ~10-20s greitesnį atsaką.
+// Heavy field'ai liko schema'oje kaip OPTIONAL — jei AI vis tiek nori
+// užpildyti high-confidence atveju (single plant save), neblokuojam.
+// Bet `required` masyve jų nebėra — AI gali grąžinti tuščius/null.
 export const TOOL_PREVIEW = {
   name: 'plant_preview',
-  description: 'Pateik pagrindinę augalo informaciją greitai. SVARBU — privalomi confidence ir matchLevel laukai, kad galėtume rodyti vartotojui kai info nepatikima.',
+  description: 'IDENTIFIKUOK augalą + grąžink disambiguation kandidatus jei abejoji. SLIM mode — TIK identification info (latinName, ltName, candidates, confidence). NEPILDYK aprašymo, kilmės, priežiūros, savybių, įdomybių — palik null arba tuščius. Rich info pildoma vėliau per bulk_series (kai admin paspaudžia „Pridėti seriją") arba plant_details (kai vartotojas paspaudžia Save).',
   input_schema: {
     type: 'object',
     properties: {
@@ -168,9 +179,12 @@ export const TOOL_PREVIEW = {
       },
       idomybes: { type: 'array', items: { type: 'string' }, description: '2-3 įdomūs faktai' },
     },
+    // SLIM required'as — TIK identification + honesty. Visi rich field'ai
+    // (tipas, savybes, aprasymas, kilme, sviesa, vanduo, idomybes ir t.t.)
+    // optional'iai — AI gali grąžinti null/tuščius, ir mes nelaužiam build'o.
+    // (Žiūr. `user-search-v1` git tag — pilna senesnė required lista.)
     required: ['confidence', 'matchLevel', 'uncertaintyReason', 'sources', 'candidates',
-               'name', 'latinName', 'emoji', 'tipas', 'augimo_greitis', 'sunkumas',
-               'toksiskas', 'savybes', 'aprasymas', 'kilme', 'sviesa', 'vanduo', 'idomybes'],
+               'name', 'latinName', 'emoji'],
   },
 }
 
@@ -1148,16 +1162,29 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       // (Anthropic API leidžia web_search server-side tool'ą veikti šalia
       // forced tool'o; Claude'as gali iškviesti web_search prieš plant_preview).
       const r1 = await claudeCall({
-        maxTokens:   3072,            // didesnis nei anksčiau — web search results gali padidinti context
+        // SLIM preview'ui užtenka mažiau token'ų — nepildom rich field'ų.
+        // 1500 = identification + iki 5 candidate'ų su distinguishingFeature.
+        maxTokens:   1500,
         temperature: 0.3,
         system:      PLANT_SYSTEM,
         tools: [
           TOOL_PREVIEW,
-          { type: 'web_search_20250305', name: 'web_search', max_uses: 2 },
+          // max_uses 2 → 1: identification'ui užtenka vieno verification trip'o.
+          // Rich research'as eina į bulk_series flow'ą su max_uses=3.
+          { type: 'web_search_20250305', name: 'web_search', max_uses: 1 },
         ],
-        // tool_choice = auto (Claude pati sprend'ia kada web_search; vis tiek
-        // turi galiausiai iškviesti plant_preview pildant final result)
-        messages:    [{ role: 'user', content: `Rask informaciją apie augalą: "${q}". Jei tai cultivar/hybrid, kurio nesi 100% tikras — naudok web_search.` }],
+        messages: [{
+          role: 'user',
+          content: `IDENTIFIKUOK augalą: "${q}".
+
+SLIM MODE — admin'o disambiguation use case'as, NE user-facing rich preview:
+• Užtenka: latinName, ltName, candidates[] (jei abejoji), confidence, sources
+• NEPILDYK: aprašymo, kilmės, priežiūros (sviesa/vanduo/substratas/...), savybių (toksiškumo/valgomumo/vaistinio), įdomybių, tipo, augimo greičio — palik null/tuščius
+• Jei tai cultivar serija → candidates[] su VISAIS žinomais nariais (iki 5 populiariausių)
+• Jei abejoji konkrečiu cultivar — web_search vieną kartą RHS/Wikipedia, paskui grąžink kandidatus
+
+Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje per kitą tool'ą.`,
+        }],
       })
       if (controller.signal.aborted) return
 
@@ -1251,7 +1278,7 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
         role: 'user',
         content: [
           { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
-          { type: 'text',  text: 'Identifikuok augalą šioje nuotraukoje (arba ant etiketės) ir pateik jo informaciją.' },
+          { type: 'text',  text: 'IDENTIFIKUOK augalą šioje nuotraukoje (arba ant etiketės). SLIM mode — užtenka latinName, ltName, candidates jei abejoji, confidence. NEPILDYK aprašymo / priežiūros / savybių — palik null/tuščius.' },
         ],
       }
 
@@ -1260,12 +1287,13 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       // cultivar'o nuotrauką iš augalų pirkliautojo, AI gali patvirtinti
       // pavadinimą per RHS/Wikipedia.
       const r1 = await claudeCall({
-        maxTokens:   3072,
+        // SLIM mode — žiūr. searchByText komentarą prie TOOL_PREVIEW.
+        maxTokens:   1500,
         temperature: 0.3,
         system:      PLANT_SYSTEM,
         tools: [
           TOOL_PREVIEW,
-          { type: 'web_search_20250305', name: 'web_search', max_uses: 2 },
+          { type: 'web_search_20250305', name: 'web_search', max_uses: 1 },
         ],
         messages:    [userMsg],
       })
