@@ -643,8 +643,16 @@ async function fetchBraveImage(latinName) {
   const genus    = cleaned.split(/\s+/)[0].toLowerCase()
   const cultivar = cleaned.replace(/['"]/g, '').toLowerCase().split(/\s+/).slice(1).join(' ').split(/\s+/)[0]
 
+  // Client-side timeout — server'is jau turi 4s abort, bet jei Vercel cold
+  // start ar tinklas užkimba, neturim laukti 30s+ ERR_TIMED_OUT'o, kol kybos
+  // visi candidates. 5s viršyti = grįžtam null ir leidžiam iNat/Wikidata/
+  // Wikipedia/Commons fallback'us pradėti. (2026-05 regresija: Brave kybėjo
+  // → 23s photo collection → user'iui atrodė kad photos „neveikia".)
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(), 5000)
+
   try {
-    const r = await fetch(`/api/plant-image?q=${encodeURIComponent(cleaned)}`)
+    const r = await fetch(`/api/plant-image?q=${encodeURIComponent(cleaned)}`, { signal: ctrl.signal })
     if (!r.ok) return null
     const data = await r.json()
     const candidates = data.images ?? []
@@ -665,8 +673,14 @@ async function fetchBraveImage(latinName) {
     })
     return genusOnly?.url ?? null
   } catch (e) {
-    console.warn('[brave-image] fetch failed:', e)
+    if (e.name === 'AbortError') {
+      console.warn('[brave-image] timed out after 5s — falling through to iNat/Wikidata/Wikipedia/Commons')
+    } else {
+      console.warn('[brave-image] fetch failed:', e)
+    }
     return null
+  } finally {
+    clearTimeout(timer)
   }
 }
 

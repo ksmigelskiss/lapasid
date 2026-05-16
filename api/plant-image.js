@@ -31,6 +31,14 @@ export default async function handler(req, res) {
     return res.status(503).json({ error: 'brave_not_configured', images: [] })
   }
 
+  // Hard timeout — Brave occasionally hangs (free-tier rate limit, transient
+  // upstream issues). Be aggressive: 4s nuo Brave > visi candidates kybo →
+  // photo enrichment'as nedirba, user'is mato ERR_TIMED_OUT (žiūr. 2026-05
+  // regresija). Geriau atsakyti tuščiu sąrašu, kad kliento fallback chain
+  // (iNat → Wikidata → Wikipedia → Commons) suvirškintų toliau.
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(), 4000)
+
   try {
     const params = new URLSearchParams({
       q,
@@ -44,6 +52,7 @@ export default async function handler(req, res) {
         'X-Subscription-Token': apiKey,
         'Accept':               'application/json',
       },
+      signal: ctrl.signal,
     })
     if (!r.ok) {
       const errText = await r.text()
@@ -70,7 +79,13 @@ export default async function handler(req, res) {
     res.setHeader('Cache-Control', 's-maxage=2592000, stale-while-revalidate=86400')
     return res.json({ images })
   } catch (e) {
+    if (e.name === 'AbortError') {
+      console.warn('[plant-image] Brave timed out after 4s — returning empty list so client fallbacks fire')
+      return res.status(504).json({ error: 'brave_timeout', images: [] })
+    }
     console.error('[plant-image] exception:', e)
     return res.status(500).json({ error: e.message, images: [] })
+  } finally {
+    clearTimeout(timer)
   }
 }
