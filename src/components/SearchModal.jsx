@@ -3,11 +3,12 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
-import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react'
 import { fetchPhotos, resizeImage, fetchWikipediaContext } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
 import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId } from '../utils/catalog'
+import { getCachedSearchResponse, setCachedSearchResponse } from '../utils/searchResponseCache'
 import { taxonGroupDocId, saveTaxonGroup, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
@@ -870,7 +871,9 @@ async function fetchCommonsImage(latinName) {
   } catch { return null }
 }
 
-// Enrich'ina candidates su image URL'ais. Priority chain:
+// Enrich'ina candidates su image URL'ais + Wikidata verification flag'u.
+//
+// Image priority chain (unchanged):
 //   1. AI parinko imageUrl iš savo web_search (retas hit)
 //   2. Brave Image Search (PAID primary, ~85-90% hit rate)
 //   3. iNaturalist Taxa Autocomplete (free, plant-focused fallback)
@@ -879,26 +882,37 @@ async function fetchCommonsImage(latinName) {
 //   6. Wikimedia Commons strict filter (free)
 //   7. null → UI fallback'ina į emoji
 //
-// Per-candidate sekvencialiai (early-exit), tarp candidates paraleliai.
+// Wikidata verification — VISADA paralelinis call'as (ne tik image fallback'ui).
+// Naudojamas trust signal'ui — UI candidate card'as rodo ✓ ikonėlę „Patvirtinta
+// per Wikidata" kai entity rastas. Wikidata yra human-curated structured data,
+// todėl hit'as = high confidence kad cultivar realiai egzistuoja (atmeta AI
+// hallucinations).
+//
+// Per-candidate sekvencialiai image'ams (early-exit), tarp candidates paraleliai.
 async function enrichCandidates(candidates) {
   if (!Array.isArray(candidates) || candidates.length === 0) return candidates
   return Promise.all(candidates.map(async c => {
-    if (c.imageUrl) return c // AI jau parinko (best case)
+    // Wikidata — startuoja iš karto, lygiagrečiai su image enrichment'u
+    const wdPromise = fetchWikidataPlant(c.latinName)
 
-    const braveImg = await fetchBraveImage(c.latinName)
-    if (braveImg) return { ...c, imageUrl: braveImg }
+    // Image chain — early-exit kai pirmas šaltinis grąžina
+    let imageUrl = c.imageUrl ?? null
+    if (!imageUrl) imageUrl = await fetchBraveImage(c.latinName)
+    if (!imageUrl) imageUrl = await fetchInatCultivarImage(c.latinName)
 
-    const inatImg = await fetchInatCultivarImage(c.latinName)
-    if (inatImg) return { ...c, imageUrl: inatImg }
+    // Join Wikidata — naudojamas tiek image fallback'ui, tiek verification flag'ui
+    const wd = await wdPromise
+    if (!imageUrl && wd?.imageUrl) imageUrl = wd.imageUrl
 
-    const wd = await fetchWikidataPlant(c.latinName)
-    if (wd?.imageUrl) return { ...c, imageUrl: wd.imageUrl, wikidataId: wd.id }
+    if (!imageUrl) imageUrl = await fetchWikiThumbnail(c.latinName)
+    if (!imageUrl) imageUrl = await fetchCommonsImage(c.latinName)
 
-    const wikiImg = await fetchWikiThumbnail(c.latinName)
-    if (wikiImg) return { ...c, imageUrl: wikiImg, wikidataId: wd?.id ?? null }
-
-    const commonsImg = await fetchCommonsImage(c.latinName)
-    return { ...c, imageUrl: commonsImg, wikidataId: wd?.id ?? null }  // gali likti null
+    return {
+      ...c,
+      imageUrl,
+      wikidataId:       wd?.id ?? null,
+      wikidataVerified: !!wd?.id,   // ✓ badge UI'e
+    }
   }))
 }
 
@@ -1153,6 +1167,19 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
         return
       }
 
+      // ── Phase 0.5: Query response cache ──────────────────────
+      // Catalog'as nieko nerado — patikrinam ar ankstesnis AI atsakymas tam
+      // pačiam query yra cache'intas (48h TTL). Visi enrichment'ai (photos,
+      // Wikidata verification) jau pritaikyti — instant replay.
+      const cachedResponse = getCachedSearchResponse(q.trim())
+      if (cachedResponse) {
+        setResult(cachedResponse)
+        setLoading(false)
+        trackStep(null)
+        console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (response cache hit, AI praleistas)`)
+        return
+      }
+
       trackStep('AI ieško augalo...')
 
       // ── Phase 1: AI preview su web_search tool'u ───────────────
@@ -1248,6 +1275,9 @@ Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje
       setResult(enriched)
       setLoading(false)
       trackStep(null)
+      // Cache pilną enriched result'ą (su image'ais + Wikidata verification) —
+      // kitą kartą šitą query'į gausim per 0ms be AI / web_search latency'o.
+      setCachedSearchResponse(q.trim(), enriched, aiResult.confidence)
       console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s`)
     } catch (e) {
       if (e.name === 'AbortError' || controller.signal.aborted) return
@@ -1671,8 +1701,20 @@ Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje
                             nereikia istorinės info, serijos paaiškinimo, ar
                             kilmės — tik kaip atskirti vizualiai. */}
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-forest-800 text-[15px] leading-tight">
-                            {c.ltName || c.latinName.replace(/^[A-Z][a-z]+\s+['"]/, '').replace(/['"]$/, '')}
+                          <p className="font-semibold text-forest-800 text-[15px] leading-tight flex items-center gap-1.5">
+                            <span className="truncate">{c.ltName || c.latinName.replace(/^[A-Z][a-z]+\s+['"]/, '').replace(/['"]$/, '')}</span>
+                            {/* Wikidata verification badge — ✓ ikonėlė reiškia,
+                                kad cultivar yra Wikidata entity'je (human-curated
+                                structured data). Stiprus signal'as, kad AI
+                                nehallucinuoja — toks cultivar realiai egzistuoja. */}
+                            {c.wikidataVerified && (
+                              <CheckCircle2
+                                size={13}
+                                className="text-forest-600 flex-shrink-0"
+                                title="Patvirtinta per Wikidata"
+                                aria-label="Patvirtinta per Wikidata"
+                              />
+                            )}
                           </p>
                           <p className="font-mono italic text-[11px] text-forest-500 mt-0.5 truncate">
                             {c.latinName}

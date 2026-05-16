@@ -3,6 +3,7 @@ import { getDocs, getDoc, collection, doc, setDoc, updateDoc, deleteDoc, arrayRe
 import { Users, Database, X, Shield, Sparkles, BadgeCheck, Loader2, RefreshCw, ChevronRight, Mail, Trash2, AlertTriangle, UserCheck, Pencil, Check, BookOpen } from 'lucide-react'
 import { db } from '../../utils/firebase'
 import { bustCatalogCache } from '../../utils/catalog'
+import { bustSearchResponseCache } from '../../utils/searchResponseCache'
 import T4Icon from '../brand/T4Icon'
 import LibraryTab from './LibraryTab'
 
@@ -287,6 +288,9 @@ export default function AdminPanel({ currentUid, onClose }) {
       // Search autocomplete + library-first short-circuit'as iškart atspindi
       // pakeitimus (kitaip stale 24h localStorage cache slėptų).
       bustCatalogCache()
+      // Query response cache irgi — kad cache'inti AI atsakymai neslėptų
+      // admin'o atnaujintos info už senų rezultatų.
+      bustSearchResponseCache()
     } catch (e) {
       console.error('[admin] save catalog failed:', e)
       alert('Nepavyko išsaugoti catalog entry: ' + e.message)
@@ -299,7 +303,8 @@ export default function AdminPanel({ currentUid, onClose }) {
     try {
       await deleteDoc(doc(db, 'catalog', entryId))
       setCatalog(prev => prev.filter(e => e.id !== entryId))
-      bustCatalogCache()  // stale autocomplete fix
+      bustCatalogCache()           // stale autocomplete fix
+      bustSearchResponseCache()    // ir AI response cache'as
     } catch (e) {
       console.error('[admin] delete catalog failed:', e)
       alert('Nepavyko ištrinti: ' + e.message)
@@ -318,6 +323,11 @@ export default function AdminPanel({ currentUid, onClose }) {
         updatedAt: new Date().toISOString(),
       }, { merge: true })
       setTaxonGroups(prev => prev.map(g => g.id === groupId ? { ...g, ...patch, updatedAt: new Date().toISOString() } : g))
+      // Serija paveldi care info cultivar'iams — bust'inam search cache'us,
+      // kad cached AI rezultatai (kuriuose galėjo būti senos care info iš
+      // catalog'o cultivar'ų) iš naujo gautų svežią info.
+      bustCatalogCache()
+      bustSearchResponseCache()
     } catch (e) {
       console.error('[admin] save taxonGroup failed:', e)
       alert('Nepavyko išsaugoti serijos: ' + e.message)
@@ -343,6 +353,8 @@ export default function AdminPanel({ currentUid, onClose }) {
       setTaxonGroups(prev => prev.filter(g => g.id !== groupId))
       // Cultivar'ai lieka su nebegaliojančiu taxonGroupId — UI'us juos rodys
       // kaip standalone'us per mergeWithSeries() (jei group null → flat behavior).
+      bustCatalogCache()
+      bustSearchResponseCache()
     } catch (e) {
       console.error('[admin] delete taxonGroup failed:', e)
       alert('Nepavyko ištrinti: ' + e.message)
