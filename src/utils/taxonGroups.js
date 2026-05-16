@@ -191,6 +191,20 @@ export function mergeWithSeries(cultivar, group) {
     // Cultivar own fields (always)
     ...cultivarOwn,
 
+    // Synonyms composition — sujungiam visus alternative names į vieną
+    // sąrašą, kad PlantDetail „Taip pat:" sekcija parodytų pilną info:
+    //   - cultivar.sinonimai (jei iš ankstesnio AI save'o)
+    //   - group.aliases (pvz. „Boulevard®", „Evison Boulevard")
+    //   - cultivar.registeredAs (pvz. „EVIPO006" patent kodas)
+    // Dedupe'inam + filtruojam null/tuščius.
+    sinonimai: [
+      ...(cultivarOwn.sinonimai ?? []),
+      ...(group.aliases ?? []),
+      cultivarOwn.registeredAs,
+    ]
+      .filter(Boolean)
+      .filter((v, i, a) => a.indexOf(v) === i),
+
     // Provenance — kad UI'as galėtų rodyti „Iš serijos Boulevard"
     _seriesId:   group.id,
     _seriesName: group.name,
