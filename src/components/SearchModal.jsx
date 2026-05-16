@@ -1162,6 +1162,10 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       const initialImageMap = new Map(
         safeInitial.map(c => [c.latinName, c.imageUrl ?? null])
       )
+      // Renkam saved entries — pasirodys BulkSaveOverlay 'done' state'e
+      // su „+ Pridėti į kolekciją" mygtukais kiekvienam. Vartotojas iš karto
+      // po importo gali pasirinkti, kurį tiksliai pridėti į savo kolekciją.
+      const savedEntries = []
 
       await Promise.all(cultivars.map(async (c) => {
         const cultId = catalogDocId(c.latinName)
@@ -1189,7 +1193,7 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
           ? `${ltGenusName} ${c.ltName}`
           : (c.ltName ?? ltGenusName ?? c.latinName)
 
-        await saveToCatalog({
+        const entry = {
           lotyniskas:            c.latinName,
           lietuviškas:           composedLt,
           inatLtName:            ltGenusName,  // genus LT atskirai saugomas reference'ui
@@ -1205,13 +1209,27 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
           wikidataId:            wd?.id ?? null,
           wikidataVerified:      !!wd?.id,
           aiVerifiedAt:          new Date().toISOString(),
-        }).catch(e => console.warn('[bulk] cultivar save failed:', c.latinName, e))
+        }
+        await saveToCatalog(entry).catch(e => console.warn('[bulk] cultivar save failed:', c.latinName, e))
+        // id reikia handleCatalogAdd'ui (catalogDocId pagal lotyniskas)
+        savedEntries.push({ ...entry, id: catalogDocId(c.latinName), _id: catalogDocId(c.latinName) })
 
         completed++
         setBulkState(s => s ? { ...s, completed } : s)
       }))
 
-      setBulkState({ phase: 'done', msg: `Pridėta ${cultivars.length} cultivars iš „${series.name}" serijos.`, seriesName: series.name, total: cultivars.length, completed: cultivars.length })
+      // Sort'inam išsaugotus pagal lietuvišką pavadinimą — vartotojui patogiau
+      // skenuoti picker'yje
+      savedEntries.sort((a, b) => (a.lietuviškas ?? '').localeCompare(b.lietuviškas ?? ''))
+
+      setBulkState({
+        phase: 'done',
+        msg: `Pridėta ${cultivars.length} cultivars iš „${series.name}" serijos. Pasirink, kurį pridėti į kolekciją:`,
+        seriesName: series.name,
+        total: cultivars.length,
+        completed: cultivars.length,
+        savedCultivars: savedEntries,
+      })
       console.log(`[bulk] ✓ ${series.name} — ${cultivars.length} cultivars saved`)
     } catch (e) {
       console.error('[bulk] failed:', e)
@@ -2192,7 +2210,12 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
     <AnimatePresence>
       {savingPhase2 && <SavingOverlay key="saving" />}
       {bulkState && (
-        <BulkSaveOverlay key="bulk" state={bulkState} onClose={() => setBulkState(null)} />
+        <BulkSaveOverlay
+          key="bulk"
+          state={bulkState}
+          onClose={() => setBulkState(null)}
+          onPick={handleCatalogAdd}
+        />
       )}
     </AnimatePresence>
     <PaywallSheet open={paywallOpen} limitType={paywallLimitType} onClose={() => setPaywallOpen(false)} />
@@ -2460,61 +2483,106 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
 // ── BulkSaveOverlay — bulk series save progress + final summary ──────
 //
 // state structure (žiūr. bulkSaveSeries handler):
-//   { phase: 'ai'|'saving'|'images'|'done'|'error', msg, seriesName, total, completed }
+//   { phase: 'ai'|'saving'|'images'|'done'|'error', msg, seriesName, total,
+//     completed, savedCultivars[] }
 //
 // Trys faze: AI generuoja → Saugomas series doc → Per-cultivar saves su images
 // (visa tai client-side, paraleliai per Promise.all). „Done" faze su summary
-// ir Close button'u.
-function BulkSaveOverlay({ state, onClose }) {
+// + picker'iu: vartotojas tiesiogiai pasirenka, kurį iš išsaugotų cultivar'ų
+// pridėti į savo kolekciją (reuse'inam handleCatalogAdd → mergeWithSeries +
+// onAddToWishlist + open detail card).
+function BulkSaveOverlay({ state, onClose, onPick }) {
   const isDone   = state.phase === 'done'
   const isError  = state.phase === 'error'
   const isActive = !isDone && !isError
   const progress = state.total ? Math.round((state.completed ?? 0) / state.total * 100) : 0
+  const saved    = Array.isArray(state.savedCultivars) ? state.savedCultivars : []
+  const hasPicker = isDone && saved.length > 0
 
   return createPortal(
     <motion.div
-      className="fixed inset-0 z-[90] flex items-center justify-center bg-forest-800/55 backdrop-blur-sm"
+      className="fixed inset-0 z-[90] flex items-center justify-center bg-forest-800/55 backdrop-blur-sm p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="bg-bone-50 rounded-3xl p-7 mx-6 flex flex-col items-center gap-4 shadow-[0_12px_32px_rgba(28,58,42,0.24)] border border-bone-400/50 w-full max-w-[360px]"
+        className={`bg-bone-50 rounded-3xl flex flex-col gap-4 shadow-[0_12px_32px_rgba(28,58,42,0.24)] border border-bone-400/50 w-full ${
+          hasPicker ? 'max-w-[440px] max-h-[88vh] p-5' : 'max-w-[360px] p-7 items-center'
+        }`}
         initial={{ scale: 0.88, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.88, opacity: 0 }}
         transition={{ type: 'spring', damping: 24, stiffness: 280 }}
       >
-        {isActive && <BrandLoader />}
-        {isDone   && <div className="text-5xl">✓</div>}
-        {isError  && <div className="text-5xl">⚠</div>}
+        {/* Header — su flex-shrink-0 kad neužimtų scroll erdvės */}
+        <div className={`flex flex-col gap-3 flex-shrink-0 ${hasPicker ? '' : 'items-center'}`}>
+          <div className={hasPicker ? 'flex items-center gap-3' : 'flex flex-col items-center gap-3'}>
+            {isActive && <BrandLoader />}
+            {isDone   && <div className={hasPicker ? 'text-3xl' : 'text-5xl'}>✓</div>}
+            {isError  && <div className="text-5xl">⚠</div>}
 
-        <div className="text-center">
-          <p className="font-display text-base font-semibold tracking-tight text-forest-800">
-            {isDone ? 'Pridėta!' : isError ? 'Klaida' : 'Bulk save…'}
-          </p>
-          {state.seriesName && (
-            <p className="font-mono text-[11px] text-forest-500 mt-0.5">
-              {state.seriesName}
-            </p>
+            <div className={hasPicker ? 'flex-1 min-w-0' : 'text-center'}>
+              <p className="font-display text-base font-semibold tracking-tight text-forest-800">
+                {isDone ? 'Pridėta!' : isError ? 'Klaida' : 'Bulk save…'}
+              </p>
+              {state.seriesName && (
+                <p className="font-mono text-[11px] text-forest-500 mt-0.5">
+                  {state.seriesName}
+                </p>
+              )}
+              <p className="text-sm text-forest-600 mt-1.5 leading-snug">
+                {state.msg}
+              </p>
+            </div>
+          </div>
+
+          {/* Progress bar — rodom kai turim total */}
+          {isActive && state.total > 0 && (
+            <div className="w-full">
+              <div className="h-1.5 bg-bone-300 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-forest-500 transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <p className="font-mono text-[10px] text-forest-400 text-center mt-1.5">
+                {state.completed} / {state.total} cultivars
+              </p>
+            </div>
           )}
-          <p className="text-sm text-forest-600 mt-1.5 leading-snug">
-            {state.msg}
-          </p>
         </div>
 
-        {/* Progress bar — rodom kai turim total */}
-        {isActive && state.total > 0 && (
-          <div className="w-full">
-            <div className="h-1.5 bg-bone-300 rounded-full overflow-hidden">
+        {/* Picker — done state'e su išsaugotais cultivars'ais */}
+        {hasPicker && (
+          <div className="flex-1 overflow-y-auto -mx-1 px-1 space-y-1.5 min-h-0">
+            {saved.map(entry => (
               <div
-                className="h-full bg-forest-500 transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <p className="font-mono text-[10px] text-forest-400 text-center mt-1.5">
-              {state.completed} / {state.total} cultivars
-            </p>
+                key={entry.id || entry._id}
+                className="flex items-center gap-3 p-2 bg-bone-100/60 border border-bone-400/30 rounded-2xl"
+              >
+                <div className="w-10 h-10 flex-shrink-0 rounded-xl overflow-hidden bg-bone-200 flex items-center justify-center">
+                  {entry.image ? (
+                    <img src={entry.image} alt="" className="w-full h-full object-cover" loading="lazy" />
+                  ) : (
+                    <span className="text-xl">{entry.emoji ?? '🌿'}</span>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-display text-[13px] font-semibold text-forest-800 truncate leading-tight">
+                    {entry.lietuviškas || entry.lotyniskas}
+                  </p>
+                  <p className="text-[10px] text-forest-500 italic truncate leading-tight">{entry.lotyniskas}</p>
+                </div>
+                <button
+                  onClick={() => onPick?.(entry)}
+                  className="flex-shrink-0 inline-flex items-center gap-1 h-7 px-2.5 rounded-btn-sm bg-forest-700 hover:bg-forest-800 text-bone text-[11px] font-display font-semibold transition-colors"
+                  title="Pridėti į kolekciją"
+                >
+                  + Pridėti
+                </button>
+              </div>
+            ))}
           </div>
         )}
 
@@ -2522,9 +2590,9 @@ function BulkSaveOverlay({ state, onClose }) {
         {(isDone || isError) && (
           <button
             onClick={onClose}
-            className="w-full h-11 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
+            className="w-full h-11 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors flex-shrink-0"
           >
-            Uždaryti
+            {hasPicker ? 'Praleisti' : 'Uždaryti'}
           </button>
         )}
       </motion.div>
