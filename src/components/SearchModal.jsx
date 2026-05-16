@@ -1859,9 +1859,18 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
                         {result.uncertaintyReason}
                       </p>
                     )}
-                    <p className="text-[11px] text-forest-500 mt-1.5 italic">
-                      Priežiūros info gali būti netiksli — saugok kaip „nepatvirtinta" ir patikrink rankiniu būdu.
-                    </p>
+                    {/* Static disclaimer rodom TIK kai info kokybė tikrai
+                        abejotina: low confidence, unknown match level, ar
+                        mažai šaltinių. Genus-level identifikacija su 2+ web
+                        sources — info patikima struktūra net jei reikia
+                        pasirinkti konkrečią rūšį. (žiūr. 2026-05 UX feedback) */}
+                    {(result.confidence === 'low' ||
+                      result.matchLevel === 'unknown' ||
+                      (result.sources?.length ?? 0) < 2) && (
+                      <p className="text-[11px] text-forest-500 mt-1.5 italic">
+                        Priežiūros info gali būti netiksli — saugok kaip „nepatvirtinta" ir patikrink rankiniu būdu.
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
