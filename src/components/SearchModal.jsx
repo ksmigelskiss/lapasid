@@ -2074,42 +2074,54 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
               <ProfileContent plant={fromAIResult(result)} section="nori" onAction={null} onClose={onClose} className="pt-5 pb-2 space-y-6" />
             )}
 
-            {/* Actions */}
-            <div className="space-y-3 pt-1 pb-4">
-              {duplicate ? (
-                <DuplicateBanner
-                  duplicate={duplicate}
-                  result={result}
-                  onAddToDashboard={onAddToDashboard}
-                  onViewPlant={onViewPlant}
-                  onPromote={onPromote}
-                  onUpdatePlant={onUpdatePlant}
-                  onClose={onClose}
-                  onSavingChange={setSavingPhase2}
-                />
-              ) : (
-                <>
-                  {/* Primary action — solid INK button per brandbook auth pattern */}
-                  <SaveButton
-                    label="Pirkau, turiu!"
-                    result={result}
-                    className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 disabled:opacity-60 transition-colors"
-                    onSave={onAddToDashboard}
-                    onClose={onClose}
-                    onSavingChange={setSavingPhase2}
-                  />
-                  {/* Secondary — bone-50 outline (mažesnis vizualinis svoris) */}
-                  <SaveButton
-                    label="Pridėti į biblioteką"
-                    result={result}
-                    className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 disabled:opacity-60 transition-colors"
-                    onSave={onAddToWishlist}
-                    onClose={onClose}
-                    onSavingChange={setSavingPhase2}
-                  />
-                </>
-              )}
-            </div>
+            {/* Actions — perduodam result'ą su CURRENTLY VISIBLE photo
+                (atsižvelgiama į photoIdx iš hero gallery cycling'o), kad
+                vartotojas išsaugotų būtent tą nuotrauką, kurią mato dabar.
+                Anksciau visada save'indavom photos[0], net jei vartotojas
+                paspaudęs › buvo perėjęs į kitą nuotrauką. */}
+            {(() => {
+              const currentImage = result.photos?.[photoIdx] ?? result.image
+              const resultForSave = currentImage !== result.image
+                ? { ...result, image: currentImage }
+                : result
+              return (
+                <div className="space-y-3 pt-1 pb-4">
+                  {duplicate ? (
+                    <DuplicateBanner
+                      duplicate={duplicate}
+                      result={resultForSave}
+                      onAddToDashboard={onAddToDashboard}
+                      onViewPlant={onViewPlant}
+                      onPromote={onPromote}
+                      onUpdatePlant={onUpdatePlant}
+                      onClose={onClose}
+                      onSavingChange={setSavingPhase2}
+                    />
+                  ) : (
+                    <>
+                      {/* Primary action — solid INK button per brandbook auth pattern */}
+                      <SaveButton
+                        label="Pirkau, turiu!"
+                        result={resultForSave}
+                        className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 disabled:opacity-60 transition-colors"
+                        onSave={onAddToDashboard}
+                        onClose={onClose}
+                        onSavingChange={setSavingPhase2}
+                      />
+                      {/* Secondary — bone-50 outline (mažesnis vizualinis svoris) */}
+                      <SaveButton
+                        label="Pridėti į biblioteką"
+                        result={resultForSave}
+                        className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 disabled:opacity-60 transition-colors"
+                        onSave={onAddToWishlist}
+                        onClose={onClose}
+                        onSavingChange={setSavingPhase2}
+                      />
+                    </>
+                  )}
+                </div>
+              )
+            })()}
           </motion.div>
         )}
 
