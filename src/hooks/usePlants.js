@@ -331,14 +331,19 @@ export function usePlants(collectionId, viewerToken = null) {
   const zones      = data.zones   ?? []
   const settings   = data.settings ?? {}
 
+  // Grąžinam naujai sukurtą plant'ą su id'u — caller (App.jsx) gali iš karto
+  // openDetail'inti jį, vietoj rendering'o tuščio Biblioteka/Augalai tab'o,
+  // kuris kartais būna stale dėl React render timing'o.
   const addToDashboard = useCallback((aiResult) => {
     const plant = { ...fromAIResult(aiResult), kategorija: 'auginama' }
     update(prev => ({ ...prev, plants: [plant, ...prev.plants] }))
+    return plant
   }, [update])
 
   const addToWishlist = useCallback((aiResult) => {
     const plant = { ...fromAIResult(aiResult), kategorija: 'nori' }
     update(prev => ({ ...prev, plants: [plant, ...prev.plants] }))
+    return plant
   }, [update])
 
   const markAsDied = useCallback((id, deathReason, lesson) => {

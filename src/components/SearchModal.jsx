@@ -1557,7 +1557,10 @@ Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje
     setCatalogLoading(true)
     const debounce = setTimeout(async () => {
       const ownedIds = new Set(plants.map(p => catalogDocId(p.lotyniskas)).filter(Boolean))
-      const matches = await searchCatalog(q, ownedIds)
+      // 20 — kad serijos search'as (Boulevard turi 20 cultivars'ų) parodytų
+      // visus narius. Dropdown'as turi max-height + scroll, kad neuztemptų
+      // viso ekrano.
+      const matches = await searchCatalog(q, ownedIds, 20)
       if (!cancelled) {
         setCatalogMatches(matches)
         setCatalogLoading(false)
@@ -2027,7 +2030,7 @@ Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje
             <p className="font-mono text-[10px] font-medium text-terracotta-600 uppercase tracking-[0.18em] px-1">
               Iš bendros bibliotekos ({catalogMatches.length})
             </p>
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 max-h-[50vh] overflow-y-auto pr-1">
               {catalogMatches.map(entry => (
                 <div
                   key={entry._id}

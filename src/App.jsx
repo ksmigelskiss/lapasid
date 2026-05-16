@@ -583,8 +583,23 @@ export default function App() {
               plants={library}
               initialQuery={searchInitialQuery}
               autoCamera={searchAutoCamera}
-              onAddToWishlist={plant => { addToWishlist(plant); setTab('biblioteka') }}
-              onAddToDashboard={plant => { addToDashboard(plant); setTab('dashboard') }}
+              onAddToWishlist={plant => {
+                const newPlant = addToWishlist(plant)
+                // Vietoj setTab('biblioteka') (kuris dažnai atidaro tuščią view
+                // dėl React state timing'o), iš karto atidarom naujai pridėto
+                // augalo detail kortelę. Vartotojas mato, ką pridėjo.
+                setShowSearch(false)
+                setSearchInitialQuery('')
+                setSearchAutoCamera(false)
+                openDetail(newPlant, 'nori')
+              }}
+              onAddToDashboard={plant => {
+                const newPlant = addToDashboard(plant)
+                setShowSearch(false)
+                setSearchInitialQuery('')
+                setSearchAutoCamera(false)
+                openDetail(newPlant, 'auginama')
+              }}
               onClose={() => { setShowSearch(false); setSearchInitialQuery(''); setSearchAutoCamera(false) }}
               onViewPlant={plant => {
                 setShowSearch(false)
