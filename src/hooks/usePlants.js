@@ -23,6 +23,28 @@ function storageKey(collectionId) {
 function migrationFlagKey(cid) {
   return cid ? `geliu-db-${cid}-migrated-v2` : null
 }
+
+/**
+ * Rekursyviai pašalina `undefined` lauks iš objekto. Firebase setDoc()
+ * KERTA su `Unsupported field value: undefined`, todėl visi save path'ai
+ * praeina pro šitą helper'į. Null vertės paliekamos — Firebase jas priima.
+ *
+ * Dažniausia undefined priežastis: slim TOOL_PREVIEW (admin'o use case'as)
+ * negrąžina pilno care info — laistymasIntervalas/tresimas/dormancyInfo
+ * gali būti undefined po fromAIResult. fromAIResult dabar grąžina null
+ * vietoj undefined, bet šitas helper'is — defense in depth ateičiai.
+ */
+function stripUndefined(obj) {
+  if (obj === null || obj === undefined) return obj
+  if (Array.isArray(obj)) return obj.map(stripUndefined)
+  if (typeof obj !== 'object') return obj
+  const out = {}
+  for (const [k, v] of Object.entries(obj)) {
+    if (v === undefined) continue
+    out[k] = stripUndefined(v)
+  }
+  return out
+}
 function isLocalMigrationDone(cid) {
   const key = migrationFlagKey(cid)
   if (!key) return true
@@ -100,7 +122,7 @@ export function usePlants(collectionId, viewerToken = null) {
 
       for (const [id, plant] of nextMap) {
         if (prevMap.get(id) !== plant) {
-          setDoc(doc(db, 'collections', cid, 'plants', id), plant)
+          setDoc(doc(db, 'collections', cid, 'plants', id), stripUndefined(plant))
             .catch(e => console.warn('[firestore] plant write:', e))
         }
       }
@@ -160,7 +182,7 @@ export function usePlants(collectionId, viewerToken = null) {
           let pushed = 0
           ;(local.plants ?? []).forEach(p => {
             if (p?.id && !byId.has(p.id)) {
-              setDoc(doc(db, 'collections', cid, 'plants', p.id), p)
+              setDoc(doc(db, 'collections', cid, 'plants', p.id), stripUndefined(p))
                 .catch(e => console.warn('[migrate] push failed:', e))
               if (p.lotyniskas) saveToCatalog(p).catch(() => {})
               pushed++
@@ -178,7 +200,7 @@ export function usePlants(collectionId, viewerToken = null) {
     const missing = plants.filter(p => !subIds.has(p.id))
     if (missing.length > 0) {
       missing.forEach(p => {
-        setDoc(doc(db, 'collections', cid, 'plants', p.id), p)
+        setDoc(doc(db, 'collections', cid, 'plants', p.id), stripUndefined(p))
           .catch(e => console.warn('[migrate-meta] push failed:', e))
         if (p.lotyniskas) saveToCatalog(p).catch(() => {})
       })

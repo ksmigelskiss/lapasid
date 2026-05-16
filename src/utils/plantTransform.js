@@ -90,20 +90,23 @@ export function fromAIResult(aiResult) {
       ...(aiResult.ppfd?.min != null ? { ppfd: { min: aiResult.ppfd.min, max: aiResult.ppfd.max } } : {}),
     },
     vanduo: aiResult.vanduo ?? { lygis: 'vidutiniškai', taskai: 2 },
+    // Firebase NEPRIIMA undefined — visada null, kai AI'us nepateikė (slim
+    // preview'as gali šių field'ų net negrąžinti). Anksčiau buvo `: undefined`
+    // ir tai sukėlė setDoc crash'ą 2026-05 po slim mode refaktoro.
     laistymasIntervalas: aiResult.laistymasIntervalas ?? (aiResult.watering?.intervalVasara != null ? {
       vasara:  aiResult.watering.intervalVasara,
       ziema:   aiResult.watering.intervalZiema ?? null,
       metodas: aiResult.watering.metodas ?? '',
-    } : undefined),
+    } : null),
     tresimas: aiResult.tresimas ?? (aiResult.fertilizing?.intervalVasara != null ? {
       intervalVasara: aiResult.fertilizing.intervalVasara,
       intervalZiema:  aiResult.fertilizing.intervalZiema ?? null,
       tipas:          aiResult.fertilizing.tipas ?? '',
-    } : undefined),
+    } : null),
     dormancyInfo: aiResult.dormancyInfo ?? (aiResult.dormancy?.reikia != null ? {
       reikia: aiResult.dormancy.reikia,
       tipas:  aiResult.dormancy.tipas ?? null,
-    } : undefined),
+    } : null),
     prieziura: aiResult.prieziura ?? {
       sviesa:      aiResult.care?.light ?? '',
       laistymas:   aiResult.care?.water ?? '',
