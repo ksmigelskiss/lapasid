@@ -478,13 +478,34 @@ function SeriesEditDrawer({ entry, cultivarCount, onSave, onDelete, onClose }) {
       </Section>
 
       <Section label="Care šablonas (paveldimas cultivars'ams)">
-        <FormRow label="Šviesa"><TextArea value={draft.careInfo.sviesa} onChange={v => update('careInfo.sviesa', v)} rows={2} /></FormRow>
-        <FormRow label="Vanduo"><TextArea value={draft.careInfo.vanduo} onChange={v => update('careInfo.vanduo', v)} rows={2} /></FormRow>
-        <FormRow label="Substratas"><TextArea value={draft.careInfo.substratas} onChange={v => update('careInfo.substratas', v)} rows={2} /></FormRow>
-        <FormRow label="Persodinimas"><TextArea value={draft.careInfo.persodinimas} onChange={v => update('careInfo.persodinimas', v)} rows={2} /></FormRow>
-        <FormRow label="Žiemojimas"><TextArea value={draft.careInfo.ziemojimas} onChange={v => update('careInfo.ziemojimas', v)} rows={2} /></FormRow>
-        <FormRow label="Tręšimas"><TextArea value={draft.careInfo.tresimas} onChange={v => update('careInfo.tresimas', v)} rows={2} /></FormRow>
-        <FormRow label="Priežiūra"><TextArea value={draft.careInfo.prieziura} onChange={v => update('careInfo.prieziura', v)} rows={2} /></FormRow>
+        {/* Object-shaped fields — JsonField'ai (sviesa, vanduo, tresimas,
+            prieziura, laistymasIntervalas). String fields — TextArea
+            (substratas, persodinimas, ziemojimas). Žiūr. TOOL_BULK_SERIES
+            schema'ą — struktūra atitinka. */}
+        <FormRow label="Šviesa (object)">
+          <JsonField value={draft.careInfo.sviesa} onChange={v => update('careInfo.sviesa', v)} />
+        </FormRow>
+        <FormRow label="Vanduo (object)">
+          <JsonField value={draft.careInfo.vanduo} onChange={v => update('careInfo.vanduo', v)} />
+        </FormRow>
+        <FormRow label="Laistymo intervalas (object)">
+          <JsonField value={draft.careInfo.laistymasIntervalas} onChange={v => update('careInfo.laistymasIntervalas', v)} />
+        </FormRow>
+        <FormRow label="Tręšimas (object)">
+          <JsonField value={draft.careInfo.tresimas} onChange={v => update('careInfo.tresimas', v)} />
+        </FormRow>
+        <FormRow label="Priežiūra (object)">
+          <JsonField value={draft.careInfo.prieziura} onChange={v => update('careInfo.prieziura', v)} />
+        </FormRow>
+        <FormRow label="Substratas (text)">
+          <TextArea value={draft.careInfo.substratas} onChange={v => update('careInfo.substratas', v)} rows={2} />
+        </FormRow>
+        <FormRow label="Persodinimas (text)">
+          <TextArea value={draft.careInfo.persodinimas} onChange={v => update('careInfo.persodinimas', v)} rows={2} />
+        </FormRow>
+        <FormRow label="Žiemojimas (text)">
+          <TextArea value={draft.careInfo.ziemojimas} onChange={v => update('careInfo.ziemojimas', v)} rows={2} />
+        </FormRow>
       </Section>
 
       <Section label="Meta">
@@ -582,6 +603,57 @@ function TextArea({ value, onChange, rows = 3, placeholder }) {
   )
 }
 
+/**
+ * JsonField — strukturizuotų objektų (taxonGroup care info — sviesa, vanduo,
+ * tresimas, prieziura, laistymasIntervalas) editor'ius. Rodom kaip pretty
+ * printed JSON monospace font'u, ant save'o parse'inam atgal į object'ą.
+ *
+ * Jei admin'as įveda invalid JSON'ą — vizualus indikatorius parodo, ir save
+ * pasiunčia raw string'ą (kad neprarastume admin'o darbo). Geriau bloga
+ * data nei prarastas edit'as.
+ */
+function JsonField({ value, onChange, rows = 6 }) {
+  const [text, setText] = useState(() => jsonStringify(value))
+  const [valid, setValid] = useState(true)
+
+  // Re-sync kai parent value pasikeičia (pvz. po save'o)
+  useEffect(() => { setText(jsonStringify(value)); setValid(true) }, [value])
+
+  const handleChange = (next) => {
+    setText(next)
+    if (!next.trim()) { setValid(true); onChange(null); return }
+    try {
+      onChange(JSON.parse(next))
+      setValid(true)
+    } catch {
+      setValid(false)
+      onChange(next)  // raw string'as — saugiau nei prarasti admin'o darbą
+    }
+  }
+
+  return (
+    <div>
+      <textarea
+        value={text}
+        onChange={e => handleChange(e.target.value)}
+        rows={rows}
+        className={`w-full bg-bone-50 border rounded-md px-2 py-1.5 font-mono text-[11px] text-forest-800 leading-relaxed focus:outline-none resize-none ${
+          valid ? 'border-bone-400/40 focus:border-forest-500' : 'border-terracotta-400 focus:border-terracotta-500'
+        }`}
+      />
+      <p className={`text-[10px] mt-0.5 px-0.5 ${valid ? 'text-forest-400' : 'text-terracotta-600'}`}>
+        {valid ? 'JSON formatas — keisk atsargiai.' : '⚠ Neteisingas JSON formatas. Save siųs raw tekstą.'}
+      </p>
+    </div>
+  )
+}
+
+function jsonStringify(val) {
+  if (val == null) return ''
+  if (typeof val === 'string') return val   // backward compat — jei seniau buvo plain text
+  try { return JSON.stringify(val, null, 2) } catch { return String(val ?? '') }
+}
+
 function Select({ value, onChange, options }) {
   return (
     <select
@@ -676,13 +748,17 @@ function normalizeTaxonGroup(g) {
     aprasymas: g.aprasymas ?? '',
     idomybes:  g.idomybes  ?? '',
     careInfo:  {
-      sviesa:       g.careInfo?.sviesa       ?? '',
-      vanduo:       g.careInfo?.vanduo       ?? '',
-      substratas:   g.careInfo?.substratas   ?? '',
-      persodinimas: g.careInfo?.persodinimas ?? '',
-      ziemojimas:   g.careInfo?.ziemojimas   ?? '',
-      tresimas:     g.careInfo?.tresimas     ?? '',
-      prieziura:    g.careInfo?.prieziura    ?? '',
+      // Object-shaped fields — laikom kaip objektus (arba null), ne string'us.
+      // JsonField stringify'ina UI'e, parse'ina ant save'o.
+      sviesa:              g.careInfo?.sviesa              ?? null,
+      vanduo:              g.careInfo?.vanduo              ?? null,
+      laistymasIntervalas: g.careInfo?.laistymasIntervalas ?? null,
+      tresimas:            g.careInfo?.tresimas            ?? null,
+      prieziura:           g.careInfo?.prieziura           ?? null,
+      // String-shaped fields (per schema'ą)
+      substratas:          g.careInfo?.substratas          ?? '',
+      persodinimas:        g.careInfo?.persodinimas        ?? '',
+      ziemojimas:          g.careInfo?.ziemojimas          ?? '',
     },
   }
 }
