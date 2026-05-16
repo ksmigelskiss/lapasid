@@ -1361,9 +1361,15 @@ NEPILDYK (per slow + per save'inama vėliau):
 • Savybes (toksiškumas, valgomumas, vaistinis) — null
 • Augimo greitis, tipas, sunkumas, lifecycle, hardiness — null
 
-KANDIDATAI:
-• Jei cultivar serija → candidates[] su VISAIS žinomais nariais (iki 15). Admin'as bulk save'ina iš čia.
-• Jei abejoji konkrečiu cultivar — web_search RHS/Wikipedia, paskui kandidatai.
+🛑 KANDIDATAI — KRITIŠKAI SVARBU:
+Jei latinName turi cultivar seriją (pvz. „Rosa Knock Out", „Clematis Boulevard", „Hydrangea Endless Summer", „Petunia Wave", „Echinacea Sombrero") — candidates[] PRIVALO turėti BENT 4 narius, IDEALIAI VISUS žinomus iki 15. NĖRA priimtina:
+  ❌ uncertaintyReason: „Knock Out yra serija su 13 cultivars" + candidates: []
+  ❌ aprasymas: „Yra Pink Knock Out, Sunny Knock Out..." + candidates: []
+  ✅ uncertaintyReason: „Knock Out yra serija, pasirink konkretų cultivar" + candidates: [Knock Out 'Radrazz', Pink Knock Out 'Radcon', Sunny Knock Out 'Radsunny', Double Knock Out 'Radtko', ...]
+
+Jei tekste paminėsi cultivar pavadinimą — jis PRIVALO būti candidates'e.
+Jei nesi tikras dėl konkretaus cultivar — web_search RHS/Wikipedia/breeder, paskui surašyk juos.
+Web_search'as nereikalingas patvirtinti VISO serijos sąrašo — pakanka 4-15 populiariausių žinomų narių.
 
 Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIES, TOOL_DETAILS).`,
         }],
@@ -1957,8 +1963,14 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
             )}
 
             {/* Hero gallery — mobile bleeds (-mx-4) iki ekrano krašto; desktop'e
-                lieka rounded card su parent padding'u (kad neišlystų už panel'ės) */}
-            {result.image ? (
+                lieka rounded card su parent padding'u (kad neišlystų už panel'ės).
+                Slepiam jei result yra serijos disambiguation (>=2 candidates) —
+                šitam atveju series-level „hero" nuotrauka tikriausiai bus ar
+                klaidinga (Brave nelabai randa konkretų image'ą serijos
+                užklausai, gali grąžinti random plant'ą), ar mažai informatyvi
+                (vieno cultivar'o nuotrauka neatstovauja visos serijos).
+                Vartotojas mato candidates su jų individualiomis nuotraukomis. */}
+            {result.image && !(Array.isArray(result.candidates) && result.candidates.length >= 2) ? (
               <div className={`rounded-3xl overflow-hidden h-56 relative mb-0 ${useDesktopPanel ? '' : '-mx-4'}`}>
                 {/* Cross-fade image swap */}
                 <AnimatePresence mode="sync" initial={false}>
