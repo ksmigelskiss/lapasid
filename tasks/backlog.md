@@ -75,3 +75,47 @@ mano accounts" arba pamatysim, kad pas mane DB'e yra dublikuojami users
 su tuo pačiu email'u (admin panel'e matosi).
 
 ---
+
+## External structured plant DB integration
+
+**Data:** 2026-05-17
+**Kontekstas:** Test'avime su Calathea + Boulevard + Knock Out — pastebėjom,
+kad mes faktiškai synthesize'inam care info iš kelių web sources per AI'us
+(Wikipedia + iNat + Wikidata + Brave + Claude training data). User'is
+paklausė: gal yra mokama strukturizuota DB, kuria perrašyti / išversti
+užtektų, ir nereiktų AI'ui sintezuoti iš nulio?
+
+**Realybės check'as** (apžvalga 2026-05):
+
+| DB | Coverage | Care info | API | Kaina |
+|---|---|---|---|---|
+| Trefle | 1M+ rūšių | Yes | DEAD ~2022 | — |
+| RHS Plant Finder (UK) | 70K + cultivars | Yes | nėra public | — |
+| Perenual | 10K rūšių | Yes | REST | $9/mo |
+| PlantNet | 350K | Identification only | REST | Free non-commercial |
+| Plants of World (Kew) | 1.3M | NO (taxonomy only) | Free | — |
+| iNaturalist | 350K | Minimal | Free | — (jau naudojame) |
+| OpenFarm | ~10K | Crowdsource | Free | — |
+
+**Vienaragis nėra:** „garden cultivars + care info + multi-language + reasonable
+price" — niekas to neturi. Trefle bandė ir uždarė. RHS turi best data, bet
+no public API.
+
+**Realiausias kandidatas — Perenual** ($9/mo, 10K species):
+- Strong species-level care info structured
+- Silpnas cultivar coverage (Boulevard'o ten nerasi)
+- Galėtų replace'inti AI calls'ams paprastiems plants (Calathea, Hosta, Monstera)
+- Cultivar'iams vis vien reikėtų AI + web_search
+
+**Kada implementuoti:**
+
+1. **Layer 2.5 (Wikipedia + AI structurer)** įdiegti pirma (žiūr. atskirą thread'ą
+   apie search architektūrą) — tai free + native source. Pažiūrim, kiek
+   užtenka species level užklausoms.
+2. JEI Wikipedia'os accuracy nepakanka → tikrinti Perenual kaip Layer 2.5
+   alternatyvą. ~$9/mo už tikslesnį structured care info.
+3. RHS gold standard. Jei rasim būdą integruoti (scraping, kontakta su jais)
+   — to būtų big win cultivars'ams. Bet rizika legal + technical (fragile).
+
+**Sprendimas dabar:** Layer 2.5 įdiegti su Wikipedia kaip primary. Perenual'as
+— tik kai realiai matom limit'us.
