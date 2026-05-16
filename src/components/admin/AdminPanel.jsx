@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
-import { getDocs, getDoc, collection, doc, updateDoc, deleteDoc, arrayRemove, deleteField, query, orderBy } from 'firebase/firestore'
-import { Users, Database, X, Shield, Sparkles, BadgeCheck, Loader2, RefreshCw, ChevronRight, Mail, Trash2, AlertTriangle, UserCheck } from 'lucide-react'
+import { getDocs, getDoc, collection, doc, setDoc, updateDoc, deleteDoc, arrayRemove, deleteField, query, orderBy } from 'firebase/firestore'
+import { Users, Database, X, Shield, Sparkles, BadgeCheck, Loader2, RefreshCw, ChevronRight, Mail, Trash2, AlertTriangle, UserCheck, Pencil, Check, BookOpen } from 'lucide-react'
 import { db } from '../../utils/firebase'
 import T4Icon from '../brand/T4Icon'
+import LibraryTab from './LibraryTab'
 
 /**
  * AdminPanel — primityvi admin dashboard kolekcijoms ir vartotojams.
@@ -36,6 +37,8 @@ export default function AdminPanel({ currentUid, onClose }) {
   const [users, setUsers] = useState([])
   const [collections, setCollections] = useState([])
   const [invites, setInvites] = useState([])
+  const [catalog, setCatalog] = useState([])
+  const [taxonGroups, setTaxonGroups] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [detail, setDetail] = useState(null) // { type: 'user'|'collection', data }
@@ -43,11 +46,14 @@ export default function AdminPanel({ currentUid, onClose }) {
   const loadAll = useCallback(async () => {
     setLoading(true); setError(null)
     try {
-      // Parallel loads
-      const [usersSnap, colsSnap, invitesSnap] = await Promise.all([
+      // Parallel loads — catalog ir taxonGroups dabar admin'ui prieinami
+      // tiesiogiai (rules leidžia visiems auth'intiems read'ą).
+      const [usersSnap, colsSnap, invitesSnap, catalogSnap, taxonGroupsSnap] = await Promise.all([
         getDocs(collection(db, 'users')),
         getDocs(collection(db, 'collections')),
         getDocs(collection(db, 'invites')),
+        getDocs(collection(db, 'catalog')),
+        getDocs(collection(db, 'taxonGroups')),
       ])
       const usersList = usersSnap.docs.map(d => ({ uid: d.id, ...d.data() }))
 
@@ -70,10 +76,14 @@ export default function AdminPanel({ currentUid, onClose }) {
       }))
 
       const invitesList = invitesSnap.docs.map(d => ({ token: d.id, ...d.data() }))
+      const catalogList = catalogSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+      const taxonGroupsList = taxonGroupsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
 
       setUsers(usersList.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')))
       setCollections(colsList.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')))
       setInvites(invitesList.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')))
+      setCatalog(catalogList.sort((a, b) => (a.lotyniskas ?? '').localeCompare(b.lotyniskas ?? '')))
+      setTaxonGroups(taxonGroupsList.sort((a, b) => (a.genus ?? a.name ?? '').localeCompare(b.genus ?? b.name ?? '')))
     } catch (e) {
       console.error('[admin] load failed:', e)
       setError(e?.message ?? 'Nepavyko įkelti duomenų. Patikrink Firestore Rules.')
@@ -174,6 +184,166 @@ export default function AdminPanel({ currentUid, onClose }) {
     }
   }
 
+  /**
+   * Rename'inam kolekciją. Tik `name` field'as keičiasi — visi member'ai,
+   * augalai, invites lieka. UI'us perkrauna iš naujo collection listę
+   * (locally update'ina state'ą be reload'o).
+   */
+  const renameCollection = async (cid, newName) => {
+    const trimmed = (newName ?? '').trim()
+    if (!trimmed) return
+    try {
+      await updateDoc(doc(db, 'collections', cid), { name: trimmed })
+      setCollections(prev => prev.map(c => c.id === cid ? { ...c, name: trimmed } : c))
+      setDetail(d => (d && d.type === 'collection' && d.data.id === cid)
+        ? { ...d, data: { ...d.data, name: trimmed } }
+        : d
+      )
+    } catch (e) {
+      console.error('[admin] rename collection failed:', e)
+      alert('Nepavyko pervadinti: ' + e.message)
+    }
+  }
+
+  /**
+   * Ištrina kolekciją + cascade:
+   *   1. visi plants subcollection'oje
+   *   2. visi invites su collectionId == cid (kad nelikčtų „dead" token'ų)
+   *   3. users'iu primaryCollection / ownCollection refs su tuo cid → null
+   *      (kad UI'us nesivedžiotų į negyvą kolekciją)
+   *   4. pati kolekcijos doc
+   *
+   * NE'rūšiuoja per Firebase Auth — visi member'iai lieka su savo paskyromis,
+   * tik praranda prieigą prie šitos kolekcijos. Pagal poreikį owner'is gali
+   * sukurti naują.
+   */
+  const deleteCollection = async (cid, name, plantCount, memberCount) => {
+    if (!window.confirm(
+      `Ištrinti kolekciją „${name || cid}"?\n\n` +
+      `Bus ištrinti:\n` +
+      `• ${plantCount} augalai (subkolekcijoje)\n` +
+      `• ${memberCount} narių prieiga\n` +
+      `• su ja susiję invite token'ai\n` +
+      `• pati kolekcijos doc'as\n\n` +
+      `Šito veiksmo NEGALIMA atšaukti.`
+    )) return
+
+    // Antras patvirtinimas didelėms kolekcijoms — apsauga nuo accidental click'o
+    if (plantCount > 10 && !window.confirm(`Tikrai? Bus prarasti ${plantCount} augalai.`)) return
+
+    try {
+      // 1. Plants subcol cascade
+      const plantsSnap = await getDocs(collection(db, 'collections', cid, 'plants'))
+      await Promise.all(plantsSnap.docs.map(p => deleteDoc(p.ref)))
+
+      // 2. Invites su collectionId == cid
+      const relatedInvites = invites.filter(i => i.collectionId === cid)
+      await Promise.all(relatedInvites.map(i => deleteDoc(doc(db, 'invites', i.token))))
+
+      // 3. Users'iu primaryCollection / ownCollection cleanup
+      const affectedUsers = users.filter(u => u.primaryCollection === cid || u.ownCollection === cid)
+      await Promise.all(affectedUsers.map(u => {
+        const patch = {}
+        if (u.primaryCollection === cid) patch.primaryCollection = deleteField()
+        if (u.ownCollection === cid)     patch.ownCollection     = deleteField()
+        return updateDoc(doc(db, 'users', u.uid), patch)
+      }))
+
+      // 4. Pati kolekcija
+      await deleteDoc(doc(db, 'collections', cid))
+
+      // Local state refresh
+      setCollections(prev => prev.filter(c => c.id !== cid))
+      const removedTokens = new Set(relatedInvites.map(i => i.token))
+      setInvites(prev => prev.filter(i => !removedTokens.has(i.token)))
+      setUsers(prev => prev.map(u => {
+        if (u.primaryCollection !== cid && u.ownCollection !== cid) return u
+        const next = { ...u }
+        if (next.primaryCollection === cid) delete next.primaryCollection
+        if (next.ownCollection === cid)     delete next.ownCollection
+        return next
+      }))
+      setDetail(null)
+    } catch (e) {
+      console.error('[admin] delete collection failed:', e)
+      alert('Nepavyko ištrinti kolekcijos: ' + e.message)
+    }
+  }
+
+  /**
+   * Catalog entry save — admin editor'ius keičia rūšies / cultivar žinias
+   * (care info, image, aprašymas). Doc ID nesikeičia, net jei keičiasi
+   * lotyniškas — kad nesujauktume taxonGroup link'ų ir existing user ref'ų.
+   * Jei reikia visiškai pervardyti — delete + new entry per saveToCatalog'ą.
+   */
+  const saveCatalogEntry = async (entryId, patch) => {
+    try {
+      await setDoc(doc(db, 'catalog', entryId), {
+        ...patch,
+        updatedAt: new Date().toISOString(),
+      }, { merge: true })
+      setCatalog(prev => prev.map(e => e.id === entryId ? { ...e, ...patch, updatedAt: new Date().toISOString() } : e))
+    } catch (e) {
+      console.error('[admin] save catalog failed:', e)
+      alert('Nepavyko išsaugoti catalog entry: ' + e.message)
+      throw e
+    }
+  }
+
+  const deleteCatalogEntry = async (entryId, label) => {
+    if (!window.confirm(`Ištrinti catalog entry „${label}"?\n\nVeiksmas negrįžtamas — augalas dings iš shared library'os.`)) return
+    try {
+      await deleteDoc(doc(db, 'catalog', entryId))
+      setCatalog(prev => prev.filter(e => e.id !== entryId))
+    } catch (e) {
+      console.error('[admin] delete catalog failed:', e)
+      alert('Nepavyko ištrinti: ' + e.message)
+    }
+  }
+
+  /**
+   * TaxonGroup save — keičia serijos care šabloną. Visi catalog cultivars,
+   * kurie turi `taxonGroupId === groupId`, paveldės naują care info per
+   * `mergeWithSeries()`.
+   */
+  const saveTaxonGroupEntry = async (groupId, patch) => {
+    try {
+      await setDoc(doc(db, 'taxonGroups', groupId), {
+        ...patch,
+        updatedAt: new Date().toISOString(),
+      }, { merge: true })
+      setTaxonGroups(prev => prev.map(g => g.id === groupId ? { ...g, ...patch, updatedAt: new Date().toISOString() } : g))
+    } catch (e) {
+      console.error('[admin] save taxonGroup failed:', e)
+      alert('Nepavyko išsaugoti serijos: ' + e.message)
+      throw e
+    }
+  }
+
+  const deleteTaxonGroupEntry = async (groupId, label) => {
+    // Įspėjam jei catalog cultivars dar yra link'inti į šitą serija
+    const linkedCount = catalog.filter(c => c.taxonGroupId === groupId).length
+    if (linkedCount > 0) {
+      if (!window.confirm(
+        `Ištrinti seriją „${label}"?\n\n` +
+        `${linkedCount} cultivar(s) dar yra prie šios serijos. Po ištrinimo ` +
+        `jie taps standalone (be paveldimos care info, bet tikslesni jų pačių field'ai liks).\n\n` +
+        `Tęsti?`
+      )) return
+    } else {
+      if (!window.confirm(`Ištrinti seriją „${label}"?\n\nNiekas neprilinkuota — saugu.`)) return
+    }
+    try {
+      await deleteDoc(doc(db, 'taxonGroups', groupId))
+      setTaxonGroups(prev => prev.filter(g => g.id !== groupId))
+      // Cultivar'ai lieka su nebegaliojančiu taxonGroupId — UI'us juos rodys
+      // kaip standalone'us per mergeWithSeries() (jei group null → flat behavior).
+    } catch (e) {
+      console.error('[admin] delete taxonGroup failed:', e)
+      alert('Nepavyko ištrinti: ' + e.message)
+    }
+  }
+
   const deleteInvite = async (token) => {
     try {
       await deleteDoc(doc(db, 'invites', token))
@@ -239,6 +409,7 @@ export default function AdminPanel({ currentUid, onClose }) {
         {pendingCount > 0 && <StatPill label="Pending" value={pendingCount} Icon={UserCheck} tone="terracotta" />}
         <StatPill label="Kolekcijos" value={collections.length} Icon={Database} />
         <StatPill label="Augalų viso" value={collections.reduce((s, c) => s + (c.plantCount ?? 0), 0)} Icon={Sparkles} />
+        <StatPill label="Biblioteka" value={catalog.length} Icon={BookOpen} />
         <StatPill label="Invitai" value={invites.length} Icon={Mail} />
       </div>
 
@@ -247,6 +418,7 @@ export default function AdminPanel({ currentUid, onClose }) {
         <nav className="inline-flex bg-bone-100 rounded-btn p-1 gap-0.5">
           <TabBtn active={tab === 'users'} onClick={() => setTab('users')} Icon={Users} label="Vartotojai" count={users.length} />
           <TabBtn active={tab === 'collections'} onClick={() => setTab('collections')} Icon={Database} label="Kolekcijos" count={collections.length} />
+          <TabBtn active={tab === 'library'} onClick={() => setTab('library')} Icon={BookOpen} label="Biblioteka" count={catalog.length + taxonGroups.length} />
           <TabBtn active={tab === 'invites'} onClick={() => setTab('invites')} Icon={Mail} label="Invitai" count={invites.length} />
         </nav>
       </div>
@@ -280,6 +452,15 @@ export default function AdminPanel({ currentUid, onClose }) {
             userByUid={userByUid}
             onSelect={c => setDetail({ type: 'collection', data: c })}
           />
+        ) : tab === 'library' ? (
+          <LibraryTab
+            catalog={catalog}
+            taxonGroups={taxonGroups}
+            onSaveCatalog={saveCatalogEntry}
+            onDeleteCatalog={deleteCatalogEntry}
+            onSaveTaxonGroup={saveTaxonGroupEntry}
+            onDeleteTaxonGroup={deleteTaxonGroupEntry}
+          />
         ) : (
           <InvitesTable
             invites={invites}
@@ -299,6 +480,8 @@ export default function AdminPanel({ currentUid, onClose }) {
           collections={collections}
           currentUid={currentUid}
           onDeleteUser={deleteUser}
+          onRenameCollection={renameCollection}
+          onDeleteCollection={deleteCollection}
           onClose={() => setDetail(null)}
         />
       )}
@@ -497,7 +680,7 @@ function Badge({ children, tone = 'forest' }) {
 
 // ── Detail drawer (right-side sheet su drill-down info) ─────────────
 
-function DetailDrawer({ detail, users, collections, currentUid, onDeleteUser, onClose }) {
+function DetailDrawer({ detail, users, collections, currentUid, onDeleteUser, onRenameCollection, onDeleteCollection, onClose }) {
   const isUser = detail.type === 'user'
   const data   = detail.data
 
@@ -548,7 +731,12 @@ function DetailDrawer({ detail, users, collections, currentUid, onDeleteUser, on
       <>
         <Section label="Identifikacija">
           <Row k="ID" v={<span className="font-mono text-[11px]">{c.id}</span>} />
-          <Row k="Pavadinimas" v={c.name || '—'} />
+          <Row k="Pavadinimas" v={
+            <CollectionNameEditor
+              value={c.name}
+              onSave={(newName) => onRenameCollection?.(c.id, newName)}
+            />
+          } />
           <Row k="Owner" v={owner ? `${owner.displayName || owner.email?.split('@')[0]} (${owner.email})` : shortId(c.ownerId)} />
           <Row k="Created" v={formatDate(c.createdAt)} />
         </Section>
@@ -620,6 +808,25 @@ function DetailDrawer({ detail, users, collections, currentUid, onDeleteUser, on
             </p>
           </div>
         )}
+
+        {/* Danger zone — delete collection. Cascade'as: plants + invites +
+            users'iu primary/own refs → null. Žiūr. deleteCollection docstring'ą. */}
+        {!isUser && (
+          <div className="border-t border-terracotta-200/40 bg-terracotta-50/40 px-5 py-4 flex-shrink-0">
+            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-terracotta-600 mb-2 flex items-center gap-1.5">
+              <AlertTriangle size={11} /> Danger zone
+            </p>
+            <button
+              onClick={() => onDeleteCollection(data.id, data.name, data.plantCount ?? 0, data.memberCount ?? (data.members?.length ?? 0))}
+              className="w-full inline-flex items-center justify-center gap-2 bg-terracotta hover:bg-terracotta-500 text-bone px-4 py-2.5 rounded-btn text-sm font-semibold transition-colors"
+            >
+              <Trash2 size={14} /> Ištrinti kolekciją + visus jos augalus
+            </button>
+            <p className="text-[10px] text-terracotta-600 mt-2 text-center">
+              {(data.plantCount ?? 0)} augalai · {data.memberCount ?? (data.members?.length ?? 0)} narių. Veiksmas negrįžtamas.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -641,6 +848,65 @@ function Row({ k, v }) {
     </div>
   )
 }
+/**
+ * Inline rename'inimas kolekcijos pavadinimo. Klik'as pieštuko ikonėlę →
+ * input'as; Enter/Check button save'ina, Esc/X cancel'ina, blur'as ignore'inamas
+ * (kad accidentaliai nesave'intume tuščios reikšmės).
+ */
+function CollectionNameEditor({ value, onSave }) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft]     = useState(value ?? '')
+
+  // Re-sync kai pasikeičia outer value (pvz. po save'o)
+  useEffect(() => { setDraft(value ?? '') }, [value])
+
+  const commit = () => {
+    const trimmed = draft.trim()
+    if (trimmed && trimmed !== (value ?? '')) onSave?.(trimmed)
+    setEditing(false)
+  }
+  const cancel = () => {
+    setDraft(value ?? '')
+    setEditing(false)
+  }
+
+  if (!editing) {
+    return (
+      <span className="inline-flex items-center gap-1.5">
+        <span className="truncate">{value || '—'}</span>
+        <button
+          onClick={() => setEditing(true)}
+          className="text-forest-400 hover:text-forest-700 transition-colors"
+          title="Pervadinti"
+        >
+          <Pencil size={11} />
+        </button>
+      </span>
+    )
+  }
+
+  return (
+    <span className="inline-flex items-center gap-1">
+      <input
+        autoFocus
+        value={draft}
+        onChange={e => setDraft(e.target.value)}
+        onKeyDown={e => {
+          if (e.key === 'Enter')  commit()
+          if (e.key === 'Escape') cancel()
+        }}
+        className="bg-bone-50 border border-bone-400/60 rounded-md px-1.5 py-0.5 text-xs text-forest-800 focus:outline-none focus:border-forest-500 w-32"
+      />
+      <button onClick={commit} className="text-forest-500 hover:text-forest-700" title="Išsaugoti">
+        <Check size={12} />
+      </button>
+      <button onClick={cancel} className="text-forest-400 hover:text-terracotta-500" title="Atšaukti">
+        <X size={12} />
+      </button>
+    </span>
+  )
+}
+
 function CollectionMini({ c, role }) {
   return (
     <div className="flex items-center justify-between gap-2 px-1 py-1 text-xs border-b border-bone-400/20">
