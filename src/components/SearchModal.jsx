@@ -1140,6 +1140,18 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       // 3) Per kiekvieną cultivar: fetch image + save į catalog (paraleliai)
       setBulkState({ phase: 'images', msg: 'Renku nuotraukas ir saugau cultivars...', seriesName: series.name, total: cultivars.length, completed: 0 })
 
+      // Vienkartinis genus LT pavadinimo fetch'as — naudosim VISIEMS cultivars
+      // šitoje serijoje (Boulevard 20 cultivars'ų visi turi tą patį Clematis →
+      // „Gelsvoji raganė"). Compose'ina full Lt pavadinimą:
+      //   „Gelsvoji raganė" (genus LT) + „Anželik" (cultivar LT) = „Gelsvoji raganė Anželik"
+      // Anksciau lietuviškas buvo tik „Anželik" — PlantDetail title atrodė
+      // nepilnas, vartotojas keldavo klausimą.
+      let ltGenusName = null
+      try {
+        const genusNames = await fetchPlantNames(series.genus)
+        ltGenusName = genusNames?.inatLtName ?? null
+      } catch (e) { console.warn('[bulk] LT genus name fetch failed:', e) }
+
       let completed = 0
       // Defensive — initialCandidates ateina iš result.candidates (caller passes
       // SearchModal'io state'ą), kuris teoriškai jau masyvas po enrichCandidates
@@ -1168,9 +1180,18 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
           fetchWikidataPlant(c.latinName),
         ])
 
+        // Compose pilną LT pavadinimą: „{genus LT} {cultivar LT}".
+        // Jei AI grąžino ltName, sujungiam su genus LT. Jei nėra cultivar LT,
+        // fallback'as į genus LT vienas (vis tiek geriau nei latin name'as).
+        // Jei net genus LT nėra — paliekam latin name'ą kaip last resort.
+        const composedLt = (ltGenusName && c.ltName)
+          ? `${ltGenusName} ${c.ltName}`
+          : (c.ltName ?? ltGenusName ?? c.latinName)
+
         await saveToCatalog({
           lotyniskas:            c.latinName,
-          lietuviškas:           c.ltName ?? c.latinName,
+          lietuviškas:           composedLt,
+          inatLtName:            ltGenusName,  // genus LT atskirai saugomas reference'ui
           emoji:                 c.emoji ?? '🌿',
           distinguishingFeature: c.distinguishingFeature,
           bloom:                 c.bloom ?? null,
