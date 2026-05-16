@@ -63,13 +63,13 @@ export default function LibraryTab({
         if (item.kind === 'series') {
           const seriesMatches = `${item.group.genus ?? ''} ${item.group.name ?? ''}`.toLowerCase().includes(q)
           const matchingCults = item.cultivars.filter(c =>
-            `${c.lotyniskas ?? ''} ${c.lietuviskas ?? ''}`.toLowerCase().includes(q)
+            `${c.lotyniskas ?? ''} ${c.lietuviškas ?? ''}`.toLowerCase().includes(q)
           )
           if (seriesMatches) return item
           if (matchingCults.length > 0) return { ...item, cultivars: matchingCults }
           return null
         }
-        const hay = `${item.entry.lotyniskas ?? ''} ${item.entry.lietuviskas ?? ''}`.toLowerCase()
+        const hay = `${item.entry.lotyniskas ?? ''} ${item.entry.lietuviškas ?? ''}`.toLowerCase()
         return hay.includes(q) ? item : null
       })
       .filter(Boolean)
@@ -186,29 +186,29 @@ function SeriesRow({ group, cultivars, expanded, onToggle, onEditSeries, onEditC
   const heroImage = cultivars[0]?.image
   return (
     <div className={`${WIDGET} overflow-hidden`}>
-      <div className="flex items-center gap-3 px-3 py-2.5 hover:bg-bone-100/40 transition-colors">
-        <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden bg-bone-200 flex items-center justify-center">
+      <div className="flex items-center gap-2.5 px-2.5 py-1.5 hover:bg-bone-100/40 transition-colors">
+        <div className="w-9 h-9 flex-shrink-0 rounded-lg overflow-hidden bg-bone-200 flex items-center justify-center">
           {heroImage ? (
             <img src={heroImage} alt="" className="w-full h-full object-cover" loading="lazy" />
           ) : (
-            <Layers size={16} className="text-forest-300" />
+            <Layers size={13} className="text-forest-300" />
           )}
         </div>
         <button onClick={onEditSeries} className="flex-1 text-left min-w-0">
-          <p className="font-display text-sm font-semibold text-forest-800 italic truncate">
+          <p className="font-display text-sm font-semibold text-forest-800 italic truncate leading-tight">
             {group.genus} {group.name}
           </p>
-          <p className="text-[11px] text-forest-500 font-mono">
-            Serija · {group.type ?? '—'} · {cultivars.length} cultivar{cultivars.length === 1 ? '' : 's'}
+          <p className="text-[10px] text-forest-500 font-mono leading-tight">
+            {group.type ?? '—'} · {cultivars.length} cultivar{cultivars.length === 1 ? '' : 's'}
           </p>
         </button>
         <Badge tone="forest">{cultivars.length}</Badge>
         <button
           onClick={onToggle}
-          className="w-8 h-8 inline-flex items-center justify-center rounded-btn-sm hover:bg-bone-300/40 text-forest-500 transition-colors flex-shrink-0"
+          className="w-7 h-7 inline-flex items-center justify-center rounded-btn-sm hover:bg-bone-300/40 text-forest-500 transition-colors flex-shrink-0"
           title={expanded ? 'Suskleisti' : 'Išskleisti cultivars'}
         >
-          {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          {expanded ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
         </button>
       </div>
 
@@ -218,22 +218,22 @@ function SeriesRow({ group, cultivars, expanded, onToggle, onEditSeries, onEditC
             <button
               key={c.id}
               onClick={() => onEditCultivar(c)}
-              className="w-full flex items-center gap-3 pl-12 pr-3 py-2 hover:bg-bone-100/70 border-b border-bone-400/20 last:border-b-0 text-left transition-colors"
+              className="w-full flex items-center gap-2.5 pl-10 pr-2.5 py-1.5 hover:bg-bone-100/70 border-b border-bone-400/20 last:border-b-0 text-left transition-colors"
             >
-              <div className="w-9 h-9 flex-shrink-0 rounded-lg overflow-hidden bg-bone-200 flex items-center justify-center">
+              <div className="w-7 h-7 flex-shrink-0 rounded-md overflow-hidden bg-bone-200 flex items-center justify-center">
                 {c.image ? (
                   <img src={c.image} alt="" className="w-full h-full object-cover" loading="lazy" />
                 ) : (
-                  <ImageOff size={12} className="text-forest-300" />
+                  <ImageOff size={11} className="text-forest-300" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-forest-700 truncate">
-                  {c.lietuviskas || '—'}
+                <p className="text-xs font-medium text-forest-700 truncate leading-tight">
+                  {c.lietuviškas || '—'}
                 </p>
-                <p className="text-[11px] text-forest-500 italic truncate">{c.lotyniskas}</p>
+                <p className="text-[10px] text-forest-500 italic truncate leading-tight">{c.lotyniskas}</p>
               </div>
-              <ChevronRight size={12} className="text-forest-400 flex-shrink-0" />
+              <ChevronRight size={11} className="text-forest-400 flex-shrink-0" />
             </button>
           ))}
         </div>
@@ -250,23 +250,23 @@ function StandaloneRow({ entry, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`${WIDGET} w-full flex items-center gap-3 px-3 py-2.5 hover:bg-bone-100/40 text-left transition-colors`}
+      className={`${WIDGET} w-full flex items-center gap-2.5 px-2.5 py-1.5 hover:bg-bone-100/40 text-left transition-colors`}
     >
-      <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden bg-bone-200 flex items-center justify-center">
+      <div className="w-9 h-9 flex-shrink-0 rounded-lg overflow-hidden bg-bone-200 flex items-center justify-center">
         {entry.image ? (
           <img src={entry.image} alt="" className="w-full h-full object-cover" loading="lazy" />
         ) : (
-          <ImageOff size={16} className="text-forest-300" />
+          <ImageOff size={13} className="text-forest-300" />
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-display text-sm font-semibold text-forest-800 truncate">
-          {entry.lietuviskas || '—'}
+        <p className="font-display text-sm font-semibold text-forest-800 truncate leading-tight">
+          {entry.lietuviškas || '—'}
         </p>
-        <p className="text-[11px] text-forest-500 italic truncate">{entry.lotyniskas}</p>
+        <p className="text-[10px] text-forest-500 italic truncate leading-tight">{entry.lotyniskas}</p>
       </div>
       <Badge tone="bone">standalone</Badge>
-      <ChevronRight size={14} className="text-forest-400 flex-shrink-0" />
+      <ChevronRight size={13} className="text-forest-400 flex-shrink-0" />
     </button>
   )
 }
@@ -320,7 +320,7 @@ function CultivarEditDrawer({ entry, taxonGroups, onSave, onDelete, onClose }) {
           <TextInput value={draft.lotyniskas} onChange={v => update('lotyniskas', v)} placeholder="Clematis 'Boulevard'" />
         </FormRow>
         <FormRow label="Lietuviškas">
-          <TextInput value={draft.lietuviskas} onChange={v => update('lietuviskas', v)} placeholder="Raganė" />
+          <TextInput value={draft.lietuviškas} onChange={v => update('lietuviškas', v)} placeholder="Raganė" />
         </FormRow>
         <FormRow label="Serija">
           <select
@@ -670,7 +670,7 @@ function Badge({ children, tone = 'forest' }) {
 function normalizeCultivar(c) {
   return {
     lotyniskas:         c.lotyniskas         ?? '',
-    lietuviskas:        c.lietuviskas        ?? '',
+    lietuviškas:        c.lietuviškas        ?? '',
     taxonGroupId:       c.taxonGroupId       ?? null,
     image:              c.image              ?? '',
     aprasymas:          c.aprasymas          ?? '',
