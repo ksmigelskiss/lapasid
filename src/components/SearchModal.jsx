@@ -920,7 +920,11 @@ async function fetchCommonsImage(latinName) {
 //
 // Per-candidate sekvencialiai image'ams (early-exit), tarp candidates paraleliai.
 async function enrichCandidates(candidates) {
-  if (!Array.isArray(candidates) || candidates.length === 0) return candidates
+  // Defensive — visada grąžinam masyvą, net jei AI'us nukrypo nuo schema'os
+  // (pvz. grąžino object'ą ar null kai schema sako array). Anksčiau grąžindavom
+  // input'ą as-is, kas vesdavo prie `.filter is not a function` error'o post-AI
+  // verification cross-check'e.
+  if (!Array.isArray(candidates) || candidates.length === 0) return []
   return Promise.all(candidates.map(async c => {
     // Wikidata — startuoja iš karto, lygiagrečiai su image enrichment'u
     const wdPromise = fetchWikidataPlant(c.latinName)
@@ -1309,8 +1313,12 @@ Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje
       // cultivar (dar nekatalog'inta) arba AI spėjimas, ne tikras augalas.
       // UI rodys confidence banner'į ir admin'as žinos, kad reikia žiūrėti
       // atidžiau prieš save'inant į biblioteką.
+      // Defensive — enriched.candidates teoriškai jau masyvas (enrichCandidates
+      // normalizuoja), bet papildomas Array.isArray guard'as apsaugo nuo
+      // edge case'ų (pvz. catalog entry su corrupted candidates field'u).
+      const candidatesList = Array.isArray(enriched.candidates) ? enriched.candidates : []
       const verifiedCount = (enriched.wikidataVerified ? 1 : 0) +
-        ((enriched.candidates ?? []).filter(c => c.wikidataVerified).length)
+        candidatesList.filter(c => c.wikidataVerified).length
       if (aiResult.confidence === 'high' && verifiedCount === 0) {
         enriched.confidence = 'medium'
         const wdNote = '(Wikidata neaptiko šio cultivar entity\'o — galimai reta registracija arba AI spėjimas.)'
