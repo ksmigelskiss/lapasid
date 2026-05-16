@@ -143,6 +143,17 @@ export function catalogEntryToAIResult(entry) {
   }
 }
 
+/**
+ * Bust'ina catalog cache'ą (in-memory + localStorage). Naudojama, kai admin
+ * tiesiogiai save'ina ar trina catalog entry'ius per AdminPanel — `searchCatalog`
+ * ir autocomplete'as iškart atspindi naują būklę be 24h laukimo.
+ */
+export function bustCatalogCache() {
+  _catalogMem = null
+  _catalogMemAt = 0
+  try { localStorage.removeItem(CATALOG_CACHE_KEY) } catch {}
+}
+
 /** Išsaugo augalo rūšinius duomenis į katalogą (merge — neperrašo). */
 export async function saveToCatalog(plant) {
   const id = catalogDocId(plant.lotyniskas ?? plant.latinName)
@@ -156,9 +167,7 @@ export async function saveToCatalog(plant) {
       { merge: true }
     )
     // Cache bust — naujai pridėtas augalas iškart pasimato `searchCatalog'e
-    _catalogMem = null
-    _catalogMemAt = 0
-    try { localStorage.removeItem(CATALOG_CACHE_KEY) } catch {}
+    bustCatalogCache()
   } catch (e) {
     console.warn('[catalog] write failed:', e)
   }

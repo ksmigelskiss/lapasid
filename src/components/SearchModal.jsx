@@ -311,12 +311,12 @@ export const TOOL_BULK_SERIES = {
         items: {
           type: 'object',
           properties: {
-            latinName:             { type: 'string', description: 'Pilnas pavadinimas su cultivar žymeniu, pvz. „Clematis \'Acropolis\'"' },
-            ltName:                { type: ['string', 'null'], description: 'Lietuviškas pavadinimas jei žinai' },
+            latinName:             { type: 'string', description: 'TRADE name (rinkos / gardener pavadinimas, KURĮ ŽMONĖS NAUDOJA) su cultivar žymeniu. Pvz. „Clematis \'Olympia\'", „Clematis \'Boulevard Bourbon\'", „Rosa \'Knock Out\'". NIEKADA neįrašyk patent/registracijos kodų (EVIPO006, EVIPO078, RADrazz, MEIcobuis, KORnacapi) į šitą lauką — jie eina į registeredAs. Jei žinai abu — pirmenybė TRADE name.' },
+            ltName:                { type: ['string', 'null'], description: 'Lietuviškas pavadinimas jei žinai (pvz. „Olimpija")' },
             distinguishingFeature: { type: 'string', description: 'Vizualus aprašymas (žiedų spalva/forma) — kuo atskiriasi nuo kitų serijos narių' },
             emoji:                 { type: 'string', description: 'Vienas emoji' },
             bloom:                 { type: ['object', 'null'], properties: { color: { type: 'string' }, period: { type: 'string' }, fragrant: { type: 'boolean' }, doubleFlower: { type: 'boolean' } } },
-            registeredAs:          { type: ['string', 'null'], description: 'Patent/trademark ID jei žinomas (EVIPO078 etc.)' },
+            registeredAs:          { type: ['string', 'null'], description: 'BREEDER patent/registration kodas (EVIPO006, EVIPO078, RADrazz, KORnacapi). Šitur, NE į latinName.' },
             overrides:             { type: ['object', 'null'], description: 'Per-cultivar overrides KAI TIKRAI skiriasi nuo serijos defaults (pvz. unikalus aukštis). Daugumai cultivars — null/empty.' },
           },
           required: ['latinName', 'distinguishingFeature', 'emoji'],
@@ -1008,7 +1008,11 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
         ],
         messages: [{
           role: 'user',
-          content: `Pateik PILNĄ info apie augalų seriją „${seriesQuery}" naudojant bulk_series tool'ą. Surašyk VISUS žinomus cultivars (iki ${MAX_BULK_BATCH}). Series block — shared care/savybės; cultivars array — tik vizualinis aprašymas + bloom info per cultivar. Naudok web_search jei reikia patikslinti.`,
+          content: `Pateik PILNĄ info apie augalų seriją „${seriesQuery}" naudojant bulk_series tool'ą. Surašyk VISUS žinomus cultivars (iki ${MAX_BULK_BATCH}). Series block — shared care/savybės; cultivars array — tik vizualinis aprašymas + bloom info per cultivar.
+
+KRITIŠKAI SVARBU: cultivars[].latinName lauke naudok TRADE name (rinkos pavadinimą), pvz. „Clematis 'Olympia'", „Clematis 'Boulevard Bourbon'" — TAI, KĄ ŽMONĖS NAUDOJA. Patent/registracijos kodus (EVIPO006, EVIPO078, RADrazz) rašyk į registeredAs lauką, NIEKADA į latinName. Jei serijoje cultivars yra dvigubo pavadinimo (trade name + EVIPO kodas) — latinName = trade name, registeredAs = EVIPO kodas.
+
+Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti tikrus trade name'us.`,
         }],
       })
       const block = r.content.find(b => b.type === 'tool_use' && b.name === 'bulk_series')
@@ -1100,9 +1104,43 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     abortRef.current = controller
     setLoading(true); setResult(null); setError(null); setPreview(null)
     const totalStartedAt = Date.now()
-    trackStep('AI ieško augalo...')
 
     try {
+      // ── Phase 0: Library-first short-circuit ──────────────────
+      // Prieš leidžiant AI'ą (~60s + $) — patikrinam mūsų catalog'ą fuzzy
+      // search'u. Jei žmonės jau yra ieškoję / admin'as bulk save'inęs šitą
+      // augalą — gauname rezultatą per ~100ms be AI cost'o.
+      // Library hit'ai konvertuojami į AI result shape'ą (catalogEntryToAIResult)
+      // ir naudojami kaip kandidatai, kad UI'us veiktų identiškai kaip su AI.
+      trackStep('Tikrinu mūsų bibliotekoje...')
+      const ownedIds = new Set(plants.map(p => catalogDocId(p.lotyniskas)).filter(Boolean))
+      const catalogHits = await searchCatalog(q.trim(), ownedIds)
+      if (controller.signal.aborted) return
+
+      if (catalogHits.length > 0) {
+        // Catalog entry → candidate card shape (UI naudoja imageUrl / ltName)
+        const candidates = catalogHits.map(c => ({
+          ...catalogEntryToAIResult(c),
+          imageUrl: c.image ?? null,
+          ltName:   c.lietuviškas ?? c.name ?? null,
+        }))
+        // Single strong hit — set'inam kaip pagrindinį rezultatą.
+        // Multiple — set'inam pirmąjį (best fuzzy score) + visus kaip candidates,
+        // kad user'is galėtų pasirinkti kitą jei nepatinka.
+        const primary = candidates[0]
+        setResult({
+          ...primary,
+          candidates: candidates.length > 1 ? candidates : undefined,
+          fromCatalog: true,
+        })
+        setLoading(false)
+        trackStep(null)
+        console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (library-first, ${catalogHits.length} match'as${catalogHits.length === 1 ? '' : 'ai'}, AI praleistas)`)
+        return
+      }
+
+      trackStep('AI ieško augalo...')
+
       // ── Phase 1: AI preview su web_search tool'u ───────────────
       // Web search'as įgalintas — Claude'as gali apsilankyti RHS, Wikipedia,
       // MissouriBotanical, kai užklausa neaiški (cultivar, hybrid, recent

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { getDocs, getDoc, collection, doc, setDoc, updateDoc, deleteDoc, arrayRemove, deleteField, query, orderBy } from 'firebase/firestore'
 import { Users, Database, X, Shield, Sparkles, BadgeCheck, Loader2, RefreshCw, ChevronRight, Mail, Trash2, AlertTriangle, UserCheck, Pencil, Check, BookOpen } from 'lucide-react'
 import { db } from '../../utils/firebase'
+import { bustCatalogCache } from '../../utils/catalog'
 import T4Icon from '../brand/T4Icon'
 import LibraryTab from './LibraryTab'
 
@@ -283,6 +284,9 @@ export default function AdminPanel({ currentUid, onClose }) {
         updatedAt: new Date().toISOString(),
       }, { merge: true })
       setCatalog(prev => prev.map(e => e.id === entryId ? { ...e, ...patch, updatedAt: new Date().toISOString() } : e))
+      // Search autocomplete + library-first short-circuit'as iškart atspindi
+      // pakeitimus (kitaip stale 24h localStorage cache slėptų).
+      bustCatalogCache()
     } catch (e) {
       console.error('[admin] save catalog failed:', e)
       alert('Nepavyko išsaugoti catalog entry: ' + e.message)
@@ -295,6 +299,7 @@ export default function AdminPanel({ currentUid, onClose }) {
     try {
       await deleteDoc(doc(db, 'catalog', entryId))
       setCatalog(prev => prev.filter(e => e.id !== entryId))
+      bustCatalogCache()  // stale autocomplete fix
     } catch (e) {
       console.error('[admin] delete catalog failed:', e)
       alert('Nepavyko ištrinti: ' + e.message)
