@@ -160,8 +160,9 @@ export const TOOL_PREVIEW = {
         },
         required: ['pavojai', 'pavojingumas', 'valgomumas', 'vaistinis'],
       },
-      aprasymas:       { type: 'string',  description: '4-6 sakinių aprašymas — kilmė, išvaizda, kodėl populiarus' },
-      kilme:           { type: 'string' },
+      aprasymas:       { type: 'string',  description: '3-5 sakiniai apie GENUS-level augalą (pvz. Clematis kaip augalas, ne konkrečią seriją „Boulevard"). Kaip atrodo, kur natūraliai auga, kodėl populiarus sodininkystėje. Aktualus visiems serijos nariams.' },
+      seriesNote:      { type: ['string', 'null'], description: 'JEI latinName turi seriją (pvz. „Clematis \\\'Boulevard\\\'", „Rosa Knock Out") — 1-2 sakiniai apie pačią seriją: kas sukūrė, kuo charakterizuojasi, kada introdusuota. null jei tai ne serija (specifinis cultivar, species, ar genus only).' },
+      kilme:           { type: 'string', description: '1 sakinys kur GENUS kilęs (region, natūralus habitat). Ne apie seriją.' },
       sviesa: {
         type: 'object',
         properties: {
@@ -1327,13 +1328,26 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
           role: 'user',
           content: `IDENTIFIKUOK augalą: "${q}".
 
-SLIM MODE — admin'o disambiguation use case'as, NE user-facing rich preview:
-• Užtenka: latinName, ltName, candidates[] (jei abejoji), confidence, sources
-• NEPILDYK: aprašymo, kilmės, priežiūros (sviesa/vanduo/substratas/...), savybių (toksiškumo/valgomumo/vaistinio), įdomybių, tipo, augimo greičio — palik null/tuščius
-• Jei tai cultivar serija (Boulevard, Wave, Knock Out, Hosta sieboldiana ir t.t.) → candidates[] su VISAIS žinomais nariais, iki 15. Tai admin'o disambiguation prieš bulk save'ą — kuo daugiau, tuo geriau.
-• Jei abejoji konkrečiu cultivar — web_search vieną kartą RHS/Wikipedia, paskui grąžink kandidatus
+SLIM MODE — disambiguation + minimal info, NE pilnas user-facing preview:
 
-Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje per kitą tool'ą.`,
+PRIVALOMA:
+• latinName, ltName, candidates[] (jei abejoji), confidence, sources
+
+PILDYK (narrative info — GENUS lygmens, ne care):
+• aprasymas: 3-5 sakiniai apie GENUS-level augalą. Pvz. užklausai „Clematis 'Boulevard'" — apie KLEMATĮ kaip augalą (kaip atrodo, kur natūraliai auga, kodėl populiarus), NE apie 'Boulevard' seriją.
+• kilme: 1 sakinys apie GENUS kilmę
+• seriesNote: 1-2 sakiniai apie konkrečią seriją (Boulevard / Wave / Knock Out / etc.) JEI latinName turi seriją. null jei ne serija.
+
+NEPILDYK (per slow + per save'inama vėliau):
+• Care info: sviesa, vanduo, substratas, persodinimas, žiemojimas, tręšimas, priežiūra — null/tuščius
+• Savybes (toksiškumas, valgomumas, vaistinis) — null
+• Augimo greitis, tipas, sunkumas, lifecycle, hardiness — null
+
+KANDIDATAI:
+• Jei cultivar serija → candidates[] su VISAIS žinomais nariais (iki 15). Admin'as bulk save'ina iš čia.
+• Jei abejoji konkrečiu cultivar — web_search RHS/Wikipedia, paskui kandidatai.
+
+Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIES, TOOL_DETAILS).`,
         }],
       })
       if (controller.signal.aborted) return
@@ -1453,7 +1467,7 @@ Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje
         role: 'user',
         content: [
           { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
-          { type: 'text',  text: 'IDENTIFIKUOK augalą šioje nuotraukoje (arba ant etiketės). SLIM mode — užtenka latinName, ltName, candidates jei abejoji, confidence. NEPILDYK aprašymo / priežiūros / savybių — palik null/tuščius.' },
+          { type: 'text',  text: 'IDENTIFIKUOK augalą šioje nuotraukoje (arba ant etiketės). SLIM mode: PILDYK latinName, ltName, candidates jei abejoji, confidence, aprasymas (GENUS lygmens info — 3-5 sakiniai), kilme (1 sakinys), seriesNote (1-2 sakiniai jei serija). NEPILDYK care info (sviesa/vanduo/etc), savybių, augimo greičio — null/tuščius.' },
         ],
       }
 
@@ -1802,6 +1816,21 @@ Rich info (aprašymas, priežiūra, savybės) bus pildoma vėlesniame žingsnyje
                     </p>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* Serijos pastaba — kompaktiška info apie KONKREČIĄ seriją
+                (Boulevard, Wave, Knock Out) virš kandidatų sąrašo. Genus info
+                lieka ProfileContent'e žemiau. AI grąžina seriesNote per
+                TOOL_PREVIEW kai latinName turi serijos identifikaciją. */}
+            {result.seriesNote && (
+              <div className="mb-3 bg-forest-50/50 border border-forest-200/50 rounded-2xl px-4 py-3">
+                <p className="font-mono text-[10px] font-medium text-forest-600 uppercase tracking-[0.16em] mb-1.5">
+                  Apie šią seriją
+                </p>
+                <p className="text-[13px] text-forest-700 leading-relaxed">
+                  {result.seriesNote}
+                </p>
               </div>
             )}
 
