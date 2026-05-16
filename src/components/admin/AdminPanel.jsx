@@ -336,23 +336,33 @@ export default function AdminPanel({ currentUid, onClose }) {
   }
 
   const deleteTaxonGroupEntry = async (groupId, label) => {
-    // Įspėjam jei catalog cultivars dar yra link'inti į šitą serija
-    const linkedCount = catalog.filter(c => c.taxonGroupId === groupId).length
-    if (linkedCount > 0) {
-      if (!window.confirm(
-        `Ištrinti seriją „${label}"?\n\n` +
-        `${linkedCount} cultivar(s) dar yra prie šios serijos. Po ištrinimo ` +
-        `jie taps standalone (be paveldimos care info, bet tikslesni jų pačių field'ai liks).\n\n` +
-        `Tęsti?`
-      )) return
-    } else {
-      if (!window.confirm(`Ištrinti seriją „${label}"?\n\nNiekas neprilinkuota — saugu.`)) return
-    }
+    // Cascade'as: serija + visi jos cultivars. Skirtingai nei senesnė
+    // implementacija (kuri palikdavo cultivar'us kaip standalone), unified
+    // Library tab'as serijas vaizduoja kaip „folder" su contents — todėl
+    // delete'as logiškai išvalo viską.
+    const linkedCultivars = catalog.filter(c => c.taxonGroupId === groupId)
+
+    if (!window.confirm(
+      `Ištrinti seriją „${label}"?\n\n` +
+      `Cascade'as ištrins:\n` +
+      `• serijos doc'ą (taxonGroup)\n` +
+      `• ${linkedCultivars.length} cultivar(s) (catalog)\n\n` +
+      `Veiksmas negrįžtamas.`
+    )) return
+
+    // Antrasis confirm'as didelėms serijoms — apsauga nuo accidental click'o
+    if (linkedCultivars.length > 10 && !window.confirm(
+      `Tikrai? Bus prarasti ${linkedCultivars.length} cultivars iš catalog'o.`
+    )) return
+
     try {
+      // 1. Cascade — visi catalog cultivars su šituo taxonGroupId
+      await Promise.all(linkedCultivars.map(c => deleteDoc(doc(db, 'catalog', c.id))))
+      // 2. Pati serijos doc'as
       await deleteDoc(doc(db, 'taxonGroups', groupId))
+      // 3. Local state refresh
       setTaxonGroups(prev => prev.filter(g => g.id !== groupId))
-      // Cultivar'ai lieka su nebegaliojančiu taxonGroupId — UI'us juos rodys
-      // kaip standalone'us per mergeWithSeries() (jei group null → flat behavior).
+      setCatalog(prev => prev.filter(c => c.taxonGroupId !== groupId))
       bustCatalogCache()
       bustSearchResponseCache()
     } catch (e) {

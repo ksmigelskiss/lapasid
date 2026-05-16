@@ -1,19 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Search, X, ChevronRight, ChevronDown, Trash2, AlertTriangle, Save, ImageOff, BookOpen, Layers } from 'lucide-react'
+import { Search, X, ChevronRight, ChevronDown, Trash2, AlertTriangle, Save, ImageOff, Layers } from 'lucide-react'
 import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS, LIFECYCLES } from '../../utils/taxonGroups'
-
-/**
- * LibraryTab — admin'as redaguoja shared knowledge base'ą:
- *   • catalog/{id}      — individualūs cultivars/species (rūšiniai field'ai,
- *                         care info, image, taxonGroupId ref)
- *   • taxonGroups/{id}  — parent serijos / species / hybrid'ai (shared care
- *                         šablonai, kurie paveldimi catalog cultivar'iams)
- *
- * Du sub-tabs vienoje vietoje, klik per row → edit drawer iš dešinės.
- * Save'inimas merge'inimu (setDoc + merge:true) per parent callback'us iš
- * AdminPanel'io, kad state'as toje pačioje vietoje liktų ir mažos refresh'os
- * nekartotų loadAll.
- */
 
 const WIDGET = 'bg-bone-50 rounded-2xl border border-bone-400/40 shadow-[0_1px_3px_rgba(28,58,42,0.06),0_4px_14px_rgba(28,58,42,0.05)]'
 
@@ -23,80 +10,131 @@ function shortDate(iso) {
   catch { return '—' }
 }
 
+/**
+ * LibraryTab — UNIFIED bibliotekos sąrašas. Serijos (taxonGroups) ir
+ * standalone cultivars rodomi viename sąraše, kaip įvairūs „augalų įrašai".
+ * Serijos turi expandable seksciją, kurioje matomi visi jos cultivars.
+ *
+ * Klikus į serijos pavadinimą — atsidaro serijos edit drawer'is.
+ * Klikus į expand chevron'ą — išskleidžia/suskleidžia cultivars'us.
+ * Klikus į cultivar'ą serijoje — atsidaro cultivar edit drawer'is.
+ * Ištrynus seriją — cascade'ina ir visus jos cultivar'us (žiūr. AdminPanel
+ * deleteTaxonGroupEntry).
+ *
+ * Anksciau buvo du sub-tab'ai (Cultivars / Serijos) — atskira lentelė kiekvienam.
+ * Unified view paprastesnis admin'ui: vienas mental model'is, serija kaip
+ * folder'is su contents'ais.
+ */
 export default function LibraryTab({
   catalog, taxonGroups,
   onSaveCatalog, onDeleteCatalog,
   onSaveTaxonGroup, onDeleteTaxonGroup,
 }) {
-  const [subTab, setSubTab]   = useState('cultivars')      // 'cultivars' | 'series'
-  const [search, setSearch]   = useState('')
-  const [editing, setEditing] = useState(null)             // { type, entry } | null
+  const [search, setSearch]     = useState('')
+  const [editing, setEditing]   = useState(null)         // { type, entry } | null
+  const [expanded, setExpanded] = useState(() => new Set())  // serijos ID'ai
 
-  // Map taxonGroup ID → name lookup'as cultivar lentelei
-  const groupById = useMemo(() => new Map(taxonGroups.map(g => [g.id, g])), [taxonGroups])
+  // Unified items list — serijos su jų cultivars'ais + standalone'iai
+  const items = useMemo(() => {
+    const seriesItems = taxonGroups.map(g => ({
+      kind: 'series',
+      group: g,
+      cultivars: catalog.filter(c => c.taxonGroupId === g.id),
+    }))
+    const standaloneItems = catalog
+      .filter(c => !c.taxonGroupId)
+      .map(c => ({ kind: 'standalone', entry: c }))
 
-  // Cultivar count'ai per seriją serijų lentelei
-  const cultivarCountByGroup = useMemo(() => {
-    const m = new Map()
-    for (const c of catalog) {
-      if (c.taxonGroupId) m.set(c.taxonGroupId, (m.get(c.taxonGroupId) ?? 0) + 1)
-    }
-    return m
-  }, [catalog])
+    // Serijos pirma (pagal narių count desc), standalone'iai pabaigoje (alfabetu)
+    return [
+      ...seriesItems.sort((a, b) => b.cultivars.length - a.cultivars.length),
+      ...standaloneItems.sort((a, b) =>
+        (a.entry.lotyniskas ?? '').localeCompare(b.entry.lotyniskas ?? '')
+      ),
+    ]
+  }, [catalog, taxonGroups])
 
-  // Filter'is — fuzzy lookup pagal kelis field'us
-  const filteredCatalog = useMemo(() => {
-    if (!search.trim()) return catalog
+  // Filter — match'ina pagal serijos ar cultivar pavadinimą
+  const filteredItems = useMemo(() => {
+    if (!search.trim()) return items
     const q = search.toLowerCase()
-    return catalog.filter(c =>
-      (c.lotyniskas ?? '').toLowerCase().includes(q) ||
-      (c.lietuviskas ?? '').toLowerCase().includes(q) ||
-      (c.taxonGroupId ?? '').toLowerCase().includes(q)
-    )
-  }, [catalog, search])
+    return items
+      .map(item => {
+        if (item.kind === 'series') {
+          const seriesMatches = `${item.group.genus ?? ''} ${item.group.name ?? ''}`.toLowerCase().includes(q)
+          const matchingCults = item.cultivars.filter(c =>
+            `${c.lotyniskas ?? ''} ${c.lietuviskas ?? ''}`.toLowerCase().includes(q)
+          )
+          if (seriesMatches) return item
+          if (matchingCults.length > 0) return { ...item, cultivars: matchingCults }
+          return null
+        }
+        const hay = `${item.entry.lotyniskas ?? ''} ${item.entry.lietuviskas ?? ''}`.toLowerCase()
+        return hay.includes(q) ? item : null
+      })
+      .filter(Boolean)
+  }, [items, search])
 
-  const filteredGroups = useMemo(() => {
-    if (!search.trim()) return taxonGroups
-    const q = search.toLowerCase()
-    return taxonGroups.filter(g =>
-      (g.genus ?? '').toLowerCase().includes(q) ||
-      (g.name ?? '').toLowerCase().includes(q) ||
-      (g.type ?? '').toLowerCase().includes(q)
-    )
-  }, [taxonGroups, search])
+  // Auto-expand serijos kai search'as turi match'us cultivar'ams jų viduje
+  useEffect(() => {
+    if (!search.trim()) return
+    setExpanded(prev => {
+      const next = new Set(prev)
+      filteredItems.forEach(item => {
+        if (item.kind === 'series') next.add(item.group.id)
+      })
+      return next
+    })
+  }, [search, filteredItems])
+
+  const toggleExpand = (id) => {
+    setExpanded(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id); else next.add(id)
+      return next
+    })
+  }
 
   return (
     <>
-      {/* Sub-tab switcher + search */}
-      <div className="flex items-center gap-3 mb-4 flex-wrap">
-        <nav className="inline-flex bg-bone-100 rounded-btn p-1 gap-0.5">
-          <SubTabBtn active={subTab === 'cultivars'} onClick={() => setSubTab('cultivars')} Icon={BookOpen} label="Cultivars" count={catalog.length} />
-          <SubTabBtn active={subTab === 'series'} onClick={() => setSubTab('series')} Icon={Layers} label="Serijos" count={taxonGroups.length} />
-        </nav>
-        <div className="flex-1 min-w-[200px] max-w-md relative">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-forest-400" />
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder={subTab === 'cultivars' ? 'Lotyniškas, lietuviškas, serija…' : 'Genus, pavadinimas, tipas…'}
-            className="w-full pl-9 pr-3 py-2 text-sm bg-bone-50 border border-bone-400/40 rounded-btn focus:outline-none focus:border-forest-500"
-          />
-        </div>
+      {/* Search */}
+      <div className="mb-4 relative max-w-md">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-forest-400" />
+        <input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Serijos, cultivar, lotyniškas, lietuviškas…"
+          className="w-full pl-9 pr-3 py-2 text-sm bg-bone-50 border border-bone-400/40 rounded-btn focus:outline-none focus:border-forest-500"
+        />
       </div>
 
-      {subTab === 'cultivars' ? (
-        <CultivarsTable
-          rows={filteredCatalog}
-          groupById={groupById}
-          searchQuery={search}
-          onSelect={c => setEditing({ type: 'cultivar', entry: c })}
-        />
+      {/* Empty state */}
+      {filteredItems.length === 0 ? (
+        <p className="text-center text-forest-500 py-12">
+          {search.trim() ? `Nieko nerasta su „${search}"` : 'Biblioteka tuščia — pridėk per Search → „Pridėti visą seriją"'}
+        </p>
       ) : (
-        <SeriesTable
-          rows={filteredGroups}
-          cultivarCountByGroup={cultivarCountByGroup}
-          onSelect={g => setEditing({ type: 'series', entry: g })}
-        />
+        <div className="space-y-2">
+          {filteredItems.map(item =>
+            item.kind === 'series' ? (
+              <SeriesRow
+                key={item.group.id}
+                group={item.group}
+                cultivars={item.cultivars}
+                expanded={expanded.has(item.group.id)}
+                onToggle={() => toggleExpand(item.group.id)}
+                onEditSeries={() => setEditing({ type: 'series', entry: item.group })}
+                onEditCultivar={(c) => setEditing({ type: 'cultivar', entry: c })}
+              />
+            ) : (
+              <StandaloneRow
+                key={item.entry.id}
+                entry={item.entry}
+                onClick={() => setEditing({ type: 'cultivar', entry: item.entry })}
+              />
+            )
+          )}
+        </div>
       )}
 
       {editing?.type === 'cultivar' && (
@@ -118,7 +156,7 @@ export default function LibraryTab({
       {editing?.type === 'series' && (
         <SeriesEditDrawer
           entry={editing.entry}
-          cultivarCount={cultivarCountByGroup.get(editing.entry.id) ?? 0}
+          cultivarCount={catalog.filter(c => c.taxonGroupId === editing.entry.id).length}
           onSave={async (patch) => {
             await onSaveTaxonGroup(editing.entry.id, patch)
             setEditing(prev => prev ? { ...prev, entry: { ...prev.entry, ...patch } } : null)
@@ -134,170 +172,102 @@ export default function LibraryTab({
   )
 }
 
-// ── Tables ───────────────────────────────────────────────────────────
+// ── Unified row komponentai ─────────────────────────────────────────
 
 /**
- * CultivarsTable — grupavimas pagal seriją (taxonGroupId).
- *
- * Kiekviena serija — atskira expandable grupė su header'iu (pavadinimas + count).
- * Standalone cultivar'ai (be `taxonGroupId`) — atskira grupė pabaigoje.
- *
- * Default'inis state: pirmos 3 grupės (didžiausios) išskleistos, likę
- * suskleistos — kad sąrašas ne'overwhelm'intų. Kai vartotojas tipina search'ą,
- * automatiškai išskleidžiam visas grupes su match'ais.
+ * SeriesRow — serijos eilutė unified sąraše. Vizualiai panaši į augalų
+ * įrašus: image + name + count. Klikus į name area — atsidaro serijos
+ * edit drawer'is. Klikus į chevron'ą — toggle'inamas išskleidimas, ir tada
+ * matomi visi serijos cultivars'ai inline.
  */
-function CultivarsTable({ rows, groupById, onSelect, searchQuery }) {
-  // Grupavimas: catalog → Map<groupId, items[]>. Standalone'us laikom su
-  // specialiu key'umi '__standalone__'.
-  const grouped = useMemo(() => {
-    const m = new Map()
-    for (const c of rows) {
-      const gid = c.taxonGroupId || '__standalone__'
-      if (!m.has(gid)) m.set(gid, [])
-      m.get(gid).push(c)
-    }
-    return m
-  }, [rows])
-
-  // Rūšiavimas: serijos pagal narių count desc → standalone gale
-  const sortedGroups = useMemo(() => {
-    const arr = Array.from(grouped.entries())
-    return arr.sort(([aId, aItems], [bId, bItems]) => {
-      if (aId === '__standalone__') return 1
-      if (bId === '__standalone__') return -1
-      return bItems.length - aItems.length
-    })
-  }, [grouped])
-
-  // Default expand state: pirmos 3 grupės išskleistos
-  const [expanded, setExpanded] = useState(() => {
-    const s = new Set()
-    sortedGroups.slice(0, 3).forEach(([gid]) => s.add(gid))
-    return s
-  })
-
-  // Auto-expand grupes su search hit'ais — kad search'inant nereiktų manually
-  // klikinti kiekvienos grupės header'į.
-  useEffect(() => {
-    if (!searchQuery.trim()) return
-    const next = new Set(expanded)
-    for (const [gid] of sortedGroups) next.add(gid)
-    setExpanded(next)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery])
-
-  const toggle = (gid) => {
-    setExpanded(prev => {
-      const next = new Set(prev)
-      if (next.has(gid)) next.delete(gid); else next.add(gid)
-      return next
-    })
-  }
-
-  if (!rows.length) return <p className="text-center text-forest-500 py-12">Nėra įrašų</p>
-
+function SeriesRow({ group, cultivars, expanded, onToggle, onEditSeries, onEditCultivar }) {
+  // Serijos hero image — naudojam pirmo cultivar'o nuotrauką (taxonGroup
+  // neturi savo image field'o; visi serijos nariai vizualiai panašūs).
+  const heroImage = cultivars[0]?.image
   return (
-    <div className="space-y-3">
-      {sortedGroups.map(([gid, items]) => {
-        const isStandalone = gid === '__standalone__'
-        const group = isStandalone ? null : groupById.get(gid)
-        const isOpen = expanded.has(gid)
-        return (
-          <div key={gid} className={`overflow-hidden ${WIDGET}`}>
+    <div className={`${WIDGET} overflow-hidden`}>
+      <div className="flex items-center gap-3 px-3 py-2.5 hover:bg-bone-100/40 transition-colors">
+        <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden bg-bone-200 flex items-center justify-center">
+          {heroImage ? (
+            <img src={heroImage} alt="" className="w-full h-full object-cover" loading="lazy" />
+          ) : (
+            <Layers size={16} className="text-forest-300" />
+          )}
+        </div>
+        <button onClick={onEditSeries} className="flex-1 text-left min-w-0">
+          <p className="font-display text-sm font-semibold text-forest-800 italic truncate">
+            {group.genus} {group.name}
+          </p>
+          <p className="text-[11px] text-forest-500 font-mono">
+            Serija · {group.type ?? '—'} · {cultivars.length} cultivar{cultivars.length === 1 ? '' : 's'}
+          </p>
+        </button>
+        <Badge tone="forest">{cultivars.length}</Badge>
+        <button
+          onClick={onToggle}
+          className="w-8 h-8 inline-flex items-center justify-center rounded-btn-sm hover:bg-bone-300/40 text-forest-500 transition-colors flex-shrink-0"
+          title={expanded ? 'Suskleisti' : 'Išskleisti cultivars'}
+        >
+          {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+        </button>
+      </div>
+
+      {expanded && cultivars.length > 0 && (
+        <div className="border-t border-bone-400/30 bg-bone-100/30">
+          {cultivars.map(c => (
             <button
-              onClick={() => toggle(gid)}
-              className="w-full flex items-center gap-2 px-4 py-3 bg-bone-100 hover:bg-bone-200/60 border-b border-bone-400/40 transition-colors text-left"
+              key={c.id}
+              onClick={() => onEditCultivar(c)}
+              className="w-full flex items-center gap-3 pl-12 pr-3 py-2 hover:bg-bone-100/70 border-b border-bone-400/20 last:border-b-0 text-left transition-colors"
             >
-              {isOpen ? <ChevronDown size={14} className="text-forest-500 flex-shrink-0" /> : <ChevronRight size={14} className="text-forest-500 flex-shrink-0" />}
-              <div className="flex-1 min-w-0">
-                {isStandalone ? (
-                  <p className="font-display text-sm font-semibold text-forest-700">Standalone — be serijos</p>
-                ) : group ? (
-                  <>
-                    <p className="font-display text-sm font-semibold text-forest-800 italic">{group.genus} {group.name}</p>
-                    <p className="text-[10px] text-forest-400 font-mono">{group.type} · {gid}</p>
-                  </>
+              <div className="w-9 h-9 flex-shrink-0 rounded-lg overflow-hidden bg-bone-200 flex items-center justify-center">
+                {c.image ? (
+                  <img src={c.image} alt="" className="w-full h-full object-cover" loading="lazy" />
                 ) : (
-                  <p className="font-display text-sm text-forest-500 italic">Negaliojantis taxonGroupId: {gid}</p>
+                  <ImageOff size={12} className="text-forest-300" />
                 )}
               </div>
-              <Badge tone={isStandalone ? 'bone' : 'forest'}>{items.length}</Badge>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-forest-700 truncate">
+                  {c.lietuviskas || '—'}
+                </p>
+                <p className="text-[11px] text-forest-500 italic truncate">{c.lotyniskas}</p>
+              </div>
+              <ChevronRight size={12} className="text-forest-400 flex-shrink-0" />
             </button>
-
-            {isOpen && (
-              <table className="w-full text-sm">
-                <thead className="bg-bone-50 border-b border-bone-400/30">
-                  <tr className="text-left">
-                    <Th>Image</Th>
-                    <Th>Lotyniškas</Th>
-                    <Th>Lietuviškas</Th>
-                    <Th>Atnaujinta</Th>
-                    <Th></Th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map(c => (
-                    <tr key={c.id} onClick={() => onSelect(c)} className="border-b border-bone-400/20 hover:bg-bone-100/50 cursor-pointer transition-colors">
-                      <Td>
-                        {c.image ? (
-                          <img src={c.image} alt="" className="w-10 h-10 rounded-md object-cover bg-bone-200" loading="lazy" />
-                        ) : (
-                          <div className="w-10 h-10 rounded-md bg-bone-200 inline-flex items-center justify-center text-forest-300">
-                            <ImageOff size={14} />
-                          </div>
-                        )}
-                      </Td>
-                      <Td>
-                        <div className="font-medium text-forest-800 italic">{c.lotyniskas || '—'}</div>
-                        <div className="text-[10px] text-forest-400 font-mono">{c.id}</div>
-                      </Td>
-                      <Td><span className="text-forest-700">{c.lietuviskas || '—'}</span></Td>
-                      <Td><span className="text-xs text-forest-500">{shortDate(c.updatedAt)}</span></Td>
-                      <Td><ChevronRight size={16} className="text-forest-400" /></Td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-        )
-      })}
+          ))}
+        </div>
+      )}
     </div>
   )
 }
 
-function SeriesTable({ rows, cultivarCountByGroup, onSelect }) {
-  if (!rows.length) return <p className="text-center text-forest-500 py-12">Nėra serijų</p>
+/**
+ * StandaloneRow — cultivar'as, kuris nepriklauso jokiai serijai (be
+ * taxonGroupId). Klikus visur — atidaro cultivar edit drawer'į.
+ */
+function StandaloneRow({ entry, onClick }) {
   return (
-    <div className={`overflow-hidden ${WIDGET}`}>
-      <table className="w-full text-sm">
-        <thead className="bg-bone-100 border-b border-bone-400/40">
-          <tr className="text-left">
-            <Th>Genus</Th>
-            <Th>Pavadinimas</Th>
-            <Th>Tipas</Th>
-            <Th center>Cultivars</Th>
-            <Th>Atnaujinta</Th>
-            <Th></Th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(g => (
-            <tr key={g.id} onClick={() => onSelect(g)} className="border-b border-bone-400/20 hover:bg-bone-100/50 cursor-pointer transition-colors">
-              <Td><span className="font-medium text-forest-800 italic">{g.genus || '—'}</span></Td>
-              <Td>
-                <div className="text-forest-700">{g.name || '—'}</div>
-                <div className="text-[10px] text-forest-400 font-mono">{g.id}</div>
-              </Td>
-              <Td><Badge tone="bone">{g.type || '—'}</Badge></Td>
-              <Td center><Badge tone="forest">{cultivarCountByGroup.get(g.id) ?? 0}</Badge></Td>
-              <Td><span className="text-xs text-forest-500">{shortDate(g.updatedAt)}</span></Td>
-              <Td><ChevronRight size={16} className="text-forest-400" /></Td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <button
+      onClick={onClick}
+      className={`${WIDGET} w-full flex items-center gap-3 px-3 py-2.5 hover:bg-bone-100/40 text-left transition-colors`}
+    >
+      <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden bg-bone-200 flex items-center justify-center">
+        {entry.image ? (
+          <img src={entry.image} alt="" className="w-full h-full object-cover" loading="lazy" />
+        ) : (
+          <ImageOff size={16} className="text-forest-300" />
+        )}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-display text-sm font-semibold text-forest-800 truncate">
+          {entry.lietuviskas || '—'}
+        </p>
+        <p className="text-[11px] text-forest-500 italic truncate">{entry.lotyniskas}</p>
+      </div>
+      <Badge tone="bone">standalone</Badge>
+      <ChevronRight size={14} className="text-forest-400 flex-shrink-0" />
+    </button>
   )
 }
 
@@ -663,23 +633,6 @@ function Select({ value, onChange, options }) {
     >
       {options.map(opt => <option key={opt || '_'} value={opt}>{opt || '— nenurodyta —'}</option>)}
     </select>
-  )
-}
-
-function SubTabBtn({ active, onClick, Icon, label, count }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-btn-sm text-xs font-medium transition-colors ${
-        active ? 'bg-forest-100 text-forest-700' : 'text-forest-500 hover:text-forest-700'
-      }`}
-    >
-      <Icon size={13} />
-      {label}
-      {count != null && (
-        <span className="font-mono text-[10px] tabular-nums text-forest-400">({count})</span>
-      )}
-    </button>
   )
 }
 
