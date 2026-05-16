@@ -9,7 +9,7 @@ import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
 import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId } from '../utils/catalog'
 import { getCachedSearchResponse, setCachedSearchResponse } from '../utils/searchResponseCache'
-import { taxonGroupDocId, saveTaxonGroup, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
+import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
 import { auth } from '../utils/firebase'
@@ -1221,10 +1221,32 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       if (controller.signal.aborted) return
 
       if (catalogHits.length > 0) {
+        // Sujungiam catalog cultivars su jų taxonGroup'o care info — mūsų
+        // normalizuotos DB struktūros sąjunga atgal į „pilną augalą". Cultivar
+        // doc'as catalog'e turi tik unikalius field'us (image, distinguishing
+        // feature, lotyniskas), o care info (sviesa, vanduo, laistymas,
+        // tresimas, ziemojimas, prieziura) saugoma parent taxonGroup'e.
+        //
+        // Be šito merge'o, save'as į kolekciją save'intų augalus su `null`
+        // care info, ir reikėtų papildomo AI Phase 2 call'o (~10s + cost).
+        // Su merge'u — save'as instant'as ir 100% admin curated.
+        const uniqueGroupIds = new Set(catalogHits.map(c => c.taxonGroupId).filter(Boolean))
+        const groupMap = new Map()
+        await Promise.all(Array.from(uniqueGroupIds).map(async gid => {
+          const g = await getTaxonGroup(gid)
+          if (g) groupMap.set(gid, g)
+        }))
+        if (controller.signal.aborted) return
+
+        const merged = catalogHits.map(c => {
+          const g = c.taxonGroupId ? groupMap.get(c.taxonGroupId) : null
+          return g ? mergeWithSeries(c, g) : c
+        })
+
         // Catalog entry → candidate card shape (UI naudoja imageUrl / ltName).
         // Wikidata flag'ai propaguojami iš catalog'o (saugomi per bulk save'ą)
         // — kad library-first cultivar'ai gautų ✓ badge'us, ne tik AI-served.
-        const candidates = catalogHits.map(c => ({
+        const candidates = merged.map(c => ({
           ...catalogEntryToAIResult(c),
           imageUrl:         c.image ?? null,
           ltName:           c.lietuviškas ?? c.name ?? null,
@@ -2191,6 +2213,10 @@ function SavingOverlay() {
 }
 
 // ── Save button: fetches Phase 2 details on click, then saves ────
+//
+// Optimizacija: jei result jau turi care info (pvz. iš library-first +
+// mergeWithSeries — admin curated tikrai pilna info), praleidžiam Phase 2
+// AI call'ą. Save'as tampa instant'as + sutaupom $0.01 per save.
 function SaveButton({ label, result, className, onSave, onClose, onSavingChange }) {
   const [saving, setSaving] = useState(false)
 
@@ -2198,6 +2224,14 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange 
     setSaving(true)
     onSavingChange?.(true)
     try {
+      // Skip Phase 2 jei result jau turi care info (mergeWithSeries iš
+      // library-first). laistymasIntervalas yra patikimas indikatorius — jei
+      // yra, tai reiškia merge'as įvyko ir kiti care field'ai irgi pildomi.
+      if (result.laistymasIntervalas) {
+        onSave(result)
+        onClose()
+        return
+      }
       const details = await fetchDetails(result.latinName, result.name)
       onSave({ ...result, ...details })
       onClose()
@@ -2227,9 +2261,11 @@ function UpdateButton({ label, result, existingId, className, onUpdate, onClose,
     setSaving(true)
     onSavingChange?.(true)
     try {
-      const details = await fetchDetails(result.latinName, result.name)
-      const merged  = { ...result, ...details }
-      const full    = fromAIResult(merged)
+      // Skip Phase 2 jei result jau turi care info (žiūr. SaveButton komentarą)
+      const merged = result.laistymasIntervalas
+        ? result
+        : { ...result, ...(await fetchDetails(result.latinName, result.name)) }
+      const full   = fromAIResult(merged)
       // Strip identity/personal fields — only update reference data
       const { id: _id, kategorija: _kat, komentaras: _kom, data_prideta: _dat, status: _st } = full
       const patch = { ...full }
