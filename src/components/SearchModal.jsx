@@ -8,6 +8,7 @@ import { fetchPhotos, resizeImage, fetchWikipediaContext } from '../utils/imageS
 import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
 import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId } from '../utils/catalog'
+import { taxonGroupDocId, saveTaxonGroup, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
 import { auth } from '../utils/firebase'
@@ -235,6 +236,96 @@ export const TOOL_DETAILS = {
     },
     required: ['laistymasIntervalas', 'tresimas', 'dormancyInfo', 'prieziura',
                'substratas', 'persodinimas', 'ziemojimas', 'dauginimas', 'problemos'],
+  },
+}
+
+// ── Bulk series save — vienu call'u pildo VISĄ seriją (shared + per-cultivar) ──
+//
+// Užklausus seriją (pvz. „Clematis 'Boulevard'") AI grąžina:
+//   • series block (SHARED — visiems cultivars vienodi field'ai)
+//   • cultivars array (PER-CULTIVAR — tik kas skiriasi)
+//
+// Naive bulk = 20× pilnas schema = 30K tokens ≈ $0.45
+// Smart bulk = 1× series + 20× minimal cultivar = 5K tokens ≈ $0.08
+// 6x pigiau, semantiškai aligned su mūsų TaxonGroup + Catalog split'u.
+
+export const TOOL_BULK_SERIES = {
+  name: 'bulk_series',
+  description: 'Pateik PILNĄ cultivar serijos info su VISAIS žinomais cultivars (iki 25). Shared care/savybės eina į series block; per-cultivar — į cultivars array.',
+  input_schema: {
+    type: 'object',
+    properties: {
+      series: {
+        type: 'object',
+        description: 'Shared atributai visiems šios serijos cultivars',
+        properties: {
+          type:               { type: 'string', enum: ['cultivar-series', 'species', 'hybrid', 'genus-care', 'cultivar-group', 'variety', 'subspecies'] },
+          name:               { type: 'string', description: 'Serijos pavadinimas (pvz. „Boulevard", „Hosta sieboldiana")' },
+          genus:              { type: 'string', description: 'Genus (pvz. „Clematis")' },
+          breeder:            { type: ['string', 'null'], description: 'Brand owner / breeder (pvz. „Raymond Evison"). null jei nežinai arba neaktualus.' },
+          aliases:            { type: 'array', items: { type: 'string' }, description: 'Alternative serijos pavadinimai („Boulevard®", „Evison Boulevard")' },
+          aprasymas:          { type: 'string', description: '3-5 sakiniai apie seriją — kilmė, charakteristika, naudojimas' },
+          kilme:              { type: 'string', description: 'Serijos kilmė (šalis, breeder, metai)' },
+          tipas:              { type: 'string', description: 'Augalo tipas (pvz. „Vijoklinis daugiametis")' },
+          augimo_greitis:     { type: 'string', enum: ['lėtas', 'vidutinis', 'greitas'] },
+          sunkumas:           { type: 'integer', minimum: 1, maximum: 5 },
+          cultivationContext: { type: 'string', enum: ['indoor', 'outdoor', 'both'], description: 'Kur augo: kambaryje, lauke, arba abu' },
+          lifecycle:          { type: 'string', enum: ['annual', 'biennial', 'perennial', 'woody', 'bulbous'] },
+          hardiness:          { type: ['object', 'null'], description: 'Hardiness — TIK outdoor augalams; indoor → null', properties: { usdaZone: { type: 'string' }, minTempC: { type: 'integer' } } },
+          typicalHeight:      { type: 'string', description: '„0.8-1.2m" formato range' },
+          typicalSpread:      { type: ['string', 'null'] },
+          careInfo: {
+            type: 'object',
+            description: 'Shared care — visiems serijos nariams vienodi',
+            properties: {
+              sviesa:              { type: 'object', properties: { taskai: { type: 'integer' }, lygis: { type: 'string' }, ppfd: { type: 'object', properties: { min: { type: 'integer' }, max: { type: 'integer' } } } } },
+              vanduo:              { type: 'object', properties: { taskai: { type: 'integer' }, lygis: { type: 'string' } } },
+              laistymasIntervalas: { type: 'object', properties: { vasara: { type: 'integer' }, ziema: { type: ['integer', 'null'] }, metodas: { type: 'string' } } },
+              tresimas:            { type: 'object', properties: { intervalVasara: { type: 'integer' }, intervalZiema: { type: ['integer', 'null'] }, tipas: { type: 'string' } } },
+              substratas:          { type: 'string' },
+              persodinimas:        { type: 'string' },
+              ziemojimas:          { type: 'string' },
+              prieziura:           { type: 'object', properties: { sviesa: { type: 'string' }, laistymas: { type: 'string' }, temperatura: { type: 'string' }, dregme: { type: 'string' } } },
+            },
+          },
+          savybes: {
+            type: 'object',
+            description: 'Pavojai/valgomumas/vaistinis — paprastai shared genus-level',
+            properties: {
+              pavojai:      { type: 'array', items: { type: 'object', properties: { tipas: { type: 'string', enum: ['toksiskas', 'alergiskas', 'dirginantis'] }, target: { type: 'string', enum: ['zmonems', 'gyvunams'] }, severity: { type: 'string', enum: ['silpnas', 'vidutinis', 'stiprus'] } } } },
+              pavojingumas: { type: 'object', properties: { yra: { type: 'boolean' }, lygis: { type: ['string', 'null'] }, detales: { type: 'string' } } },
+              valgomumas:   { type: 'object', properties: { statusas: { type: 'string' }, dalys: { type: 'string' }, detales: { type: 'string' } } },
+              vaistinis:    { type: 'object', properties: { statusas: { type: 'string' }, naudojama: { type: 'string' }, detales: { type: 'string' } } },
+            },
+          },
+          dauginimas:         { type: 'array', items: { type: 'string' } },
+          problemos:          { type: 'array', items: { type: 'object', properties: { pavadinimas: { type: 'string' }, sprendimas: { type: 'string' } } } },
+          idomybes:           { type: 'array', items: { type: 'string' }, description: '2-3 serijos faktai' },
+          sources:            { type: 'array', items: { type: 'string' }, description: 'Web search šaltiniai (URLs)' },
+        },
+        required: ['type', 'name', 'genus', 'cultivationContext', 'lifecycle', 'careInfo', 'savybes', 'tipas'],
+      },
+      cultivars: {
+        type: 'array',
+        description: 'Visi žinomi šios serijos cultivars (iki 25). TIK per-cultivar info — kas skiriasi nuo serijos defaults.',
+        items: {
+          type: 'object',
+          properties: {
+            latinName:             { type: 'string', description: 'Pilnas pavadinimas su cultivar žymeniu, pvz. „Clematis \'Acropolis\'"' },
+            ltName:                { type: ['string', 'null'], description: 'Lietuviškas pavadinimas jei žinai' },
+            distinguishingFeature: { type: 'string', description: 'Vizualus aprašymas (žiedų spalva/forma) — kuo atskiriasi nuo kitų serijos narių' },
+            emoji:                 { type: 'string', description: 'Vienas emoji' },
+            bloom:                 { type: ['object', 'null'], properties: { color: { type: 'string' }, period: { type: 'string' }, fragrant: { type: 'boolean' }, doubleFlower: { type: 'boolean' } } },
+            registeredAs:          { type: ['string', 'null'], description: 'Patent/trademark ID jei žinomas (EVIPO078 etc.)' },
+            overrides:             { type: ['object', 'null'], description: 'Per-cultivar overrides KAI TIKRAI skiriasi nuo serijos defaults (pvz. unikalus aukštis). Daugumai cultivars — null/empty.' },
+          },
+          required: ['latinName', 'distinguishingFeature', 'emoji'],
+        },
+        minItems: 2,
+        maxItems: 25,
+      },
+    },
+    required: ['series', 'cultivars'],
   },
 }
 
@@ -822,6 +913,11 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   const inputRef  = useRef(null)
   const fileRef   = useRef(null)
 
+  // Bulk save state — kai admin'as save'ina visus serijos cultivars iš karto.
+  // null = neaktyvu; objektas = vyksta su progress info; 'done' / 'error' — terminus.
+  const [bulkState, setBulkState] = useState(null)
+  // { phase: 'ai'|'images'|'saving'|'done'|'error', total, completed, seriesName, savedCount, msg }
+
   useEffect(() => {
     if (!loading) { setDots(''); return }
     const t = setInterval(() => setDots(d => d.length >= 3 ? '' : d + '.'), 400)
@@ -878,6 +974,109 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
 
   const handleKeyDown = e => {
     if (e.key === 'Enter' && query.trim() && !loading) searchByText(query.trim())
+  }
+
+  // ── Bulk save entire series → taxonGroups + catalog ─────────────────
+  // Vienas AI call'as su TOOL_BULK_SERIES grąžina (series + cultivars).
+  // Save'inam į DB ir paraleliai įkeliam image URL'us per Brave/iNat chain'ą.
+  // Costs: ~$0.05-0.15 priklausomai nuo cultivars sk., +Brave queries.
+  const bulkSaveSeries = async (seriesQuery, initialCandidates = []) => {
+    setBulkState({ phase: 'ai', msg: 'AI surenka visą serijos info...' })
+    try {
+      // 1) AI bulk call su web_search (max_uses=3, nes serija dažnai reikalauja research'o)
+      const r = await claudeCall({
+        maxTokens:   8000,
+        temperature: 0.3,
+        system:      PLANT_SYSTEM,
+        tools: [
+          TOOL_BULK_SERIES,
+          { type: 'web_search_20250305', name: 'web_search', max_uses: 3 },
+        ],
+        messages: [{
+          role: 'user',
+          content: `Pateik PILNĄ info apie augalų seriją „${seriesQuery}" naudojant bulk_series tool'ą. Surašyk VISUS žinomus cultivars (iki ${MAX_BULK_BATCH}). Series block — shared care/savybės; cultivars array — tik vizualinis aprašymas + bloom info per cultivar. Naudok web_search jei reikia patikslinti.`,
+        }],
+      })
+      const block = r.content.find(b => b.type === 'tool_use' && b.name === 'bulk_series')
+      if (!block) throw new Error('AI negrąžino bulk_series struktūros')
+
+      const { series, cultivars } = block.input
+      const seriesId = taxonGroupDocId({ genus: series.genus, name: series.name, type: series.type })
+      if (!seriesId) throw new Error('Negalima sukurti seriesId')
+
+      setBulkState({ phase: 'saving', msg: 'Saugomas serijos doc...', seriesName: series.name, total: cultivars.length, completed: 0 })
+
+      // 2) Save series → taxonGroups
+      await saveTaxonGroup({
+        id:             seriesId,
+        type:           series.type,
+        name:           series.name,
+        genus:          series.genus,
+        breeder:        series.breeder ?? null,
+        aliases:        series.aliases ?? [],
+        aprasymas:      series.aprasymas,
+        kilme:          series.kilme,
+        tipas:          series.tipas,
+        augimo_greitis: series.augimo_greitis,
+        sunkumas:       series.sunkumas,
+        cultivationContext: series.cultivationContext,
+        lifecycle:      series.lifecycle,
+        hardiness:      series.hardiness,
+        typicalHeight:  series.typicalHeight,
+        typicalSpread:  series.typicalSpread,
+        careInfo:       series.careInfo ?? {},
+        savybes:        series.savybes ?? {},
+        dauginimas:     series.dauginimas ?? [],
+        problemos:      series.problemos ?? [],
+        idomybes:       series.idomybes ?? [],
+        sources:        series.sources ?? [],
+        verificationStatus: 'auto-verified',
+        aiVerifiedAt:   new Date().toISOString(),
+      })
+
+      // 3) Per kiekvieną cultivar: fetch image + save į catalog (paraleliai)
+      setBulkState({ phase: 'images', msg: 'Renku nuotraukas ir saugau cultivars...', seriesName: series.name, total: cultivars.length, completed: 0 })
+
+      let completed = 0
+      const initialImageMap = new Map(
+        (initialCandidates ?? []).map(c => [c.latinName, c.imageUrl ?? null])
+      )
+
+      await Promise.all(cultivars.map(async (c) => {
+        const cultId = catalogDocId(c.latinName)
+        if (!cultId) { completed++; return }
+
+        // Image priority: AI candidates pre-fetched → Brave → iNat → Wiki → null
+        let imageUrl = initialImageMap.get(c.latinName) ?? null
+        if (!imageUrl) imageUrl = await fetchBraveImage(c.latinName)
+        if (!imageUrl) imageUrl = await fetchInatCultivarImage(c.latinName)
+        if (!imageUrl) imageUrl = await fetchWikiThumbnail(c.latinName)
+
+        await saveToCatalog({
+          lotyniskas:            c.latinName,
+          lietuviškas:           c.ltName ?? c.latinName,
+          emoji:                 c.emoji ?? '🌿',
+          distinguishingFeature: c.distinguishingFeature,
+          bloom:                 c.bloom ?? null,
+          registeredAs:          c.registeredAs ?? null,
+          overrides:             c.overrides ?? null,
+          image:                 imageUrl,
+          taxonGroupId:          seriesId,
+          schemaVersion:         CATALOG_SCHEMA_VERSION,
+          verificationStatus:    'auto-verified',
+          aiVerifiedAt:          new Date().toISOString(),
+        }).catch(e => console.warn('[bulk] cultivar save failed:', c.latinName, e))
+
+        completed++
+        setBulkState(s => s ? { ...s, completed } : s)
+      }))
+
+      setBulkState({ phase: 'done', msg: `Pridėta ${cultivars.length} cultivars iš „${series.name}" serijos.`, seriesName: series.name, total: cultivars.length, completed: cultivars.length })
+      console.log(`[bulk] ✓ ${series.name} — ${cultivars.length} cultivars saved`)
+    } catch (e) {
+      console.error('[bulk] failed:', e)
+      setBulkState({ phase: 'error', msg: e?.message ?? 'Klaida bulk save metu' })
+    }
   }
 
   // ── Text search — Phase 1 (preview) + Phase 2 (details) ────────
@@ -1348,6 +1547,19 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
                 <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-forest-500 mb-2 px-1">
                   Galimi atitikmenys — pasirink savo augalą
                 </p>
+
+                {/* Admin bulk save — vienas AI call'as save'ina VISĄ seriją
+                    (taxonGroup + cultivars + photos) į catalog'ą. Pigesnis nei
+                    po vieną. Tinka admin/manager flow'ui — user'iui slėpti
+                    vėliau (žiūr. backlog). */}
+                <button
+                  onClick={() => bulkSaveSeries(query.trim() || result.latinName, result.candidates)}
+                  disabled={!!bulkState && bulkState.phase !== 'done' && bulkState.phase !== 'error'}
+                  className="w-full mb-2 bg-forest-700 hover:bg-forest-800 disabled:opacity-40 text-bone-50 rounded-2xl px-4 py-2.5 text-[13px] font-semibold transition-colors flex items-center justify-center gap-2"
+                >
+                  💾 Pridėti visą seriją į biblioteką
+                  <span className="font-mono text-[10px] opacity-70">(iki {MAX_BULK_BATCH} cultivars · ~$0.10)</span>
+                </button>
                 <div className="space-y-1.5">
                   {result.candidates.map((c, i) => (
                     <button
@@ -1649,6 +1861,9 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
 
     <AnimatePresence>
       {savingPhase2 && <SavingOverlay key="saving" />}
+      {bulkState && (
+        <BulkSaveOverlay key="bulk" state={bulkState} onClose={() => setBulkState(null)} />
+      )}
     </AnimatePresence>
     <PaywallSheet open={paywallOpen} limitType={paywallLimitType} onClose={() => setPaywallOpen(false)} />
     </div>
@@ -1895,5 +2110,81 @@ function DuplicateBanner({ duplicate, result, onAddToDashboard, onViewPlant, onP
         </button>
       </div>
     </div>
+  )
+}
+
+// ── BulkSaveOverlay — bulk series save progress + final summary ──────
+//
+// state structure (žiūr. bulkSaveSeries handler):
+//   { phase: 'ai'|'saving'|'images'|'done'|'error', msg, seriesName, total, completed }
+//
+// Trys faze: AI generuoja → Saugomas series doc → Per-cultivar saves su images
+// (visa tai client-side, paraleliai per Promise.all). „Done" faze su summary
+// ir Close button'u.
+function BulkSaveOverlay({ state, onClose }) {
+  const isDone   = state.phase === 'done'
+  const isError  = state.phase === 'error'
+  const isActive = !isDone && !isError
+  const progress = state.total ? Math.round((state.completed ?? 0) / state.total * 100) : 0
+
+  return createPortal(
+    <motion.div
+      className="fixed inset-0 z-[90] flex items-center justify-center bg-forest-800/55 backdrop-blur-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="bg-bone-50 rounded-3xl p-7 mx-6 flex flex-col items-center gap-4 shadow-[0_12px_32px_rgba(28,58,42,0.24)] border border-bone-400/50 w-full max-w-[360px]"
+        initial={{ scale: 0.88, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.88, opacity: 0 }}
+        transition={{ type: 'spring', damping: 24, stiffness: 280 }}
+      >
+        {isActive && <BrandLoader />}
+        {isDone   && <div className="text-5xl">✓</div>}
+        {isError  && <div className="text-5xl">⚠</div>}
+
+        <div className="text-center">
+          <p className="font-display text-base font-semibold tracking-tight text-forest-800">
+            {isDone ? 'Pridėta!' : isError ? 'Klaida' : 'Bulk save…'}
+          </p>
+          {state.seriesName && (
+            <p className="font-mono text-[11px] text-forest-500 mt-0.5">
+              {state.seriesName}
+            </p>
+          )}
+          <p className="text-sm text-forest-600 mt-1.5 leading-snug">
+            {state.msg}
+          </p>
+        </div>
+
+        {/* Progress bar — rodom kai turim total */}
+        {isActive && state.total > 0 && (
+          <div className="w-full">
+            <div className="h-1.5 bg-bone-300 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-forest-500 transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <p className="font-mono text-[10px] text-forest-400 text-center mt-1.5">
+              {state.completed} / {state.total} cultivars
+            </p>
+          </div>
+        )}
+
+        {/* Close — tik kai done arba error */}
+        {(isDone || isError) && (
+          <button
+            onClick={onClose}
+            className="w-full h-11 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
+          >
+            Uždaryti
+          </button>
+        )}
+      </motion.div>
+    </motion.div>,
+    document.body
   )
 }
