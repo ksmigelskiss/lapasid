@@ -61,8 +61,17 @@ export function fromAIResult(aiResult) {
   // Vėliau admin / botanikas gali pažymėti `expert-verified` (per admin panel).
   // aiConfidence + aiMatchLevel + aiUncertaintyReason — užfiksuojam, kodėl
   // ši būsena susidarė, kad galėtume rodyti UI badge'ą ir filtruoti admin'e.
+  //
+  // fallbackInfo — kai AI grąžino aukštesnį lygį nei vartotojas paklausė
+  // (cultivar→species). Saugom, kad UI galėtų rodyti banner'į „čia ne tai,
+  // ko prašei, bet…" ir vartotojas suprastų kodėl.
+  // cultivarsExist — eksplicitinis flag'as ar yra kultivarų / sub-taksonų.
+  // Pildoma admin'o veliau, kai admin'as su atstovaujamais kultivarais
+  // dirba. Šaltinis — AI's `cultivarsExist` field'as.
   const aiConfidence = aiResult.confidence ?? null
-  const verificationStatus = aiConfidence === 'high' ? 'auto-verified' : 'unverified'
+  const verificationStatus = aiConfidence === 'high' && !aiResult.fallbackInfo
+    ? 'auto-verified'
+    : 'unverified'
 
   return {
     id: makeId(),
@@ -70,6 +79,8 @@ export function fromAIResult(aiResult) {
     aiConfidence,
     aiMatchLevel: aiResult.matchLevel ?? null,
     aiUncertaintyReason: aiResult.uncertaintyReason ?? null,
+    aiFallbackInfo: aiResult.fallbackInfo ?? null,
+    aiCultivarsExist: aiResult.cultivarsExist ?? null,
     aiVerifiedAt: new Date().toISOString(),
     lotyniskas:  aiResult.latinName ?? '',
     lietuviškas: aiResult.name ?? '',

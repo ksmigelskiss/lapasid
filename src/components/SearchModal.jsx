@@ -63,62 +63,93 @@ async function claudeCall(body) {
 // Bet `required` masyve jų nebėra — AI gali grąžinti tuščius/null.
 export const TOOL_PREVIEW = {
   name: 'plant_preview',
-  description: 'IDENTIFIKUOK augalą + grąžink disambiguation kandidatus jei abejoji. SLIM mode — TIK identification info (latinName, ltName, candidates, confidence). NEPILDYK aprašymo, kilmės, priežiūros, savybių, įdomybių — palik null arba tuščius. Rich info pildoma vėliau per bulk_series (kai admin paspaudžia „Pridėti seriją") arba plant_details (kai vartotojas paspaudžia Save).',
+  description: 'Identify a plant + return disambiguation candidates if uncertain. SLIM mode — ONLY identification info (latinName, ltName, candidates, confidence). DO NOT fill description, origin, care, properties, fun facts — leave null/empty. Rich info filled later via bulk_series (when admin clicks "Add series") or plant_details (when user clicks Save). All human-readable output fields (name, ltName, aprasymas, kilme, seriesNote, uncertaintyReason, fallbackInfo.note) MUST be written in Lithuanian.',
   input_schema: {
     type: 'object',
     properties: {
-      // ── Confidence metadata (kritiškai svarbu — neleidžia AI tyliai
-      //    grąžinti artimiausią rūšį kaip atsakymą į cultivar užklausą) ─
+      // ── Confidence metadata (critical — prevents AI from silently
+      //    returning the closest species as an answer to a cultivar query) ─
       confidence: {
         type: 'string',
         enum: ['high', 'medium', 'low'],
-        description: 'Tavo tikrumas, kad atsakymas atitinka užklausą. high = aiškiai žinai šitą tiksliai augalą; medium = žinai bendrai (pvz. gentį) bet ne tikslų cultivar/sub-species; low = nežinai konkrečiai, atsakymas yra spėjimas remiantis artimiausiu giminaičiu.',
+        description: 'Your certainty that the answer matches the query. high = you clearly know this exact plant; medium = you know it generally (e.g., the genus) but not the precise cultivar/sub-species; low = you don\'t know specifically, the answer is a guess based on the closest relative.',
       },
       matchLevel: {
         type: 'string',
         enum: ['cultivar', 'species', 'genus', 'unknown'],
-        description: 'Kokiu taksonomijos lygiu tikrai pataikei. cultivar = tikslus cultivar/hybrid identifikuotas; species = tik iki species lygio; genus = tik genties lygis; unknown = nesi tikras net dėl genties.',
+        description: 'The taxonomic level at which you have certainty. cultivar = exact cultivar/hybrid identified; species = only down to species level; genus = only at genus level; unknown = uncertain even of genus.',
       },
       uncertaintyReason: {
         type: ['string', 'null'],
-        description: 'Jei confidence != high — paaiškink lietuviškai 1 sakiniu KODĖL nesi tikras. Pvz. „Šio cultivar (Clematis Boulevard) nėra mano žinių bazėje, pateikiu bendrą Clematis informaciją." arba „Nuotraukoje matomas neaiškus augalas, gali būti X arba Y." null jei confidence == high.',
+        description: 'If confidence != high — explain in Lithuanian (1 sentence) WHY you are not sure. E.g. „Šio cultivar (Clematis Boulevard) nėra mano žinių bazėje, pateikiu bendrą Clematis informaciją." or „Nuotraukoje matomas neaiškus augalas, gali būti X arba Y." null if confidence == high.',
+      },
+      // ── Taxonomic fallback metadata ──────────────────────────────
+      // When the user asked for a specific cultivar but we cannot find
+      // it, we step UP the taxonomy (cultivar → species → genus) and
+      // return the parent. UI uses this to explain WHY the user is
+      // seeing a broader result than they asked for.
+      fallbackInfo: {
+        type: ['object', 'null'],
+        description: 'Fill ONLY when you stepped UP the taxonomy to answer a more specific query. E.g. user asked „Dionaea \'Akai Ryu\'" (cultivar) but you only confidently know Dionaea muscipula (species) — record that fact here. null when the returned latinName matches the granularity of the user query (no fallback happened).',
+        properties: {
+          from:   { type: 'string', description: 'Original taxonomic specificity the user requested. E.g. „Dionaea \'Akai Ryu\'" or „Rosa Knock Out".' },
+          to:     { type: 'string', description: 'The level you actually answered at — matches the returned latinName. E.g. „Dionaea muscipula" or „Rosa".' },
+          reason: {
+            type: 'string',
+            enum: ['cultivar-not-found', 'cultivar-uncertain', 'series-no-members-known', 'spell-uncertain'],
+            description: 'cultivar-not-found = specific cultivar absent from your knowledge; cultivar-uncertain = you have weak info and prefer the parent; series-no-members-known = series exists but you cannot name members confidently; spell-uncertain = query may be a typo, parent is the safer answer.',
+          },
+          note:   { type: 'string', description: '1 short Lithuanian sentence the UI will show. E.g. „Konkretaus kultivaro „Akai Ryu" neradau — pateikiu motininę rūšį Dionaea muscipula." Keep it factual, no apology.' },
+        },
+        required: ['from', 'to', 'reason', 'note'],
+      },
+      // Explicit signal that named cultivars / sub-taxa exist for this
+      // species or genus. UI uses this to render the seriesNote area and
+      // (later) to offer a "Save as species representative" CTA. Set true
+      // ONLY if you can confidently assert at least one specific
+      // cultivar/variant exists (even if you do not list it in
+      // candidates). DO NOT set true on vague "probably some hybrids
+      // exist" hunches.
+      cultivarsExist: {
+        type: ['boolean', 'null'],
+        description: 'true = you know with high certainty that named cultivars/variants of this species or genus exist (ideally you list some in candidates). false = monotypic / no notable cultivars known. null = unknown.',
       },
       sources: {
         type: 'array',
         items: { type: 'string' },
-        description: 'Šaltiniai, iš kurių sėmesi info. Jei naudojai web_search tool — surašyk apsilankytus URL\'us (pvz. „https://www.rhs.org.uk/plants/...", „https://en.wikipedia.org/wiki/..."). Jei rėmeisi tik savo žiniomis — palik tuščią array.',
+        description: 'Sources you drew info from. If you used the web_search tool — list the URLs you visited (e.g. „https://www.rhs.org.uk/plants/...", „https://en.wikipedia.org/wiki/..."). If you relied solely on your own knowledge — leave the array empty.',
       },
       candidates: {
         type: 'array',
-        description: 'JEI confidence != "high" IR yra plausibly identifikuojamų kandidatų — surašyk juos. Kiekiai: cultivar serijoms (Boulevard, Wave, Knock Out) — VISI žinomi nariai iki 15; vizualiai panašios rūšys disambiguation atveju — 2-5. Vartotojas paskui pasirinks vieną → nauja paieška su tiksliu pavadinimu → high confidence rezultatas. Tuščia array jei kandidatai neaišku arba confidence == high.',
+        description: 'IF confidence != "high" AND there are plausibly identifiable candidates — list them. Counts: for cultivar series (Boulevard, Wave, Knock Out) — ALL known members up to 15; for visually-similar species disambiguation — 2-5. The user then picks one → new search with exact name → high confidence result. Empty array if candidates are unclear or confidence == high.',
         maxItems: 15,
         items: {
           type: 'object',
           properties: {
-            latinName:             { type: 'string', description: 'Tikslus lotyniškas pavadinimas su cultivar žymeniu (pvz. „Clematis \'Acropolis\'")' },
-            ltName:                { type: ['string', 'null'], description: 'Lietuviškas pavadinimas jei žinai, kitaip null' },
-            description:           { type: 'string', description: '1-2 sakiniai apie šitą cultivar/variantą — kilmė, serija, charakteringa ypatybė.' },
-            distinguishingFeature: { type: 'string', description: 'GRYNAI VIZUALUS aprašymas (žiedų spalva, dydis, forma, lapų formos), kuris padės user\'iui atskirti šitą cultivar nuo kitų kandidatų LYGINANT SU TIKRA AUGALO NUOTRAUKA. NEPRIDĖK serijos / sukūrimo metų / aukščio / žydėjimo periodo — tai eina į description. Pvz. „Ryškiai pink žvaigždiniai žiedai su tamsesne pink juostele per centrą; balti kuokeliai" gerai. „Pristatytas 2013m. Chelsea Flower Show, populiarus" — BLOGAI, eina į description.' },
-            imageUrl:              { type: ['string', 'null'], description: 'Jei web_search rezultatuose APLANKEI puslapį, kuriame buvo direct image URL (formato https://.../something.jpg|png|webp) šios SPECIFINĖS cultivar nuotrauka, pateik čia. SVARBU: tik URL adresai, kuriuos tikrai matei web_search rezultate, ne spėjimai. Geriau null nei hallucinuotas URL. Idealiai iš RHS / nursery / Wikipedia article body, ne thumbnail.' },
+            latinName:             { type: 'string', description: 'Exact latin name with cultivar marker (e.g. „Clematis \'Acropolis\'")' },
+            ltName:                { type: ['string', 'null'], description: 'Lithuanian name if you know it, otherwise null' },
+            description:           { type: 'string', description: '1-2 sentences in Lithuanian about this cultivar/variant — origin, series, defining characteristic.' },
+            distinguishingFeature: { type: 'string', description: 'PURELY VISUAL description in Lithuanian (flower colour, size, shape, leaf form) that helps the user tell this cultivar apart from other candidates WHEN COMPARING TO A REAL PHOTO. DO NOT add series / introduction year / height / bloom period — those go in description. Good: „Ryškiai pink žvaigždiniai žiedai su tamsesne pink juostele per centrą; balti kuokeliai". BAD: „Pristatytas 2013m. Chelsea Flower Show, populiarus" — that belongs in description.' },
+            imageUrl:              { type: ['string', 'null'], description: 'If during web_search you VISITED a page that contained a direct image URL (https://.../something.jpg|png|webp) of THIS specific cultivar, put it here. CRITICAL: only URLs you actually saw in web_search results, no guesses. Better null than a hallucinated URL. Ideally from RHS / nursery / Wikipedia article body, not a thumbnail.' },
           },
           required: ['latinName', 'description', 'distinguishingFeature', 'imageUrl'],
         },
       },
-      name:            { type: 'string',  description: 'Tikras lietuviškas pavadinimas. NIEKADA angliškas ar lotyniškas.' },
-      latinName:       { type: 'string',  description: 'Tikslus lotyniškas pavadinimas (su cultivar žymeniu jei taikoma, pvz. „Clematis \'Boulevard\'")' },
-      emoji:           { type: 'string',  description: 'Vienas emoji' },
-      tipas:           { type: 'string',  description: 'Augalo tipas (pvz. Sultingas, Tropinis daugiametis...)' },
+      name:            { type: 'string',  description: 'Genuine Lithuanian name. NEVER English or Latin.' },
+      latinName:       { type: 'string',  description: 'Exact latin name (with cultivar marker if applicable, e.g. „Clematis \'Boulevard\'")' },
+      emoji:           { type: 'string',  description: 'A single emoji' },
+      tipas:           { type: 'string',  description: 'Plant type in Lithuanian (e.g. „Sultingas", „Tropinis daugiametis"...)' },
       augimo_greitis:  { type: 'string',  enum: ['lėtas', 'vidutinis', 'greitas'] },
       sunkumas:        { type: 'integer', minimum: 1, maximum: 5 },
-      toksiskas:       { type: 'boolean', description: 'Backward compat — TRUE jei yra bet koks pavojus' },
-      toksiskumo_info: { type: ['string', 'null'], description: 'Backward compat — savybes.pavojingumas.detales kopija' },
+      toksiskas:       { type: 'boolean', description: 'Backward compat — TRUE if there is any hazard' },
+      toksiskumo_info: { type: ['string', 'null'], description: 'Backward compat — copy of savybes.pavojingumas.detales' },
       savybes: {
         type: 'object',
-        description: 'Struktūruoti augalo savybės: pavojai (granuliariai), valgomumas, vaistinis.',
+        description: 'Structured plant properties: hazards (granular), edibility, medicinal use.',
         properties: {
           pavojai: {
             type: 'array',
-            description: 'GRANULIARŪS pavojai. Pildyk TIK kai TIKRAS dėl tipo+target+severity (literatūra/Wikipedia aiškiai nurodo). Jei žinai tik bendrai — palik tuščią ir pildyk pavojingumas.* saugiklį.',
+            description: 'GRANULAR hazards. Fill ONLY when CERTAIN of type+target+severity (literature / Wikipedia clearly states it). If you only know generally — leave empty and fill the pavojingumas.* safeguard instead.',
             items: {
               type: 'object',
               properties: {
@@ -131,11 +162,11 @@ export const TOOL_PREVIEW = {
           },
           pavojingumas: {
             type: 'object',
-            description: 'SAUGIKLIS — visada pildyk, jei augalas yra bet kiek pavojingas, net jei pavojai[] tuščias.',
+            description: 'SAFEGUARD — always fill if the plant is hazardous at all, even when pavojai[] is empty.',
             properties: {
               yra:    { type: 'boolean' },
               lygis:  { type: ['string', 'null'], enum: ['silpnas', 'vidutinis', 'stiprus', null] },
-              detales: { type: 'string', description: 'Free text Lt kalba: kokia medžiaga, kokiu būdu, kokiu kiekiu daro žalą. PRIVALOMAS dose kontekstas — pvz. „nurijus dideliais kiekiais", „ilgalaikiu kontaktu su oda".' },
+              detales: { type: 'string', description: 'Free text in Lithuanian: what substance, by what route, at what dose it causes harm. DOSE CONTEXT IS REQUIRED — e.g. „nurijus dideliais kiekiais", „ilgalaikiu kontaktu su oda".' },
             },
             required: ['yra', 'lygis', 'detales'],
           },
@@ -143,16 +174,16 @@ export const TOOL_PREVIEW = {
             type: 'object',
             properties: {
               statusas: { type: 'string', enum: ['none', 'dalinai', 'pilnai'] },
-              dalys:    { type: 'string', description: 'Pvz. „vaisiai", „lapai", „sėklos", „visas augalas". Tuščia jei none.' },
-              detales:  { type: 'string', description: 'Kontekstas. Pvz. „Tik prinokę vaisiai; lapai toksiški."' },
+              dalys:    { type: 'string', description: 'In Lithuanian, e.g. „vaisiai", „lapai", „sėklos", „visas augalas". Empty when none.' },
+              detales:  { type: 'string', description: 'Context in Lithuanian. E.g. „Tik prinokę vaisiai; lapai toksiški."' },
             },
             required: ['statusas', 'dalys', 'detales'],
           },
           vaistinis: {
             type: 'object',
             properties: {
-              statusas:  { type: 'string', enum: ['none', 'tradicine', 'moksline'], description: 'tradicine = liaudies medicina; moksline = klinikiniai įrodymai' },
-              naudojama: { type: 'string', description: 'Pvz. „odos uždegimams, virškinimui". Tuščia jei none.' },
+              statusas:  { type: 'string', enum: ['none', 'tradicine', 'moksline'], description: 'tradicine = folk medicine; moksline = clinical evidence' },
+              naudojama: { type: 'string', description: 'In Lithuanian, e.g. „odos uždegimams, virškinimui". Empty when none.' },
               detales:   { type: 'string' },
             },
             required: ['statusas', 'naudojama', 'detales'],
@@ -160,9 +191,9 @@ export const TOOL_PREVIEW = {
         },
         required: ['pavojai', 'pavojingumas', 'valgomumas', 'vaistinis'],
       },
-      aprasymas:       { type: 'string',  description: '3-5 sakiniai apie GENUS-level augalą (pvz. Clematis kaip augalas, ne konkrečią seriją „Boulevard"). Kaip atrodo, kur natūraliai auga, kodėl populiarus sodininkystėje. Aktualus visiems serijos nariams.' },
-      seriesNote:      { type: ['string', 'null'], description: 'JEI latinName turi seriją (pvz. „Clematis \\\'Boulevard\\\'", „Rosa Knock Out") — 1-2 sakiniai apie pačią seriją: kas sukūrė, kuo charakterizuojasi, kada introdusuota. null jei tai ne serija (specifinis cultivar, species, ar genus only).' },
-      kilme:           { type: 'string', description: '1 sakinys kur GENUS kilęs (region, natūralus habitat). Ne apie seriją.' },
+      aprasymas:       { type: 'string',  description: '3-5 sentences in Lithuanian about the GENUS-level plant (e.g. Clematis as a plant, not the specific „Boulevard" series). How it looks, where it grows natively, why it is popular in gardening. Relevant to every series member.' },
+      seriesNote:      { type: ['string', 'null'], description: 'IF latinName contains a series (e.g. „Clematis \\\'Boulevard\\\'", „Rosa Knock Out") — 1-2 sentences in Lithuanian about the series itself: who bred it, what characterises it, when it was introduced. null if this is not a series (specific cultivar, species, or genus only).' },
+      kilme:           { type: 'string', description: '1 sentence in Lithuanian about where the GENUS originates (region, natural habitat). Not about the series.' },
       sviesa: {
         type: 'object',
         properties: {
@@ -180,11 +211,13 @@ export const TOOL_PREVIEW = {
         },
         required: ['taskai', 'lygis'],
       },
-      idomybes: { type: 'array', items: { type: 'string' }, description: '2-3 įdomūs faktai' },
+      idomybes: { type: 'array', items: { type: 'string' }, description: '2-3 fun facts in Lithuanian' },
     },
     // SLIM required'as — TIK identification + honesty. Visi rich field'ai
     // (tipas, savybes, aprasymas, kilme, sviesa, vanduo, idomybes ir t.t.)
     // optional'iai — AI gali grąžinti null/tuščius, ir mes nelaužiam build'o.
+    // fallbackInfo + cultivarsExist nėra required — AI grąžina null
+    // kai nereikia (nėra fallback'o / nežinia ar yra kultivarų).
     // (Žiūr. `user-search-v1` git tag — pilna senesnė required lista.)
     required: ['confidence', 'matchLevel', 'uncertaintyReason', 'sources', 'candidates',
                'name', 'latinName', 'emoji'],
@@ -346,192 +379,257 @@ export const TOOL_BULK_SERIES = {
   },
 }
 
-export const PLANT_SYSTEM = `Esi augalų ekspertas. Visada ieškok tiksliai nurodyto augalo. Rašyk LIETUVIŠKAI, natūraliai.
+export const PLANT_SYSTEM = `You are a plant expert. Always answer about the exact plant the user asked for. All human-readable output MUST be in natural Lithuanian.
 
 ═════════════════════════════════════════════════════════
-WEB SEARCH — NAUDOJIMAS
+WEB SEARCH — USAGE
 ═════════════════════════════════════════════════════════
 
-Turi prieigą prie web_search tool'o. KADA jį naudoti:
+You have access to the web_search tool. WHEN to use it:
 
-  ✓ Cultivar/hybrid užklausoms, kurių pavadinimu nesi 100% tikras
-    (pvz. „Clematis 'Boulevard Vicki'", „Coleus 'Wizard Velvet'")
-  ✓ Naujesniems augalams (po 2024) — gali būti ne tavo training'e
-  ✓ Specifikai cultivar serijos — patvirtink, kuriai serijai priklauso,
-    kuo skiriasi nuo kitų
+  ✓ Cultivar/hybrid queries you are not 100% sure of by name
+    (e.g. „Clematis 'Boulevard Vicki'", „Coleus 'Wizard Velvet'")
+  ✓ Newer plants (post-2024) — may be outside your training data
+  ✓ Specifics of a cultivar series — confirm which series it belongs to
+    and how it differs from siblings
 
-PIRMIAUSIA naudok web_search, paskui pildyk plant_preview tool'ą.
+ALWAYS use web_search FIRST, THEN fill the plant_preview tool.
 
-Šaltiniai (priority order):
-  1. https://www.rhs.org.uk/plants/  (Royal Horticultural Society — autoritetas)
+Sources (priority order):
+  1. https://www.rhs.org.uk/plants/  (Royal Horticultural Society — authority)
   2. https://en.wikipedia.org/wiki/  (cross-reference, multilingual)
   3. https://www.missouribotanicalgarden.org/PlantFinder/  (US horticulture)
   4. https://garden.org/plants/  (user-curated cultivar files)
 
-Jei web_search patvirtina informaciją — confidence galima kelti į „high"
-ir privalomai surašyti sources lauką su apsilankytais URL'ais.
-Jei web_search NIEKO neranda — confidence lieka „low", uncertaintyReason
-paaiškina kad cultivar net online nerandamas.
+If web_search confirms your info — confidence may be raised to „high"
+and you MUST list the visited URLs in the sources field.
+If web_search finds NOTHING — confidence stays „low", uncertaintyReason
+explains that the cultivar is not even findable online.
 
 ═════════════════════════════════════════════════════════
-DISAMBIGUATION — KANDIDATAI (PRIVALOMA SĄLYGA)
+TAXONOMIC FALLBACK — THE CORE RULE
 ═════════════════════════════════════════════════════════
 
-🛑 GRIEŽTA TAISYKLĖ — jei tavo uncertaintyReason arba description
-TEKSTE PAMINĖSI bet kuriuos KONKREČIUS cultivar pavadinimus (pvz.
-„Cézanne, Rebecca, Olympia, Chantilly"), tada VISI ŠITIE pavadinimai
-PRIVALO būti candidates array'uje su pilna informacija.
+A plant's taxonomy has nested levels:
+  • Genus    — e.g. „Clematis"
+  • Species  — e.g. „Clematis vitalba"
+  • Cultivar — e.g. „Clematis 'Boulevard'"
 
-Negali sakyti „yra cultivars X, Y, Z" tekste BE jų sąrašo candidates'e.
-Tai bug'as user'iui: jis mato problemą bet negali pasirinkti sprendimo.
+When you CANNOT confidently answer at the level the user asked for,
+STEP UP ONE LEVEL rather than refusing or guessing. Always return
+SOMETHING true, even if broader than asked.
 
-Kiekvienas kandidatas turi turėti:
-  • latinName — tikslus pavadinimas (su cultivar žymeniu, pvz „Clematis 'Cézanne'")
-  • ltName — lietuviškas pavadinimas jei žinai, kitaip null
-  • description — 1-2 sakiniai (serija, kilmė, charakteristika)
-  • distinguishingFeature — GRYNAI VIZUALUS aprašymas (žiedų spalva, forma)
-  • imageUrl — jei web_search rezultate matei photo URL, kitaip null
+The fallback ladder, in order of preference:
+  1. Cultivar (user asked for it, you know it)        → matchLevel: "cultivar"
+  2. Cultivar miss → parent species                    → matchLevel: "species" + fallbackInfo
+  3. Species miss → parent genus                       → matchLevel: "genus"   + fallbackInfo
+  4. Even genus unclear                                → matchLevel: "unknown" + low confidence
 
-User'is paspausta vieną kandidatą → nauja paieška su tikslesniu pavadinimu
-→ high confidence rezultatas → saugomas į catalog.
+CRITICAL RULES for fallback:
 
-KADA PILDYTI candidates (privaloma):
-  ✓ Užklausa: serijos pavadinimas („Clematis 'Boulevard'") → surašyk
-    bent 4-5 populiarius serijos narius
-  ✓ Photo identifikacija ne 100% tikra → surašyk top 3-5 plausibly rūšis
-  ✓ Tekste paminėjai konkrečių cultivar pavadinimų → visi į candidates
-  ✓ matchLevel == 'genus' arba 'species' kai pati genus turi cultivar'us
+  • Step UP ONLY ONE LEVEL at a time. Cultivar → species is good.
+    Cultivar → genus skips a level; only do that when the species is
+    ALSO unknown to you.
+  • BEFORE falling back, check for typos / case variants. „Akay Riu"
+    is probably „Akai Ryu". If you suspect a typo, add the corrected
+    spelling as a candidate FIRST and only fallback if still unsure
+    (reason: "spell-uncertain").
+  • Fallback only when cultivar confidence is below MEDIUM. If you
+    have a weak-but-plausible cultivar match, return the cultivar
+    with confidence: "medium" + candidates listing alternatives,
+    rather than collapsing to the species.
+  • When you fallback, you MUST fill the fallbackInfo object:
+      from:   exact user query string
+      to:     the parent latinName you are returning
+      reason: cultivar-not-found | cultivar-uncertain
+            | series-no-members-known | spell-uncertain
+      note:   short Lithuanian explanation for the UI
+  • The returned latinName MUST match the level you actually answered
+    at. If you fallback to species, latinName is the species (no
+    quote marks). Do NOT carry the user's quoted cultivar through.
+  • Set cultivarsExist = true when you fallback because cultivars
+    EXIST but you don't know specific ones (this enables the UI to
+    surface a "Save as species representative" action later).
 
-NEPILDYK candidates TIK jei:
-  ✗ Confidence == 'high' (tikrai žinai augalą)
-  ✗ Užklausa visiškai neaiški („kažkoks žalias augalas") — per daug,
-    geriau low confidence + uncertaintyReason be konkrečių pavardžių
+FORBIDDEN: silently returning the wild species (e.g. Clematis vitalba)
+when the user asked for a specific cultivar (e.g. Clematis 'Boulevard')
+WITHOUT filling fallbackInfo. The user MUST know they got a different
+specificity than they asked for.
 
-PAVYZDYS — Clematis 'Boulevard' užklausa:
-  ✗ BLOGAI:
-    uncertaintyReason: „Boulevard serijoje yra Cézanne, Rebecca, Olympia"
-    candidates: []  ← NĖRA SĄRAŠO! User nemato sprendimo!
+Examples:
 
-  ✓ GERAI:
-    uncertaintyReason: „Boulevard yra cultivar serija, ne konkretus augalas."
-    candidates: [
-      { latinName: "Clematis 'Cézanne'", ltName: "Klematis Sezanas",
-        description: "Boulevard serijos narys, kompaktiškas",
-        distinguishingFeature: "Šviesiai mėlyni dideli žiedai su balta juostele",
-        imageUrl: null },
-      { latinName: "Clematis 'Rebecca'", ... },
-      { latinName: "Clematis 'Olympia'", ... },
-      ...
-    ]
+  User: „Dionaea 'Akai Ryu'"  (you don't know this specific cultivar)
+  ✓ Correct:
+     latinName:      "Dionaea muscipula"
+     matchLevel:     "species"
+     confidence:     "medium"
+     cultivarsExist: true
+     fallbackInfo: {
+       from:   "Dionaea 'Akai Ryu'",
+       to:     "Dionaea muscipula",
+       reason: "cultivar-not-found",
+       note:   "Konkretaus kultivaro „Akai Ryu" nepavyko patvirtinti — pateikiu motininę rūšį Dionaea muscipula."
+     }
+
+  User: „Dionaea muscipula"  (no specific cultivar asked, you know species)
+  ✓ Correct:
+     latinName:      "Dionaea muscipula"
+     matchLevel:     "species"
+     confidence:     "high"
+     cultivarsExist: true       (you know cultivars exist, but you don't list any)
+     fallbackInfo:   null       (no fallback — user got what they asked for)
+     candidates:     []         (acceptable if you cannot confidently name members)
+
+  User: „Rosa Knock Out"  (series — you know SOME members)
+  ✓ Correct:
+     latinName:      "Rosa"
+     matchLevel:     "genus"
+     confidence:     "medium"
+     cultivarsExist: true
+     fallbackInfo: {
+       from:   "Rosa Knock Out",
+       to:     "Rosa",
+       reason: "series-no-members-known",   (use this only when you list <4 candidates)
+       note:   "Knock Out yra The Conard-Pyle serija; pateikiu žinomus narius."
+     }
+     candidates:     [Knock Out 'Radrazz', Pink Knock Out 'Radcon', ...]
 
 ═════════════════════════════════════════════════════════
-HONESTY REQUIREMENT — KRITIŠKAI SVARBU
+DISAMBIGUATION — CANDIDATES (MANDATORY)
 ═════════════════════════════════════════════════════════
 
-PRIVALOMI laukai: confidence, matchLevel, uncertaintyReason, sources, candidates.
+🛑 STRICT RULE — if uncertaintyReason, fallbackInfo.note, or any
+description text MENTIONS specific cultivar names (e.g. „Cézanne,
+Rebecca, Olympia, Chantilly"), then ALL those names MUST appear in
+the candidates array with full info.
 
-Augalų pasaulis turi tris taksonomijos lygius, kurie SKIRIASI priežiūra:
-  • Genus (gentis) — pvz. „Clematis"
-  • Species (rūšis) — pvz. „Clematis vitalba" (laukinė)
-  • Cultivar/Hybrid — pvz. „Clematis 'Boulevard'" (sodo hibridas, Raymond Evison serija)
+You cannot say "there are cultivars X, Y, Z" in text WITHOUT listing
+them in candidates. That is a bug for the user — they see a problem
+but cannot pick a solution.
 
-VISKAS skiriasi tarp lygmenų: laistymas, dirvožemis, ligos, atsparumas, kvapas, žiedų spalva.
-Hibrido priežiūra GALI būti dramatiškai kitokia nei laukinio giminaičio.
+Each candidate must contain:
+  • latinName — exact name with cultivar marker (e.g. „Clematis 'Cézanne'")
+  • ltName — Lithuanian name if known, else null
+  • description — 1-2 Lithuanian sentences (series, origin, traits)
+  • distinguishingFeature — PURELY VISUAL Lithuanian description
+  • imageUrl — if you saw a photo URL in web_search, else null
 
-DRAUDŽIAMA: tyliai grąžinti laukinę rūšį (pvz. Clematis vitalba), kai
-vartotojas paklausė konkretaus cultivar'o (pvz. Clematis 'Boulevard').
+The user picks a candidate → new search with the exact name →
+high-confidence result → saved to catalog.
 
-TEISINGAS elgesys:
-  → Jei TIKRAI žinai konkrečiai šitą cultivar/hybrid →
-      confidence: "high", matchLevel: "cultivar"
-  → Jei žinai gentį/seriją bet ne tikslų cultivar →
-      confidence: "medium", matchLevel: "genus" arba "species",
-      uncertaintyReason: „Konkretus cultivar 'X' neidentifikuotas;
-      pateikiama bendra genties Y informacija."
-  → Jei nieko aiškaus nežinai →
-      confidence: "low", matchLevel: "unknown",
-      uncertaintyReason: „Augalas '…' nėra mano žinių bazėje."
+WHEN TO FILL candidates (mandatory):
+  ✓ Query is a series name („Clematis 'Boulevard'") → list at least
+    4-5 popular members
+  ✓ Photo identification not 100% certain → list top 3-5 plausible species
+  ✓ You mentioned specific cultivar names in any text field → all in candidates
+  ✓ matchLevel == 'genus' or 'species' AND cultivarsExist == true AND
+    you can name members confidently
 
-Niekada nemeluok confidence — geriau pasakyti „nežinau" nei pateikti
-neteisingą priežiūrą, kuri gali pakenkti augalui ar gyvūnui.
+DO NOT fill candidates when:
+  ✗ confidence == 'high' (you truly know the plant)
+  ✗ Query is completely vague („some green plant") — better low
+    confidence + uncertaintyReason without specific names
 
-latinName lauko formate IŠLAIKYK cultivar žymenį: jei vartotojas paklausė
-„Clematis 'Boulevard'", grąžink būtent „Clematis 'Boulevard'" (su quote'ais),
-NE „Clematis vitalba".
+═════════════════════════════════════════════════════════
+HONESTY REQUIREMENT — CRITICAL
+═════════════════════════════════════════════════════════
 
-latinName PRIVALO būti GRYNAS taksonominis pavadinimas — be lietuviškų
-ar angliškų suffix'ų skliaustuose, be ® / ™ simbolių. Pavyzdžiai:
+Required fields: confidence, matchLevel, uncertaintyReason, sources, candidates.
+
+Care differs across taxonomic levels: watering, soil, diseases,
+hardiness, scent, flower colour can all differ between a hybrid and
+its wild relative.
+
+Never lie about confidence — better to say "I don't know" via the
+fallback ladder than provide care info that may harm a plant or animal.
+
+Preserve the cultivar marker in latinName when you DO identify a
+cultivar: if the user asked „Clematis 'Boulevard'" and you found
+exactly that, return „Clematis 'Boulevard'" with quotes, NOT
+„Clematis vitalba".
+
+latinName MUST be a CLEAN taxonomic name — no Lithuanian/English
+suffixes in parentheses, no ® / ™ symbols. Examples:
   ✓ „Clematis 'Olympia'"
   ✓ „Clematis 'Acropolis'"
-  ✗ „Clematis 'Olympia' (Boulevard® serija)" ← serija į description lauką, ne latinName
-  ✗ „Clematis 'Acropolis'® (Evison hybrid)"  ← trademark / komercinė info eina description'e
+  ✗ „Clematis 'Olympia' (Boulevard® serija)" ← series goes in description
+  ✗ „Clematis 'Acropolis'® (Evison hybrid)"  ← trademark info goes in description
 
 ═════════════════════════════════════════════════════════
 
-SVARBU — laukas "name": PRIVALO būti tikras lietuviškas pavadinimas (žodynas/Vikipedija). NIEKADA lotyniškas ar angliškas. Hibridams be atskiro pavadinimo — naudok genties lietuvišką (pvz. Nepenthes → "Ąsotenė").
+LITHUANIAN NAME FIELD — the "name" field MUST be a genuine Lithuanian
+name (from a dictionary / Lithuanian Wikipedia). NEVER Latin or
+English. For hybrids without their own name — use the Lithuanian
+genus name (e.g. Nepenthes → „Ąsotenė").
 
-Nuotraukų atpažinimas: identifikuok TIK pagrindinį nuotraukos augalą — tą, kuris užima daugiausiai kadro arba yra fokuse. Visiškai ignoruok fone ar šonuose matomus kitus augalus.
+PHOTO IDENTIFICATION — identify ONLY the main plant in the photo:
+the one occupying most of the frame or in focus. Completely ignore
+background or side plants.
 
-Šviesa: taskai 1 (žema) 50–150 μmol/m²/s; 2 (vidutinė) 150–400; 3 (ryški) 400–2000
-Vanduo: 1 (mažai) sultingi; 2 (vidutiniškai) tropiniai; 3 (daug) paparčiai
-Laistymas (dienomis): sultingi vasara 14–21, vidutiniai 7–14, paparčiai 3–7
+Light: taskai 1 (žema) 50–150 μmol/m²/s; 2 (vidutinė) 150–400; 3 (ryški) 400–2000
+Water: 1 (mažai) succulents; 2 (vidutiniškai) tropical; 3 (daug) ferns
+Watering (days): succulents summer 14–21, average 7–14, ferns 3–7
 
 ═════════════════════════════════════════════════════════
-SAVYBES — pavojai, valgomumas, vaistinis. KRITIŠKAI svarbu.
+SAVYBES — hazards, edibility, medicinal. CRITICAL.
 ═════════════════════════════════════════════════════════
 
-KAI VARTOTOJO MESSAGE'E PRIDEDAMI WIKIPEDIA ŠALTINIAI — naudok juos kaip
-PIRMINĮ AUTORITETĄ. Papildyk savo treniruotės žiniomis tik kur trūksta.
-Detalėse nurodyk "Wikipedia mini, kad ..." kai informacija iš ten.
+WHEN THE USER MESSAGE CONTAINS WIKIPEDIA SOURCES — treat them as the
+PRIMARY AUTHORITY. Supplement with training-data knowledge only where
+they are silent. In Lithuanian detales note „Wikipedia mini, kad ..."
+when the info came from there.
 
-PAVOJAI[] (granuliarus) vs PAVOJINGUMAS (saugiklis):
+PAVOJAI[] (granular) vs PAVOJINGUMAS (safeguard):
 
-Pildyk pavojai[] TIK kai TIKRAS dėl visų trijų: tipas + target + severity.
-   ✓ "Pomidoras → toksiškas glikoalkaloidas solaninas; gyvūnams sukelia
-      virškinimo sutrikimus, neretai hospitalizacija" — TAIP, severity=stiprus
-   ✗ "Augalas turi alkaloidų" — nepildyk pavojai[], nes severity nežinomas
+Fill pavojai[] ONLY when CERTAIN of all three: tipas + target + severity.
+   ✓ Tomato → toxic glycoalkaloid solanine; in animals causes digestive
+     issues, often hospitalisation. YES, severity=stiprus,
+     detales (Lithuanian): „Pomidoro lapuose ir žaliuose vaisiuose yra
+     glikoalkaloido solanino; nurijus dideliais kiekiais sukelia
+     virškinimo sutrikimus, gyvūnams gali prireikti veterinaro."
+   ✗ "Plant has alkaloids" — do NOT fill pavojai[], severity unknown.
 
-JEI pavojai[] tuščias, BET žinai, kad augalas yra bet kiek pavojingas:
-  → pildyk pavojingumas.yra=true + spėk lygį + detalėse nurodyk kontekstą
-  → pvz. "Wikipedia mini, kad gyvūnams kenkia; konkrečių detalių nepateikia."
+IF pavojai[] is empty BUT you know the plant is hazardous at all:
+  → set pavojingumas.yra=true + guess lygis + add context in detales
+  → e.g. „Wikipedia mini, kad gyvūnams kenkia; konkrečių detalių nepateikia."
 
-NIEKADA nepildyk pavojai[] su pavyzdiniais skaičiais. Tuščias array OK.
+NEVER fill pavojai[] with placeholder numbers. Empty array is OK.
 
-TWO-STEP REASONING toksiškumui (kai šaltiniuose nerasta tiesioginio įrašo):
-  1. Ar augale yra žinomas toksiškas junginys (alkaloidai, glikozidai,
-     oksalatai, saponinai, latexas)?
-  2. Ar AUGALUOSE (ne gryną laboratorijoje) tas junginys daro poveikį žinomu
-     kiekiu/būdu?
+TWO-STEP REASONING for toxicity (when sources lack a direct entry):
+  1. Does the plant contain a known toxic compound (alkaloids,
+     glycosides, oxalates, saponins, latex)?
+  2. Does that compound — inside the plant tissue, not pure lab form —
+     act at a known dose / route?
 
-  Jei abu „taip" — pildyk pavojai[] su severity NE AUKŠTESNIU NEI VIDUTINIS.
-  Detalėse PRIVALOMAI nurodyk:
-    - kokia medžiaga
-    - kokiu būdu žalą daro ("nurijus", "ilgalaikiu kontaktu su oda")
-    - apytikslis kiekis ("net mažais kiekiais", "tik dideliais kiekiais")
+  If both "yes" — fill pavojai[] with severity NO HIGHER THAN VIDUTINIS.
+  In detales (Lithuanian), MUST include:
+    - the substance name
+    - route of harm („nurijus", „ilgalaikiu kontaktu su oda")
+    - approximate dose („net mažais kiekiais", „tik dideliais kiekiais")
 
-  NIEKADA nepildyk severity=stiprus remdamasis vien junginio buvimu — tam
-  reikia konkretaus literatūros įrašo apie hospitalizacijos atvejus.
+  NEVER set severity=stiprus just because the compound is present —
+  that requires a specific literature record of hospitalisation.
 
-DOSE KONTEKSTAS pavojingumas.detales lauke yra PRIVALOMAS:
-  ✓ "Sultys aitrios — sukelia odos dirginimą prisilietus; gerai nuplaunama
+DOSE CONTEXT in pavojingumas.detales is REQUIRED:
+  ✓ „Sultys aitrios — sukelia odos dirginimą prisilietus; gerai nuplaunama
      vandeniu. Vaikams ir gyvūnams pavojingiau."
-  ✓ "Sėklos turi cijanogeninių glikozidų — pavojingos NURIJUS DIDESNIAIS
+  ✓ „Sėklos turi cijanogeninių glikozidų — pavojingos NURIJUS DIDESNIAIS
      KIEKIAIS (10+ sėklų). Vaisiai be sėklų saugūs."
-  ✗ "Augalas yra toksiškas." (be konteksto = gąsdina, ne informuoja)
+  ✗ „Augalas yra toksiškas." (no context = scares, doesn't inform)
 
 VALGOMUMAS:
-  - none = nevalgomas (rodom tik kaip "trūksta"; neignoruok jei yra)
-  - dalinai = kai kurios dalys (privalomai nurodyk dalys lauke)
-  - pilnai = visas augalas valgomas
+  - none    = not edible
+  - dalinai = some parts edible (you MUST name parts in „dalys")
+  - pilnai  = whole plant edible
 
 VAISTINIS:
-  - tradicine = liaudies medicina, žiniaraščių lygis
-  - moksline = klinikinis tyrimas patvirtino
-  - none = nevaistinis
+  - tradicine = folk medicine, herbalist record
+  - moksline  = clinical trial confirms
+  - none      = not medicinal
 
-NIEKADA nepamiršk valgomų/vaistinių augalų — pomidoras, čiobreliai, citrina,
-papartis dažnai įvedami kaip kambariniai, bet jų atskiros dalys turi
-maistinę/vaistinę vertę. Tai stiprus app'o sell point — neignoruok.`
+NEVER forget edible/medicinal angles — tomato, thyme, lemon, fern are
+often grown as houseplants yet have edible / medicinal parts. That's
+a strong app selling point — don't omit it.`
 
 
 
@@ -1344,42 +1442,48 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
         ],
         messages: [{
           role: 'user',
-          content: `IDENTIFIKUOK augalą: "${q}".
+          content: `Identify the plant: "${q}".
 
-SLIM MODE — disambiguation + minimal info, NE pilnas user-facing preview:
+SLIM MODE — disambiguation + minimal info, NOT a full user-facing preview.
 
-PRIVALOMA:
-• latinName, ltName, candidates[] (jei abejoji), confidence, sources
+ALL human-readable text (name, ltName, aprasymas, kilme, seriesNote, uncertaintyReason, candidate description / distinguishingFeature, fallbackInfo.note) MUST be in Lithuanian.
 
-PILDYK (narrative info — GENUS lygmens, ne care):
-• aprasymas: 3-5 sakiniai apie GENUS-level augalą. Pvz. užklausai „Clematis 'Boulevard'" — apie KLEMATĮ kaip augalą (kaip atrodo, kur natūraliai auga, kodėl populiarus), NE apie 'Boulevard' seriją.
-• kilme: 1 sakinys apie GENUS kilmę
-• seriesNote: 1-2 sakiniai apie konkrečią seriją (Boulevard / Wave / Knock Out / etc.) JEI latinName turi seriją. null jei ne serija.
+REQUIRED:
+• latinName, ltName, candidates[] (if uncertain), confidence, sources
 
-NEPILDYK (per slow + per save'inama vėliau):
-• Care info: sviesa, vanduo, substratas, persodinimas, žiemojimas, tręšimas, priežiūra — null/tuščius
-• Savybes (toksiškumas, valgomumas, vaistinis) — null
-• Augimo greitis, tipas, sunkumas, lifecycle, hardiness — null
+FILL (narrative — GENUS level, no care info):
+• aprasymas: 3-5 Lithuanian sentences about the GENUS-level plant. E.g. for „Clematis 'Boulevard'" — about CLEMATIS as a plant (how it looks, where it grows natively, why it is popular), NOT about the 'Boulevard' series.
+• kilme: 1 Lithuanian sentence about GENUS origin.
+• seriesNote: 1-2 Lithuanian sentences about the specific series (Boulevard / Wave / Knock Out / etc.) IF latinName contains a series. null otherwise.
+• fallbackInfo: fill ONLY when you stepped UP the taxonomy (see system prompt rules). null otherwise.
+• cultivarsExist: true if you know named cultivars exist for the genus/species you returned, false if monotypic, null if unknown.
 
-🛑 BE QUOTE'Ų = SERIJA, NE VIENAS CULTIVAR'AS:
-Tai esminis interpretation rule'as:
-  • „Clematis 'Acropolis'"  → quote'as → KONKRETUS CULTIVAR
-  • „Clematis Boulevard"     → BE quote'o → SERIJA (Boulevard yra serijos pavadinimas)
-  • „Rosa 'Radrazz'"          → quote'as → KONKRETUS CULTIVAR
-  • „Rosa Knock Out"          → BE quote'o → SERIJA (net jei žinai, kad „Knock Out" yra ir trademark vienam original cultivar'ui — vartotojas tikriausiai nori SERIJOS)
-  • „Hydrangea Endless Summer"→ BE quote'o → SERIJA
-  • „Petunia Wave"            → BE quote'o → SERIJA
+DO NOT FILL (too slow + saved later via other tools):
+• Care info: sviesa, vanduo, substratas, persodinimas, žiemojimas, tręšimas, priežiūra — null/empty
+• Savybes (toxicity, edibility, medicinal) — null
+• augimo_greitis, tipas, sunkumas, lifecycle, hardiness — null
 
-JEI užklausa be quote'ų IR latinName atitinka žinomos serijos pattern'ą → candidates[] PRIVALO turėti BENT 4 narius (iki 15 jei žinai). NĖRA priimtina:
+🛑 NO QUOTES = SERIES, NOT A SINGLE CULTIVAR
+This is the core interpretation rule for the user query:
+  • „Clematis 'Acropolis'"   → quotes → SPECIFIC CULTIVAR
+  • „Clematis Boulevard"     → no quotes → SERIES (Boulevard is the series name)
+  • „Rosa 'Radrazz'"          → quotes → SPECIFIC CULTIVAR
+  • „Rosa Knock Out"          → no quotes → SERIES (even if „Knock Out" is also a trademark of an original cultivar — the user most likely wants the series)
+  • „Hydrangea Endless Summer"→ no quotes → SERIES
+  • „Petunia Wave"            → no quotes → SERIES
+
+If the query is unquoted AND latinName matches a known series pattern → candidates[] MUST contain AT LEAST 4 members (up to 15 if you know more). UNACCEPTABLE:
   ❌ uncertaintyReason: „Knock Out yra serija su 13 cultivars" + candidates: []
   ❌ aprasymas: „Yra Pink Knock Out, Sunny Knock Out..." + candidates: []
-  ❌ Identifikuoji kaip vieną „Rosa 'Radrazz'" kai užklausa „Rosa Knock Out" → ne tas, ką vartotojas norėjo
+  ❌ Identifying as a single „Rosa 'Radrazz'" when the query was „Rosa Knock Out" — not what the user wanted
   ✅ uncertaintyReason: „Knock Out yra serija, pasirink konkretų cultivar" + candidates: [Knock Out 'Radrazz', Pink Knock Out 'Radcon', Sunny Knock Out 'Radsunny', Double Knock Out 'Radtko', Rainbow Knock Out, Coral Knock Out, ...]
 
-Jei tekste paminėsi cultivar pavadinimą — jis PRIVALO būti candidates'e.
-Web_search'as nereikalingas patvirtinti VISO serijos sąrašo — pakanka 4-15 populiariausių žinomų narių iš training data.
+If you mention a cultivar name in ANY text field — it MUST be in candidates.
+web_search is NOT required to confirm a series list — 4-15 popular members from training data are enough.
 
-Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIES, TOOL_DETAILS).`,
+TAXONOMIC FALLBACK (see system prompt): if you cannot confidently identify the queried cultivar, step up ONE level (cultivar → species) and fill fallbackInfo. Do NOT silently substitute a wild species without recording the fallback.
+
+Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOOL_DETAILS).`,
         }],
       })
       if (controller.signal.aborted) return
@@ -1457,7 +1561,14 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
       // Auto-save į catalog TIK jei high confidence — nepilam šiukšlių į DB.
       // Low/medium confidence rezultatai ateina į catalog tik kai user'is
       // juos išsaugo (per onAddToDashboard → fromAIResult → catalog write).
-      if (aiResult.confidence === 'high') {
+      // Auto-save SKIP kai fallbackInfo užpildyta — tai reiškia, kad
+      // AI grąžino aukštesnį taksonominį lygį nei vartotojas paklausė
+      // (cultivar → species fallback). Tokio rezultato nelaikom
+      // „expert quality" catalog entry'iu pagal vartotojo originalią
+      // query — bet pati grąžinama rūšis vis tiek gali būti teisinga,
+      // todėl confidence='high' + fallbackInfo užpildyta yra leistina
+      // kombinacija (rūšis tikra, tiesiog kultivaro nežinom).
+      if (aiResult.confidence === 'high' && !aiResult.fallbackInfo) {
         saveToCatalog({
           lotyniskas:          aiResult.latinName,
           lietuviškas:         enriched.name,
@@ -1467,6 +1578,8 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
           aiConfidence:        aiResult.confidence,
           aiMatchLevel:        aiResult.matchLevel,
           aiUncertaintyReason: aiResult.uncertaintyReason,
+          aiFallbackInfo:      aiResult.fallbackInfo ?? null,
+          aiCultivarsExist:    aiResult.cultivarsExist ?? null,
           aiVerifiedAt:        new Date().toISOString(),
         }).catch(e => console.warn('[catalog] auto-save failed:', e))
       }
@@ -1507,7 +1620,7 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
         role: 'user',
         content: [
           { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
-          { type: 'text',  text: 'IDENTIFIKUOK augalą šioje nuotraukoje (arba ant etiketės). SLIM mode: PILDYK latinName, ltName, candidates jei abejoji, confidence, aprasymas (GENUS lygmens info — 3-5 sakiniai), kilme (1 sakinys), seriesNote (1-2 sakiniai jei serija). NEPILDYK care info (sviesa/vanduo/etc), savybių, augimo greičio — null/tuščius.' },
+          { type: 'text',  text: 'Identify the plant in this photo (or on a label). SLIM mode: FILL latinName, ltName, candidates if uncertain, confidence, aprasymas (GENUS-level info — 3-5 Lithuanian sentences), kilme (1 Lithuanian sentence), seriesNote (1-2 Lithuanian sentences if a series). DO NOT FILL care info (sviesa/vanduo/etc), savybes, augimo_greitis — null/empty. All human-readable text MUST be in Lithuanian. TAXONOMIC FALLBACK: if the label shows a specific cultivar you cannot confirm, step up to the species and fill fallbackInfo (see system prompt). Set cultivarsExist=true when you fallback to a species/genus that you know has named cultivars.' },
         ],
       }
 
@@ -1567,7 +1680,14 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
         enrichCandidates(aiResult.candidates),
       ])
       enriched.candidates = candidatesWithImages
-      if (aiResult.confidence === 'high') {
+      // Auto-save SKIP kai fallbackInfo užpildyta — tai reiškia, kad
+      // AI grąžino aukštesnį taksonominį lygį nei vartotojas paklausė
+      // (cultivar → species fallback). Tokio rezultato nelaikom
+      // „expert quality" catalog entry'iu pagal vartotojo originalią
+      // query — bet pati grąžinama rūšis vis tiek gali būti teisinga,
+      // todėl confidence='high' + fallbackInfo užpildyta yra leistina
+      // kombinacija (rūšis tikra, tiesiog kultivaro nežinom).
+      if (aiResult.confidence === 'high' && !aiResult.fallbackInfo) {
         saveToCatalog({
           lotyniskas:          aiResult.latinName,
           lietuviškas:         enriched.name,
@@ -1577,6 +1697,8 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
           aiConfidence:        aiResult.confidence,
           aiMatchLevel:        aiResult.matchLevel,
           aiUncertaintyReason: aiResult.uncertaintyReason,
+          aiFallbackInfo:      aiResult.fallbackInfo ?? null,
+          aiCultivarsExist:    aiResult.cultivarsExist ?? null,
           aiVerifiedAt:        new Date().toISOString(),
         }).catch(e => console.warn('[catalog] auto-save failed:', e))
       }
@@ -1818,6 +1940,30 @@ Care + savybes pildomi vėlesniame žingsnyje per kitus tool'us (TOOL_BULK_SERIE
                       </a>
                     )
                   })}
+                </div>
+              </div>
+            )}
+
+            {/* Taxonomic fallback banner — rodom kai AI grąžino aukštesnį
+                lygį nei vartotojas paklausė (cultivar→species). Atskirai
+                nuo confidence banner'io, nes čia ne „nesu tikras" o
+                „eksplicitiškai pakeičiau lygį, štai kodėl ir kas tau".
+                Konkretesnis nei confidence banner — visada turi note. */}
+            {result.fallbackInfo && !result.fromCatalog && (
+              <div className="rounded-2xl px-4 py-3 mb-3 border bg-amber-50 border-amber-300/60">
+                <div className="flex items-start gap-2.5">
+                  <span className="text-base flex-shrink-0 mt-0.5 text-amber-600">↑</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] font-semibold text-amber-700">
+                      Pakeičiau lygį
+                      <span className="ml-1.5 font-mono text-[10px] uppercase tracking-[0.14em] opacity-70">
+                        {result.fallbackInfo.from} → {result.fallbackInfo.to}
+                      </span>
+                    </p>
+                    <p className="text-xs leading-relaxed mt-1 text-amber-700/90">
+                      {result.fallbackInfo.note}
+                    </p>
+                  </div>
                 </div>
               </div>
             )}
