@@ -142,8 +142,14 @@ export function speciesTaxonGroupId(latinName) {
  * @returns {Promise<string|null>} — sukurto/esamo taxonGroup'o ID, arba null.
  */
 export async function ensureParentTaxonGroup(aiResult) {
-  if (!aiResult?.latinName) return null
-  const parsed = parseLatinName(aiResult.latinName)
+  // Latin pavadinimo lookup'as palaiko abu naming convention'us:
+  //   - latinName  (AI rezultatas iš plant_preview tool'o)
+  //   - lotyniskas (catalog field'as po fromAIResult / save flow)
+  // Tai svarbu — fetchDetails save'as paduoda `lotyniskas`, o SLIM auto-save
+  // paduoda abu per `...aiResult` spread'ą. Anksčiau buvo silent fail.
+  const latin = aiResult?.latinName ?? aiResult?.lotyniskas
+  if (!latin) return null
+  const parsed = parseLatinName(latin)
   if (!parsed.genus) return null
 
   // Decide parent rank. Entry rangas turi būti cultivar/variety/subspecies/forma

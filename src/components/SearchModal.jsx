@@ -149,7 +149,7 @@ export const TOOL_PREVIEW = {
         properties: {
           pavojai: {
             type: 'array',
-            description: 'GRANULAR hazards. Fill ONLY when CERTAIN of type+target+severity (literature / Wikipedia clearly states it). If you only know generally — leave empty and fill the pavojingumas.* safeguard instead.',
+            description: 'GRANULAR hazards. Fill GENEROUSLY when you can name BOTH tipas and target — default severity=vidutinis if literature confirms harm without quantifying; silpnas for mild irritation; stiprus only with explicit hospitalisation record. Empty array only when even tipas is unknown — then use pavojingumas.* safeguard instead. Pildyk pavojai[] kaip DEFAULT\'Ą; pavojingumas.* lieka fallback\'ui.',
             items: {
               type: 'object',
               properties: {
@@ -581,19 +581,36 @@ when the info came from there.
 
 PAVOJAI[] (granular) vs PAVOJINGUMAS (safeguard):
 
-Fill pavojai[] ONLY when CERTAIN of all three: tipas + target + severity.
-   ✓ Tomato → toxic glycoalkaloid solanine; in animals causes digestive
-     issues, often hospitalisation. YES, severity=stiprus,
-     detales (Lithuanian): „Pomidoro lapuose ir žaliuose vaisiuose yra
-     glikoalkaloido solanino; nurijus dideliais kiekiais sukelia
-     virškinimo sutrikimus, gyvūnams gali prireikti veterinaro."
-   ✗ "Plant has alkaloids" — do NOT fill pavojai[], severity unknown.
+FILL pavojai[] GENEROUSLY whenever you can name BOTH tipas and target.
+Default severity='vidutinis' when source confirms harm but does not
+quantify; use 'silpnas' only for mild irritation (e.g. skin redness on
+contact); use 'stiprus' only with explicit literature record of
+hospitalisation or severe systemic effects.
 
-IF pavojai[] is empty BUT you know the plant is hazardous at all:
-  → set pavojingumas.yra=true + guess lygis + add context in detales
-  → e.g. „Wikipedia mini, kad gyvūnams kenkia; konkrečių detalių nepateikia."
+   ✓ Tomato → toxic glycoalkaloid solanine; gyvūnams sukelia virškinimo
+     sutrikimus, neretai hospitalizacija →
+       pavojai: [{ tipas:'toksiskas', target:'gyvunams', severity:'stiprus' }]
+       detales: „Pomidoro lapuose ir žaliuose vaisiuose yra glikoalkaloido
+       solanino; nurijus dideliais kiekiais sukelia virškinimo sutrikimus."
+   ✓ Monstera → calcium oxalate raphides; nurijus sukelia burnos ir
+     skrandžio dirginimą žmonėms ir gyvūnams →
+       pavojai: [
+         { tipas:'toksiskas', target:'zmonems',  severity:'vidutinis' },
+         { tipas:'toksiskas', target:'gyvunams', severity:'vidutinis' }
+       ]
+       detales: „Visi augalo audiniai turi kalcio oksalato kristalų; nurijus
+       sukelia burnos ir gerklės dirginimą, seilėtekį, kosulį."
+   ✓ Aglaonema → saponins + raphides; alergenas kontaktui →
+       pavojai: [{ tipas:'alergiskas', target:'zmonems', severity:'silpnas' }]
+   ✗ „Plant has alkaloids" be konkretaus poveikio aprašymo → palik pavojai
+     tuščią ir užpildyk tik pavojingumas.* saugiklį.
 
-NEVER fill pavojai[] with placeholder numbers. Empty array is OK.
+USE pavojai[] kaip DEFAULT'Ą kai tipas+target aiški iš tavo žinių. PAVOJINGUMAS
+saugiklis lieka FALLBACK'ui, kai net tipas neaiškus („yra alkaloidų bet
+nežinau kaip veikia"). Ne atvirkščiai — neperdraudžiama pildyti pavojai[].
+
+NEVER fill pavojai[] with placeholder numbers. Empty array is OK kai
+tikrai nieko nežinai.
 
 TWO-STEP REASONING for toxicity (when sources lack a direct entry):
   1. Does the plant contain a known toxic compound (alkaloids,
@@ -654,10 +671,19 @@ async function fetchDetails(latinName, name) {
   const details = block?.input ?? {}
 
   // Išsaugome į katalogą — kitas vartotojas gaus iš cache.
-  // Naudojam saveCatalogWithSpeciesParent'ą — su pilna care info Phase 2
-  // rezultatas tinka kurti parent species taxonGroup'ą (jei dar nėra).
+  // Merge'inam SLIM auto-save cached data (aprasymas, kilme, savybes,
+  // sviesa, vanduo) su Phase 2 details — kad parent species taxonGroup'as
+  // gautų PILNĄ informaciją, ne tik care field'us. Be šito merge'o
+  // parent doc'as susikurtų su mostly null'ais (TOOL_DETAILS schema nepildo
+  // genus-level field'ų — tik care + dauginimas + problemos).
   if (details.laistymasIntervalas) {
-    saveCatalogWithSpeciesParent({ lotyniskas: latinName, lietuviškas: name, ...details })
+    const fullPlant = {
+      ...(cached ?? {}),       // SLIM cached: aprasymas, kilme, savybes, sviesa, vanduo, sources, etc.
+      lotyniskas: latinName,
+      lietuviškas: name,
+      ...details,              // Phase 2: laistymas, tresimas, problemos, dauginimas, etc.
+    }
+    saveCatalogWithSpeciesParent(fullPlant)
       .catch(e => console.warn('[fetchDetails] catalog save failed:', e?.message ?? e))
   }
 
