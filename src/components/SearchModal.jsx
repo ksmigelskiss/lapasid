@@ -311,7 +311,13 @@ export const TOOL_DETAILS = {
       tipas:          { type: 'string', description: 'Plant type in Lithuanian (e.g. „Sultingas", „Tropinis daugiametis", „Sodo daugiametis krūmas").' },
       augimo_greitis: { type: 'string', enum: ['lėtas', 'vidutinis', 'greitas'] },
       sunkumas:       { type: 'integer', minimum: 1, maximum: 5, description: '1=labai lengvas augalas, 5=tik patyrusiems.' },
-      idomybes:       { type: 'array', items: { type: 'string' }, description: '2-3 fun facts in Lithuanian (history, etymology, ecological role, cultural significance).' },
+      idomybes: {
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 2,
+        maxItems: 4,
+        description: 'REQUIRED — array of 2-3 fun facts in Lithuanian. DO NOT return empty array. Pick from: history, etymology, ecological role, cultural significance, unusual biology, geographic origin story, breeding history, traditional uses. If you cannot think of one — invent reasonable facts based on the genus characteristics, but NEVER skip this field.',
+      },
       savybes: {
         type: 'object',
         description: 'Structured plant properties: hazards (granular), edibility, medicinal use. PRIVALOMA — net kai augalas nepavojingas, užpildyk struktūrą su tinkamais default\'ais (pavojai: [], pavojingumas.yra: false, valgomumas.statusas: \'none\', vaistinis.statusas: \'none\').',
@@ -772,7 +778,21 @@ GENUS-LEVEL META (PRIVALOMA):
 • tipas: pvz. „Sultingas", „Tropinis daugiametis"
 • augimo_greitis: „lėtas"/„vidutinis"/„greitas"
 • sunkumas: 1-5 (priežiūros sudėtingumas)
-• idomybes: 2-3 įdomūs faktai (istorija, etimologija, ekologija)
+
+IDOMYBES — KRITIŠKAI SVARBU, NEPRALEISK:
+• PRIVALOMA grąžinti array su 2-3 įrašais. NIEKADA NETUŠČIA.
+• Kiekvienas įrašas — 1-2 įdomūs sakiniai lietuviškai.
+• Tinkamos temos: istorija/atradimas, etimologija (kodėl toks pavadinimas),
+  ekologinė rolė, kultūrinis reikšmingumas, neįprasta biologija (greitas
+  augimas, lapų judėjimas, atsparumas), kilmės regiono ypatybės, naudojimas
+  liaudies tradicijoje, hibridizacijos istorija.
+• Pavyzdys: „Schefflera arboricola yra kilusi iš Taivano kalnuotų miškų,
+  kur natūraliai gali pasiekti 8 metrų aukštį." + „Jos žiedai labai
+  smulkūs ir neturi dekoratyvinės vertės — augalas auginamas tik dėl
+  efektingų delninių lapų." + „Sub-tropikuose populiariai naudojama
+  bonsai formavimui dėl atsparios kamieno struktūros."
+• Jei nežinai nė vieno konkretaus fakto — generuok gerai pagrįstus
+  iš genties charakteristikų. Niekada nepalikti idomybes tuščios.
 
 SAVYBES (PRIVALOMA struktūra — net nepavojingam augalui):
 • pavojai: GRANULIARUS array — pildyk GENEROUSLY kai žinai tipas+target.
@@ -787,6 +807,24 @@ Naudok savo botanikos žinias + Wikipedia/RHS info kur reikia. Visi human-readab
   })
   const block   = r.content.find(b => b.type === 'tool_use' && b.name === 'plant_details')
   const details = block?.input ?? {}
+
+  // DIAGNOSTIC — kad matytume ar AI iš tiesų grąžino visus laukus.
+  // Konkrečiai stebim idomybes/savybes/tipas/augimo_greitis/sunkumas —
+  // šie laukai buvo „dingstanti" 2026-05-17 testavime nors schema'oje
+  // pažymėti kaip required. Galim ištrinti po patvirtinto fix'o.
+  console.log('[fetchDetails] AI Phase 2 returned:', {
+    latinName,
+    idomybesCount: Array.isArray(details.idomybes) ? details.idomybes.length : `NOT_ARRAY (${typeof details.idomybes})`,
+    idomybesPreview: Array.isArray(details.idomybes) ? details.idomybes.slice(0, 2) : details.idomybes,
+    hasSavybes: !!details.savybes,
+    pavojaiCount: Array.isArray(details.savybes?.pavojai) ? details.savybes.pavojai.length : 'N/A',
+    tipas: details.tipas,
+    augimo_greitis: details.augimo_greitis,
+    sunkumas: details.sunkumas,
+    hasSviesa: !!details.sviesa,
+    hasVanduo: !!details.vanduo,
+    allKeys: Object.keys(details),
+  })
 
   // Išsaugome į katalogą — kitas vartotojas gaus iš cache.
   // Merge'inam SLIM auto-save cached data (aprasymas, kilme, savybes,

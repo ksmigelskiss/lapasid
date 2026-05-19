@@ -249,20 +249,52 @@ export const ensureSpeciesTaxonGroup = ensureParentTaxonGroup
 export async function saveCatalogWithParent(plant) {
   if (!plant?.lotyniskas) return saveToCatalog(plant)
 
+  // Normalize'inam array laukus PRIEŠ saugant — AI kartais grąžina array'us
+  // kaip JSON-string'us (žiūr. fromAIResult ensureArray helper'į). Catalog'as
+  // turi gauti pilnaverčius array'us, kad downstream (admin UI, library-first
+  // mergeWithSeries, kt.) gautų tinkamus duomenis.
+  const normalizeArr = (v) => {
+    if (Array.isArray(v)) return v
+    if (typeof v === 'string' && v.trim().startsWith('[') && v.trim().endsWith(']')) {
+      try {
+        const parsed = JSON.parse(v.trim())
+        return Array.isArray(parsed) ? parsed : v
+      } catch { return v }
+    }
+    return v
+  }
+  const normalized = {
+    ...plant,
+    idomybes:    normalizeArr(plant.idomybes),
+    dauginimas:  normalizeArr(plant.dauginimas),
+    problemos:   normalizeArr(plant.problemos),
+    sources:     normalizeArr(plant.sources),
+    sinonimai:   normalizeArr(plant.sinonimai),
+    englishNames: normalizeArr(plant.englishNames),
+    photos:      normalizeArr(plant.photos),
+  }
+  // Nested pavojai struktūroje — taip pat normalize'inam.
+  if (normalized.savybes && typeof normalized.savybes === 'object') {
+    normalized.savybes = {
+      ...normalized.savybes,
+      pavojai: normalizeArr(normalized.savybes.pavojai),
+    }
+  }
+
   // Set parent pointer jei cultivar'as dar nesusietas su jokia grupe.
   // Bulk_series flow'as set'ina taxonGroupId į series ID — nepakeičiam jo.
-  let updated = plant
-  if (!plant.taxonGroupId) {
-    const parentId = parentTaxonGroupIdFor(plant.lotyniskas)
-    if (parentId) updated = { ...plant, taxonGroupId: parentId }
+  let updated = normalized
+  if (!normalized.taxonGroupId) {
+    const parentId = parentTaxonGroupIdFor(normalized.lotyniskas)
+    if (parentId) updated = { ...normalized, taxonGroupId: parentId }
   }
 
   // Jei turim pilną care info — užtikriname, kad parent doc'as egzistuoja
   // (idempotent). Cultivar gali ateit ir be care info (SLIM auto-save) —
   // tada parent kūrimą atidedam vėlesnėms save iteracijoms.
-  if (plant.laistymasIntervalas) {
+  if (normalized.laistymasIntervalas) {
     try {
-      await ensureParentTaxonGroup(plant)
+      await ensureParentTaxonGroup(normalized)
     } catch (e) {
       console.warn('[saveCatalogWithParent] ensureParentTaxonGroup failed (non-fatal):', e?.message ?? e)
     }

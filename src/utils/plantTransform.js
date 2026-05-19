@@ -11,6 +11,40 @@ export function today() {
   return new Date().toISOString().slice(0, 10)
 }
 
+/**
+ * AI tool_use schemas declare `type: 'array'`, bet Anthropic API kartais
+ * grąžina array'us kaip JSON-formatuotus STRING'us (pvz. `'["a","b"]'`).
+ * Anthropic neapsaugo strict validation'u, todėl mes turim normalizuotis.
+ *
+ * Šis helper'is užtikrina:
+ *   - jei jau array → grąžinam kaip yra
+ *   - jei string'as su JSON array shape → bandom JSON.parse
+ *   - jei plain string → wrap'inam į single-element array
+ *   - kitu atveju (null, number, object) → tuščia array
+ *
+ * Sprendžia bug'ą, kur idomybes save'inosi į catalog'ą kaip string
+ * `'["fact1","fact2"]'`, o PlantDetail'as su `Array.isArray()` check'u
+ * gaudavo false → idomybės sekcija neslepiama. (2026-05-17 testavime.)
+ */
+export function ensureArray(value) {
+  if (Array.isArray(value)) return value
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (!trimmed) return []
+    // JSON array shape — bandyk parse'inti.
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+      try {
+        const parsed = JSON.parse(trimmed)
+        if (Array.isArray(parsed)) return parsed
+      } catch { /* fall through */ }
+    }
+    // Plain string — wrap'inam į single-element array. Geriau parodyti
+    // bent vieną fact'ą nei nieko.
+    return [trimmed]
+  }
+  return []
+}
+
 // Normalizuoja AI grąžintą savybes objektą į saugią formą. Bet kuris laukas
 // gali būti undefined — saugiai užpildom default'ais. UI naudoja granuliarius
 // `pavojai[]` pirmiausia; jei tuščia, krenta į saugiklį `pavojingumas.yra`.
@@ -33,11 +67,11 @@ export function normalizeSavybes(s, legacyToksiskas, legacyInfo) {
     return empty
   }
   return {
-    pavojai: Array.isArray(s.pavojai) ? s.pavojai.filter(p =>
+    pavojai: ensureArray(s.pavojai).filter(p =>
       p && ['toksiskas','alergiskas','dirginantis'].includes(p.tipas)
         && ['zmonems','gyvunams'].includes(p.target)
         && ['silpnas','vidutinis','stiprus'].includes(p.severity)
-    ) : [],
+    ),
     pavojingumas: {
       yra:    !!s.pavojingumas?.yra,
       lygis:  ['silpnas','vidutinis','stiprus'].includes(s.pavojingumas?.lygis) ? s.pavojingumas.lygis : null,
@@ -127,9 +161,9 @@ export function fromAIResult(aiResult) {
     substratas:   aiResult.substratas ?? aiResult.care?.soil ?? '',
     persodinimas: aiResult.persodinimas ?? '',
     ziemojimas:   aiResult.ziemojimas ?? '',
-    dauginimas:   Array.isArray(aiResult.dauginimas) ? aiResult.dauginimas : [],
-    problemos:    Array.isArray(aiResult.problemos)  ? aiResult.problemos  : [],
-    idomybes:     Array.isArray(aiResult.idomybes)   ? aiResult.idomybes   : [],
+    dauginimas:   ensureArray(aiResult.dauginimas),
+    problemos:    ensureArray(aiResult.problemos),
+    idomybes:     ensureArray(aiResult.idomybes),
     kategorija:   'auginama',
     komentaras:   '',
     data_prideta: today(),
@@ -138,11 +172,11 @@ export function fromAIResult(aiResult) {
     // + Commons). Naudojama PlantDetail hero gallery cycling'ui — vartotojas
     // gali peržiūrėti alternativias nuotraukas net po save'o, ne tik prieš.
     // Limit 10 — saugumo dėlei nuo bloated plant doc'o.
-    photos:       Array.isArray(aiResult.photos) ? aiResult.photos.slice(0, 10) : [],
+    photos:       ensureArray(aiResult.photos).slice(0, 10),
     status:       'healthy',
     inatLtName:   aiResult.inatLtName   ?? null,
     inatTaxonId:  aiResult.inatTaxonId  ?? null,
-    sinonimai:    aiResult.sinonimai    ?? [],
-    englishNames: aiResult.englishNames ?? [],
+    sinonimai:    ensureArray(aiResult.sinonimai),
+    englishNames: ensureArray(aiResult.englishNames),
   }
 }
