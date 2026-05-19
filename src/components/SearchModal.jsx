@@ -9,7 +9,7 @@ import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
 import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId } from '../utils/catalog'
 import { getCachedSearchResponse, setCachedSearchResponse } from '../utils/searchResponseCache'
-import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
+import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
 import { auth } from '../utils/firebase'
@@ -653,9 +653,12 @@ async function fetchDetails(latinName, name) {
   const block   = r.content.find(b => b.type === 'tool_use' && b.name === 'plant_details')
   const details = block?.input ?? {}
 
-  // Išsaugome į katalogą — kitas vartotojas gaus iš cache
+  // Išsaugome į katalogą — kitas vartotojas gaus iš cache.
+  // Naudojam saveCatalogWithSpeciesParent'ą — su pilna care info Phase 2
+  // rezultatas tinka kurti parent species taxonGroup'ą (jei dar nėra).
   if (details.laistymasIntervalas) {
-    saveToCatalog({ lotyniskas: latinName, lietuviškas: name, ...details }).catch(() => {})
+    saveCatalogWithSpeciesParent({ lotyniskas: latinName, lietuviškas: name, ...details })
+      .catch(e => console.warn('[fetchDetails] catalog save failed:', e?.message ?? e))
   }
 
   return details
@@ -1351,7 +1354,11 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
           wikidataVerified:      !!wd?.id,
           aiVerifiedAt:          new Date().toISOString(),
         }
-        await saveToCatalog(entry).catch(e => console.warn('[bulk] cultivar save failed:', c.latinName, e))
+        // Bulk-series cultivar'ai jau turi taxonGroupId rodantį į seriją.
+        // saveCatalogWithSpeciesParent matys to ir nepakuris parent species
+        // taxonGroup'o (preservuos series link'ą). Care info čia ne'paduodama
+        // tiesiai į cultivar entry — ji gyvena series taxonGroup'e per `careInfo`.
+        await saveCatalogWithSpeciesParent(entry).catch(e => console.warn('[bulk] cultivar save failed:', c.latinName, e))
         // id reikia handleCatalogAdd'ui (catalogDocId pagal lotyniskas)
         savedEntries.push({ ...entry, id: catalogDocId(c.latinName), _id: catalogDocId(c.latinName) })
 
@@ -1629,8 +1636,12 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
       // query — bet pati grąžinama rūšis vis tiek gali būti teisinga,
       // todėl confidence='high' + fallbackInfo užpildyta yra leistina
       // kombinacija (rūšis tikra, tiesiog kultivaro nežinom).
+      // Auto-save į catalog'ą. saveCatalogWithSpeciesParent'as set'ina
+      // taxonGroupId pointer'į į parent species jei cultivar'as (be
+      // care info — parent doc'as kuriamas vėliau, kai admin'as paspaus
+      // Save mygtuką ir gausim Phase 2 care info per fetchDetails).
       if (aiResult.confidence === 'high' && !aiResult.fallbackInfo) {
-        saveToCatalog({
+        saveCatalogWithSpeciesParent({
           lotyniskas:          aiResult.latinName,
           lietuviškas:         enriched.name,
           ...aiResult,
@@ -1748,8 +1759,12 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
       // query — bet pati grąžinama rūšis vis tiek gali būti teisinga,
       // todėl confidence='high' + fallbackInfo užpildyta yra leistina
       // kombinacija (rūšis tikra, tiesiog kultivaro nežinom).
+      // Auto-save į catalog'ą. saveCatalogWithSpeciesParent'as set'ina
+      // taxonGroupId pointer'į į parent species jei cultivar'as (be
+      // care info — parent doc'as kuriamas vėliau, kai admin'as paspaus
+      // Save mygtuką ir gausim Phase 2 care info per fetchDetails).
       if (aiResult.confidence === 'high' && !aiResult.fallbackInfo) {
-        saveToCatalog({
+        saveCatalogWithSpeciesParent({
           lotyniskas:          aiResult.latinName,
           lietuviškas:         enriched.name,
           ...aiResult,

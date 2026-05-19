@@ -1,6 +1,7 @@
 import { doc, getDoc, setDoc, getDocs, collection, query, where, deleteDoc } from 'firebase/firestore'
 import { db } from './firebase'
 import { parseLatinName, speciesPortion } from './latinName'
+import { saveToCatalog } from './catalog'
 
 // ── Schema constants ─────────────────────────────────────────────────
 //
@@ -232,6 +233,60 @@ export async function ensureSpeciesTaxonGroup(aiResult) {
     aiVerifiedAt:       new Date().toISOString(),
   })
   return groupId
+}
+
+/**
+ * saveCatalogWithSpeciesParent(plant) — pagrindinis save'as catalog'ui
+ * + parent species taxonGroup orchestration. Naudojamas vietoj tiesioginio
+ * saveToCatalog visur, kur saugomi AI rezultatai.
+ *
+ * Algoritmas:
+ *   1. Parse'inam latinName.
+ *   2. Jei plant'as yra cultivar/variety/subspecies/forma:
+ *      - Jei jis dar neturi taxonGroupId — set'inam į parent species ID
+ *        (deterministic per `taxonGroupDocId`). Šis žingsnis idempotent —
+ *        jei plant'as jau turi seriesGroupId (per bulk_series), nepakeičiam.
+ *   3. Jei plant'as turi pilną care info (laistymasIntervalas != null) —
+ *      iškviečiam ensureSpeciesTaxonGroup, kuris idempotent'iškai užtikrina,
+ *      kad parent species doc'as egzistuoja su default'ais iš to paties
+ *      AI rezultato.
+ *   4. Save'ina cultivar'ą į catalog'ą.
+ *
+ * NESTRIPINAM care info iš cultivar entry — paliekam defensyviai. Jei parent
+ * doc'as išnyks, mergeWithSeries fallback'ins į cultivar'o pačius field'us.
+ * (Migration backfill galės vėliau strip'inti redundant'us laukus.)
+ *
+ * @param {object} plant — augalo objektas (po fromAIResult arba tiesiai iš AI).
+ * @returns {Promise<void>}
+ */
+export async function saveCatalogWithSpeciesParent(plant) {
+  if (!plant?.lotyniskas) return saveToCatalog(plant)
+
+  const parsed = parseLatinName(plant.lotyniskas)
+
+  // Set parent species pointer jei cultivar'as dar nesusietas su jokia grupe.
+  // Bulk_series flow'as set'ina taxonGroupId į series ID — nepakeičiam jo.
+  let updated = plant
+  const isSubSpecific = ['cultivar', 'variety', 'subspecies', 'forma'].includes(parsed.rank)
+  if (!plant.taxonGroupId && isSubSpecific && parsed.genus && parsed.species) {
+    const speciesId = taxonGroupDocId({ genus: parsed.genus, name: parsed.species, type: 'species' })
+    if (speciesId) {
+      updated = { ...plant, taxonGroupId: speciesId }
+    }
+  }
+
+  // Jei turim pilną care info — užtikriname, kad parent species doc'as
+  // egzistuoja (idempotent). Cultivar gali ateit ir be care info (SLIM
+  // auto-save) — tada parent kūrimą atidedam vėlesnėms save iteracijoms.
+  if (isSubSpecific && plant.laistymasIntervalas) {
+    try {
+      await ensureSpeciesTaxonGroup(plant)
+    } catch (e) {
+      console.warn('[saveCatalogWithSpeciesParent] ensureSpeciesTaxonGroup failed (non-fatal):', e?.message ?? e)
+    }
+  }
+
+  return saveToCatalog(updated)
 }
 
 /** List visus cultivars priklausančius šitai taxon grupei. */
