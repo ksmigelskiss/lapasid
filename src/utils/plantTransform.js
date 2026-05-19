@@ -12,37 +12,97 @@ export function today() {
 }
 
 /**
- * AI tool_use schemas declare `type: 'array'`, bet Anthropic API kartais
- * grąžina array'us kaip JSON-formatuotus STRING'us (pvz. `'["a","b"]'`).
- * Anthropic neapsaugo strict validation'u, todėl mes turim normalizuotis.
+ * Robust array parser. Anthropic tool_use API neapsaugo strict validation'u,
+ * todėl AI gali grąžinti `type: 'array'` lauką kaip JSON-formatuotą STRING'ą.
+ * Be to, AI generuoja string'us su lietuviškomis curly quotes („"), kurios
+ * nesusimaišo su ASCII JSON delimiter'iais — bet kartais maišo, ir tada
+ * JSON.parse fail'ina.
  *
- * Šis helper'is užtikrina:
- *   - jei jau array → grąžinam kaip yra
- *   - jei string'as su JSON array shape → bandom JSON.parse
- *   - jei plain string → wrap'inam į single-element array
- *   - kitu atveju (null, number, object) → tuščia array
+ * Strategija — three-tier:
+ *   1. Jei jau array → grąžinam (happy path)
+ *   2. Jei string su [...] shape → strict JSON.parse
+ *   3. Jei JSON.parse fail'ina → lenient regex split (find `","` boundaries,
+ *      strip outer brackets+quotes)
+ *   4. Jei nieks nepavyko → []
  *
- * Sprendžia bug'ą, kur idomybes save'inosi į catalog'ą kaip string
- * `'["fact1","fact2"]'`, o PlantDetail'as su `Array.isArray()` check'u
- * gaudavo false → idomybės sekcija neslepiama. (2026-05-17 testavime.)
+ * Lenient regex'as konkrečiai sprendžia case'ą:
+ *   '[„fact1." + nelogičnos kabutės content'e, "fact2"]'
+ *   → ['„fact1."', '"fact2"'] — ne idealu, bet recover'ina pakankamai.
  */
 export function ensureArray(value) {
   if (Array.isArray(value)) return value
-  if (typeof value === 'string') {
-    const trimmed = value.trim()
-    if (!trimmed) return []
-    // JSON array shape — bandyk parse'inti.
-    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-      try {
-        const parsed = JSON.parse(trimmed)
-        if (Array.isArray(parsed)) return parsed
-      } catch { /* fall through */ }
+  if (typeof value !== 'string') return []
+  const trimmed = value.trim()
+  if (!trimmed) return []
+
+  // Bandyk strict JSON.parse jei [...] shape
+  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+    try {
+      const parsed = JSON.parse(trimmed)
+      if (Array.isArray(parsed)) return parsed.map(v => typeof v === 'string' ? v : v)
+    } catch { /* fall through to lenient */ }
+
+    // LENIENT — strip outer brackets, split by `","` (ASCII closing+comma+opening),
+    // ir clean'inam liekanas. Naudojama kai AI sumaišė LT curly quotes su
+    // ASCII JSON delimiter'iais ir strict parse fail'ino.
+    const inner = trimmed.slice(1, -1).trim()
+    if (inner) {
+      // Split by `","` su tolerancija whitespace'ui ir LT quote types
+      const splitPattern = /["»"]\s*,\s*[«""]/  // ASCII or LT quote pairs
+      const parts = inner.split(splitPattern)
+      if (parts.length >= 2) {
+        // Strip leading/trailing quote chars iš pirmo ir paskutinio elemento
+        return parts.map((p, i) => {
+          let cleaned = p.trim()
+          if (i === 0) cleaned = cleaned.replace(/^["«„""]/, '')
+          if (i === parts.length - 1) cleaned = cleaned.replace(/["»"]$/, '')
+          return cleaned.trim()
+        }).filter(Boolean)
+      }
+      // Single string in brackets — strip outer quotes
+      const single = inner.replace(/^["«„""]/, '').replace(/["»"]$/, '').trim()
+      if (single) return [single]
     }
-    // Plain string — wrap'inam į single-element array. Geriau parodyti
-    // bent vieną fact'ą nei nieko.
-    return [trimmed]
+    return []
   }
-  return []
+
+  // Plain string (no brackets) — wrap'inam single-element (geriau vienas fact'as nei nieko)
+  return [trimmed]
+}
+
+/**
+ * normalizeAIResponse(rawDetails) — vieta vienoje vietoje sutvarko AI
+ * tool_use atsakymą. Naudojama TIK PRIE BOUNDARY (fetchDetails post-AI).
+ * Downstream'as gauna jau švarius duomenis ir gali tikėtis array tipų.
+ *
+ * Normalize'inami visi array laukai (idomybes, dauginimas, problemos,
+ * sources, sinonimai, englishNames, photos), plius nested pavojai struktūroje.
+ * Sviesa/vanduo lieka kaip yra (object) — atskira normalize'ina f-ja toliau.
+ */
+export function normalizeAIResponse(rawDetails) {
+  if (!rawDetails || typeof rawDetails !== 'object') return rawDetails
+
+  const out = {
+    ...rawDetails,
+    idomybes:     ensureArray(rawDetails.idomybes),
+    dauginimas:   ensureArray(rawDetails.dauginimas),
+    problemos:    ensureArray(rawDetails.problemos),
+    sources:      ensureArray(rawDetails.sources),
+    sinonimai:    ensureArray(rawDetails.sinonimai),
+    englishNames: ensureArray(rawDetails.englishNames),
+    photos:       ensureArray(rawDetails.photos),
+    candidates:   ensureArray(rawDetails.candidates),
+  }
+
+  // Nested pavojai struktūroje
+  if (out.savybes && typeof out.savybes === 'object') {
+    out.savybes = {
+      ...out.savybes,
+      pavojai: ensureArray(out.savybes.pavojai),
+    }
+  }
+
+  return out
 }
 
 // Normalizuoja AI grąžintą savybes objektą į saugią formą. Bet kuris laukas

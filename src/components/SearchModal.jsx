@@ -7,6 +7,7 @@ import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight, CheckCircle2 }
 import { fetchPhotos, resizeImage, fetchWikipediaContext } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
+import { normalizeAIResponse } from '../utils/plantTransform'
 import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId } from '../utils/catalog'
 import { getCachedSearchResponse, setCachedSearchResponse } from '../utils/searchResponseCache'
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
@@ -779,20 +780,21 @@ GENUS-LEVEL META (PRIVALOMA):
 • augimo_greitis: „lėtas"/„vidutinis"/„greitas"
 • sunkumas: 1-5 (priežiūros sudėtingumas)
 
-IDOMYBES — KRITIŠKAI SVARBU, NEPRALEISK:
-• PRIVALOMA grąžinti array su 2-3 įrašais. NIEKADA NETUŠČIA.
-• Kiekvienas įrašas — 1-2 įdomūs sakiniai lietuviškai.
-• Tinkamos temos: istorija/atradimas, etimologija (kodėl toks pavadinimas),
-  ekologinė rolė, kultūrinis reikšmingumas, neįprasta biologija (greitas
-  augimas, lapų judėjimas, atsparumas), kilmės regiono ypatybės, naudojimas
-  liaudies tradicijoje, hibridizacijos istorija.
-• Pavyzdys: „Schefflera arboricola yra kilusi iš Taivano kalnuotų miškų,
-  kur natūraliai gali pasiekti 8 metrų aukštį." + „Jos žiedai labai
-  smulkūs ir neturi dekoratyvinės vertės — augalas auginamas tik dėl
-  efektingų delninių lapų." + „Sub-tropikuose populiariai naudojama
-  bonsai formavimui dėl atsparios kamieno struktūros."
-• Jei nežinai nė vieno konkretaus fakto — generuok gerai pagrįstus
-  iš genties charakteristikų. Niekada nepalikti idomybes tuščios.
+IDOMYBES — CRITICAL, DO NOT SKIP:
+• REQUIRED — return native JSON array with 2-3 items. NEVER return as JSON-string.
+• Each item — 1-2 short sentences in Lithuanian.
+• Use Lithuanian curly quotes INSIDE strings if needed („like this"),
+  but the array structure itself uses native JSON syntax.
+• Topics: history/discovery, etymology, ecological role, cultural significance,
+  unusual biology, geographic origin, traditional uses, hybridization history.
+• Example structure (native array, NOT JSON-string):
+    idomybes: [
+      "Schefflera arboricola kilusi iš Taivano kalnuotų miškų, kur natūraliai pasiekia iki 8 metrų aukščio.",
+      "Jos žiedai labai smulkūs ir neturi dekoratyvinės vertės — augalas auginamas tik dėl efektingų delninių lapų.",
+      "Sub-tropikuose populiariai naudojama bonsai formavimui dėl atsparios kamieno struktūros."
+    ]
+• If you do not know specific facts — generate well-grounded ones from
+  genus characteristics. NEVER leave idomybes empty.
 
 SAVYBES (PRIVALOMA struktūra — net nepavojingam augalui):
 • pavojai: GRANULIARUS array — pildyk GENEROUSLY kai žinai tipas+target.
@@ -806,24 +808,26 @@ Naudok savo botanikos žinias + Wikipedia/RHS info kur reikia. Visi human-readab
     }],
   })
   const block   = r.content.find(b => b.type === 'tool_use' && b.name === 'plant_details')
-  const details = block?.input ?? {}
+  const rawDetails = block?.input ?? {}
 
-  // DIAGNOSTIC — kad matytume ar AI iš tiesų grąžino visus laukus.
-  // Konkrečiai stebim idomybes/savybes/tipas/augimo_greitis/sunkumas —
-  // šie laukai buvo „dingstanti" 2026-05-17 testavime nors schema'oje
-  // pažymėti kaip required. Galim ištrinti po patvirtinto fix'o.
-  console.log('[fetchDetails] AI Phase 2 returned:', {
+  // ────────────────────────────────────────────────────────────────
+  // AI BOUNDARY — vienintelė vieta, kur normalize'inam tool_use atsakymą.
+  // Anthropic API neapsaugo strict type validation'u, todėl array laukai
+  // gali ateit kaip JSON-formatuoti STRING'ai. normalizeAIResponse paleidžia
+  // ensureArray ant visų array laukų (ir nested pavojai). Po šio call'o
+  // downstream'as (catalog write, plant doc save, render) gali tikėtis,
+  // kad idomybes/dauginimas/problemos yra tikri array'ai.
+  // ────────────────────────────────────────────────────────────────
+  const details = normalizeAIResponse(rawDetails)
+
+  // Diagnostic — kiek faktų sutvarkėm. Galim ištrinti po patvirtinto fix'o.
+  console.log('[fetchDetails] AI Phase 2 normalized:', {
     latinName,
-    idomybesCount: Array.isArray(details.idomybes) ? details.idomybes.length : `NOT_ARRAY (${typeof details.idomybes})`,
-    idomybesPreview: Array.isArray(details.idomybes) ? details.idomybes.slice(0, 2) : details.idomybes,
-    hasSavybes: !!details.savybes,
-    pavojaiCount: Array.isArray(details.savybes?.pavojai) ? details.savybes.pavojai.length : 'N/A',
+    idomybesCount: details.idomybes?.length ?? 0,
+    rawIdomybesType: typeof rawDetails.idomybes,
+    wasJsonString: typeof rawDetails.idomybes === 'string',
+    pavojaiCount: details.savybes?.pavojai?.length ?? 0,
     tipas: details.tipas,
-    augimo_greitis: details.augimo_greitis,
-    sunkumas: details.sunkumas,
-    hasSviesa: !!details.sviesa,
-    hasVanduo: !!details.vanduo,
-    allKeys: Object.keys(details),
   })
 
   // Išsaugome į katalogą — kitas vartotojas gaus iš cache.

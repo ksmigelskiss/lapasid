@@ -370,19 +370,19 @@ function PassportSection({ plant, collectionId, onToggle }) {
 // ── Profile tab content ────────────────────────────────────────
 
 export function ProfileContent({ plant: rawPlant, section, onAction, onClose, collectionId, onTogglePassport, onUpdateNames, onRefreshFromAI, className }) {
-  // DEFENSIVE READ-TIME NORMALIZATION — kai kurie senesni catalog/plant
-  // įrašai turi array laukus kaip JSON-string'us (žiūr. 2026-05-17 testavimą
-  // su Calathea/Schefflera). Normalize'inam render'inant, kad Section'ai
-  // su `length > 0` check'u rodytų idomybes/problemos/dauginimą net senuose
-  // entry'iuose. Naujieji save'ai gauna array iš fromAIResult tiesiogiai.
+  // LEGACY READ-TIME SAFETY NET — kai kurie SENI catalog/plant įrašai
+  // (saved'inti prieš normalizeAIResponse boundary refaktorą) turi array
+  // laukus kaip JSON-string'us. Naujieji save'ai per fetchDetails →
+  // normalizeAIResponse jau gauna švarius array'us. Šis layer'is — TIK
+  // legacy data fallback'as. Backfill script'as ateityje gali jį panaikinti.
   const plant = {
     ...rawPlant,
-    idomybes:    ensureArray(rawPlant?.idomybes),
-    problemos:   ensureArray(rawPlant?.problemos),
-    dauginimas:  ensureArray(rawPlant?.dauginimas),
-    sinonimai:   ensureArray(rawPlant?.sinonimai),
+    idomybes:     ensureArray(rawPlant?.idomybes),
+    problemos:    ensureArray(rawPlant?.problemos),
+    dauginimas:   ensureArray(rawPlant?.dauginimas),
+    sinonimai:    ensureArray(rawPlant?.sinonimai),
     englishNames: ensureArray(rawPlant?.englishNames),
-    photos:      ensureArray(rawPlant?.photos),
+    photos:       ensureArray(rawPlant?.photos),
   }
   const [editingName, setEditingName] = useState(false)
   const [nameVal, setNameVal]         = useState('')
