@@ -2,6 +2,12 @@ import { doc, getDoc, setDoc, getDocs, collection, query, where, deleteDoc } fro
 import { db } from './firebase'
 import { parseLatinName, speciesPortion } from './latinName'
 import { saveToCatalog } from './catalog'
+import { TAXON_GROUP_TYPES, taxonGroupDocId, parentTaxonGroupIdFor } from './taxonGroupId'
+
+// Re-eksport'inam iš pure modulio — esamas call site'ams nesulūžo.
+// Pure ID derivation gyvena taxonGroupId.js'e, kad Node-side test'ai
+// galėtų importuoti be Firebase init'inimo.
+export { TAXON_GROUP_TYPES, taxonGroupDocId, parentTaxonGroupIdFor }
 
 // ── Schema constants ─────────────────────────────────────────────────
 //
@@ -16,16 +22,6 @@ import { saveToCatalog } from './catalog'
 // Standalone cultivars (be serijos / genus parent) → `taxonGroupId: null`,
 // visi field'ai tiesiogiai catalog doc'e (flat behavior, kaip seniai).
 
-export const TAXON_GROUP_TYPES = [
-  'cultivar-series',   // Boulevard, Wave, Knock Out
-  'species',           // Coleus scutellarioides, Hosta sieboldiana
-  'hybrid',            // Clematis × jackmanii, Heuchera × heucherella
-  'genus-care',        // „Echeveria genus" — kai bendros care info pakanka
-  'cultivar-group',    // Tea Roses, Tall Bearded Iris, Zonal Pelargoniums
-  'variety',           // Acer palmatum var. dissectum (botanical var.)
-  'subspecies',        // Picea pungens ssp. engelmannii
-]
-
 export const CULTIVATION_CONTEXTS = ['indoor', 'outdoor', 'both']
 export const LIFECYCLES = ['annual', 'biennial', 'perennial', 'woody', 'bulbous']
 export const PHOTO_TYPES = ['flower', 'plant', 'foliage', 'winter', 'fruit', 'seedling']
@@ -39,40 +35,7 @@ export const MAX_BULK_BATCH = 25
 // Migration script'ai naudoja šitą, kad atpažintų ką update'inti.
 export const CATALOG_SCHEMA_VERSION = 2  // v1 = flat, v2 = series-aware
 
-// ── ID generation ────────────────────────────────────────────────────
-
-/**
- * TaxonGroup docId — slug formatas pagal genus + name.
- *   ({ genus: "Clematis", name: "Boulevard" })           → "clematis-boulevard"
- *   ({ genus: "Hosta",    name: "Hosta", type: "genus-care" }) → "hosta-genus"
- *   ({ genus: "Clematis", name: "×jackmanii", type: "hybrid" }) → "clematis-jackmanii-hybrid"
- *
- * `type` suffix'as automatiškai pridedamas tik genus-care, hybrid, variety,
- * subspecies atvejais (kad nesusimaišytų su species ar cultivar-series).
- */
-export function taxonGroupDocId({ genus, name, type }) {
-  if (!genus && !name) return null
-  const norm = (s) => (s ?? '').toLowerCase()
-    .replace(/[®™©]/g, '')
-    .replace(/\s*['"]\s*/g, '')
-    .replace(/[×x]\s+/g, '')             // strip hybrid sign
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '')
-
-  const parts = []
-  if (genus) parts.push(norm(genus))
-  // Don't duplicate genus in name (kai name == genus, pvz. „Hosta" + „Hosta")
-  if (name && norm(name) !== norm(genus)) parts.push(norm(name))
-
-  // Type suffix'as atskiria semantines situacijas su tuo pačiu genus+name
-  if (type === 'genus-care')   parts.push('genus')
-  if (type === 'hybrid')       parts.push('hybrid')
-  if (type === 'variety')      parts.push('var')
-  if (type === 'subspecies')   parts.push('ssp')
-
-  return parts.join('-').slice(0, 100) || null
-}
+// ── ID generation — pure logika gyvena taxonGroupId.js'e (re-exported above) ──
 
 // Cultivar docId — perpanaudojam catalog.js catalogDocId logiką.
 // Eksportuojam aliasą semantiniam aiškumui.
@@ -158,33 +121,49 @@ export function speciesTaxonGroupId(latinName) {
 }
 
 /**
- * ensureSpeciesTaxonGroup(aiResult) — get-or-create parent species
- * taxonGroup'as iš AI rezultato. Idempotent.
+ * ensureParentTaxonGroup(aiResult) — get-or-create parent taxonGroup'as
+ * cultivar'ui. Idempotent. Atskiria du atvejus:
  *
- * Jei latinName turi cultivar'ą („Dionaea muscipula 'Akai Ryu'") —
- * atskaitos taškas yra species portion'as („Dionaea muscipula").
- * Jei AI grąžino tik gentį be species — grąžinam null (nieko nedarom,
- * cultivar'as save'insis standalone).
+ *   1. SPECIES PARENT — kai latinName turi tiek genus, tiek species
+ *      („Dionaea muscipula 'Akai Ryu'"). Sukuriam type='species'
+ *      taxonGroup'ą su species-level care info.
  *
- * Care/savybes/aprašymas užpildomi iš pateikto `aiResult` objekto, su
- * prielaida, kad AI species-lygio info yra GERAS default'as visiems
- * potencialiems šios rūšies kultivarams. (Vėliau, kai gausim daugiau
- * šios rūšies cultivars, galima override'inti specifinius laukus
- * konkrečiame cultivar.overrides.)
+ *   2. GENUS-CARE PARENT — kai latinName turi tik genus + cultivar
+ *      („Hosta 'Patriot'", „Rosa Knock Out", „Clematis Boulevard").
+ *      Tai ICNCP standartinis atvejis cultivar'ams be priskirtos rūšies.
+ *      Sukuriam type='genus-care' taxonGroup'ą su genties lygio care
+ *      info — vis tiek paveldima per mergeWithSeries, tiesiog platesnis
+ *      lygmuo.
+ *
+ *   3. NĖRA PARENT — kai entry'is yra species ar genus pats (nebe
+ *      cultivar) — grąžinam null, nieko nedarom.
  *
  * @param {object} aiResult — pilnas AI rezultatas (po enrich + fetchDetails).
- *                            Reikia: latinName, aprasymas, kilme, sviesa,
- *                            vanduo, savybes, laistymasIntervalas, tresimas,
- *                            substratas, persodinimas, ziemojimas, prieziura,
- *                            idomybes, dauginimas, problemos.
  * @returns {Promise<string|null>} — sukurto/esamo taxonGroup'o ID, arba null.
  */
-export async function ensureSpeciesTaxonGroup(aiResult) {
+export async function ensureParentTaxonGroup(aiResult) {
   if (!aiResult?.latinName) return null
   const parsed = parseLatinName(aiResult.latinName)
-  if (!parsed.genus || !parsed.species) return null
+  if (!parsed.genus) return null
 
-  const groupId = taxonGroupDocId({ genus: parsed.genus, name: parsed.species, type: 'species' })
+  // Decide parent rank. Entry rangas turi būti cultivar/variety/subspecies/forma
+  // kad būtų prasmė kurti parent'ą.
+  const isSubSpecific = ['cultivar', 'variety', 'subspecies', 'forma'].includes(parsed.rank)
+  if (!isSubSpecific) return null  // entry yra pačios rūšies ar genties lygyje — neturi parent'o
+
+  let parentType, parentName
+  if (parsed.species) {
+    // Species parent — geriausias atvejis. Care info specifiškas rūšiai.
+    parentType = 'species'
+    parentName = parsed.species
+  } else {
+    // Genus-care parent — fallback'as kai species nežinia. Care info
+    // genties lygyje, kuris vis tiek tinka cultivar'ams be priskirtos rūšies.
+    parentType = 'genus-care'
+    parentName = parsed.genus
+  }
+
+  const groupId = taxonGroupDocId({ genus: parsed.genus, name: parentName, type: parentType })
   if (!groupId) return null
 
   // Patikrinam ar jau egzistuoja — idempotent.
@@ -203,15 +182,17 @@ export async function ensureSpeciesTaxonGroup(aiResult) {
   if (aiResult.laistymasIntervalas) careInfo.laistymasIntervalas = aiResult.laistymasIntervalas
   if (aiResult.prieziura)           careInfo.prieziura           = aiResult.prieziura
 
+  // scientificName — pilnas binomial jei species, tik genus jei genus-care.
+  const scientificName = parentType === 'species'
+    ? `${parsed.genus} ${parsed.species}`
+    : parsed.genus
+
   await saveTaxonGroup({
     id:                 groupId,
-    type:               'species',
+    type:               parentType,
     genus:              parsed.genus,
-    name:               parsed.species,
-    // Botanikos sutartis: species name = pilnas binomial (Genus epithet).
-    // `name` field'as tradiciškai turi epithet'ą, bet aiškumui pridedam ir
-    // scientificName visuose lookup'uose.
-    scientificName:     `${parsed.genus} ${parsed.species}`,
+    name:               parentName,
+    scientificName,
     aprasymas:          aiResult.aprasymas ?? null,
     kilme:              aiResult.kilme ?? null,
     tipas:              aiResult.tipas ?? null,
@@ -223,71 +204,70 @@ export async function ensureSpeciesTaxonGroup(aiResult) {
     dauginimas:         Array.isArray(aiResult.dauginimas) ? aiResult.dauginimas : [],
     problemos:          Array.isArray(aiResult.problemos)  ? aiResult.problemos  : [],
     sources:            Array.isArray(aiResult.sources)    ? aiResult.sources    : [],
-    // Provenance — kad vėliau matytume, kaip species taxonGroup'as
-    // atsirado: ar admin'as sukūrė per bulk_series, ar auto iš cultivar
-    // save'o. Backfill scripts gali pažymėti `from-backfill`.
-    createdFrom:        aiResult.latinName === `${parsed.genus} ${parsed.species}`
-      ? 'species-save'      // user save'ino pačią rūšį
-      : 'cultivar-save',    // user save'ino cultivar'ą, mes auto-pakurėm species
+    // Provenance — žinom, ar parent'as sukurtas kaip species ar genus-care,
+    // ir kad jis ateina iš cultivar save'o (ne tiesioginio admin'o input'o).
+    createdFrom:        parentType === 'species' ? 'cultivar-save' : 'cultivar-save-genus-fallback',
     verificationStatus: aiResult.aiConfidence === 'high' ? 'auto-verified' : 'unverified',
     aiVerifiedAt:       new Date().toISOString(),
   })
   return groupId
 }
 
+// Backward-compat alias — kol kas dar paliekam, kad esami caller'iai
+// nesulūžtu. Galima ištrinti po migration'o.
+export const ensureSpeciesTaxonGroup = ensureParentTaxonGroup
+
 /**
- * saveCatalogWithSpeciesParent(plant) — pagrindinis save'as catalog'ui
- * + parent species taxonGroup orchestration. Naudojamas vietoj tiesioginio
- * saveToCatalog visur, kur saugomi AI rezultatai.
+ * saveCatalogWithParent(plant) — pagrindinis save'as catalog'ui + parent
+ * taxonGroup orchestration. Naudojamas vietoj tiesioginio saveToCatalog
+ * visur, kur saugomi AI rezultatai.
  *
  * Algoritmas:
  *   1. Parse'inam latinName.
  *   2. Jei plant'as yra cultivar/variety/subspecies/forma:
- *      - Jei jis dar neturi taxonGroupId — set'inam į parent species ID
- *        (deterministic per `taxonGroupDocId`). Šis žingsnis idempotent —
- *        jei plant'as jau turi seriesGroupId (per bulk_series), nepakeičiam.
+ *      - Jei jis dar neturi taxonGroupId — set'inam į parent ID
+ *        (species jei žinom rūšį, kitaip genus-care). Deterministic.
+ *        Jei plant'as jau turi taxonGroupId (per bulk_series → serija),
+ *        nepakeičiam — serija turi pirmenybę.
  *   3. Jei plant'as turi pilną care info (laistymasIntervalas != null) —
- *      iškviečiam ensureSpeciesTaxonGroup, kuris idempotent'iškai užtikrina,
- *      kad parent species doc'as egzistuoja su default'ais iš to paties
- *      AI rezultato.
+ *      iškviečiam ensureParentTaxonGroup, kuris idempotent'iškai užtikrina,
+ *      kad parent doc'as egzistuoja su default'ais iš to paties AI rezultato.
  *   4. Save'ina cultivar'ą į catalog'ą.
  *
  * NESTRIPINAM care info iš cultivar entry — paliekam defensyviai. Jei parent
  * doc'as išnyks, mergeWithSeries fallback'ins į cultivar'o pačius field'us.
- * (Migration backfill galės vėliau strip'inti redundant'us laukus.)
  *
  * @param {object} plant — augalo objektas (po fromAIResult arba tiesiai iš AI).
  * @returns {Promise<void>}
  */
-export async function saveCatalogWithSpeciesParent(plant) {
+export async function saveCatalogWithParent(plant) {
   if (!plant?.lotyniskas) return saveToCatalog(plant)
 
-  const parsed = parseLatinName(plant.lotyniskas)
-
-  // Set parent species pointer jei cultivar'as dar nesusietas su jokia grupe.
+  // Set parent pointer jei cultivar'as dar nesusietas su jokia grupe.
   // Bulk_series flow'as set'ina taxonGroupId į series ID — nepakeičiam jo.
   let updated = plant
-  const isSubSpecific = ['cultivar', 'variety', 'subspecies', 'forma'].includes(parsed.rank)
-  if (!plant.taxonGroupId && isSubSpecific && parsed.genus && parsed.species) {
-    const speciesId = taxonGroupDocId({ genus: parsed.genus, name: parsed.species, type: 'species' })
-    if (speciesId) {
-      updated = { ...plant, taxonGroupId: speciesId }
-    }
+  if (!plant.taxonGroupId) {
+    const parentId = parentTaxonGroupIdFor(plant.lotyniskas)
+    if (parentId) updated = { ...plant, taxonGroupId: parentId }
   }
 
-  // Jei turim pilną care info — užtikriname, kad parent species doc'as
-  // egzistuoja (idempotent). Cultivar gali ateit ir be care info (SLIM
-  // auto-save) — tada parent kūrimą atidedam vėlesnėms save iteracijoms.
-  if (isSubSpecific && plant.laistymasIntervalas) {
+  // Jei turim pilną care info — užtikriname, kad parent doc'as egzistuoja
+  // (idempotent). Cultivar gali ateit ir be care info (SLIM auto-save) —
+  // tada parent kūrimą atidedam vėlesnėms save iteracijoms.
+  if (plant.laistymasIntervalas) {
     try {
-      await ensureSpeciesTaxonGroup(plant)
+      await ensureParentTaxonGroup(plant)
     } catch (e) {
-      console.warn('[saveCatalogWithSpeciesParent] ensureSpeciesTaxonGroup failed (non-fatal):', e?.message ?? e)
+      console.warn('[saveCatalogWithParent] ensureParentTaxonGroup failed (non-fatal):', e?.message ?? e)
     }
   }
 
   return saveToCatalog(updated)
 }
+
+// Backward-compat alias — kol kas dar paliekam, kad esami caller'iai
+// nesulūžtu. Galima ištrinti po migration'o.
+export const saveCatalogWithSpeciesParent = saveCatalogWithParent
 
 /** List visus cultivars priklausančius šitai taxon grupei. */
 export async function getCultivarsInGroup(groupId) {

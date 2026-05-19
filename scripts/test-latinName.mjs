@@ -246,5 +246,78 @@ for (const h of helperTests) {
 
 console.log(`[helpers] ${hPassed}/${helperTests.length} passed, ${hFailed} failed`)
 
+// ── Parent taxonGroup ID derivation tests ─────────────────────
+//
+// Tikrinam, kad parentTaxonGroupIdFor grąžintų teisingą deterministic ID
+// kiekvienam scenarijui — species parent, genus-care fallback, ne-cultivar
+// entry'iams null.
+import { parentTaxonGroupIdFor } from '../src/utils/taxonGroupId.js'
+
+const parentTests = [
+  // SPECIES PARENT — cultivar su žinoma rūšimi
+  {
+    input: "Dionaea muscipula 'Akai Ryu'",
+    expect: 'dionaea-muscipula',
+  },
+  {
+    input: "Hosta sieboldiana 'Alba'",
+    expect: 'hosta-sieboldiana',
+  },
+  {
+    input: "Monstera deliciosa 'Variegata'",
+    expect: 'monstera-deliciosa',
+  },
+  // GENUS-CARE PARENT — cultivar be priskirtos rūšies
+  {
+    input: "Hosta 'Patriot'",
+    expect: 'hosta-genus',
+  },
+  {
+    input: "Rosa Knock Out",
+    expect: 'rosa-genus',
+  },
+  {
+    input: "Clematis Boulevard",
+    expect: 'clematis-genus',
+  },
+  {
+    input: "Heuchera 'Palace Purple'",
+    expect: 'heuchera-genus',
+  },
+  // NĖRA PARENT — entry'is yra species ar genus pats
+  {
+    input: 'Dionaea muscipula',
+    expect: null,  // species pati — nėra parent'o
+  },
+  {
+    input: 'Dionaea',
+    expect: null,  // genus pati — nėra parent'o
+  },
+  // INFRASPECIFIC — variety/subspecies turi parent'ą species lygyje
+  {
+    input: 'Acer palmatum var. dissectum',
+    expect: 'acer-palmatum',
+  },
+  // EDGE — neatpažintas string'as
+  {
+    input: 'random nonsense',
+    expect: null,
+  },
+]
+
+let pPassed = 0, pFailed = 0
+for (const t of parentTests) {
+  const got = parentTaxonGroupIdFor(t.input)
+  if (got === t.expect) {
+    pPassed++
+  } else {
+    pFailed++
+    console.log(`FAIL parentTaxonGroupIdFor("${t.input}")`)
+    console.log(`  expected: ${JSON.stringify(t.expect)}`)
+    console.log(`  got:      ${JSON.stringify(got)}`)
+  }
+}
+console.log(`[parentTaxonGroupIdFor] ${pPassed}/${parentTests.length} passed, ${pFailed} failed`)
+
 // Exit kodas — naudojama CI'e jei kada įdiegsim
-process.exit((failed + hFailed) > 0 ? 1 : 0)
+process.exit((failed + hFailed + pFailed) > 0 ? 1 : 0)
