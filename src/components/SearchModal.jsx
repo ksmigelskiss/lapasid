@@ -1955,8 +1955,37 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
       // visus narius. Dropdown'as turi max-height + scroll, kad neuztemptų
       // viso ekrano.
       const matches = await searchCatalog(q, ownedIds, 20)
+      if (cancelled) return
+
+      // FILTER incomplete entries (orphan SLIM stub'ai be care info).
+      // Merge'inam su taxonGroup pirmiau, kad cultivar entries paveldintys
+      // care iš parent'o praeitų filter'į. Tas pats logikos blokas kaip
+      // library-first short-circuit'e — kad consistency išliktų autocomplete
+      // + search button rezultatuose.
+      const uniqueGroupIds = new Set(matches.map(m => m.taxonGroupId).filter(Boolean))
+      const groupMap = new Map()
+      await Promise.all(Array.from(uniqueGroupIds).map(async gid => {
+        const g = await getTaxonGroup(gid)
+        if (g) groupMap.set(gid, g)
+      }))
+      if (cancelled) return
+
+      const completeMatches = matches.filter(m => {
+        // Tiesiogiai turi care info — pre-refactor flat save'ai arba
+        // post-d976ff3 Phase 2 saves.
+        if (m.laistymasIntervalas) return true
+        // Cultivar paveldi care iš parent group'o per mergeWithSeries.
+        // Tikrinam parent group EGZISTUOJA ir turi laistymasIntervalas.
+        if (m.taxonGroupId) {
+          const group = groupMap.get(m.taxonGroupId)
+          return !!group?.careInfo?.laistymasIntervalas
+        }
+        // Standalone be care + be parent'o → orphan stub'as, hide'inam.
+        return false
+      })
+
       if (!cancelled) {
-        setCatalogMatches(matches)
+        setCatalogMatches(completeMatches)
         setCatalogLoading(false)
       }
     }, 200)
