@@ -1575,29 +1575,43 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
           return g ? mergeWithSeries(c, g) : c
         })
 
-        // Catalog entry → candidate card shape (UI naudoja imageUrl / ltName).
-        // Wikidata flag'ai propaguojami iš catalog'o (saugomi per bulk save'ą)
-        // — kad library-first cultivar'ai gautų ✓ badge'us, ne tik AI-served.
-        const candidates = merged.map(c => ({
-          ...catalogEntryToAIResult(c),
-          imageUrl:         c.image ?? null,
-          ltName:           c.lietuviškas ?? c.name ?? null,
-          wikidataVerified: !!c.wikidataVerified,
-          wikidataId:       c.wikidataId ?? null,
-        }))
-        // Single strong hit — set'inam kaip pagrindinį rezultatą.
-        // Multiple — set'inam pirmąjį (best fuzzy score) + visus kaip candidates,
-        // kad user'is galėtų pasirinkti kitą jei nepatinka.
-        const primary = candidates[0]
-        setResult({
-          ...primary,
-          candidates: candidates.length > 1 ? candidates : undefined,
-          fromCatalog: true,
-        })
-        setLoading(false)
-        trackStep(null)
-        console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (library-first, ${catalogHits.length} match'as${catalogHits.length === 1 ? '' : 'ai'}, AI praleistas)`)
-        return
+        // FILTER incomplete entries — bibliotekoje yra istorinių SLIM
+        // auto-save'ų be care info (Birkin/Kalatėja era). Jie neturi
+        // laistymasIntervalas — reiškia nepilna info, todėl
+        // „Iš mūsų patvirtintos bibliotekos" badge būtų melas.
+        // Tokius entries praleidžiam į AI'us, kuris atsakys svarbiu.
+        // Admin'as gali juos delete'inti per Library tab arba palikti
+        // backfill'ui.
+        const completeMerged = merged.filter(m => m.laistymasIntervalas)
+
+        if (completeMerged.length > 0) {
+          // Catalog entry → candidate card shape (UI naudoja imageUrl / ltName).
+          // Wikidata flag'ai propaguojami iš catalog'o (saugomi per bulk save'ą)
+          // — kad library-first cultivar'ai gautų ✓ badge'us, ne tik AI-served.
+          const candidates = completeMerged.map(c => ({
+            ...catalogEntryToAIResult(c),
+            imageUrl:         c.image ?? null,
+            ltName:           c.lietuviškas ?? c.name ?? null,
+            wikidataVerified: !!c.wikidataVerified,
+            wikidataId:       c.wikidataId ?? null,
+          }))
+          // Single strong hit — set'inam kaip pagrindinį rezultatą.
+          // Multiple — set'inam pirmąjį (best fuzzy score) + visus kaip candidates,
+          // kad user'is galėtų pasirinkti kitą jei nepatinka.
+          const primary = candidates[0]
+          setResult({
+            ...primary,
+            candidates: candidates.length > 1 ? candidates : undefined,
+            fromCatalog: true,
+          })
+          setLoading(false)
+          trackStep(null)
+          const skipped = merged.length - completeMerged.length
+          console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (library-first, ${completeMerged.length} match'as${completeMerged.length === 1 ? '' : 'ai'}, AI praleistas${skipped > 0 ? `; ${skipped} incomplete entries praleisti` : ''})`)
+          return
+        } else if (catalogHits.length > 0) {
+          console.log(`[search] catalog rado ${catalogHits.length} entries, bet visi incomplete (be care info) — einam į AI`)
+        }
       }
 
       // ── Phase 0.5: Query response cache ──────────────────────
@@ -1770,35 +1784,13 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
         }
       }
 
-      // Auto-save į catalog TIK jei high confidence — nepilam šiukšlių į DB.
-      // Low/medium confidence rezultatai ateina į catalog tik kai user'is
-      // juos išsaugo (per onAddToDashboard → fromAIResult → catalog write).
-      // Auto-save SKIP kai fallbackInfo užpildyta — tai reiškia, kad
-      // AI grąžino aukštesnį taksonominį lygį nei vartotojas paklausė
-      // (cultivar → species fallback). Tokio rezultato nelaikom
-      // „expert quality" catalog entry'iu pagal vartotojo originalią
-      // query — bet pati grąžinama rūšis vis tiek gali būti teisinga,
-      // todėl confidence='high' + fallbackInfo užpildyta yra leistina
-      // kombinacija (rūšis tikra, tiesiog kultivaro nežinom).
-      // Auto-save į catalog'ą. saveCatalogWithSpeciesParent'as set'ina
-      // taxonGroupId pointer'į į parent species jei cultivar'as (be
-      // care info — parent doc'as kuriamas vėliau, kai admin'as paspaus
-      // Save mygtuką ir gausim Phase 2 care info per fetchDetails).
-      if (aiResult.confidence === 'high' && !aiResult.fallbackInfo) {
-        saveCatalogWithSpeciesParent({
-          lotyniskas:          aiResult.latinName,
-          lietuviškas:         enriched.name,
-          ...aiResult,
-          image:               enriched.image,
-          verificationStatus:  'auto-verified',
-          aiConfidence:        aiResult.confidence,
-          aiMatchLevel:        aiResult.matchLevel,
-          aiUncertaintyReason: aiResult.uncertaintyReason,
-          aiFallbackInfo:      aiResult.fallbackInfo ?? null,
-          aiCultivarsExist:    aiResult.cultivarsExist ?? null,
-          aiVerifiedAt:        new Date().toISOString(),
-        }).catch(e => console.warn('[catalog] auto-save failed:', e))
-      }
+      // NEBE'AUTO-SAVE į catalog'ą SLIM mode'e — anksciau pildavo incomplete
+      // įrašus (be care info, be idomybės, kartais su AI hallucination'ais
+      // kaip Cyrillic K Kalatėjoje). Bibliotekoje ai-tirti įrašai turėtų būt
+      // tik tie, kuriuos vartotojas eksplicitiškai save'ino per SaveButton →
+      // fetchDetails (Phase 2 su pilna info). Cross-user replay'us atlieka
+      // response cache (per-device, 48h TTL) — žemiau setCachedSearchResponse.
+      // (2026-05-17 lesson — žiūr. testavimo screenshot'us su Birkin/Kalatėja.)
 
       setResult(enriched)
       setLoading(false)
@@ -1896,32 +1888,9 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
         enrichCandidates(aiResult.candidates),
       ])
       enriched.candidates = candidatesWithImages
-      // Auto-save SKIP kai fallbackInfo užpildyta — tai reiškia, kad
-      // AI grąžino aukštesnį taksonominį lygį nei vartotojas paklausė
-      // (cultivar → species fallback). Tokio rezultato nelaikom
-      // „expert quality" catalog entry'iu pagal vartotojo originalią
-      // query — bet pati grąžinama rūšis vis tiek gali būti teisinga,
-      // todėl confidence='high' + fallbackInfo užpildyta yra leistina
-      // kombinacija (rūšis tikra, tiesiog kultivaro nežinom).
-      // Auto-save į catalog'ą. saveCatalogWithSpeciesParent'as set'ina
-      // taxonGroupId pointer'į į parent species jei cultivar'as (be
-      // care info — parent doc'as kuriamas vėliau, kai admin'as paspaus
-      // Save mygtuką ir gausim Phase 2 care info per fetchDetails).
-      if (aiResult.confidence === 'high' && !aiResult.fallbackInfo) {
-        saveCatalogWithSpeciesParent({
-          lotyniskas:          aiResult.latinName,
-          lietuviškas:         enriched.name,
-          ...aiResult,
-          image:               enriched.image,
-          verificationStatus:  'auto-verified',
-          aiConfidence:        aiResult.confidence,
-          aiMatchLevel:        aiResult.matchLevel,
-          aiUncertaintyReason: aiResult.uncertaintyReason,
-          aiFallbackInfo:      aiResult.fallbackInfo ?? null,
-          aiCultivarsExist:    aiResult.cultivarsExist ?? null,
-          aiVerifiedAt:        new Date().toISOString(),
-        }).catch(e => console.warn('[catalog] auto-save failed:', e))
-      }
+      // NEBE'AUTO-SAVE į catalog'ą iš photo search'o — žiūr. text search
+      // paaiškinimą aukščiau. SaveButton + fetchDetails atliks pilną save'ą
+      // į catalog su Phase 2 care info, jei vartotojas užklausa.
       setResult(enriched)
       setLoading(false)
       trackStep(null)
