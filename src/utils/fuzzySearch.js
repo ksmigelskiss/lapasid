@@ -121,6 +121,12 @@ export function fuzzyMatch(query, target) {
  * Plant-specific: best match score per visus plant'o name fields
  * (lietuviškas, lotyniskas, inatLtName, sinonimai, englishNames).
  * Grąžina Infinity jei joks field'as nematch'ina.
+ *
+ * SPECIFICITY GATE — atmetam cultivar entry'ius, kai vartotojas paklausė
+ * tik rūšies (be cultivar quote'ų). Kitaip library-first short-circuit'as
+ * tyliai grąžintų konkretų kultivarą (pvz. „Dionaea muscipula 'Akai Ryu'")
+ * į rūšinę užklausą („Dionaea muscipula") — vartotojui tai būtų klaida,
+ * jis turi gauti rūšies lygio info per AI. (2026-05 testavime.)
  */
 export function plantFuzzyScore(plant, query) {
   const fields = [
@@ -136,6 +142,31 @@ export function plantFuzzyScore(plant, query) {
     const { matched, score } = fuzzyScore(query, f)
     if (matched && score < best) best = score
     if (best === 0) break
+  }
+  if (best === Infinity) return best
+
+  // Specificity gate — žiūr. doc'as virš funkcijos.
+  // Tik tada kai user'io query NETURI cultivar žymeklio („'…'" arba „"…""),
+  // o plant.lotyniskas turi — patikrinam, ar query patenka į species
+  // portion (pvz. „Dionaea muscipula" ⊂ „Dionaea muscipula 'Akai Ryu'").
+  // Jei taip — atmetam šitą match'ą; user'is turi gauti rūšies AI atsakymą.
+  const queryHasCultivar = /['"]/.test(query)
+  const latin = plant?.lotyniskas ?? ''
+  const latinHasCultivar = /['"]/.test(latin)
+  if (!queryHasCultivar && latinHasCultivar) {
+    const speciesPortion = normalize(latin.replace(/\s*['"][^'"]*['"]\s*/g, ' ').trim())
+    const nq = normalize(String(query).trim())
+    // nq === speciesPortion → user pataike į TIKSLŲ rūšies pavadinimą
+    // speciesPortion.startsWith(nq) → user trumpiau parašė bet vis dar
+    // species/genus lygyje (pvz. „Dion" → „Dionaea muscipula")
+    if (nq === speciesPortion || (nq.length >= 3 && speciesPortion.startsWith(nq + ' ')) || speciesPortion === nq) {
+      return Infinity
+    }
+    // Edge case: query yra tik gentis („Dionaea") — species portion'as
+    // prasideda ja, bet ne pilna species. Vis tiek atmetam — user'is
+    // paklausė platesnio lygio nei catalog entry'is.
+    const genusPortion = speciesPortion.split(/\s+/)[0]
+    if (nq === genusPortion) return Infinity
   }
   return best
 }

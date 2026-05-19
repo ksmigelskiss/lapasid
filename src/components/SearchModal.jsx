@@ -922,6 +922,49 @@ async function fetchWikidataPlant(latinName) {
   }
 }
 
+// Parent species Wikipedia cultivar mention check.
+//
+// Use case: AI grąžina „Dionaea muscipula 'Justina Davis'" su high confidence,
+// bet Wikidata neturi entity'o atskirai tam cultivar'ui (dažnas atvejis retiems
+// kultivarams). Standartinis flow'as downgrade'ina į medium. Bet jei TĖVINĖS
+// rūŠIES Wikipedia puslapyje cultivar'as paminėtas (pvz. cultivar list'e) —
+// tai stiprus signal'as, kad jis tikras, tiesiog be atskiro entity'o.
+//
+// Algoritmas:
+//   1. Iš „Dionaea muscipula 'Justina Davis'" ištraukiam species + cultivarName
+//   2. Fetch'inam parent species Wikipedia extract'ą (prop=extracts plain text)
+//   3. Ieškom cultivarName kaip case-insensitive substring'o extract'e
+//
+// Bandom abi kalbas (EN + LT) — paraleliai. Pirmas hit'as = TRUE.
+// Network fail'ai → false (silently — tai tik papildomas signal'as).
+async function parentWikipediaMentionsCultivar(latinName) {
+  if (!latinName) return false
+  const m = latinName.match(/^(.+?)\s*['"]([^'"]+)['"]\s*$/)
+  if (!m) return false
+  const species = m[1].trim()
+  const cultivarName = m[2].trim()
+  if (!species || !cultivarName || cultivarName.length < 3) return false
+
+  const needle = cultivarName.toLowerCase()
+  const tryLang = async (lang) => {
+    try {
+      const slug = species.replace(/\s+/g, '_')
+      const r = await fetch(
+        `https://${lang}.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(slug)}&prop=extracts&explaintext=1&format=json&origin=*`
+      )
+      if (!r.ok) return false
+      const data = await r.json()
+      const pages = data?.query?.pages
+      if (!pages) return false
+      const page = Object.values(pages)[0]
+      const extract = page?.extract ?? ''
+      return !!extract && extract.toLowerCase().includes(needle)
+    } catch { return false }
+  }
+  const [en, lt] = await Promise.all([tryLang('en'), tryLang('lt')])
+  return en || lt
+}
+
 // Wikipedia REST API — thumbnail per latin name. Cultivar'ams retas case'as
 // kad būtų atskiras article — todėl bandom kelis variantus + fallback į
 // opensearch API (Wikipedia full-text search).
@@ -1550,12 +1593,30 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
       const verifiedCount = (enriched.wikidataVerified ? 1 : 0) +
         candidatesList.filter(c => c.wikidataVerified).length
       if (aiResult.confidence === 'high' && verifiedCount === 0) {
-        enriched.confidence = 'medium'
-        const wdNote = '(Wikidata neaptiko šio cultivar entity\'o — galimai reta registracija arba AI spėjimas.)'
-        enriched.uncertaintyReason = enriched.uncertaintyReason
-          ? `${enriched.uncertaintyReason} ${wdNote}`
-          : wdNote
-        console.log('[search] ⚠ AI sakė high bet Wikidata neverify\'no — downgrade į medium')
+        // Antras šansas prieš downgrade'ą: jei AI grąžino cultivar'ą
+        // („Dionaea muscipula 'Justina Davis'"), patikrinam ar tėvinės
+        // rūšies Wikipedia puslapyje tas cultivar'as paminėtas. Jei taip
+        // — tai retas, bet TIKRAS cultivar'as (be atskiro Wikidata
+        // entity'o), confidence lieka „high" su pastaba šaltinyje.
+        // (2026-05-17 testavime „Justina Davis" iškrito į medium nors
+        // Wikipedia cultivar list'e cituojamas.)
+        const latinHasCultivar = /['"][^'"]+['"]/.test(enriched.latinName ?? '')
+        let parentWikiOK = false
+        if (latinHasCultivar) {
+          parentWikiOK = await parentWikipediaMentionsCultivar(enriched.latinName)
+        }
+
+        if (parentWikiOK) {
+          enriched.parentWikiVerified = true
+          console.log('[search] ✓ Wikidata neverify\'no, bet parent species Wikipedia cituoja cultivar\'ą — confidence laikom high')
+        } else {
+          enriched.confidence = 'medium'
+          const wdNote = '(Wikidata neaptiko šio cultivar entity\'o — galimai reta registracija arba AI spėjimas.)'
+          enriched.uncertaintyReason = enriched.uncertaintyReason
+            ? `${enriched.uncertaintyReason} ${wdNote}`
+            : wdNote
+          console.log('[search] ⚠ AI sakė high bet Wikidata neverify\'no — downgrade į medium')
+        }
       }
 
       // Auto-save į catalog TIK jei high confidence — nepilam šiukšlių į DB.
