@@ -227,10 +227,11 @@ export const TOOL_PREVIEW = {
 // ── Phase 2: full details (care, watering, problems, etc.) ────────
 export const TOOL_DETAILS = {
   name: 'plant_details',
-  description: 'Pateik išsamią augalo priežiūros informaciją.',
+  description: 'Pateik PILNĄ augalo info save\'ui — care, savybes, įdomybės, šviesa/vanduo lygmenys. All human-readable fields in Lithuanian.',
   input_schema: {
     type: 'object',
     properties: {
+      // ── CARE INFO (laistymas, tresimas, etc.) ────────────────
       laistymasIntervalas: {
         type: 'object',
         properties: {
@@ -260,17 +261,17 @@ export const TOOL_DETAILS = {
       prieziura: {
         type: 'object',
         properties: {
-          sviesa:      { type: 'string' },
-          laistymas:   { type: 'string' },
-          temperatura: { type: 'string' },
-          dregme:      { type: 'string' },
+          sviesa:      { type: 'string', description: 'Lithuanian narrative — light needs in plain language (e.g. „Vidutinė šviesa, 2-3m nuo lango").' },
+          laistymas:   { type: 'string', description: 'Lithuanian narrative — watering pattern (e.g. „Kas 7 dienos vasarą, kas 14 žiemą").' },
+          temperatura: { type: 'string', description: 'Lithuanian narrative — temperature range + notes.' },
+          dregme:      { type: 'string', description: 'Lithuanian narrative — humidity needs + tips.' },
         },
         required: ['sviesa', 'laistymas', 'temperatura', 'dregme'],
       },
-      substratas:   { type: 'string' },
-      persodinimas: { type: 'string' },
-      ziemojimas:   { type: 'string' },
-      dauginimas:   { type: 'array', items: { type: 'string' } },
+      substratas:   { type: 'string', description: 'Lithuanian — substrate composition + pH if known.' },
+      persodinimas: { type: 'string', description: 'Lithuanian — repotting timing + technique.' },
+      ziemojimas:   { type: 'string', description: 'Lithuanian — winter care, dormancy details.' },
+      dauginimas:   { type: 'array', items: { type: 'string' }, description: 'Each item: 1 propagation method in Lithuanian. Recommended 2-4 methods.' },
       problemos: {
         type: 'array',
         items: {
@@ -282,10 +283,91 @@ export const TOOL_DETAILS = {
           },
           required: ['simptomas', 'priezastis', 'sprendimas'],
         },
+        description: 'Common problems with diagnosis. Recommended 3-5 entries in Lithuanian.',
       },
+
+      // ── SLIM-mode GAP fields — Phase 2 dabar pildo, kad save'as
+      //    būtų pilnas (anksciau SLIM nepildė, ir Phase 2 nepildė,
+      //    todėl save'inta entry buvo iškarpytas). ─────────────────
+      sviesa: {
+        type: 'object',
+        description: 'Structured light requirement — Lithuanian lygis label + 1-3 taskai score + optional PPFD range.',
+        properties: {
+          taskai: { type: 'integer', minimum: 1, maximum: 3 },
+          lygis:  { type: 'string', enum: ['žema', 'vidutinė', 'ryški'] },
+          ppfd:   { type: 'object', properties: { min: { type: 'integer' }, max: { type: 'integer' } }, required: ['min', 'max'] },
+        },
+        required: ['taskai', 'lygis', 'ppfd'],
+      },
+      vanduo: {
+        type: 'object',
+        description: 'Structured water requirement — Lithuanian lygis label + 1-3 taskai score.',
+        properties: {
+          taskai: { type: 'integer', minimum: 1, maximum: 3 },
+          lygis:  { type: 'string', enum: ['mažai', 'vidutiniškai', 'daug'] },
+        },
+        required: ['taskai', 'lygis'],
+      },
+      tipas:          { type: 'string', description: 'Plant type in Lithuanian (e.g. „Sultingas", „Tropinis daugiametis", „Sodo daugiametis krūmas").' },
+      augimo_greitis: { type: 'string', enum: ['lėtas', 'vidutinis', 'greitas'] },
+      sunkumas:       { type: 'integer', minimum: 1, maximum: 5, description: '1=labai lengvas augalas, 5=tik patyrusiems.' },
+      idomybes:       { type: 'array', items: { type: 'string' }, description: '2-3 fun facts in Lithuanian (history, etymology, ecological role, cultural significance).' },
+      savybes: {
+        type: 'object',
+        description: 'Structured plant properties: hazards (granular), edibility, medicinal use. PRIVALOMA — net kai augalas nepavojingas, užpildyk struktūrą su tinkamais default\'ais (pavojai: [], pavojingumas.yra: false, valgomumas.statusas: \'none\', vaistinis.statusas: \'none\').',
+        properties: {
+          pavojai: {
+            type: 'array',
+            description: 'GRANULAR hazards. Fill GENEROUSLY when you can name BOTH tipas and target — default severity=vidutinis if literature confirms harm without quantifying; silpnas for mild irritation; stiprus only with explicit hospitalisation record. Empty array only when even tipas unknown.',
+            items: {
+              type: 'object',
+              properties: {
+                tipas:    { type: 'string', enum: ['toksiskas', 'alergiskas', 'dirginantis'] },
+                target:   { type: 'string', enum: ['zmonems', 'gyvunams'] },
+                severity: { type: 'string', enum: ['silpnas', 'vidutinis', 'stiprus'] },
+              },
+              required: ['tipas', 'target', 'severity'],
+            },
+          },
+          pavojingumas: {
+            type: 'object',
+            description: 'SAFEGUARD — fill when hazardous at all, even if pavojai[] empty. yra:false if plant safe.',
+            properties: {
+              yra:    { type: 'boolean' },
+              lygis:  { type: ['string', 'null'], enum: ['silpnas', 'vidutinis', 'stiprus', null] },
+              detales: { type: 'string', description: 'Lithuanian: substance + route + dose context. Empty string when yra:false.' },
+            },
+            required: ['yra', 'lygis', 'detales'],
+          },
+          valgomumas: {
+            type: 'object',
+            properties: {
+              statusas: { type: 'string', enum: ['none', 'dalinai', 'pilnai'] },
+              dalys:    { type: 'string', description: 'Lithuanian e.g. „vaisiai", „lapai". Empty when none.' },
+              detales:  { type: 'string', description: 'Lithuanian context. Empty when none.' },
+            },
+            required: ['statusas', 'dalys', 'detales'],
+          },
+          vaistinis: {
+            type: 'object',
+            properties: {
+              statusas:  { type: 'string', enum: ['none', 'tradicine', 'moksline'] },
+              naudojama: { type: 'string', description: 'Lithuanian use case. Empty when none.' },
+              detales:   { type: 'string' },
+            },
+            required: ['statusas', 'naudojama', 'detales'],
+          },
+        },
+        required: ['pavojai', 'pavojingumas', 'valgomumas', 'vaistinis'],
+      },
+      // Backward-compat boolean — paliekam, kad UI fallback'as veiktų
+      // su senesniais render'iais kol viskas migravo.
+      toksiskas:       { type: 'boolean', description: 'Backward compat — true jei pavojingumas.yra=true.' },
+      toksiskumo_info: { type: ['string', 'null'], description: 'Backward compat — pavojingumas.detales copy.' },
     },
     required: ['laistymasIntervalas', 'tresimas', 'dormancyInfo', 'prieziura',
-               'substratas', 'persodinimas', 'ziemojimas', 'dauginimas', 'problemos'],
+               'substratas', 'persodinimas', 'ziemojimas', 'dauginimas', 'problemos',
+               'sviesa', 'vanduo', 'tipas', 'augimo_greitis', 'sunkumas', 'idomybes', 'savybes'],
   },
 }
 
@@ -659,13 +741,49 @@ async function fetchDetails(latinName, name) {
     return careData
   }
 
+  // Phase 2 — FULL save. Anksciau buvo tik care info, bet SLIM mode (Phase 1)
+  // nepildė savybes/sviesa/vanduo/idomybes/tipas/sunkumas/augimo_greitis,
+  // todėl save'inta entry buvo iškarpytas. Dabar Phase 2 pildo VISKĄ kas
+  // reikalinga „Ferrari quality" plant detail puslapiui — kaip 2026-05-02 era.
+  // Token'ų cost +30% bet save'as gauna pilną spektrą.
   const r = await claudeCall({
-    maxTokens:  2048,
+    maxTokens:  3000,   // padidinta — pridėti field'ai (savybes su pavojai struktūra + idomybes + lt narrative)
     temperature: 0.3,
     system:     PLANT_SYSTEM,
     tools:      [TOOL_DETAILS],
     toolChoice: { type: 'tool', name: 'plant_details' },
-    messages:   [{ role: 'user', content: `Pateik išsamią priežiūros informaciją apie augalą "${latinName}" (${name}).` }],
+    messages:   [{
+      role: 'user',
+      content: `Pateik PILNĄ info apie augalą "${latinName}" (${name}).
+
+PRIVALOMA užpildyti VISUS plant_details laukus:
+
+CARE (narrative + structured):
+• prieziura: 4 narrative Lithuanian field'ai (sviesa, laistymas, temperatura, dregme) — 1-2 sakiniai kiekvienam
+• sviesa: STRUCTURED — { taskai: 1-3, lygis: „žema"/„vidutinė"/„ryški", ppfd: {min, max} }
+• vanduo: STRUCTURED — { taskai: 1-3, lygis: „mažai"/„vidutiniškai"/„daug" }
+• laistymasIntervalas: { vasara, ziema, metodas } — dienų skaičius + technika
+• tresimas: { intervalVasara, intervalZiema, tipas } — interval + trąšų rūšis
+• substratas, persodinimas, ziemojimas: narrative Lithuanian
+• dauginimas: array of 2-4 methods
+• problemos: array of 3-5 entries su simptomas/priezastis/sprendimas
+
+GENUS-LEVEL META (PRIVALOMA):
+• tipas: pvz. „Sultingas", „Tropinis daugiametis"
+• augimo_greitis: „lėtas"/„vidutinis"/„greitas"
+• sunkumas: 1-5 (priežiūros sudėtingumas)
+• idomybes: 2-3 įdomūs faktai (istorija, etimologija, ekologija)
+
+SAVYBES (PRIVALOMA struktūra — net nepavojingam augalui):
+• pavojai: GRANULIARUS array — pildyk GENEROUSLY kai žinai tipas+target.
+  Default severity='vidutinis' kai info patvirtinta bet nekvantifikuota.
+  Empty array kai nepavojingas.
+• pavojingumas: { yra, lygis, detales } — saugiklis kai pavojai tuščias.
+• valgomumas: { statusas: 'none'/'dalinai'/'pilnai', dalys, detales }
+• vaistinis: { statusas: 'none'/'tradicine'/'moksline', naudojama, detales }
+
+Naudok savo botanikos žinias + Wikipedia/RHS info kur reikia. Visi human-readable laukai LIETUVIŠKAI.`,
+    }],
   })
   const block   = r.content.find(b => b.type === 'tool_use' && b.name === 'plant_details')
   const details = block?.input ?? {}
