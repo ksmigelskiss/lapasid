@@ -13,6 +13,8 @@
  * arba server-side full-text (Algolia/Typesense/Meilisearch).
  */
 
+import { parseLatinName, queryIsBroader, sameSpecies } from './latinName'
+
 // Lithuanian → ASCII char map'as. Naudojama matching'e (NE display'e!) —
 // kad „raktazole" surastų „Raktažolė", o „monstra" — „Monsterą".
 const LT_DIACRITICS_MAP = {
@@ -122,11 +124,12 @@ export function fuzzyMatch(query, target) {
  * (lietuviškas, lotyniskas, inatLtName, sinonimai, englishNames).
  * Grąžina Infinity jei joks field'as nematch'ina.
  *
- * SPECIFICITY GATE — atmetam cultivar entry'ius, kai vartotojas paklausė
- * tik rūšies (be cultivar quote'ų). Kitaip library-first short-circuit'as
- * tyliai grąžintų konkretų kultivarą (pvz. „Dionaea muscipula 'Akai Ryu'")
- * į rūšinę užklausą („Dionaea muscipula") — vartotojui tai būtų klaida,
- * jis turi gauti rūšies lygio info per AI. (2026-05 testavime.)
+ * SPECIFICITY GATE — atmetam siauresnio lygmens entry'ius, kai vartotojas
+ * paklausė platesnio (pvz. rūšies query → kultivaro entry). Naudoja
+ * `parseLatinName` parser'į vietoj trapaus quote regex'o — atpažįsta ir
+ * be quote'ų esančius kultivarus („Rosa Knock Out", AI grąžintus „Dionaea
+ * muscipula Akai Ryu"). Be šito gate'o library-first short-circuit'as
+ * tyliai grąžintų konkretų kultivarą į rūšinę užklausą.
  */
 export function plantFuzzyScore(plant, query) {
   const fields = [
@@ -145,28 +148,31 @@ export function plantFuzzyScore(plant, query) {
   }
   if (best === Infinity) return best
 
-  // Specificity gate — žiūr. doc'as virš funkcijos.
-  // Tik tada kai user'io query NETURI cultivar žymeklio („'…'" arba „"…""),
-  // o plant.lotyniskas turi — patikrinam, ar query patenka į species
-  // portion (pvz. „Dionaea muscipula" ⊂ „Dionaea muscipula 'Akai Ryu'").
-  // Jei taip — atmetam šitą match'ą; user'is turi gauti rūšies AI atsakymą.
-  const queryHasCultivar = /['"]/.test(query)
-  const latin = plant?.lotyniskas ?? ''
-  const latinHasCultivar = /['"]/.test(latin)
-  if (!queryHasCultivar && latinHasCultivar) {
-    const speciesPortion = normalize(latin.replace(/\s*['"][^'"]*['"]\s*/g, ' ').trim())
-    const nq = normalize(String(query).trim())
-    // nq === speciesPortion → user pataike į TIKSLŲ rūšies pavadinimą
-    // speciesPortion.startsWith(nq) → user trumpiau parašė bet vis dar
-    // species/genus lygyje (pvz. „Dion" → „Dionaea muscipula")
-    if (nq === speciesPortion || (nq.length >= 3 && speciesPortion.startsWith(nq + ' ')) || speciesPortion === nq) {
-      return Infinity
+  // Specificity gate — parser-based.
+  // Parse'inam query ir entry latinName į rank'us. Jei query rank platesnis
+  // (genus/species) o entry rank siauresnis (cultivar/variety/subspecies),
+  // ir abu rodo į TĄ PAČIĄ rūšį (genus + species sutampa) — atmetam.
+  // User'is turi gauti platesnio lygmens AI atsakymą, ne random siauresnį
+  // catalog entry'į.
+  const entryLatin = plant?.lotyniskas
+  if (entryLatin) {
+    const qParsed = parseLatinName(query)
+    const eParsed = parseLatinName(entryLatin)
+    // Atmetam tik kai query yra TIKSLIAI species ar genus lygis IR entry
+    // yra siauresnio lygmens. Genus-only query'iui (pvz. „Dionaea") —
+    // taip pat atmetam, jei entry yra konkretus cultivar.
+    if (queryIsBroader(qParsed, eParsed)) {
+      // Genus query → atmetam jei entry'io genus sutampa
+      if (qParsed.rank === 'genus' && qParsed.genus && eParsed.genus &&
+          qParsed.genus.toLowerCase() === eParsed.genus.toLowerCase()) {
+        return Infinity
+      }
+      // Species/hybrid query → atmetam jei genus+species sutampa
+      if ((qParsed.rank === 'species' || qParsed.rank === 'hybrid') &&
+          sameSpecies(qParsed, eParsed)) {
+        return Infinity
+      }
     }
-    // Edge case: query yra tik gentis („Dionaea") — species portion'as
-    // prasideda ja, bet ne pilna species. Vis tiek atmetam — user'is
-    // paklausė platesnio lygio nei catalog entry'is.
-    const genusPortion = speciesPortion.split(/\s+/)[0]
-    if (nq === genusPortion) return Infinity
   }
   return best
 }
