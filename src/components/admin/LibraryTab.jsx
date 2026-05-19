@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { Search, X, ChevronRight, ChevronDown, Trash2, AlertTriangle, Save, ImageOff, Layers } from 'lucide-react'
 import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS, LIFECYCLES } from '../../utils/taxonGroups'
+import { parseLatinName } from '../../utils/latinName'
 
 const WIDGET = 'bg-bone-50 rounded-2xl border border-bone-400/40 shadow-[0_1px_3px_rgba(28,58,42,0.06),0_4px_14px_rgba(28,58,42,0.05)]'
 
@@ -98,14 +99,21 @@ export default function LibraryTab({
   return (
     <>
       {/* Search */}
-      <div className="mb-4 relative max-w-md">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-forest-400" />
-        <input
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Serijos, cultivar, lotyniškas, lietuviškas…"
-          className="w-full pl-9 pr-3 py-2 text-sm bg-bone-50 border border-bone-400/40 rounded-btn focus:outline-none focus:border-forest-500"
-        />
+      <div className="mb-4 flex items-center gap-2 max-w-2xl">
+        <div className="relative flex-1 max-w-md">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-forest-400" />
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Serijos, cultivar, lotyniškas, lietuviškas…"
+            className="w-full pl-9 pr-3 py-2 text-sm bg-bone-50 border border-bone-400/40 rounded-btn focus:outline-none focus:border-forest-500"
+          />
+        </div>
+        {/* TEMPORARY — parser audit button. Pažiūrim ar `parseLatinName`
+            teisingai klasifikuoja visus catalog įrašus prieš leidžiantis
+            ant jo `ensureSpeciesTaxonGroup` flow'e. Galima ištrinti po
+            verification'o. */}
+        <AuditParserButton catalog={catalog} taxonGroups={taxonGroups} />
       </div>
 
       {/* Empty state */}
@@ -717,3 +725,85 @@ function normalizeTaxonGroup(g) {
 }
 
 function defaultValueFor(_k) { return '' }
+
+// ── TEMPORARY: parser audit button ─────────────────────────────────
+//
+// Paspaudus, paleidžia `parseLatinName` ant visų catalog + taxonGroups
+// įrašų. Console.log'ina rank distribution + samples + suspicious
+// atvejus. Naudojama vienkartiniam parser'io verification'ui prieš
+// statant `ensureSpeciesTaxonGroup` flow'us. Galima ištrinti po to.
+function AuditParserButton({ catalog, taxonGroups }) {
+  const handleAudit = () => {
+    const rankCounts = {}
+    const samples = { species: [], cultivar: [], hybrid: [], variety: [], subspecies: [], forma: [], genus: [], unknown: [] }
+    const suspicious = []
+
+    const entries = [
+      ...catalog.map(c => ({ kind: 'catalog', id: c.id, latin: c.lotyniskas, data: c })),
+      ...taxonGroups.map(g => ({ kind: 'taxonGroup', id: g.id, latin: g.scientificName || `${g.genus ?? ''} ${g.name ?? ''}`.trim(), data: g })),
+    ]
+
+    for (const entry of entries) {
+      if (!entry.latin) {
+        suspicious.push({ ...entry, why: 'tuščias latinName' })
+        continue
+      }
+      const parsed = parseLatinName(entry.latin)
+      rankCounts[parsed.rank] = (rankCounts[parsed.rank] ?? 0) + 1
+      if (samples[parsed.rank] && samples[parsed.rank].length < 5) {
+        samples[parsed.rank].push({ id: entry.id, latin: entry.latin, parsed })
+      }
+      if (parsed.rank === 'unknown') {
+        suspicious.push({ ...entry, parsed, why: 'parser rank=unknown' })
+      } else if (/['"]/.test(entry.latin) && (parsed.rank === 'species' || parsed.rank === 'genus')) {
+        suspicious.push({ ...entry, parsed, why: 'turi kabutes bet parser sako ne-cultivar' })
+      } else if (parsed.rank === 'cultivar' && !parsed.genus) {
+        suspicious.push({ ...entry, parsed, why: 'cultivar be genus' })
+      }
+    }
+
+    console.log('═══ PARSER AUDIT ═══')
+    console.log(`Total entries: ${entries.length} (catalog: ${catalog.length}, taxonGroups: ${taxonGroups.length})\n`)
+    console.log('Rank distribution:')
+    console.table(rankCounts)
+    console.log('\nSamples per rank:')
+    for (const [rank, list] of Object.entries(samples)) {
+      if (list.length === 0) continue
+      console.group(`${rank} (${list.length})`)
+      for (const s of list) {
+        console.log(`  "${s.latin}" →`, s.parsed)
+      }
+      console.groupEnd()
+    }
+    if (suspicious.length > 0) {
+      console.group(`⚠ Suspicious (${suspicious.length})`)
+      for (const s of suspicious) {
+        console.log(`[${s.why}] kind=${s.kind} id=${s.id}`)
+        console.log(`  latin: "${s.latin}"`)
+        if (s.parsed) console.log(`  parsed:`, s.parsed)
+      }
+      console.groupEnd()
+    } else {
+      console.log('✓ Visi įrašai parser\'iui pažįstami.')
+    }
+
+    const susCount = suspicious.length
+    alert(
+      susCount === 0
+        ? `✓ Audit OK — ${entries.length} įrašai, 0 problemų. Detalės console'je.`
+        : `⚠ ${susCount} suspicious įrašai iš ${entries.length}. Žiūr. console.`
+    )
+  }
+
+  return (
+    <button
+      onClick={handleAudit}
+      className="text-[11px] font-mono uppercase tracking-[0.14em] px-3 py-2 rounded-btn border border-forest-200 text-forest-600 hover:bg-forest-50 transition-colors"
+      title="Paleidžia parseLatinName ant visų catalog + taxonGroups. Console.log'ina rezultatus."
+    >
+      🔍 Audit parser
+    </button>
+  )
+}
+
+
