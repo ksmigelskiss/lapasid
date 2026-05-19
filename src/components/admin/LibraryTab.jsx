@@ -570,9 +570,37 @@ function TextInput({ value, onChange, placeholder }) {
 }
 
 function TextArea({ value, onChange, rows = 3, placeholder }) {
+  // Defensive — kai kurie laukai gali ateit kaip:
+  //   - Array (idomybes, problemos, dauginimas) — rodom kaip newline-separated
+  //   - Object (sviesa, vanduo structured) — rodom kaip JSON.stringify (admin
+  //     gali edit'inti, parsing'as ant save'o)
+  //   - String → naudojam kaip yra (legacy + plain narrative)
+  //   - JSON-string array → parse'inam ir rodom newline-separated (recover'is
+  //     po AI hallucination'o)
+  let displayValue = ''
+  if (Array.isArray(value)) {
+    displayValue = value.map(v => typeof v === 'string' ? v : JSON.stringify(v)).join('\n')
+  } else if (typeof value === 'object' && value !== null) {
+    displayValue = JSON.stringify(value, null, 2)
+  } else if (typeof value === 'string') {
+    // JSON-string array detection — parse + render newline-separated
+    const trimmed = value.trim()
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+      try {
+        const parsed = JSON.parse(trimmed)
+        if (Array.isArray(parsed)) {
+          displayValue = parsed.map(v => typeof v === 'string' ? v : JSON.stringify(v)).join('\n')
+        } else {
+          displayValue = value
+        }
+      } catch { displayValue = value }
+    } else {
+      displayValue = value
+    }
+  }
   return (
     <textarea
-      value={value ?? ''}
+      value={displayValue}
       onChange={e => onChange(e.target.value)}
       rows={rows}
       placeholder={placeholder}

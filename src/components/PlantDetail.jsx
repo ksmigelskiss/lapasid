@@ -14,6 +14,7 @@ import PlantImage from './brand/PlantImage'
 import BrandLoader from './brand/BrandLoader'
 import { refreshPlantFromAI } from '../utils/plantAI'
 import { TOOL_PREVIEW, TOOL_DETAILS, PLANT_SYSTEM } from './SearchModal'
+import { ensureArray } from '../utils/plantTransform'
 import { getWateringForecast } from '../utils/wateringForecast'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
@@ -368,7 +369,21 @@ function PassportSection({ plant, collectionId, onToggle }) {
 
 // ── Profile tab content ────────────────────────────────────────
 
-export function ProfileContent({ plant, section, onAction, onClose, collectionId, onTogglePassport, onUpdateNames, onRefreshFromAI, className }) {
+export function ProfileContent({ plant: rawPlant, section, onAction, onClose, collectionId, onTogglePassport, onUpdateNames, onRefreshFromAI, className }) {
+  // DEFENSIVE READ-TIME NORMALIZATION — kai kurie senesni catalog/plant
+  // įrašai turi array laukus kaip JSON-string'us (žiūr. 2026-05-17 testavimą
+  // su Calathea/Schefflera). Normalize'inam render'inant, kad Section'ai
+  // su `length > 0` check'u rodytų idomybes/problemos/dauginimą net senuose
+  // entry'iuose. Naujieji save'ai gauna array iš fromAIResult tiesiogiai.
+  const plant = {
+    ...rawPlant,
+    idomybes:    ensureArray(rawPlant?.idomybes),
+    problemos:   ensureArray(rawPlant?.problemos),
+    dauginimas:  ensureArray(rawPlant?.dauginimas),
+    sinonimai:   ensureArray(rawPlant?.sinonimai),
+    englishNames: ensureArray(rawPlant?.englishNames),
+    photos:      ensureArray(rawPlant?.photos),
+  }
   const [editingName, setEditingName] = useState(false)
   const [nameVal, setNameVal]         = useState('')
   const [refreshing, setRefreshing]   = useState(false)
