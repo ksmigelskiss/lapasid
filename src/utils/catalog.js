@@ -34,13 +34,28 @@ export function catalogDocId(lotyniskas) {
     .slice(0, 100)
 }
 
-/** Ar nuotrauka yra viešas rūšinis šaltinis (iNaturalist / Wikimedia), ne asmeninė */
+/** Ar nuotrauka yra viešas rūšinis šaltinis — paliekamas catalog'e.
+ *
+ * Whitelist'as:
+ *  - iNaturalist (originalūs šaltiniai, stabilūs)
+ *  - Wikimedia / Wikipedia (originalūs šaltiniai, stabilūs)
+ *  - Mūsų Firebase Storage (REHOST'INTOS hero nuotraukos per /api/rehost-image)
+ *    Tik mūsų bucket'as (geliu-db), kad neperkėltume kitų projektų URL'us.
+ *
+ * Anksciau Firebase Storage URL'ai buvo EXCLUDED kaip „asmeninės" — bet po
+ * 2026-05 rehost feature'o tai pasikeitė: Storage'as dabar gyvena ir
+ * commercial rūšinės hero nuotraukos (Brave → rehost). Update'inta filter
+ * logika atspindi naują pažiūrą.
+ */
 function isPublicPhoto(url) {
   if (!url || typeof url !== 'string') return false
   return url.startsWith('https://static.inaturalist') ||
          url.startsWith('https://inaturalist-open-data') ||
          url.startsWith('https://upload.wikimedia') ||
-         url.startsWith('https://photos.inaturalist')
+         url.startsWith('https://photos.inaturalist') ||
+         // Mūsų Firebase Storage (rehost'intos hero photos) — abu URL formatai
+         url.startsWith('https://storage.googleapis.com/geliu-db') ||
+         url.startsWith('https://firebasestorage.googleapis.com/v0/b/geliu-db')
 }
 
 /** Iš augalo objekto paliekame tik rūšiniai (ne asmeniniai) laukai */
@@ -48,7 +63,9 @@ export function toCatalogEntry(plant) {
   const entry = Object.fromEntries(
     Object.entries(plant).filter(([k, v]) => !PERSONAL_FIELDS.has(k) && v != null)
   )
-  // image: saugome tik jei viešas rūšinis URL — ne Firebase Storage (asmeninė nuotrauka)
+  // image: saugome tik jei viešas rūšinis URL (iNat, Wikimedia, mūsų Storage).
+  // Random commercial URL'ai (paghat.com, etc.) filter'inami — jie nepatikimi
+  // catalog'ui (gali sulūžti). User'is gaus rehost'intą URL per SaveButton flow.
   if (plant.image && isPublicPhoto(plant.image)) entry.image = plant.image
   return entry
 }
