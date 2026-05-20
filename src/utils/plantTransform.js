@@ -72,30 +72,39 @@ export function ensureArray(value) {
 
 /**
  * normalizeAIResponse(rawDetails) — vieta vienoje vietoje sutvarko AI
- * tool_use atsakymą. Naudojama TIK PRIE BOUNDARY (fetchDetails post-AI).
- * Downstream'as gauna jau švarius duomenis ir gali tikėtis array tipų.
+ * tool_use atsakymą. Naudojama TIK PRIE BOUNDARY (fetchDetails post-AI,
+ * refreshPlantFromAI merge).
  *
- * Normalize'inami visi array laukai (idomybes, dauginimas, problemos,
- * sources, sinonimai, englishNames, photos), plius nested pavojai struktūroje.
- * Sviesa/vanduo lieka kaip yra (object) — atskira normalize'ina f-ja toliau.
+ * Normalize'ina TIK PRESENT array laukus — t.y., tuos, kurie iš tiesų
+ * yra rawDetails objekte. Jei AI negrąžino kažkurio lauko (undefined),
+ * NEPADIDINAME jo į []. Anksciau (regressija 5527a4e) buvo overwritinami
+ * esami sinonimai į [] refresh path'e, nes AI Phase 2 negrąžina sinonimai
+ * bet normalize defaults'indavo į []. Refresh patch laikė tai kaip
+ * „filled" ir perrašydavo plant doc'o esamus duomenis.
+ *
+ * Rule: jei key'as YRA rawDetails objekte (`'idomybes' in rawDetails`),
+ * normalizuojam (parse JSON-string ir t.t.). Jei NĖRA — paliekam undefined
+ * kad downstream patch logika praleistų tą lauką.
  */
+const ARRAY_FIELDS_FOR_NORMALIZE = [
+  'idomybes', 'dauginimas', 'problemos', 'sources',
+  'sinonimai', 'englishNames', 'photos', 'candidates',
+]
+
 export function normalizeAIResponse(rawDetails) {
   if (!rawDetails || typeof rawDetails !== 'object') return rawDetails
 
-  const out = {
-    ...rawDetails,
-    idomybes:     ensureArray(rawDetails.idomybes),
-    dauginimas:   ensureArray(rawDetails.dauginimas),
-    problemos:    ensureArray(rawDetails.problemos),
-    sources:      ensureArray(rawDetails.sources),
-    sinonimai:    ensureArray(rawDetails.sinonimai),
-    englishNames: ensureArray(rawDetails.englishNames),
-    photos:       ensureArray(rawDetails.photos),
-    candidates:   ensureArray(rawDetails.candidates),
+  const out = { ...rawDetails }
+
+  // Normalize tik PRESENT array laukus — undefined liekai undefined
+  for (const k of ARRAY_FIELDS_FOR_NORMALIZE) {
+    if (k in rawDetails) {
+      out[k] = ensureArray(rawDetails[k])
+    }
   }
 
-  // Nested pavojai struktūroje
-  if (out.savybes && typeof out.savybes === 'object') {
+  // Nested pavojai struktūroje — tik jei savybes egzistuoja
+  if (out.savybes && typeof out.savybes === 'object' && 'pavojai' in out.savybes) {
     out.savybes = {
       ...out.savybes,
       pavojai: ensureArray(out.savybes.pavojai),

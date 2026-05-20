@@ -69,7 +69,10 @@ export async function refreshPlantFromAI(plant, { tools, system }) {
   const callWithTool = async (tool, label) => {
     console.log(`[refresh/ai] calling Claude API (${label})...`)
     const r = await claudeCall({
-      maxTokens:   2048,
+      // 3000 — padidinta nuo 2048. Po d976ff3 TOOL_DETAILS schema'a turi
+      // 16+ laukų (savybes, idomybes, sviesa, vanduo, prieziura, etc.) ir
+      // 2048 nepakanka — testavime Adenium obesum details stop_reason: max_tokens.
+      maxTokens:   3000,
       temperature: 0.3,
       // top_p NEnaudojamas — Sonnet 4.6 neleidžia abiejų temperature+top_p kartu
       system,
