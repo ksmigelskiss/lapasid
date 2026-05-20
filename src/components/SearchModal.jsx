@@ -895,24 +895,29 @@ async function enrich(parsed) {
     // photos, ne wild collection nuotraukos), iNat fallback'as ir gallery.
     // Visa keturi šaltiniai paraleliai — bendras laikas = max(brave, inat,
     // names, wikidata), o ne suma.
-    const [bravePhoto, inatPhotos, namesData, wd] = await Promise.all([
-      fetchBraveImage(parsed.latinName),
+    const [bravePhotos, inatPhotos, namesData, wd] = await Promise.all([
+      fetchBraveImages(parsed.latinName, 5),   // TOP 5 Brave — gardener-style nuotraukos
       fetchPhotos(parsed.latinName),
       fetchPlantNames(parsed.latinName),
       wdPromise,
     ])
+    const bravePhoto = bravePhotos[0] ?? null
 
     // Primary image priority chain:
-    //   1. Brave (gardener photo) → 2. iNat[0] (species photo) → 3. Wikidata P18
+    //   1. Brave[0] (gardener photo) → 2. iNat[0] (species photo) → 3. Wikidata P18
     //   → 4. Wikipedia thumb (paskutinis fallback'as, sequential)
     let mainImage = bravePhoto ?? inatPhotos[0] ?? wd?.imageUrl ?? null
     if (!mainImage) mainImage = await fetchWikiThumbnail(parsed.latinName)
 
-    // Gallery — Brave pirma (jei yra), paskui iNat extras (deduped).
-    // Tai užtikrina cycling'ą PhotoSheet'e su Brave kaip default'iniu.
+    // Gallery — TOP 5 Brave (gardener-style, vizualiai patrauklios) PIRMA,
+    // paskui iNat (wild-style species photos) kaip extras. Deduplicate'inam
+    // URL'us, kad Brave hero nebūtų antrą kartą sąraše. 2026-05 fix'as —
+    // anksciau gallery turėdavo TIK 1 Brave + N iNat, todėl user'is mate
+    // daugiausiai biologinių wild photos. Dabar 5 Brave dominuoja pradžioje.
+    const braveSet = new Set(bravePhotos)
     const gallery = [
-      ...(bravePhoto ? [bravePhoto] : []),
-      ...inatPhotos.filter(p => p && p !== bravePhoto),
+      ...bravePhotos,
+      ...inatPhotos.filter(p => p && !braveSet.has(p)),
     ]
 
     const inatLtName = namesData?.inatLtName ?? null
@@ -1028,6 +1033,65 @@ async function fetchBraveImage(latinName) {
       console.warn('[brave-image] fetch failed:', e)
     }
     return null
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+/**
+ * fetchBraveImages(latinName, limit) — gauna TOP N Brave nuotraukas gallery'jai.
+ * Skiriasi nuo fetchBraveImage (singular) tuo, kad grąžina array iki `limit`
+ * URL'ų, filtruotų pagal genus / cultivar match.
+ *
+ * Naudojama enrich() gallery konstravimui — kad photos[] turėtų ne 1 Brave +
+ * 9 iNat, o 3-5 Brave (gardener-style) + likę iNat (wild collection).
+ *
+ * Tas pats endpoint'as `/api/plant-image` (Brave Search proxy + Vercel cache).
+ */
+async function fetchBraveImages(latinName, limit = 5) {
+  if (!latinName) return []
+  const cleaned = cleanLatinForSearch(latinName)
+  if (!cleaned) return []
+  const genus    = cleaned.split(/\s+/)[0].toLowerCase()
+  const cultivar = cleaned.replace(/['"]/g, '').toLowerCase().split(/\s+/).slice(1).join(' ').split(/\s+/)[0]
+
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(), 5000)
+
+  try {
+    const r = await fetch(`/api/plant-image?q=${encodeURIComponent(cleaned)}`, { signal: ctrl.signal })
+    if (!r.ok) return []
+    const data = await r.json()
+    const candidates = data.images ?? []
+
+    // Priority order — strict matches pirmiausia (genus + cultivar abu), tada
+    // genus-only matches. Pirmenybės sąraše paliekam unikalius URL'us.
+    const strict = candidates.filter(img => {
+      const haystack = `${img.title ?? ''} ${img.source ?? ''} ${img.url ?? ''}`.toLowerCase()
+      return haystack.includes(genus) && cultivar && haystack.includes(cultivar)
+    })
+    const genusOnly = candidates.filter(img => {
+      const haystack = `${img.title ?? ''} ${img.source ?? ''} ${img.url ?? ''}`.toLowerCase()
+      return haystack.includes(genus) && !strict.includes(img)
+    })
+
+    const ordered = [...strict, ...genusOnly]
+    const urls = []
+    const seen = new Set()
+    for (const img of ordered) {
+      if (!img?.url || seen.has(img.url)) continue
+      seen.add(img.url)
+      urls.push(img.url)
+      if (urls.length >= limit) break
+    }
+    return urls
+  } catch (e) {
+    if (e.name === 'AbortError') {
+      console.warn('[brave-images] timed out after 5s')
+    } else {
+      console.warn('[brave-images] fetch failed:', e)
+    }
+    return []
   } finally {
     clearTimeout(timer)
   }
