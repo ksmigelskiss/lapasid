@@ -6,6 +6,7 @@
 
 import { auth } from './firebase'
 import { fetchWikipediaContext } from './imageService'
+import { normalizeAIResponse } from './plantTransform'
 
 // ── Claude API call ─────────────────────────────────────────
 
@@ -96,7 +97,20 @@ export async function refreshPlantFromAI(plant, { tools, system }) {
   if (calls.length === 0) throw new Error('Nepateikta nei vieno AI tool\'o.')
 
   const results = await Promise.all(calls)
-  const merged = Object.assign({}, ...results)
+  const rawMerged = Object.assign({}, ...results)
+
+  // ────────────────────────────────────────────────────────────────
+  // AI BOUNDARY normalize — tas pats kaip fetchDetails save flow'e.
+  // Anthropic kartais grąžina array laukus kaip JSON-string'us; čia
+  // sutvarkom centrally, kad downstream (refreshPlantFromAIResult)
+  // gautų tikrus array'us. (žiūr. plantTransform.normalizeAIResponse)
+  // ────────────────────────────────────────────────────────────────
+  const merged = normalizeAIResponse(rawMerged)
+
   console.log('[refresh/ai] merged keys:', Object.keys(merged))
+  console.log('[refresh/ai] idomybes after normalize:', {
+    count: merged.idomybes?.length ?? 0,
+    rawWasString: typeof rawMerged.idomybes === 'string',
+  })
   return merged
 }

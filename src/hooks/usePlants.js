@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { getDoc, getDocs, setDoc, deleteDoc, doc, collection as fsCol, onSnapshot } from 'firebase/firestore'
 import { db } from '../utils/firebase'
-import { fromAIResult, normalizeSavybes, makeId as _makeId, today as _today } from '../utils/plantTransform'
+import { fromAIResult, normalizeSavybes, ensureArray, makeId as _makeId, today as _today } from '../utils/plantTransform'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { saveToCatalog } from '../utils/catalog'
 import { isMockMode, MOCK_DATA } from '../utils/mockData'
@@ -432,7 +432,11 @@ export function usePlants(collectionId, viewerToken = null) {
     for (const k of aiFields) {
       if (aiData[k] === undefined) { skippedFields.push(k); continue }
       if (ARRAY_FIELDS.has(k)) {
-        patch[k] = Array.isArray(aiData[k]) ? aiData[k] : []
+        // ensureArray — palaiko ir JSON-string'us su [...] shape (defense-
+        // in-depth — plantAI.refreshPlantFromAI jau normalize'ina, bet defensive
+        // čia padengia rare edge case'us, kai refreshPlantFromAIResult kviečiamas
+        // iš kito source'o (pvz. tiesiogiai admin'as patcha plant'ą).
+        patch[k] = ensureArray(aiData[k])
         filledFields.push(k)
       } else if (STRING_FIELDS.has(k)) {
         // String validation — AI turi grąžinti string'ą, kitaip skip'inam
