@@ -135,17 +135,42 @@ export function normalizeSavybes(s, legacyToksiskas, legacyInfo) {
     }
     return empty
   }
+  const cleanPavojai = ensureArray(s.pavojai).filter(p =>
+    p && ['toksiskas','alergiskas','dirginantis'].includes(p.tipas)
+      && ['zmonems','gyvunams'].includes(p.target)
+      && ['silpnas','vidutinis','stiprus'].includes(p.severity)
+  )
+  const pavojingumas = {
+    yra:    !!s.pavojingumas?.yra,
+    lygis:  ['silpnas','vidutinis','stiprus'].includes(s.pavojingumas?.lygis) ? s.pavojingumas.lygis : null,
+    detales: s.pavojingumas?.detales ?? '',
+  }
+
+  // INFERENCE — kai AI užpildė pavojingumas saugiklį (yra=true + detales),
+  // bet PALIKO pavojai[] tuščią, deterministiškai išvedame granuliarų
+  // entry iš detales narrative'o. Tai sprendžia recurring AI compliance
+  // bug'ą (Hosta saponinai, Monstera oxalates, Calathea atvejai) kai AI
+  // pasirenka saugesnį pavojingumas safeguard'ą vietoj eksplicitiškų
+  // pavojai array įrašų — nors detales narrative aiškiai apibūdina tipas,
+  // target ir severity.
+  //
+  // Patterns'ai (case-insensitive Lithuanian):
+  //   tipas    — „nuoding/toks[iįę]š" → toksiskas
+  //              „alerg/odos reakc"   → alergiskas
+  //              „dirgin"             → dirginantis
+  //   target   — „šun/kat/gyvūn"      → gyvunams
+  //              „žmon/vaik"          → zmonems
+  //   severity — iš pavojingumas.lygis (jei AI užpildė) arba „vidutinis" default
+  //
+  // Jei narrative neaiškus (nei tipas, nei target nepasirenkamas) — paliekam
+  // pavojai tuščią. Saugesnis fallback.
+  const inferredPavojai = cleanPavojai.length === 0 && pavojingumas.yra
+    ? inferPavojaiFromDetales(pavojingumas.detales, pavojingumas.lygis)
+    : cleanPavojai
+
   return {
-    pavojai: ensureArray(s.pavojai).filter(p =>
-      p && ['toksiskas','alergiskas','dirginantis'].includes(p.tipas)
-        && ['zmonems','gyvunams'].includes(p.target)
-        && ['silpnas','vidutinis','stiprus'].includes(p.severity)
-    ),
-    pavojingumas: {
-      yra:    !!s.pavojingumas?.yra,
-      lygis:  ['silpnas','vidutinis','stiprus'].includes(s.pavojingumas?.lygis) ? s.pavojingumas.lygis : null,
-      detales: s.pavojingumas?.detales ?? '',
-    },
+    pavojai: inferredPavojai,
+    pavojingumas,
     valgomumas: {
       statusas: ['none','dalinai','pilnai'].includes(s.valgomumas?.statusas) ? s.valgomumas.statusas : 'none',
       dalys:    s.valgomumas?.dalys ?? '',
@@ -157,6 +182,42 @@ export function normalizeSavybes(s, legacyToksiskas, legacyInfo) {
       detales:   s.vaistinis?.detales ?? '',
     },
   }
+}
+
+/**
+ * inferPavojaiFromDetales(detales, lygis) — heuristinis išvedimas pavojai
+ * array'aus iš narrative teksto. Naudojama, kai AI praleido eksplicitišką
+ * pavojai pildymą bet užpildė pavojingumas safeguard'ą.
+ *
+ * Grąžina array su 1-2 entries (po vieną per target: gyvunams + zmonems).
+ * Tuščia jei nei tipas, nei target neaiškus.
+ */
+function inferPavojaiFromDetales(detales, lygis) {
+  if (!detales || typeof detales !== 'string') return []
+  const text = detales.toLowerCase()
+
+  // Tipas — pirmenybė toksiskas > dirginantis > alergiskas (saugumo dėlei)
+  let tipas = null
+  if (/nuoding|toks[iįę]š|toks[iįę]nu|nuod[ėe]/i.test(text)) tipas = 'toksiskas'
+  else if (/dirgin|sudirgin/i.test(text))                   tipas = 'dirginantis'
+  else if (/alerg/i.test(text))                             tipas = 'alergiskas'
+  if (!tipas) return []
+
+  // Target — gali būti abu (žmonėms IR gyvūnams)
+  const targetsAnimals = /gyv[ūu]nams|šun[iīymsui]?|kat[eė][ms]?|šuni|kat[eė]/i.test(text)
+  const targetsHumans  = /žmon[eė][msi]?|vaik[amsīIi]?/i.test(text)
+
+  const severity = ['silpnas','vidutinis','stiprus'].includes(lygis) ? lygis : 'vidutinis'
+
+  const result = []
+  if (targetsAnimals) result.push({ tipas, target: 'gyvunams', severity })
+  if (targetsHumans)  result.push({ tipas, target: 'zmonems',  severity })
+  // Jei nei vienas target ne'pasirinktas — default both (saugu)
+  if (result.length === 0) {
+    result.push({ tipas, target: 'gyvunams', severity })
+    result.push({ tipas, target: 'zmonems',  severity })
+  }
+  return result
 }
 
 export function fromAIResult(aiResult) {
