@@ -739,7 +739,16 @@ a strong app selling point — don't omit it.`
 
 
 
-async function fetchDetails(latinName, name) {
+/**
+ * fetchDetails(latinName, name, baseResult?) — gauna Phase 2 care info iš AI
+ * + paraleliai saugo PILNĄ catalog entry'į.
+ *
+ * baseResult — search result'as su Phase 1 SLIM data (aprasymas, kilme,
+ * savybes, image, sources). Jei perduotas, įtraukiamas į fullPlant prieš
+ * catalog save. Be jo catalog entry'is gaudavo tik care info (be image,
+ * be aprasymas) ir admin matydavo tuščius laukus.
+ */
+async function fetchDetails(latinName, name, baseResult = null) {
   // Pirma tikriname katalogą — jei jau yra priežiūros duomenys, nemokami
   const cached = await getCatalogEntry(latinName)
   if (cached?.laistymasIntervalas) {
@@ -837,11 +846,17 @@ Naudok savo botanikos žinias + Wikipedia/RHS info kur reikia. Visi human-readab
   // parent doc'as susikurtų su mostly null'ais (TOOL_DETAILS schema nepildo
   // genus-level field'ų — tik care + dauginimas + problemos).
   if (details.laistymasIntervalas) {
+    // Spread order — kuo specifiškesnis, tuo vėliau:
+    //   1. cached (jei egzistuoja, sena versija)
+    //   2. baseResult (search Phase 1: aprasymas, kilme, savybes, IMAGE, sources)
+    //   3. lotyniskas/lietuviškas (canonical iš parametrų)
+    //   4. details (Phase 2: care info, override'ina viską jei conflict)
     const fullPlant = {
-      ...(cached ?? {}),       // SLIM cached: aprasymas, kilme, savybes, sviesa, vanduo, sources, etc.
+      ...(cached ?? {}),
+      ...(baseResult ?? {}),
       lotyniskas: latinName,
       lietuviškas: name,
-      ...details,              // Phase 2: laistymas, tresimas, problemos, dauginimas, etc.
+      ...details,
     }
     saveCatalogWithSpeciesParent(fullPlant)
       .catch(e => console.warn('[fetchDetails] catalog save failed:', e?.message ?? e))
@@ -2801,7 +2816,14 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange 
         onClose()
         return
       }
-      const details = await fetchDetails(resultWithStorageImage.latinName, resultWithStorageImage.name)
+      // Perduodam resultWithStorageImage kaip baseResult — kad fetchDetails
+      // catalog write'as gautų image (rehost'intas Storage URL), aprasymas,
+      // kilme, savybes iš Phase 1 SLIM mode'o.
+      const details = await fetchDetails(
+        resultWithStorageImage.latinName,
+        resultWithStorageImage.name,
+        resultWithStorageImage,
+      )
       onSave({ ...resultWithStorageImage, ...details })
       onClose()
     } catch (e) {
