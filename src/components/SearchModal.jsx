@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
 import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react'
-import { fetchPhotos, resizeImage, fetchWikipediaContext } from '../utils/imageService'
+import { fetchPhotos, resizeImage, fetchWikipediaContext, rehostExternalImage } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
 import { normalizeAIResponse } from '../utils/plantTransform'
@@ -2778,16 +2778,31 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange 
     setSaving(true)
     onSavingChange?.(true)
     try {
+      // REHOST hero photo į Firebase Storage — kad nesulūš (Brave/paghat URL'us
+      // randame catalog'e admin'e, gali timeout'inti). Path'as deterministic
+      // pagal latinName slug — re-save'ojas tos pačios rūšies augalą perrašo
+      // tą patį hero failą. Fail-soft — jei nepavyko, paliekam external URL.
+      const slug = (result.latinName ?? '').toLowerCase()
+        .replace(/['"]/g, '').trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+        .slice(0, 80)
+      let rehostedImage = result.image
+      if (result.image && slug) {
+        rehostedImage = await rehostExternalImage(result.image, `catalog/${slug}`, 1200)
+      }
+      const resultWithStorageImage = rehostedImage !== result.image
+        ? { ...result, image: rehostedImage }
+        : result
+
       // Skip Phase 2 jei result jau turi care info (mergeWithSeries iš
       // library-first). laistymasIntervalas yra patikimas indikatorius — jei
       // yra, tai reiškia merge'as įvyko ir kiti care field'ai irgi pildomi.
-      if (result.laistymasIntervalas) {
-        onSave(result)
+      if (resultWithStorageImage.laistymasIntervalas) {
+        onSave(resultWithStorageImage)
         onClose()
         return
       }
-      const details = await fetchDetails(result.latinName, result.name)
-      onSave({ ...result, ...details })
+      const details = await fetchDetails(resultWithStorageImage.latinName, resultWithStorageImage.name)
+      onSave({ ...resultWithStorageImage, ...details })
       onClose()
     } catch (e) {
       console.error('[SaveButton] Phase 2 error:', e)

@@ -141,6 +141,58 @@ export function resizeImage(file, maxSize = 900, quality = 0.82) {
 // ── Upload ────────────────────────────────────────────────────
 
 /**
+ * rehostExternalImage(externalUrl, pathHint, maxSize) — gauna external image
+ * URL'ą (Brave commercial, paghat.com, etc.), server'is fetch'ina, resize'ina
+ * į maxSize px (longest side) ir upload'ina į mūsų Firebase Storage.
+ *
+ * Naudojama Save flow'e — vartotojas išsaugo augalą, mes pasiimam jo hero
+ * nuotrauką ir užtikrinam, kad ji nesulūš (mūsų Storage = guaranteed URL).
+ *
+ * Storage path: pagal `pathHint` (pvz. „catalog/calathea-zebrina"). Skambinant
+ * iš save flow'o — naudojam catalogDocId(latinName) kaip hint'ą, kad
+ * idempotent'iškai užrašytume vieną hero per catalog entry.
+ *
+ * Fail-soft — jei rehost nepavyksta (CORS, timeout, 404), grąžinam original
+ * URL ir log'iname warning'ą. Vartotojas save'o flow'as nesulūž.
+ */
+export async function rehostExternalImage(externalUrl, pathHint, maxSize = 1200) {
+  if (!externalUrl || typeof externalUrl !== 'string') return externalUrl
+  if (!pathHint) return externalUrl
+
+  // Skip jei jau mūsų Storage URL'as
+  if (externalUrl.includes('firebasestorage.googleapis.com') ||
+      externalUrl.includes('storage.googleapis.com/geliu-db')) {
+    return externalUrl
+  }
+  // Skip data: URL'ai — atskira tvarka per uploadImage
+  if (externalUrl.startsWith('data:')) return externalUrl
+
+  try {
+    const r = await fetch('/api/rehost-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: externalUrl, pathHint, maxSize }),
+    })
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}))
+      console.warn('[rehostExternalImage] server returned', r.status, err)
+      return externalUrl  // fail-soft
+    }
+    const data = await r.json()
+    if (data.url) {
+      if (data.reduction != null) {
+        console.log(`[rehostExternalImage] ${pathHint}: ${data.originalSize} → ${data.finalSize} bytes (-${data.reduction}%)`)
+      }
+      return data.url
+    }
+    return externalUrl
+  } catch (e) {
+    console.warn('[rehostExternalImage] failed (keeping external):', e?.message ?? e)
+    return externalUrl  // fail-soft
+  }
+}
+
+/**
  * Uploads a base64 data URL to Firebase Storage.
  * External URLs (iNaturalist, Wikimedia) pass through unchanged.
  */
