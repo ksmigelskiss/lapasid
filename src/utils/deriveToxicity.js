@@ -74,11 +74,33 @@ function derivePfafSeverity(hazardsText) {
   if (!hazardsText || typeof hazardsText !== 'string') return null
   const text = hazardsText.toLowerCase()
 
-  // STIPRUS — life-threatening keywords
+  // STIPRUS — life-threatening evidence
+  // (2026-05-21 expanded: PFAF rarely uses "death/fatal" tiesiogiai.
+  // Klasikiniai mirtinai pavojingi augalai (Aconitum, Digitalis, Conium, Cicuta)
+  // identifikuojami per simptomus + intensity modifier'ius. Narrow patterns —
+  // ne false positive Monstera/Pilea/Aglaonema tipams.)
+
+  // 1a. Explicit death/fatal/lethal
   if (/\b(death|fatal|lethal|deadly|kills|fatality)\b/.test(text)) {
     return 'stiprus'
   }
-  // VIDUTINIS — significant symptoms
+  // 1b. "Highly/extremely toxic" + nervous system attack — Aconitum pattern
+  if (/\b(highly toxic|extremely toxic|very toxic|highly poisonous|extremely poisonous)\b/.test(text)
+      && /\b(nerve|nervous|paraly)/.test(text)) {
+    return 'stiprus'
+  }
+  // 1c. Cardiac arrest / heart failure pattern — Digitalis, Nerium
+  if (/\b(cardiac|heart)\b/.test(text)
+      && /\b(arrest|failure|stop|disturbance)/.test(text)) {
+    return 'stiprus'
+  }
+  // 1d. Hemlock-style nervous system paralysis
+  if (/\b(nerve centres?|central nervous)/.test(text)
+      && /\b(paraly[sz]|paralys)/.test(text)) {
+    return 'stiprus'
+  }
+
+  // VIDUTINIS — significant symptoms (Monstera, Aglaonema, kalcio oksalatai)
   if (/\b(paraly[sz]|vomit|nause|burning|diarrho?e|severe|cardiac|nerve|seizur|convuls)\b/.test(text)) {
     return 'vidutinis'
   }
@@ -136,13 +158,18 @@ export async function deriveToxicityFromSources(latinName) {
     const severity = aspcaEntry.confidence === 'high' ? 'vidutinis' : 'silpnas'
     const targets = aspcaEntry.toxicTo ?? []
 
-    // Pavojai entries — vienas per pet category
-    for (const target of targets) {
+    // VIENAS pavojai entry per UNIQUE tipas+target+severity kombinaciją.
+    // ASPCA targets (cats/dogs/horses) visi yra 'gyvunams' Lithuanian'ai,
+    // todėl nepridedam 3 dublikuotų badge'ų UI'e. Detales sujungia visus
+    // pet category'us kaip žmogiškai skaitomas list'as.
+    // (2026-05-22 dedupe fix po user test #12 — anksčiau Monstera rodė
+    // "TOKSIŠKA TOKSIŠKA TOKSIŠKA" — 3 vienodi badge'ai.)
+    if (targets.length > 0) {
       result.pavojai.push({
         tipas: 'toksiskas',
-        target: 'gyvunams',  // ASPCA targets: cats, dogs, horses — visi gyvūnai
+        target: 'gyvunams',
         severity,
-        detales: `${target} (ASPCA)`,
+        detales: `${targets.join(', ')} (ASPCA)`,
       })
     }
 
