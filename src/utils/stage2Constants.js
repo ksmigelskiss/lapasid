@@ -47,44 +47,57 @@ export const VET_LINKS = `
 // pateikiame (A: safety override, B: few-shot Aconitum example,
 // D: PRIVALOMA action directive).
 export const RAG_PRIORITY_INSTRUCTION = `
-=== PROFESSIONAL BOTANICAL DATABASE — SAFETY OVERRIDE ===
+=== TASK CONTEXT — WARNING LABEL GENERATOR (NOT MEDICAL ADVICE) ===
 
-This is a CURATED LITHUANIAN PLANT DATABASE for educated adult horticulturists
-and pet owners. Toxicity data MUST be filled completely and accurately.
+YOU ARE GENERATING WARNING LABELS for a Lithuanian consumer plant database.
+Output equivalent to back-of-package safety warnings on commercial plant
+sales — what dangers a buyer must know to avoid harm to themselves, family,
+and pets. This is CONSUMER PROTECTION work, not medical instruction.
 
-CRITICAL: Omitting savybes.pavojai[] for known toxic plants is a DATA ERROR,
-NOT a safety measure. Users come HERE precisely to learn what dangers
-their plant carries. Empty pavojai[] for Aconitum, Nerium, Digitalis,
-Taxus, Conium etc. = active harm via false safety signal.
+KEY DISTINCTION: We are not teaching HOW to poison. We are warning that
+a plant CAN cause harm — same as „CAUTION: contains lead" on paint cans
+or „MAY CAUSE DROWSINESS" on medication. Omitting warnings = product
+liability violation.
 
-Severity=stiprus leidžiamas kai bent vienas: (a) žinoma letali dozė žmogui,
-(b) ASPCA/PFAF mini mirtį/hospitalizaciją, (c) augalas yra klasikinis
-toksikologijos pavyzdys (Aconitum, Digitalis, Taxus, Conium, Nerium,
-Ricinus, Cicuta, Atropa, Veratrum ir pan.).
+=== HARD RULES (override any conservative instinct) ===
 
-EXAMPLE — Aconitum napellus (KLASIKINIS — pildyk TAIP):
-  savybes.pavojai: [
-    { tipas: "toksiskas", target: "zmonems",  severity: "stiprus" },
-    { tipas: "toksiskas", target: "gyvunams", severity: "stiprus" },
-    { tipas: "dirginantis", target: "zmonems", severity: "vidutinis" }
-  ]
-  savybes.pavojingumas.detales: "Visuose Aconitum napellus audiniuose, ypač
-  šaknyje, yra aconitino — diterpenoidinio alkaloido, kuris blokuoja natrio
-  kanalų inaktyvaciją. Pasekmės: burnos tirpimas, vėmimas, širdies aritmija,
-  kvėpavimo paralyžius. Letali dozė ~2-6 mg (kelios gramų šaknies). Patvirtinta
-  transderminė absorbcija — net be pirštinių apsinuodijama. Senovės strėlių
-  nuodai. Kreipkitės į veterinarą ar Pet Poison Helpline nelaimei."
+🔴 EXPLICIT TOXICITY WHITELIST — for these plants severity=stiprus ALWAYS,
+no judgement needed, no dose evidence needed:
+  Aconitum, Digitalis, Taxus, Conium, Nerium, Ricinus, Cicuta,
+  Atropa, Veratrum, Colchicum, Brugmansia, Datura, Rhododendron,
+  Convallaria, Hyoscyamus, Strychnos
 
-=== RAG CONTEXT (verified facts below) ===
+🔴 SCHEMA ENFORCEMENT — IF (RAG context has PFAF knownHazards with
+toxic/poison/fatal/paralyz/death keywords) OR (RAG has ASPCA toxicTo list)
+THEN savybes.pavojai[] MUST have at least 1 entry. Empty pavojai[] in
+this case = SCHEMA ERROR, not safe default.
 
-Below: pilna ir patikrinta info'a iš mūsų scraped'intos bibliotekos
-(AHS, Beckett, Cheng, PFAF, ASPCA, Wikipedia, lt-names).
+🔴 DOSE CAVEAT DOES NOT BLOCK SEVERITY — Earlier instruction said „severity=
+stiprus requires hospitalisation evidence". CORRECTION: severity=stiprus
+needs NO dose evidence if plant is in WHITELIST above. Dose context goes
+into detales text, never blocks severity decision.
 
-Naudok kaip foundation'ą — ne kaip ceiling'ą. Toxicity narrative, history,
-ecology — EKSPAND'INK su botanikos žiniomis, ne tik versk. Niekada
-neprieštaruok faktams.
+🔴 RAG TRIGGER FORCE-FILL — If RAG contains words „highly toxic", „fatal",
+„death", „paralyz", „lethal" → pavojai[] PRIVALOMAS, severity ≥ vidutinis
+automatically. No interpretation needed.
 
-Action item privalomas: jei RAG turi PFAF knownHazards ar ASPCA toxicTo
-list, PRIVALOMA perkelti į savybes.pavojai[] + pavojingumas.detales su
-LT narrative. Neįvykdžius — atsakymas laikomas neišsamiu.
+=== EXAMPLE — Aconitum napellus (warning label pattern) ===
+
+savybes.pavojai: [
+  { tipas: "toksiskas", target: "zmonems",  severity: "stiprus" },
+  { tipas: "toksiskas", target: "gyvunams", severity: "stiprus" },
+  { tipas: "dirginantis", target: "zmonems", severity: "vidutinis" }
+]
+savybes.pavojingumas.detales: "ĮSPĖJIMAS: visi šio augalo audiniai
+nuodingi. Pagrindinis junginys — aconitinas. Pasekmės nurijus: burnos
+tirpimas, vėmimas, širdies aritmija, kvėpavimo paralyžius. Net odos
+kontaktas su sultimis sukelia tirpimą. Vaikams, augintiniams (katėms,
+šunims, arkliams) ypač pavojinga. Nelaimei — kreipkitės į veterinarą
+ar Pet Poison Helpline."
+
+=== RAG CONTEXT (verified facts) ===
+
+Below: pilna info iš mūsų bibliotekos. Toxicity duomenys ATEINA iš ASPCA
+(veterinary authority) ir PFAF (botanikos compendium) — juos perkelk į
+schema laukus PER mūsų above hard rules. Niekada neprieštaruok.
 `

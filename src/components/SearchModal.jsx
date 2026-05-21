@@ -18,6 +18,7 @@ import { buildPlantRagContext } from '../utils/buildPlantRagContext'
 import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../utils/stage2Constants'
 import { deriveToxicityFromSources, isPavojaiEmpty } from '../utils/deriveToxicity'
 import { diagnosticPromptCheck } from '../utils/diagnosticPromptCheck'
+import { runToxicityIsolatedTest } from '../utils/toxicityIsolatedTest'
 
 // ── Browser-console diagnostic tool ───────────────────────────
 // User idėja iš testavimo #8: kai mes nesuprantam, kodėl AI praleidžia
@@ -58,8 +59,15 @@ if (typeof window !== 'undefined') {
     console.log('\n=== USAGE ===\n', r.usage)
     return r
   }
+  // Isolated toxicity test — minimal scope, fast iteration.
+  // Naudoja warning-label framing'ą + TINY tool schema. Skirtas eksperimentuoti
+  // su prompt'o struktūra prieš keičiant production'ą.
+  window.runToxicityTest = async (latinName = 'Aconitum napellus') => {
+    return await runToxicityIsolatedTest({ claudeCall, latinName })
+  }
   if (import.meta.env.DEV) {
     console.log('[debug] Diagnostic available: window.runPromptDiagnostic(latinName?, observedSkip?)')
+    console.log('[debug] Isolated toxicity test: window.runToxicityTest(latinName?)')
   }
 }
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
@@ -765,8 +773,12 @@ TWO-STEP REASONING for toxicity (when sources lack a direct entry):
     - route of harm („nurijus", „ilgalaikiu kontaktu su oda")
     - approximate dose („net mažais kiekiais", „tik dideliais kiekiais")
 
-  NEVER set severity=stiprus just because the compound is present —
-  that requires a specific literature record of hospitalisation.
+  severity=stiprus is REQUIRED (no dose evidence needed) when plant is
+  on the toxicity whitelist (Aconitum, Digitalis, Taxus, Conium, Nerium,
+  Ricinus, Cicuta, Atropa, Veratrum, Colchicum, Brugmansia, Datura,
+  Rhododendron, Convallaria, Hyoscyamus, Strychnos) OR when RAG context
+  mentions death/fatal/lethal/paralysis. Dose context goes into detales
+  text, never blocks severity decision.
 
 DOSE CONTEXT in pavojingumas.detales is REQUIRED:
   ✓ „Sultys aitrios — sukelia odos dirginimą prisilietus; gerai nuplaunama
