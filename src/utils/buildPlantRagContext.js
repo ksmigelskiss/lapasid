@@ -158,9 +158,15 @@ export async function buildPlantRagContext(latinName, options = {}) {
       sections.push(`📚 CARE SIGNALS (PFAF icons)\n  • ${pfafEntry.careIcons.join(', ')}`)
     }
 
-    // Toxicity hazards
+    // Toxicity hazards — PFAF botanical source.
+    // NB: anksčiau čia buvo „VERBATIM, do not paraphrase mechanism" — AI'us
+    // tai interpret'avo kaip „neperkelti į savybes laukus" → pavojaiCount
+    // STIPRIAI strugged net su strict toxicity rule. Dabar instrukcija
+    // ACTION-ORIENTED: action plan'as AI'ui, ne defensive marker'is.
     if (pfafEntry.knownHazards) {
-      sections.push(`⚠️ KNOWN HAZARDS (PFAF — VERBATIM, do not paraphrase mechanism)\n  ${pfafEntry.knownHazards.slice(0, 600)}`)
+      sections.push(
+        `TOXICITY DATA (PFAF botanical source) — PRIVALOMA INTEGRUOTI Į savybes.pavojai[] + pavojingumas.detales schema:\n  ${pfafEntry.knownHazards.slice(0, 600)}\n\nAction: išversk į LT, ekspand'ink su mechanism, simptomais ir first-aid pointer.`,
+      )
     }
 
     // Ratings
@@ -198,10 +204,14 @@ export async function buildPlantRagContext(latinName, options = {}) {
   }
 
   // ── ASPCA toxicity (high authority) ─────────────────────────
+  // Anksčiau "VERIFIED — authoritative" + "⚠️" markeriai padarė AI atsargia.
+  // Naujasis ton'as: clear action plan + Lithuanian narrative requirement.
   const aspcaEntry = await findAspcaEntry(latinName, pfafEntry?.commonNameEn)
   if (aspcaEntry) {
     sourcesUsed.add('aspca')
-    sections.push(`⚠️ ASPCA TOXICITY (VERIFIED — authoritative)\n  • Toxic to: ${aspcaEntry.toxicTo.join(', ')}\n  • Display name: ${aspcaEntry.displayName}\n  • Details: ${aspcaEntry.detailUrl}`)
+    sections.push(
+      `PET TOXICITY DATA (ASPCA) — PRIVALOMA INTEGRUOTI Į savybes.pavojai[]:\n  • Toksiškas: ${aspcaEntry.toxicTo.join(', ')}\n  • Common name: ${aspcaEntry.displayName}\n  • Detail URL: ${aspcaEntry.detailUrl}\n\nAction: pridėti structured entry per target į savybes.pavojai[], pavojingumas.detales rašyti LT su mechanism (jei žinai) + simptomais + Pet Poison Helpline citation.`,
+    )
   }
 
   // ── Cheng premium care (19 plants only) ─────────────────────
