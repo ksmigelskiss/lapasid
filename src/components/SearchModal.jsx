@@ -17,6 +17,51 @@ import { catalogPreviewUpsert } from '../utils/catalogPreviewUpsert'
 import { buildPlantRagContext } from '../utils/buildPlantRagContext'
 import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../utils/stage2Constants'
 import { deriveToxicityFromSources, isPavojaiEmpty } from '../utils/deriveToxicity'
+import { diagnosticPromptCheck } from '../utils/diagnosticPromptCheck'
+
+// ── Browser-console diagnostic tool ───────────────────────────
+// User idėja iš testavimo #8: kai mes nesuprantam, kodėl AI praleidžia
+// schema lauką, klausiam modelį pati paaiškinti elgesį. Atidaryk F12,
+// paleisk window.runPromptDiagnostic() — gausi Claude'o LT atsakymą,
+// kuris instrukcijos sluoksnis priežastiškai suvaržo.
+if (typeof window !== 'undefined') {
+  window.runPromptDiagnostic = async (latinName = 'Aconitum napellus', observedSkip = null) => {
+    console.log(`[diagnostic] Building prompt for "${latinName}"...`)
+    const rag = await buildPlantRagContext(latinName, {
+      includeCheng: true,
+      includePropagation: true,
+      maxLen: 2500,
+    })
+    const groundedSystem = [
+      PLANT_SYSTEM,
+      '',
+      RAG_PRIORITY_INSTRUCTION,
+      '',
+      rag.context,
+      '',
+      LT_CLIMATE_CONTEXT,
+      '',
+      VET_LINKS,
+    ].join('\n')
+    console.log(`[diagnostic] Total system prompt: ${groundedSystem.length} chars (~${Math.round(groundedSystem.length / 4)} tokens)`)
+    console.log(`[diagnostic] RAG context: ${rag.context.length} chars, sources: ${rag.sources.join('+')}`)
+    console.log('[diagnostic] Calling Claude with diagnostic question (no tool_use, plain text response)...')
+
+    const r = await diagnosticPromptCheck({
+      claudeCall,
+      systemPrompt: groundedSystem,
+      latinName,
+      observedSkip: observedSkip ?? `savybes.pavojai grąžinamas tuščias array net kai RAG context'e yra PFAF knownHazards (~600 chars su žodžiais 'toxic', 'paralyze', 'vomit', 'death').`,
+    })
+    console.log('\n=== CLAUDE DIAGNOSTIC RESPONSE ===\n')
+    console.log(r.explanation)
+    console.log('\n=== USAGE ===\n', r.usage)
+    return r
+  }
+  if (import.meta.env.DEV) {
+    console.log('[debug] Diagnostic available: window.runPromptDiagnostic(latinName?, observedSkip?)')
+  }
+}
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
