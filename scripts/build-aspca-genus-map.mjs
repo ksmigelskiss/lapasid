@@ -142,6 +142,11 @@ const MANUAL_MAP = {
   'helmet-flower':                 'ACONITUM',
   'pineapple-lily':                'EUCOMIS',
   'pineapple-flower':              'EUCOMIS',
+
+  // Auto-suggested by aspca-coverage-analysis (2026-05-22):
+  'common-staghorn-fern':          'PLATYCERIUM',
+  'prayer-plant':                  'MARANTA',
+  'silver-jade-plant':             'CRASSULA',  // already had 'jade-plant'
 }
 
 console.log('[aspca-map] loading sources...')

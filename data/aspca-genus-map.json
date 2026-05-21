@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-05-21T13:58:49.906Z",
+  "generatedAt": "2026-05-21T21:22:53.869Z",
   "source": "ASPCA toxic plants list → pre-DB genus mapping",
   "totalGeneraMatched": 116,
-  "totalAspcaEntriesMatched": 224,
-  "manualMappings": 56,
+  "totalAspcaEntriesMatched": 227,
+  "manualMappings": 65,
   "toxicityByGenus": {
     "RHODODENDRON": {
       "toxicTo": [
@@ -423,6 +423,15 @@
             "horses"
           ],
           "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/jade-plant"
+        },
+        {
+          "slug": "silver-jade-plant",
+          "displayName": "Silver Jade Plant",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/silver-jade-plant"
         }
       ],
       "matchTypes": [
@@ -748,6 +757,40 @@
       ],
       "confidence": "high"
     },
+    "PLATYCERIUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "common-staghorn-fern",
+          "displayName": "Common Staghorn Fern",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/common-staghorn-fern"
+        },
+        {
+          "slug": "platycerium-alcicorne",
+          "displayName": "Platycerium Alcicorne",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/platycerium-alcicorne"
+        }
+      ],
+      "matchTypes": [
+        "manual",
+        "displayName"
+      ],
+      "confidence": "high"
+    },
     "PACHIRA": {
       "toxicTo": [
         "cats",
@@ -768,6 +811,50 @@
       ],
       "matchTypes": [
         "manual"
+      ],
+      "confidence": "high"
+    },
+    "MARANTA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "prayer-plant",
+          "displayName": "Prayer Plant",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/prayer-plant"
+        },
+        {
+          "slug": "maranta",
+          "displayName": "Maranta",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/maranta"
+        },
+        {
+          "slug": "miniature-maranta",
+          "displayName": "Miniature Maranta",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/miniature-maranta"
+        }
+      ],
+      "matchTypes": [
+        "manual",
+        "displayName"
       ],
       "confidence": "high"
     },
@@ -3302,39 +3389,6 @@
       ],
       "confidence": "medium"
     },
-    "MARANTA": {
-      "toxicTo": [
-        "cats",
-        "dogs",
-        "horses"
-      ],
-      "matchedEntries": [
-        {
-          "slug": "maranta",
-          "displayName": "Maranta",
-          "toxicTo": [
-            "cats",
-            "dogs",
-            "horses"
-          ],
-          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/maranta"
-        },
-        {
-          "slug": "miniature-maranta",
-          "displayName": "Miniature Maranta",
-          "toxicTo": [
-            "cats",
-            "dogs",
-            "horses"
-          ],
-          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/miniature-maranta"
-        }
-      ],
-      "matchTypes": [
-        "displayName"
-      ],
-      "confidence": "medium"
-    },
     "PHLOX": {
       "toxicTo": [
         "cats",
@@ -3506,29 +3560,6 @@
             "horses"
           ],
           "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/phalaenopsis-orchid"
-        }
-      ],
-      "matchTypes": [
-        "displayName"
-      ],
-      "confidence": "medium"
-    },
-    "PLATYCERIUM": {
-      "toxicTo": [
-        "cats",
-        "dogs",
-        "horses"
-      ],
-      "matchedEntries": [
-        {
-          "slug": "platycerium-alcicorne",
-          "displayName": "Platycerium Alcicorne",
-          "toxicTo": [
-            "cats",
-            "dogs",
-            "horses"
-          ],
-          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/platycerium-alcicorne"
         }
       ],
       "matchTypes": [
