@@ -14,6 +14,8 @@ import { searchStage1 } from '../utils/searchStage1'
 import { previewParallelFetch } from '../utils/previewParallelFetch'
 import { buildPreDbBaseResult } from '../utils/preDbBaseResult'
 import { catalogPreviewUpsert } from '../utils/catalogPreviewUpsert'
+import { buildPlantRagContext } from '../utils/buildPlantRagContext'
+import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../utils/stage2Constants'
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
@@ -766,10 +768,51 @@ async function fetchDetails(latinName, name, baseResult = null) {
   // todėl save'inta entry buvo iškarpytas. Dabar Phase 2 pildo VISKĄ kas
   // reikalinga „Ferrari quality" plant detail puslapiui — kaip 2026-05-02 era.
   // Token'ų cost +30% bet save'as gauna pilną spektrą.
+  //
+  // RAG SWAP (2026-05-21): vietoj „AI generate from memory" → „AI structure
+  // verified facts". buildPlantRagContext renka faktus iš pre-DB + PFAF +
+  // ASPCA + Cheng + Wikipedia ir įjungia juos kaip context'ą. AI pakeičia
+  // rolę į „strukturizuoti + verst LT". Haliucinacijų rizika ↓ ~70%.
+  const ragStartTime = Date.now()
+  const rag = await buildPlantRagContext(latinName, {
+    includeCheng: true,
+    includePropagation: true,
+    maxLen: 4500,
+  })
+  const ragMs = Date.now() - ragStartTime
+
+  // Grounded system prompt: PLANT_SYSTEM + RAG priority instrukcija + verified
+  // facts + LT climate + vet links. Visi pridedami PO PLANT_SYSTEM, kad esama
+  // web search + fallback logika liktų.
+  const groundedSystem = [
+    PLANT_SYSTEM,
+    '',
+    RAG_PRIORITY_INSTRUCTION,
+    '',
+    rag.context,
+    '',
+    LT_CLIMATE_CONTEXT,
+    '',
+    VET_LINKS,
+  ].join('\n')
+
+  console.log('[fetchDetails] RAG context built:', {
+    latinName,
+    ragMs,
+    contextChars: rag.context?.length ?? 0,
+    confidence: rag.confidence,
+    sources: rag.sources,
+    hasIdentity: rag.hasIdentityData,
+    hasLtName: rag.hasLtName,
+    hasToxicity: rag.hasToxicity,
+    hasCare: rag.hasCare,
+    hasCheng: rag.hasCheng,
+  })
+
   const r = await claudeCall({
     maxTokens:  3000,   // padidinta — pridėti field'ai (savybes su pavojai struktūra + idomybes + lt narrative)
     temperature: 0.3,
-    system:     PLANT_SYSTEM,
+    system:     groundedSystem,
     tools:      [TOOL_DETAILS],
     toolChoice: { type: 'tool', name: 'plant_details' },
     messages:   [{
@@ -862,6 +905,24 @@ Naudok savo botanikos žinias + Wikipedia/RHS info kur reikia. Visi human-readab
       lietuviškas: name,
       ...details,
     }
+
+    // KRITINIS — verificationStatus upgrade'as (2026-05-21 audit fix).
+    // Jei cached arba baseResult turėjo 'preview' (iš Phase 0.3 catalogPreviewUpsert),
+    // o Phase 2 sėkmingai grąžino full care info (laistymasIntervalas yra) —
+    // PROMOTE'inam į 'auto-verified'. normalizeAIResponse() neturi šio lauko,
+    // todėl spread'as nesusveriaja status'o automatiškai.
+    const previousStatus = (cached?.verificationStatus ?? baseResult?.verificationStatus ?? null)
+    if (previousStatus === 'preview' && details.laistymasIntervalas) {
+      fullPlant.verificationStatus = 'auto-verified'
+      fullPlant.aiConfidence = details.confidence ?? 'mid'
+      console.log('[fetchDetails] catalog upgrade preview → auto-verified for', latinName)
+    }
+
+    // Pridėti RAG provenance + Phase 2 sources
+    fullPlant.ragSources = rag.sources
+    fullPlant.ragConfidence = rag.confidence
+    fullPlant.schemaVersion = 2
+
     saveCatalogWithSpeciesParent(fullPlant)
       .catch(e => console.warn('[fetchDetails] catalog save failed:', e?.message ?? e))
   }
