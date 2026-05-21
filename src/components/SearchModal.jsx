@@ -10,6 +10,9 @@ import { fromAIResult } from '../hooks/usePlants'
 import { normalizeAIResponse } from '../utils/plantTransform'
 import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId } from '../utils/catalog'
 import { getCachedSearchResponse, setCachedSearchResponse } from '../utils/searchResponseCache'
+import { searchStage1 } from '../utils/searchStage1'
+import { previewParallelFetch } from '../utils/previewParallelFetch'
+import { buildPreDbBaseResult } from '../utils/preDbBaseResult'
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
@@ -1735,8 +1738,48 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
         }
       }
 
+      // ── Phase 0.3: Pre-DB powered slim preview ──────────────
+      // Catalog'as nerado — bandom mūsų deterministic pre-DB lookup'ą (1655
+      // genera). Šis pagauna augalus, kurių dar niekas neisaugojo į catalog'ą,
+      // BET kurie yra mūsų scrape'inta bibliotekoj (AHS + Beckett + Cheng +
+      // ASPCA + PFAF + LT vardai). ~5ms lookup'as + ~200-500ms paralelinis
+      // Wiki+iNat photo fetch'as. Iš viso ~300-500ms vs ~10s AI Phase 1.
+      //
+      // Tikslumo win'as: AI haliucinacijų rizika sumažinta — useris mato
+      // verified Latin/family/toxicity + Wiki extract'ą (nemeluojantis
+      // citation), ne AI memory generation.
+      trackStep('Tikrinu pre-DB...')
+      const stage1Result = await searchStage1(q.trim())
+      if (controller.signal.aborted) return
+
+      if (stage1Result.found) {
+        trackStep('Renkam nuotrauką ir aprašymą...')
+        // Paraleliai gauti Wiki extract + photo (LT + EN both). Photo iš Wiki
+        // preferred (geresnė kokybė), iNat fallback. Wikidata gate NE kviečiam
+        // — pre-DB hit'as jau verified plant, nereikia.
+        const preview = await previewParallelFetch(stage1Result.latin, {
+          includeWikiEn: true,
+          includeWikidataGate: false,
+          debug: false,
+        })
+        if (controller.signal.aborted) return
+
+        const baseResult = buildPreDbBaseResult(stage1Result, preview, {
+          userQuery: q.trim(),
+        })
+        setResult(baseResult)
+        setLoading(false)
+        trackStep(null)
+        console.log(
+          `[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s ` +
+          `(pre-DB hit, ${stage1Result.layer}/${stage1Result.confidence}, ` +
+          `preview ${preview?.totalMs ?? 0}ms, AI praleistas)`
+        )
+        return
+      }
+
       // ── Phase 0.5: Query response cache ──────────────────────
-      // Catalog'as nieko nerado — patikrinam ar ankstesnis AI atsakymas tam
+      // Pre-DB nerado — patikrinam ar ankstesnis AI atsakymas tam
       // pačiam query yra cache'intas (48h TTL). Visi enrichment'ai (photos,
       // Wikidata verification) jau pritaikyti — instant replay.
       const cachedResponse = getCachedSearchResponse(q.trim())
