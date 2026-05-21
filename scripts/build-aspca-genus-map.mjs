@@ -132,6 +132,16 @@ const MANUAL_MAP = {
   'philodendron-monstera':          'MONSTERA',  // some ASPCA call Monstera this
   'split-leaf-philodendron':        'MONSTERA',
   'swiss-cheese-plant':            'MONSTERA',
+
+  // Highly toxic plants — pridėta po 2026-05-21 user test'o, kai pamatėm,
+  // kad mūsų ASPCA scrape'as šių NEPAGAVO. Jei rebuild'as ateityje pildys
+  // duomenis, šie mapping'ai aktyvuosis automatiškai.
+  'monkshood':                     'ACONITUM',
+  'aconite':                       'ACONITUM',
+  'wolfsbane':                     'ACONITUM',
+  'helmet-flower':                 'ACONITUM',
+  'pineapple-lily':                'EUCOMIS',
+  'pineapple-flower':              'EUCOMIS',
 }
 
 console.log('[aspca-map] loading sources...')

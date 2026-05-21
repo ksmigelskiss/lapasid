@@ -37,30 +37,66 @@ export const VET_LINKS = `
 `
 
 // RAG priority instrukcija — pasakanti AI'ui, kad VERIFIED FACTS žemiau yra
-// authoritative source, ne AI memory. Tas yra Stage 2 RAG sukimuko esmė —
-// AI rolė pakeičiama iš „generate from knowledge" į „structure verified facts".
+// authoritative FOUNDATION, ne tiesiog COPY source. Tas yra Stage 2 RAG
+// sukimuko esmė — AI rolė: „ground in RAG + EXPAND with botanical context".
+//
+// 2026-05-21 update'as: po user test'o pamatėm, kad AI buvo PER MUCH compliant
+// — Eucomis aprasymas TIESIOG IŠVERSTAS Beckett intro (1 sakinys), Aconitum
+// pavojai array TUŠČIA nors PFAF knownHazards 300+ chars. Sprendimas — aiški
+// EXPAND nurodymas + hard rule on toxicity structurizing.
 export const RAG_PRIORITY_INSTRUCTION = `
-=== RAG CONTEXT — VERIFIED FACTS (PRIORITY OVER MEMORY) ===
+=== RAG CONTEXT — VERIFIED FACTS (FOUNDATION + EXPAND) ===
 
 You will receive VERIFIED FACTS below from our scraped plant database
 (AHS Encyclopedia, Beckett, Cheng "House Plant Journal", PFAF, ASPCA,
 Wikipedia, lt-names dictionary).
 
-HIERARCHY (in priority order):
-  1. RAG VERIFIED FACTS (below)        ← always prefer
-  2. Your botanical knowledge           ← only when RAG silent
-  3. Cross-reference                    ← if conflict, cite RAG, mark
-                                          memory inference as „tikriausiai"
+YOUR ROLE: USE RAG AS FOUNDATION, THEN EXPAND.
+RAG facts are the verified core — but plant detail pages need RICH content.
+A 1-sentence Beckett intro is NOT enough. EXPAND with botanical knowledge:
+history, etymology, ecological role, geographic context, cultural significance,
+horticultural details. Mark uncertain extensions with „tikriausiai" / „galimai".
 
-RULES:
-  • Do NOT contradict RAG facts. If you "remember" something different,
-    defer to RAG and skip your version.
-  • USE RAG facts directly — translate to Lithuanian, restructure into
-    schema, but do NOT invent new claims that contradict RAG.
-  • TOXICITY: prioritize ASPCA + PFAF knownHazards verbatim. Never
-    paraphrase poison mechanism — quote source exactly.
-  • If RAG is silent on a field — you MAY use general botanical
-    knowledge BUT mark uncertain claims with „tikriausiai" / „galimai".
-  • For first-aid advice — refer to external vet links (see below),
-    NEVER generate dosage or treatment.
+HIERARCHY (in priority order):
+  1. RAG VERIFIED FACTS (below)        ← never contradict; always include
+  2. Your botanical knowledge           ← EXPAND on RAG, fill gaps, add context
+  3. If conflict, cite RAG, mark memory inference as „tikriausiai"
+
+FIELD-LEVEL RULES:
+
+📝 APRASYMAS — Minimum 3-5 sakiniai LIETUVIŠKAI.
+  • Foundation: RAG taxonomy + family + origin
+  • EXPAND: morphology, ekologinis kontekstas, history of cultivation,
+    distinctive features, kultūrinė reikšmė.
+  • NEPAKANKA tiesiog išversti Beckett 1-sakinio intro.
+
+⚠️ SAVYBES.PAVOJAI[] — HARD RULE:
+  • IF RAG turi ASPCA "Toxic to: X" → savybes.pavojai[] PRIVALO turėti entry
+    per target (tipas:"toksiskas", target:"gyvunams", severity, detales).
+  • IF RAG turi PFAF "knownHazards" textą su žodžiais toxic/poison/hazard →
+    savybes.pavojai[] PRIVALO turėti bent vieną entry (severity iš mechanism:
+    "death/fatal" → stiprus, "nausea/burning" → vidutinis, "irritation" → silpnas).
+  • NEPRALEISI šio lauko užpildymo. Tas yra projekto primary value —
+    vartotojas paliks gyvūną namuose pasitikėdamas mūsų info.
+
+✨ IDOMYBES[] — Minimum 2-3 items LIETUVIŠKAI.
+  • Naudok RAG facts kaip seed, ekspand'ink su:
+    geographic origin specifics, taxonomic history (kas atrado, when,
+    nepatvirtinta etymology), cultural/medicinal traditional uses,
+    ekologiniai aspektai (kas dargina, ką dauginasi).
+
+🌱 PRIEZIURA — RAG'as duoda PFAF cultivation prose. Strukturizuok į:
+  • prieziura: 4 narrative LT field'ai (sviesa, laistymas, temperatura, dregme)
+  • sviesa.lygis: žema/vidutinė/ryški + ppfd range jei žinai
+  • vanduo.lygis: mažai/vidutiniškai/daug
+  • laistymasIntervalas.vasara/ziema: number iš PFAF moisture/USDA hardiness
+
+🦴 VAISTINIS / VALGOMUMAS — Iš PFAF edibility/medicinal ratings + uses.
+  • Jei rating > 0 → pildyk statusas, naudojama, detales.
+  • Jei rating = 0 ar nėra info → statusas: "none", tuščia.
+
+🩹 FIRST-AID — NIEKADA negeneruok dosing'o ar treatment'o.
+  • Toxic plants → savybes.pavojingumas.detales gali paminėti "konsultuokitės
+    su veterinaru ar Pet Poison Helpline" su pridedamais external sources URLs
+    (žiūrėk =EXTERNAL SOURCES= sekciją žemiau).
 `
