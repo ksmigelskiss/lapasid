@@ -1,6 +1,26 @@
 import { doc, getDoc, setDoc, getDocs, collection, query, limit } from 'firebase/firestore'
+import { get as idbGet, set as idbSet, del as idbDel, createStore } from 'idb-keyval'
 import { db } from './firebase'
 import { plantFuzzyScore } from './fuzzySearch'
+import { stripUndefinedDeep } from './plantTransform'
+
+// IndexedDB store — viena baze visam catalog cache'ui. Migracija iš
+// localStorage'o: pirmą kartą po deploy'o IndexedDB tuščias, fetch'iname
+// fresh iš Firestore, rašom į IndexedDB. localStorage'as natūraliai
+// pamiršamas (24h TTL nebeperskaitomas). Migration step'as nereikalingas.
+//
+// Kodėl ne localStorage:
+//   • localStorage limit'as ~5-10MB browser'iui. PFAF v4 duos 1500+ entries
+//     × ~5KB avg = 7-8MB → quota exceeded, silent fail.
+//   • IndexedDB praktiškai be limit'o (~50% disk per origin).
+//   • Async API — non-blocking main thread.
+// idb-keyval'as = ~600B wrapper'is, paprastas key-value API.
+const CATALOG_DB_NAME = 'lapasid-catalog'
+const CATALOG_STORE_NAME = 'cache-v1'
+const _idbStore = typeof indexedDB !== 'undefined'
+  ? createStore(CATALOG_DB_NAME, CATALOG_STORE_NAME)
+  : null
+const CACHE_KEY = 'all-entries'
 
 // Asmeniniai laukai — nekaupiami kataloge
 const PERSONAL_FIELDS = new Set([
@@ -83,32 +103,41 @@ export async function getCatalogEntry(lotyniskas) {
 }
 
 // ── Bendrosios bibliotekos search'as ─────────────────────────────────
-// Visi catalog/ docs fetch'inami vienąkart per sesiją + 24h localStorage
+// Visi catalog/ docs fetch'inami vienąkart per sesiją + 24h IndexedDB
 // cache'as. Client-side filter'is per visus name field'us (lotyniskas,
-// lietuviškas, sinonimai, englishNames). v1 implementacija — kai catalog
-// peraugs ~1000 įrašų, reikės server-side searchTerms index'o.
+// lietuviškas, sinonimai, englishNames).
+//
+// Cache architektūra:
+//   • _catalogMem      — in-memory (per session, instant)
+//   • IndexedDB        — cross-session, ~50% disk per origin (praktiškai
+//                        be limit'o), 24h TTL
+//   • Firestore        — source of truth, full collection fetch
+//
+// CATALOG_LIMIT 2000 — buvo 500 dėl localStorage 5-10MB quota'os, IndexedDB
+// tos problemos neturi. 2000 entries × ~5KB = ~10MB, fits comfortably.
+// Server-side searchTerms index'as reikalingas tik kai > 10K entries.
 let _catalogMem = null
 let _catalogMemAt = 0
 const CATALOG_TTL    = 24 * 60 * 60 * 1000 // 24h
-const CATALOG_LIMIT  = 500                  // hard limit per fetch
-const CATALOG_CACHE_KEY = 'catalog-cache-v1'
+const CATALOG_LIMIT  = 2000                 // hard limit per fetch
 
 async function loadAllCatalog() {
   // 1) in-memory cache (per session)
   if (_catalogMem && Date.now() - _catalogMemAt < CATALOG_TTL) return _catalogMem
 
-  // 2) localStorage cache (cross-session, 24h)
-  try {
-    const raw = localStorage.getItem(CATALOG_CACHE_KEY)
-    if (raw) {
-      const { data, at } = JSON.parse(raw)
-      if (Array.isArray(data) && Date.now() - at < CATALOG_TTL) {
-        _catalogMem = data
-        _catalogMemAt = at
-        return data
+  // 2) IndexedDB cache (cross-session, 24h)
+  if (_idbStore) {
+    try {
+      const cached = await idbGet(CACHE_KEY, _idbStore)
+      if (cached && Array.isArray(cached.data) && Date.now() - cached.at < CATALOG_TTL) {
+        _catalogMem = cached.data
+        _catalogMemAt = cached.at
+        return cached.data
       }
+    } catch (e) {
+      console.warn('[catalog] IndexedDB read failed:', e)
     }
-  } catch {}
+  }
 
   // 3) fresh fetch — full collection (limited)
   try {
@@ -116,7 +145,11 @@ async function loadAllCatalog() {
     const data = snap.docs.map(d => ({ ...d.data(), _id: d.id }))
     _catalogMem = data
     _catalogMemAt = Date.now()
-    try { localStorage.setItem(CATALOG_CACHE_KEY, JSON.stringify({ data, at: _catalogMemAt })) } catch {}
+    if (_idbStore) {
+      // Fire-and-forget — neblokuojam, jei IDB write fail'ina (storage quota?)
+      idbSet(CACHE_KEY, { data, at: _catalogMemAt }, _idbStore)
+        .catch(e => console.warn('[catalog] IndexedDB write failed:', e))
+    }
     return data
   } catch (e) {
     console.warn('[catalog] load failed:', e)
@@ -164,28 +197,39 @@ export function catalogEntryToAIResult(entry) {
 }
 
 /**
- * Bust'ina catalog cache'ą (in-memory + localStorage). Naudojama, kai admin
+ * Bust'ina catalog cache'ą (in-memory + IndexedDB). Naudojama, kai admin
  * tiesiogiai save'ina ar trina catalog entry'ius per AdminPanel — `searchCatalog`
  * ir autocomplete'as iškart atspindi naują būklę be 24h laukimo.
+ *
+ * NB: bust'inimas yra fire-and-forget. Jei localStorage'e dar liko OLD
+ * cache'as (pre-IDB migration), tyliai pašalinam — apsauga prieš stale data.
  */
 export function bustCatalogCache() {
   _catalogMem = null
   _catalogMemAt = 0
-  try { localStorage.removeItem(CATALOG_CACHE_KEY) } catch {}
+  if (_idbStore) {
+    idbDel(CACHE_KEY, _idbStore).catch(() => {/* ignore */})
+  }
+  // Cleanup'as senų localStorage cache'ų (migration period)
+  try { localStorage.removeItem('catalog-cache-v1') } catch {}
 }
 
-/** Išsaugo augalo rūšinius duomenis į katalogą (merge — neperrašo). */
+/** Išsaugo augalo rūšinius duomenis į katalogą (merge — neperrašo).
+ *
+ * NB: stripUndefinedDeep tarp toCatalogEntry ir setDoc — apsaugo nuo
+ * Firebase setDoc'o crash'inimo, kai nested objektas turi undefined
+ * (pvz., `tresimas.tipas` jei AI praleido subfield). top-level laukai
+ * jau buvo filter'inami per `v != null` toCatalogEntry'je, bet nested
+ * neapsaugoti. (Audit 2026-05-21.)
+ */
 export async function saveToCatalog(plant) {
   const id = catalogDocId(plant.lotyniskas ?? plant.latinName)
   if (!id) return
   const entry = toCatalogEntry(plant)
   if (!Object.keys(entry).length) return
+  const clean = stripUndefinedDeep({ ...entry, updatedAt: new Date().toISOString() })
   try {
-    await setDoc(
-      doc(db, 'catalog', id),
-      { ...entry, updatedAt: new Date().toISOString() },
-      { merge: true }
-    )
+    await setDoc(doc(db, 'catalog', id), clean, { merge: true })
     // Cache bust — naujai pridėtas augalas iškart pasimato `searchCatalog'e
     bustCatalogCache()
   } catch (e) {

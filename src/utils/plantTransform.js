@@ -114,6 +114,52 @@ export function normalizeAIResponse(rawDetails) {
   return out
 }
 
+/**
+ * stripUndefinedDeep(value) — rekursinis undefined šalintojas.
+ *
+ * NAUDOJIMAS: PRIE BOUNDARY su Firestore. Firebase setDoc REJECT'ina
+ * undefined su `Function setDoc() called with invalid data. Unsupported
+ * field value: undefined` (kelias kelyje, pvz. `tresimas.tipas`).
+ *
+ * Šis helper'is rekursyviai walk'ina objektą + array'us:
+ *   • Object key'as su `undefined` → key'as pašalinamas
+ *   • Array element'as `undefined` → element'as pašalinamas
+ *   • null → paliekamas (Firestore validates null fine)
+ *   • Primitives → passthrough
+ *
+ * NE'naikinama `normalizeAIResponse` undefined logika — ji sąmoningai
+ * palaiko undefined kaip „skip this field" signal'ą. stripUndefinedDeep
+ * tik PRIES setDoc paskutiniam pasiruošimui.
+ *
+ * @example
+ *   stripUndefinedDeep({ a: 1, b: undefined, c: { d: undefined, e: 2 } })
+ *   // → { a: 1, c: { e: 2 } }
+ *
+ *   stripUndefinedDeep([1, undefined, 2])
+ *   // → [1, 2]
+ */
+export function stripUndefinedDeep(value) {
+  if (value === undefined) return undefined
+  if (value === null) return null
+  if (Array.isArray(value)) {
+    return value
+      .map(stripUndefinedDeep)
+      .filter(v => v !== undefined)
+  }
+  if (typeof value === 'object') {
+    // Firebase Timestamp, Date, Geopoint etc. — leave intact
+    if (value.constructor && value.constructor !== Object) return value
+
+    const out = {}
+    for (const [k, v] of Object.entries(value)) {
+      const cleaned = stripUndefinedDeep(v)
+      if (cleaned !== undefined) out[k] = cleaned
+    }
+    return out
+  }
+  return value  // primitive (string, number, boolean)
+}
+
 // Normalizuoja AI grąžintą savybes objektą į saugią formą. Bet kuris laukas
 // gali būti undefined — saugiai užpildom default'ais. UI naudoja granuliarius
 // `pavojai[]` pirmiausia; jei tuščia, krenta į saugiklį `pavojingumas.yra`.
@@ -306,7 +352,23 @@ export function fromAIResult(aiResult) {
     status:       'healthy',
     inatLtName:   aiResult.inatLtName   ?? null,
     inatTaxonId:  aiResult.inatTaxonId  ?? null,
+    // LT colloq/vernacular names (e.g. "Uošvės liežuvis" for Sansevieria)
     sinonimai:    ensureArray(aiResult.sinonimai),
     englishNames: ensureArray(aiResult.englishNames),
+    // NEW (Stage B schema extension):
+    // Latin taxonomic synonyms — atskirti nuo LT colloq pavadinimų.
+    // Pavyzdys: Sansevieria trifasciata → lotyniskiSinonimai = ['Dracaena trifasciata']
+    // Stage B Phase 2 RAG context'as ekstraktuoja iš PFAF latinSynonyms.
+    lotyniskiSinonimai: ensureArray(aiResult.lotyniskiSinonimai),
+    // Source provenance per field — naudojama UI source badges + AI prompt context.
+    // Schema: { fieldName: 'src1+src2', ... }
+    // Pavyzdys: { lietuviškas: 'wiki+plants+inat', toxicity: 'aspca+pfaf' }
+    // Old plants neturės šito field'o — defaults to {} on read.
+    sources:      typeof aiResult.sources === 'object' && aiResult.sources !== null
+                    ? aiResult.sources
+                    : {},
+    // Schema version — leidžia future migrations tracking. v1 = pre-Stage B,
+    // v2 = post-Stage B (turi sources + lotyniskiSinonimai).
+    schemaVersion: aiResult.schemaVersion ?? 2,
   }
 }
