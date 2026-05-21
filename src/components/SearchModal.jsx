@@ -778,7 +778,8 @@ async function fetchDetails(latinName, name, baseResult = null) {
   const rag = await buildPlantRagContext(latinName, {
     includeCheng: true,
     includePropagation: true,
-    maxLen: 4500,
+    maxLen: 2500,   // sumažinta nuo 4500 — per ilgas system prompt'as
+                    // sukėlė regressioną (Aconitum idomybesCount=0).
   })
   const ragMs = Date.now() - ragStartTime
 
@@ -811,9 +812,8 @@ async function fetchDetails(latinName, name, baseResult = null) {
   })
 
   const r = await claudeCall({
-    maxTokens:  3500,   // pakelta — RAG context'as + rich narrative LT reikalauja daugiau
-    temperature: 0.5,   // pakelta nuo 0.3 — daugiau narrative kūrybingumo (toxicity, idomybes).
-                        // 0.3 padarydavo per trumpus aprašymus net su EXPAND instrukcija.
+    maxTokens:  3000,
+    temperature: 0.3,   // grąžinta į 0.3 — 0.5 nepadėjo, AI'us tapdavo overload'intas
     system:     groundedSystem,
     tools:      [TOOL_DETAILS],
     toolChoice: { type: 'tool', name: 'plant_details' },
