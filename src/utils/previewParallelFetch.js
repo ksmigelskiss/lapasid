@@ -34,7 +34,7 @@
 import {
   fetchWikiExtract as wikiExtract,
   fetchWikiPhoto as wikiPhoto,
-  fetchWikidataIsPlant,
+  fetchWikidataIsPlant as wikidataPlantCheck,
   WIKI_USER_AGENT,
 } from './wikiApi.js'
 
@@ -138,14 +138,20 @@ async function fetchBraveImages(latin, opts = {}) {
  * @param {string} latinName
  * @param {object} opts
  * @param {boolean} opts.debug — console.log per-source timings
- * @param {boolean} opts.includeBrave — include Brave Image (only Save click context)
+ * @param {boolean} opts.includeBrave — include Brave Image (Save click context)
  * @param {boolean} opts.includeWikiEn — also fetch EN Wiki extract (default true — needed for Stage 2 RAG)
+ * @param {boolean} opts.includeWikidataGate — fetch Wikidata P31 (instance of)
+ *                  to verify Wikipedia page is a plant/taxon, NOT "keptuvė" or
+ *                  similar non-plant. ~200ms extra (paralelinis su Wiki extract).
+ *                  Naudoti TIK pre-DB miss kelyje — pre-DB hit'as jau yra
+ *                  verified plant'as, gate'as nieko nepridėtų.
  */
 export async function previewParallelFetch(latinName, opts = {}) {
   const {
     debug = false,
     includeBrave = false,
     includeWikiEn = true,
+    includeWikidataGate = false,
   } = opts
 
   if (!latinName) return null
@@ -197,14 +203,43 @@ export async function previewParallelFetch(latinName, opts = {}) {
   }
   result.bestExtract = bestExtract
 
+  // ── Wikidata plant gate ──────────────────────────────────────
+  // wikidataId pasiimamas iš Wiki extract'o pageprops (vienas API call'as
+  // grąžina ir extract'ą, ir QID). Antras call'as eina į Wikidata wbgetentities
+  // gauti P31 (instance of). Iškviečiamas TIK jei toj pačioj sesijoj reikia
+  // gate'o (opt-in flag).
+  if (includeWikidataGate) {
+    const wikidataId = result.wikiEn?.wikidataId ?? result.wikiLt?.wikidataId ?? null
+    if (wikidataId) {
+      const gateResult = await timed(
+        'wikidataGate',
+        wikidataPlantCheck(wikidataId, { timeoutMs: TIMEOUT_MS }),
+        debug,
+      )
+      result.wikidataGate = gateResult
+      // PERMISSIVE gate: isPlant ARBA isTaxon → leist eiti per AI fallback.
+      // Block'inam tik kai EXPLICITIŠKAI not-plant (cooking utensil ir pan.).
+      result.passesPlantGate = !!(gateResult.ok && (gateResult.isPlant || gateResult.isTaxon))
+    } else {
+      // Net Wikipedia page'o nėra → null wikidataId → useris pateikė neegzistuojantį
+      // ar gerokai iškraipytą terminą. Gate'as nepraeitas.
+      result.wikidataGate = null
+      result.passesPlantGate = false
+    }
+  }
+
   result.totalMs = Date.now() - totalStart
 
   if (debug) {
+    const gateInfo = includeWikidataGate
+      ? ` | gate: ${result.passesPlantGate ? '✓PLANT' : '✗BLOCK'}`
+      : ''
     console.log(
       `[preview-fetch] TOTAL: ${result.totalMs}ms` +
       ` | photo: ${bestPhoto?.source ?? 'none'}` +
       ` | extract: ${bestExtract?.lang ?? 'none'}` +
-      (bestExtract?.needsTranslation ? ' (EN→LT pending)' : ''),
+      (bestExtract?.needsTranslation ? ' (EN→LT pending)' : '') +
+      gateInfo,
     )
   }
 
