@@ -1747,32 +1747,30 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
         }
       }
 
-      // ── Phase 0.3: Pre-DB powered slim preview ──────────────
+      // ── Phase 0.3: Pre-DB lookup + paralelinis Wiki/iNat/Wikidata fetch ──
       // Catalog'as nerado — bandom mūsų deterministic pre-DB lookup'ą (1655
-      // genera). Šis pagauna augalus, kurių dar niekas neisaugojo į catalog'ą,
-      // BET kurie yra mūsų scrape'inta bibliotekoj (AHS + Beckett + Cheng +
-      // ASPCA + PFAF + LT vardai). ~5ms lookup'as + ~200-500ms paralelinis
-      // Wiki+iNat photo fetch'as. Iš viso ~300-500ms vs ~10s AI Phase 1.
+      // genera) + paraleliai fetch'inam Wikipedia extract'ą, photo'ą ir
+      // Wikidata "instance of" gate'ą. Vienas tinklo fetch'as dengia abu
+      // path'us:
+      //   • Pre-DB HIT  → naudojam Wiki/photo kaip preview augmentation
+      //   • Pre-DB MISS → naudojam Wikidata gate'ą kaip safeguard nuo
+      //                    "keptuvė"/"xyz123" tipo užklausų, BE AI laukimo
       //
-      // Tikslumo win'as: AI haliucinacijų rizika sumažinta — useris mato
-      // verified Latin/family/toxicity + Wiki extract'ą (nemeluojantis
-      // citation), ne AI memory generation.
+      // Wiki+gate fetch'as ~500-800ms, daug pigiau už 18s AI Preview vien
+      // dėl false-positive interpretacijos.
       trackStep('Tikrinu pre-DB...')
-      const stage1Result = await searchStage1(q.trim())
+      const [stage1Result, preview] = await Promise.all([
+        searchStage1(q.trim()),
+        previewParallelFetch(q.trim(), {
+          includeWikiEn: true,
+          includeWikidataGate: true,  // visada — naudojam gate jei pre-DB miss
+          debug: false,
+        }),
+      ])
       if (controller.signal.aborted) return
 
       if (stage1Result.found) {
         trackStep('Renkam nuotrauką ir aprašymą...')
-        // Paraleliai gauti Wiki extract + photo (LT + EN both). Photo iš Wiki
-        // preferred (geresnė kokybė), iNat fallback. Wikidata gate NE kviečiam
-        // — pre-DB hit'as jau verified plant, nereikia.
-        const preview = await previewParallelFetch(stage1Result.latin, {
-          includeWikiEn: true,
-          includeWikidataGate: false,
-          debug: false,
-        })
-        if (controller.signal.aborted) return
-
         const baseResult = buildPreDbBaseResult(stage1Result, preview, {
           userQuery: q.trim(),
         })
@@ -1793,6 +1791,39 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
           console.warn('[search] catalog preview upsert failed:', e?.message)
         })
 
+        return
+      }
+
+      // ── Phase 0.4: Wikidata plant gate (pre-DB miss case) ────
+      // Pre-DB nerado. Prieš leidžiant AI ($, 10-50s), patikrinam, ar šis
+      // pavadinimas Wikipedijoj/Wikidatoje yra augalas. Block'ina:
+      //   • "keptuvė" → Wiki LT yra (virtuvinis įrankis), P31=Q1198681 → BLOCK
+      //   • "xyz123"  → Wikipedia neturi → null wikidataId → BLOCK
+      //   • "Felis catus" → taxon, bet P31 ne plant hierarchy → BLOCK
+      // Praleidžia:
+      //   • Rare cultivar'ai — Wikipedia turi parent'ą, P31=Q16521 → PASS
+      //   • Naujos rūšys, hybrids → Wikidata taxon → PASS
+      if (!preview?.passesPlantGate) {
+        const wdLabels = preview?.wikidataGate?.labels ?? {}
+        const wdName = wdLabels.lt ?? wdLabels.en ?? null
+        const wikidataFound = !!preview?.wikidataGate?.found
+        const reason = !wikidataFound
+          ? 'no-wiki-page'      // Wikipedia neturi tokio puslapio
+          : 'not-a-plant'        // Wiki yra, BET P31 rodo, kad ne augalas
+
+        // Skirtinga žinutė pagal block'avimo priežastį. Useris mato AIŠKIAI,
+        // kodėl mes nepaleidžiame AI, ir gauna konkretų patarimą.
+        const errorMessage = reason === 'no-wiki-page'
+          ? `„${q.trim()}" — nerasta mūsų bibliotekoj nei Wikipedijoj. Patikrinkite pavadinimą.`
+          : `„${q.trim()}"${wdName ? ` (${wdName})` : ''} Wikipedijoj nėra augalas. Pabandykite Latin ar LT augalo pavadinimą.`
+
+        setError(errorMessage)
+        setLoading(false)
+        trackStep(null)
+        console.log(
+          `[search] ✗ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s ` +
+          `(Wikidata gate BLOCK, reason=${reason}${wdName ? `, wiki=${wdName}` : ''}, AI praleistas)`
+        )
         return
       }
 
@@ -2533,7 +2564,14 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                 užklausai, gali grąžinti random plant'ą), ar mažai informatyvi
                 (vieno cultivar'o nuotrauka neatstovauja visos serijos).
                 Vartotojas mato candidates su jų individualiomis nuotraukomis. */}
-            {result.image && !(Array.isArray(result.candidates) && result.candidates.length >= 2) ? (
+            {/* Hide hero photo kai AI nepatvirtino augalo (low confidence ar
+                unknown match level). Anksčiau Brave/AI grąžindavo random foto
+                kaip „Nežinomas augalas" hero — sci-fi monstrą Xenomorphica
+                paieškoje, etc. Tas siunčia klaidingą signal'ą vartotojui,
+                kad augalas tikrai egzistuoja. (2026-05-21 testavimo fix.) */}
+            {result.image &&
+             !(Array.isArray(result.candidates) && result.candidates.length >= 2) &&
+             !(result.confidence === 'low' || result.matchLevel === 'unknown') ? (
               <div className={`rounded-3xl overflow-hidden h-56 relative mb-0 ${useDesktopPanel ? '' : '-mx-4'}`}>
                 {/* Cross-fade image swap */}
                 <AnimatePresence mode="sync" initial={false}>

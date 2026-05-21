@@ -29,7 +29,7 @@
 //   "Cannot convert argument to a ByteString because the character ...
 //    has a value of 371 which is greater than 255"
 export const WIKI_USER_AGENT =
-  'LapasidPlantApp/1.0 (https://augalai.crazyeuropean.eu; kestutis@okone.lt) plant-care-app'
+  'LapasidPlantApp/1.0 (https://lapasid.lt; kestutis@okone.lt) plant-care-app'
 
 const COMMON_HEADERS = {
   'Accept': 'application/json',
