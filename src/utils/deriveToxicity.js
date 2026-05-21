@@ -175,20 +175,33 @@ export async function deriveToxicityFromSources(latinName) {
           tipas: 'toksiskas',
           target: 'zmonems',
           severity,
-          detales: 'PFAF: žmonių toksiškumas (žiūrėk pavojingumas.detales)',
+          detales: 'PFAF botaninis šaltinis nurodo toksiškumą',
         })
       }
 
-      // Jei dar nebuvo pavojingumas užpildyta iš ASPCA — pildyti iš PFAF
+      // pavojingumas.detales — LT placeholder + PFAF citation kaip raw evidence.
+      // Anksčiau čia atsidurdavo PFAF knownHazards EN text TIESIOG (užterštos
+      // pavojų sekcijos angliškai!). Dabar paliekam aiškų LT message kaip
+      // safety net + EN evidence appended kaip „source citation". Tai būna
+      // matoma TIK kai AI praleidžia field'o pildymą.
+      //
+      // TODO: ateityje pre-translate PFAF knownHazards į LT build-time.
+      const ltPlaceholder =
+        severity === 'stiprus' ? 'Stipriai toksiškas. Kreipkitės į veterinarą ar Pet Poison Helpline nelaimei.'
+      : severity === 'vidutinis' ? 'Toksiškas augalas — venkite nurijimo ir kontakto su sultimis. Kreipkitės į veterinarą jei įvyko apsinuodijimas.'
+      : 'Augalas gali sukelti dirginimą — venkite kontakto su sultimis.'
+
+      const pfafCitation = `\n\nŠaltinis (PFAF, anglų k.): "${pfafEntry.knownHazards.slice(0, 300)}${pfafEntry.knownHazards.length > 300 ? '...' : ''}"`
+
       if (!result.pavojingumas.yra) {
         result.pavojingumas = {
           yra: true,
           lygis: severity,
-          detales: `PFAF knownHazards: ${pfafEntry.knownHazards.slice(0, 400)}${pfafEntry.knownHazards.length > 400 ? '...' : ''}`,
+          detales: ltPlaceholder + pfafCitation,
         }
       } else {
         // ASPCA jau pildė — pridėti PFAF citation prie esamų detales
-        result.pavojingumas.detales += `\n\nPFAF: ${pfafEntry.knownHazards.slice(0, 300)}${pfafEntry.knownHazards.length > 300 ? '...' : ''}`
+        result.pavojingumas.detales += pfafCitation
       }
     }
   }

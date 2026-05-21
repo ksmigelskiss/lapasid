@@ -222,16 +222,16 @@ export async function buildPlantRagContext(latinName, options = {}) {
     sections.push('📚 GENUS INFO (AHS/Beckett)\n  ' + plant.genus.introText.slice(0, 400))
   }
 
-  // ── Instructions for AI ─────────────────────────────────────
-  sections.push(
-    '\n=== INSTRUCTIONS FOR AI ===\n' +
-    'Use ONLY these verified facts. Translate to natural Lithuanian.\n' +
-    'DO NOT invent contradictory information.\n' +
-    'Mark uncertain inferences with "tikriausiai" / "galimai".\n' +
-    'For TOXICITY: cite ASPCA + recommend consulting veterinarian.\n' +
-    'For MEDICAL claims: never generate dosing or first-aid; link external sources.\n' +
-    'If asked about something NOT in these facts: respond "Apie šitą detalę neturim patvirtintos info."'
-  )
+  // NB: anksčiau čia buvo „=== INSTRUCTIONS FOR AI ===" sekcija su
+  // „Use ONLY these verified facts" / „DO NOT invent" / „If not in facts,
+  // respond 'neturim info'". 2026-05-21 user test pamatė, kad ši instrukcija
+  // KONFLIKTAVO su stage2Constants.js RAG_PRIORITY_INSTRUCTION („RAG = anchor
+  // + EXPAND"). AI'us prioritetavo restrictive ("Use ONLY") → praleisdavo
+  // toxicity narrative net su rich PFAF knownHazards RAG'e.
+  //
+  // Sprendimas: vienas šaltinis instrukcijų — stage2Constants.js. Šis modulis
+  // grąžina TIK FAKTUS, ne instrukcijas. Caller'is (fetchDetails) injectina
+  // RAG_PRIORITY_INSTRUCTION atskirai.
 
   let context = sections.join('\n\n')
   if (context.length > maxLen) {
