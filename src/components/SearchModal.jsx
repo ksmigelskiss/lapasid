@@ -13,6 +13,7 @@ import { getCachedSearchResponse, setCachedSearchResponse } from '../utils/searc
 import { searchStage1 } from '../utils/searchStage1'
 import { previewParallelFetch } from '../utils/previewParallelFetch'
 import { buildPreDbBaseResult } from '../utils/preDbBaseResult'
+import { catalogPreviewUpsert } from '../utils/catalogPreviewUpsert'
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
@@ -1706,7 +1707,15 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
         // Tokius entries praleidžiam į AI'us, kuris atsakys svarbiu.
         // Admin'as gali juos delete'inti per Library tab arba palikti
         // backfill'ui.
-        const completeMerged = merged.filter(m => m.laistymasIntervalas)
+        //
+        // EXCEPTION: nuo 2026-05-21 priimam ir 'preview' status'o įrašus
+        // (pre-DB Phase 0.3 background upsert'ai). Jie irgi be care info,
+        // BET turi verified Latin/family/toxicity/Wiki extract — verta
+        // pakartotinai grąžinti antrojo userio paieškoms be Wiki re-fetch.
+        const completeMerged = merged.filter(m =>
+          m.laistymasIntervalas ||
+          m.verificationStatus === 'preview'
+        )
 
         if (completeMerged.length > 0) {
           // Catalog entry → candidate card shape (UI naudoja imageUrl / ltName).
@@ -1775,6 +1784,15 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
           `(pre-DB hit, ${stage1Result.layer}/${stage1Result.confidence}, ` +
           `preview ${preview?.totalMs ?? 0}ms, AI praleistas)`
         )
+
+        // Background upsert į catalog (fire-and-forget) — antras useris
+        // to paties augalo gauna instant catalog hit'ą, be Wiki/iNat
+        // fetch'o. Photo rehost'as paraleliai (Firebase Storage). Klaidos
+        // tylios — vartotojo flow'as nesulūž jei catalog write fail'ina.
+        catalogPreviewUpsert(baseResult, stage1Result).catch(e => {
+          console.warn('[search] catalog preview upsert failed:', e?.message)
+        })
+
         return
       }
 
