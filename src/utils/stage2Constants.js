@@ -36,67 +36,94 @@ export const VET_LINKS = `
 - Lietuvos veterinarijos pagalba: konsultuokitės su veterinaru
 `
 
-// RAG priority instrukcija — pasakanti AI'ui, kad VERIFIED FACTS žemiau yra
-// authoritative FOUNDATION, ne tiesiog COPY source. Tas yra Stage 2 RAG
-// sukimuko esmė — AI rolė: „ground in RAG + EXPAND with botanical context".
+// RAG priority instrukcija (2026-05-21 v3): nuo „RAG > memory" prie
+// „RAG = ANCHOR + EXPAND". Pamatėm, kad AI'us interpretavo per stipriai
+// — kopijuoja PFAF 1-sakinio intro be expand'inimo, praleidžia toxicity
+// narrative. Mūsų SAVO botanikos žinių nepakanka be RAG, BET RAG vienas
+// nepakanka be AI EXPAND.
 //
-// 2026-05-21 update'as: po user test'o pamatėm, kad AI buvo PER MUCH compliant
-// — Eucomis aprasymas TIESIOG IŠVERSTAS Beckett intro (1 sakinys), Aconitum
-// pavojai array TUŠČIA nors PFAF knownHazards 300+ chars. Sprendimas — aiški
-// EXPAND nurodymas + hard rule on toxicity structurizing.
+// Tikslas: 99.9% AI'us sudeda RICH LT NARRATIVE (kaip Adenium ekrane —
+// mechanism, simptomai, kultūrinis kontekstas). Deterministic backfill
+// lieka kaip safety net 0.1% atvejų.
 export const RAG_PRIORITY_INSTRUCTION = `
-=== RAG CONTEXT — VERIFIED FACTS (FOUNDATION + EXPAND) ===
+=== RAG CONTEXT — ANCHOR + EXPAND (NOT JUST COPY) ===
 
 You will receive VERIFIED FACTS below from our scraped plant database
-(AHS Encyclopedia, Beckett, Cheng "House Plant Journal", PFAF, ASPCA,
-Wikipedia, lt-names dictionary).
+(AHS Encyclopedia, Beckett, Cheng, PFAF, ASPCA, Wikipedia, lt-names).
 
-YOUR ROLE: USE RAG AS FOUNDATION, THEN EXPAND.
-RAG facts are the verified core — but plant detail pages need RICH content.
-A 1-sentence Beckett intro is NOT enough. EXPAND with botanical knowledge:
-history, etymology, ecological role, geographic context, cultural significance,
-horticultural details. Mark uncertain extensions with „tikriausiai" / „galimai".
+🎯 YOUR ROLE: USE RAG AS ANCHOR, THEN GENERATE RICH LITHUANIAN NARRATIVE.
 
-HIERARCHY (in priority order):
-  1. RAG VERIFIED FACTS (below)        ← never contradict; always include
-  2. Your botanical knowledge           ← EXPAND on RAG, fill gaps, add context
-  3. If conflict, cite RAG, mark memory inference as „tikriausiai"
+RAG yra MINIMAL FACTS — anchor'as, nuo kurio tavęs reikia ekspand'inti
+PILNĄ rich content. Vartotojui reikia plant detail puslapio, NE Beckett
+encyclopedia 1-sakinio intro tiesioginio vertimo.
 
-FIELD-LEVEL RULES:
+INTERPRET RAG correctly:
+  ✅ RAG fact'as "PFAF: knownHazards = 'plant is highly toxic, causes
+     paralysis of nerve centers...'" reiškia, kad TU PRIVALAI generuoti
+     3-5 sakinių LT narrative apie toxicity — mechanism, simptomai,
+     kultūrinis kontekstas, first-aid pointer. NE tiesiog versti vieną
+     sakinį.
+  ❌ NEPRIIMK RAG kaip celling — tai grindys, ne lubos.
 
-📝 APRASYMAS — Minimum 3-5 sakiniai LIETUVIŠKAI.
-  • Foundation: RAG taxonomy + family + origin
-  • EXPAND: morphology, ekologinis kontekstas, history of cultivation,
-    distinctive features, kultūrinė reikšmė.
-  • NEPAKANKA tiesiog išversti Beckett 1-sakinio intro.
+RULES:
+  • RAG facts yra UNDENIABLE. Niekada neprieštaruok.
+  • Iš RAG kaip seed ekspand'ink su savo botanikos žiniomis: etymology,
+    geographic specifics, ecological role, cultivation history, cultural/
+    medicinal uses, distinctive morphology.
+  • Mark uncertain extensions su „tikriausiai" / „galimai".
 
-⚠️ SAVYBES.PAVOJAI[] — HARD RULE:
-  • IF RAG turi ASPCA "Toxic to: X" → savybes.pavojai[] PRIVALO turėti entry
-    per target (tipas:"toksiskas", target:"gyvunams", severity, detales).
-  • IF RAG turi PFAF "knownHazards" textą su žodžiais toxic/poison/hazard →
-    savybes.pavojai[] PRIVALO turėti bent vieną entry (severity iš mechanism:
-    "death/fatal" → stiprus, "nausea/burning" → vidutinis, "irritation" → silpnas).
-  • NEPRALEISI šio lauko užpildymo. Tas yra projekto primary value —
-    vartotojas paliks gyvūną namuose pasitikėdamas mūsų info.
+FIELD-LEVEL EXPECTATIONS:
 
-✨ IDOMYBES[] — Minimum 2-3 items LIETUVIŠKAI.
-  • Naudok RAG facts kaip seed, ekspand'ink su:
-    geographic origin specifics, taxonomic history (kas atrado, when,
-    nepatvirtinta etymology), cultural/medicinal traditional uses,
-    ekologiniai aspektai (kas dargina, ką dauginasi).
+📝 APRASYMAS — 3-5 PILNŲ sakinių LT.
+  Pavyzdys: „Aconitum napellus (kurpelė) yra vienas iš nuodingiausių
+  Europos žolinių augalų, priklausančių vėdryninių (Ranunculaceae) šeimai.
+  Augalas pasižymi būdingais šalmiečių žiedais, dėl kurių anglų kalba
+  vadinamas „monkshood". Auga Europos kalnų pievose ir miškuose, ypač
+  Alpėse. Senovėje sultys naudotos strėlių nuodais, šiandien — homeopatijai
+  ir labai retai medicinai (po griežtos dozavimo)."
+  ❌ Per trumpa: „Kurpelė yra vėdrynių šeimos augalų rūšis."
 
-🌱 PRIEZIURA — RAG'as duoda PFAF cultivation prose. Strukturizuok į:
-  • prieziura: 4 narrative LT field'ai (sviesa, laistymas, temperatura, dregme)
-  • sviesa.lygis: žema/vidutinė/ryški + ppfd range jei žinai
-  • vanduo.lygis: mažai/vidutiniškai/daug
-  • laistymasIntervalas.vasara/ziema: number iš PFAF moisture/USDA hardiness
+⚠️ SAVYBES.PAVOJAI[] + PAVOJINGUMAS.DETALES — REIKIA RICH NARRATIVE
+  Toxic augalams pavojingumas.detales PRIVALO turėti 3-5 sakinius LT:
+    1. KAS toksiška (visi audiniai / tik sultys / tik šaknys / sėklos)
+    2. KOKIE mechanism'as (širdies glikozidai? Kalcio oksalatai? Saponinai?)
+    3. SIMPTOMAI gyvūnams + žmonėms (kontaktas su oda, nurijus, t.t.)
+    4. KAM ypač pavojinga (vaikai, naminiai gyvūnai)
+    5. KAS DARYTI nelaimei (Pet Poison Helpline, veterinaras — žiūr.
+       =EXTERNAL SOURCES= žemiau)
 
-🦴 VAISTINIS / VALGOMUMAS — Iš PFAF edibility/medicinal ratings + uses.
-  • Jei rating > 0 → pildyk statusas, naudojama, detales.
-  • Jei rating = 0 ar nėra info → statusas: "none", tuščia.
+  Pavyzdys, kuris VEIKIA:
+  „Visuose Adenium audiniuose, ypač latekso sultyse, yra širdies glikozidų
+  (digitalino tipo junginių — oleandrin, neriine ir kt.), kurie net mažais
+  kiekiais nurijus sukelia širdies ritmo sutrikimus, pykinimą, vėmimą ir
+  gali būti mirtini žmonėms bei gyvūnams. Kontaktas su sultimis sukelia
+  odos ir gleivinių dirginimą. Ypač pavojinga vaikams ir augintiniams
+  (katėms, šunims). Kai kuriose Afrikos kultūrose sultys naudotos kaip
+  strėlių nuodai. Kilus įtarimui — kreipkitės į veterinarą ar Pet Poison
+  Helpline."
 
-🩹 FIRST-AID — NIEKADA negeneruok dosing'o ar treatment'o.
-  • Toxic plants → savybes.pavojingumas.detales gali paminėti "konsultuokitės
-    su veterinaru ar Pet Poison Helpline" su pridedamais external sources URLs
-    (žiūrėk =EXTERNAL SOURCES= sekciją žemiau).
+  pavojai[] entries (struct'urized) — pildyk GENEROUSLY:
+    • Severity: stiprus (death/fatal/lethal), vidutinis (paralysis/vomit/severe),
+      silpnas (irritation/rash/mild)
+    • target: zmonems / gyvunams
+    • Default 'vidutinis' kai info patvirtinta bet specifika neaiški
+
+✨ IDOMYBES[] — 2-3 items su REAL facts.
+  Pavyzdys: „Augalas pavadinimą gavo iš graikų „akoniton", kuris reiškė
+  bet kokį nuodingą augalą." (etymology), „Senovėje romėnai juo nuodydavo
+  griežtai prižiūrimus persekiojamuosius." (history), „Žiedų formą ūkininkai
+  vadina ‚vienuolio gobtuvu' arba ‚kurpe' — iš ko ir lietuviškas pavadinimas."
+
+🌱 PRIEZIURA — Strukturizuok PFAF cultivation prose į schema:
+  prieziura: 4 narrative LT (sviesa, laistymas, temperatura, dregme)
+  sviesa.lygis: žema/vidutinė/ryški + ppfd range
+  vanduo.lygis: mažai/vidutiniškai/daug
+  laistymasIntervalas.vasara/ziema (dienų skaičius)
+
+🦴 VAISTINIS / VALGOMUMAS — Iš PFAF ratings.
+  rating > 0 → pildyk; rating = 0 → statusas:'none', tuščia.
+
+🩹 FIRST-AID — Niekada negeneruok dosing'o ar treatment'o.
+  Toxic plants → pavojingumas.detales paminėk „kreipkitės į veterinarą
+  ar Pet Poison Helpline", linkuok external sources žemiau.
 `

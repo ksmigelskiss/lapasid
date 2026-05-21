@@ -811,8 +811,9 @@ async function fetchDetails(latinName, name, baseResult = null) {
   })
 
   const r = await claudeCall({
-    maxTokens:  3000,   // padidinta — pridėti field'ai (savybes su pavojai struktūra + idomybes + lt narrative)
-    temperature: 0.3,
+    maxTokens:  3500,   // pakelta — RAG context'as + rich narrative LT reikalauja daugiau
+    temperature: 0.5,   // pakelta nuo 0.3 — daugiau narrative kūrybingumo (toxicity, idomybes).
+                        // 0.3 padarydavo per trumpus aprašymus net su EXPAND instrukcija.
     system:     groundedSystem,
     tools:      [TOOL_DETAILS],
     toolChoice: { type: 'tool', name: 'plant_details' },
