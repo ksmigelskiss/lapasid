@@ -2858,15 +2858,15 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange 
     onSavingChange?.(true)
     try {
       // REHOST hero photo į Firebase Storage — kad nesulūš (Brave/paghat URL'us
-      // randame catalog'e admin'e, gali timeout'inti). Path'as deterministic
-      // pagal latinName slug — re-save'ojas tos pačios rūšies augalą perrašo
-      // tą patį hero failą. Fail-soft — jei nepavyko, paliekam external URL.
-      const slug = (result.latinName ?? '').toLowerCase()
-        .replace(/['"]/g, '').trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-        .slice(0, 80)
+      // randame catalog'e admin'e, gali timeout'inti). Path'as deterministic —
+      // server'is sukurs slug'ą iš latinName per savą catalogSlug() (mirror'as
+      // catalogDocId), todėl Storage path GARANTUOTAI atitinka catalog/{docId}.
+      // Anksčiau čia buvo inline slug derivation su dash separator'ais, kuris
+      // skyrėsi nuo catalogDocId underscore'ų — sukurdavo DVI Storage path'us
+      // tam pačiam augalui (2026-05-21 audit fix).
       let rehostedImage = result.image
-      if (result.image && slug) {
-        rehostedImage = await rehostExternalImage(result.image, `catalog/${slug}`, 1200)
+      if (result.image && result.latinName) {
+        rehostedImage = await rehostExternalImage(result.image, result.latinName, 1200)
       }
       const resultWithStorageImage = rehostedImage !== result.image
         ? { ...result, image: rehostedImage }

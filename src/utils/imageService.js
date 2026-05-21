@@ -1,5 +1,5 @@
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { storage } from './firebase'
+import { storage, auth } from './firebase'
 
 // ── Fetch ──────────────────────────────────────────────────────
 
@@ -141,23 +141,28 @@ export function resizeImage(file, maxSize = 900, quality = 0.82) {
 // ── Upload ────────────────────────────────────────────────────
 
 /**
- * rehostExternalImage(externalUrl, pathHint, maxSize) — gauna external image
- * URL'ą (Brave commercial, paghat.com, etc.), server'is fetch'ina, resize'ina
- * į maxSize px (longest side) ir upload'ina į mūsų Firebase Storage.
+ * rehostExternalImage(externalUrl, latinNameOrPathHint, maxSize) — gauna external
+ * image URL'ą (Brave commercial, paghat.com, etc.), server'is fetch'ina,
+ * resize'ina į maxSize px (longest side) ir upload'ina į mūsų Firebase Storage.
  *
  * Naudojama Save flow'e — vartotojas išsaugo augalą, mes pasiimam jo hero
  * nuotrauką ir užtikrinam, kad ji nesulūš (mūsų Storage = guaranteed URL).
  *
- * Storage path: pagal `pathHint` (pvz. „catalog/calathea-zebrina"). Skambinant
- * iš save flow'o — naudojam catalogDocId(latinName) kaip hint'ą, kad
- * idempotent'iškai užrašytume vieną hero per catalog entry.
+ * Storage path: server'is derivuoja iš `latinName` per savą `catalogSlug()`
+ * (mirror'as catalogDocId). Backward-compat: jei perduotum `catalog/{slug}`
+ * format'o string'ą, server'is jį validuoja ir priima kaip legacy pathHint.
+ * Geriau perduoti tiesiog latinName.
  *
- * Fail-soft — jei rehost nepavyksta (CORS, timeout, 404), grąžinam original
- * URL ir log'iname warning'ą. Vartotojas save'o flow'as nesulūž.
+ * AUTH: nuo 2026-05-21 reikalauja Firebase ID token'o (audit fix). Jei
+ * user nelogged'in — request'as fail'ins su 401, fail-soft grąžinam original
+ * URL'ą.
+ *
+ * Fail-soft — jei rehost nepavyksta (CORS, timeout, 401, 404), grąžinam
+ * original URL ir log'iname warning'ą. Vartotojas save'o flow'as nesulūž.
  */
-export async function rehostExternalImage(externalUrl, pathHint, maxSize = 1200) {
+export async function rehostExternalImage(externalUrl, latinNameOrPathHint, maxSize = 1200) {
   if (!externalUrl || typeof externalUrl !== 'string') return externalUrl
-  if (!pathHint) return externalUrl
+  if (!latinNameOrPathHint) return externalUrl
 
   // Skip jei jau mūsų Storage URL'as
   if (externalUrl.includes('firebasestorage.googleapis.com') ||
@@ -167,11 +172,35 @@ export async function rehostExternalImage(externalUrl, pathHint, maxSize = 1200)
   // Skip data: URL'ai — atskira tvarka per uploadImage
   if (externalUrl.startsWith('data:')) return externalUrl
 
+  // Auth tokenas — server'is reikalauja nuo 2026-05-21
+  let idToken = null
+  try {
+    idToken = await auth.currentUser?.getIdToken?.()
+  } catch (e) {
+    console.warn('[rehostExternalImage] auth token unavailable:', e?.message)
+    return externalUrl  // fail-soft, no auth → no rehost
+  }
+  if (!idToken) {
+    console.warn('[rehostExternalImage] no signed-in user, skipping rehost')
+    return externalUrl
+  }
+
+  // Pasirenkam, kurį body param siųsti: jei argumentas atrodo kaip pilnas
+  // legacy pathHint'as (su `catalog/` prefix'u), siunčiam jį; kitaip
+  // pradedam laikyti kaip latinName ir server'is sukurs slug'ą.
+  const isLegacyPathHint = /^catalog\//.test(latinNameOrPathHint)
+  const body = isLegacyPathHint
+    ? { url: externalUrl, pathHint: latinNameOrPathHint, maxSize }
+    : { url: externalUrl, latinName: latinNameOrPathHint, maxSize }
+
   try {
     const r = await fetch('/api/rehost-image', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: externalUrl, pathHint, maxSize }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${idToken}`,
+      },
+      body: JSON.stringify(body),
     })
     if (!r.ok) {
       const err = await r.json().catch(() => ({}))
@@ -181,7 +210,7 @@ export async function rehostExternalImage(externalUrl, pathHint, maxSize = 1200)
     const data = await r.json()
     if (data.url) {
       if (data.reduction != null) {
-        console.log(`[rehostExternalImage] ${pathHint}: ${data.originalSize} → ${data.finalSize} bytes (-${data.reduction}%)`)
+        console.log(`[rehostExternalImage] ${latinNameOrPathHint}: ${data.originalSize} → ${data.finalSize} bytes (-${data.reduction}%)`)
       }
       return data.url
     }

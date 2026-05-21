@@ -18,6 +18,26 @@
 
 import admin from 'firebase-admin'
 import sharp from 'sharp'
+import { uidFromToken } from './_firestore.js'
+
+// Server-side latinName → catalog slug derivation.
+// MIRROR'as src/utils/catalog.js'o `catalogDocId` funkcijos. Lengvai
+// dubliuotas (pure string manipulation, ~10 line'ų), kad išvengtume
+// browser↔node bundler share'inimo komplikacijų.
+//
+// SVARBU: ABU code path'ai TURI grąžinti tą patį slug'ą tam pačiam latinName'ui,
+// kitaip catalog photo path'ai išsiskirs (browser save'ina vienoj vietoj,
+// server rehost'ina kitoj).
+function catalogSlug(latinName) {
+  if (!latinName) return null
+  return latinName
+    .toLowerCase()
+    .replace(/['"]/g, '')           // tik quotes pašalinam
+    .trim()
+    .replace(/\s+/g, '_')
+    .replace(/[^a-z0-9_]/g, '')
+    .slice(0, 100)
+}
 
 // Lazy init — Vercel function instance gali atgaivinti tarp request'ų.
 let _initialized = false
@@ -50,12 +70,58 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const { url, pathHint, maxSize = 1200 } = req.body ?? {}
+  // ── AUTH ─────────────────────────────────────────────────────
+  // Anksčiau šis endpoint'as buvo OPEN — kas nors galėjo POST'inti
+  // su arbitrary URL ir pathHint, užteršti mūsų Firebase Storage
+  // ar DDoS'inti rehost flow'ą. Audit (2026-05-21) flagino kaip 🔴.
+  //
+  // Patikrinam Authorization Bearer tokeną — konsistent su esamu
+  // api/claude.js ir api/claude/stream.js pattern'u. uidFromToken
+  // dekuoduoja JWT payload (nepatikrina parašo, bet pakanka block'inti
+  // naive bot'us). Future: upgrade'inti visus endpoint'us į
+  // admin.auth().verifyIdToken() vienu šuoliu.
+  const idToken = (req.headers.authorization ?? '').replace(/^Bearer\s+/i, '')
+  if (!idToken) return res.status(401).json({ error: 'auth_required' })
+  const uid = uidFromToken(idToken)
+  if (!uid) return res.status(401).json({ error: 'invalid_token' })
+
+  // ── BODY PARSING ─────────────────────────────────────────────
+  // Naujas contract'as: priimam `latinName`, server derivuoja pathHint
+  // per catalogSlug(). Senas `pathHint` parametras backward-compat —
+  // priimam, bet log'inam warning'ą + validate'inam catalog/ prefix'ą.
+  const { url, latinName, pathHint: legacyPathHint, maxSize = 1200 } = req.body ?? {}
   if (!url || typeof url !== 'string') {
     return res.status(400).json({ error: 'url required' })
   }
-  if (!pathHint || typeof pathHint !== 'string') {
-    return res.status(400).json({ error: 'pathHint required' })
+
+  // ── URL PROTOCOL WHITELIST ───────────────────────────────────
+  // Tik http/https. Anksčiau galima buvo file://, ftp:// → server'is
+  // bandytų fetch'inti local files ar internal services (SSRF rizika).
+  if (!/^https?:\/\//i.test(url)) {
+    return res.status(400).json({ error: 'url_protocol_must_be_http_or_https' })
+  }
+
+  // ── PATH HINT — SERVER DERIVED ───────────────────────────────
+  // Prioritetas: latinName → catalog/{slug}. Jei tik legacyPathHint,
+  // validate'inam, kad atitinka catalog/{a-z0-9_-/}+ formatą.
+  let pathHint = null
+  if (latinName && typeof latinName === 'string') {
+    const slug = catalogSlug(latinName)
+    if (!slug) return res.status(400).json({ error: 'invalid_latin_name' })
+    pathHint = `catalog/${slug}`
+  } else if (legacyPathHint && typeof legacyPathHint === 'string') {
+    // Backward compat — validate'inam, kad nepradėtum jokios kitos Storage tree
+    // šakos. catalog/ prefix'as privalomas.
+    if (!/^catalog\/[a-z0-9_-]+$/i.test(legacyPathHint)) {
+      return res.status(400).json({
+        error: 'invalid_path_hint',
+        detail: 'must match catalog/{slug} format',
+      })
+    }
+    pathHint = legacyPathHint
+    console.warn('[rehost-image] uid=' + uid + ' using legacy pathHint param — caller should migrate to latinName')
+  } else {
+    return res.status(400).json({ error: 'latinName_or_pathHint_required' })
   }
 
   // Skip jei jau mūsų Storage URL'as (idempotent)
