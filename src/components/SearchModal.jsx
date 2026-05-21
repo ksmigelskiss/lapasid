@@ -16,6 +16,7 @@ import { buildPreDbBaseResult } from '../utils/preDbBaseResult'
 import { catalogPreviewUpsert } from '../utils/catalogPreviewUpsert'
 import { buildPlantRagContext } from '../utils/buildPlantRagContext'
 import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../utils/stage2Constants'
+import { deriveToxicityFromSources, isPavojaiEmpty } from '../utils/deriveToxicity'
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
@@ -885,6 +886,35 @@ Naudok savo botanikos žinias + Wikipedia/RHS info kur reikia. Visi human-readab
     pavojaiCount: details.savybes?.pavojai?.length ?? 0,
     tipas: details.tipas,
   })
+
+  // ────────────────────────────────────────────────────────────────
+  // DETERMINISTIC TOXICITY BACKFILL (2026-05-21 user test #3 fix).
+  //
+  // AI nepatikimas dėl pavojai[] pildymo — Aconitum napellus (vienas iš
+  // nuodingiausių Europos augalų) gavo pavojaiCount=0 net po RAG_PRIORITY
+  // hard rule'o pridėjimo. AI sąmoningai ar sąmoningai praleidžia šį
+  // kritinį field'ą. Mūsų primary value (toxicity tikslumas) negali būti
+  // AI'aus compliance'ui.
+  //
+  // SAFETY NET: jei mūsų sources (ASPCA + PFAF) sako, kad augalas toksiškas,
+  // BET AI grąžino pavojai=[] → backfill'inam struct'urized pavojai entries
+  // tiesiogiai iš mūsų data. Veiks 100% deterministiškai, neprilausomai
+  // nuo AI šokimo aplink instrukcijas.
+  // ────────────────────────────────────────────────────────────────
+  if (isPavojaiEmpty(details.savybes)) {
+    const derivedToxicity = await deriveToxicityFromSources(latinName)
+    if (derivedToxicity.hasToxicity) {
+      console.warn(
+        `[fetchDetails] AI praleido pavojai[] for ${latinName} — backfill iš ${derivedToxicity.sources.join('+')}`,
+      )
+      details.savybes = {
+        ...(details.savybes ?? {}),
+        pavojai: derivedToxicity.pavojai,
+        pavojingumas: derivedToxicity.pavojingumas,
+      }
+      details.toxicityBackfilled = derivedToxicity.sources  // audit trail
+    }
+  }
 
   // Išsaugome į katalogą — kitas vartotojas gaus iš cache.
   // Merge'inam SLIM auto-save cached data (aprasymas, kilme, savybes,
@@ -1832,7 +1862,7 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
 
       if (stage1Result.found) {
         trackStep('Renkam nuotrauką ir aprašymą...')
-        const baseResult = buildPreDbBaseResult(stage1Result, preview, {
+        const baseResult = await buildPreDbBaseResult(stage1Result, preview, {
           userQuery: q.trim(),
         })
         setResult(baseResult)

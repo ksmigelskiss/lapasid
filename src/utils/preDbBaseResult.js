@@ -1,3 +1,5 @@
+import { deriveToxicityFromSources } from './deriveToxicity.js'
+
 /**
  * preDbBaseResult — konvertuoja searchStage1 + previewParallelFetch rezultatus
  * į baseResult shape, kuris atitinka AI Phase 1 SLIM TOOL_PREVIEW output'ą.
@@ -25,10 +27,14 @@
  * @param {string} opts.userQuery — originalas vartotojo įvestas terminas (telemetry)
  * @returns {object} baseResult-shaped objektas, ready setResult()'ui
  */
-export function buildPreDbBaseResult(stage1, preview, opts = {}) {
+export async function buildPreDbBaseResult(stage1, preview, opts = {}) {
   if (!stage1?.found) return null
 
   const { userQuery = '' } = opts
+
+  // Deterministic toxicity derivation iš ASPCA + PFAF. NEPATIKLAUSO AI'aus —
+  // mūsų primary value (toxicity tikslumas) negali būti AI compliance'ui.
+  const derivedToxicity = await deriveToxicityFromSources(stage1.latin)
 
   // ── Identity ────────────────────────────────────────────────
   const latinName = stage1.latin
@@ -56,11 +62,18 @@ export function buildPreDbBaseResult(stage1, preview, opts = {}) {
   const image = preview?.bestPhoto?.url ?? null
   const imageSource = preview?.bestPhoto?.source ?? null
 
-  // ── Savybės — toxicity pirmiausia (mūsų primary value) ──────
-  // Maps stage1.toxicity (ASPCA-derived) į schema, kurią laukia plantTransform.
-  // 3 states: toxic / safe / unknown — current'a tik 'toxic' implementuota, kiti
-  // ateičiai (PFAF safe-confirmed flag'as).
-  const savybes = buildSavybes(stage1)
+  // ── Savybės — toxicity iš derivedToxicity (ASPCA + PFAF kombo) ──
+  // Anksčiau šis lookup'as tik per stage1.toxicity (vien ASPCA), bet ASPCA
+  // duomenys yra incomplete (Aconitum missing!). deriveToxicityFromSources
+  // pildo iš ASPCA + PFAF knownHazards — pilnesnis safety net.
+  const savybes = {
+    pavojai: derivedToxicity.pavojai,
+    pavojingumas: derivedToxicity.pavojingumas,
+    valgomumas: { statusas: 'none', dalys: '', detales: '' },
+    vaistinis:  { statusas: 'none', naudojama: '', detales: '' },
+  }
+  // Updated toxicityStatus: priimam derivedToxicity rezultatą virš stage1
+  const toxicityStatus = derivedToxicity.hasToxicity ? 'toxic' : (stage1.toxicityStatus ?? 'unknown')
 
   // ── Sources tracking ────────────────────────────────────────
   // Per-field provenance, kad Phase 2 RAG'as paveldėtų ir UI badge'as
@@ -99,8 +112,9 @@ export function buildPreDbBaseResult(stage1, preview, opts = {}) {
     savybes,
 
     // Toxicity (kept as top-level for UI badge)
-    toxicityStatus: stage1.toxicityStatus,
-    toxicity:       stage1.toxicity,
+    toxicityStatus,                          // derived (ASPCA + PFAF)
+    toxicity:       stage1.toxicity,         // legacy ASPCA-only shape (UI badge)
+    derivedToxicity,                         // full struct'urized (pavojai, pavojingumas, sources)
 
     // Cheng premium flag
     hasChengProfile: stage1.hasChengProfile,
