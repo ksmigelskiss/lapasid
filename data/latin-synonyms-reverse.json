@@ -1,0 +1,6625 @@
+{
+  "generatedAt": "2026-05-21T10:24:44.842Z",
+  "totalEntries": 1103,
+  "fromMultipleSources": 0,
+  "reverseMap": {
+    "Leucojum autumnale (Autumn snowflake)": {
+      "canonical": "Acis autumnalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Leucojum roseum": {
+      "canonical": "Acis rosea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "cuneatum": {
+      "canonical": "Adiantum raddianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "aemulum": {
+      "canonical": "Adiantum raddianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "scutum": {
+      "canonical": "Adiantum tenerum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pubescens": {
+      "canonical": "Adiantum hispidulum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cotyledon cooperi": {
+      "canonical": "Adromischus cooperi",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "of gardens": {
+      "canonical": "Chamaecereus graminifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Billbergia rhodocyanea (Silver vase plant": {
+      "canonical": "Aechmea fasciata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Billbergia rhodocyanea": {
+      "canonical": "Aechmea fasciata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "lindenii": {
+      "canonical": "Aechmea comata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "caespitosum": {
+      "canonical": "Aechmea simsii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "zebrinus": {
+      "canonical": "Costus malortianus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "grandiflorus": {
+      "canonical": "Aeschynanthus parasiticus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "parviflorus": {
+      "canonical": "Aeschynanthus parasiticus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "parasiticus X A. speciosus": {
+      "canonical": "Aeschynanthus X splendidus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "umbellatus": {
+      "canonical": "Agapanthus praecox",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pentapterygium serpens": {
+      "canonical": "Agapetes serpens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pentapterygium rugosum": {
+      "canonical": "Agapetes rugosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Barosma pulchella": {
+      "canonical": "Agathosma pulchella",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Diosma purpurea": {
+      "canonical": "Agathosma corymbosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "glaucescens": {
+      "canonical": "Agave attenuata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Manfreda maculosa": {
+      "canonical": "Agave maculosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "filifera * A. schidigera": {
+      "canonical": "Agave X leopoldii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "acutispathum": {
+      "canonical": "Aglaonema modestum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "oblongifolium": {
+      "canonical": "Aglaonema nitidum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "minor": {
+      "canonical": "Albuca major",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Althaea rosea (Hollyhock)": {
+      "canonical": "Alcea rosea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "lowii veitchii": {
+      "canonical": "Alocasia veitchii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "sanderiana X A. lowii": {
+      "canonical": "Alocasia X amazonica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "longiloba X A. pucciana": {
+      "canonical": "Alocasia X argyraea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "lowii X A. cuprea": {
+      "canonical": "Alocasia X sedenii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "whinckii": {
+      "canonical": "Alocasia wentii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "saponaria latifolia": {
+      "canonical": "Aloe Jatifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Nananthus malherbei": {
+      "canonical": "Aloinopsis malherbei",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Titanopsis setifera": {
+      "canonical": "Aloinopsis setifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "compacta": {
+      "canonical": "Alonsoa warscewiczii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lippia citriodora": {
+      "canonical": "Aloysia triphylla",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ramosissima": {
+      "canonical": "Alpinia dentata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ptilotrichum spinosum": {
+      "canonical": "Alyssum spinosum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Centaurea moschata (Sweet sultan)": {
+      "canonical": "Amberboa moschata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Vitis aconiti folia (Monkshood vine)": {
+      "canonical": "Ampelopsis aconitifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhazya orientalis": {
+      "canonical": "Amsonia orientalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Orchis morio (Gandergoose": {
+      "canonical": "Amsonia morio",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "sativus": {
+      "canonical": "Ananas comosus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Helichrysum bellidioides": {
+      "canonical": "Anaphalioides bellidioides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pavonina X A. hortensis": {
+      "canonical": "Anemone X fulgens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Anemone thaiictroides 'Schoaf's Double' is a slow-growing": {
+      "canonical": "Anemonella thaiictroides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Malvastrum capensis": {
+      "canonical": "Anisodontea capensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Malvastrum capense": {
+      "canonical": "Anisodontea capensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Malvastrum scabrosum": {
+      "canonical": "Anisodontea scabrosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Boussingaultia baselloides (Madeira vine": {
+      "canonical": "Anredera cordifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "caribaeum": {
+      "canonical": "Anthurium cordifolium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pentaphyllum digitatum": {
+      "canonical": "Anthurium digitatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "fissum": {
+      "canonical": "Anthurium palmatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "fascinator": {
+      "canonical": "Antirrhinum aurantiaca",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Disocactus flagelliformis": {
+      "canonical": "Aporocactus flagelliformis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Mesembryanthemum cordifolium": {
+      "canonical": "Aptenia cordifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "andrachne X A. unedo": {
+      "canonical": "Arbutus X andrachnoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "including S.W. Ireland": {
+      "canonical": "Arbutus Europe",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arctous alpinus (Alpine bearberry)": {
+      "canonical": "Arctostaphylos alpina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Comarostaphylis diversifolia (Summer holly)": {
+      "canonical": "Arctostaphylos diversifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cryptostemma calendulaceum (Cape dandelion)": {
+      "canonical": "Arctotheca calendula",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "crenata": {
+      "canonical": "Ardisia crispa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "crenulata": {
+      "canonical": "Ardisia crispa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum frutescens (Marguerite)": {
+      "canonical": "Argyranthemum frutescens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum frutescens 'Jamaica Primrose'": {
+      "canonical": "Argyranthemum frutescens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum frutescens 'Mary Wootton'": {
+      "canonical": "Argyranthemum frutescens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "testiculare pearsonii": {
+      "canonical": "Argyroderma pearsonii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "delaetii roseum": {
+      "canonical": "Argyroderma roseum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cyperorchis elegans": {
+      "canonical": "Aria elegans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Neogomesia agavoides": {
+      "canonical": "Ariocarpus agavoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "thyrsiflora": {
+      "canonical": "Aristea major",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Isotrema griffithii": {
+      "canonical": "Aristolochia griffithii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "spathacea": {
+      "canonical": "Moraea spathulata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Sinarundinamia nitida": {
+      "canonical": "Arthropodium murielae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Sinarundinaria nitida": {
+      "canonical": "Arthropodium nitida",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pleioblastus simonii": {
+      "canonical": "Arthropodium simonii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "fortunei": {
+      "canonical": "Arthropodium variegata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pleioblastus variegatus": {
+      "canonical": "Arthropodium variegata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Antirrhinum asarina": {
+      "canonical": "Asarina procumbens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "plumosus": {
+      "canonical": "Asparagus setaceus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ceterach officinarum": {
+      "canonical": "Asplenium ceterach",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "nidus-avis": {
+      "canonical": "Asplenium nidus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phyllitis scolopendrium": {
+      "canonical": "Asplenium scolopendrium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phyllitis scolopendrium 'Marginatum'": {
+      "canonical": "Asplenium scolopendrium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "viviparwn": {
+      "canonical": "Asplenium daucifolium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Microglossa albescens": {
+      "canonical": "Aster albescens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Columnea ovata": {
+      "canonical": "Asteranthera ovata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Perennial spireas": {
+      "canonical": "Astilbe X arendsii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rodgersia tabularis": {
+      "canonical": "Astilboides tabularis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinocactus asterias (Sea urchin": {
+      "canonical": "Astrophytum asterias",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinocactus myriostigma": {
+      "canonical": "Astrophytum myriostigma",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinocactus ornatus": {
+      "canonical": "Astrophytum ornatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Alyssum saxatile": {
+      "canonical": "Aurinia saxatilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Libocedrus chilensis": {
+      "canonical": "Austrocedrus chilensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Campanula vidalii": {
+      "canonical": "Azorina vidalii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Alisma ranunculoides": {
+      "canonical": "Baldellia ranunculoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Sempervivum globiferum subsp": {
+      "canonical": "Barba sobolifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Nolina recurvata": {
+      "canonical": "Beaucarnea recurvata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "coccinea X B. teuscheri": {
+      "canonical": "Begonia X corallina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "X feastii": {
+      "canonical": "Begonia X erythrophylla",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "grandis": {
+      "canonical": "Begonia Asia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "X elatior": {
+      "canonical": "Begonia X hiemalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Iris domestica (Blackberry lily)": {
+      "canonical": "Belamcanda chinensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Strangweja spicata": {
+      "canonical": "Bellevalia hyacinthoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ligulata": {
+      "canonical": "Bergenia ciliata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Doxantha capreolata (Cross vine": {
+      "canonical": "Bignonia capreolata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Doxantha capreolata": {
+      "canonical": "Bignonia capreolata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "decora * B. nutans": {
+      "canonical": "Billbergia X windii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "hastatum": {
+      "canonical": "Blechnum auriculatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lomaria gibba": {
+      "canonical": "Blechnum gibbum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "triphylla": {
+      "canonical": "Bouvardia ternifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Sterculia acerifolia (Illawarra flame tree)": {
+      "canonical": "Brachychiton acerifolius",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Sterculia diversifolia (Kurrajong)": {
+      "canonical": "Brachychiton populneus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Senecio compactus": {
+      "canonical": "Brachyscome compacta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Senecio Dunedin Hybrids": {
+      "canonical": "Brachyscome compacta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Senecio laxifolius": {
+      "canonical": "Brachyscome laxifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Senecio monroi": {
+      "canonical": "Brachyscome monroi",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Senecio reinholdii": {
+      "canonical": "Brachyscome rotundifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Maxillaria picta": {
+      "canonical": "Brachyscome picta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Maxillaria porphyrostele": {
+      "canonical": "Brachyscome porphyrostele",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hyacinthus amethystinus": {
+      "canonical": "Brimeura amethystina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "grandiflora": {
+      "canonical": "Sophronitis coccinea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hookera coronaria": {
+      "canonical": "Brodiaea coronaria",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hookera californica": {
+      "canonical": "Brodiaea californica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Azureocereus hertlingianus": {
+      "canonical": "Browningia hertlingiana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "paucifolia calycina": {
+      "canonical": "Brunfelsia calycina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Franciscea latifolia": {
+      "canonical": "Brunfelsia latifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Nicodemia madagascariensis": {
+      "canonical": "Buddleja madagascariensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cocos capitata (Jelly palm)": {
+      "canonical": "Butia capitata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Poinciana gilliesii": {
+      "canonical": "Caesalpinia gilliesii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Poinciana pulcherrima (Barbados pride)": {
+      "canonical": "Caesalpinia pulcherrima",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Poinciana pulcherrima": {
+      "canonical": "Caesalpinia pulcherrima",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "kegeliana": {
+      "canonical": "Calathea bella",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ot gardens": {
+      "canonical": "Calathea dasignis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "picta": {
+      "canonical": "Dieffenbachia maculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "rugosa": {
+      "canonical": "Calceolaria integrifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Libocedrus decurrens": {
+      "canonical": "Callistephus decurrens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cyclobothra lutea": {
+      "canonical": "Calochortus barbatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Nothoscordum neriniflorum": {
+      "canonical": "Caloscordum neriniflorum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Symphyandra armena": {
+      "canonical": "Campanula armena",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Symphyandra pendula": {
+      "canonical": "Campanula pendula",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Symphyandra wanneri": {
+      "canonical": "Campanula wanneri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bignonia radicans": {
+      "canonical": "Campsis radicans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "campanula": {
+      "canonical": "Canarina canariensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "dependens": {
+      "canonical": "Cantua buxifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Elymus arenarius": {
+      "canonical": "Capri arenarius",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Stapelia europaea": {
+      "canonical": "Caralluma europaea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dentaria enneaphyllos": {
+      "canonical": "Cardamine enneaphyllos",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dentaria pentaphyllos": {
+      "canonical": "Cardamine pentaphyllos",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Notospartium carmichaeliae (Pink broom)": {
+      "canonical": "Carmichaelia carmichaeliae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chordospartium stevensonii": {
+      "canonical": "Carmichaelia stevensonii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cereus giganteus": {
+      "canonical": "Carnegiea gigantea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "nairobensis": {
+      "canonical": "Cassia didymobotrya",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Vinca rosea": {
+      "canonical": "Catharanthus roseus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Laelia cinnabarina": {
+      "canonical": "Catharanthus cinnabarina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "gracilis": {
+      "canonical": "Washingtonia robusta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Parthenocissus thomsonii": {
+      "canonical": "Ceanothus thomsonii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "gymnocarpa": {
+      "canonical": "Centaurea cineraria",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cereus senilis": {
+      "canonical": "Cephalocereus senilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pilocereus senilis": {
+      "canonical": "Cephalocereus senilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pilocereus chrysacanthus": {
+      "canonical": "Cephalocereus chrysacanthus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "siliquosa": {
+      "canonical": "Ceratopteris thalictroides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "thalictroides cornuta": {
+      "canonical": "Ceratopteris cornuta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "purpureum": {
+      "canonical": "Clytostoma binatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cytisus albua": {
+      "canonical": "Chamaecytisus albus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cytisus purpureus (Purple broom)": {
+      "canonical": "Chamaecytisus purpureus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cytisus supinus": {
+      "canonical": "Chamaecytisus supinus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Neanthe bella": {
+      "canonical": "Chamaedorea elegans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Anthemis nobilis (Chamomile)": {
+      "canonical": "Chamaemelum nobile",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Antholyza aethiopica": {
+      "canonical": "Chasmanthe aethiopica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cotyledon simplicifolia": {
+      "canonical": "Chiastophyllum oppositifolium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "elatum": {
+      "canonical": "Chlorophytum capense",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Anthericum elatum": {
+      "canonical": "Chlorophytum capense",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Anthericum comosum": {
+      "canonical": "Chlorophytum comosum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ilicifolium": {
+      "canonical": "Chorizema cordatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "C-. tricolor": {
+      "canonical": "Chrysanthemum carinatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Argyranthemum frutescens": {
+      "canonical": "Chrysanthemum frutescens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "morifolium": {
+      "canonical": "Chrysanthemum vestitum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lactuca alpina (Mountain sow thistle)": {
+      "canonical": "Cicerbita alpina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lactuca bourgaei": {
+      "canonical": "Cicerbita bourgaei",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Actaea racemosa (Kamchatka bugbane)": {
+      "canonical": "Cimicifuga racemosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Actaea simplex": {
+      "canonical": "Cimicifuga simplex",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Marsdenia erecta": {
+      "canonical": "Cionura erecta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhoicissus rhombifolia": {
+      "canonical": "Cissus rhombifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ampelopsis sempervirens": {
+      "canonical": "Cissus striata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cladastris lutea": {
+      "canonical": "Cladrastis kentukea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Calandrinia megarhiza": {
+      "canonical": "Clayton megarhiza",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cereus baumannii": {
+      "canonical": "Cleistocactus baumannii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cereus smaragdiflorus": {
+      "canonical": "Cleistocactus smaragdiflorus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "indivisa": {
+      "canonical": "Clematis paniculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "coccinea": {
+      "canonical": "Clematis texensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "dampieri": {
+      "canonical": "Clianthus formosus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Imantophyllum miniatum": {
+      "canonical": "Clivia miniata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Imantophyllum aitonii": {
+      "canonical": "Clivia nobilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "miniata X C. nobilis": {
+      "canonical": "Clivia X cyrtanthiflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pandorea lindleyana": {
+      "canonical": "Clytostoma callistegioides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bignonia purpurea": {
+      "canonical": "Clytostoma binatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "oerstediana schiediana": {
+      "canonical": "Columnea X banksii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tricantha minor of gardens": {
+      "canonical": "Columnea teuscheri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "tigrina": {
+      "canonical": "Columnea zebrina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ophthalmophyllum villetii": {
+      "canonical": "Conophytum concordans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ophthalmophyllum herri": {
+      "canonical": "Conophytum longum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "truncatellum": {
+      "canonical": "Conophytum truncatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "uviforme": {
+      "canonical": "Conophytum uvaeforme",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "including C. montana": {
+      "canonical": "Convallaria majalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinocactus cinerea": {
+      "canonical": "Copiapoa cinerea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinocactus marginata": {
+      "canonical": "Copiapoa marginata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dracaena indivisa": {
+      "canonical": "Cordyline indivisa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dracaena terminalis": {
+      "canonical": "Coprosma terminalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dracaena australis (New Zealand cabbage palm)": {
+      "canonical": "Cordyline australis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "speciosa": {
+      "canonical": "Rondeletia odorata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chamaepericlymenum canadense": {
+      "canonical": "Cornus canadensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dendrobenthamia capitata (Evergreen dogwood)": {
+      "canonical": "Cornus capitata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pseudofumaria lutea": {
+      "canonical": "Corydalis lutea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pseudofumaria alba": {
+      "canonical": "Corydalis ochroleuca",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "radians": {
+      "canonical": "Coryphantha cornifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Escobaria dasyacantha": {
+      "canonical": "Coryphantha dasyacantha",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinocactus poselgerianus": {
+      "canonical": "Coryphantha poselgeriana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bidens atrosanguinea": {
+      "canonical": "Cosmos atrosanguineus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "elegans": {
+      "canonical": "Libertia pumila",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pulverulentus": {
+      "canonical": "Costus sanguineus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhus cotinus (Smoke bush)": {
+      "canonical": "Cotin coggygria",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rochea coccinea": {
+      "canonical": "Crassula coccinea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "argentea": {
+      "canonical": "Dorstenia argentata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "teres": {
+      "canonical": "Crassula barklyi",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "rhomboidea": {
+      "canonical": "Crassula deltoidea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "longifolia": {
+      "canonical": "Crassula perfoliata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tricuspidaria lanceolata": {
+      "canonical": "Crinodendron hookerianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "capense": {
+      "canonical": "Jasminum angulare",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "longifolium": {
+      "canonical": "Crinum bulbispermum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Antholyza paniculata": {
+      "canonical": "Crocosmia paniculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "aureus": {
+      "canonical": "Crocus flavus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "undulifolia": {
+      "canonical": "Crossandra infundibuliformis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Calathea oppenheimiana": {
+      "canonical": "Ctenanthe oppenheimiana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "platycentra": {
+      "canonical": "Cuphea ignea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "llavea miniata": {
+      "canonical": "Cuphea miniata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "longa": {
+      "canonical": "Curcuma domestica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Alsophila australis": {
+      "canonical": "Cyathea australis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Alsophila tricolor": {
+      "canonical": "Cyathea dealbata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Alsophila smithii": {
+      "canonical": "Cyathea smithii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hemitelia smithii": {
+      "canonical": "Cyathea smithii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tabebuia donnell-smithii": {
+      "canonical": "Cybistax donnell-smithii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cissus bainesii": {
+      "canonical": "Cyphostemma bainesii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Vitis bainesti": {
+      "canonical": "Cyphostemma bainesii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cissus juttae": {
+      "canonical": "Cyphostemma juttae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Anoiganthus breviflorus": {
+      "canonical": "Cyrtanthus breviflorus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phanerophlebia fortunei": {
+      "canonical": "Cyrtomium fortunei",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Argyrocytisus battandieri": {
+      "canonical": "Cytisus battandieri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lembotropis nigricans": {
+      "canonical": "Cytisus nigricans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Orchis elata (Marsh orchid)": {
+      "canonical": "Cytisus el",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "racemosus": {
+      "canonical": "Cytisus fragrans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "acrotrichum": {
+      "canonical": "Dasylirion acrotriche",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "solida fijiensis": {
+      "canonical": "Davallia fijiensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "dissecta": {
+      "canonical": "Davallia trichomanoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pruinosum": {
+      "canonical": "Delosperma echinatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "aureum": {
+      "canonical": "Delosperma heterocarpum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "aphyllum": {
+      "canonical": "Delosperma pierardii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "intermedia of gardens": {
+      "canonical": "Dianella nigra",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lamprocapnos spectabilis": {
+      "canonical": "Dicentra spectabilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lamprocapnos spectabilis f": {
+      "canonical": "Dicentra spectabilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Brodiaea congesta": {
+      "canonical": "Dichelostemma congestum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Brodiaea ida-maia": {
+      "canonical": "Dichelostemma ida-maia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Brodiaea capitata": {
+      "canonical": "Dichelostemma pulchellum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tradescantia reginae": {
+      "canonical": "Dichorisandra reginae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "lunulata": {
+      "canonical": "Didymochlaena trunculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "sinuosa": {
+      "canonical": "Didymochlaena trunculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Moraea bicolor": {
+      "canonical": "Dietes bicolor",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Moraea catenulata": {
+      "canonical": "Dietes vegeta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "iridoides": {
+      "canonical": "Dietes vegeta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "annua": {
+      "canonical": "Dimorphotheca pluvialis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Testudinaria elephantipes": {
+      "canonical": "Dioscorea elephantipes",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "opposita": {
+      "canonical": "Dioscorea batatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Epiphyllum ackermannii": {
+      "canonical": "Disocactus ackermannii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pseudorhipsalis macrantha": {
+      "canonical": "Disocactus macranthus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phaedranthus buccinatorius": {
+      "canonical": "Distictis buccinatoria",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "burgessiae X wallichii": {
+      "canonical": "Dombeya X cayeuxii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Mesembryanthemum criniflorum (Livingstone daisy)": {
+      "canonical": "Dorotheanthus bellidiformis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Mesembryanthemum tricolor": {
+      "canonical": "Dorotheanthus tricolor",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "godseffiana": {
+      "canonical": "Dracaena surculosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arum dracunculus": {
+      "canonical": "Dracunculus vulgaris",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Wattakaka sinensis": {
+      "canonical": "Dracaena corrugata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Urginea maritima": {
+      "canonical": "Drimia maritima",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pseudowintera colorata": {
+      "canonical": "Drimys colorata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Wintera aromatica": {
+      "canonical": "Drimys winteri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "dichotoma": {
+      "canonical": "Drosera binata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "borreri": {
+      "canonical": "Dryopteris pseudomas",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Fragaria indica (Indian strawberry)": {
+      "canonical": "Duchesnea indica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echeveria attenuata": {
+      "canonical": "Dudleya attenuata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "edulis": {
+      "canonical": "Dudleya attenuata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echeveria nudicaulis": {
+      "canonical": "Dudleya densiflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echeveria hassei": {
+      "canonical": "Dudleya hassei",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "plumieri": {
+      "canonical": "Duranta repens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "sulphurea": {
+      "canonical": "Dyckia brevifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "princeps": {
+      "canonical": "Dyckia brevifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Areca lutescens": {
+      "canonical": "Chrysalidocarpus lutescens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Urbinia agavoides": {
+      "canonical": "Echeveria agavoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Oliveranthus elegans": {
+      "canonical": "Echeveria harmsii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "sanguinea": {
+      "canonical": "Passiflora vitifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "secunda glauca": {
+      "canonical": "Echeveria glauca",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "desmetiana": {
+      "canonical": "Echeveria peacockii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "subsessilis": {
+      "canonical": "Echeveria peacockii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rudbeckia purpurea (Purple coneflower)": {
+      "canonical": "Echinacea purpurea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Wilcoxia albiflora": {
+      "canonical": "Echinocereus leucanthus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "caespitosus": {
+      "canonical": "Echinocereus reichenbachii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Wilcoxia schmollii": {
+      "canonical": "Echinocereus schmollii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "paucispinus triglochidiatus": {
+      "canonical": "Echinocereus triglochidiatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pectinatus rigidissimus": {
+      "canonical": "Echinocereus rigidissimus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Trichocereus candicans": {
+      "canonical": "Echinopsis candicans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chamaecereus silvestrii": {
+      "canonical": "Echinopsis chamaecereus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lobivia cinnabarina": {
+      "canonical": "Echinopsis cinnabarina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lobivia haageana": {
+      "canonical": "Echinopsis marsoneri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lobivia pentlandii": {
+      "canonical": "Echinopsis pentlandii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cereus spachianus": {
+      "canonical": "Trichocereus spachianus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "plantagineum": {
+      "canonical": "Echium lycopsis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Wahlenbergia serpyllifolia": {
+      "canonical": "Edraianthus serpyllifolius",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Anacharis densa": {
+      "canonical": "Egeria densa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Musa arnoldiana": {
+      "canonical": "Ensete ventricosum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Orphanidesia gaultherioides": {
+      "canonical": "Epigaea gaultherioides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Nopalxochia ackermannii": {
+      "canonical": "Epiphyllum ackermannii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Alsobia dianthiflora": {
+      "canonical": "Episcia dianthiflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Trichosma suavis": {
+      "canonical": "Eremurus coronaria",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bruckenthalia spiculifolia (Spike heath)": {
+      "canonical": "Eremurus spiculifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bahia lanata": {
+      "canonical": "Eriophyllum lanatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinocactus chilensis": {
+      "canonical": "Eriosyce chilensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Neoporteria nidus": {
+      "canonical": "Eriosyce kunzei",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Neoporteria mitis": {
+      "canonical": "Eriosyce napina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Neoporteria litoralis": {
+      "canonical": "Eriosyce subgibbosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Neoporteria villosa": {
+      "canonical": "Eriosyce villosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cheiranthus 'Bredon'": {
+      "canonical": "Erysimum 'Bowles'",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cheiranthus cheiri (English wallflower)": {
+      "canonical": "Erysimum cheiri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cheiranthus cheiri 'Harpur Crewe'": {
+      "canonical": "Erysimum pumilum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cheiranthus 'Moonlight'": {
+      "canonical": "Erysimum linifolium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Coryphantha vivipara": {
+      "canonical": "Escobaria vivipara",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tasmanian": {
+      "canonical": "Eucalyptus globulus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "amazonica": {
+      "canonical": "Eucharis grandiflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "undulata": {
+      "canonical": "Eucomis autumnalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "fimbriatus": {
+      "canonical": "Euonymus lucidus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "erosa": {
+      "canonical": "Eupatorium cereiformis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "leviana": {
+      "canonical": "Eupatorium cereiformis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "splendens": {
+      "canonical": "Eupatorium milii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Synadenium compactum var": {
+      "canonical": "Euphorbia bicompacta var. rubra",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pedilanthus tithymaloides": {
+      "canonical": "Euphorbia tithymaloides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Polygonum aubertii (Silver flea vine": {
+      "canonical": "Fallopia aubertii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ligularia tussilaginea (Leopard plant)": {
+      "canonical": "Farfugium japonicum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arundinaria murieliae": {
+      "canonical": "Farfugium murieliae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arundinaria nitida": {
+      "canonical": "Farfugium nitida",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Aster capensis (Blue daisy)": {
+      "canonical": "Felicia amelioides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Aster bergeriana": {
+      "canonical": "Felicia bergeriana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Agathaea coelestis": {
+      "canonical": "Felicia amelloides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hamatocactus hamatacanthus": {
+      "canonical": "Ferocactus hamatacanthus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "stainesii haematacanthus": {
+      "canonical": "Ferocactus haematacanthus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "crispa": {
+      "canonical": "Ferocactus undulata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "repens": {
+      "canonical": "Pellionia daveauana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "roxburghii": {
+      "canonical": "Ficus auriculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "diversifolia": {
+      "canonical": "Ficus deltoidea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pandurata": {
+      "canonical": "Ficus lyrata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "nitida": {
+      "canonical": "Solandra maxima",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "retusa": {
+      "canonical": "Ficus microcarpa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Spiraea ulmaria": {
+      "canonical": "Filipendula ulmaria",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "x hybrida": {
+      "canonical": "Freesia X kewensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhinopetalum bucharica": {
+      "canonical": "Fritillaria bucharica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Korolkowia sewerzowii": {
+      "canonical": "Fritillaria sewerzowii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "serratipetala": {
+      "canonical": "Fuchsia austromontana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lloydia graeca": {
+      "canonical": "Gagea graeca",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Asperula odorata": {
+      "canonical": "Galium odoratum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "florida": {
+      "canonical": "Gardenia jasminoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pernettya mucronata": {
+      "canonical": "Gaultheria mucronata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pernettya pumila": {
+      "canonical": "Gaultheria pumila",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pernettya tasmanica": {
+      "canonical": "Gaultheria tasmanica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chamaespartium sagittale": {
+      "canonical": "Genista sagittalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "nelii": {
+      "canonical": "Gibbaeum fissoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Antegibbaeum fissoides": {
+      "canonical": "Gibbaeum fissoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "muirii": {
+      "canonical": "Gibbaeum schwantesii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "coronipifolia": {
+      "canonical": "Gilia rubra",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ipomopsis rubra": {
+      "canonical": "Gilia rubra",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "italicus": {
+      "canonical": "Gladiolus segetum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "purpureo-auratus": {
+      "canonical": "Gladiolus papilio",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "blandus": {
+      "canonical": "Gladiolus carneus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "symmetranthus": {
+      "canonical": "Gladiolus citrinus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ixia spathacea": {
+      "canonical": "Gladiolus citrinus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "nanus of gardens": {
+      "canonical": "Gladiolus X colvillei",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Verbena chamaedrifolia": {
+      "canonical": "Glandularia peruviana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Verbena 'Sissinghurst'": {
+      "canonical": "Glandularia peruviana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "maculata": {
+      "canonical": "Phaius flavus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Achimenes gymnostoma": {
+      "canonical": "Gloxinia gymnostoma",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Oncidium flexuosum (Dancing-doll orchid": {
+      "canonical": "Glycyrrhiza flexuosum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Asclepias physocarpa": {
+      "canonical": "Gomphocarpus physocarpus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pachyphytum amethystinum": {
+      "canonical": "Graptopetalum amethystinum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tacitus bellus": {
+      "canonical": "Graptopetalum bellum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "juniperina": {
+      "canonical": "Grevillea sulphurea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cattleya howringiana": {
+      "canonical": "Griselinia bowringiana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "tricolor": {
+      "canonical": "Tropaeolum tricolorum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "venturianum": {
+      "canonical": "Gymnocalycium baldianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "bruchii": {
+      "canonical": "Gymnocalycium lafaldense",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "procumbens": {
+      "canonical": "Gymnocalycium sarmentosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cereus versicolor": {
+      "canonical": "Haageocereus versicolor",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cereus acranthus": {
+      "canonical": "Haageocereus acranthus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hippeastrum brachyandrum": {
+      "canonical": "Habranthus brachyandrus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Zephyranthes robusta": {
+      "canonical": "Habranthus robustus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cistus revolii": {
+      "canonical": "Halesia sahucii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Halimium wintonense": {
+      "canonical": "Halesia wintonensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cistus algarvensis": {
+      "canonical": "Halimium ocymoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Helianthemum umbellatum": {
+      "canonical": "Halimium umbellatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhipsalidopsis gaertneri": {
+      "canonical": "Hatiora gaertneri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhipsalidopsis rosea": {
+      "canonical": "Hatiora rosea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhipsalis salicomioides (Drunkard's dream)": {
+      "canonical": "Hatiora salicornioides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Brachychilum horsfieldii": {
+      "canonical": "Hedychium horsfieldii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Houstonia serpyllifolia": {
+      "canonical": "Hedyotis michauxii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "angustifolium": {
+      "canonical": "Helichrysum italicum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "serotinum": {
+      "canonical": "Helichrysum italicum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Avena Candida": {
+      "canonical": "Heliconia sempervirens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "distans": {
+      "canonical": "Heliconia bihai",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Actocimum roseum": {
+      "canonical": "Heliotropium roseum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Asplenium hemionitis": {
+      "canonical": "Heliotropium palmata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Iris tuberosa": {
+      "canonical": "Hermodactylus tuberosus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Yucca parviflora": {
+      "canonical": "Hesperaloe parviflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Schizocentron elegans": {
+      "canonical": "Heterocentron elegans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "volubilis": {
+      "canonical": "Hibbertia scandens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arundinaria falconeri": {
+      "canonical": "Hieracium falconeri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Worsleya rayneri": {
+      "canonical": "Hippeastrum procerum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "rutilum": {
+      "canonical": "Hippeastrum striatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    ".X acramanii": {
+      "canonical": "Hippeastrum X ackermannii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Amaryllis reticulata": {
+      "canonical": "Hippeastrum reticulatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "breyniana": {
+      "canonical": "Homeria collina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kentia belmoreana": {
+      "canonical": "Hoodia belmoreana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kenta forsterana": {
+      "canonical": "Hoodia forsterana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "‘Silver Pink’": {
+      "canonical": "Hoya purpureo-fusca",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Scilla natalensis": {
+      "canonical": "Hyaci plumbea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Scilla italica": {
+      "canonical": "Hyacinthoides italica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Scilla non-scripta": {
+      "canonical": "Hyacinthoides non-scripta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "hortensis": {
+      "canonical": "Hydrangea macrophylla",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pancratium caribaeum": {
+      "canonical": "Hydrangea caribaea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ismene X festalis": {
+      "canonical": "Hydrangea X festalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "calathina": {
+      "canonical": "Hydrangea narcissiflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Acnistus australis": {
+      "canonical": "Iochroma australe",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "learii": {
+      "canonical": "Ipomoea acuminata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pharbitis learii": {
+      "canonical": "Ipomoea acuminata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "noctiflora": {
+      "canonical": "Ipomoea bona-nox",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Calonyction bona-nox": {
+      "canonical": "Ipomoea bona-nox",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Quamoclit coccinea (Red morning glory": {
+      "canonical": "Ipomoea coccinea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pharbitis hederacea": {
+      "canonical": "Ipomoea hederacea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pharbitis nil": {
+      "canonical": "Ipomoea nil",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Mina lobata": {
+      "canonical": "Ipomoea lobata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Convolvulus purpureus (Common morning glory)": {
+      "canonical": "Ipomoea purpurea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pharbitis purpurea": {
+      "canonical": "Ipomoea purpurea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Quamoclit pennata": {
+      "canonical": "Ipomoea quamoclit",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "IRIS I": {
+      "canonical": "Iris germanica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "latifolia": {
+      "canonical": "Iris xiphioides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Herrhodactylus tuberosus": {
+      "canonical": "Iris tuberosus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hymenocallis festalis": {
+      "canonical": "Ismene calanthina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hymenocallis x spofforthiae \"Sulphur Queen'": {
+      "canonical": "Ismene calanthina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Digitalis canariensis": {
+      "canonical": "Isoplexis canariensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Digitalis sceptrum": {
+      "canonical": "Isoplexis sceptrum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ovalifolia": {
+      "canonical": "Jacaranda mimosifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Sutera grandiflora": {
+      "canonical": "Jamesbrittenia grandiflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "primulinum": {
+      "canonical": "Jasminum mesneyi",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pandurifolia": {
+      "canonical": "Jasminum integerrima",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "hastata": {
+      "canonical": "Pelecyphora viridis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Plagiorhegma dubia": {
+      "canonical": "Jeffersonia dubia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "spectabilis": {
+      "canonical": "Jubaea chilensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Duvernoia adhatodoides": {
+      "canonical": "Justicia adhatoda",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Beloperone guttata": {
+      "canonical": "Justicia brandegeeana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pilosa of gardens": {
+      "canonical": "Kalanchoe tomentosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kitchingia uni flora": {
+      "canonical": "Kalanchoe uni",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Isoloma amabilis": {
+      "canonical": "Kalanchoe amabilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "hirsuta": {
+      "canonical": "Kalanchoe eriantha",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kentia fosteriana (Kentia palm": {
+      "canonical": "Kentia forsteriana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Scabiosa arvensis (Blue buttons)": {
+      "canonical": "Knautia arvensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Scabiosa rumelica": {
+      "canonical": "Knautia macedonica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dolichos lablab": {
+      "canonical": "Lablab purpureus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pendula": {
+      "canonical": "Lachenalia bulbifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Elodea crispa": {
+      "canonical": "Lagarosiphon major",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Mesembryanthemum multiradiatum": {
+      "canonical": "Lampranthus roseus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "multiradiatus": {
+      "canonical": "Lampranthus roseus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "spica": {
+      "canonical": "Lavandula angustifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "vera": {
+      "canonical": "Lavandula angustifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pedunculata": {
+      "canonical": "Lavandula stoechas pedunculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Scilla adlamii": {
+      "canonical": "Ledebouria cooperi",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Scilla socialis": {
+      "canonical": "Ledebouria socialis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhipsalis warmingiana": {
+      "canonical": "Lepismium warmingianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cotula atrata": {
+      "canonical": "Leptinella atrata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum serotinum": {
+      "canonical": "Leucanthemella serotina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum alpinum (Alpine chrysanthemum)": {
+      "canonical": "Leucanthemopsis alpina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Raoulia leontopodium (North Island edelweiss)": {
+      "canonical": "Leucogenes leontopodium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Calocephalus brownii": {
+      "canonical": "Leucophyta brownii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cyathodes colensoi": {
+      "canonical": "Leucopogon colensoi",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "L.nutans": {
+      "canonical": "Leucospermum cordifolium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lewisiopsis tweedi": {
+      "canonical": "Lewisia tweedyi",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pritchardia grandis": {
+      "canonical": "Libertia grandis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Senecio przewalskii": {
+      "canonical": "Ligularia przewalskii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "lancifolium": {
+      "canonical": "Lilium tigrinum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Nomocharis nana": {
+      "canonical": "Lilium nanum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "muscari exiliflora": {
+      "canonical": "Liriope exiliflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lithospermum diffusum": {
+      "canonical": "Lithodora diffusa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lithospermum oleifolium": {
+      "canonical": "Lithodora oleifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lithospermum zahnii": {
+      "canonical": "Lithodora zahnii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pratia angulata": {
+      "canonical": "Lobelia angulata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pratia pendunculata": {
+      "canonical": "Lobelia pedunculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Myrtus bullata": {
+      "canonical": "Lophomyrtus bullata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Asarina erubescens": {
+      "canonical": "Lophospermum erubescens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tristania conferta (Brush box)": {
+      "canonical": "Lophostemon confertus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Myrceugenia apiculata": {
+      "canonical": "Luma apiculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Myrtus chequen": {
+      "canonical": "Luma chequen",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Alisma natans (Floating water plantain)": {
+      "canonical": "Luronium natans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Viscaria alpina (Alpine campion": {
+      "canonical": "Lychnis alpina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Solanum rantonnei": {
+      "canonical": "Lycianthes rantonnetii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "scandens": {
+      "canonical": "Lygodium microphyllum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bignonia unguis-cati": {
+      "canonical": "Macfadyena unguis-cati",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Asystasia bella": {
+      "canonical": "Mackaya bella",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bocconia cordata (Plume poppy)": {
+      "canonical": "Macleaya cordata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cudrania tricuspidata": {
+      "canonical": "Maclura tricuspidata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dipladenia boliviensis": {
+      "canonical": "Mandevilla boliviensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dipladenia splendens": {
+      "canonical": "Mandevilla splendens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "bicolor": {
+      "canonical": "Manettia inflata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "luteo-rubra": {
+      "canonical": "Manettia inflata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Magnolia insignis": {
+      "canonical": "Manglietia insignis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Oreocereus aurantiacus": {
+      "canonical": "Matucana aurantiaca",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Asarina barclayana": {
+      "canonical": "Maurandya barclayana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Maxillaria tenuifolia": {
+      "canonical": "Maurandya tenuifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hymenanthera crassifolia": {
+      "canonical": "Melicytus crassifolius",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhynchelytrum repens": {
+      "canonical": "Melicytus repens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bartonia aurea (Blazing star)": {
+      "canonical": "Mentzelia lindleyi",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ipomoea tuberosa": {
+      "canonical": "Merremia tuberosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Magnolia doltsopa": {
+      "canonical": "Michelia doltsopa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Magnolia figo (Banana shrub)": {
+      "canonical": "Michelia figo",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "fuscata": {
+      "canonical": "Michelia figo",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "hirta of some authorities": {
+      "canonical": "Microlepia pyramidata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "apiifolia": {
+      "canonical": "Mikania ternata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "glutinosus puniceus": {
+      "canonical": "Mimulus puniceus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "M altissima is a tuft-forming": {
+      "canonical": "Mitraria caerulea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "leichtlinii": {
+      "canonical": "Monstera epipremnoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ramosa": {
+      "canonical": "Moraea ramosissima",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Gynandiris sisyrinchium": {
+      "canonical": "Moraea sisyrinchium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Monarda spathacea": {
+      "canonical": "Moraea spathulata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "exotica": {
+      "canonical": "Muehlenbeckia paniculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pseudomuscari azureum": {
+      "canonical": "Muscari azureum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Leopoldia comosa (Tassel grape hyacinth)": {
+      "canonical": "Muscari comosum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Myosotidium nobile": {
+      "canonical": "Myosotidium hortensia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ceretis geometrigny": {
+      "canonical": "Myriophyllum geometrizans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lophomyrtus bullata": {
+      "canonical": "Myrtus bullata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pentapetala": {
+      "canonical": "Nelumbo lutea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Nelumbium lutea": {
+      "canonical": "Nelumbo lutea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "radicans": {
+      "canonical": "Epidendrum ibaguense",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hypocyrta radicans": {
+      "canonical": "Nematanthus gregarius",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hypocyrta strigillosa": {
+      "canonical": "Nematanthus strigillosus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Columnea splendens": {
+      "canonical": "Nematanthus longipes",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hypocyrta perianthomega": {
+      "canonical": "Nematanthus perianthomegus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hypocyrta wettsteinii": {
+      "canonical": "Nematanthus wettsteinii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Litsea glauca": {
+      "canonical": "Neolitsea sericea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Mammillaria conoidea": {
+      "canonical": "Neolloydia conoidea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Aregelia carolinae": {
+      "canonical": "Neoregelia carolinae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Aregelia marmorata": {
+      "canonical": "Neoregelia marmorata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "fulgens X N. innocentii": {
+      "canonical": "Nidularium X chantrieri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pictum": {
+      "canonical": "Diastema vexans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Guzmania picta": {
+      "canonical": "Nidularium fulgens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "“amazonicum”": {
+      "canonical": "Nidularium innocentii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "caerulea": {
+      "canonical": "Nierembergia hippomanica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pygmaea": {
+      "canonical": "Nymphaea tetragona",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pygmaea helvola": {
+      "canonical": "Nymphaea X helvola",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Limnanthemum nymphoides": {
+      "canonical": "Nymphoides peltata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phaiophleps biflora": {
+      "canonical": "Olsynium biflorum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Sisyrinchium douglasi": {
+      "canonical": "Olsynium douglasii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Odontoglossum crispum": {
+      "canonical": "Omphalogramma alexandrae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Odontoglossum Eric Young gx": {
+      "canonical": "Omphalogramma alexandrae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Odontoglossum Le Nez Point gx": {
+      "canonical": "Omphalogramma flexuosum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Odontoglossum Royal Occasion gx": {
+      "canonical": "Omphalogramma papilio",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dipidax triquetrum": {
+      "canonical": "Onixotis triquetra",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Mondo jaburan": {
+      "canonical": "Ophiopogon jaburan",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Brasiliopuntia brasiliensis": {
+      "canonical": "Opuntia brasiliensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Austrocylindropuntia cylindrica": {
+      "canonical": "Opuntia cylindrica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "compressa": {
+      "canonical": "Opuntia humifusa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "opuntia": {
+      "canonical": "Opuntia humifusa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pulvinata": {
+      "canonical": "Opuntia microdasys",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cylindropuntia tunicata": {
+      "canonical": "Opuntia tunicata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "furiosa": {
+      "canonical": "Opuntia tunicata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Austrocylindropuntia verschaffeltii": {
+      "canonical": "Opuntia verschaffeltii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tephrocactus pentlandii": {
+      "canonical": "Opuntia pentlandii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Stapelia variegata": {
+      "canonical": "Orbea variegata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cleistocactus celsianus": {
+      "canonical": "Oreocereus celsianus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cleistocactus trollii": {
+      "canonical": "Oreocereus trollii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Thelypteris oreopteris (Mountain buckler fern": {
+      "canonical": "Oreopteris limbosperma",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lampranthus deltoides": {
+      "canonical": "Osbeckia deltoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phillyrea decora": {
+      "canonical": "Osmanthus decorus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Siphonosmanthus delavayi": {
+      "canonical": "Osmanthus delavayi",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dimorphotheca ecklonis": {
+      "canonical": "Osteospermum ecklonis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dimorphotheca jucunda": {
+      "canonical": "Osteospermum jucundum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "QO. inops": {
+      "canonical": "Oxalis depressa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "O.siliquosa": {
+      "canonical": "Oxalis vulcanicola",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "purpurata bowei": {
+      "canonical": "Oxalis bowei",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "cernua": {
+      "canonical": "Oxalis pes-caprae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Helichrysum coralloides": {
+      "canonical": "Ozothamnus coralloides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Helichrysum ledifolium": {
+      "canonical": "Ozothamnus ledifolius",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Helichrysum rosmarinifolium": {
+      "canonical": "Ozothamnus rosmarinifolius",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Helichrysum selago": {
+      "canonical": "Ozothamnus selago",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lemaireocereus marginatus": {
+      "canonical": "Pachycereus marginatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lophocereus schottii": {
+      "canonical": "Pachycereus schottii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Thlaspi macrophyllum": {
+      "canonical": "Pachyphragma macrophyllum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "cardinalis": {
+      "canonical": "Pachystachys coccinea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Justicia coccinea": {
+      "canonical": "Pachystachys coccinea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "P x lemoinei 'L'Esperance'": {
+      "canonical": "Paeon 'L'",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bignonia jasminoides": {
+      "canonical": "Pandorea jasminoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tecoma australis": {
+      "canonical": "Pandorea pandorana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Veronica perfoliata": {
+      "canonical": "Parahebe perfoliata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Albizia distachya": {
+      "canonical": "Paraserianthes lophantha",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Notocactus haselbergii": {
+      "canonical": "Parodia haselbergii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Notocactus leninghausii": {
+      "canonical": "Parodia haselbergii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Notocactus mammulosus": {
+      "canonical": "Parodia haselbergii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Notocactus ottonis": {
+      "canonical": "Parodia rutilans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Notocactus scopa (Silver ball cactus)": {
+      "canonical": "Parodia scopa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ampelopsis veitchii": {
+      "canonical": "Parthenocissus tricuspidata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tacsonia vanvolxemii (Red banana passionflower)": {
+      "canonical": "Passiflora antioquiensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tacsonia mollissima": {
+      "canonical": "Passiflora antioquiensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "alata x P. caerulea": {
+      "canonical": "Passiflora X alatocaerulea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tacsonia X exoniensis": {
+      "canonical": "Passiflora X exoniensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tacsonia mollisima": {
+      "canonical": "Passiflora mollissima",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "P 'Fraicher Beauty'": {
+      "canonical": "Pelargonium crispum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "P 'Mrs": {
+      "canonical": "Pelargonium crispum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "crispum hybrid": {
+      "canonical": "Pelargonium X citrosum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "terebinthaceum": {
+      "canonical": "Pelargonium quercifolium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "radula": {
+      "canonical": "Pelargonium radens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "splendidum violareum": {
+      "canonical": "Pelargonium violareum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chelone barbata (Beardlip penstemon)": {
+      "canonical": "Penstemon barbatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "carnea": {
+      "canonical": "Pentas lanceolata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "sandersii": {
+      "canonical": "Peperomia argyreia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "hederifolia": {
+      "canonical": "Peperomia griseoargentea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "nummulariifolia": {
+      "canonical": "Peperomia rotundifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "fosteri": {
+      "canonical": "Peperomia dahistedtii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "resediflora": {
+      "canonical": "Peperomia fraseri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pereskiaefolia": {
+      "canonical": "Peperomia pereskiifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pulchella": {
+      "canonical": "Tillandsia tenuifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhodocactus grandifolius": {
+      "canonical": "Pereskia acuieata var. godseffiana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "angustifolia": {
+      "canonical": "Peristrophe hyssopifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Polygonum affine (Himalayan knotweed)": {
+      "canonical": "Persicaria affinis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Polygonum amplexicaule (Bistort": {
+      "canonical": "Persicaria affinis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Polygonum bistorta (Bistort": {
+      "canonical": "Persicaria bistorta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Polygonum campanulatum": {
+      "canonical": "Persicaria campanulata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Polygonum capitatum": {
+      "canonical": "Persicaria campanulata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Polygonum milletii": {
+      "canonical": "Persicaria sphaerostachya",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Polygonum vacciniifolium": {
+      "canonical": "Persicaria vacciniifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tovara virginiana 'Painter's Palette'": {
+      "canonical": "Persicaria vacciniifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Thelypteris phegopteris (Narrow beech fern)": {
+      "canonical": "Phecopteris connectilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "andreanum": {
+      "canonical": "Philodendron melanochrysum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "laciniatum": {
+      "canonical": "Philodendron pedatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "sagittatum": {
+      "canonical": "Philodendron sagittifolium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "cannifolium": {
+      "canonical": "Philodendron martianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "crassum": {
+      "canonical": "Philodendron martianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Polypodium aureum": {
+      "canonical": "Phlebodium aureum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "P paniculata 'Fujiyama'": {
+      "canonical": "Phlox paniculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "colensoi": {
+      "canonical": "Phoenix cookianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phyteuma comosum": {
+      "canonical": "Physoplexis comosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arcterica nana": {
+      "canonical": "Pieris nana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "muscosa": {
+      "canonical": "Pilea microphylla",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "bakerana": {
+      "canonical": "Pilea caudata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Heimerliodendron brunonianum": {
+      "canonical": "Pisonia umbellifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "alcicorne": {
+      "canonical": "Pittosporum bifurcatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "biforme": {
+      "canonical": "Pittosporum coronarium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Biota orientalis": {
+      "canonical": "Platycerium orientalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Coleus thyrsoideus": {
+      "canonical": "Plectranthus thyrsoideus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arundinaria fortunei": {
+      "canonical": "Plectranthus variegatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arundinaria auricoma": {
+      "canonical": "Plectranthus variegatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "capensis": {
+      "canonical": "Plumbago auriculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "rosea": {
+      "canonical": "Tritonia rubrolucens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "acuminata": {
+      "canonical": "Plumeria rubra",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pandorea ricasoliana": {
+      "canonical": "Podranea ricasoliana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Agave duplicata": {
+      "canonical": "Polianthes geminiflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Agave polianthes (Tuberose)": {
+      "canonical": "Polianthes tuberosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phlebodium aureum": {
+      "canonical": "Polypodium aureum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Campyloneurum phyllitidis": {
+      "canonical": "Polypodium phyllitidis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "P setiferum 'Divisilobum'": {
+      "canonical": "Polystichum braunii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Polystichium aculeatum 'Pulcherrimum'": {
+      "canonical": "Polystichum braunii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Scindapsus aureus 'Marble Queen'": {
+      "canonical": "Pothos aureum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "mellifera": {
+      "canonical": "Protea repens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Podocarpus andinus (Plum yew)": {
+      "canonical": "Protea mellifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Eranthemum atropurpureum": {
+      "canonical": "Pseuderanthemum atropurpureum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Eranthemum reticulatum": {
+      "canonical": "Pseuderanthemum reticulatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Eranthemum cooperi": {
+      "canonical": "Pseuderanthemum sinuatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Nothopanax arboreus": {
+      "canonical": "Pseuderanthemum arboreus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cydonia sinensis": {
+      "canonical": "Pseudocydonia sinensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Senecio confusus (Mexican flame vine)": {
+      "canonical": "Pseudogynoxys chenopodioides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arundinaria japonica": {
+      "canonical": "Pseudopanax japonica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Drimys axillaris (Heropito": {
+      "canonical": "Pseudowintera axillaris",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Drimys colorata": {
+      "canonical": "Pseudowintera axillaris",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Oncidium papilio (Butterfly orchid)": {
+      "canonical": "Pseudowintera papilio",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Limonium suworowii": {
+      "canonical": "Psylliostachys suworowii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "serrulata": {
+      "canonical": "Pteris multifida",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "biaurita": {
+      "canonical": "Pteris quadriaurita",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Combretum indicum": {
+      "canonical": "Quisqualis indica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ficaria verna (Lesser celandine)": {
+      "canonical": "Ranunculus ficaria",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Sulcorebutia arenacea": {
+      "canonical": "Rebutia arenacea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Mediolobivia aureiflora": {
+      "canonical": "Rebutia aureiflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Weingartia neocumingii": {
+      "canonical": "Rebutia neocumingii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lobivia pygmaea": {
+      "canonical": "Rebutia pygmaea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "angulata of gardens": {
+      "canonical": "Rehmannia elata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "trigyna": {
+      "canonical": "Reinwardtia indica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Genista monosperma": {
+      "canonical": "Retama monosperma",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lepismium anceps": {
+      "canonical": "Rhipsalis anceps",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "cassutha": {
+      "canonical": "Rhipsalis baccifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "cassytha": {
+      "canonical": "Rhipsalis cassutha",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lepismium cruciforme": {
+      "canonical": "Rhipsalis cruciformis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Erythrorhipsalis pilocarpa": {
+      "canonical": "Rhipsalis pilocarpa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Acroclinium roseum": {
+      "canonical": "Rhodanthe chlorocephala subsp. rosea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Helipterum manglesii (Swan River everlasting)": {
+      "canonical": "Rhodanthe manglesii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum hosmariense": {
+      "canonical": "Rhodanthemum hosmariense",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Sedum heterodontum": {
+      "canonical": "Rhodiola heterodonta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Sedum rosea (Roseroot)": {
+      "canonical": "Rhodiola rosea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "volubile": {
+      "canonical": "Rhodochiton atrosanguineum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ciliatum * moupinense": {
+      "canonical": "Rhododendron X cilipinense",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "bullatum": {
+      "canonical": "Rhododendron edgeworthii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Toxicodendron vernicifluum (Varnish tree)": {
+      "canonical": "Rhus verniciflua",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Toxicodendron succedaneum (Wax tree)": {
+      "canonical": "Rhus succedanea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Dichromena colorata": {
+      "canonical": "Rhus colorata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lemboglossum bictoniense": {
+      "canonical": "Rhus bictoniensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lemboglossum cervantesii": {
+      "canonical": "Rhus cervantesii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lemboglossum cordatum": {
+      "canonical": "Rhus cordatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lemboglossum rossii": {
+      "canonical": "Rhus rossii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rosmarinifolius lavanduiaceus": {
+      "canonical": "Rosmarinus officinalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Odontoglossum grande (Clown orchid": {
+      "canonical": "Rosmarinus grande",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "officinalis prostratus": {
+      "canonical": "Rosmarinus lavandulaceum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Gardenia capensis": {
+      "canonical": "Rothmannia capensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "amoena": {
+      "canonical": "Ruellia graecizans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "juncea": {
+      "canonical": "Russelia equisetiformis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "amaniensis": {
+      "canonical": "Saintpaulia magungensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "rutilans": {
+      "canonical": "Salvia elegans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "cornui": {
+      "canonical": "Sansevieria senegambica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "drummondii": {
+      "canonical": "Sarracenia leucophylla",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "sarmentosa": {
+      "canonical": "Saxifraga stolonifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Haemanthus multiflorus": {
+      "canonical": "Scadoxus multiflorus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Haemanthus katherinae": {
+      "canonical": "Scadoxus multiflorus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Haemanthus magnificus": {
+      "canonical": "Scadoxus puniceus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Heptapleurum arboricola": {
+      "canonical": "Schefflera arboricola",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Aralia elegantissima": {
+      "canonical": "Dizygotheca elegantissima",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hesperantha coccinea": {
+      "canonical": "Schizostylis coccinea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Zygocactus truncatus": {
+      "canonical": "Schlumbergera truncata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Scirpus lacustris var": {
+      "canonical": "Schlumbergera lacustris subsp. tabernaemontani",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "X bridgesii": {
+      "canonical": "Schlumbergera x buckleyi",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Epipremnum pictum 'Argyraeum' (Silver vine)": {
+      "canonical": "Scindapsus pictus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Scirpus holoschoenus (Round-headed club-rush)": {
+      "canonical": "Scindapsus holoschoenus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ancistrocactus megarhizus": {
+      "canonical": "Sclerocactus scheeri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ancistrocactus uncinatus": {
+      "canonical": "Sclerocactus uncinatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phedimus aizoon": {
+      "canonical": "Sedum aizoon",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hylotelephium anacampseros": {
+      "canonical": "Sedum anacampseros",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hylotelephium cauticola": {
+      "canonical": "Sedum cauticola",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hylotelephium ewersii": {
+      "canonical": "Sedum ewersii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phedimus kamtschaticus": {
+      "canonical": "Sedum kamtschaticum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hylotelephium populifolium": {
+      "canonical": "Sedum populifolium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Prometheum sempervivoides": {
+      "canonical": "Sedum sempervivoides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hylotelephium sieboldii": {
+      "canonical": "Sedum sieboldii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hylotelephium spectabile (Everlasting": {
+      "canonical": "Sedum spectabile",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phedimus spurius": {
+      "canonical": "Sedum spurium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hylotelephium tatarinowii": {
+      "canonical": "Sedum tatarinowii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "emiliana": {
+      "canonical": "Selaginella emmeliana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arundinaria fastuosa": {
+      "canonical": "Semiaquilegia fastuosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kleinia articulata (Candle plant)": {
+      "canonical": "Senecio articulatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kleinia articulatus": {
+      "canonical": "Senecio articulatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Telanthophora grandiflora": {
+      "canonical": "Senecio grandifolius",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Delairea odorata (German ivy": {
+      "canonical": "Senecio mikanioides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kleinia rowleyana": {
+      "canonical": "Senecio row",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kleinia fulgens": {
+      "canonical": "Senecio fulgens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kleinia haworthii": {
+      "canonical": "Senecio haworthii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "tomentosa": {
+      "canonical": "Oscularia excelsa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kleinia gomphophylla": {
+      "canonical": "Senecio herreianus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "cruentus of gardens": {
+      "canonical": "Senecio X hybridus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kleinia neriifolia": {
+      "canonical": "Senecio kleinia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Kleinia radicans": {
+      "canonical": "Senecio radicans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cassia artemisioides (Silver cassia)": {
+      "canonical": "Senna artemisioides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cassia corymbosa": {
+      "canonical": "Senna corymbosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cassia didymobotrya": {
+      "canonical": "Senna didymobotrya",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cassia corymbosa var": {
+      "canonical": "Senna didymobotrya",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cassia siamea": {
+      "canonical": "Senna siamea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "japonica": {
+      "canonical": "Serissa foetida",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Heliosperma alpestre": {
+      "canonical": "Silene alpestris",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Agrostemma coelirosa": {
+      "canonical": "Silene coeli-rosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Gloxinia speciosa (Florists' gloxinia)": {
+      "canonical": "Sinningia speciosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Gloxinia speciosa": {
+      "canonical": "Sinningia speciosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Gesneria cardinalis": {
+      "canonical": "Sinningia cardinalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rechsteineria leucotricha": {
+      "canonical": "Sinningia leucotricha",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rechsteineria tuberosa": {
+      "canonical": "Sinningia tuberosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Achimenes tubiflora": {
+      "canonical": "Sinningia tubiflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Podophyllum emodii": {
+      "canonical": "Sinopodophyllum hexandrum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Maianthemum racemosum": {
+      "canonical": "Smilacina racemosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Helxine soleirolii": {
+      "canonical": "Soleirolia soleirolii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Coleus blumei var": {
+      "canonical": "Solenostemon scutellarioides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Edwardsia microphylla": {
+      "canonical": "Sophora microphylla",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Spiraea sorbifolia": {
+      "canonical": "Sorbaria sorbifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Streptanthera cuprea": {
+      "canonical": "Sparaxis elegans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Amaryllis formosissima": {
+      "canonical": "Sprekelia formosissima",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Betonica officinalis (Bishop's wort": {
+      "canonical": "Stachys officinalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinofossulatus lamellosus": {
+      "canonical": "Stenocactus crispatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lemaireocereus thurberi": {
+      "canonical": "Stenocereus thurberi",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Urceolina peruviana": {
+      "canonical": "Stenomesson miniatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Achnatherum calamagrostis": {
+      "canonical": "Stigmaphyllon calamagrostis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "augusta": {
+      "canonical": "Strelitzia alba",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Calathea amabilis": {
+      "canonical": "Stromanthe amabilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Maranta amabilis": {
+      "canonical": "Stromanthe amabilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Maranta porteana": {
+      "canonical": "Stromanthe porteana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arecastrum romanozoffianum (Queen palm)": {
+      "canonical": "Syagrus romanzoffiana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Philodendron auritum": {
+      "canonical": "Syngonium auritum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Nephthytis hoffmannii": {
+      "canonical": "Syngonium hoffmannii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Nephthytis triphylla": {
+      "canonical": "Syngonium podophyllum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Nephthytis wendlandii": {
+      "canonical": "Syngonium wendlandii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Eugenia jambos": {
+      "canonical": "Syngonium jambos",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Eugenia australis": {
+      "canonical": "Syzygium paniculatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pinnatifida": {
+      "canonical": "Tacca leontopetaloides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "signata": {
+      "canonical": "Tagetes tenuifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "patens": {
+      "canonical": "Talinum paniculatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum parthenium": {
+      "canonical": "Tanacetum parthenium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Achillea argentea": {
+      "canonical": "Tanacetum argenteum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum coccineum": {
+      "canonical": "Tanacetum coccineum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pyrethrum 'Brenda' is an erect perennial": {
+      "canonical": "Tanacetum coccineum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum densum": {
+      "canonical": "Tanacetum densum subsp. amani",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum haradjanii": {
+      "canonical": "Tanacetum haradjanii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bignonia capensis": {
+      "canonical": "Tecomaria capensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bignonia stans": {
+      "canonical": "Tecoma stans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Stenolobium stans": {
+      "canonical": "Tecoma stans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Stenolobium garrocha": {
+      "canonical": "Tecoma garrocha",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Buphthalmum speciosum": {
+      "canonical": "Telekia speciosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Euodia hupehensis": {
+      "canonical": "Tetradium daniellii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Fatsia papyrifera": {
+      "canonical": "Tetrapanax papyrifer",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cissus voinieriana": {
+      "canonical": "Tetrastigma voinierianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinomastus macdowellii": {
+      "canonical": "Thelocactus macdowellii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ferocactus setispinus": {
+      "canonical": "Thelocactus setispinus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinocactus rinconensis": {
+      "canonical": "Thelocactus rinconensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "gibsonii": {
+      "canonical": "Thunbergia gregorii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "semidecandra": {
+      "canonical": "Tibouchina urvilleana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cedrela sinensis": {
+      "canonical": "Toona sinensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Diosphaera asperuloides": {
+      "canonical": "Trachelium asperuloides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Didiscus coeruleus (Blue lace flower)": {
+      "canonical": "Trachymene coerulea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Zebrina pendula": {
+      "canonical": "Tradescantia zebrina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhoeo discolor": {
+      "canonical": "Tradescantia spathacea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Gibasis geniculata": {
+      "canonical": "Tradescantia geniculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Elliottia paniculata": {
+      "canonical": "Tripetaleia paniculata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Brodiaea hyacinthina": {
+      "canonical": "Triteleia hyacinthina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Brodiaea ixioides": {
+      "canonical": "Triteleia ixioides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Brodiaea laxa": {
+      "canonical": "Triteleia laxa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Brodiaea laxa \"Queen Fabiola'": {
+      "canonical": "Triteleia laxa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Brodiaea peduncularis": {
+      "canonical": "Triteleia peduncularis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "canariensis": {
+      "canonical": "Tropaeolum peregrinum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "lobbianum": {
+      "canonical": "Tropaeolum peltophorum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Helianthemum guttatum": {
+      "canonical": "Tuberaria guttata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "dasystemon of gardens": {
+      "canonical": "Tulbaghia tarda",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "trioniflora": {
+      "canonical": "Tulbaghia ulmifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Oxypetalum caeruleum": {
+      "canonical": "Tweedia caerulea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cotyledon paniculata (Botterbom": {
+      "canonical": "Tylecodon paniculatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cotyledon reticulata (Barbed-wire plant)": {
+      "canonical": "Tylecodon reticulatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Eugenia ugni": {
+      "canonical": "Ugni molinae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ulma carpinifolia (European field elm": {
+      "canonical": "Ulmus glabra",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ulma 'Dicksonii'": {
+      "canonical": "Ulmus angustifolia var. cornubiensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Barbacenia elegans": {
+      "canonical": "Vellozia elegans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "glauca": {
+      "canonical": "Vellozia capensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "viridiflora": {
+      "canonical": "Vellozia undulata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "V capensis of gardens": {
+      "canonical": "Veltheimia bracteata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "venosa": {
+      "canonical": "Verbena rigida",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Veronica virginica (Culver's root)": {
+      "canonical": "Veronicastrum virginicum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Veronica virginica f": {
+      "canonical": "Veronicastrum virginicum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phaseolus caracalla (Snail flower)": {
+      "canonical": "Vigna caracalla",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "VI tricolor 'Green Goddess'": {
+      "canonical": "Viola gracilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "V! reniforme": {
+      "canonical": "Viola hederacea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "X hortensis": {
+      "canonical": "Viola X wittrockiana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Douglasia vitaliana": {
+      "canonical": "Vitaliana primuliflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "tesselata": {
+      "canonical": "Vriesea gigantea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "botafogensis": {
+      "canonical": "Vriesea saundersii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "X poelmannii X rex": {
+      "canonical": "Vriesea X erecta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "carinata X barilletii": {
+      "canonical": "Vriesea X mariae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "gloriosa X vangeertii": {
+      "canonical": "Vriesea X poelmannii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "psittacina X simplex": {
+      "canonical": "Vriesea X retroflexa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pritchardia filifera": {
+      "canonical": "Washingtonia filifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pritchardia robusta": {
+      "canonical": "Washingtonia robusta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Westringiana rosmariniformis": {
+      "canonical": "Westringia fruticosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "fruticosa": {
+      "canonical": "Westringia rosmariniformis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum coronarium": {
+      "canonical": "Xanthophthalmum coronarium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chrysanthemum segetum": {
+      "canonical": "Xanthophthalmum segetum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bracteantha bracteata (Everlasting flower": {
+      "canonical": "Xerochrysum bracteatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Arundinaria anceps": {
+      "canonical": "Yucca filifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "africana": {
+      "canonical": "Zantedeschia aethiopica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Richardia africana": {
+      "canonical": "Zantedeschia aethiopica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Richardia elliottiana": {
+      "canonical": "Zantedeschia elliottiana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Richardia rehmannii": {
+      "canonical": "Zantedeschia rehmannii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Epilobium califomicum": {
+      "canonical": "Zauschneria caiifornica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Epilobium septentrionale": {
+      "canonical": "Zauschneria septentrionalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "australis": {
+      "canonical": "Actiniopteris semiflabellata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "distachya": {
+      "canonical": "Aichryson lophantha",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Acacia lophantha": {
+      "canonical": "Aichryson lophantha",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "hybridus": {
+      "canonical": "Amaranthus hypochondriacus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "compactum": {
+      "canonical": "Amomum cardamomum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "salicariaefolia": {
+      "canonical": "Angelonia salicariifolia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "superbum": {
+      "canonical": "Angraecum eburneum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Aerangis rhodostictum": {
+      "canonical": "Angraecum rhodostictum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "confusa": {
+      "canonical": "Ansellia africana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "gigantea": {
+      "canonical": "Ansellia africana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "excelsa": {
+      "canonical": "Araucaria heterophylla",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Mawrandya enubescens": {
+      "canonical": "Arundo erubescens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Odontoglossum lunatum": {
+      "canonical": "Aspasia lunata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Herpestes monnieri": {
+      "canonical": "Bacopa monnieri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "fuerstenbergiana": {
+      "canonical": "Bifrenaria inodora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bletiahyacinthina of gardens": {
+      "canonical": "Bletilla striata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Submatucana aurantiaca": {
+      "canonical": "Borzicactus aurantiacus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Oreocereus trollii": {
+      "canonical": "Borzicactus trollii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Rhyncholaelia glauca": {
+      "canonical": "Brassavola glauca",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Laelia glauca": {
+      "canonical": "Brassavola glauca",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "brachiata": {
+      "canonical": "Brassia verrucosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bletia masuca": {
+      "canonical": "Calanthe masuca",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Neanthe elegans": {
+      "canonical": "Chamaecereus elegans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "tussacia pulchella": {
+      "canonical": "Chrysothemis pulchella",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bulbophyllum fascinator": {
+      "canonical": "Cirrhopetalum fascinator",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bulbophyllum umbellatum": {
+      "canonical": "Cirrhopetalum guttulatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bulbophyllum longissimum": {
+      "canonical": "Cirrhopetalum longissimum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bulbophyllum medusae": {
+      "canonical": "Cirrhopetalum medusae",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "C-. bigarardia": {
+      "canonical": "Citrus aurantium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "maxima": {
+      "canonical": "Citrus grandis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "decumanus": {
+      "canonical": "Citrus grandis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "limonia": {
+      "canonical": "Citrus limon",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "limonium": {
+      "canonical": "Citrus limonia",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "nobilis": {
+      "canonical": "Citrus reticulata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "aurantium sinense": {
+      "canonical": "Citrus sinensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Odontoglossum noetzlianum": {
+      "canonical": "Cochlioda noetzliana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Odontoglossum roseum": {
+      "canonical": "Cochlioda rosea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Broughtonia linearis": {
+      "canonical": "Coelogyne fimbriata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ocellata": {
+      "canonical": "Coelogyne nitida",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "rehneltianus": {
+      "canonical": "Coleus pumilus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "gembanga": {
+      "canonical": "Corypha elata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "capitulata": {
+      "canonical": "Curculigo recurvata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ventricosum egertonianum": {
+      "canonical": "Cycnoches egertonianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Linaria cymbalaria": {
+      "canonical": "Cycnoches muralis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Platyclinis cobbiana": {
+      "canonical": "Dendrochilum cobbianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Platyclinis filiformis": {
+      "canonical": "Dendrochilum filiforme",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Platyclinis glumacea": {
+      "canonical": "Dendrochilum glumaceum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "adiantoides": {
+      "canonical": "Pelecyphora viridis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "puberulus": {
+      "canonical": "Dinteranthus punctatus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Athyrium esculentum": {
+      "canonical": "Diplazium esculentum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Aralia kerchoveana": {
+      "canonical": "Dizygotheca kerchoveana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Aralia veitchii": {
+      "canonical": "Dizygotheca veitchii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Mamamillaria longimamma": {
+      "canonical": "Dolichothele longimamma",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Homalocephela texensis": {
+      "canonical": "Echinocactus texensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinocactus eyriesii": {
+      "canonical": "Echinofossulocactus eyriesii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "forbesii": {
+      "canonical": "Echinofossulocactus rhodotricha",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Acrostichum crinitum": {
+      "canonical": "Elaphoglossum crinitum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "acrostichum paleaceum": {
+      "canonical": "Elaphoglossum hirtum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "spectabile": {
+      "canonical": "Epidendrum lindleyana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Barkeria spectabilis": {
+      "canonical": "Epidendrum lindleyana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "brevicaule": {
+      "canonical": "Epidendrum schlecterianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "variegatum": {
+      "canonical": "Epidendrum vespa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "herbacea": {
+      "canonical": "Erica carnea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "dombeyi": {
+      "canonical": "Eugenia brasiliensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Myricaria myriophylla": {
+      "canonical": "Eugenia myriophylla",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Acmena smithii": {
+      "canonical": "Eugenia smithii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "floribunda": {
+      "canonical": "Eugenia smithii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Aralia japonica": {
+      "canonical": "Fatsia japonica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Aralia sieboldii": {
+      "canonical": "Fatsia japonica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Acca sellowiana": {
+      "canonical": "Faucaria sellowiana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "sturtii": {
+      "canonical": "Gossypium sturtianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "cymbiformis obtusa": {
+      "canonical": "Haworthia obtusa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "margaritifera": {
+      "canonical": "Haworthia pumila",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cereus serratus": {
+      "canonical": "Heliocereus serratus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cereus speciosus": {
+      "canonical": "Heliocereus speciosus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "1. lanceolatwn": {
+      "canonical": "Lochroma cvaneum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "| tabvdanen": {
+      "canonical": "Lochroma cvaneum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ledebourii": {
+      "canonical": "Ixiolirion tataricum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "montanum": {
+      "canonical": "Ixiolirion tataricum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cattleya cinnabarina": {
+      "canonical": "Laelia cinnabarina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cattleya perrinii": {
+      "canonical": "Laelia perrinii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "vulgaris": {
+      "canonical": "Lagenaria siceraria",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "cruenta": {
+      "canonical": "Lapageria laxa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Anomatheca cruenta": {
+      "canonical": "Lapageria laxa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "borbonica": {
+      "canonical": "Latania lontaroides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "commersonii": {
+      "canonical": "Latania lontaroides",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "aurea": {
+      "canonical": "Lycopersicon africana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinopsis aurea": {
+      "canonical": "Lobivia aurea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinopsis pentlandii": {
+      "canonical": "Lobivia pentlandii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Pilocereus schottii": {
+      "canonical": "Lobivia schottii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "aegyptica": {
+      "canonical": "Luffa cylindrica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "skinneri": {
+      "canonical": "Lycaste virginalis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "esculentum": {
+      "canonical": "Lycopersicon lycopersicum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "mollis": {
+      "canonical": "Malpighia arboreus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Solisia pectinifera": {
+      "canonical": "Mammillaria pectinifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "pusilla": {
+      "canonical": "Mammillaria prolifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "multiceps": {
+      "canonical": "Mammillaria prolifera",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "suaveolens": {
+      "canonical": "Mammillaria laxa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "utilissima": {
+      "canonical": "Manihot esculenta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phymatodes diversifolium": {
+      "canonical": "Microsorium diversifolium",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Phymatodes scolopendria": {
+      "canonical": "Microsorium scolopendria",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ciardenia citriodora": {
+      "canonical": "Mitriostigma axillare",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "insignis": {
+      "canonical": "Nemophila menziesii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Neochilenia napina": {
+      "canonical": "Nemophila napina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Chilenia acutissima": {
+      "canonical": "Nemophila subgibbosa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Buddleja madagascariensis": {
+      "canonical": "Nicodemia madagascariensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Strombocactus denegrii": {
+      "canonical": "Obregonia denegrii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Thyrsacanthus rutilans": {
+      "canonical": "Odontonema schomburgkianum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ilicifolius": {
+      "canonical": "Orphium heterophyllus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "cordata sagittata": {
+      "canonical": "Pelecyphora sagittata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ocimoides": {
+      "canonical": "Perilla frutescens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "gratissima": {
+      "canonical": "Persea americana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "longifolium x schlimii": {
+      "canonical": "Phragmipedium x sedenii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ornatum crocatum": {
+      "canonical": "Piper crocatum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Seaforthia elegans": {
+      "canonical": "Ptychosperma elegans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "ignea": {
+      "canonical": "Pyrostegia venusta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Bignonia venusta": {
+      "canonical": "Pyrostegia venusta",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Stereospermum sinicum": {
+      "canonical": "Pyrrosia sinica",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Lirtope hyacinthiflora": {
+      "canonical": "Reineckea carnea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Monstera latevaginata": {
+      "canonical": "Rhaphidophora celatocaulis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "discolor": {
+      "canonical": "Rhoeo spathacea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "laevis": {
+      "canonical": "Rivina humilis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Crassula coccinea": {
+      "canonical": "Rochea coccinea",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "tubergeniana": {
+      "canonical": "Scilla mischtschenkoana",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ledebouria socialis": {
+      "canonical": "Scilla socialis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "sometimes grown as Isolepis gracilis": {
+      "canonical": "Scirpus cernuus",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "hartwegii": {
+      "canonical": "Solandra maxima",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "eburnea": {
+      "canonical": "Stanhopea grandiflora",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "costaricensis": {
+      "canonical": "Stanhopea graveolens",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "hernandezii": {
+      "canonical": "Stanhopea tigrina",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "coronaria": {
+      "canonical": "Tabernaemontana divaricata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Ervatamia coronaria": {
+      "canonical": "Tabernaemontana divaricata",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Tecoma capensis": {
+      "canonical": "Tecomaria capensis",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "morrisii": {
+      "canonical": "Thrinax microcarpa",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cereus candicans": {
+      "canonical": "Trichocereus candicans",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Cereus chiloensis": {
+      "canonical": "Trichocereus chiloense",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Vandopsis parishii": {
+      "canonical": "Vanda parishii",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Malacocarpus corynodes": {
+      "canonical": "Wigginsia corynodes",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Echinocereus poselgeri": {
+      "canonical": "Wilcoxia poselgeri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "tuberosus": {
+      "canonical": "Wilcoxia poselgeri",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Alocasia violacea": {
+      "canonical": "Xanthosma violaceum",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Hesperoyucca whipplei": {
+      "canonical": "Xanthosma whipplei",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "furfuracea": {
+      "canonical": "Zamia pumila",
+      "sources": [
+        "pre-db-species"
+      ]
+    },
+    "Mimosa longifolia.": {
+      "canonical": "Acacia longifolia",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Calamus aromaticus": {
+      "canonical": "Acorus",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Actaea racemosa L.": {
+      "canonical": "Actaea racemosa",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Agave consociata Trel.": {
+      "canonical": "Agave deserti",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "None Known": {
+      "canonical": "Agave palmeri",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Rajania quinata.": {
+      "canonical": "Akebia",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Marlea platanifolium.": {
+      "canonical": "Alangium platanifolium",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Althaea rosea.": {
+      "canonical": "Alcea",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Betula alnus incana.": {
+      "canonical": "Alnus incana",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Aloe vulgaris": {
+      "canonical": "Aloe barbadensis",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Aloe barbadensis": {
+      "canonical": "Aloe vera",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Alternanthera sessilis": {
+      "canonical": "Alternanthera",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Aronia alnifolia.": {
+      "canonical": "Amelanchier",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Conophallus konjak.": {
+      "canonical": "Amorphophallus rivieri",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Anchusa tinctoria.": {
+      "canonical": "Anchusa",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Anthericum hookeri.": {
+      "canonical": "Anthericum",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Arabis thaliana.": {
+      "canonical": "Arabis",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Arachis prostrata Benth.": {
+      "canonical": "Arachis",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Dimorphanthus elatus.": {
+      "canonical": "Aralia elata",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Macrotomia benthamii.": {
+      "canonical": "Arnebia",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Pyrus arbutifolia.": {
+      "canonical": "Aronia arbutifolia",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Annona triloba.": {
+      "canonical": "Asimina",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Asperula odorata.": {
+      "canonical": "Asperula odorata",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Asphodelus luteus.": {
+      "canonical": "Asphodeline",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Asplenium felix-femina": {
+      "canonical": "Athyrium",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Bauhinia candicans Benth.": {
+      "canonical": "Bauhinia",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Betula americana": {
+      "canonical": "Betula nigra",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Betula lanulosa": {
+      "canonical": "Betula nigra",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Betula rubra.": {
+      "canonical": "Betula nigra",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Betula bhojpattra.": {
+      "canonical": "Betula utilis",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Lomaria spicant.": {
+      "canonical": "Blech",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Bletia hyacinthina.": {
+      "canonical": "Bletilla",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Nothoscordum aureum.": {
+      "canonical": "Bloomeria crocea",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Ruta alba": {
+      "canonical": "Boenninghausenia",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Borago advena": {
+      "canonical": "Borago",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Borago aspera": {
+      "canonical": "Borago",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Borago hortensis": {
+      "canonical": "Borago",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Brodiaea laxa.": {
+      "canonical": "Brodiaea laxa",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Buddleja asiatica": {
+      "canonical": "Buddleja",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Maranta allouia Aubl.": {
+      "canonical": "Calathea",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Phrynium allouia Aubl.": {
+      "canonical": "Calathea",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Curcuma americana": {
+      "canonical": "Calathea",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Cyclobothra lutea.": {
+      "canonical": "Calochortus barbatus",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Thea japonica.": {
+      "canonical": "Camellia japonica",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Thea sasanqua.": {
+      "canonical": "Camellia sasanqua",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Lilium giganteum.": {
+      "canonical": "Cardiocrinum giganteum",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Mesembryanthemum acinaciforme.": {
+      "canonical": "Carpobrotus",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Mesembryanthemum edulis.": {
+      "canonical": "Carpobrotus edulis",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Juglans aquatica.": {
+      "canonical": "Carya",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Andromeda tetragona.": {
+      "canonical": "Cassiope",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Castanopsis henryi.": {
+      "canonical": "Castanopsis",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Quercus cuspidata.": {
+      "canonical": "Castanopsis cuspidata",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Scabiosa syriaca.": {
+      "canonical": "Cephalaria",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Andromeda calyculata.": {
+      "canonical": "Chamaedaphne",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Cheiranthus x allionii": {
+      "canonical": "Cheiranthus X allionii",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Loathoe pomeridiana.": {
+      "canonical": "Chlorogalum pomeridianum",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Cichorium balearicum": {
+      "canonical": "Cichorium intybus",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Cichorium cicorea": {
+      "canonical": "Cichorium intybus",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Cichorium commune": {
+      "canonical": "Cichorium intybus",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Cichorium perenne.": {
+      "canonical": "Cichorium intybus",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Smilacena borealis.": {
+      "canonical": "Clinton",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Convolvulus sepium.": {
+      "canonical": "Convolvulus",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Dracaena indivisa.": {
+      "canonical": "Cordyline indivisa",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Chamaepericlymenum canadense.": {
+      "canonical": "Cornus canadensis",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Mespilus tanacetifolia.": {
+      "canonical": "Crataegus tanacetifolia",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Tritonia aurea": {
+      "canonical": "Crocosmia",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Goughia himalayensis.": {
+      "canonical": "Daphniphyllum",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Delphinium consolida.": {
+      "canonical": "Delphinium",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Uvularia sessile.": {
+      "canonical": "Disporum sessile",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Pyrus delavayi.": {
+      "canonical": "Docynia",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Dolichos ahipa.": {
+      "canonical": "Dolichos",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Tasmannia insipida.": {
+      "canonical": "Drimys",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Drimys axillaris.": {
+      "canonical": "Drimys axillaris",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Nephrodium felix-mas.": {
+      "canonical": "Dryopteris filix-mas",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Pycnopteris sieboldii.": {
+      "canonical": "Dryopteris sieboldii",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Brauneria angustifolia": {
+      "canonical": "Echinacea",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Parapyrola trichocarpa.": {
+      "canonical": "Epigaea",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Erica vulgaris.": {
+      "canonical": "Erica",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    },
+    "Erigeron canadensis.": {
+      "canonical": "Erigeron",
+      "sources": [
+        "pfaf-latinSynonyms"
+      ]
+    }
+  }
+}

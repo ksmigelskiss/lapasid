@@ -1,0 +1,3680 @@
+{
+  "generatedAt": "2026-05-21T13:58:49.906Z",
+  "source": "ASPCA toxic plants list → pre-DB genus mapping",
+  "totalGeneraMatched": 116,
+  "totalAspcaEntriesMatched": 224,
+  "manualMappings": 56,
+  "toxicityByGenus": {
+    "RHODODENDRON": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "azalea",
+          "displayName": "Azalea",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/azalea"
+        },
+        {
+          "slug": "rhododendron",
+          "displayName": "Rhododendron",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/rhododendron"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "CALADIUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "caladium",
+          "displayName": "Caladium",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/caladium"
+        },
+        {
+          "slug": "elephant-ears-caladium-hortulanum",
+          "displayName": "Elephant Ears (Caladium hortulanum)",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/elephant-ears-caladium-hortulanum"
+        },
+        {
+          "slug": "taro-caladium-hortulanum",
+          "displayName": "Taro (Caladium hortulanum)",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/taro-caladium-hortulanum"
+        }
+      ],
+      "matchTypes": [
+        "manual",
+        "displayName"
+      ],
+      "confidence": "high"
+    },
+    "ZAMIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "cardboard-palm",
+          "displayName": "Cardboard Palm",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/cardboard-palm"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "CYCLAMEN": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "cyclamen",
+          "displayName": "Cyclamen",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/cyclamen"
+        },
+        {
+          "slug": "persian-violet",
+          "displayName": "Persian Violet",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/persian-violet"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "ADENIUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "desert-rose",
+          "displayName": "Desert Rose",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/desert-rose"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "DIEFFENBACHIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "dumbcane",
+          "displayName": "Dumbcane",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/dumbcane"
+        },
+        {
+          "slug": "charming-dieffenbachia",
+          "displayName": "Charming Dieffenbachia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/charming-dieffenbachia"
+        },
+        {
+          "slug": "dieffenbachia",
+          "displayName": "Dieffenbachia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/dieffenbachia"
+        },
+        {
+          "slug": "gold-dieffenbachia",
+          "displayName": "Gold Dieffenbachia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/gold-dieffenbachia"
+        },
+        {
+          "slug": "variable-dieffenbachia",
+          "displayName": "Variable Dieffenbachia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/variable-dieffenbachia"
+        }
+      ],
+      "matchTypes": [
+        "manual",
+        "displayName"
+      ],
+      "confidence": "high"
+    },
+    "LILIUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "easter-lily",
+          "displayName": "Easter Lily",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/easter-lily"
+        },
+        {
+          "slug": "tiger-lily",
+          "displayName": "Tiger Lily",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/tiger-lily"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "HEDERA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "english-ivy",
+          "displayName": "English Ivy",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/english-ivy"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "ANTHURIUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "flamingo-flower",
+          "displayName": "Flamingo Flower",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/flamingo-flower"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "EPIPREMNUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "golden-pothos",
+          "displayName": "Golden Pothos",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/golden-pothos"
+        },
+        {
+          "slug": "satin-pothos",
+          "displayName": "Satin Pothos",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/satin-pothos"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "HYACINTHUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "hyacinth",
+          "displayName": "Hyacinth",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/hyacinth"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "TRADESCANTIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "inch-plant",
+          "displayName": "Inch Plant",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/inch-plant"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "FICUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "indian-rubber-plant",
+          "displayName": "Indian Rubber Plant",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/indian-rubber-plant"
+        },
+        {
+          "slug": "weeping-fig",
+          "displayName": "Weeping Fig",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/weeping-fig"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "CRASSULA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "jade-plant",
+          "displayName": "Jade Plant",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/jade-plant"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "SOLANUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "jerusalem-cherry",
+          "displayName": "Jerusalem Cherry",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/jerusalem-cherry"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "CONVALLARIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "lily-valley",
+          "displayName": "Lily of the Valley",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/lily-valley"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "SPATHIPHYLLUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "mauna-loa-peace-lily",
+          "displayName": "Mauna Loa Peace Lily",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/mauna-loa-peace-lily"
+        },
+        {
+          "slug": "peace-lily",
+          "displayName": "Peace Lily",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/peace-lily"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "NERIUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "oleander",
+          "displayName": "Oleander",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/oleander"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "CYCAS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "sago-palm",
+          "displayName": "Sago Palm",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/sago-palm"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "SANSEVIERIA": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "snake-plant",
+          "displayName": "Snake Plant",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/snake-plant"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "MONSTERA": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "split-leaf-philodendron",
+          "displayName": "Split Leaf Philodendron",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/split-leaf-philodendron"
+        },
+        {
+          "slug": "swiss-cheese-plant",
+          "displayName": "Swiss Cheese Plant",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/swiss-cheese-plant"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "TULIPA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "tulip",
+          "displayName": "Tulip",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/tulip"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "SCHEFFLERA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "umbrella-tree",
+          "displayName": "Umbrella Tree",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/umbrella-tree"
+        },
+        {
+          "slug": "umbrella-plant",
+          "displayName": "Umbrella Plant",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/umbrella-plant"
+        },
+        {
+          "slug": "schefflera",
+          "displayName": "Schefflera",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/schefflera"
+        }
+      ],
+      "matchTypes": [
+        "manual",
+        "displayName"
+      ],
+      "confidence": "high"
+    },
+    "SAINTPAULIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "african-violet",
+          "displayName": "African Violet",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/african-violet"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "NEPHROLEPIS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "boston-fern",
+          "displayName": "Boston Fern",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/boston-fern"
+        },
+        {
+          "slug": "sword-fern",
+          "displayName": "Sword Fern",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/sword-fern"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "SCHLUMBERGERA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "christmas-cactus",
+          "displayName": "Christmas Cactus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/christmas-cactus"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "PACHIRA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "money-tree",
+          "displayName": "Money Tree",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/money-tree"
+        }
+      ],
+      "matchTypes": [
+        "manual"
+      ],
+      "confidence": "high"
+    },
+    "CHLOROPHYTUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "spider-plant",
+          "displayName": "Spider Plant",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/spider-plant"
+        },
+        {
+          "slug": "chlorophytum",
+          "displayName": "Chlorophytum",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/chlorophytum"
+        },
+        {
+          "slug": "chlorophytum-bichetti",
+          "displayName": "Chlorophytum bichetti",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/chlorophytum-bichetti"
+        },
+        {
+          "slug": "ribbon-plant-chlorophytum-comosum",
+          "displayName": "Ribbon Plant (Chlorophytum Comosum)",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/ribbon-plant-chlorophytum-comosum"
+        }
+      ],
+      "matchTypes": [
+        "manual",
+        "displayName"
+      ],
+      "confidence": "high"
+    },
+    "ALOCASIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "alocasia",
+          "displayName": "Alocasia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/alocasia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ALOE": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "aloe",
+          "displayName": "Aloe",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/aloe"
+        },
+        {
+          "slug": "barbados-aloe",
+          "displayName": "Barbados Aloe",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/barbados-aloe"
+        },
+        {
+          "slug": "true-aloe",
+          "displayName": "True Aloe",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/true-aloe"
+        },
+        {
+          "slug": "cushion-aloe",
+          "displayName": "Cushion Aloe",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/cushion-aloe"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "AMARYLLIS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "amaryllis",
+          "displayName": "Amaryllis",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/amaryllis"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ANDROMEDA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "andromeda-japonica",
+          "displayName": "Andromeda Japonica",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/andromeda-japonica"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ARUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "arum",
+          "displayName": "Arum",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/arum"
+        },
+        {
+          "slug": "arum-lily",
+          "displayName": "Arum Lily",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/arum-lily"
+        },
+        {
+          "slug": "ivy-arum",
+          "displayName": "Ivy Arum",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/ivy-arum"
+        },
+        {
+          "slug": "wild-arum",
+          "displayName": "Wild Arum",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/wild-arum"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ASPARAGUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "asparagus-fern",
+          "displayName": "Asparagus Fern",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/asparagus-fern"
+        },
+        {
+          "slug": "racemose-asparagus",
+          "displayName": "Racemose asparagus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/racemose-asparagus"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CROCUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "autumn-crocus",
+          "displayName": "Autumn Crocus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/autumn-crocus"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "BEGONIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "begonia",
+          "displayName": "Begonia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/begonia"
+        },
+        {
+          "slug": "elephant-ear-begonia",
+          "displayName": "Elephant-Ear Begonia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/elephant-ear-begonia"
+        },
+        {
+          "slug": "iron-cross-begonia",
+          "displayName": "Iron Cross Begonia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/iron-cross-begonia"
+        },
+        {
+          "slug": "mapleleaf-begonia",
+          "displayName": "Mapleleaf Begonia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/mapleleaf-begonia"
+        },
+        {
+          "slug": "metallic-leaf-begonia",
+          "displayName": "Metallic Leaf Begonia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/metallic-leaf-begonia"
+        },
+        {
+          "slug": "peace-begonia",
+          "displayName": "Peace Begonia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/peace-begonia"
+        },
+        {
+          "slug": "rex-begonia",
+          "displayName": "Rex Begonia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/rex-begonia"
+        },
+        {
+          "slug": "begonia-climbing",
+          "displayName": "Begonia, Climbing",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/begonia-climbing"
+        },
+        {
+          "slug": "begonia-trailing",
+          "displayName": "Begonia, Trailing",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/begonia-trailing"
+        },
+        {
+          "slug": "watermelon-begonia",
+          "displayName": "Watermelon Begonia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/watermelon-begonia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CALLA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "black-calla",
+          "displayName": "Black Calla",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/black-calla"
+        },
+        {
+          "slug": "calla-lily",
+          "displayName": "Calla Lily",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/calla-lily"
+        },
+        {
+          "slug": "florists-calla",
+          "displayName": "Florist&#039;s Calla",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/florists-calla"
+        },
+        {
+          "slug": "garden-calla",
+          "displayName": "Garden Calla",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/garden-calla"
+        },
+        {
+          "slug": "wild-calla",
+          "displayName": "Wild Calla",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/wild-calla"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "BRUNFELSIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "brunfelsia",
+          "displayName": "Brunfelsia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/brunfelsia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "IRIS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "butterfly-iris",
+          "displayName": "Butterfly Iris",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/butterfly-iris"
+        },
+        {
+          "slug": "iris",
+          "displayName": "Iris",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/iris"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CHRYSANTHEMUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "chrysanthemum",
+          "displayName": "Chrysanthemum",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/chrysanthemum"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CLEMATIS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "clematis",
+          "displayName": "Clematis",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/clematis"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CLIVIA": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "clivia-lily",
+          "displayName": "Clivia Lily",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/clivia-lily"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CLUSIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "clusia-rosea",
+          "displayName": "Clusia Rosea",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/clusia-rosea"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "COLEUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "coleus",
+          "displayName": "Coleus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/coleus"
+        },
+        {
+          "slug": "prostrate-coleus",
+          "displayName": "Prostrate Coleus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/prostrate-coleus"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "PHILODENDRON": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "cutleaf-philodendron",
+          "displayName": "Cutleaf Philodendron",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/cutleaf-philodendron"
+        },
+        {
+          "slug": "heartleaf-philodendron",
+          "displayName": "Heartleaf Philodendron",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/heartleaf-philodendron"
+        },
+        {
+          "slug": "horsehead-philodendron",
+          "displayName": "Horsehead Philodendron",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/horsehead-philodendron"
+        },
+        {
+          "slug": "lacy-tree-philodendron",
+          "displayName": "Lacy Tree Philodendron",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/lacy-tree-philodendron"
+        },
+        {
+          "slug": "philodendron-pertusum",
+          "displayName": "Philodendron Pertusum",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/philodendron-pertusum"
+        },
+        {
+          "slug": "tree-philodendron",
+          "displayName": "Tree Philodendron",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/tree-philodendron"
+        },
+        {
+          "slug": "variegated-philodendron",
+          "displayName": "Variegated Philodendron",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/variegated-philodendron"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "DRACAENA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "dracaena",
+          "displayName": "Dracaena",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/dracaena"
+        },
+        {
+          "slug": "giant-dracaena",
+          "displayName": "Giant Dracaena",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/giant-dracaena"
+        },
+        {
+          "slug": "gold-dust-dracaena",
+          "displayName": "Gold Dust Dracaena",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/gold-dust-dracaena"
+        },
+        {
+          "slug": "malaysian-dracaena",
+          "displayName": "Malaysian Dracaena",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/malaysian-dracaena"
+        },
+        {
+          "slug": "red-marginated-dracaena",
+          "displayName": "Red-Marginated Dracaena",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/red-marginated-dracaena"
+        },
+        {
+          "slug": "straight-margined-dracaena",
+          "displayName": "Straight-Margined Dracaena",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/straight-margined-dracaena"
+        },
+        {
+          "slug": "striped-dracaena",
+          "displayName": "Striped Dracaena",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/striped-dracaena"
+        },
+        {
+          "slug": "warneckei-dracaena",
+          "displayName": "Warneckei Dracaena",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/warneckei-dracaena"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "COLOCASIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "elephant-ears-colocasia-esculenta",
+          "displayName": "Elephant Ears (Colocasia esculenta)",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/elephant-ears-colocasia-esculenta"
+        },
+        {
+          "slug": "taro-colocasia-esculenta",
+          "displayName": "Taro (Colocasia esculenta)",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/taro-colocasia-esculenta"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "EUCALYPTUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "eucalyptus",
+          "displayName": "Eucalyptus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/eucalyptus"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "GERANIUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "feather-geranium",
+          "displayName": "Feather Geranium",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/feather-geranium"
+        },
+        {
+          "slug": "geranium",
+          "displayName": "Geranium",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/geranium"
+        },
+        {
+          "slug": "geranium-leaf-aralia",
+          "displayName": "Geranium-Leaf Aralia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/geranium-leaf-aralia"
+        },
+        {
+          "slug": "scented-geranium",
+          "displayName": "Scented Geranium",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/scented-geranium"
+        },
+        {
+          "slug": "jungle-geranium",
+          "displayName": "Jungle Geranium",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/jungle-geranium"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "GARDENIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "gardenia",
+          "displayName": "Gardenia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/gardenia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "GLORIOSA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "gloriosa-lily",
+          "displayName": "Gloriosa Lily",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/gloriosa-lily"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "HOSTA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "hosta",
+          "displayName": "Hosta",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/hosta"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "HYDRANGEA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "hydrangea",
+          "displayName": "Hydrangea",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/hydrangea"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "KALANCHOE": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "kalanchoe",
+          "displayName": "Kalanchoe",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/kalanchoe"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "LANTANA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "lantana",
+          "displayName": "Lantana",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/lantana"
+        },
+        {
+          "slug": "wild-lantana",
+          "displayName": "Wild Lantana",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/wild-lantana"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "VERBENA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "lemon-verbena",
+          "displayName": "Lemon Verbena",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/lemon-verbena"
+        },
+        {
+          "slug": "sand-verbena",
+          "displayName": "Sand Verbena",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/sand-verbena"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "LOBELIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "lobelia",
+          "displayName": "Lobelia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/lobelia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "NARCISSUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "narcissus",
+          "displayName": "Narcissus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/narcissus"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "NEPHTHYTIS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "nephthytis",
+          "displayName": "Nephthytis",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/nephthytis"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "PIERIS": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "pieris",
+          "displayName": "Pieris",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/pieris"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "VINCA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "vinca",
+          "displayName": "Vinca",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/vinca"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "WISTERIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "wisteria",
+          "displayName": "Wisteria",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/wisteria"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "YUCCA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "yucca",
+          "displayName": "Yucca",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/yucca"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ALYSSUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "alyssum",
+          "displayName": "Alyssum",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/alyssum"
+        },
+        {
+          "slug": "hoary-alyssum",
+          "displayName": "Hoary Alyssum",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/hoary-alyssum"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ANTHERICUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "anthericum-comosum",
+          "displayName": "Anthericum Comosum",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/anthericum-comosum"
+        },
+        {
+          "slug": "walking-anthericum",
+          "displayName": "Walking Anthericum",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/walking-anthericum"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ANTIRRHINUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "antirrhinum-multiflorum",
+          "displayName": "Antirrhinum Multiflorum",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/antirrhinum-multiflorum"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ECHEVERIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "blue-echeveria",
+          "displayName": "Blue Echeveria",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/blue-echeveria"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "PEPEROMIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "blunt-leaf-peperomia",
+          "displayName": "Blunt Leaf Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/blunt-leaf-peperomia"
+        },
+        {
+          "slug": "emerald-ripple-peperomia",
+          "displayName": "Emerald Ripple Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/emerald-ripple-peperomia"
+        },
+        {
+          "slug": "green-ripple-peperomia",
+          "displayName": "Green Ripple Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/green-ripple-peperomia"
+        },
+        {
+          "slug": "ivy-peperomia",
+          "displayName": "Ivy Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/ivy-peperomia"
+        },
+        {
+          "slug": "leather-peperomia",
+          "displayName": "Leather Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/leather-peperomia"
+        },
+        {
+          "slug": "little-fantasy-peperomia",
+          "displayName": "Little Fantasy Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/little-fantasy-peperomia"
+        },
+        {
+          "slug": "metallic-peperomia",
+          "displayName": "Metallic Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/metallic-peperomia"
+        },
+        {
+          "slug": "peperomia-hederifolia",
+          "displayName": "Peperomia Hederifolia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/peperomia-hederifolia"
+        },
+        {
+          "slug": "peperomia-peltfolia",
+          "displayName": "Peperomia Peltfolia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/peperomia-peltfolia"
+        },
+        {
+          "slug": "peperomia-rotundifolia",
+          "displayName": "Peperomia Rotundifolia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/peperomia-rotundifolia"
+        },
+        {
+          "slug": "peperomia-sandersii",
+          "displayName": "Peperomia Sandersii",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/peperomia-sandersii"
+        },
+        {
+          "slug": "platinum-peperomia",
+          "displayName": "Platinum Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/platinum-peperomia"
+        },
+        {
+          "slug": "red-edge-peperomia",
+          "displayName": "Red Edge Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/red-edge-peperomia"
+        },
+        {
+          "slug": "trailing-peperomia",
+          "displayName": "Trailing Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/trailing-peperomia"
+        },
+        {
+          "slug": "vining-peperomia",
+          "displayName": "Vining Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/vining-peperomia"
+        },
+        {
+          "slug": "watermelon-peperomia",
+          "displayName": "Watermelon Peperomia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/watermelon-peperomia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "BRODIAEA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "brodiaea-pulchella",
+          "displayName": "Brodiaea Pulchella",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/brodiaea-pulchella"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CALATHEA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "calathea",
+          "displayName": "Calathea",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/calathea"
+        },
+        {
+          "slug": "calathea-lancifolia-2",
+          "displayName": "Calathea Lancifolia 2",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/calathea-lancifolia-2"
+        },
+        {
+          "slug": "calathea-lancifolia-3",
+          "displayName": "Calathea Lancifolia 3",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/calathea-lancifolia-3"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CALLISTEMON": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "callistemon-brachyandrus",
+          "displayName": "Callistemon Brachyandrus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/callistemon-brachyandrus"
+        },
+        {
+          "slug": "callistemon-citrinus",
+          "displayName": "Callistemon citrinus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/callistemon-citrinus"
+        },
+        {
+          "slug": "callistemon-viminalis",
+          "displayName": "Callistemon viminalis",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/callistemon-viminalis"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CALOCHORTUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "calochortus-nuttalli",
+          "displayName": "Calochortus nuttalli",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/calochortus-nuttalli"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CAMELLIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "camellia",
+          "displayName": "Camellia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/camellia"
+        },
+        {
+          "slug": "common-camellia",
+          "displayName": "Common Camellia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/common-camellia"
+        },
+        {
+          "slug": "mountain-camellia",
+          "displayName": "Mountain Camellia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/mountain-camellia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CANNA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "canna",
+          "displayName": "Canna",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/canna"
+        },
+        {
+          "slug": "canna-lily",
+          "displayName": "Canna Lily",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/canna-lily"
+        },
+        {
+          "slug": "common-garden-canna",
+          "displayName": "Common Garden Canna",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/common-garden-canna"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CATTLEYA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "cattleya-labiata",
+          "displayName": "Cattleya Labiata",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/cattleya-labiata"
+        },
+        {
+          "slug": "easter-cattleya",
+          "displayName": "Easter Cattleya",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/easter-cattleya"
+        },
+        {
+          "slug": "winter-cattleya",
+          "displayName": "Winter Cattleya",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/winter-cattleya"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CELOSIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "celosia-globosa",
+          "displayName": "Celosia Globosa",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/celosia-globosa"
+        },
+        {
+          "slug": "celosia-plumosa",
+          "displayName": "Celosia Plumosa",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/celosia-plumosa"
+        },
+        {
+          "slug": "celosia-spicata",
+          "displayName": "Celosia Spicata",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/celosia-spicata"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CHAMAEDOREA": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "chamaedorea",
+          "displayName": "Chamaedorea",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/chamaedorea"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ASTER": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "china-aster",
+          "displayName": "China Aster",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/china-aster"
+        },
+        {
+          "slug": "giant-aster",
+          "displayName": "Giant Aster",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/giant-aster"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "PLUMBAGO": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "chinese-plumbago",
+          "displayName": "Chinese Plumbago",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/chinese-plumbago"
+        },
+        {
+          "slug": "plumbago-larpentiae",
+          "displayName": "Plumbago Larpentiae",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/plumbago-larpentiae"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CIRRHOPETALUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "cirrhopetalum",
+          "displayName": "Cirrhopetalum",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/cirrhopetalum"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "GLOXINIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "creeping-gloxinia",
+          "displayName": "Creeping Gloxinia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/creeping-gloxinia"
+        },
+        {
+          "slug": "gloxinia",
+          "displayName": "Gloxinia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/gloxinia"
+        },
+        {
+          "slug": "hardy-gloxinia",
+          "displayName": "Hardy Gloxinia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/hardy-gloxinia"
+        },
+        {
+          "slug": "tree-gloxinia",
+          "displayName": "Tree Gloxinia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/tree-gloxinia"
+        },
+        {
+          "slug": "violet-slipper-gloxinia",
+          "displayName": "Violet Slipper Gloxinia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/violet-slipper-gloxinia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "MAHONIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "creeping-mahonia",
+          "displayName": "Creeping Mahonia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/creeping-mahonia"
+        },
+        {
+          "slug": "mahonia",
+          "displayName": "Mahonia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/mahonia"
+        },
+        {
+          "slug": "tall-mahonia",
+          "displayName": "Tall Mahonia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/tall-mahonia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "PILEA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "creeping-pilea",
+          "displayName": "Creeping Pilea",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/creeping-pilea"
+        },
+        {
+          "slug": "pilea-microphylla",
+          "displayName": "Pilea Microphylla",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/pilea-microphylla"
+        },
+        {
+          "slug": "pilea-mucosa",
+          "displayName": "Pilea Mucosa",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/pilea-mucosa"
+        },
+        {
+          "slug": "watermelon-pilea",
+          "displayName": "Watermelon Pilea",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/watermelon-pilea"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "RUBUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "creeping-rubus",
+          "displayName": "Creeping Rubus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/creeping-rubus"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ZINNIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "creeping-zinnia",
+          "displayName": "Creeping Zinnia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/creeping-zinnia"
+        },
+        {
+          "slug": "zinnia",
+          "displayName": "Zinnia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/zinnia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CROSSANDRA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "crossandra",
+          "displayName": "Crossandra",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/crossandra"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "DICHELOSTEMMA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "dichelostemma",
+          "displayName": "Dichelostemma",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/dichelostemma"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "DICHORISANDRA": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "dichorisandra-reginae",
+          "displayName": "Dichorisandra Reginae",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/dichorisandra-reginae"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "DINTERANTHUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "dinteranthus",
+          "displayName": "Dinteranthus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/dinteranthus"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "EPISCIA": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "episcia",
+          "displayName": "Episcia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/episcia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ARALIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "false-aralia",
+          "displayName": "False Aralia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/false-aralia"
+        },
+        {
+          "slug": "japanese-aralia",
+          "displayName": "Japanese Aralia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/japanese-aralia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "EPIDENDRUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "florida-butterfly-orchid-epidendrum-tampense",
+          "displayName": "Florida Butterfly Orchid (Epidendrum tampense)",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/florida-butterfly-orchid-epidendrum-tampense"
+        },
+        {
+          "slug": "spice-orchid-epidendrum-atropurpeum",
+          "displayName": "Spice Orchid (Epidendrum atropurpeum)",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/spice-orchid-epidendrum-atropurpeum"
+        },
+        {
+          "slug": "spice-orchid-epidendrum-ibaguense",
+          "displayName": "Spice Orchid (Epidendrum ibaguense)",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/spice-orchid-epidendrum-ibaguense"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "HAWORTHIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "haworthia",
+          "displayName": "Haworthia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/haworthia"
+        },
+        {
+          "slug": "zebra-haworthia",
+          "displayName": "Zebra Haworthia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/zebra-haworthia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "HIBISCUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "hibiscus",
+          "displayName": "Hibiscus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/hibiscus"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "FUCHSIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "honeysuckle-fuchsia",
+          "displayName": "Honeysuckle Fuchsia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/honeysuckle-fuchsia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "PITTOSPORUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "japanese-pittosporum",
+          "displayName": "Japanese Pittosporum",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/japanese-pittosporum"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "KAEMPFERIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "kaempferia",
+          "displayName": "Kaempferia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/kaempferia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "KENTIA": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "kentia-palm",
+          "displayName": "Kentia Palm",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/kentia-palm"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "LAGERSTROEMIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "lagerstroemia-indica",
+          "displayName": "Lagerstroemia Indica",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/lagerstroemia-indica"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "MAGNOLIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "magnolia-bush",
+          "displayName": "Magnolia Bush",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/magnolia-bush"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "MARANTA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "maranta",
+          "displayName": "Maranta",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/maranta"
+        },
+        {
+          "slug": "miniature-maranta",
+          "displayName": "Miniature Maranta",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/miniature-maranta"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "PHLOX": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "moss-phlox",
+          "displayName": "Moss Phlox",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/moss-phlox"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "MUSA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "musa-paradisiaca",
+          "displayName": "Musa Paradisiaca",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/musa-paradisiaca"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "MUSCARI": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "muscari-armeniacum",
+          "displayName": "Muscari Armeniacum",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/muscari-armeniacum"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "NEMATANTHUS": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "nematanthus-spp",
+          "displayName": "Nematanthus spp.",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/nematanthus-spp"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "NEOREGELIA": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "neoregelia",
+          "displayName": "Neoregelia",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/neoregelia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "CEREUS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "night-blooming-cereus",
+          "displayName": "Night Blooming Cereus",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/night-blooming-cereus"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "PETUNIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "petunia",
+          "displayName": "Petunia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/petunia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "PHALAENOPSIS": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "phalaenopsis-orchid",
+          "displayName": "Phalaenopsis Orchid",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/phalaenopsis-orchid"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "PLATYCERIUM": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "platycerium-alcicorne",
+          "displayName": "Platycerium Alcicorne",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/platycerium-alcicorne"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "POLYSTICHUM": {
+      "toxicTo": [
+        "cats",
+        "dogs"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "polystichum-falcatum",
+          "displayName": "Polystichum Falcatum",
+          "toxicTo": [
+            "cats",
+            "dogs"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/polystichum-falcatum"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "PELLIONIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "satin-pellionia",
+          "displayName": "Satin Pellionia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/satin-pellionia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "DEUTZIA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "slender-deutzia",
+          "displayName": "Slender Deutzia",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/slender-deutzia"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "SMILAX": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "smilax-tamnoides-vas",
+          "displayName": "Smilax Tamnoides Vas",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/smilax-tamnoides-vas"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "HOYA": {
+      "toxicTo": [
+        "cats",
+        "dogs",
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "sweetheart-hoya",
+          "displayName": "Sweetheart Hoya",
+          "toxicTo": [
+            "cats",
+            "dogs",
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/sweetheart-hoya"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    },
+    "ECHIUM": {
+      "toxicTo": [
+        "horses"
+      ],
+      "matchedEntries": [
+        {
+          "slug": "vipers-bugloss-echium-plantagineum",
+          "displayName": "Viper&#039;s Bugloss (Echium plantagineum)",
+          "toxicTo": [
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/vipers-bugloss-echium-plantagineum"
+        },
+        {
+          "slug": "vipers-bugloss-echium-vulgare",
+          "displayName": "Viper&#039;s Bugloss (Echium vulgare)",
+          "toxicTo": [
+            "horses"
+          ],
+          "detailUrl": "https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/vipers-bugloss-echium-vulgare"
+        }
+      ],
+      "matchTypes": [
+        "displayName"
+      ],
+      "confidence": "medium"
+    }
+  }
+}

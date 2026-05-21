@@ -11,3 +11,11 @@ dist
 # Editor
 .DS_Store
 .vercel
+
+# Data — book sources (per-file >100MB, GitHub rejects)
+# Extracted epubs lieka local'iai, JSON results commit'inami
+data/*.epub
+data/*.pdf
+data/ahs-epub/
+data/cheng-epub/
+data/.DS_Store

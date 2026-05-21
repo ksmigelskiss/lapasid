@@ -1,0 +1,2729 @@
+{
+  "generatedAt": "2026-05-21T07:23:09.061Z",
+  "source": "gaspadorius.lt — augalų katalogai",
+  "catalogsFetched": 5,
+  "totalUniqueEntries": 386,
+  "catalogStats": {
+    "geles-A-K": 121,
+    "geles-L-Z": 102,
+    "darzoves": 66,
+    "prieskoniai": 20,
+    "vaistiniai": 77
+  },
+  "entries": [
+    {
+      "ltName": "Achimenė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/achimene.htm",
+      "slug": "achimene",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Adijantas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/adijantas.htm",
+      "slug": "adijantas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Aeonium",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/aeonium.htm",
+      "slug": "aeonium",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Aglaonema",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/aglaonema.htm",
+      "slug": "aglaonema",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Ajeras viksvinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/viksvinis-ajeras.htm",
+      "slug": "viksvinis-ajeras",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Akolifa",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/akolifa.htm",
+      "slug": "akolifa",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Alamanda",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/alamanda.htm",
+      "slug": "alamanda",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Alavijas",
+      "ltSynonyms": [
+        "alijošius"
+      ],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/alavijas-alijosius.htm",
+      "slug": "alavijas-alijosius",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Alefandra",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/alefandra.htm",
+      "slug": "alefandra",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Alokazija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/alokazija.htm",
+      "slug": "alokazija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Anturis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/anturis.htm",
+      "slug": "anturis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Azalija rododendras",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/azalija-rododendras.htm",
+      "slug": "azalija-rododendras",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Ananasas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/ananasas.htm",
+      "slug": "ananasas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Araukarija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/araukarija.htm",
+      "slug": "araukarija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Arbatmedis australiškasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/australiskasis-arbatmedis.htm",
+      "slug": "australiskasis-arbatmedis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Ardizija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/ardizija.htm",
+      "slug": "ardizija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Aspidistra aukštoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/aukstoji-aspidistra.htm",
+      "slug": "aukstoji-aspidistra",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Avortija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/avortija.htm",
+      "slug": "avortija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Ąsotenis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/asotenis.htm",
+      "slug": "asotenis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Bambukas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/bambukas.htm",
+      "slug": "bambukas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Beaucamea recurvata",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/beaucamea-recurvata.htm",
+      "slug": "beaucamea-recurvata",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Begonija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/begonija.htm",
+      "slug": "begonija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Begonija aukštoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/aukstoji-begonija.htm",
+      "slug": "aukstoji-begonija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Begonijos gumbinės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/sodiname-gumbines-begonijas.htm",
+      "slug": "sodiname-gumbines-begonijas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Begonija krūminė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/krumine-begonija.htm",
+      "slug": "krumine-begonija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Beloperonė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/beloperone.htm",
+      "slug": "beloperone",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Brachychiton rupestris",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/brachychiton-rupestris.htm",
+      "slug": "brachychiton-rupestris",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Brovalija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/brovalija.htm",
+      "slug": "brovalija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Brunfelsija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/brunfelsija.htm",
+      "slug": "brunfelsija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Budlėja",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/budleja.htm",
+      "slug": "budleja",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Bugenvilija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/bugenvilija.htm",
+      "slug": "bugenvilija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Ceropegija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/ceropegija.htm",
+      "slug": "ceropegija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Chamelaucium uncinatum",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/chamelaucium-uncinatum.htm",
+      "slug": "chamelaucium-uncinatum",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Chlorofitas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/chlorofitas.htm",
+      "slug": "chlorofitas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Chrizantemos",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/chrizantemos.htm",
+      "slug": "chrizantemos",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Chrizantema indinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/indine-chrizantema.htm",
+      "slug": "indine-chrizantema",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Cikas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/cikas.htm",
+      "slug": "cikas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Ciklamenas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/ciklamenas.htm",
+      "slug": "ciklamenas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Cimbidis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/cimbidis.htm",
+      "slug": "cimbidis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Cimbžieda",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/cimbzieda.htm",
+      "slug": "cimbzieda",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Cirtomis pjautuviškasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/pjautuviskasis-cirtomis.htm",
+      "slug": "pjautuviskasis-cirtomis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Citrinmedis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/citrinmedis.htm",
+      "slug": "citrinmedis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Corynocarpus laevigatus",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/corynocarpus-laevigatus.htm",
+      "slug": "corynocarpus-laevigatus",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Davalija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/davalija.htm",
+      "slug": "davalija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Dendrobis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/dendrobis.htm",
+      "slug": "dendrobis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Difenbachija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/difenbachija.htm",
+      "slug": "difenbachija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Dipladenija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/dipladenija.htm",
+      "slug": "dipladenija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Diptekarantas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/diptekarantas.htm",
+      "slug": "diptekarantas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Dizigoteka",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/dizigoteka.htm",
+      "slug": "dizigoteka",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Dracena",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/dracena.htm",
+      "slug": "dracena",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Echmėja",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/echmeja.htm",
+      "slug": "echmeja",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Elksinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/elksine.htm",
+      "slug": "elksine",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Erantema",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/erantema.htm",
+      "slug": "erantema",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Eschinanatas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/eschinantas.htm",
+      "slug": "eschinantas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Eustoma",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/eustoma.htm",
+      "slug": "eustoma",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Eševerija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/eseverija.htm",
+      "slug": "eseverija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Falaenopsis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/phalaenopsis.htm",
+      "slug": "phalaenopsis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Fikas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/fikas.htm",
+      "slug": "fikas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Filodendras",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/filodendras.htm",
+      "slug": "filodendras",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Fitonija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/fitonija.htm",
+      "slug": "fitonija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Fryzija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/fryzija.htm",
+      "slug": "fryzija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Galenis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/galenis.htm",
+      "slug": "galenis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Gardenija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/gardenija.htm",
+      "slug": "gardenija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Garždenis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/garzdenis.htm",
+      "slug": "garzdenis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Gebenė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/gebene.htm",
+      "slug": "gebene",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Gebenkrūmis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/gebenkrumis.htm",
+      "slug": "gebenkrumis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Ginura",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/ginura.htm",
+      "slug": "ginura",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Gyvatbarzdė ilgalapė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/ilgalape-gyvatbarzde.htm",
+      "slug": "ilgalape-gyvatbarzde",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Globa",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/globa.htm",
+      "slug": "globa",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Gloksinija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/gloksinija.htm",
+      "slug": "gloksinija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Glorioza",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/glorioa.htm",
+      "slug": "glorioa",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Grevilėja didžioji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/didzioji-grevileja.htm",
+      "slug": "didzioji-grevileja",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Guzmania",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/guzmania.htm",
+      "slug": "guzmania",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Hypocirta",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/hypocirta.htm",
+      "slug": "hypocirta",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Hypoestes phyllostachya",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/hypoestes-phyllostachya.htm",
+      "slug": "hypoestes-phyllostachya",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Hortenzija didžialapė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/didzialape-hortenzija.htm",
+      "slug": "didzialape-hortenzija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Iksora",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/iksora.htm",
+      "slug": "iksora",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Irezinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/irezine.htm",
+      "slug": "irezine",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Jakobinija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/jakobinija.htm",
+      "slug": "jakobinija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Jasminaitis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/jasminaitis.htm",
+      "slug": "jasminaitis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Jatrofa",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/jatrofa.htm",
+      "slug": "jatrofa",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Juka",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/juka.htm",
+      "slug": "juka",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kaktusai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kaktusai.htm",
+      "slug": "kaktusai",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kaktusas gymnocalycium",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/gymnocalycium.htm",
+      "slug": "gymnocalycium",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kaktusas kalėdinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kaledinis-kaktusas.htm",
+      "slug": "kaledinis-kaktusas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kaktusas karpuotasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/karpuotasis-kaktusas.htm",
+      "slug": "karpuotasis-kaktusas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kaktusai lapiniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/lapiniai-kaktusai.htm",
+      "slug": "lapiniai-kaktusai",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kaktusas melocactus",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/melocactus.htm",
+      "slug": "melocactus",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kaktusas notocactus",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/notocactus.htm",
+      "slug": "notocactus",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kaktusas velykinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/velykinis-kaktusas.htm",
+      "slug": "velykinis-kaktusas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kaladis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kaladis.htm",
+      "slug": "kaladis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kalankė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kalanke.htm",
+      "slug": "kalanke",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kalatėja",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kalateja.htm",
+      "slug": "kalateja",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kalceoliarija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kalceoliarija.htm",
+      "slug": "kalceoliarija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kalijos",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kalija.htm",
+      "slug": "kalija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kalisfemonas gelsvasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/gelsvasis-kalisfemonas.htm",
+      "slug": "gelsvasis-kalisfemonas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kalnarūtė lizdinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/lizdine-kalnarute.htm",
+      "slug": "lizdine-kalnarute",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kalpokė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kalpoke.htm",
+      "slug": "kalpoke",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kamelija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kamelija.htm",
+      "slug": "kamelija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kaplamstis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kaplamstis.htm",
+      "slug": "kaplamstis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Karpažolė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/karpazole.htm",
+      "slug": "karpazole",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Karpažolė raudonžiedė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/raudonziede-karpazole.htm",
+      "slug": "raudonziede-karpazole",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Katarantas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/katarantas.htm",
+      "slug": "katarantas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "atilėlis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/katilelis.htm",
+      "slug": "katilelis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Katilėlis smulkiažiedis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/smulkiaziedis-katilelis.htm",
+      "slug": "smulkiaziedis-katilelis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Katlėja",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/katleja.htm",
+      "slug": "katleja",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kengūros letena",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kenguros-letena.htm",
+      "slug": "kenguros-letena",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kiauliauogė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kiauliauoge.htm",
+      "slug": "kiauliauoge",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kinrožė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kinroze.htm",
+      "slug": "kinroze",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kiparisas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kiparisas.htm",
+      "slug": "kiparisas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kiškiakopūstis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kiskiakopustis.htm",
+      "slug": "kiskiakopustis",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Klivija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/klivija.htm",
+      "slug": "klivija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kluzija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kluzija.htm",
+      "slug": "kluzija",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kodonantė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kodonante.htm",
+      "slug": "kodonante",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kolumnėja",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kolumneja.htm",
+      "slug": "kolumneja",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kordilina",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kordilina.htm",
+      "slug": "kordilina",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Kriptantas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kriptantas.htm",
+      "slug": "kriptantas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Krosandra",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/krosandra.htm",
+      "slug": "krosandra",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Krotonas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/krotonas.htm",
+      "slug": "krotonas",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Ksontosoma Lindeno",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/lindeno-ksontosoma.htm",
+      "slug": "lindeno-ksontosoma",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Ktenantė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/ktenante.htm",
+      "slug": "ktenante",
+      "catalog": "geles-A-K"
+    },
+    {
+      "ltName": "Lamstas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/lamstas.htm",
+      "slug": "lamstas",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Leea quineensis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/leea-quineensis.htm",
+      "slug": "leea-quineensis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Maranta",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/maranta.htm",
+      "slug": "maranta",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Medinilė puikioji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/puikioji-medinile.htm",
+      "slug": "puikioji-medinile",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Meilenis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/meilenis.htm",
+      "slug": "meilenis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Mikrolepija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/mikrolepija.htm",
+      "slug": "mikrolepija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Miltonija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/miltonija-miltoniopsis.htm",
+      "slug": "miltonija-miltoniopsis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Mirta paprastoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/paprastoji-mirta.htm",
+      "slug": "paprastoji-mirta",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Monstera nuostabioji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/nuostabioji-monstera.htm",
+      "slug": "nuostabioji-monstera",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Musėkautas jautrusis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/jautrusis-musekautas.htm",
+      "slug": "jautrusis-musekautas",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Nedera granadinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/granadine-nedera.htm",
+      "slug": "granadine-nedera",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Neoregelija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/neoregelija.htm",
+      "slug": "neoregelija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Nidularijus",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/nidularijus.htm",
+      "slug": "nidularijus",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Orchidėjos",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/orchidejos.htm",
+      "slug": "orchidejos",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Orchidėja brassia verrucosa",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/brassia-verrucosa.htm",
+      "slug": "brassia-verrucosa",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Orchidėja bulbophyllum longiflorum",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/bulbophyllum-longiflorum.htm",
+      "slug": "bulbophyllum-longiflorum",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Orchidėja coelogyne cristata",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/coelogyne-cristata.htm",
+      "slug": "coelogyne-cristata",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Orchidėja laelia",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/laelia.htm",
+      "slug": "laelia",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Orchidėja masdevallia militaris",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/masdevallia-militaris.htm",
+      "slug": "masdevallia-militaris",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Orchidėja odontoglossum",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/odontoglossum.htm",
+      "slug": "odontoglossum",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Orchidėja oncidium",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/oncidium.htm",
+      "slug": "oncidium",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Orchidėja zygopetalum ‘Artur Elle’",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/zygopetalum-artur-elle.htm",
+      "slug": "zygopetalum-artur-elle",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Ožekšnis japoninis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/japoninis-ozeksnis.htm",
+      "slug": "japoninis-ozeksnis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Pachira",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/pachira.htm",
+      "slug": "pachira",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Pachypodium",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/pachypodium.htm",
+      "slug": "pachypodium",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palėpštis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/palepstis.htm",
+      "slug": "palepstis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė archontophoenix cunninghamiana",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/archontophoenix-cunninghamiana.htm",
+      "slug": "archontophoenix-cunninghamiana",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė areka",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/areka.htm",
+      "slug": "areka",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė chrysalidocarpus",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/chrysalidocarpus-lutescens.htm",
+      "slug": "chrysalidocarpus-lutescens",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė finikas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/finikas.htm",
+      "slug": "finikas",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė grakščioji chamedorėja",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/grakscioji-chamedoreja.htm",
+      "slug": "grakscioji-chamedoreja",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė hovėja",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/hoveja.htm",
+      "slug": "hoveja",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė karijota",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/karijota.htm",
+      "slug": "karijota",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė kokosinis mikrocelis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kokosinis-mikrocelis.htm",
+      "slug": "kokosinis-mikrocelis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė rapipalmė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/rapipalme.htm",
+      "slug": "rapipalme",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė riešutinė kokospalmė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/riesutine-kokospalme.htm",
+      "slug": "riesutine-kokospalme",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė sabalpalmė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/sabalpalme.htm",
+      "slug": "sabalpalme",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Palmė vašingtonija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/vasingtonija.htm",
+      "slug": "vasingtonija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Pandanas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/pandanas.htm",
+      "slug": "pandanas",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Paparčiai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/paparciai.htm",
+      "slug": "paparciai",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Papartis arachniodes",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/arachniodes.htm",
+      "slug": "arachniodes",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Papartis auksuotasis flebodis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/auksuotasis-flebodis.htm",
+      "slug": "auksuotasis-flebodis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Papartis didymochlaena truncatula",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/didymochlaena-truncatula.htm",
+      "slug": "didymochlaena-truncatula",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Papartis ilgalapis inkstpapartis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/llgalapis-inkstpapartis.htm",
+      "slug": "llgalapis-inkstpapartis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Papartis paprastoji briedlielė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/paprastoji-briedliele.htm",
+      "slug": "paprastoji-briedliele",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Papartis pelėja",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/peleja.htm",
+      "slug": "peleja",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Papartis plačiaragis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/placiaragis.htm",
+      "slug": "placiaragis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Papartis Pteris",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/pteris.htm",
+      "slug": "pteris",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Paprika viemetė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/vienamete-paprika.htm",
+      "slug": "vienamete-paprika",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Pasiflora",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/pasiflora.htm",
+      "slug": "pasiflora",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Pelargonijos",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/pelargonijos.htm",
+      "slug": "pelargonijos",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Pelargonija didžiažiedė (karališkoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/didziaziede-karaliskoji-pelargonija.htm",
+      "slug": "didziaziede-karaliskoji-pelargonija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Pentas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/pentas.htm",
+      "slug": "pentas",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Peperomija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/peperomija.htm",
+      "slug": "peperomija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Perilepta",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/perilepta.htm",
+      "slug": "perilepta",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Petunija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/petunija.htm",
+      "slug": "petunija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Pilėja",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/pileja.htm",
+      "slug": "pileja",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Pogonateras",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/pogonateras.htm",
+      "slug": "pogonateras",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Polyscias",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/polyscias.htm",
+      "slug": "polyscias",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Povonija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/povonija.htm",
+      "slug": "povonija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Puansetija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/puansetija.htm",
+      "slug": "puansetija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Radermachera sinica",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/radermachera-sinica.htm",
+      "slug": "radermachera-sinica",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Raibuolė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/raibuole.htm",
+      "slug": "raibuole",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Raktažuolė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/raktazole.htm",
+      "slug": "raktazole",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Ratiklė skėtinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/sketine-ratikle.htm",
+      "slug": "sketine-ratikle",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Reinwardtia indica",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/reinwardtia-indica.htm",
+      "slug": "reinwardtia-indica",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Rėjus",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/rejus.htm",
+      "slug": "rejus",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Rochija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/rochija.htm",
+      "slug": "rochija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Rožė kininė",
+      "ltSynonyms": [
+        "erškėtis kininis"
+      ],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/kinine-roze.htm",
+      "slug": "kinine-roze",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Sanpaulija našlaitinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/naslaitine-sanpaulija.htm",
+      "slug": "naslaitine-sanpaulija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Sansevjera trijuostė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/trijuoste-sansevjera.htm",
+      "slug": "trijuoste-sansevjera",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Singonis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/singonis.htm",
+      "slug": "singonis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Skeltažiedis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/skeltaziedis.htm",
+      "slug": "skeltaziedis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Skindapas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/skindapas-kambarine-gele.htm",
+      "slug": "skindapas-kambarine-gele",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Smidras",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/smidras.htm",
+      "slug": "smidras",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Smitianta",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/smitianta.htm",
+      "slug": "smitianta",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Sparmanija afrikinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/afrikine-sparmanija.htm",
+      "slug": "afrikine-sparmanija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Spatifilis papėdžialapis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/spatifilis-papedzialapis.htm",
+      "slug": "spatifilis-papedzialapis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Sprigė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/sprige.htm",
+      "slug": "sprige",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Stefanotis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/stefanotis.htm",
+      "slug": "stefanotis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Storalapis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/storalapis.htm",
+      "slug": "storalapis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Streptokarpas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/streptokarpas.htm",
+      "slug": "streptokarpas",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Surfinija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/surfinija.htm",
+      "slug": "surfinija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Šeflera",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/seflera.htm",
+      "slug": "seflera",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Šilokas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/silokas.htm",
+      "slug": "silokas",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Šventmedis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/sventmedis.htm",
+      "slug": "sventmedis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Testudinarija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/testudinarija.htm",
+      "slug": "testudinarija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Tetrastigma",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/tetrastigma.htm",
+      "slug": "tetrastigma",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Tilandsija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/tilandsija.htm",
+      "slug": "tilandsija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Tinūtras",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/tinutras.htm",
+      "slug": "tinutras",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Totmėja",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/totmeja.htm",
+      "slug": "totmeja",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Tradeskantė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/tradeskante.htm",
+      "slug": "tradeskante",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Unksmenė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/unksmene.htm",
+      "slug": "unksmene",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Uolaskėlė ūsuotoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/usuotoji-uolaskele.htm",
+      "slug": "usuotoji-uolaskele",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Vaškuolė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/vaskuole.htm",
+      "slug": "vaskuole",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Viksvamedis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/viksvameldis.htm",
+      "slug": "viksvameldis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Viksvuolė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/viksvuole.htm",
+      "slug": "viksvuole",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Vytenis trumpakotis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/trumpakotis-vytenis.htm",
+      "slug": "trumpakotis-vytenis",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Zebrina",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/zebrina.htm",
+      "slug": "zebrina",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Žibutės persų",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/persu-zibutes.htm",
+      "slug": "persu-zibutes",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Žilė cinenarija",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/zile-cinerarija.htm",
+      "slug": "zile-cinerarija",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Žilė karolinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/namai/kambarines-geles/karoline-zile.htm",
+      "slug": "karoline-zile",
+      "catalog": "geles-L-Z"
+    },
+    {
+      "ltName": "Aguročiai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/agurociai-2.htm",
+      "slug": "agurociai-2",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Artišokai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/artisokai.htm",
+      "slug": "artisokai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Balandūnė daržinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/darzine-balandune.htm",
+      "slug": "darzine-balandune",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Brokoliai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/brokoliu-auginimas.htm",
+      "slug": "brokoliu-auginimas",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Brokoliai 2",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/brokoliai.htm",
+      "slug": "brokoliai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Bulvės ankstyvosios",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/ankstyvosios-bulves.htm",
+      "slug": "ankstyvosios-bulves",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Burokėliai raudonieji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/raudonieji-burokeliai.htm",
+      "slug": "raudonieji-burokeliai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Cikorija cukrinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/cukrine-cikorija.htm",
+      "slug": "cukrine-cikorija",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Cikorija daržinė (trūkažolė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/darzine-cikorija-trukazole.htm",
+      "slug": "darzine-cikorija-trukazole",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Cikorija paprastoji (šakninė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/paprastoji-saknine-cikorija.htm",
+      "slug": "paprastoji-saknine-cikorija",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Cikorija raudongūžė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/raudonguze-cikorija.htm",
+      "slug": "raudonguze-cikorija",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Cukinijos",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/cukinijos.htm",
+      "slug": "cukinijos",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Česnakai laiškiniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/laiskiniai-cesnakai.htm",
+      "slug": "laiskiniai-cesnakai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Česnakai laiškiniai tribuliai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/laiskiniai-cesnakai-tribuliai.htm",
+      "slug": "laiskiniai-cesnakai-tribuliai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Česnakai narcizalapiai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/narcizalapiai-cesnakai.htm",
+      "slug": "narcizalapiai-cesnakai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Česnakai ropiniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/cesnakai-ropiniai.htm",
+      "slug": "cesnakai-ropiniai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Česnakai vasariniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/vasariniai-cesnakai.htm",
+      "slug": "vasariniai-cesnakai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Gelteklė valgomoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/valgomoji-geltekle.htm",
+      "slug": "valgomoji-geltekle",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Kaliaropės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/kaliaropes.htm",
+      "slug": "kaliaropes",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Kiaulpienė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/kiaulpiene.htm",
+      "slug": "kiaulpiene",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Kopūstai briuseliniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/briuseliniai-kopustai-2.htm",
+      "slug": "briuseliniai-kopustai-2",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Kopūstai gūžiniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/guziniai-kopustai.htm",
+      "slug": "guziniai-kopustai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Kopūstai raudonieji gūžiniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/raudonieji-guziniai-kopustai.htm",
+      "slug": "raudonieji-guziniai-kopustai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Kopūstai pekino",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/pekino-kopustai.htm",
+      "slug": "pekino-kopustai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Kopūstai Savojos",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/savojos-kopustai.htm",
+      "slug": "savojos-kopustai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Kopūstai kiniški",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/kiniski-kopustai.htm",
+      "slug": "kiniski-kopustai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Kopūstai žiediniai (kalafiorai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/ziediniai-kopustai-kalafiorai.htm",
+      "slug": "ziediniai-kopustai-kalafiorai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Krienai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/krienai.htm",
+      "slug": "krienai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Kukurūzai cukriniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/cukriniai-kukuruzai.htm",
+      "slug": "cukriniai-kukuruzai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Moliūgai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/moliugai.htm",
+      "slug": "moliugai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Moliūgai didieji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/didieji-moliugai.htm",
+      "slug": "didieji-moliugai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Pankoliai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/pankoliai.htm",
+      "slug": "pankoliai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Paprikos saldžiosios",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/saldziosios-paprikos.htm",
+      "slug": "saldziosios-paprikos",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Pastarnokai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/pastarnokai.htm",
+      "slug": "pastarnokai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Patisonai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/patisonai.htm",
+      "slug": "patisonai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Petražolės šakninės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/saknines-petrazoles.htm",
+      "slug": "saknines-petrazoles",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Porai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/porai.htm",
+      "slug": "porai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Pupelės krūminės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/krumines-pupeles.htm",
+      "slug": "krumines-pupeles",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Pupelės raudonžiedės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/raudonziedes-pupeles.htm",
+      "slug": "raudonziedes-pupeles",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Pupelės vijoklinės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/vijoklines-pupeles.htm",
+      "slug": "vijoklines-pupeles",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Pupos",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/pupos.htm",
+      "slug": "pupos",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Poras",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/darzinis-poras.htm",
+      "slug": "darzinis-poras",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Rabarbarai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/rabarbarai.htm",
+      "slug": "rabarbarai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Ridikai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/ridikai.htm",
+      "slug": "ridikai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Ropės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/ropes.htm",
+      "slug": "ropes",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Ropės ankstyvosios",
+      "ltSynonyms": [
+        "vėlyvosios",
+        "Teltovo",
+        "lapinės"
+      ],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/ropes-2.htm",
+      "slug": "ropes-2",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Rugštynės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/rugstynes.htm",
+      "slug": "rugstynes",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Salierai lapkotiniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/lapkotiniai-salierai.htm",
+      "slug": "lapkotiniai-salierai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Salierai šakniniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/sakniniai-salierai.htm",
+      "slug": "sakniniai-salierai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Salotos gūžinės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/guzines-salotos.htm",
+      "slug": "guzines-salotos",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Salotos gūžinės (sėjamosios",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/guzines-sejamosios-salotos.htm",
+      "slug": "guzines-sejamosios-salotos",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Salota lapinė (pjaunamoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/lapine-pjaunamoji-salota.htm",
+      "slug": "lapine-pjaunamoji-salota",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Salota lapinė (skinamoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/lapine-skinamoji-salota.htm",
+      "slug": "lapine-skinamoji-salota",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Salota romėnų",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/romenu-salota.htm",
+      "slug": "romenu-salota",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Sojos",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/sojos.htm",
+      "slug": "sojos",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Sultenė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/sultene.htm",
+      "slug": "sultene",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Svogūnai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/svogunai.htm",
+      "slug": "svogunai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Svogūnai laiškiniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/laiskiniai-svogunai.htm",
+      "slug": "laiskiniai-svogunai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Svogūnai ropiniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/ropiniai-svogunai.htm",
+      "slug": "ropiniai-svogunai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Svogūnai žieminiai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/zieminiai-svogunai.htm",
+      "slug": "zieminiai-svogunai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Šparagai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/sparagai.htm",
+      "slug": "sparagai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Špinatai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/spinatai.htm",
+      "slug": "spinatai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Špinatas Naujosios Zelandijos",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/naujosios-zelandijos-spinatas.htm",
+      "slug": "naujosios-zelandijos-spinatas",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Tombinatai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/topinambai.htm",
+      "slug": "topinambai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Žirniai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/zirniai.htm",
+      "slug": "zirniai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Žirniai daržo",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/darzoves/darzo-zirniai.htm",
+      "slug": "darzo-zirniai",
+      "catalog": "darzoves"
+    },
+    {
+      "ltName": "Anyžiai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/anyziai.htm",
+      "slug": "anyziai",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Arbatmedis kiniškasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/kiniskasis-arbatmedis.htm",
+      "slug": "kiniskasis-arbatmedis",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Bazilikas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/bazilikas.htm",
+      "slug": "bazilikas",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Citrinžolė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/citrinzole.htm",
+      "slug": "citrinzole",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Dašis darželinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/darzelinis-dasis.htm",
+      "slug": "darzelinis-dasis",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Gelsvė vaistinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/vaistine-gelsve.htm",
+      "slug": "vaistine-gelsve",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Imbieras prieskoninis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/prieskoninis-imbieras.htm",
+      "slug": "prieskoninis-imbieras",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Juozažolė vaistinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/vaistine-juozazole.htm",
+      "slug": "vaistine-juozazole",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Kalendra",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/kalendros-auginimas.htm",
+      "slug": "kalendros-auginimas",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Kalendra blakinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/blakine-kalendra.htm",
+      "slug": "blakine-kalendra",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Krapai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/krapu-auginimas.htm",
+      "slug": "krapu-auginimas",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Krienas valgomasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/valgomasis-krienas.htm",
+      "slug": "valgomasis-krienas",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Mairūnas daržinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/darzinis-mairunas.htm",
+      "slug": "darzinis-mairunas",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Mangoldai",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/mangoldai.htm",
+      "slug": "mangoldai",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Melisa vaistinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/vaistine-melisa.htm",
+      "slug": "vaistine-melisa",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Peletrūnas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/peletrunas.htm",
+      "slug": "peletrunas",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Petražolės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/petrazoliu-auginimas.htm",
+      "slug": "petrazoliu-auginimas",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Pipirmetė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/pipirmete.htm",
+      "slug": "pipirmete",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Pipirnės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/ant-palanges-pipirnes.htm",
+      "slug": "ant-palanges-pipirnes",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Rūgštynės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/darzas/prieskonines-darzoves/rugstynes-2.htm",
+      "slug": "rugstynes-2",
+      "catalog": "prieskoniai"
+    },
+    {
+      "ltName": "Adonis pavasarinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/pavasarinis-adonis.htm",
+      "slug": "pavasarinis-adonis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Ajeras balinis",
+      "ltSynonyms": [
+        "paprastasis"
+      ],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/balinis-ajeras.htm",
+      "slug": "balinis-ajeras",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Anyžius laukinis (uolaskėlė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/laukinis-anyzius-arba-uolaskele.htm",
+      "slug": "laukinis-anyzius-arba-uolaskele",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Asiūklis dirvinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/dirvinis-asiuklis.htm",
+      "slug": "dirvinis-asiuklis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Bitkrėslė paprastoji (čižma",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastoji-bitkresle-cizma.htm",
+      "slug": "paprastoji-bitkresle-cizma",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Čiobrelis paprastasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastasis-ciobrelis.htm",
+      "slug": "paprastasis-ciobrelis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Dedešva miškinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/miskine-dedesva.htm",
+      "slug": "miskine-dedesva",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Dilgėlė didžioji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/didzioji-dilgele.htm",
+      "slug": "didzioji-dilgele",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Ežiuolė rasvažiedė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/rausvaziede-eziuole.htm",
+      "slug": "rausvaziede-eziuole",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Gyslotis plačialapis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/placialapis-gyslotis.htm",
+      "slug": "placialapis-gyslotis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Grikis sėjamasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/sejamasis-grikis.htm",
+      "slug": "sejamasis-grikis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Grikis totoriškas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/totoriskas-grikis.htm",
+      "slug": "totoriskas-grikis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Jonažolė paprastoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastoji-jonazole.htm",
+      "slug": "paprastoji-jonazole",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Kalankė plunksnalapė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/plunksnalape-kalanke.htm",
+      "slug": "plunksnalape-kalanke",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Kiaulpienė paprastoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastoji-kiaulpiene.htm",
+      "slug": "paprastoji-kiaulpiene",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Kietis kartusis (pelynas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/kartusis-kietis-pielynas.htm",
+      "slug": "kartusis-kietis-pielynas",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Kraujažolė paprastoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastoji-kraujazole.htm",
+      "slug": "paprastoji-kraujazole",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Kukurūzas",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/kukuruza.htm",
+      "slug": "kukuruza",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Linų sėmenys",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/linu-semenys-vertingas-vaistas.htm",
+      "slug": "linu-semenys-vertingas-vaistas",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Moliūgas kartusis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/kartusis-moliugas.htm",
+      "slug": "kartusis-moliugas",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Našlaitė dirvinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/dirvine-naslaite.htm",
+      "slug": "dirvine-naslaite",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Našlaitė trispalvė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/trispalve-naslaite-ir-dirvine-naslaite.htm",
+      "slug": "trispalve-naslaite-ir-dirvine-naslaite",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Ožkarožė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/ozkaroze.htm",
+      "slug": "ozkaroze",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Pataisas šarkakojis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/pataisas-sarkakojis.htm",
+      "slug": "pataisas-sarkakojis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Piliarožė vaistinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/vaistine-piliaroze.htm",
+      "slug": "vaistine-piliaroze",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Pupalaiškis trilapis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/trilapis-pupalaiskis.htm",
+      "slug": "trilapis-pupalaiskis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "puplaiškis trilapis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/trilapis-puplaiskis.htm",
+      "slug": "trilapis-puplaiskis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Pūkelis pelkinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/pelkinis-pukelis.htm",
+      "slug": "pelkinis-pukelis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Ramunėlė vaistinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/vaistine-ramunele.htm",
+      "slug": "vaistine-ramunele",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Raudoklė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/raudokle.htm",
+      "slug": "raudokle",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Raudonėlis paprastasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastasis-raudonelis.htm",
+      "slug": "paprastasis-raudonelis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Rugiagėlė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/rugiagele.htm",
+      "slug": "rugiagele",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Rūgtis dėmėtasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/demetasis-rugtis.htm",
+      "slug": "demetasis-rugtis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Rūgtis gyvatžolė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/rugtis-gyvatzole.htm",
+      "slug": "rugtis-gyvatzole",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Rūgtis kartusis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/kartusis-rugtis.htm",
+      "slug": "kartusis-rugtis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Rūgtis lininis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/lininis-rugtis.htm",
+      "slug": "lininis-rugtis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Rūgtis šiurkštusis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/siurkstusis-rugtis.htm",
+      "slug": "siurkstusis-rugtis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Rūgtis takažolė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/rugtis-takazole.htm",
+      "slug": "rugtis-takazole",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Sidabražolė miškinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/miskine-sidabrazole.htm",
+      "slug": "miskine-sidabrazole",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Sidabražolė žąsinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/zasine-sidabrazole.htm",
+      "slug": "zasine-sidabrazole",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Sukatžolė paprastoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastoji-sukatzole.htm",
+      "slug": "paprastoji-sukatzole",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Svilarožė vaistinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/vaistine-svilaroze.htm",
+      "slug": "vaistine-svilaroze",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Šalpusnis ankstyvasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/ankstyvasis-salpusnis.htm",
+      "slug": "ankstyvasis-salpusnis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Širdažolė skėtinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/sketine-sirdazole.htm",
+      "slug": "sketine-sirdazole",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Šlamutis smiltyninis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/smiltyninis-slamutis.htm",
+      "slug": "smiltyninis-slamutis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Ugniažolė didžioji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/didzioji-ugniazole.htm",
+      "slug": "didzioji-ugniazole",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Usnis pelkinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/pelkine-usnis.htm",
+      "slug": "pelkine-usnis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Usnis paprastoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastoji-usnis.htm",
+      "slug": "paprastoji-usnis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Valerijonas vaistinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/vaistinis-valerijonas.htm",
+      "slug": "vaistinis-valerijonas",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Vingiorykštė pelkinė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/pelkine-vingiorykste.htm",
+      "slug": "pelkine-vingiorykste",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Žvaginė trikertė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/trikerte-zvagine.htm",
+      "slug": "trikerte-zvagine",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Pievagrybis didysis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/didysis-pievagrybis.htm",
+      "slug": "didysis-pievagrybis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Pievagrybis dirvinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/dirvinis-pievagrybis.htm",
+      "slug": "dirvinis-pievagrybis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Pievagrybis dvisporis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/dvisporis-pievagrybis.htm",
+      "slug": "dvisporis-pievagrybis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Pievagrybis miškinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/miskinis-pievagrybis.htm",
+      "slug": "miskinis-pievagrybis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Pievagrybis nuodingasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/nuodingasis-pievagrybis.htm",
+      "slug": "nuodingasis-pievagrybis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Pievagrybis paprastasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastasis-pievagrybis.htm",
+      "slug": "paprastasis-pievagrybis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Erškėtis miškinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/miskinis-ersketis.htm",
+      "slug": "miskinis-ersketis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Gailis pelkinis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/pelkinis-gailis.htm",
+      "slug": "pelkinis-gailis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Gudobelė vienapiestė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/vienapieste-gudobele.htm",
+      "slug": "vienapieste-gudobele",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Kadagys paprastasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastasis-kadagys.htm",
+      "slug": "paprastasis-kadagys",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Putinas paprastasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastasis-putinas.htm",
+      "slug": "paprastasis-putinas",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Šaltalankis dygliuotasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/dygliuotasis-saltalankis.htm",
+      "slug": "dygliuotasis-saltalankis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Šaltekšnis paprastasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastasis-salteksnis.htm",
+      "slug": "paprastasis-salteksnis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Šeivamedis juoduogis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/juoduogis-seivamedis.htm",
+      "slug": "juoduogis-seivamedis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Beržas karpotasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/karpotasis-berzas.htm",
+      "slug": "karpotasis-berzas",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Juodalksnis",
+      "ltSynonyms": [
+        "baltalksnis"
+      ],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/juodalksnis-ir-baltalksnis.htm",
+      "slug": "juodalksnis-ir-baltalksnis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Gluosnis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/gluosnis-vaistinis-augalas.htm",
+      "slug": "gluosnis-vaistinis-augalas",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Liepa mažalapė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/mazalape-liepa.htm",
+      "slug": "mazalape-liepa",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Pušis paprastoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastoji-pusis.htm",
+      "slug": "paprastoji-pusis",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Avietė paprastoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastoji-aviete.htm",
+      "slug": "paprastoji-aviete",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Arkliauogė miltinė (meškauogė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/miltine-arkliauoge-meskauoge.htm",
+      "slug": "miltine-arkliauoge-meskauoge",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Bruknė",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/brukne.htm",
+      "slug": "brukne",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Mėlynės",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/melyne.htm",
+      "slug": "melyne",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Serbentas juodasis",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/juodasis-serbentas.htm",
+      "slug": "juodasis-serbentas",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Spanguolė paprastoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastoji-spanguole.htm",
+      "slug": "paprastoji-spanguole",
+      "catalog": "vaistiniai"
+    },
+    {
+      "ltName": "Žemuogė paprastoji",
+      "ltSynonyms": [],
+      "sourceUrl": "https://www.gaspadorius.lt/sveikata/vaistiniai-augalai/paprastoji-zemuoge.htm",
+      "slug": "paprastoji-zemuoge",
+      "catalog": "vaistiniai"
+    }
+  ]
+}
