@@ -66,9 +66,70 @@ if (typeof window !== 'undefined') {
   window.runToxicityTest = async (latinName = 'Aconitum napellus') => {
     return await runToxicityIsolatedTest({ claudeCall, latinName })
   }
+
+  // D strict pipeline test — IDENTIŠKAS fetchDetails post-AI flow'as, BE
+  // pilnos paieškos, BE catalog'o write, BE Save'o. Tiesiog patikrina:
+  //   1. deriveToxicityFromSources (DB lookup)
+  //   2. generateToxicityNarrative (mini AI call iš mūsų source'ų)
+  //   3. Final result: pavojai + pavojingumas.detales
+  //
+  // Greitis: 5-15s (tik narrative AI call'as). Nereikia trinti catalog'o.
+  window.runDStrictTest = async (latinName = 'Aconitum napellus') => {
+    console.log(`\n[d-strict] === ${latinName} ===`)
+    const start = Date.now()
+
+    // 1. DB lookup
+    const derived = await deriveToxicityFromSources(latinName)
+    console.log(`[d-strict] DB lookup:`, {
+      hasToxicity: derived.hasToxicity,
+      sources: derived.sources,
+      pavojaiCount: derived.pavojai.length,
+    })
+
+    if (!derived.hasToxicity) {
+      console.log(`[d-strict] ✓ DB tyli → pavojai = [] (no scare mongering) ✓`)
+      console.log(`[d-strict] TOTAL: ${Date.now() - start}ms`)
+      return { latinName, hasToxicity: false, pavojai: [], pavojingumas: { yra: false, lygis: null, detales: '' } }
+    }
+
+    // 2. Mini AI call'as — vertimas iš DB source'ų į LT narrative
+    console.log(`[d-strict] DB has toxicity → calling generateToxicityNarrative()...`)
+    const narrativeStart = Date.now()
+    const ltNarrative = await generateToxicityNarrative({
+      claudeCall,
+      latinName,
+      derivedToxicity: derived,
+    })
+    const narrativeMs = Date.now() - narrativeStart
+
+    console.log(`[d-strict] AI narrative response in ${narrativeMs}ms (${ltNarrative?.length ?? 0} chars)`)
+    console.log(`[d-strict] Final pavojai entries:`, derived.pavojai)
+    console.log(`[d-strict] Final pavojingumas:`, {
+      yra: derived.pavojingumas.yra,
+      lygis: derived.pavojingumas.lygis,
+      detales: ltNarrative ?? derived.pavojingumas.detales,
+    })
+    console.log(`[d-strict] LT narrative text:\n${ltNarrative ?? '(fallback to PFAF placeholder)'}`)
+    console.log(`[d-strict] TOTAL: ${Date.now() - start}ms`)
+
+    return {
+      latinName,
+      hasToxicity: true,
+      sources: derived.sources,
+      pavojai: derived.pavojai,
+      pavojingumas: {
+        ...derived.pavojingumas,
+        detales: ltNarrative ?? derived.pavojingumas.detales,
+      },
+      narrativeMs,
+      totalMs: Date.now() - start,
+    }
+  }
+
   if (import.meta.env.DEV) {
     console.log('[debug] Diagnostic available: window.runPromptDiagnostic(latinName?, observedSkip?)')
     console.log('[debug] Isolated toxicity test: window.runToxicityTest(latinName?)')
+    console.log('[debug] D strict pipeline test: window.runDStrictTest(latinName?)')
   }
 }
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
