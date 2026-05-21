@@ -19,6 +19,7 @@ import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../util
 import { deriveToxicityFromSources, isPavojaiEmpty } from '../utils/deriveToxicity'
 import { diagnosticPromptCheck } from '../utils/diagnosticPromptCheck'
 import { runToxicityIsolatedTest } from '../utils/toxicityIsolatedTest'
+import { generateToxicityNarrative } from '../utils/toxicityNarrativeGenerator'
 
 // ── Browser-console diagnostic tool ───────────────────────────
 // User idėja iš testavimo #8: kai mes nesuprantam, kodėl AI praleidžia
@@ -946,32 +947,55 @@ Naudok savo botanikos žinias + Wikipedia/RHS info kur reikia. Visi human-readab
   })
 
   // ────────────────────────────────────────────────────────────────
-  // DETERMINISTIC TOXICITY BACKFILL (2026-05-21 user test #3 fix).
+  // D STRICT — DETERMINISTIC TOXICITY + AI NARRATIVE (post test #11).
   //
-  // AI nepatikimas dėl pavojai[] pildymo — Aconitum napellus (vienas iš
-  // nuodingiausių Europos augalų) gavo pavojaiCount=0 net po RAG_PRIORITY
-  // hard rule'o pridėjimo. AI sąmoningai ar sąmoningai praleidžia šį
-  // kritinį field'ą. Mūsų primary value (toxicity tikslumas) negali būti
-  // AI'aus compliance'ui.
-  //
-  // SAFETY NET: jei mūsų sources (ASPCA + PFAF) sako, kad augalas toksiškas,
-  // BET AI grąžino pavojai=[] → backfill'inam struct'urized pavojai entries
-  // tiesiogiai iš mūsų data. Veiks 100% deterministiškai, neprilausomai
-  // nuo AI šokimo aplink instrukcijas.
+  // Vartotojo verdict'as: AI = structurer, ne creator. Mūsų DB = authority.
+  // Strategija:
+  //   1. deriveToxicityFromSources tikrai pagal MŪSŲ ASPCA+PFAF.
+  //   2. JEI hasToxicity=true → STRUKTURIZUOTI pavojai užrašom (DB authority).
+  //   3. JEI hasToxicity=true → mini AI call'as VERTIMUI/STRUKTURIZAVIMUI
+  //      iš mūsų source'o į LT warning narrative. AI yra TRANSLATOR,
+  //      ne KŪRĖJAS — neprideda iš training'o.
+  //   4. JEI hasToxicity=false → palieka pavojai=[], pavojingumas.yra=false.
+  //      AI NIEKO nepilanavo savo training'o (no scare mongering).
   // ────────────────────────────────────────────────────────────────
-  if (isPavojaiEmpty(details.savybes)) {
-    const derivedToxicity = await deriveToxicityFromSources(latinName)
-    if (derivedToxicity.hasToxicity) {
-      console.warn(
-        `[fetchDetails] AI praleido pavojai[] for ${latinName} — backfill iš ${derivedToxicity.sources.join('+')}`,
-      )
-      details.savybes = {
-        ...(details.savybes ?? {}),
-        pavojai: derivedToxicity.pavojai,
-        pavojingumas: derivedToxicity.pavojingumas,
-      }
-      details.toxicityBackfilled = derivedToxicity.sources  // audit trail
+  const derivedToxicity = await deriveToxicityFromSources(latinName)
+  if (derivedToxicity.hasToxicity) {
+    // Užrašyti structured pavojai iš mūsų DB authority (kad neperrašytum
+    // AI rezultato — AI Phase 2 gali būti grąžinęs tuščia ar nepilną.
+    // Mūsų DB pildymas yra deterministic ground truth).
+    details.savybes = {
+      ...(details.savybes ?? {}),
+      pavojai: derivedToxicity.pavojai,
+      pavojingumas: { ...derivedToxicity.pavojingumas },  // copy — keisim detales
     }
+
+    // Mini AI call'as: PFAF EN text → LT warning narrative.
+    // ~5-15s, ~$0.0008, paleidžiamas TIK toxic plants atveju.
+    const narrativeStart = Date.now()
+    const ltNarrative = await generateToxicityNarrative({
+      claudeCall,
+      latinName,
+      derivedToxicity,
+    })
+    const narrativeMs = Date.now() - narrativeStart
+    if (ltNarrative) {
+      details.savybes.pavojingumas.detales = ltNarrative
+      details.toxicityNarrativeGenerated = true
+      console.log(`[fetchDetails] toxicity narrative LT generated in ${narrativeMs}ms (${ltNarrative.length} chars) for ${latinName} — sources: ${derivedToxicity.sources.join('+')}`)
+    } else {
+      // Fallback — LT placeholder iš deriveToxicity (jau LT-friendly)
+      console.warn(`[fetchDetails] toxicity narrative generation failed for ${latinName}, using LT placeholder`)
+      details.toxicityNarrativeGenerated = false
+    }
+    details.toxicitySources = derivedToxicity.sources
+  } else {
+    // DB tyli — palieka, ką AI grąžino (galbūt tuščia, galbūt AI vis tiek
+    // pildė iš training'o). Nieks nepridedam ir nieks netrinam — D strict
+    // pasitiki MŪSŲ DB authority'tu, bet ne forcina AI elgesį.
+    // Jei vartotojas pamatys scare mongering iš AI — tas yra signal'as,
+    // kad mūsų RAG_PRIORITY_INSTRUCTION reikia stiprinti (debug priežastis,
+    // ne pleistras).
   }
 
   // Išsaugome į katalogą — kitas vartotojas gaus iš cache.

@@ -46,58 +46,49 @@ export const VET_LINKS = `
 // Plus Claude pasiūlė three konkrečius pakeitimus, kuriuos čia ir
 // pateikiame (A: safety override, B: few-shot Aconitum example,
 // D: PRIVALOMA action directive).
+// D STRICT INSTRUCTION (2026-05-21 v6, after user test #11):
+//
+// Vartotojo verdict'as: AI YRA STRUKTURIZATORIUS, NE KŪRĖJAS. Mūsų DB
+// (ASPCA + PFAF) yra AUTHORITY. Jei mes davėme — AI privalo užrašyti.
+// Jei mūsų DB tyli — AI palieka tuščia. NE pridėjimas iš training'o.
+//
+// Toxicity narrative (rich LT) generuojamas ATSKIRA mini AI call'a
+// (toxicityNarrativeGenerator.js) iš tų pačių MŪSŲ source'ų. AI Phase 2
+// pagrindiniam call'ui tik užtenka structured pavojai entries.
+//
+// Skirtumas nuo ankstesnių v1-v5 versijų:
+//   ❌ NEBĖRA explicit whitelist'o (Aconitum/Digitalis etc.) — tas atvers
+//      AI free fill door'į; vietoj — sandėlyje atskira Plus C decision
+//   ❌ NEBĖRA few-shot Aconitum example'o — AI matydavo „čia kūrybiškas
+//      pavyzdys", per much expand'indavo
+//   ❌ NEBĖRA "warning label generator" framing'o — AI tampa creator
+//   ✅ AI tampa STRICT translator iš RAG context'o
+//   ✅ Empty pavojai[] yra TIESIOG VALID, jei RAG tyli
 export const RAG_PRIORITY_INSTRUCTION = `
-=== TASK CONTEXT — WARNING LABEL GENERATOR (NOT MEDICAL ADVICE) ===
+=== ROLE: DB-GROUNDED STRUCTURER ===
 
-YOU ARE GENERATING WARNING LABELS for a Lithuanian consumer plant database.
-Output equivalent to back-of-package safety warnings on commercial plant
-sales — what dangers a buyer must know to avoid harm to themselves, family,
-and pets. This is CONSUMER PROTECTION work, not medical instruction.
+You are structuring verified plant data from our Lithuanian botanical
+database into the schema. RAG context below is AUTHORITATIVE — translate
+to natural Lithuanian, restructure into schema fields, but DO NOT add
+information beyond what RAG provides.
 
-KEY DISTINCTION: We are not teaching HOW to poison. We are warning that
-a plant CAN cause harm — same as „CAUTION: contains lead" on paint cans
-or „MAY CAUSE DROWSINESS" on medication. Omitting warnings = product
-liability violation.
+CRITICAL: If RAG context is SILENT on a field, OUTPUT EMPTY for that
+field. Do NOT fill from your training data.
 
-=== HARD RULES (override any conservative instinct) ===
+  Examples:
+  • RAG has ASPCA toxic-to list → fill savybes.pavojai[] entries per target.
+  • RAG has PFAF knownHazards text → structured pavojai[] (severity from
+    keywords: death/fatal→stiprus, paralyz/vomit/severe→vidutinis,
+    irritate/mild→silpnas).
+  • RAG silent on toxicity → savybes.pavojai = [], pavojingumas.yra = false.
+    Do NOT add general "may be toxic" or compound-presence claims from
+    your knowledge — our DB is authority on what to warn about.
 
-🔴 EXPLICIT TOXICITY WHITELIST — for these plants severity=stiprus ALWAYS,
-no judgement needed, no dose evidence needed:
-  Aconitum, Digitalis, Taxus, Conium, Nerium, Ricinus, Cicuta,
-  Atropa, Veratrum, Colchicum, Brugmansia, Datura, Rhododendron,
-  Convallaria, Hyoscyamus, Strychnos
+For care info, idomybes, aprasymas — same principle: use RAG as foundation,
+expand with Lithuanian narrative IF you can ground it in RAG. Skip
+fabricating data not in RAG.
 
-🔴 SCHEMA ENFORCEMENT — IF (RAG context has PFAF knownHazards with
-toxic/poison/fatal/paralyz/death keywords) OR (RAG has ASPCA toxicTo list)
-THEN savybes.pavojai[] MUST have at least 1 entry. Empty pavojai[] in
-this case = SCHEMA ERROR, not safe default.
+=== RAG CONTEXT ===
 
-🔴 DOSE CAVEAT DOES NOT BLOCK SEVERITY — Earlier instruction said „severity=
-stiprus requires hospitalisation evidence". CORRECTION: severity=stiprus
-needs NO dose evidence if plant is in WHITELIST above. Dose context goes
-into detales text, never blocks severity decision.
-
-🔴 RAG TRIGGER FORCE-FILL — If RAG contains words „highly toxic", „fatal",
-„death", „paralyz", „lethal" → pavojai[] PRIVALOMAS, severity ≥ vidutinis
-automatically. No interpretation needed.
-
-=== EXAMPLE — Aconitum napellus (warning label pattern) ===
-
-savybes.pavojai: [
-  { tipas: "toksiskas", target: "zmonems",  severity: "stiprus" },
-  { tipas: "toksiskas", target: "gyvunams", severity: "stiprus" },
-  { tipas: "dirginantis", target: "zmonems", severity: "vidutinis" }
-]
-savybes.pavojingumas.detales: "ĮSPĖJIMAS: visi šio augalo audiniai
-nuodingi. Pagrindinis junginys — aconitinas. Pasekmės nurijus: burnos
-tirpimas, vėmimas, širdies aritmija, kvėpavimo paralyžius. Net odos
-kontaktas su sultimis sukelia tirpimą. Vaikams, augintiniams (katėms,
-šunims, arkliams) ypač pavojinga. Nelaimei — kreipkitės į veterinarą
-ar Pet Poison Helpline."
-
-=== RAG CONTEXT (verified facts) ===
-
-Below: pilna info iš mūsų bibliotekos. Toxicity duomenys ATEINA iš ASPCA
-(veterinary authority) ir PFAF (botanikos compendium) — juos perkelk į
-schema laukus PER mūsų above hard rules. Niekada neprieštaruok.
+Below: data from our scraped database. Treat as source of truth.
 `
