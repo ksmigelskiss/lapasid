@@ -202,7 +202,7 @@ export const TOOL_PREVIEW = {
         properties: {
           pavojai: {
             type: 'array',
-            description: 'GRANULAR hazards. Fill GENEROUSLY when you can name BOTH tipas and target — default severity=vidutinis if literature confirms harm without quantifying; silpnas for mild irritation; stiprus only with explicit hospitalisation record. Empty array only when even tipas is unknown — then use pavojingumas.* safeguard instead. Pildyk pavojai[] kaip DEFAULT\'Ą; pavojingumas.* lieka fallback\'ui.',
+            description: 'GRANULAR hazards. Fill GENEROUSLY when you can name BOTH tipas and target — default severity=vidutinis if literature confirms harm without quantifying; silpnas for mild irritation; stiprus when ANY of: (a) known letal dose for humans, (b) ASPCA/PFAF mentions death or hospitalisation, (c) classic toxicology example (Aconitum, Digitalis, Taxus, Conium, Nerium, Ricinus, Cicuta, Atropa, Veratrum, etc.). Empty array only when even tipas is unknown — then use pavojingumas.* safeguard instead. Pildyk pavojai[] kaip DEFAULT\'Ą; pavojingumas.* lieka fallback\'ui.',
             items: {
               type: 'object',
               properties: {
@@ -377,7 +377,7 @@ export const TOOL_DETAILS = {
         properties: {
           pavojai: {
             type: 'array',
-            description: 'GRANULAR hazards. Fill GENEROUSLY when you can name BOTH tipas and target — default severity=vidutinis if literature confirms harm without quantifying; silpnas for mild irritation; stiprus only with explicit hospitalisation record. Empty array only when even tipas unknown.',
+            description: 'GRANULAR hazards. Fill GENEROUSLY when you can name BOTH tipas and target — default severity=vidutinis if literature confirms harm without quantifying; silpnas for mild irritation; stiprus when ANY of: (a) known letal dose for humans, (b) ASPCA/PFAF mentions death or hospitalisation, (c) classic toxicology example (Aconitum, Digitalis, Taxus, Conium, Nerium, Ricinus, Cicuta, Atropa, Veratrum, etc.). Empty array only when even tipas unknown.',
             items: {
               type: 'object',
               properties: {
