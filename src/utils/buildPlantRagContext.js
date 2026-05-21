@@ -159,13 +159,32 @@ export async function buildPlantRagContext(latinName, options = {}) {
     }
 
     // Toxicity hazards — PFAF botanical source.
-    // NB: anksčiau čia buvo „VERBATIM, do not paraphrase mechanism" — AI'us
-    // tai interpret'avo kaip „neperkelti į savybes laukus" → pavojaiCount
-    // STIPRIAI strugged net su strict toxicity rule. Dabar instrukcija
-    // ACTION-ORIENTED: action plan'as AI'ui, ne defensive marker'is.
+    // 2026-05-21 (post-diagnostic v2): action direktyva schema-format,
+    // ne prose. Claude'o antra diagnostic'a parodė, kad „translate +
+    // expand" prose'as → modelis verčia į pavojingumas.detales tekstą,
+    // bet pamiršta pavojai[] schema. Schema-format example padaro tikslą
+    // aiškų — tai yra TIKSLAS, kurį tu turi pildyti.
     if (pfafEntry.knownHazards) {
       sections.push(
-        `TOXICITY DATA (PFAF botanical source) — PRIVALOMA INTEGRUOTI Į savybes.pavojai[] + pavojingumas.detales schema:\n  ${pfafEntry.knownHazards.slice(0, 600)}\n\nAction: išversk į LT, ekspand'ink su mechanism, simptomais ir first-aid pointer.`,
+`TOXICITY DATA (PFAF) — PRIVALOMA pildyti AB schema laukus:
+
+Source text: "${pfafEntry.knownHazards.slice(0, 600)}"
+
+Action — užpildyk EXACTLY šitokia struktūra (ne tik tekstas):
+
+  savybes.pavojai: [
+    { tipas: "toksiskas", target: "zmonems",  severity: <stiprus|vidutinis|silpnas> },
+    { tipas: "toksiskas", target: "gyvunams", severity: <stiprus|vidutinis|silpnas> },
+    ... (pagal toxicity profilį, MIN 1 entry)
+  ]
+  savybes.pavojingumas.detales: <3-5 sakiniai LT su mechanism, simptomais, first-aid pointer>
+
+Severity sprendimas: jei knownHazards mini „death", „fatal", „lethal", „paralyz",
+„kills", arba augalas yra klasikinis toksikologijos pavyzdys → stiprus.
+Jei „vomit", „nausea", „burning", „severe" → vidutinis.
+Jei „irritate", „rash", „mild" → silpnas.
+
+TUŠČIAS pavojai[] = SCHEMA KLAIDA šiam augalui (turi knownHazards data).`,
       )
     }
 

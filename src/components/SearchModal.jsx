@@ -202,7 +202,7 @@ export const TOOL_PREVIEW = {
         properties: {
           pavojai: {
             type: 'array',
-            description: 'GRANULAR hazards. Fill GENEROUSLY when you can name BOTH tipas and target — default severity=vidutinis if literature confirms harm without quantifying; silpnas for mild irritation; stiprus when ANY of: (a) known letal dose for humans, (b) ASPCA/PFAF mentions death or hospitalisation, (c) classic toxicology example (Aconitum, Digitalis, Taxus, Conium, Nerium, Ricinus, Cicuta, Atropa, Veratrum, etc.). Empty array only when even tipas is unknown — then use pavojingumas.* safeguard instead. Pildyk pavojai[] kaip DEFAULT\'Ą; pavojingumas.* lieka fallback\'ui.',
+            description: 'GRANULAR hazards. Fill GENEROUSLY whenever the plant has known toxic compounds (alkaloids, glycosides, oxalates, saponins, latex). Severity decision tree: stiprus = hospitalisation/death record in literature (Aconitum, Digitalis, Taxus, Conium, Nerium, Ricinus, Cicuta, Atropa, Veratrum, etc. — ALL stiprus); vidutinis = systemic effects (vomiting, neurological); silpnas = local irritation only. Empty array ALLOWED ONLY when plant has NO known toxins AND no hazard records. For ANY plant with literature evidence of toxicity, empty pavojai[] is a SCHEMA ERROR — use pavojingumas.* safeguard for uncertainty only, never as substitute for missing pavojai.',
             items: {
               type: 'object',
               properties: {
@@ -377,7 +377,7 @@ export const TOOL_DETAILS = {
         properties: {
           pavojai: {
             type: 'array',
-            description: 'GRANULAR hazards. Fill GENEROUSLY when you can name BOTH tipas and target — default severity=vidutinis if literature confirms harm without quantifying; silpnas for mild irritation; stiprus when ANY of: (a) known letal dose for humans, (b) ASPCA/PFAF mentions death or hospitalisation, (c) classic toxicology example (Aconitum, Digitalis, Taxus, Conium, Nerium, Ricinus, Cicuta, Atropa, Veratrum, etc.). Empty array only when even tipas unknown.',
+            description: 'GRANULAR hazards. Severity decision tree: stiprus = hospitalisation/death record (Aconitum, Digitalis, Taxus, Conium, Nerium, Ricinus, Cicuta, Atropa, Veratrum etc. — ALL stiprus); vidutinis = systemic effects; silpnas = local irritation only. Empty array ALLOWED ONLY when plant has NO known toxins. For classic toxic plants empty pavojai[] = SCHEMA ERROR.',
             items: {
               type: 'object',
               properties: {
