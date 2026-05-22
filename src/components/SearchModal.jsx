@@ -1696,6 +1696,7 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
         previewParallelFetch(q.trim(), {
           includeWikiEn: true,
           includeWikidataGate: true,  // visada — naudojam gate jei pre-DB miss
+          includeBrave:  true,         // Step 6j — gardener-style hero photo
           debug: false,
         }),
       ])
