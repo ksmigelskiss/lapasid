@@ -44,7 +44,7 @@ export const TOOL_DETAILS = {
       // savo žinių jei RAG'e nieko nėra.
       aprasymas: {
         type: 'string',
-        description: 'Bendras augalo aprašymas LIETUVIŠKAI, 3-5 sakiniai. Jei RAG context\'e yra Wikipedia EN extract\'as — IŠVERSK jį verbatim (compound names, native habitat, common names). Jei tik LT extract\'as — naudok jį verbatim. Jei nieko nėra — sukurk LT iš savo žinių. NIEKADA negrąžinti EN. Apie GENUS-level augalą (e.g. Lavanda kaip augalas), ne apie konkretų kultivarą.',
+        description: 'Bendras augalo aprasymas LIETUVISKAI, 3-5 sakiniai. RAG context turi Wikipedia turini (LT arba EN) — naudok ji kaip FAKTU saltini, BET rasyk SAVO ZODZIAIS pagal VOICE_PERSONA „Sodininkas" friend stilius (ziur. sistemos prompte). NETIESIOG VERSI Wikipedia teksto — paimk faktus ir perskazuok kaip lietuvis sodininkas pasakotu draugui. Botaniniai terminai PAPRASTESNE versija jei techniniai: „daugiametis zolinis augalas" ne „rhizomatous perennial"; „lapai" ne „undivided leaves with sheathing stalks"; „zydi smulkiomis geliu kekemis" ne „three-petalled flowers with staminodes". NIEKADA negrazinti EN. Apie GENUS-level augala (e.g. Maranta kaip gentis), ne apie konkretu kultivara.',
       },
 
       // ── ORIGIN ────────────────────────────────────────────────
@@ -53,7 +53,7 @@ export const TOOL_DETAILS = {
       // dabar verčia į LT iš RAG context'o (origin yra įtraukta į RAG).
       kilme: {
         type: 'string',
-        description: 'Augalo kilme LIETUVISKAI, 1-3 sakiniai. Jei RAG turi origin field (EN, e.g. „Tropical America") - ISVERSK i LT („Tropine Amerika") + placiau apibudink jei zinai (kuriose salyse naturaliai auga, kokia ekologija). NIEKADA negrazinti EN.',
+        description: 'Augalo kilme LIETUVISKAI, 1-3 sakiniai. RAG turi origin field (EN, e.g. „Tropical America" arba ilgesni botanikos tekstas) — naudok kaip FAKTU saltini, BET rasyk SAVO ZODZIAIS VOICE_PERSONA stiliumi. Pateik regionus, ekologini kontekta jei zinai („auga Brazilijos Atograzu misku paklotese, kur silta ir dregna", ne „naturally grows in clump-forming perennials"). NIEKADA negrazinti EN.',
       },
 
       // ── LT VERNACULAR NAMES ──────────────────────────────────
