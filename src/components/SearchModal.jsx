@@ -2896,7 +2896,11 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange,
 
   const handleClick = async () => {
     setSaving(true)
-    onSavingChange?.(true)
+    // SavingOverlay skirtas SENAM client-side Phase 2 flow'ui (~30s AI wait).
+    // Variant B flag-on path'e modal'is uždaroma ~1s — overlay tik mirksi
+    // ir atrodo trash. Trigger'inam TIK kai realiai laukim ilgai (client-side
+    // Phase 2 path'as, žemiau).
+    if (!useServerSide) onSavingChange?.(true)
     try {
       // REHOST hero photo į Firebase Storage — kad nesulūš (Brave/paghat URL'us
       // randame catalog'e admin'e, gali timeout'inti). Path'as deterministic —
