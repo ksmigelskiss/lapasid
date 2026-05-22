@@ -47,6 +47,26 @@ export const TOOL_DETAILS = {
         description: 'Bendras augalo aprašymas LIETUVIŠKAI, 3-5 sakiniai. Jei RAG context\'e yra Wikipedia EN extract\'as — IŠVERSK jį verbatim (compound names, native habitat, common names). Jei tik LT extract\'as — naudok jį verbatim. Jei nieko nėra — sukurk LT iš savo žinių. NIEKADA negrąžinti EN. Apie GENUS-level augalą (e.g. Lavanda kaip augalas), ne apie konkretų kultivarą.',
       },
 
+      // ── ORIGIN ────────────────────────────────────────────────
+      // Step 6o — pre-DB AHS origin field'as yra EN (e.g. „Tropical America").
+      // Anksciau šis EN string'as patekdavo į catalog kaip kilme. AI Phase 2
+      // dabar verčia į LT iš RAG context'o (origin yra įtraukta į RAG).
+      kilme: {
+        type: 'string',
+        description: 'Augalo kilme LIETUVISKAI, 1-3 sakiniai. Jei RAG turi origin field (EN, e.g. „Tropical America") - ISVERSK i LT („Tropine Amerika") + placiau apibudink jei zinai (kuriose salyse naturaliai auga, kokia ekologija). NIEKADA negrazinti EN.',
+      },
+
+      // ── LT VERNACULAR NAMES ──────────────────────────────────
+      // Step 6o — kai AI žino LT folk names (e.g. Maranta → „Maldos augalas"),
+      // pridėk čia kaip array. Server merge'ina į plant.sinonimai šalia
+      // baseResult.sinonimai (iš iNat/Wiki). Anksciau AI minėdavo folk names
+      // idomybes sekcijoje — dabar struktūruotai į sinonimus.
+      ltSynonyms: {
+        type: 'array',
+        items: { type: 'string' },
+        description: 'LT folk/vernacular names jei zinai (e.g. Maranta -> ["Maldos augalas"], Crassula -> ["Pinigu medis"]). Tik PRIDEK names cia, nedubliuok jei jie jau yra zinomi rusies (ziur. RAG ltName). Tuscias array OK kai folk name nezinai. NESVARSTYK descriptors (e.g. „zolinis augalas") kaip names.',
+      },
+
       // ── CARE INFO (laistymas, tresimas, etc.) ────────────────
       laistymasIntervalas: {
         type: 'object',
@@ -190,7 +210,8 @@ export const TOOL_DETAILS = {
     required: ['laistymasIntervalas', 'tresimas', 'dormancyInfo', 'prieziura',
                'substratas', 'persodinimas', 'ziemojimas', 'dauginimas', 'problemos',
                'sviesa', 'vanduo', 'tipas', 'augimo_greitis', 'sunkumas', 'idomybes', 'savybes',
-               'aprasymas'],
+               'aprasymas', 'kilme'],
+               // ltSynonyms NEEINA į required — tuščias array OK kai nežinai folk name'o
   },
 }
 

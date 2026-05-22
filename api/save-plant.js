@@ -175,7 +175,9 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
 PRIVALOMA užpildyti VISUS plant_details laukus:
 
 APIE AUGALĄ:
-• aprasymas: 3-5 LT sakiniai apie GENUS-level augalą (kilmė, šeima, kaip atrodo, kur natūraliai auga). Jei RAG context'e yra Wikipedia EN extract'as — IŠVERSK jį VERBATIM (compound names, locations, taxonomy). NIEKADA negrąžinti EN teksto.
+• aprasymas: 3-5 LT sakiniai apie GENUS-level augalą (šeima, kaip atrodo, struktūra, charakteristika). Jei RAG context'e yra Wikipedia EN extract'as — IŠVERSK jį VERBATIM. NIEKADA negrąžinti EN teksto.
+• kilme: 1-3 LT sakiniai apie kilmę. Jei RAG turi origin field'ą EN (e.g. „Tropical America") — IŠVERSK + plačiau apibūdink (regionai, ekologija). NIEKADA negrąžinti EN.
+• ltSynonyms: array LT folk names jei žinai (Maranta → ["Maldos augalas"]). Tuščias OK jei nežinai.
 
 CARE (narrative + structured):
 • prieziura: 4 narrative Lithuanian field'ai (sviesa, laistymas, temperatura, dregme) — 1-2 sakiniai kiekvienam
@@ -307,6 +309,10 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
       // Wiki LT lookup Phase 0.5 metu lieka — naudinga UI source links
       // („Wikipedia LT" link'as direct article URL'u jei wikiLtFound).
       aprasymas: null,
+      // Step 6o — kilme tas pats pattern'as: baseResult turi EN AHS origin
+      // („Tropical America"), AI verčia į LT per Phase 2. Strip baseResult'ą
+      // → AI's LT iš details wins.
+      kilme: null,
       lotyniskas: latinName,
       lietuviškas: name,
       ...details,
@@ -325,6 +331,20 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
       // Step 6k — honest provenance marker
       aprasymasSource,
     }
+
+    // Step 6o — merge AI's ltSynonyms (folk names) into plant.sinonimai
+    // (greta iNat/Wiki sources iš baseResult). Dedupe + filter empty.
+    if (Array.isArray(details.ltSynonyms) && details.ltSynonyms.length > 0) {
+      const existingSyns = Array.isArray(baseResult?.sinonimai) ? baseResult.sinonimai : []
+      const merged = [...existingSyns, ...details.ltSynonyms]
+        .map(s => typeof s === 'string' ? s.trim() : '')
+        .filter(Boolean)
+        .filter((v, i, a) => a.findIndex(x => x.toLowerCase() === v.toLowerCase()) === i)
+      fullPlant.sinonimai = merged
+      console.log('[save-plant] sinonimai merged', { plantId, ai: details.ltSynonyms, final: merged.length })
+    }
+    // ltSynonyms (AI source field) nereikia plant doc'e — merge'inta į sinonimai
+    delete fullPlant.ltSynonyms
 
     // verificationStatus upgrade (mirror client logikos)
     const previousStatus = baseResult?.verificationStatus ?? null

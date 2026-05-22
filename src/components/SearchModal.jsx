@@ -625,7 +625,9 @@ async function fetchDetails(latinName, name, baseResult = null) {
 PRIVALOMA užpildyti VISUS plant_details laukus:
 
 APIE AUGALĄ:
-• aprasymas: 3-5 LT sakiniai apie GENUS-level augalą (kilmė, šeima, kaip atrodo, kur natūraliai auga). Jei RAG context'e yra Wikipedia EN extract'as — IŠVERSK jį VERBATIM (compound names, locations, taxonomy). NIEKADA negrąžinti EN teksto.
+• aprasymas: 3-5 LT sakiniai apie GENUS-level augalą (šeima, kaip atrodo, struktūra, charakteristika). Jei RAG context'e yra Wikipedia EN extract'as — IŠVERSK jį VERBATIM. NIEKADA negrąžinti EN teksto.
+• kilme: 1-3 LT sakiniai apie kilmę. Jei RAG turi origin field'ą EN (e.g. „Tropical America") — IŠVERSK + plačiau apibūdink (regionai, ekologija). NIEKADA negrąžinti EN.
+• ltSynonyms: array LT folk names jei žinai (Maranta → ["Maldos augalas"]). Tuščias OK jei nežinai.
 
 CARE (narrative + structured):
 • prieziura: 4 narrative Lithuanian field'ai (sviesa, laistymas, temperatura, dregme) — 1-2 sakiniai kiekvienam
