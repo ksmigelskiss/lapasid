@@ -15,7 +15,7 @@ import Mascot from './brand/Mascot'
  * Vizualas: forest-600 toast su mascot plant happy. Atitinka CareCircuitToast
  * stilių (familiar success pattern user'iui).
  */
-export default function DiscoveryToast({ message = 'Atradai naują rūšį! Tau priklauso +1 AI užklausa' }) {
+export default function DiscoveryToast({ message = '+1 AI užklausa gauta. Ačiū už indėlį!' }) {
   return (
     <motion.div
       initial={{ y: -20, opacity: 0 }}
@@ -27,7 +27,7 @@ export default function DiscoveryToast({ message = 'Atradai naują rūšį! Tau 
       <Mascot type="plant" state="happy" size={36} blink={false} className="flex-shrink-0 text-bone" />
       <div className="flex-1 min-w-0">
         <p className="font-mono text-[9.5px] font-medium uppercase tracking-[0.16em] text-bone/70">
-          ⭐ atradimas
+          ✓ prisidėjai
         </p>
         <p className="text-[14px] font-semibold text-bone leading-tight mt-0.5">
           {message}

@@ -604,7 +604,10 @@ export default function App() {
                 // Fast-path turi laistymasIntervalas iš karto → joko AI
                 // call'as, joko discovery moment'as → joko toast.
                 if (!plant.laistymasIntervalas) {
-                  showDiscoveryToast('Atradai naują rūšį! Tau priklauso +1 AI užklausa')
+                  // Step 6m — post-save = REWARD CONFIRMATION ("gavai"), ne
+                  // discovery invitation. Discovery hint atskirai rodomas
+                  // Phase1SlimPreview'e prieš save (žiūr. Phase1SlimPreview).
+                  showDiscoveryToast('+1 AI užklausa gauta. Ačiū už indėlį!')
                 }
               }}
               onAddToDashboard={plant => {
@@ -614,7 +617,10 @@ export default function App() {
                 setSearchAutoCamera(false)
                 setTab('dashboard')
                 if (!plant.laistymasIntervalas) {
-                  showDiscoveryToast('Atradai naują rūšį! Tau priklauso +1 AI užklausa')
+                  // Step 6m — post-save = REWARD CONFIRMATION ("gavai"), ne
+                  // discovery invitation. Discovery hint atskirai rodomas
+                  // Phase1SlimPreview'e prieš save (žiūr. Phase1SlimPreview).
+                  showDiscoveryToast('+1 AI užklausa gauta. Ačiū už indėlį!')
                 }
               }}
               onClose={() => { setShowSearch(false); setSearchInitialQuery(''); setSearchAutoCamera(false) }}

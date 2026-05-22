@@ -2811,6 +2811,11 @@ function Phase1SlimPreview({ result }) {
   const hasToxicity = result.savybes?.pavojai?.length > 0 ||
                       result.savybes?.pavojingumas?.yra === true
 
+  // Step 6m — discovery hint: jei augalas NĖRA mūsų catalog'e (= bus Phase 2
+  // enrichment), rodom invitation banner'į. Heuristika: catalog hit'as
+  // grąžina baseResult su laistymasIntervalas (full care info). Be jo — nauja.
+  const isNewToCatalog = !result.laistymasIntervalas
+
   // Source links — Wiki LT/EN + iNat (jei taxon ID žinomas). Logika mirror'as
   // PlantDetail.jsx — naudoja direct article URL jei wikiLtFound/wikiEnFound,
   // arba search URL fallback (Phase 1 metu šitie flagai dažniausiai dar nėra
@@ -2837,6 +2842,21 @@ function Phase1SlimPreview({ result }) {
 
   return (
     <div className="pt-5 pb-2 space-y-4">
+      {/* Step 6m — discovery invitation banner. Atsiranda tik kai augalo
+          nėra catalog'e (= bus AI Phase 2 enrichment + library indėlis).
+          Tonalitetas: kvietimas, ne reklama. */}
+      {isNewToCatalog && (
+        <div className="rounded-2xl bg-forest-50 border border-forest-200/60 p-3">
+          <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-700 font-medium mb-1">
+            ⭐ atradimas
+          </p>
+          <p className="text-[12.5px] text-forest-600 leading-relaxed">
+            Šio augalo mūsų bibliotekoje dar neturime. Pridėk — AI surinks
+            pilną info, o tau priklauso <span className="font-semibold">+1 AI užklausa</span>.
+          </p>
+        </div>
+      )}
+
       {/* Toxicity badges — TIK kai mūsų DB turi entry. PlantSavybesPills
           internally returns null jei nieko nėra → no empty render. */}
       <PlantSavybesPills plant={result} />
