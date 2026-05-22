@@ -57,7 +57,7 @@ export const config = {
  * @param {string} params.uid         - User ID (for plant write to collections/)
  * @param {string} params.colId       - Target collection ID
  */
-async function processPlant({ latinName, name, baseResult, uid, colId, plantId, kategorija }) {
+async function processPlant({ latinName, name, baseResult, uid, colId }) {
   const startMs = Date.now()
   console.log(`[save-plant] processPlant START: ${latinName} (uid=${uid?.slice(0, 8)}…, col=${colId?.slice(0, 8)}…)`)
 
@@ -159,25 +159,14 @@ async function processPlant({ latinName, name, baseResult, uid, colId, plantId, 
     }
 
     // ── STEP 7: Firebase Admin SDK writes ───────────────────────
-    // 7a. Catalog (rūšiniai laukai — visiems vartotojams)
     const { saveCatalogWithParentServer } = await import('./_lib/taxon-groups-server.js')
     const catalogResult = await saveCatalogWithParentServer(fullPlant)
     console.log(`[save-plant] catalog write:`, catalogResult)
 
-    // 7b. User library — collections/{colId}/plants/{plantId} (rūšiniai + asmeniniai)
-    // OVERWRITES preliminary klient'side write (jei klientas darė optimistic
-    // update). Server-side write yra authoritative — pilna Phase 2 data.
-    if (plantId && colId && uid) {
-      const { saveUserPlantServer } = await import('./_lib/user-plant-server.js')
-      const userPlantResult = await saveUserPlantServer({
-        uid, colId, plantId,
-        fullPlant,
-        kategorija: kategorija ?? 'auginama',
-      })
-      console.log(`[save-plant] user plant write:`, userPlantResult)
-    } else {
-      console.warn('[save-plant] skip user plant write — missing plantId/colId/uid')
-    }
+    // TODO collections/{colId}/plants/{plantId} write (user copy)
+    // — atskirti į Step 3 (Client refactor) — klientas šiandien write'ina
+    //   user plant'ą savo path'u. Server-side user plant write reikalauja
+    //   plantId generavimo + duplicate handling. Tas atskirai.
 
     const elapsedMs = Date.now() - startMs
     console.log(`[save-plant] processPlant END: ${latinName} | total ${elapsedMs}ms`)
@@ -198,18 +187,12 @@ export default async function handler(req, res) {
   if (!uid) return res.status(401).json({ error: 'invalid_token' })
 
   // Body validation
-  const { latinName, name, baseResult, colId, plantId, kategorija } = req.body ?? {}
+  const { latinName, name, baseResult, colId } = req.body ?? {}
   if (!latinName || typeof latinName !== 'string') {
     return res.status(400).json({ error: 'latinName required' })
   }
   if (!colId || typeof colId !== 'string') {
     return res.status(400).json({ error: 'colId required' })
-  }
-  if (!plantId || typeof plantId !== 'string') {
-    return res.status(400).json({ error: 'plantId required' })
-  }
-  if (kategorija && !['auginama', 'nori'].includes(kategorija)) {
-    return res.status(400).json({ error: 'kategorija must be auginama or nori' })
   }
 
   // Limit check (Phase 2 counts as 'searches' — same as client-side)
@@ -225,7 +208,7 @@ export default async function handler(req, res) {
   }
 
   // Schedule background processing — survives client disconnect via waitUntil
-  waitUntil(processPlant({ latinName, name, baseResult, uid, colId, plantId, kategorija }))
+  waitUntil(processPlant({ latinName, name, baseResult, uid, colId }))
 
   // Increment counter NOW (optimistic — we count even if processPlant fails)
   // TODO consider moving to processPlant success path post-Step 2
@@ -235,7 +218,6 @@ export default async function handler(req, res) {
   return res.status(202).json({
     status: 'accepted',
     latinName,
-    plantId,
-    message: 'Plant Save scheduled for background processing (catalog + user library)',
+    message: 'Plant Save scheduled for background processing',
   })
 }
