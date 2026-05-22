@@ -32,6 +32,7 @@
  */
 
 import { NARRATIVE_TOOL, TRANSLATOR_SYSTEM } from './toxicityNarrativePrompts.js'
+import { VOICE_PERSONA } from './plantVoicePersona.js'
 
 /**
  * @param {object} opts
@@ -73,7 +74,7 @@ export async function generateToxicityNarrative({ claudeCall, latinName, derived
     const response = await claudeCall({
       maxTokens: 600,
       temperature: 0.3,
-      system: TRANSLATOR_SYSTEM,
+      system: [VOICE_PERSONA, '', TRANSLATOR_SYSTEM].join('\n'),
       tools: [NARRATIVE_TOOL],
       toolChoice: { type: 'tool', name: 'toxicity_narrative' },
       messages: [{ role: 'user', content: userMessage }],

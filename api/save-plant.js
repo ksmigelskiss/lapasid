@@ -43,6 +43,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { uidFromToken } from './_firestore.js'
 import { TOOL_DETAILS, PLANT_SYSTEM } from '../src/utils/plantPromptConfig.js'
 import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../src/utils/stage2Constants.js'
+import { VOICE_PERSONA } from '../src/utils/plantVoicePersona.js'
 import { normalizeAIResponse } from '../src/utils/plantTransform.js'
 import { buildPlantRagContextServer } from './_lib/buildPlantRagContext-server.js'
 import { deriveToxicityFromSourcesServer } from './_lib/deriveToxicity-server.js'
@@ -142,8 +143,12 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
     })
 
     // ── 2. AI Phase 2 call ──────────────────────────────────
-    // Grounded system: PLANT_SYSTEM + RAG priority + verified facts + LT climate + vet links
+    // Grounded system: VOICE_PERSONA + PLANT_SYSTEM + RAG priority + verified facts + LT climate + vet links
+    // VOICE_PERSONA (Step 6l) prepend'inta — shared LT „Sodininkas" friend
+    // persona visiems AI calls, kad output'as skaitytųsi vienodu balsu.
     const groundedSystem = [
+      VOICE_PERSONA,
+      '',
       PLANT_SYSTEM,
       '',
       RAG_PRIORITY_INSTRUCTION,

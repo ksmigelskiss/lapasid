@@ -27,6 +27,7 @@ import { buildPreDbBaseResult } from '../utils/preDbBaseResult'
 import { catalogPreviewUpsert } from '../utils/catalogPreviewUpsert'
 import { buildPlantRagContext } from '../utils/buildPlantRagContext'
 import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../utils/stage2Constants'
+import { VOICE_PERSONA } from '../utils/plantVoicePersona'
 import { deriveToxicityFromSources, isPavojaiEmpty } from '../utils/deriveToxicity'
 import { diagnosticPromptCheck } from '../utils/diagnosticPromptCheck'
 import { runToxicityIsolatedTest } from '../utils/toxicityIsolatedTest'
@@ -581,10 +582,12 @@ async function fetchDetails(latinName, name, baseResult = null) {
   })
   const ragMs = Date.now() - ragStartTime
 
-  // Grounded system prompt: PLANT_SYSTEM + RAG priority instrukcija + verified
-  // facts + LT climate + vet links. Visi pridedami PO PLANT_SYSTEM, kad esama
-  // web search + fallback logika liktų.
+  // Grounded system prompt: VOICE_PERSONA + PLANT_SYSTEM + RAG priority + verified
+  // facts + LT climate + vet links. Step 6l — VOICE_PERSONA shared across client +
+  // server, kad output'as skaitytųsi vienodu „Sodininkas" LT friend balsu.
   const groundedSystem = [
+    VOICE_PERSONA,
+    '',
     PLANT_SYSTEM,
     '',
     RAG_PRIORITY_INSTRUCTION,

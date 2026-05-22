@@ -22,6 +22,7 @@
  */
 import Anthropic from '@anthropic-ai/sdk'
 import { NARRATIVE_TOOL, TRANSLATOR_SYSTEM } from '../../src/utils/toxicityNarrativePrompts.js'
+import { VOICE_PERSONA } from '../../src/utils/plantVoicePersona.js'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -73,7 +74,7 @@ export async function generateToxicityNarrativeServer({ latinName, derivedToxici
       model: 'claude-sonnet-4-6',
       max_tokens: 600,
       temperature: 0.3,
-      system: TRANSLATOR_SYSTEM,
+      system: [VOICE_PERSONA, '', TRANSLATOR_SYSTEM].join('\n'),
       tools: [NARRATIVE_TOOL],
       tool_choice: { type: 'tool', name: 'toxicity_narrative' },
       messages: [{ role: 'user', content: userMessage }],
