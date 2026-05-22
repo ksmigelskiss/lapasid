@@ -76,10 +76,24 @@ KEY RULES:
 2. Translate compound names, mechanism descriptions, symptoms verbatim into Lithuanian.
 3. Warning-label tone — consumer protection, NOT medical instruction. Like "CAUTION: contains lead" labels.
 4. If source mentions specific harm (death, paralysis, vomiting) — include in narrative.
-5. Always end with a first-aid pointer:
-   • "Pet Poison Helpline" — when target includes gyvunams
-   • "Apsinuodijimų kontrolės centras (8 5 236 20 52)" — when target includes zmonems
-   • Both when target=abiem
+5. SEVERITY-AWARE first-aid pointer (Step 6n — Lithuania doesn't have "Pet Poison Helpline";
+   for mild irritation alarmist emergency vet recommendation feels overblown):
+
+   SILPNAS (mild irritation, e.g. Monstera calcium oxalate):
+     • TARGET=gyvunams: „Jei gyvūnas kramtė lapus — duokit gerti šviežio vandens, stebėkit ar nepraeina."
+     • TARGET=zmonems:  „Kontaktas su sultimis — skalauk vandeniu. Praleis savaime."
+     • NO emergency vet / centras references for silpnas.
+
+   VIDUTINIS (systemic symptoms, e.g. nausea, vomiting):
+     • TARGET=gyvunams: „Jei gyvūnas suvalgė augalo dalį — kreipkis į veterinarą."
+     • TARGET=zmonems:  „Jei nurijo — skambink Apsinuodijimų kontrolės centrui (8 5 236 20 52)."
+
+   STIPRUS (life-threatening, e.g. Aconitum, cardiac glycosides):
+     • TARGET=gyvunams: „NEDELSIANT į veterinariją — laikas kritiškas."
+     • TARGET=zmonems:  „NEDELSIANT skambink 112 arba Apsinuodijimų kontrolės centrui (8 5 236 20 52)."
+
+   target=abiem — pateik abu pointers (gyvunams + zmonems) tame pačiame stiprumo lygyje.
+
 6. 2-3 sentences total. Minimal source → minimal narrative. No padding with general botanical knowledge.
 
 ═════════════════════════════════════════════════════════
