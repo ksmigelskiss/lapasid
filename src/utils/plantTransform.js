@@ -290,6 +290,16 @@ export function fromAIResult(aiResult) {
     // patektų į TĄ PATĮ doc'ą, ne kurtų antrą). Default'ai į naują makeId()
     // kai id nepateiktas — visi senesni call site'ai.
     id: aiResult.id ?? makeId(),
+    // Variant B Step 6g — propagate enrichmentStartedAt jei pre-set caller'io.
+    // Client'as SaveButton flag-on path'e sets'ina ISO timestamp save click
+    // metu. Server'is NIEKADA šio field'o nelies (rašo savą phase2CompletedAt
+    // + enrichmentError per merge:true). Atskiri laukai = joko race.
+    //
+    // KODĖL ATSKIRAS NUO data_prideta:
+    // data_prideta yra YYYY-MM-DD (tik data, ne tikslus laikas) — naudojama
+    // UI date label'ams. Mums reikia tiksli ISO timestamp'a kad galėtumėm
+    // skaičiuoti 90s timing window'ą enrichment state'ui.
+    ...(aiResult.enrichmentStartedAt ? { enrichmentStartedAt: aiResult.enrichmentStartedAt } : {}),
     verificationStatus,
     aiConfidence,
     aiMatchLevel: aiResult.matchLevel ?? null,

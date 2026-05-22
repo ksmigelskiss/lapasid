@@ -105,6 +105,27 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
   console.log('[save-plant] START', { uid, latin: latinName, plantId, colId })
 
   try {
+    // ── 0. Idempotency check ────────────────────────────────
+    // Variant B retry'aus + dual-write race apsauga — jei plant doc'as jau
+    // turi phase2CompletedAt (success'as), processPlant netryptina antrą
+    // sykį. Idempotent: callers can safely retry without duplicating cost.
+    // Failed state'as (enrichmentError set, phase2CompletedAt missing) leidžia
+    // retry — overwrites error per success path.
+    try {
+      const { adminFirestore } = await import('./_lib/firestore-admin.js')
+      const snap = await adminFirestore()
+        .collection('collections').doc(colId)
+        .collection('plants').doc(plantId)
+        .get()
+      if (snap.exists && snap.data().phase2CompletedAt) {
+        console.log('[save-plant] IDEMPOTENT skip — phase2CompletedAt exists', plantId)
+        return
+      }
+    } catch (e) {
+      // Idempotency check fail'inasi — vis tiek tęsiam (saugiau nei skip'inti)
+      console.warn('[save-plant] idempotency check failed (continuing):', e?.message)
+    }
+
     // ── 1. RAG context ──────────────────────────────────────
     const ragStart = Date.now()
     const rag = await buildPlantRagContextServer(latinName, {

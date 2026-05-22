@@ -47,12 +47,20 @@ export function getPlantEnrichmentState(plant) {
   // 3. Explicit failure signal — server'io processPlant catch block
   if (plant.enrichmentError) return 'failed'
 
-  // 4. Legacy plant (no save timestamp) — neturime ką spręsti, palieka normaliai
-  if (!plant.data_prideta) return 'unknown'
+  // 4. Legacy plant (no enrichmentStartedAt — Variant B flag-off saves arba
+  //    senesni plant'ai) — neturime ką spręsti, palieka normaliai.
+  //
+  //    PASTABA: ankstesnė versija naudojo `data_prideta` timing'ui, BET
+  //    `data_prideta` yra TIK YYYY-MM-DD (be valandų). new Date(date_only)
+  //    parse'inasi į midnight UTC — bet kuris save'as po midnight'o iš karto
+  //    atrodo „seniai" (>90s) → false 'failed' state'as. Dabar naudojam ISO
+  //    timestamp `enrichmentStartedAt` kurį SaveButton flag-on path'as rašo.
+  if (!plant.enrichmentStartedAt) return 'unknown'
 
-  // 5. Timing fallback — apima hard crash atvejus
-  const ageMs = Date.now() - new Date(plant.data_prideta).getTime()
-  if (Number.isNaN(ageMs)) return 'unknown'    // invalid timestamp → assume legacy
+  // 5. Timing fallback — apima hard crash atvejus, kai server'is mirė PRIEŠ
+  //    enrichmentError write'ą.
+  const ageMs = Date.now() - new Date(plant.enrichmentStartedAt).getTime()
+  if (Number.isNaN(ageMs)) return 'unknown'    // invalid timestamp → legacy
   if (ageMs < ENRICHMENT_TIMEOUT_MS) return 'enriching'
   return 'failed'
 }

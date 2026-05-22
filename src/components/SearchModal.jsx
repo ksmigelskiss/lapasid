@@ -3028,7 +3028,16 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange,
       // Server'is dirba savo darbą iki galo (waitUntil).
       if (useServerSide) {
         const plantId = makeId()
-        const resultWithId = { ...resultWithStorageImage, id: plantId }
+        // enrichmentStartedAt — ISO timestamp save click metu. Naudojamas
+        // getPlantEnrichmentState'e timing fallback'ui (90s window'as).
+        // SEPARATE nuo data_prideta (tik YYYY-MM-DD) ir separate nuo bet
+        // kokio server write'o (server'is rašo phase2CompletedAt /
+        // enrichmentError, niekada šio field'o).
+        const resultWithId = {
+          ...resultWithStorageImage,
+          id: plantId,
+          enrichmentStartedAt: new Date().toISOString(),
+        }
         onSave(resultWithId)
         try {
           const idToken = await auth.currentUser?.getIdToken().catch(() => null)

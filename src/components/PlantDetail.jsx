@@ -422,10 +422,19 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
   }
 
   // Synonyms — inline editorial proza
+  // Step 6g filter — drop'inam descriptor-style entries (e.g. „žolės pavidalo"
+  // iš data/plants.json scrape — žemiau case + 2+ žodžiai = aprašymas, ne
+  // vardas). Tikrieji LT augalų pavadinimai prasideda CAPITAL letter'iu.
+  // Long-term fix — pataisyti scripts/build-lt-names.mjs source data.
+  const isProperLtName = (s) => {
+    if (!s) return false
+    const first = s.charAt(0)
+    return first !== first.toLowerCase()  // first letter uppercase = real name
+  }
   const ltSyns = [
     plant.inatLtName && plant.inatLtName !== plant.lietuviškas ? plant.inatLtName : null,
     ...(plant.sinonimai?.filter(s => s !== plant.inatLtName) ?? []),
-  ].filter(Boolean)
+  ].filter(Boolean).filter(isProperLtName)
   const enSyns = plant.englishNames ?? []
   const hasSyns = ltSyns.length > 0 || enSyns.length > 0
 

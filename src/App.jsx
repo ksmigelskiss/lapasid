@@ -585,20 +585,24 @@ export default function App() {
               autoCamera={searchAutoCamera}
               onAddToWishlist={plant => {
                 const newPlant = addToWishlist(plant)
-                // Vietoj setTab('biblioteka') (kuris dažnai atidaro tuščią view
-                // dėl React state timing'o), iš karto atidarom naujai pridėto
-                // augalo detail kortelę. Vartotojas mato, ką pridėjo.
                 setShowSearch(false)
                 setSearchInitialQuery('')
                 setSearchAutoCamera(false)
-                openDetail(newPlant, 'nori')
+                // Step 6g — Variant B flag-on path'as nebeatidaro detail
+                // kortelės automatiškai. Anksciau openDetail() iškart parodydavo
+                // tuščia / 'failed' state'ą per dual-write window'ą. Dabar
+                // tiesiog redirect'as į biblioteka tab — user'is mato kortelę
+                // su forest-700 loading overlay'um ir kontroliuoja momentą,
+                // kada atidaro detail.
+                // (Step 6i pridės toast notification reward UX'ui.)
+                setTab('biblioteka')
               }}
               onAddToDashboard={plant => {
                 const newPlant = addToDashboard(plant)
                 setShowSearch(false)
                 setSearchInitialQuery('')
                 setSearchAutoCamera(false)
-                openDetail(newPlant, 'auginama')
+                setTab('dashboard')
               }}
               onClose={() => { setShowSearch(false); setSearchInitialQuery(''); setSearchAutoCamera(false) }}
               onViewPlant={plant => {

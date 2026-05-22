@@ -25,6 +25,8 @@ const PERSONAL_FIELDS = new Set([
   'id', 'kategorija', 'komentaras', 'uzrasai', 'data_prideta', 'status',
   'timeline', 'chat', 'zonaId', 'pirkinys', 'diedDate', 'deathReason',
   'lesson', 'useHistoryPhoto', 'photos',
+  // Step 6g — enrichment lifecycle markers (per-user)
+  'enrichmentStartedAt', 'phase2CompletedAt', 'enrichmentError',
   // 'image' čia NĖRA — iNaturalist URL yra rūšinis
 ])
 
