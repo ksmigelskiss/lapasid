@@ -262,12 +262,6 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
       ragSources: rag.sources,
       ragConfidence: rag.confidence,
       schemaVersion: 2,
-      // Step 6c — žymim enrichment'ą kaip baigtą. Client'as rašė 'pending'
-      // pirma write'e, dabar merge:true keičia į 'complete' su completedAt.
-      // PERSONAL_FIELDS filter'is catalog-server'yje pašalina šituos
-      // laukus prieš catalog write'ą (per-user state, ne global catalog).
-      enrichmentStatus: 'complete',
-      enrichmentCompletedAt: new Date().toISOString(),
     }
 
     // verificationStatus upgrade (mirror client logikos)

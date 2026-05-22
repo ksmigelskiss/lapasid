@@ -290,13 +290,6 @@ export function fromAIResult(aiResult) {
     // patektų į TĄ PATĮ doc'ą, ne kurtų antrą). Default'ai į naują makeId()
     // kai id nepateiktas — visi senesni call site'ai.
     id: aiResult.id ?? makeId(),
-    // Variant B Step 6c — propagate enrichment status if pre-set by caller.
-    // Client'as flag-on writes 'pending' su startedAt; server processPlant
-    // baigęs pipeline'ą writes 'complete' su completedAt. Tarp jų UI rodo
-    // loading state'ą.
-    ...(aiResult.enrichmentStatus ? { enrichmentStatus: aiResult.enrichmentStatus } : {}),
-    ...(aiResult.enrichmentStartedAt ? { enrichmentStartedAt: aiResult.enrichmentStartedAt } : {}),
-    ...(aiResult.enrichmentCompletedAt ? { enrichmentCompletedAt: aiResult.enrichmentCompletedAt } : {}),
     verificationStatus,
     aiConfidence,
     aiMatchLevel: aiResult.matchLevel ?? null,

@@ -428,34 +428,8 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
   const enSyns = plant.englishNames ?? []
   const hasSyns = ltSyns.length > 0 || enSyns.length > 0
 
-  // Variant B Step 6c — enrichment loading state.
-  // Server-side flag-on save'as rašo slim plant doc + pending status.
-  // Vėliau /api/save-plant baigia AI Phase 2 + merge:true → 'complete'.
-  // Failsafe — jei pending > 2 min, greičiausiai server fail'ino.
-  const isEnriching = plant.enrichmentStatus === 'pending'
-  const enrichStartedMsAgo = plant.enrichmentStartedAt
-    ? Date.now() - new Date(plant.enrichmentStartedAt).getTime()
-    : 0
-  const enrichStuck = isEnriching && enrichStartedMsAgo > 2 * 60 * 1000
-
   return (
     <div className={className ?? "px-5 pt-4 pb-10 space-y-6"}>
-
-      {/* Step 6c — enrichment loading banner */}
-      {isEnriching && (
-        <div className={`rounded-2xl border p-3 ${enrichStuck
-          ? 'bg-terracotta-50 border-terracotta-200/60'
-          : 'bg-forest-50 border-forest-200/60'}`}>
-          <p className={`font-mono text-[10px] uppercase tracking-[0.16em] font-medium ${enrichStuck ? 'text-terracotta-700' : 'text-forest-700'}`}>
-            {enrichStuck ? '⚠ Užtrunka ilgiau nei tikėtasi' : '⌛ Renkam priežiūros informaciją…'}
-          </p>
-          <p className="text-[12px] text-forest-500 mt-1.5 leading-relaxed">
-            {enrichStuck
-              ? 'AI dirba foniniame režime jau virš 2 minučių. Gali būti tinklo problema. Bandyk grįžti per kelias minutes — augalas pasipildys automatiškai.'
-              : 'Naujas augalas — AI renka care info (apie 10-30 sek). Gali uždaryti šį langą; grįžus duomenys jau bus.'}
-          </p>
-        </div>
-      )}
 
       {/* ── Title block — Bricolage 600 + Latin + synonyms inline. Scroll'inasi
             su content (vietoj static hero block — taupo scroll erdvę). ── */}
