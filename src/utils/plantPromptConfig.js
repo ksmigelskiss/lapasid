@@ -34,6 +34,19 @@ export const TOOL_DETAILS = {
   input_schema: {
     type: 'object',
     properties: {
+      // ── ABOUT THE PLANT (description) ────────────────────────
+      // Bug fix: anksciau aprasymas nebūdavo TOOL_DETAILS schema'oj, todėl
+      // jei baseResult'as turėjo Wikipedia EN extract'ą (LT versija
+      // neegzistuoja arba nepasiekta — pvz. Lavandula angustifolia LT Wiki
+      // indeksuoja per „Tikrosios levandos", ne Latin name'ą), EN tekstas
+      // passthrough'indavosi į catalog + user plant. Dabar AI privalo
+      // grąžinti LT versiją — verčia EN→LT verbatim arba sukuria iš
+      // savo žinių jei RAG'e nieko nėra.
+      aprasymas: {
+        type: 'string',
+        description: 'Bendras augalo aprašymas LIETUVIŠKAI, 3-5 sakiniai. Jei RAG context\'e yra Wikipedia EN extract\'as — IŠVERSK jį verbatim (compound names, native habitat, common names). Jei tik LT extract\'as — naudok jį verbatim. Jei nieko nėra — sukurk LT iš savo žinių. NIEKADA negrąžinti EN. Apie GENUS-level augalą (e.g. Lavanda kaip augalas), ne apie konkretų kultivarą.',
+      },
+
       // ── CARE INFO (laistymas, tresimas, etc.) ────────────────
       laistymasIntervalas: {
         type: 'object',
@@ -176,7 +189,8 @@ export const TOOL_DETAILS = {
     },
     required: ['laistymasIntervalas', 'tresimas', 'dormancyInfo', 'prieziura',
                'substratas', 'persodinimas', 'ziemojimas', 'dauginimas', 'problemos',
-               'sviesa', 'vanduo', 'tipas', 'augimo_greitis', 'sunkumas', 'idomybes', 'savybes'],
+               'sviesa', 'vanduo', 'tipas', 'augimo_greitis', 'sunkumas', 'idomybes', 'savybes',
+               'aprasymas'],
   },
 }
 

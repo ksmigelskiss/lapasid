@@ -148,6 +148,9 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
 
 PRIVALOMA užpildyti VISUS plant_details laukus:
 
+APIE AUGALĄ:
+• aprasymas: 3-5 LT sakiniai apie GENUS-level augalą (kilmė, šeima, kaip atrodo, kur natūraliai auga). Jei RAG context'e yra Wikipedia EN extract'as — IŠVERSK jį VERBATIM (compound names, locations, taxonomy). NIEKADA negrąžinti EN teksto.
+
 CARE (narrative + structured):
 • prieziura: 4 narrative Lithuanian field'ai (sviesa, laistymas, temperatura, dregme) — 1-2 sakiniai kiekvienam
 • sviesa: STRUCTURED — { taskai: 1-3, lygis: „žema"/„vidutinė"/„ryški", ppfd: {min, max} }
