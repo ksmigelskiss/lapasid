@@ -422,14 +422,27 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
   }
 
   // Synonyms — inline editorial proza
-  // Step 6g filter — drop'inam descriptor-style entries (e.g. „žolės pavidalo"
-  // iš data/plants.json scrape — žemiau case + 2+ žodžiai = aprašymas, ne
-  // vardas). Tikrieji LT augalų pavadinimai prasideda CAPITAL letter'iu.
-  // Long-term fix — pataisyti scripts/build-lt-names.mjs source data.
+  // Step 6g filter — drop'inam DESCRIPTOR-style entries.
+  // Probleminis case: „žolės pavidalo" iš data/plants.json scrape (Polygal'ui
+  // klaidingai label'inta kaip LT pavadinimas; realiai tai būdvardinis
+  // aprašymas „grass-shaped", ne sinonimas).
+  //
+  // CRITERIA — 2+ žodžiai IR visi lowercase:
+  //   ✓ Paprastoji putokšlė   → KEEP (capital first)
+  //   ✓ Common Milkwort       → KEEP (capital words)
+  //   ✓ alijošius             → KEEP (single lowercase OK — folk name e.g. Aloe)
+  //   ✓ milkwort              → KEEP (single lowercase OK — English name)
+  //   ✗ žolės pavidalo        → DROP (2+ words, all lowercase = descriptor)
+  //   ✗ vingrio pavidalo      → DROP (same pattern)
+  //
+  // Long-term fix — pataisyti scripts/build-lt-names.mjs source data
+  // (data/plants.json turi descriptor entries kaip „names").
   const isProperLtName = (s) => {
     if (!s) return false
-    const first = s.charAt(0)
-    return first !== first.toLowerCase()  // first letter uppercase = real name
+    const words = s.trim().split(/\s+/)
+    if (words.length === 1) return true  // single word — any case OK
+    // Multi-word: bent vienas turi prasidėti uppercase
+    return words.some(w => w[0] !== w[0].toLowerCase())
   }
   const ltSyns = [
     plant.inatLtName && plant.inatLtName !== plant.lietuviškas ? plant.inatLtName : null,
