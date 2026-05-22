@@ -143,10 +143,66 @@ if (typeof window !== 'undefined') {
     }
   }
 
+  // Server-side D strict pipeline test (Variant B Step 6a) — hit'ina
+  // /api/dev-toxicity-test, kuris paleidžia deriveToxicityServer +
+  // generateToxicityNarrativeServer BE catalog'o write'o BE user plant
+  // write'o. Skirtas greitai iteruoti server narrative gen prompt'us
+  // be pilnos save'o procedūros.
+  window.runServerToxicityTest = async (latinName = 'Aconitum napellus') => {
+    console.log(`\n[server-tox] === ${latinName} ===`)
+    const start = Date.now()
+    try {
+      const idToken = await auth.currentUser?.getIdToken().catch(() => null)
+      if (!idToken) {
+        console.error('[server-tox] not authenticated — sign in pirma')
+        return null
+      }
+      const res = await fetch('/api/dev-toxicity-test', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({ latinName }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        console.error('[server-tox] HTTP', res.status, err)
+        return null
+      }
+      const result = await res.json()
+      const totalMs = Date.now() - start
+
+      console.log('[server-tox] hasToxicity:', result.hasToxicity)
+      console.log('[server-tox] sources:', result.sources)
+      console.log('[server-tox] pavojai entries:', result.pavojai)
+      console.log('[server-tox] pavojingumas:', {
+        yra: result.pavojingumas.yra,
+        lygis: result.pavojingumas.lygis,
+      })
+      if (result.hasToxicity) {
+        console.log('[server-tox] narrative.elapsedMs:', result.narrative.elapsedMs)
+        console.log('[server-tox] narrative.aiSupplementaryHazard:', result.narrative.aiSupplementaryHazard, '(6a: should be null)')
+        console.log('[server-tox] ─── NARRATIVE (LT) ───')
+        console.log(result.narrative.detales ?? '(null — narrative gen failed)')
+        console.log('[server-tox] ─── PLACEHOLDER (for comparison) ───')
+        console.log(result.pavojingumas.placeholderDetales)
+      } else {
+        console.log('[server-tox] DB tyli → no narrative (6a). Step 6b atidarys versija plus.')
+      }
+      console.log(`[server-tox] TOTAL: ${totalMs}ms (incl. roundtrip)`)
+      return result
+    } catch (e) {
+      console.error('[server-tox] failed:', e?.message)
+      return null
+    }
+  }
+
   if (import.meta.env.DEV) {
     console.log('[debug] Diagnostic available: window.runPromptDiagnostic(latinName?, observedSkip?)')
     console.log('[debug] Isolated toxicity test: window.runToxicityTest(latinName?)')
-    console.log('[debug] D strict pipeline test: window.runDStrictTest(latinName?)')
+    console.log('[debug] D strict pipeline test (client): window.runDStrictTest(latinName?)')
+    console.log('[debug] D strict pipeline test (server): window.runServerToxicityTest(latinName?)')
   }
 }
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'

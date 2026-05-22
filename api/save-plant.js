@@ -46,6 +46,7 @@ import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../src/
 import { normalizeAIResponse } from '../src/utils/plantTransform.js'
 import { buildPlantRagContextServer } from './_lib/buildPlantRagContext-server.js'
 import { deriveToxicityFromSourcesServer } from './_lib/deriveToxicity-server.js'
+import { generateToxicityNarrativeServer } from './_lib/toxicityNarrativeGenerator-server.js'
 import { saveCatalogWithParentServer } from './_lib/taxon-groups-server.js'
 import { saveUserPlantServer, isUidMember } from './_lib/user-plant-server.js'
 
@@ -190,22 +191,42 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     // ── 3. Toxicity backfill (D strict) ──────────────────────
     // Mirror'as client'o fetchDetails post-AI flow'o (žiūr. fetchDetails
     // komentarą "AI = structurer, ne creator. Mūsų DB = authority").
-    // Mini AI narrative call'as praleidžiamas — fallback LT placeholder
-    // iš deriveToxicityServer'io (TODO: pridėti server-side narrative gen).
+    //
+    // Step 6a — port'inta `generateToxicityNarrativeServer`. Catalog dabar
+    // gauna REAL LT narrative iš mūsų DB šaltinių (ne placeholder'į).
     const derivedTox = await deriveToxicityFromSourcesServer(latinName)
     if (derivedTox.hasToxicity) {
+      // Pirma — užrašom structured pavojai iš mūsų DB authority
       details.savybes = {
         ...(details.savybes ?? {}),
         pavojai: derivedTox.pavojai,
         pavojingumas: { ...derivedTox.pavojingumas },
       }
-      details.toxicityNarrativeGenerated = false  // LT placeholder used
       details.toxicitySources = derivedTox.sources
-      console.log('[save-plant] toxicity backfilled from sources', {
-        plantId,
-        sources: derivedTox.sources,
-        severity: derivedTox.pavojingumas.lygis,
+
+      // Antra — mini AI call'as: PFAF/ASPCA EN → LT narrative (~5-15s).
+      const nar = await generateToxicityNarrativeServer({
+        latinName,
+        derivedToxicity: derivedTox,
       })
+      if (nar.detales) {
+        details.savybes.pavojingumas.detales = nar.detales
+        details.toxicityNarrativeGenerated = true
+        console.log('[save-plant] narrative LT generated', {
+          plantId,
+          chars: nar.detales.length,
+          elapsedMs: nar.elapsedMs,
+          sources: derivedTox.sources,
+        })
+      } else {
+        // Fallback į LT placeholder iš deriveToxicityServer (jau LT-friendly)
+        details.toxicityNarrativeGenerated = false
+        console.warn('[save-plant] narrative gen failed, using placeholder', {
+          plantId,
+          elapsedMs: nar.elapsedMs,
+          error: nar.error,
+        })
+      }
     }
 
     // ── 4. Build full plant doc (catalog + user) ────────────

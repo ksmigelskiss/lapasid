@@ -23,38 +23,10 @@
  * dar greitesniam call'ui.
  */
 
-// ── Schema — TIK narrative output, viskas kita iš deterministic source ──
-
-const NARRATIVE_TOOL = {
-  name: 'toxicity_narrative',
-  description: 'Translate plant toxicity data from English sources into Lithuanian consumer warning label.',
-  input_schema: {
-    type: 'object',
-    properties: {
-      detales: {
-        type: 'string',
-        description: 'Lithuanian consumer warning label, 3-5 sentences. Structure: (1) what is toxic (parts, compounds named in source); (2) what happens if exposed (symptoms from source); (3) who is most at risk (children, pets — based on ASPCA/PFAF audience); (4) what to do (Pet Poison Helpline / vet / nedelsiant kreiptis). Warning-label tone, not medical lecture.',
-      },
-    },
-    required: ['detales'],
-  },
-}
-
-// ── Minimal system prompt — translator role ──
-
-const TRANSLATOR_SYSTEM = `You are a translator from English botanical/veterinary sources into Lithuanian consumer warning labels.
-
-YOUR ROLE: STRUCTURING + TRANSLATING the source data we provide. NOT GENERATING from your training.
-
-KEY RULES:
-1. Use ONLY information present in the source text below.
-2. Translate compound names, mechanism descriptions, symptoms verbatim into Lithuanian.
-3. Warning-label tone — consumer protection, NOT medical instruction. Same as "CAUTION: contains lead" labels on commercial products.
-4. If source mentions specific harm (death, paralysis, vomiting) — include in narrative.
-5. Always end with a first-aid pointer: "Pet Poison Helpline" for pets, "Apsinuodijimų kontrolės centras (8 5 236 20 52)" for humans, "kreipkitės į veterinarą / gydytoją".
-6. 3-5 sentences total. Do NOT invent compounds, doses, or effects not in source.
-
-If source data is minimal — output minimal narrative. Don't pad with general botanical knowledge.`
+// Schema + system prompt extract'inti į shared modulį (Variant B Step 6a).
+// Client'as + server'is naudoja tą patį source-of-truth, kad narrative'ai
+// būtų vienodi neatsižvelgiant į flow'ą.
+import { NARRATIVE_TOOL, TRANSLATOR_SYSTEM } from './toxicityNarrativePrompts.js'
 
 /**
  * @param {object} opts
@@ -86,7 +58,7 @@ export async function generateToxicityNarrative({ claudeCall, latinName, derived
   sourceLines.push('')
   sourceLines.push(`Sources used: ${derivedToxicity.sources.join(' + ')}`)
   sourceLines.push('')
-  sourceLines.push('TASK: Generate Lithuanian consumer warning label (3-5 sentences) from above source. Translator role only.')
+  sourceLines.push('TASK: Generate Lithuanian consumer warning label (2-3 sentences) from above source. Translator role only. Step 6a: aiSupplementaryHazard MUST be null.')
 
   const userMessage = sourceLines.join('\n')
 
