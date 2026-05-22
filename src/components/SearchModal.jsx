@@ -17,6 +17,7 @@ import { catalogPreviewUpsert } from '../utils/catalogPreviewUpsert'
 import { buildPlantRagContext } from '../utils/buildPlantRagContext'
 import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../utils/stage2Constants'
 import { TOOL_DETAILS as TOOL_DETAILS_IMPORTED, PLANT_SYSTEM as PLANT_SYSTEM_IMPORTED } from '../utils/plantPromptConfig'
+import { useAuth } from '../hooks/useAuth'
 import { deriveToxicityFromSources, isPavojaiEmpty } from '../utils/deriveToxicity'
 import { diagnosticPromptCheck } from '../utils/diagnosticPromptCheck'
 import { runToxicityIsolatedTest } from '../utils/toxicityIsolatedTest'
@@ -1621,6 +1622,10 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   const host = useDetailHost()
   const useDesktopPanel = isDesktop && !!host?.container
 
+  // Auth context'as Server-side Save flow'ui (Variant B). collectionId
+  // perduodamas SaveButton'ui per `colId` prop'ą.
+  const { collectionId } = useAuth()
+
   useEffect(() => {
     if (!useDesktopPanel || !host) return
     host.open()
@@ -2940,6 +2945,8 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                         onSave={onAddToDashboard}
                         onClose={onClose}
                         onSavingChange={setSavingPhase2}
+                        colId={collectionId}
+                        kategorija="auginama"
                       />
                       {/* Secondary — bone-50 outline (mažesnis vizualinis svoris) */}
                       <SaveButton
@@ -2949,6 +2956,8 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                         onSave={onAddToWishlist}
                         onClose={onClose}
                         onSavingChange={setSavingPhase2}
+                        colId={collectionId}
+                        kategorija="nori"
                       />
                     </>
                   )}
@@ -3198,20 +3207,21 @@ function SavingOverlay() {
 // Optimizacija: jei result jau turi care info (pvz. iš library-first +
 // mergeWithSeries — admin curated tikrai pilna info), praleidžiam Phase 2
 // AI call'ą. Save'as tampa instant'as + sutaupom $0.01 per save.
-function SaveButton({ label, result, className, onSave, onClose, onSavingChange }) {
+function SaveButton({ label, result, className, onSave, onClose, onSavingChange, colId, kategorija }) {
   const [saving, setSaving] = useState(false)
+
+  // Feature flag — server-side Save flow (Variant B). Default OFF, kad
+  // produkcija liktų stabili kol Step 4 testai įvyks. Įjunki per Vercel
+  // env: VITE_USE_SERVERSIDE_SAVE=true (preview deployment) → test'inam.
+  const USE_SERVERSIDE_SAVE = import.meta.env.VITE_USE_SERVERSIDE_SAVE === 'true'
 
   const handleClick = async () => {
     setSaving(true)
     onSavingChange?.(true)
     try {
-      // REHOST hero photo į Firebase Storage — kad nesulūš (Brave/paghat URL'us
-      // randame catalog'e admin'e, gali timeout'inti). Path'as deterministic —
-      // server'is sukurs slug'ą iš latinName per savą catalogSlug() (mirror'as
-      // catalogDocId), todėl Storage path GARANTUOTAI atitinka catalog/{docId}.
-      // Anksčiau čia buvo inline slug derivation su dash separator'ais, kuris
-      // skyrėsi nuo catalogDocId underscore'ų — sukurdavo DVI Storage path'us
-      // tam pačiam augalui (2026-05-21 audit fix).
+      // REHOST hero photo (tas pat tiek client-side, tiek server-side flow'ui).
+      // Server'is rehost'ina tiesiogiai per /api/rehost-image; klient'as siunčia
+      // result'ą su jau rehost'inta image URL.
       let rehostedImage = result.image
       if (result.image && result.latinName) {
         rehostedImage = await rehostExternalImage(result.image, result.latinName, 1200)
@@ -3221,16 +3231,59 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange 
         : result
 
       // Skip Phase 2 jei result jau turi care info (mergeWithSeries iš
-      // library-first). laistymasIntervalas yra patikimas indikatorius — jei
-      // yra, tai reiškia merge'as įvyko ir kiti care field'ai irgi pildomi.
+      // library-first). laistymasIntervalas yra patikimas indikatorius.
+      // Šis path NESIKEIČIA su feature flag'u — klient'as save'ina iškart be AI.
       if (resultWithStorageImage.laistymasIntervalas) {
         onSave(resultWithStorageImage)
         onClose()
         return
       }
-      // Perduodam resultWithStorageImage kaip baseResult — kad fetchDetails
-      // catalog write'as gautų image (rehost'intas Storage URL), aprasymas,
-      // kilme, savybes iš Phase 1 SLIM mode'o.
+
+      // ── SERVER-SIDE SAVE FLOW (Variant B) ──
+      if (USE_SERVERSIDE_SAVE && colId && kategorija) {
+        // Generate user plant'ą iš Phase 1 data (preliminary). Klientas pat'ies
+        // rašo preliminary doc'ą per onSave — UI mato augalą iškart. Server'is
+        // ~30s vėliau overwrite'ina su pilna Phase 2 data per Admin SDK. Vartotojas
+        // mato atnaujinimą per Firestore live sync (onSnapshot).
+        const preliminary = fromAIResult(resultWithStorageImage)
+        const plantId = preliminary.id
+
+        try {
+          const idToken = await auth.currentUser?.getIdToken()
+          if (!idToken) throw new Error('not signed in')
+
+          const r = await fetch('/api/save-plant', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
+            body: JSON.stringify({
+              latinName: resultWithStorageImage.latinName,
+              name:      resultWithStorageImage.name,
+              baseResult: resultWithStorageImage,
+              colId,
+              plantId,
+              kategorija,
+            }),
+          })
+          if (r.ok || r.status === 202) {
+            console.log(`[SaveButton] server-side save scheduled (plantId=${plantId.slice(0, 8)}…)`)
+          } else {
+            const err = await r.json().catch(() => ({}))
+            console.warn('[SaveButton] server-side save failed, will see client preliminary only:', r.status, err)
+          }
+        } catch (e) {
+          console.warn('[SaveButton] /api/save-plant network error:', e?.message)
+          // Fall through — klientas vis tiek save'ins preliminary
+        }
+
+        // Klientas IRGI save'ina preliminary — vartotojas mato augalą iškart
+        // (su Phase 1 data: latinName, name, image, aprasymas, savybes preview).
+        // Server'is overwrite'ins su Phase 2 data ~30s vėliau.
+        onSave(resultWithStorageImage)
+        onClose()
+        return
+      }
+
+      // ── CLIENT-SIDE SAVE FLOW (esamas, default) ──
       const details = await fetchDetails(
         resultWithStorageImage.latinName,
         resultWithStorageImage.name,
