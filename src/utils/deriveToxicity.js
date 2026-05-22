@@ -24,8 +24,6 @@
  *   • general "toxic"/"poisonous" be specific'o → vidutinis (saugesnis default)
  */
 
-import { loadJson } from './dataLoader.js'
-
 let aspcaCache = null
 let pfafCache = null
 let aspcaGenusMapCache = null
@@ -33,7 +31,10 @@ let aspcaGenusMapCache = null
 async function loadAspca() {
   if (aspcaCache) return aspcaCache
   try {
-    aspcaCache = await loadJson('aspca-toxicity.json', import.meta.url)
+    const url = new URL('../../data/aspca-toxicity.json', import.meta.url)
+    const res = await fetch(url)
+    if (!res.ok) return { toxicity: {} }
+    aspcaCache = await res.json()
     return aspcaCache
   } catch {
     return { toxicity: {} }
@@ -43,7 +44,10 @@ async function loadAspca() {
 async function loadPfaf() {
   if (pfafCache) return pfafCache
   try {
-    pfafCache = await loadJson('pfaf.json', import.meta.url)
+    const url = new URL('../../data/pfaf.json', import.meta.url)
+    const res = await fetch(url)
+    if (!res.ok) return { results: {} }
+    pfafCache = await res.json()
     return pfafCache
   } catch {
     return { results: {} }
@@ -53,7 +57,10 @@ async function loadPfaf() {
 async function loadAspcaGenusMap() {
   if (aspcaGenusMapCache) return aspcaGenusMapCache
   try {
-    const data = await loadJson('aspca-genus-map.json', import.meta.url)
+    const url = new URL('../../data/aspca-genus-map.json', import.meta.url)
+    const res = await fetch(url)
+    if (!res.ok) return {}
+    const data = await res.json()
     aspcaGenusMapCache = data.toxicityByGenus ?? {}
     return aspcaGenusMapCache
   } catch {
