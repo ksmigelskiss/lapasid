@@ -2937,7 +2937,14 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange,
       // Server'is dirba savo darbą iki galo (waitUntil).
       if (useServerSide) {
         const plantId = makeId()
-        const resultWithId = { ...resultWithStorageImage, id: plantId }
+        // Step 6c — pažymim plant doc'ą kaip pending. UI rodys loading
+        // skeleton'us care info sekcijose iki server'is baigs.
+        const resultWithId = {
+          ...resultWithStorageImage,
+          id: plantId,
+          enrichmentStatus: 'pending',
+          enrichmentStartedAt: new Date().toISOString(),
+        }
         onSave(resultWithId)
         try {
           const idToken = await auth.currentUser?.getIdToken().catch(() => null)

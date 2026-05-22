@@ -308,6 +308,15 @@ const PlantCard = memo(function PlantCard({
           <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 border-white/60 bg-transparent shadow-sm" />
         )}
 
+        {/* Step 6c — enrichment pending indicator (Variant B server-side save).
+            Subtle pulse dot on image kampe — user'is mato, kad AI dar dirba. */}
+        {plant.enrichmentStatus === 'pending' && (
+          <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded-full bg-forest-700/85 backdrop-blur-sm shadow-sm">
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse" />
+            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-bone font-medium">renkam</span>
+          </div>
+        )}
+
         {/* Top-right pill stack (auginama only) — forecast'ai + badge'ai.
             Du švarūs lygmenys:
               • Overdue → semi-transparent action color + bone contour ring
