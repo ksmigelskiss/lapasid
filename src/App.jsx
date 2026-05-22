@@ -16,6 +16,7 @@ import { DetailHostProvider } from './contexts/DetailHostContext'
 import LoginScreen from './components/LoginScreen'
 import PendingApprovalScreen from './components/PendingApprovalScreen'
 import BrandLoader from './components/brand/BrandLoader'
+import DiscoveryToast from './components/DiscoveryToast'
 import T4Icon from './components/brand/T4Icon'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
 
@@ -98,6 +99,15 @@ export default function App() {
   const [showSearch, setShowSearch]   = useState(false)
   const [searchInitialQuery, setSearchInitialQuery] = useState('')
   const [searchAutoCamera, setSearchAutoCamera] = useState(false)
+  // Step 6i — DiscoveryToast trigger'is. Set'inamas saving callback'e (kai
+  // augalas pridedamas) ir auto-clear'inasi po 3.5s. Skip'inamas fast-path
+  // case'e (catalog hit'as su laistymasIntervalas — joko AI cost'as, joko
+  // discovery).
+  const [discoveryToast, setDiscoveryToast] = useState(null)
+  const showDiscoveryToast = useCallback((message) => {
+    setDiscoveryToast({ message, ts: Date.now() })
+    setTimeout(() => setDiscoveryToast(null), 3500)
+  }, [])
   const [deathTarget, setDeathTarget]       = useState(null)
   const [deleteTarget, setDeleteTarget]     = useState(null)
   const [buyConfirmTarget, setBuyConfirmTarget] = useState(null)
@@ -588,14 +598,14 @@ export default function App() {
                 setShowSearch(false)
                 setSearchInitialQuery('')
                 setSearchAutoCamera(false)
-                // Step 6g — Variant B flag-on path'as nebeatidaro detail
-                // kortelės automatiškai. Anksciau openDetail() iškart parodydavo
-                // tuščia / 'failed' state'ą per dual-write window'ą. Dabar
-                // tiesiog redirect'as į biblioteka tab — user'is mato kortelę
-                // su forest-700 loading overlay'um ir kontroliuoja momentą,
-                // kada atidaro detail.
-                // (Step 6i pridės toast notification reward UX'ui.)
                 setTab('biblioteka')
+                // Step 6i — DiscoveryToast trigger TIK kai augalas ėjo per
+                // Phase 2 enrichment'ą (t.y. nebuvo catalog fast-path).
+                // Fast-path turi laistymasIntervalas iš karto → joko AI
+                // call'as, joko discovery moment'as → joko toast.
+                if (!plant.laistymasIntervalas) {
+                  showDiscoveryToast('Atradai naują rūšį! Tau priklauso +1 AI užklausa')
+                }
               }}
               onAddToDashboard={plant => {
                 const newPlant = addToDashboard(plant)
@@ -603,6 +613,9 @@ export default function App() {
                 setSearchInitialQuery('')
                 setSearchAutoCamera(false)
                 setTab('dashboard')
+                if (!plant.laistymasIntervalas) {
+                  showDiscoveryToast('Atradai naują rūšį! Tau priklauso +1 AI užklausa')
+                }
               }}
               onClose={() => { setShowSearch(false); setSearchInitialQuery(''); setSearchAutoCamera(false) }}
               onViewPlant={plant => {
@@ -658,6 +671,27 @@ export default function App() {
             }}
             onClose={() => setBuyConfirmTarget(null)}
           />
+        )}
+      </AnimatePresence>
+
+      {/* Step 6i — DiscoveryToast po naujo augalo save'o.
+          Pozicija: top-center, fixed virš header'io, pointer-events-none kad
+          netrukdytų user'iui spausti UI. Auto-dismiss po 3.5s per setTimeout. */}
+      <AnimatePresence>
+        {discoveryToast && (
+          <motion.div
+            key="discovery-toast"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="fixed top-0 left-0 right-0 z-[60] pointer-events-none"
+            style={{ paddingTop: 'max(0.5rem, env(safe-area-inset-top))' }}
+          >
+            <div className="max-w-[430px] mx-auto px-4">
+              <DiscoveryToast message={discoveryToast.message} />
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </DetailHostProvider>

@@ -14,17 +14,20 @@
  * USAGE:
  *   const fetched = await previewParallelFetch('Monstera deliciosa', { debug: true })
  *   // → {
- *   //     wikiLt: { extract, url, ms, ok },
  *   //     wikiEn: { extract, url, ms, ok },
  *   //     wikiPhoto: { url, ms, ok },
  *   //     iNatPhoto: { url, taxonId, ms, ok },
  *   //     brave: { images, ms, ok } | null,
  *   //     bestPhoto: { url, source, ms },
+ *   //     bestExtract: { lang: 'en', extract, url, title, needsTranslation: true } | null,
  *   //     totalMs: 1234,
  *   //   }
  *
+ * Step 6h: wikiLt fetch'as DROPP'INTAS. baseResult.aprasymas tarnauja TIK
+ * kaip RAG fuel'as AI Phase 2 translation'ui — LT lookup'as nebereikalingas.
+ * Wiki LT existence check'as (source link UX) lieka per plantNames.js.
+ *
  * DEBUG mode — kiekvienas šaltinis console.log:
- *   [preview-fetch] wikiLt: 234ms ✓ (812 chars)
  *   [preview-fetch] wikiEn: 312ms ✓ (1450 chars)
  *   [preview-fetch] wikiPhoto: 280ms ✓ https://...
  *   [preview-fetch] iNatPhoto: 198ms ✓ (taxon 47218)
@@ -159,8 +162,16 @@ export async function previewParallelFetch(latinName, opts = {}) {
 
   if (debug) console.log(`\n[preview-fetch] ━━━ ${latinName} ━━━`)
 
+  // Step 6h architectural decision: drop wikiLt fetch'as.
+  // baseResult.aprasymas tarnauja TIK kaip RAG fuel'as AI Phase 2 translation'ui
+  // (Step 6f Phase 1 modal'as nebeparodo aprasymo user'iui, server processPlant
+  // unconditional strip baseResult.aprasymas). Tad LT Wiki extract'as
+  // niekur user-visible neturi advantage — AI verčia EN → LT vis tiek.
+  //
+  // Wiki LT EXISTENCE check'as (wikiLtFound flag'as source link UX'ui) lieka
+  // atskirai per plantNames.js fetchPlantNames (lightweight HEAD-style check).
+  // Šitas vykdomas PlantDetail mount'inant, ne Phase 0.5 metu.
   const tasks = {
-    wikiLt:    timed('wikiLt',    fetchWikiExtract(latinName, 'lt'), debug),
     wikiPhoto: timed('wikiPhoto', fetchWikiPhoto(latinName, 'en'),   debug),
     iNatPhoto: timed('iNatPhoto', fetchINatPhoto(latinName),         debug),
   }
@@ -183,24 +194,23 @@ export async function previewParallelFetch(latinName, opts = {}) {
   }
   result.bestPhoto = bestPhoto
 
-  // Best LT description — LT preferred, EN fallback (flagged for later translation)
+  // Best extract — TIK EN (Step 6h architectural decision).
+  // Anksciau bandyta LT preferred + EN fallback — bet LT often miss'ina
+  // dėl Latin name vs LT title indexing problemos, ir AI Phase 2 vis tiek
+  // verčia EN → LT (Step 6h unconditional strip). Drop LT logiką visiškai.
   let bestExtract = null
-  if (result.wikiLt?.ok && result.wikiLt.found) {
-    bestExtract = {
-      lang: 'lt',
-      extract: result.wikiLt.extract,
-      url: result.wikiLt.url,
-      title: result.wikiLt.title,
-    }
-  } else if (result.wikiEn?.ok && result.wikiEn.found) {
+  if (result.wikiEn?.ok && result.wikiEn.found) {
     bestExtract = {
       lang: 'en',
       extract: result.wikiEn.extract,
       url: result.wikiEn.url,
       title: result.wikiEn.title,
-      needsTranslation: true,
+      needsTranslation: true,   // AI Phase 2 visada verčia į LT
     }
   }
+  // TODO (atskira task'a): jei wikiEn nerasta — Brave search fallback'as
+  // (anksciau buvo aptarta). aprasymasLang === null atvejis user'iui
+  // matomas kaip tuščia APIE AUGALĄ sekcija → nedraugiškas pristatymas.
   result.bestExtract = bestExtract
 
   // ── Wikidata plant gate ──────────────────────────────────────
@@ -209,7 +219,7 @@ export async function previewParallelFetch(latinName, opts = {}) {
   // gauti P31 (instance of). Iškviečiamas TIK jei toj pačioj sesijoj reikia
   // gate'o (opt-in flag).
   if (includeWikidataGate) {
-    const wikidataId = result.wikiEn?.wikidataId ?? result.wikiLt?.wikidataId ?? null
+    const wikidataId = result.wikiEn?.wikidataId ?? null
     if (wikidataId) {
       const gateResult = await timed(
         'wikidataGate',
