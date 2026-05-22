@@ -240,6 +240,7 @@ if (typeof window !== 'undefined') {
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
+import PlantSavybesPills from './brand/PlantSavybesPills'
 import { auth } from '../utils/firebase'
 import PaywallSheet from './PaywallSheet'
 import BrandLoader from './brand/BrandLoader'
@@ -2580,14 +2581,15 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
               </div>
             )}
 
-            {/* Profile content — rodom TIK kai result turi realios info.
-                Slim AI mode'as serijos disambiguation atvejais grąžina tik
-                latinName + candidates, BE aprašymo / kilmės / priežiūros —
-                tada info kortelės nereikia, vartotojas vis tiek turi pasirinkti
-                konkretų cultivar'ą iš kandidatų sąrašo viršuje. */}
-            {(result.aprasymas || result.kilme || result.sviesa || result.savybes || result.idomybes?.length > 0) && (
-              <ProfileContent plant={fromAIResult(result)} section="nori" onAction={null} onClose={onClose} className="pt-5 pb-2 space-y-6" />
-            )}
+            {/* SLIM Phase 1 preview — rodom TIK tai, kas TIKRAI lietuviškai
+                ir patikimai. Aprasymas (gali būti EN), care icons (Phase 2
+                ne'pildyta), idomybes (Phase 2 ne'pildyta) — VISKAS ATIDĖTA
+                Phase 2 enrichment'ui, kuris pradedamas paspaudus „Pirkau"
+                arba „Į biblioteką".
+                Slim AI mode'as (serijos disambiguation) — irgi grąžina
+                tik latinName + candidates, šis blokas vis tiek netrukdys
+                (savybes tuščia → nieks nerodysim). */}
+            <Phase1SlimPreview result={result} />
 
             {/* Actions — perduodam result'ą su CURRENTLY VISIBLE photo
                 (atsižvelgiama į photoIdx iš hero gallery cycling'o), kad
@@ -2785,6 +2787,88 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
 }
 
 // ── Full-screen Phase 2 loading overlay ──────────────────────────
+// ── Phase 1 slim preview ─────────────────────────────────────
+// VAIDMUO: search result modal'yje rodom TIK tai, kas TIKRAI lietuviškai ir
+// patikimai (image, names, synonyms — hero block'e ABOVE; toxicity badges
+// iš mūsų ASPCA/PFAF DB; source links Wiki/iNat). Aprasymas, care icons,
+// idomybes etc — VISKAS atidėta Phase 2 enrichment'ui po Save click'o.
+//
+// KODĖL: anksciau ProfileContent'as buvo reuse'inamas tiek Phase 1 modal'yje,
+// tiek post-save library detail card'e. Phase 1 versija rodydavo:
+//   • EN aprasymą (Wiki LT lookup miss'ina exotic plant'ams)
+//   • Default'us care icons iš Phase 0.5 (kurie nėra Phase 2 reliable info)
+//   • Daugiau triukšmo nei naudos
+// Slim versija — user'is matosi tik tai, kuo gali pasitikėti, ir
+// ekonomiškai sprendžia ar pridėti augalą (kuriam tada AI Phase 2
+// surinks pilną info).
+function Phase1SlimPreview({ result }) {
+  if (!result) return null
+
+  const hasToxicity = result.savybes?.pavojai?.length > 0 ||
+                      result.savybes?.pavojingumas?.yra === true
+
+  // Source links — Wiki LT/EN + iNat (jei taxon ID žinomas). Logika mirror'as
+  // PlantDetail.jsx — naudoja direct article URL jei wikiLtFound/wikiEnFound,
+  // arba search URL fallback (Phase 1 metu šitie flagai dažniausiai dar nėra
+  // gauti, todėl gausim search URL — kas yra OK).
+  const fullName = result.latinName ?? result.lotyniskas
+  const genus = fullName?.split(' ')?.[0] ?? fullName
+  const sourceLinks = fullName ? [
+    {
+      label: 'Wikipedia LT',
+      href: result.wikiLtFound
+        ? `https://lt.wikipedia.org/wiki/${encodeURIComponent(fullName)}`
+        : `https://lt.wikipedia.org/w/index.php?search=${encodeURIComponent(genus)}`,
+    },
+    {
+      label: 'Wikipedia EN',
+      href: result.wikiEnFound
+        ? `https://en.wikipedia.org/wiki/${encodeURIComponent(fullName)}`
+        : `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(genus)}`,
+    },
+    ...(result.inatTaxonId
+      ? [{ label: 'iNaturalist', href: `https://www.inaturalist.org/taxa/${result.inatTaxonId}` }]
+      : []),
+  ] : []
+
+  return (
+    <div className="pt-5 pb-2 space-y-4">
+      {/* Toxicity badges — TIK kai mūsų DB turi entry. PlantSavybesPills
+          internally returns null jei nieko nėra → no empty render. */}
+      <PlantSavybesPills plant={result} />
+
+      {/* „Pavojai nenustatyti" call-to-action callout — kai DB tyli, kad
+          user'is nepamanytų „nieks neparodyta = saugu". Action framing'as
+          paskatina paspausti save (kur AI Phase 2 dirba versiją plus
+          aiSupplementaryHazard evaluation'ą). */}
+      {!hasToxicity && (
+        <div className="rounded-2xl bg-bone-300/40 border border-bone-400/40 p-3">
+          <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-500 mb-1.5">
+            ⓘ pavojai
+          </p>
+          <p className="text-[12.5px] text-forest-600 leading-relaxed">
+            Mūsų ASPCA + PFAF bazėse įrašo nėra. Tikslesnė pavojų info — kai
+            leisi man surinkti duomenis (paspausk įdėjimo mygtuką).
+          </p>
+        </div>
+      )}
+
+      {/* Source links — visada matomi (palankiu user'iui patikrinti
+          original šaltinį prieš pridedant) */}
+      {sourceLinks.length > 0 && (
+        <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1">
+          {sourceLinks.map(({ label, href }) => (
+            <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+              className="font-mono text-[10px] uppercase tracking-[0.14em] text-forest-500 hover:text-forest-700 underline underline-offset-2 transition-colors">
+              {label}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function SavingOverlay() {
   const [msgIndex, setMsgIndex] = useState(0)
   const msgs = [
