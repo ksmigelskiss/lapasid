@@ -9,6 +9,16 @@ import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
 import { normalizeAIResponse, makeId } from '../utils/plantTransform'
 import { useAuth } from '../hooks/useAuth'
+
+// Diagnostic: log Variant B flag state once per page load. Padeda patikrinti
+// ar VITE_USE_SERVERSIDE_SAVE tikrai bake'intas į bundle'ą po Vercel'io
+// env'o pakeitimo + redeploy'o. Jei matai `undefined` po env'o pridėjimo —
+// reiškia redeploy NEPASIĖMĖ env'o (greičiausiai "Use existing Build Cache"
+// buvo on). Force redeploy be cache'o.
+if (typeof window !== 'undefined') {
+  console.log('[Variant B flag] VITE_USE_SERVERSIDE_SAVE =',
+    JSON.stringify(import.meta.env.VITE_USE_SERVERSIDE_SAVE))
+}
 import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId } from '../utils/catalog'
 import { getCachedSearchResponse, setCachedSearchResponse } from '../utils/searchResponseCache'
 import { searchStage1 } from '../utils/searchStage1'
@@ -2770,8 +2780,15 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange,
   const { collectionId } = useAuth()
   // Variant B feature flag — set VITE_USE_SERVERSIDE_SAVE=1 Vercel'io env'e
   // įjungti server-side save flow'ą (POST /api/save-plant + waitUntil).
-  // Default OFF — behavior'as ID-INTIŠKAS šios feature'os iki Variant B retake'ui.
-  const useServerSide = import.meta.env.VITE_USE_SERVERSIDE_SAVE === '1'
+  // Default OFF — behavior'as IDENTIŠKAS šios feature'os iki Variant B retake'ui.
+  //
+  // Forgiving truthy check — '1' / 'true' / 'on' / 'yes' visi enable'ina.
+  // Env var skaitomas BUILD TIME (Vite static replace) — jei tik ką pridėjai
+  // Vercel'io env'e, REIKIA force redeploy'inti (Vercel Deployments → ⋮ →
+  // Redeploy → UNCHECK "Use existing Build Cache"). Eilinis refresh'as
+  // nepasiims naujo env'o.
+  const flagRaw = import.meta.env.VITE_USE_SERVERSIDE_SAVE
+  const useServerSide = ['1', 'true', 'on', 'yes'].includes(String(flagRaw).toLowerCase())
 
   const handleClick = async () => {
     setSaving(true)
