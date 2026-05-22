@@ -5,7 +5,7 @@ import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
 import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronLeft, ChevronRight, ChevronDown, Share2, Copy, Check, Link2 } from 'lucide-react'
 import { doc, setDoc } from 'firebase/firestore'
-import { db } from '../utils/firebase'
+import { db, auth } from '../utils/firebase'
 import { ZonePicker } from './ZoneManager'
 import PlantTimeline, { FAB, AddEventSheet } from './PlantTimeline'
 import BarcodeLifeline from './brand/BarcodeLifeline'
@@ -456,6 +456,61 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
   const isEnriching = enrichmentState === 'enriching'
   const isFailed    = enrichmentState === 'failed'
 
+  // Step 6h — retry handler
+  // Re-POST /api/save-plant su esamais plant doc fields. Server'io
+  // idempotency check'as ne'block'ina (phase2CompletedAt nėra failed state'e),
+  // tad processPlant pradeda iš naujo. Sėkmingai → phase2CompletedAt set +
+  // enrichmentError: null overwrite → state pereina į 'enriched'.
+  const [retrying, setRetrying] = useState(false)
+  const handleRetry = async () => {
+    if (retrying) return
+    setRetrying(true)
+    try {
+      const idToken = await auth.currentUser?.getIdToken().catch(() => null)
+      if (!idToken || !collectionId) {
+        console.warn('[retry] missing auth/collectionId')
+        setRetrying(false)
+        return
+      }
+      const res = await fetch('/api/save-plant', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({
+          latinName: plant.lotyniskas,
+          name:      plant.lietuviškas,
+          // baseResult — pass existing plant doc (slim version) kaip resource.
+          // Server'is gauna identity + image + slim savybes + sources kontekstą.
+          baseResult: {
+            latinName: plant.lotyniskas,
+            name: plant.lietuviškas,
+            image: plant.image,
+            aprasymas: plant.aprasymas,
+            aprasymasLang: plant.aprasymasLang,
+            kilme: plant.kilme,
+            savybes: plant.savybes,
+            sources: plant.sources,
+          },
+          colId:     collectionId,
+          plantId:   plant.id,
+          kategorija: plant.kategorija ?? 'auginama',
+        }),
+      })
+      if (!res.ok) {
+        console.warn('[retry] HTTP', res.status)
+      } else {
+        console.log('[retry] dispatched — listener updatins UI po server completion')
+        // Listener'is auto-updates kortelę kai phase2CompletedAt patenka per merge:true
+      }
+    } catch (e) {
+      console.warn('[retry] failed:', e?.message)
+    } finally {
+      setRetrying(false)
+    }
+  }
+
   return (
     <div className={className ?? "px-5 pt-4 pb-10 space-y-6"}>
 
@@ -477,14 +532,29 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
         </div>
       )}
       {isFailed && (
-        <div className="rounded-2xl bg-terracotta-50 border border-terracotta-200/60 p-3">
-          <p className="font-mono text-[10px] uppercase tracking-[0.16em] font-medium text-terracotta-700">
-            ⚠ nepavyko surinkti
-          </p>
-          <p className="text-[12px] text-forest-500 mt-1.5 leading-relaxed">
-            {getEnrichmentFailureReason(plant)}. Šis augalas išsisaugojo su pagrindinė info, bet AI priežiūros surinkti neišėjo.
-          </p>
-          {/* Step 6h prijungs retry button'ą čia */}
+        <div className="rounded-2xl bg-terracotta-50 border border-terracotta-200/60 p-3 space-y-3">
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] font-medium text-terracotta-700">
+              ⚠ nepavyko surinkti
+            </p>
+            <p className="text-[12px] text-forest-500 mt-1.5 leading-relaxed">
+              {getEnrichmentFailureReason(plant)}. Šis augalas išsisaugojo su pagrindine info, bet AI priežiūros surinkti neišėjo.
+            </p>
+          </div>
+          <button
+            onClick={handleRetry}
+            disabled={retrying}
+            className="w-full h-10 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 disabled:opacity-60 transition-colors flex items-center justify-center gap-2"
+          >
+            {retrying ? (
+              <>
+                <BrandLoader inline size={16} />
+                <span>bandom dar kartą…</span>
+              </>
+            ) : (
+              <span>Bandyti dar kartą</span>
+            )}
+          </button>
         </div>
       )}
 

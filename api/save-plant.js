@@ -279,6 +279,22 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     //   3. details (Phase 2 care info override'ina)
     const fullPlant = {
       ...(baseResult ?? {}),
+      // ARCHITECTURE — AI yra AUTHORITATIVE aprasymas šaltinis.
+      // Po Step 6f Phase 1 modal'as nebeparodo aprasymo user'iui — jis
+      // tarnauja TIK kaip RAG fuel'as AI Phase 2 translation'ui. Tad
+      // baseResult.aprasymas (Wiki extract'as LT ar EN) NIEKADA neturi
+      // pakliūti į plant doc'ą per spread. Unconditional strip → AI's
+      // LT iš details wins. Jei AI skip'ino field'ą — null (geriau nei
+      // misleading EN passthrough).
+      //
+      // Šis sprendimas eliminuoja:
+      //   • Wikidata QID lookup root-cause complex refactor'ą (#23 closed)
+      //   • Sąlyginį „if aprasymasLang === 'en'" check'ą
+      //   • LT vs EN preview branching concern'us catalog write'e
+      //
+      // Wiki LT lookup Phase 0.5 metu lieka — naudinga UI source links
+      // („Wikipedia LT" link'as direct article URL'u jei wikiLtFound).
+      aprasymas: null,
       lotyniskas: latinName,
       lietuviškas: name,
       ...details,
