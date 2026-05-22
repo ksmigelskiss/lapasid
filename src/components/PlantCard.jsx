@@ -6,6 +6,8 @@ import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
 import PlantImage from './brand/PlantImage'
+import BrandLoader from './brand/BrandLoader'
+import { getPlantEnrichmentState } from '../utils/plantState'
 
 // Designer'io PlantPhoto gradient pool (paimta iš /tmp/geliai-design styles.css `.pp-*`).
 // Hash from plant.id deterministiškai parinka vieną iš 12 gradient'ų.
@@ -254,12 +256,23 @@ const PlantCard = memo(function PlantCard({
                     : needsAction             ? ''          // full opacity
                     : 'opacity-65'                          // neutral, dimmed
 
-  const handleClick = () => { if (didLongPress.current) return; careMode ? onToggle?.() : onTap?.() }
+  // Variant B Step 6g — enrichment state'as iš derived signal'ų
+  const enrichmentState = getPlantEnrichmentState(plant)
+  const isEnriching = enrichmentState === 'enriching'
+  const isFailed    = enrichmentState === 'failed'
+  // Card NON-CLICKABLE pending state'e (overlay'aus instrukcija — palaukti).
+  // Failed state'e — clickable, kad user'is galėtų atidaryti detail card'ą
+  // ir paspausti „Bandyti dar kartą" (PlantDetail handle'ina retry button'ą).
+  const handleClick = () => {
+    if (didLongPress.current) return
+    if (isEnriching) return  // block tap during enrichment
+    careMode ? onToggle?.() : onTap?.()
+  }
 
   return (
     <>
     <div
-      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card transition-all duration-200 cursor-pointer active:scale-[0.97] lg:hover:-translate-y-0.5 lg:hover:shadow-ios-lg ${careOpacity}`}
+      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card transition-all duration-200 ${isEnriching ? 'cursor-wait' : 'cursor-pointer active:scale-[0.97] lg:hover:-translate-y-0.5 lg:hover:shadow-ios-lg'} ${careOpacity}`}
       /* Vienas style prop'as su conditional merge'u — anksčiau buvo du
          atskiri style props'ai (contentVisibility ir careMode style),
          React laikė tik paskutinį, todėl contentVisibility off-screen
@@ -306,6 +319,34 @@ const PlantCard = memo(function PlantCard({
         {/* Status dot (non-auginama only) */}
         {section !== 'auginama' && (
           <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full border-2 border-white/60 bg-transparent shadow-sm" />
+        )}
+
+        {/* Variant B Step 6g — enrichment loading overlay (forest-700
+            signature, BrandLoader centered, "renkam info..." caption).
+            Non-clickable card during this state (handleClick early-returns).
+            Note: overlay'us TIK ant image area, kad title/lotyniskas matomi
+            ir user'is žinotų KOKĮ augalą sistema renka. */}
+        {isEnriching && (
+          <div className="absolute inset-0 z-[3] bg-forest-700/82 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2 pointer-events-none">
+            <BrandLoader inline size={36} />
+            <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] font-medium text-bone/90">
+              renkam info…
+            </span>
+          </div>
+        )}
+
+        {/* Failed state — terracotta overlay'us, klickable kortelė kad
+            user'is atidarytų detail su retry button'u (Step 6h).
+            Naudoja terracotta-700 signature failure color. */}
+        {isFailed && (
+          <div className="absolute inset-0 z-[3] bg-terracotta-700/80 backdrop-blur-[2px] flex flex-col items-center justify-center gap-1.5">
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] font-medium text-bone">
+              ⚠ ne pavyko
+            </span>
+            <span className="text-[10.5px] text-bone/85 italic">
+              atidaryk — bandysim dar kartą
+            </span>
+          </div>
         )}
 
         {/* Top-right pill stack (auginama only) — forecast'ai + badge'ai.

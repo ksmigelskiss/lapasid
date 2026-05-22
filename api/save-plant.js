@@ -265,6 +265,14 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
       ragSources: rag.sources,
       ragConfidence: rag.confidence,
       schemaVersion: 2,
+      // Variant E signals — explicit completion marker. Klientas naudoja
+      // šitą lauk'ą kaip primary „enrichment baigtas" signalą per
+      // getPlantEnrichmentState helper'į. Eliminuoja false-positive'ą jei
+      // laistymasIntervalas dėl AI klaidos lieka tuščias.
+      phase2CompletedAt: new Date().toISOString(),
+      // Reset error field jei prieš tai buvo retry — explicit value (null
+      // Firestore'e tinka, ne dingsta dėl merge:true semantics).
+      enrichmentError: null,
     }
 
     // verificationStatus upgrade (mirror client logikos)
@@ -301,5 +309,25 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
       error: err?.message,
       stack: err?.stack?.split('\n').slice(0, 6).join('\n'),
     })
+    // Variant E — explicit error signal į user plant doc'ą per merge:true.
+    // Klientas naudoja šitą field'ą show'inti „failed" state'ą su retry
+    // button'u. Failsafe — jei Vercel function hard-crash'inasi PRIEŠ
+    // šitą write'ą (e.g. OOM), klientas vis tiek pereis į 'failed' state'ą
+    // per timing fallback'ą (data_prideta + 90s).
+    try {
+      const { adminFirestore } = await import('./_lib/firestore-admin.js')
+      await adminFirestore()
+        .collection('collections').doc(colId)
+        .collection('plants').doc(plantId)
+        .set({
+          enrichmentError: {
+            reason: err?.message ?? 'unknown error',
+            at: new Date().toISOString(),
+          },
+        }, { merge: true })
+      console.log('[save-plant] enrichmentError written for retry UI', plantId)
+    } catch (writeErr) {
+      console.error('[save-plant] failed to write enrichmentError:', writeErr?.message)
+    }
   }
 }

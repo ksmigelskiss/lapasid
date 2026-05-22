@@ -15,6 +15,7 @@ import BrandLoader from './brand/BrandLoader'
 import { refreshPlantFromAI } from '../utils/plantAI'
 import { TOOL_PREVIEW, TOOL_DETAILS, PLANT_SYSTEM } from './SearchModal'
 import { ensureArray } from '../utils/plantTransform'
+import { getPlantEnrichmentState, getEnrichmentFailureReason } from '../utils/plantState'
 import { getWateringForecast } from '../utils/wateringForecast'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
@@ -428,8 +429,42 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
   const enSyns = plant.englishNames ?? []
   const hasSyns = ltSyns.length > 0 || enSyns.length > 0
 
+  // Variant B Step 6g — enrichment state'as (Variant E signals)
+  const enrichmentState = getPlantEnrichmentState(plant)
+  const isEnriching = enrichmentState === 'enriching'
+  const isFailed    = enrichmentState === 'failed'
+
   return (
     <div className={className ?? "px-5 pt-4 pb-10 space-y-6"}>
+
+      {/* Step 6g — enrichment loading / failed banner.
+          'enriching' — forest green, BrandLoader, normal pending copy.
+          'failed'    — terracotta, error reason, retry CTA (Step 6h
+                        prijungs retry handler'į). */}
+      {isEnriching && (
+        <div className="rounded-2xl bg-forest-50 border border-forest-200/60 p-3 flex items-start gap-3">
+          <div className="flex-shrink-0 mt-0.5"><BrandLoader inline size={20} /></div>
+          <div className="flex-1">
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] font-medium text-forest-700">
+              ⌛ renkam priežiūros informaciją…
+            </p>
+            <p className="text-[12px] text-forest-500 mt-1.5 leading-relaxed">
+              AI dirba foniniame režime (apie 10-30 sek). Gali uždaryti — grįžęs rasi pilną informaciją.
+            </p>
+          </div>
+        </div>
+      )}
+      {isFailed && (
+        <div className="rounded-2xl bg-terracotta-50 border border-terracotta-200/60 p-3">
+          <p className="font-mono text-[10px] uppercase tracking-[0.16em] font-medium text-terracotta-700">
+            ⚠ nepavyko surinkti
+          </p>
+          <p className="text-[12px] text-forest-500 mt-1.5 leading-relaxed">
+            {getEnrichmentFailureReason(plant)}. Šis augalas išsisaugojo su pagrindinė info, bet AI priežiūros surinkti neišėjo.
+          </p>
+          {/* Step 6h prijungs retry button'ą čia */}
+        </div>
+      )}
 
       {/* ── Title block — Bricolage 600 + Latin + synonyms inline. Scroll'inasi
             su content (vietoj static hero block — taupo scroll erdvę). ── */}
