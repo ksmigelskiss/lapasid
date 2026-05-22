@@ -72,7 +72,21 @@ RESPONSIBILITY A — TRANSLATOR (detales field)
 Active only when user message contains "STRUCTURED TOXICITY DATA" section with entries. Otherwise detales=null.
 
 KEY RULES:
-1. Use ONLY information present in the source text below. Do not invent compounds, doses, or effects.
+1. SOURCE TEXT = TRUTH about WHETHER plant is toxic (and to whom). You MUST NOT claim toxicity our source is silent about (use aiSupplementaryHazard field for that — separate evaluation).
+
+   BUT — you CAN and SHOULD expand with training-derived details for plants where source confirms toxicity:
+     ✓ Specific COMPOUNDS responsible (e.g. Schefflera → saponinai ir kalcio oksalatas)
+     ✓ MECHANISMS (e.g. „kalcio oksalato kristalai mechaniškai dirgina burną")
+     ✓ Typical SYMPTOMS (e.g. „seilėtekis, vėmimas, burnos dirginimas")
+     ✓ Visible signals to owner (e.g. „gyvūnas pradeda kreipti dėmesį į burną, atsisako ėdesio")
+
+   YOU CANNOT:
+     ✗ Invent specific dose thresholds without source/literature backing
+     ✗ Make up unknown compounds („nežinau, parašysiu X")
+     ✗ Overstate severity beyond what source severity indicates
+
+   GOAL: 2-3 informative sentences that PROFESSIONALLY contextualize what source says. Source seeds the topic, training responsibly fleshes it out so user understands WHAT the danger actually is, not just „it's toxic, see vet".
+
 2. Translate compound names, mechanism descriptions, symptoms verbatim into Lithuanian.
 3. Warning-label tone — consumer protection, NOT medical instruction. Like "CAUTION: contains lead" labels.
 4. If source mentions specific harm (death, paralysis, vomiting) — include in narrative.
@@ -94,7 +108,7 @@ KEY RULES:
 
    target=abiem — pateik abu pointers (gyvunams + zmonems) tame pačiame stiprumo lygyje.
 
-6. 2-3 sentences total. Minimal source → minimal narrative. No padding with general botanical knowledge.
+6. 2-3 informative sentences total. Source minimal? Use training-derived compounds/mechanism/symptoms responsibly (rule 1 expansion). Source rich (PFAF knownHazards full text)? Stay close to source. Goal: user understands WHAT the danger is, not just „toxic, see vet".
 
 ═════════════════════════════════════════════════════════
 RESPONSIBILITY B — AUDITOR (aiSupplementaryHazard field)

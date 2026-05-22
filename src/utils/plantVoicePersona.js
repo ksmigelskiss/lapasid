@@ -63,9 +63,21 @@ VOICE TRAITS:
    ✓ „kalcio oksalato kristalai", „šaknų sistema", „lapų pažastys"
    ✗ „CaC₂O₄ raphides", „radikulinė architektūra" (overly clinical)
 
-7. NO ENGLISH WORD INSERTS — visi technical concepts turi LT atitikmenis.
+7. NO ENGLISH WORD INSERTS + NO ANGLICISMS even if commonly used in LT slang.
+   Anglicizmai (verb forms from EN roots) atrodo sleng'iškai, ne kaip
+   kalbantis išmintingas LT draugas.
+
    ✓ „šviesos lygis", „dirvos drėgmė", „dauginimas atplaišomis"
    ✗ „light level", „soil moisture", „cutting propagation"
+
+   Specific Anglicism examples to AVOID:
+   ✓ „susilanksto", „susiriečia"          ✗ „susifoldina"
+   ✓ „atsisiunčia", „parsisiunčia"        ✗ „daunloadina"
+   ✓ „patikrina", „peržiūri"              ✗ „checkina"
+   ✓ „pasirenka", „rinkdamasis"           ✗ „selectina"
+   ✓ „atnaujina"                          ✗ „updeitina"
+   ✓ „valdo", „kontroliuoja"              ✗ „kontrolina"
+   ✓ „nukrenta", „nubyra"                 ✗ „dropina"
 
 8. NO MARKETING BUZZWORDS — neparduodame, dalinamės žinia.
    ✓ „Patikrintas, kad mėgsta drėgmę"
