@@ -670,6 +670,13 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
       {/* ── Description + external links ── */}
       {plant.aprasymas && (
         <Section title="Apie augalą">
+          {/* Step 6k — honest provenance marker. UI'us nemaskuoja AI synthesis
+              kaip Wiki content. Subtle mono pill po antraštės. */}
+          {plant.aprasymasSource && (
+            <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-400 mb-2 -mt-1">
+              {plant.aprasymasSource === 'wikipedia-en' ? 'ⓘ Wikipedia + AI vertimas' : 'ⓘ AI sintezė'}
+            </p>
+          )}
           <p className="text-sm text-forest-700 leading-relaxed">{plant.aprasymas}</p>
           {plant.lotyniskas && (
             <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">

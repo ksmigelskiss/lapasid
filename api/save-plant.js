@@ -277,6 +277,13 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     //   1. baseResult (Phase 1 SLIM: aprasymas, kilme, savybes, image, sources)
     //   2. lotyniskas/lietuviškas (canonical)
     //   3. details (Phase 2 care info override'ina)
+    // Step 6k — track aprasymas source for honest UX provenance.
+    // Wiki EN extract'as → AI verčia/struktūrizuoja = „wikipedia-en"
+    // baseResult tyli → AI sintezuoja iš training'o = „ai-only"
+    // Vartotojas matosi šitą per ⓘ badge'ą PlantDetail APIE AUGALĄ sekcijoje.
+    const hasWikiSource = !!(baseResult?.aprasymas && baseResult?.aprasymasLang === 'en')
+    const aprasymasSource = hasWikiSource ? 'wikipedia-en' : 'ai-only'
+
     const fullPlant = {
       ...(baseResult ?? {}),
       // ARCHITECTURE — AI yra AUTHORITATIVE aprasymas šaltinis.
@@ -310,6 +317,8 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
       // Reset error field jei prieš tai buvo retry — explicit value (null
       // Firestore'e tinka, ne dingsta dėl merge:true semantics).
       enrichmentError: null,
+      // Step 6k — honest provenance marker
+      aprasymasSource,
     }
 
     // verificationStatus upgrade (mirror client logikos)
