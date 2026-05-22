@@ -1,0 +1,180 @@
+/**
+ * Server-side deriveToxicity — MIRROR of src/utils/deriveToxicity.js.
+ *
+ * VAIDMUO: Phase 2 post-AI backfill — jei AI grąžino tuščią pavojai[]
+ * BET mūsų sources (ASPCA + PFAF) turi toxicity → automatic backfill.
+ *
+ * BEHAVIORAL CONTRACT — IDENTIŠKAS client'o variantui:
+ *   • derivePfafSeverity() — TIKSLIAI tas pats heuristic'as
+ *   • deriveToxicityFromSources() — same return shape, same priority
+ *     (ASPCA verified veterinary > PFAF botanical hazards text)
+ *   • isPavojaiEmpty() — identical
+ *
+ * KAS SKIRIASI nuo client'o:
+ *   • loadJson() iš dataLoader-server.js vietoj fetch'o
+ *   • Cache'as gyvena module scope'e (Fluid Compute Function instance'as
+ *     persi-naudoja tarp request'ų)
+ */
+import { loadJson } from './dataLoader-server.js'
+
+async function loadAspca() {
+  try {
+    return await loadJson('aspca-toxicity.json')
+  } catch { return { toxicity: {} } }
+}
+
+async function loadPfaf() {
+  try {
+    return await loadJson('pfaf.json')
+  } catch { return { results: {} } }
+}
+
+async function loadAspcaGenusMap() {
+  try {
+    const data = await loadJson('aspca-genus-map.json')
+    return data.toxicityByGenus ?? {}
+  } catch { return {} }
+}
+
+// ── Severity heuristic iš PFAF knownHazards textą ─────────────
+// MIRROR src/utils/deriveToxicity.js derivePfafSeverity() — IDENTIŠKAS.
+
+function derivePfafSeverity(hazardsText) {
+  if (!hazardsText || typeof hazardsText !== 'string') return null
+  const text = hazardsText.toLowerCase()
+
+  // STIPRUS — life-threatening evidence
+  if (/\b(death|fatal|lethal|deadly|kills|fatality)\b/.test(text)) {
+    return 'stiprus'
+  }
+  if (/\b(highly toxic|extremely toxic|very toxic|highly poisonous|extremely poisonous)\b/.test(text)
+      && /\b(nerve|nervous|paraly)/.test(text)) {
+    return 'stiprus'
+  }
+  if (/\b(cardiac|heart)\b/.test(text)
+      && /\b(arrest|failure|stop|disturbance)/.test(text)) {
+    return 'stiprus'
+  }
+  if (/\b(nerve centres?|central nervous)/.test(text)
+      && /\b(paraly[sz]|paralys)/.test(text)) {
+    return 'stiprus'
+  }
+
+  // VIDUTINIS — significant symptoms
+  if (/\b(paraly[sz]|vomit|nause|burning|diarrho?e|severe|cardiac|nerve|seizur|convuls)\b/.test(text)) {
+    return 'vidutinis'
+  }
+  // SILPNAS — mild reactions
+  if (/\b(irritat|rash|skin contact|mild|topical)\b/.test(text)) {
+    return 'silpnas'
+  }
+  // Generic toxic/poison without specific severity → vidutinis (safer default)
+  if (/\b(toxic|poison|hazard|harmful)\b/.test(text)) {
+    return 'vidutinis'
+  }
+  return null
+}
+
+/**
+ * MIRROR src/utils/deriveToxicity.js deriveToxicityFromSources().
+ * Grąžina structured toxicity info iš ASPCA + PFAF.
+ *
+ * @param {string} latinName
+ * @returns {Promise<{ hasToxicity, pavojai, pavojingumas, sources }>}
+ */
+export async function deriveToxicityFromSourcesServer(latinName) {
+  const empty = {
+    hasToxicity: false,
+    pavojai: [],
+    pavojingumas: { yra: false, lygis: null, detales: '' },
+    sources: [],
+  }
+  if (!latinName) return empty
+
+  const result = {
+    hasToxicity: false,
+    pavojai: [],
+    pavojingumas: { yra: false, lygis: null, detales: '' },
+    sources: [],
+  }
+
+  const genus = latinName.trim().split(/\s+/)[0]
+  const genusKey = genus.toUpperCase()
+
+  // ── 1. ASPCA via genus map ───────────────────────────────────
+  const aspcaMap = await loadAspcaGenusMap()
+  const aspcaEntry = aspcaMap[genusKey]
+
+  if (aspcaEntry) {
+    result.hasToxicity = true
+    result.sources.push('aspca')
+
+    const severity = aspcaEntry.confidence === 'high' ? 'vidutinis' : 'silpnas'
+    const targets = aspcaEntry.toxicTo ?? []
+
+    if (targets.length > 0) {
+      result.pavojai.push({
+        tipas: 'toksiskas',
+        target: 'gyvunams',
+        severity,
+        detales: `${targets.join(', ')} (ASPCA)`,
+      })
+    }
+
+    result.pavojingumas = {
+      yra: true,
+      lygis: severity,
+      detales: `ASPCA: toksiškas ${targets.join(', ')}. Konsultuokitės su veterinaru. Šaltinis: ${aspcaEntry.matchedEntries?.[0]?.detailUrl ?? 'https://www.aspca.org/pet-care/animal-poison-control'}`,
+    }
+  }
+
+  // ── 2. PFAF knownHazards (genus or species level) ─────────
+  const pfaf = await loadPfaf()
+  const pfafEntry = pfaf.results?.[latinName] ?? pfaf.results?.[genus]
+
+  if (pfafEntry?.knownHazards) {
+    const severity = derivePfafSeverity(pfafEntry.knownHazards)
+    if (severity) {
+      result.hasToxicity = true
+      if (!result.sources.includes('pfaf')) result.sources.push('pfaf')
+
+      const alreadyHasHuman = result.pavojai.some(
+        p => p.tipas === 'toksiskas' && p.target === 'zmonems'
+      )
+      if (!alreadyHasHuman) {
+        result.pavojai.push({
+          tipas: 'toksiskas',
+          target: 'zmonems',
+          severity,
+          detales: 'PFAF botaninis šaltinis nurodo toksiškumą',
+        })
+      }
+
+      const ltPlaceholder =
+        severity === 'stiprus' ? 'Stipriai toksiškas. Kreipkitės į veterinarą ar Pet Poison Helpline nelaimei.'
+      : severity === 'vidutinis' ? 'Toksiškas augalas — venkite nurijimo ir kontakto su sultimis. Kreipkitės į veterinarą jei įvyko apsinuodijimas.'
+      : 'Augalas gali sukelti dirginimą — venkite kontakto su sultimis.'
+
+      const pfafCitation = `\n\nŠaltinis (PFAF, anglų k.): "${pfafEntry.knownHazards.slice(0, 300)}${pfafEntry.knownHazards.length > 300 ? '...' : ''}"`
+
+      if (!result.pavojingumas.yra) {
+        result.pavojingumas = {
+          yra: true,
+          lygis: severity,
+          detales: ltPlaceholder + pfafCitation,
+        }
+      } else {
+        result.pavojingumas.detales += pfafCitation
+      }
+    }
+  }
+
+  return result
+}
+
+/** MIRROR src/utils/deriveToxicity.js isPavojaiEmpty(). */
+export function isPavojaiEmptyServer(savybes) {
+  if (!savybes || typeof savybes !== 'object') return true
+  const pavojai = Array.isArray(savybes.pavojai) ? savybes.pavojai : []
+  return pavojai.length === 0
+}
