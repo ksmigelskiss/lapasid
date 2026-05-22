@@ -37,8 +37,6 @@
  *   }
  */
 
-import { loadJson } from './dataLoader.js'
-
 let ltCache = null
 let normalizedReverseMap = null  // normalized_lt → latin
 let loadPromise = null
@@ -47,7 +45,10 @@ async function loadLtNames() {
   if (ltCache) return ltCache
   if (loadPromise) return loadPromise
   loadPromise = (async () => {
-    ltCache = await loadJson('lt-names.json', import.meta.url)
+    const url = new URL('../../data/lt-names.json', import.meta.url)
+    const res = await fetch(url)
+    if (!res.ok) throw new Error(`Failed to load lt-names.json: HTTP ${res.status}`)
+    ltCache = await res.json()
     return ltCache
   })()
   return loadPromise

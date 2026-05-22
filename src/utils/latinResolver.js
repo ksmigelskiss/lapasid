@@ -27,8 +27,6 @@
  *   }
  */
 
-import { loadJson } from './dataLoader.js'
-
 let cache = null
 let loadPromise = null
 
@@ -36,7 +34,10 @@ async function loadReverseMap() {
   if (cache) return cache
   if (loadPromise) return loadPromise
   loadPromise = (async () => {
-    cache = await loadJson('latin-synonyms-reverse.json', import.meta.url)
+    const url = new URL('../../data/latin-synonyms-reverse.json', import.meta.url)
+    const res = await fetch(url)
+    if (!res.ok) throw new Error(`Failed to load latin-synonyms-reverse.json: HTTP ${res.status}`)
+    cache = await res.json()
     return cache
   })()
   return loadPromise

@@ -39,25 +39,24 @@
  *   }
  */
 
-import { loadJson } from './dataLoader.js'
-
 let preDbCache = null
 let loadPromise = null
 
 /**
  * Lazy-load data/pre-db.json. Called automatically by lookup functions.
  * Returns the parsed JSON object. Cached after first call.
- *
- * Isomorphic — naudoja loadJson() (browser fetch arba Node fs.readFile)
- * priklausomai nuo environment'o. Server-side save (api/save-plant.js)
- * reikalauja Node path.
  */
 async function loadPreDb() {
   if (preDbCache) return preDbCache
   if (loadPromise) return loadPromise
 
   loadPromise = (async () => {
-    const data = await loadJson('pre-db.json', import.meta.url)
+    // Vite/webpack will bundle this as static asset
+    // Path is relative to project root via ?url import
+    const url = new URL('../../data/pre-db.json', import.meta.url)
+    const res = await fetch(url)
+    if (!res.ok) throw new Error(`Failed to load pre-db.json: HTTP ${res.status}`)
+    const data = await res.json()
     preDbCache = data
     return data
   })()
