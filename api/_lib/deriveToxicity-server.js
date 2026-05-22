@@ -75,6 +75,26 @@ function derivePfafSeverity(hazardsText) {
   return null
 }
 
+// ── PFAF tipas heuristic (Step 6d) — MIRROR src/utils/deriveToxicity.js ─
+// Priority: severity first, then text pattern (systemic > irritation > allergy).
+function derivePfafTipas(hazardsText, severity) {
+  if (severity === 'stiprus') return 'toksiskas'
+  if (severity === 'silpnas') return 'dirginantis'
+  if (!hazardsText || typeof hazardsText !== 'string') return 'toksiskas'
+  const text = hazardsText.toLowerCase()
+  // No trailing \b — kad "irritation"/"paralyzed"/"allergic" matched'intų
+  if (/\b(paraly[sz]|vomit|naus|cardiac arrest|cardiac failure|seizur|convuls|death|fatal|lethal|deadly|kill)/.test(text)) {
+    return 'toksiskas'
+  }
+  if (/\b(irritat|rash|topical|skin contact)/.test(text)) {
+    return 'dirginantis'
+  }
+  if (/\b(allerg|hypersens|anaphyla)/.test(text)) {
+    return 'alergiskas'
+  }
+  return 'toksiskas'
+}
+
 /**
  * MIRROR src/utils/deriveToxicity.js deriveToxicityFromSources().
  * Grąžina structured toxicity info iš ASPCA + PFAF.
@@ -138,15 +158,20 @@ export async function deriveToxicityFromSourcesServer(latinName) {
       result.hasToxicity = true
       if (!result.sources.includes('pfaf')) result.sources.push('pfaf')
 
-      const alreadyHasHuman = result.pavojai.some(
-        p => p.tipas === 'toksiskas' && p.target === 'zmonems'
-      )
+      // Step 6d — tipas iš severity + hazardsText (Monstera-style irritation
+      // gauna 'dirginantis', Aconitum-style systemic lieka 'toksiskas')
+      const tipas = derivePfafTipas(pfafEntry.knownHazards, severity)
+      const alreadyHasHuman = result.pavojai.some(p => p.target === 'zmonems')
       if (!alreadyHasHuman) {
         result.pavojai.push({
-          tipas: 'toksiskas',
+          tipas,
           target: 'zmonems',
           severity,
-          detales: 'PFAF botaninis šaltinis nurodo toksiškumą',
+          detales: tipas === 'dirginantis'
+            ? 'PFAF: dirginantis (vietinis kontaktas, ne sisteminis)'
+            : tipas === 'alergiskas'
+            ? 'PFAF: alergiškas (jautrumo reakcija)'
+            : 'PFAF botaninis šaltinis nurodo toksiškumą',
         })
       }
 

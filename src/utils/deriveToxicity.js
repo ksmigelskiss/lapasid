@@ -115,6 +115,43 @@ function derivePfafSeverity(hazardsText) {
   return null
 }
 
+// ── PFAF tipas heuristic (post user-test #14, refined) ───────
+//
+// Anksčiau visi PFAF entries gaudavo tipas='toksiskas' (hardcoded). User'is
+// pastebėjo, kad Monstera rodė „TOKSIŠKA žmonėms" badge'ą — orange-alarm
+// styling'as houseplant'e, kurio realybė yra MOUTH IRRITATION nuo kalcio
+// oksalato (ne sisteminis nuodingumas). Schema enum'as turi 3 reikšmes:
+// toksiskas | alergiskas | dirginantis — naudokim tinkamą pagal hazardsText.
+//
+// PRIORITY (post v2 fix — Monstera „skin irritation OR allergic reaction"
+// text trigger'ino allergic check pirma vietoje, klaidingai grąžino
+// alergiskas. Reorder'inta: severity sprendimas pirma, tada text pattern):
+//
+// 1. severity='stiprus' (death/paralys/highly toxic) → toksiskas
+//    (life-threatening visada = systemic poisoning)
+// 2. severity='silpnas' (mild/irritat/rash/topical) → dirginantis
+//    (local irritation only)
+// 3. severity='vidutinis' — mixed bag, naudoti text pattern priority:
+//    systemic > irritation > allergy > default toksiskas
+function derivePfafTipas(hazardsText, severity) {
+  if (severity === 'stiprus') return 'toksiskas'
+  if (severity === 'silpnas') return 'dirginantis'
+  if (!hazardsText || typeof hazardsText !== 'string') return 'toksiskas'
+  const text = hazardsText.toLowerCase()
+  // No trailing \b — kad "irritation", "paralyzed", "allergic" matched'intų
+  // su prefix match'u (\b prieš + prefix + bet kokia uodega).
+  if (/\b(paraly[sz]|vomit|naus|cardiac arrest|cardiac failure|seizur|convuls|death|fatal|lethal|deadly|kill)/.test(text)) {
+    return 'toksiskas'
+  }
+  if (/\b(irritat|rash|topical|skin contact)/.test(text)) {
+    return 'dirginantis'
+  }
+  if (/\b(allerg|hypersens|anaphyla)/.test(text)) {
+    return 'alergiskas'
+  }
+  return 'toksiskas'
+}
+
 // ── Main: derive toxicity from all sources ───────────────────
 
 /**
@@ -191,18 +228,28 @@ export async function deriveToxicityFromSources(latinName) {
       result.hasToxicity = true
       if (!result.sources.includes('pfaf')) result.sources.push('pfaf')
 
+      // Tipas iš severity + hazardsText (6d refinement) — Monstera-style
+      // irritation gauna 'dirginantis', Aconitum-style systemic lieka
+      // 'toksiskas'.
+      const tipas = derivePfafTipas(pfafEntry.knownHazards, severity)
+
       // Pridėti pavojai entry per žmones (PFAF kontekstas dažniausiai apie žmones,
       // ne pet'us — ASPCA tvarko gyvūnus, PFAF tvarko bendrą toxicity).
-      // Dedupe — jei jau yra entry su tipas=toksiskas+target=zmonems, neperpildom.
+      // Dedupe pagal target tik — bet kuris tipas (toksiskas/alergiskas/dirginantis)
+      // tam pačiam target'ui yra duplikatas.
       const alreadyHasHuman = result.pavojai.some(
-        p => p.tipas === 'toksiskas' && p.target === 'zmonems'
+        p => p.target === 'zmonems'
       )
       if (!alreadyHasHuman) {
         result.pavojai.push({
-          tipas: 'toksiskas',
+          tipas,
           target: 'zmonems',
           severity,
-          detales: 'PFAF botaninis šaltinis nurodo toksiškumą',
+          detales: tipas === 'dirginantis'
+            ? 'PFAF: dirginantis (vietinis kontaktas, ne sisteminis)'
+            : tipas === 'alergiskas'
+            ? 'PFAF: alergiškas (jautrumo reakcija)'
+            : 'PFAF botaninis šaltinis nurodo toksiškumą',
         })
       }
 
