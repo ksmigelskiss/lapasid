@@ -16,6 +16,7 @@ import { buildPreDbBaseResult } from '../utils/preDbBaseResult'
 import { catalogPreviewUpsert } from '../utils/catalogPreviewUpsert'
 import { buildPlantRagContext } from '../utils/buildPlantRagContext'
 import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../utils/stage2Constants'
+import { TOOL_DETAILS as TOOL_DETAILS_IMPORTED, PLANT_SYSTEM as PLANT_SYSTEM_IMPORTED } from '../utils/plantPromptConfig'
 import { deriveToxicityFromSources, isPavojaiEmpty } from '../utils/deriveToxicity'
 import { diagnosticPromptCheck } from '../utils/diagnosticPromptCheck'
 import { runToxicityIsolatedTest } from '../utils/toxicityIsolatedTest'
@@ -347,8 +348,15 @@ export const TOOL_PREVIEW = {
   },
 }
 
-// ── Phase 2: full details (care, watering, problems, etc.) ────────
-export const TOOL_DETAILS = {
+// ── Phase 2: full details — EXTRACTED to src/utils/plantPromptConfig.js
+// Server-side (api/save-plant) imports the same schema, ensuring zero drift.
+// Re-export here for backward compatibility with existing consumers.
+export const TOOL_DETAILS = TOOL_DETAILS_IMPORTED
+
+// Old inline definition kept BELOW (commented-out for visual reference) —
+// actual schema lives in plantPromptConfig.js. Remove this comment block
+// after confirming no external imports of inner schema parts.
+const _UNUSED_OLD_TOOL_DETAILS = {
   name: 'plant_details',
   description: 'Pateik PILNĄ augalo info save\'ui — care, savybes, įdomybės, šviesa/vanduo lygmenys. All human-readable fields in Lithuanian.',
   input_schema: {
@@ -590,7 +598,14 @@ export const TOOL_BULK_SERIES = {
   },
 }
 
-export const PLANT_SYSTEM = `You are a plant expert. Always answer about the exact plant the user asked for. All human-readable output MUST be in natural Lithuanian.
+// ── PLANT_SYSTEM — EXTRACTED to src/utils/plantPromptConfig.js
+// Server-side (api/save-plant) imports the same prompt. Re-export here
+// for backward compatibility.
+export const PLANT_SYSTEM = PLANT_SYSTEM_IMPORTED
+
+// Old inline definition kept BELOW (commented-out for visual reference).
+// Actual prompt lives in plantPromptConfig.js. Remove after migration verified.
+const _UNUSED_OLD_PLANT_SYSTEM = `You are a plant expert. Always answer about the exact plant the user asked for. All human-readable output MUST be in natural Lithuanian.
 
 ═════════════════════════════════════════════════════════
 WEB SEARCH — USAGE

@@ -62,36 +62,116 @@ async function processPlant({ latinName, name, baseResult, uid, colId }) {
   console.log(`[save-plant] processPlant START: ${latinName} (uid=${uid?.slice(0, 8)}…, col=${colId?.slice(0, 8)}…)`)
 
   try {
-    // STEP 1: Build RAG context (server-side using isomorphic dataLoader)
+    // ── STEP 1: Build RAG context (verified facts iš mūsų DB) ────
     const { buildPlantRagContext } = await import('../src/utils/buildPlantRagContext.js')
     const rag = await buildPlantRagContext(latinName, {
       includeCheng: true,
       includePropagation: true,
       maxLen: 2500,
     })
-    console.log(`[save-plant] RAG context: ${rag.context.length} chars, sources: ${rag.sources.join('+')}`)
+    console.log(`[save-plant] RAG: ${rag.context.length} chars, sources: ${rag.sources.join('+')}`)
 
-    // STEP 2: Anthropic call (TOOL_DETAILS) — Phase 2 full plant info
-    // TODO Step 2: implement full prompt assembly + tool schema
-    // For now — placeholder, just record that we got the request
-    console.log('[save-plant] Step 2 placeholder — Anthropic call not yet implemented')
+    // ── STEP 2: Build grounded system prompt ────────────────────
+    const { PLANT_SYSTEM, TOOL_DETAILS } = await import('../src/utils/plantPromptConfig.js')
+    const { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } = await import('../src/utils/stage2Constants.js')
+    const groundedSystem = [
+      PLANT_SYSTEM,
+      '',
+      RAG_PRIORITY_INSTRUCTION,
+      '',
+      rag.context,
+      '',
+      LT_CLIMATE_CONTEXT,
+      '',
+      VET_LINKS,
+    ].join('\n')
 
-    // STEP 3: Deterministic toxicity backfill (regardless of AI output)
+    // ── STEP 3: Anthropic Phase 2 call (TOOL_DETAILS full info) ──
+    const userMessage = `Pateik PILNĄ info apie augalą "${name ?? latinName}" (${latinName}). Naudok plant_details schema. Visi narrative fields LT kalba.`
+    const aiStartMs = Date.now()
+    const r = await client.messages.create({
+      model:       'claude-sonnet-4-6',
+      max_tokens:  3500,
+      temperature: 0.3,
+      system:      groundedSystem,
+      tools:       [TOOL_DETAILS],
+      tool_choice: { type: 'tool', name: 'plant_details' },
+      messages:    [{ role: 'user', content: userMessage }],
+    })
+    const aiMs = Date.now() - aiStartMs
+    const block = r.content?.find(b => b.type === 'tool_use' && b.name === 'plant_details')
+    if (!block) {
+      throw new Error(`Phase 2 AI did not return plant_details tool_use. stop_reason=${r.stop_reason}`)
+    }
+    const rawDetails = block.input ?? {}
+    console.log(`[save-plant] AI Phase 2 done in ${aiMs}ms. idomybesCount=${rawDetails.idomybes?.length ?? 0}, pavojaiCount=${rawDetails.savybes?.pavojai?.length ?? 0}`)
+
+    // ── STEP 4: normalizeAIResponse ─────────────────────────────
+    const { normalizeAIResponse, stripUndefinedDeep } = await import('../src/utils/plantTransform.js')
+    const details = normalizeAIResponse(rawDetails)
+
+    // ── STEP 5: Deterministic toxicity backfill + narrative ─────
     const { deriveToxicityFromSources } = await import('../src/utils/deriveToxicity.js')
     const derivedToxicity = await deriveToxicityFromSources(latinName)
-    console.log(`[save-plant] derived toxicity: hasToxicity=${derivedToxicity.hasToxicity}, pavojaiCount=${derivedToxicity.pavojai.length}`)
+    if (derivedToxicity.hasToxicity) {
+      // Authority: mūsų DB. Overwritina AI'aus pavojai bet kuriuo atveju.
+      details.savybes = {
+        ...(details.savybes ?? {}),
+        pavojai: derivedToxicity.pavojai,
+        pavojingumas: derivedToxicity.pavojingumas,
+      }
 
-    // STEP 4: generateToxicityNarrative (jei hasToxicity)
-    // TODO Step 2: implement Anthropic SDK direct narrative call
+      // LT narrative iš mūsų sources (translator role)
+      const { generateToxicityNarrative } = await import('../src/utils/toxicityNarrativeGenerator.js')
+      const narrativeStartMs = Date.now()
+      try {
+        const narrative = await generateToxicityNarrative({
+          claudeCall: async (body) => client.messages.create({ ...body, model: 'claude-sonnet-4-6' }),
+          latinName,
+          derivedToxicity,
+        })
+        if (narrative) {
+          details.savybes.pavojingumas = {
+            ...details.savybes.pavojingumas,
+            detales: narrative,
+          }
+        }
+        console.log(`[save-plant] narrative ${Date.now() - narrativeStartMs}ms (${narrative?.length ?? 0} chars)`)
+      } catch (e) {
+        console.warn('[save-plant] narrative generation failed:', e?.message)
+      }
+    }
 
-    // STEP 5: Firebase Admin SDK writes
-    // TODO Step 2: saveCatalogWithSpeciesParent (via admin.firestore())
-    // TODO Step 2: collections/{colId}/plants write
+    // ── STEP 6: Build full plant + verificationStatus upgrade ──
+    const fullPlant = stripUndefinedDeep({
+      ...(baseResult ?? {}),
+      lotyniskas: latinName,
+      lietuviškas: name ?? baseResult?.lietuviškas ?? null,
+      ...details,
+      ragSources: rag.sources,
+      ragConfidence: rag.confidence,
+      schemaVersion: 2,
+    })
+
+    // Upgrade verificationStatus: preview → auto-verified jei pilna care info
+    if (baseResult?.verificationStatus === 'preview' && details.laistymasIntervalas) {
+      fullPlant.verificationStatus = 'auto-verified'
+    }
+
+    // ── STEP 7: Firebase Admin SDK writes ───────────────────────
+    const { saveCatalogWithParentServer } = await import('./_lib/taxon-groups-server.js')
+    const catalogResult = await saveCatalogWithParentServer(fullPlant)
+    console.log(`[save-plant] catalog write:`, catalogResult)
+
+    // TODO collections/{colId}/plants/{plantId} write (user copy)
+    // — atskirti į Step 3 (Client refactor) — klientas šiandien write'ina
+    //   user plant'ą savo path'u. Server-side user plant write reikalauja
+    //   plantId generavimo + duplicate handling. Tas atskirai.
 
     const elapsedMs = Date.now() - startMs
-    console.log(`[save-plant] processPlant END: ${latinName} | ${elapsedMs}ms (placeholder, no writes yet)`)
+    console.log(`[save-plant] processPlant END: ${latinName} | total ${elapsedMs}ms`)
   } catch (e) {
-    console.error(`[save-plant] processPlant FAILED: ${latinName}`, e?.message ?? e)
+    console.error(`[save-plant] processPlant FAILED: ${latinName}`, e?.message ?? e, e?.stack)
   }
 }
 
