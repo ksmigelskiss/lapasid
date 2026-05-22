@@ -58,13 +58,13 @@ export default async function handler(req, res) {
   try {
     const derived = await deriveToxicityFromSourcesServer(latinName)
 
-    let narrative = { detales: null, aiSupplementaryHazard: null, elapsedMs: 0 }
-    if (derived.hasToxicity) {
-      narrative = await generateToxicityNarrativeServer({
-        latinName,
-        derivedToxicity: derived,
-      })
-    }
+    // 6b versija plus — VISADA kviestis narrative gen:
+    //   • Jei hasToxicity → AI verčia EN → LT
+    //   • Jei DB tyli → AI evaluating'as aiSupplementaryHazard
+    const narrative = await generateToxicityNarrativeServer({
+      latinName,
+      derivedToxicity: derived,
+    })
 
     return res.status(200).json({
       latinName,

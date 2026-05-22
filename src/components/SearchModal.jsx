@@ -103,30 +103,53 @@ if (typeof window !== 'undefined') {
       pavojaiCount: derived.pavojai.length,
     })
 
-    if (!derived.hasToxicity) {
-      console.log(`[d-strict] ✓ DB tyli → pavojai = [] (no scare mongering) ✓`)
-      console.log(`[d-strict] TOTAL: ${Date.now() - start}ms`)
-      return { latinName, hasToxicity: false, pavojai: [], pavojingumas: { yra: false, lygis: null, detales: '' } }
-    }
-
-    // 2. Mini AI call'as — vertimas iš DB source'ų į LT narrative
-    console.log(`[d-strict] DB has toxicity → calling generateToxicityNarrative()...`)
+    // 2. AI call'as (6b versija plus) — VISADA paleidžiamas:
+    //    • Jei hasToxicity=true → AI verčia DB EN → LT narrative
+    //    • Jei hasToxicity=false → AI evaluating'as aiSupplementaryHazard
+    //      pagal whitelist + hospitalization bar (default null)
+    console.log(`[d-strict] calling generateToxicityNarrative() (6b versija plus — runs always)...`)
     const narrativeStart = Date.now()
-    const ltNarrative = await generateToxicityNarrative({
+    const nar = await generateToxicityNarrative({
       claudeCall,
       latinName,
       derivedToxicity: derived,
     })
     const narrativeMs = Date.now() - narrativeStart
 
-    console.log(`[d-strict] AI narrative response in ${narrativeMs}ms (${ltNarrative?.length ?? 0} chars)`)
+    console.log(`[d-strict] AI response in ${narrativeMs}ms`)
+    console.log(`[d-strict] narrative.detales:`, nar.detales ? `${nar.detales.length} chars` : 'null')
+    console.log(`[d-strict] narrative.aiSupplementaryHazard:`, nar.aiSupplementaryHazard)
+
+    if (!derived.hasToxicity && !nar.aiSupplementaryHazard) {
+      console.log(`[d-strict] ✓ DB tyli + AI auditor pasakė null → no toxicity flagged ✓`)
+      console.log(`[d-strict] TOTAL: ${Date.now() - start}ms`)
+      return {
+        latinName, hasToxicity: false, pavojai: [], pavojingumas: { yra: false, lygis: null, detales: '' },
+        aiSupplementaryHazard: null, narrativeMs,
+      }
+    }
+
+    if (!derived.hasToxicity && nar.aiSupplementaryHazard) {
+      console.log(`[d-strict] ⚠ DB tyli BET AI auditor PRIDĖJO aiSupplementaryHazard:`)
+      console.log(`  reason:   ${nar.aiSupplementaryHazard.reason}`)
+      console.log(`  severity: ${nar.aiSupplementaryHazard.severity}`)
+      console.log(`  evidence: ${nar.aiSupplementaryHazard.evidence}`)
+      console.log(`  target:   ${nar.aiSupplementaryHazard.target}`)
+      console.log(`[d-strict] TOTAL: ${Date.now() - start}ms`)
+      return {
+        latinName, hasToxicity: false,
+        pavojai: [], pavojingumas: { yra: false, lygis: null, detales: '' },
+        aiSupplementaryHazard: nar.aiSupplementaryHazard, narrativeMs,
+      }
+    }
+
     console.log(`[d-strict] Final pavojai entries:`, derived.pavojai)
     console.log(`[d-strict] Final pavojingumas:`, {
       yra: derived.pavojingumas.yra,
       lygis: derived.pavojingumas.lygis,
-      detales: ltNarrative ?? derived.pavojingumas.detales,
+      detales: nar.detales ?? derived.pavojingumas.detales,
     })
-    console.log(`[d-strict] LT narrative text:\n${ltNarrative ?? '(fallback to PFAF placeholder)'}`)
+    console.log(`[d-strict] LT narrative text:\n${nar.detales ?? '(fallback to PFAF placeholder)'}`)
     console.log(`[d-strict] TOTAL: ${Date.now() - start}ms`)
 
     return {
@@ -136,8 +159,9 @@ if (typeof window !== 'undefined') {
       pavojai: derived.pavojai,
       pavojingumas: {
         ...derived.pavojingumas,
-        detales: ltNarrative ?? derived.pavojingumas.detales,
+        detales: nar.detales ?? derived.pavojingumas.detales,
       },
+      aiSupplementaryHazard: nar.aiSupplementaryHazard,
       narrativeMs,
       totalMs: Date.now() - start,
     }
@@ -180,15 +204,22 @@ if (typeof window !== 'undefined') {
         yra: result.pavojingumas.yra,
         lygis: result.pavojingumas.lygis,
       })
-      if (result.hasToxicity) {
-        console.log('[server-tox] narrative.elapsedMs:', result.narrative.elapsedMs)
-        console.log('[server-tox] narrative.aiSupplementaryHazard:', result.narrative.aiSupplementaryHazard, '(6a: should be null)')
-        console.log('[server-tox] ─── NARRATIVE (LT) ───')
-        console.log(result.narrative.detales ?? '(null — narrative gen failed)')
+      console.log('[server-tox] narrative.elapsedMs:', result.narrative.elapsedMs)
+      console.log('[server-tox] narrative.aiSupplementaryHazard:', result.narrative.aiSupplementaryHazard)
+      if (result.narrative.aiSupplementaryHazard) {
+        console.log('[server-tox] ⚠ VERSIJA PLUS aktivuota — AI auditor pridėjo gap-fill:')
+        console.log('  reason:   ', result.narrative.aiSupplementaryHazard.reason)
+        console.log('  severity: ', result.narrative.aiSupplementaryHazard.severity)
+        console.log('  evidence: ', result.narrative.aiSupplementaryHazard.evidence)
+        console.log('  target:   ', result.narrative.aiSupplementaryHazard.target)
+      }
+      if (result.narrative.detales) {
+        console.log('[server-tox] ─── NARRATIVE (LT, iš mūsų DB) ───')
+        console.log(result.narrative.detales)
         console.log('[server-tox] ─── PLACEHOLDER (for comparison) ───')
         console.log(result.pavojingumas.placeholderDetales)
-      } else {
-        console.log('[server-tox] DB tyli → no narrative (6a). Step 6b atidarys versija plus.')
+      } else if (!result.narrative.aiSupplementaryHazard) {
+        console.log('[server-tox] ✓ DB tyli + AI auditor null → safe plant, nieks nepridedam')
       }
       console.log(`[server-tox] TOTAL: ${totalMs}ms (incl. roundtrip)`)
       return result
@@ -202,7 +233,8 @@ if (typeof window !== 'undefined') {
     console.log('[debug] Diagnostic available: window.runPromptDiagnostic(latinName?, observedSkip?)')
     console.log('[debug] Isolated toxicity test: window.runToxicityTest(latinName?)')
     console.log('[debug] D strict pipeline test (client): window.runDStrictTest(latinName?)')
-    console.log('[debug] D strict pipeline test (server): window.runServerToxicityTest(latinName?)')
+    console.log('[debug] D strict pipeline test (server, 6b versija plus): window.runServerToxicityTest(latinName?)')
+    console.log('[debug] Try: window.runServerToxicityTest("Strophanthus kombe") — should trigger aiSupplementaryHazard')
   }
 }
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
@@ -666,44 +698,60 @@ Naudok savo botanikos žinias + Wikipedia/RHS info kur reikia. Visi human-readab
   //   4. JEI hasToxicity=false → palieka pavojai=[], pavojingumas.yra=false.
   //      AI NIEKO nepilanavo savo training'o (no scare mongering).
   // ────────────────────────────────────────────────────────────────
+  // D STRICT (6b versija plus): VISADA kviečiam narrative gen, AI grąžina:
+  //   • detales = LT translation IF mūsų DB turi entry; ELSE null
+  //   • aiSupplementaryHazard = object IF DB tyli BET genus whitelist'e +
+  //     hospitalization bar; ELSE null (99% atvejų)
+  // Mūsų DB = primary authority. AI gap-fill su strict evidence.
   const derivedToxicity = await deriveToxicityFromSources(latinName)
+  const narrativeStart = Date.now()
+  const nar = await generateToxicityNarrative({
+    claudeCall,
+    latinName,
+    derivedToxicity,
+  })
+  const narrativeMs = Date.now() - narrativeStart
+  console.log(`[fetchDetails] narrative AI in ${narrativeMs}ms — detales:${nar.detales ? nar.detales.length+'ch' : 'null'} aiSupplementaryHazard:${nar.aiSupplementaryHazard ? 'object' : 'null'}`)
+
   if (derivedToxicity.hasToxicity) {
-    // Užrašyti structured pavojai iš mūsų DB authority (kad neperrašytum
-    // AI rezultato — AI Phase 2 gali būti grąžinęs tuščia ar nepilną.
-    // Mūsų DB pildymas yra deterministic ground truth).
+    // DB turi entry → struktūrizuotas pavojai + LT narrative
     details.savybes = {
       ...(details.savybes ?? {}),
       pavojai: derivedToxicity.pavojai,
-      pavojingumas: { ...derivedToxicity.pavojingumas },  // copy — keisim detales
+      pavojingumas: { ...derivedToxicity.pavojingumas },
     }
-
-    // Mini AI call'as: PFAF EN text → LT warning narrative.
-    // ~5-15s, ~$0.0008, paleidžiamas TIK toxic plants atveju.
-    const narrativeStart = Date.now()
-    const ltNarrative = await generateToxicityNarrative({
-      claudeCall,
-      latinName,
-      derivedToxicity,
-    })
-    const narrativeMs = Date.now() - narrativeStart
-    if (ltNarrative) {
-      details.savybes.pavojingumas.detales = ltNarrative
+    if (nar.detales) {
+      details.savybes.pavojingumas.detales = nar.detales
       details.toxicityNarrativeGenerated = true
-      console.log(`[fetchDetails] toxicity narrative LT generated in ${narrativeMs}ms (${ltNarrative.length} chars) for ${latinName} — sources: ${derivedToxicity.sources.join('+')}`)
     } else {
       // Fallback — LT placeholder iš deriveToxicity (jau LT-friendly)
-      console.warn(`[fetchDetails] toxicity narrative generation failed for ${latinName}, using LT placeholder`)
+      console.warn(`[fetchDetails] narrative gen failed for ${latinName} — placeholder fallback`)
       details.toxicityNarrativeGenerated = false
     }
     details.toxicitySources = derivedToxicity.sources
-  } else {
-    // DB tyli — palieka, ką AI grąžino (galbūt tuščia, galbūt AI vis tiek
-    // pildė iš training'o). Nieks nepridedam ir nieks netrinam — D strict
-    // pasitiki MŪSŲ DB authority'tu, bet ne forcina AI elgesį.
-    // Jei vartotojas pamatys scare mongering iš AI — tas yra signal'as,
-    // kad mūsų RAG_PRIORITY_INSTRUCTION reikia stiprinti (debug priežastis,
-    // ne pleistras).
+  } else if (nar.aiSupplementaryHazard) {
+    // DB tyli BET AI auditor pridėjo gap-fill — saugom į savybes
+    // su aiSupplementaryHazard lauke (audit-visible) + minimal pavojai entry
+    console.warn(`[fetchDetails] aiSupplementaryHazard ACTIVATED for ${latinName}:`, nar.aiSupplementaryHazard)
+    const sup = nar.aiSupplementaryHazard
+    details.savybes = {
+      ...(details.savybes ?? {}),
+      aiSupplementaryHazard: sup,
+      pavojai: [{
+        tipas:    'toksiskas',
+        target:   sup.target === 'abiem' ? 'zmonems' : sup.target, // schema enum
+        severity: sup.severity,
+        detales:  `AI papildomas pavojus (${sup.evidence})`,
+      }],
+      pavojingumas: {
+        yra:     true,
+        lygis:   sup.severity,
+        detales: sup.reason,
+      },
+    }
+    details.toxicitySources = ['ai-supplementary']
   }
+  // else: DB tyli + AI grąžino null → nothing to add (safe plant, scare prevention)
 
   // Išsaugome į katalogą — kitas vartotojas gaus iš cache.
   // Merge'inam SLIM auto-save cached data (aprasymas, kilme, savybes,

@@ -188,46 +188,65 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
       tipas: details.tipas,
     })
 
-    // ── 3. Toxicity backfill (D strict) ──────────────────────
-    // Mirror'as client'o fetchDetails post-AI flow'o (žiūr. fetchDetails
-    // komentarą "AI = structurer, ne creator. Mūsų DB = authority").
-    //
-    // Step 6a — port'inta `generateToxicityNarrativeServer`. Catalog dabar
-    // gauna REAL LT narrative iš mūsų DB šaltinių (ne placeholder'į).
+    // ── 3. Toxicity backfill — D STRICT 6b versija plus ──────
+    // AI VISADA kviečiamas. Du output'ai:
+    //   • detales: LT translation IF mūsų DB turi entry
+    //   • aiSupplementaryHazard: gap-fill IF DB tyli + whitelist + bar
+    // Mūsų DB authority + AI gap-fill (audit-visible per separate field).
     const derivedTox = await deriveToxicityFromSourcesServer(latinName)
+    const nar = await generateToxicityNarrativeServer({
+      latinName,
+      derivedToxicity: derivedTox,
+    })
+    console.log('[save-plant] narrative AI', {
+      plantId,
+      elapsedMs: nar.elapsedMs,
+      detalesChars: nar.detales?.length ?? 0,
+      hasAiSupplement: nar.aiSupplementaryHazard != null,
+    })
+
     if (derivedTox.hasToxicity) {
-      // Pirma — užrašom structured pavojai iš mūsų DB authority
+      // DB turi entry → struktūrizuotas pavojai + LT narrative
       details.savybes = {
         ...(details.savybes ?? {}),
         pavojai: derivedTox.pavojai,
         pavojingumas: { ...derivedTox.pavojingumas },
       }
-      details.toxicitySources = derivedTox.sources
-
-      // Antra — mini AI call'as: PFAF/ASPCA EN → LT narrative (~5-15s).
-      const nar = await generateToxicityNarrativeServer({
-        latinName,
-        derivedToxicity: derivedTox,
-      })
       if (nar.detales) {
         details.savybes.pavojingumas.detales = nar.detales
         details.toxicityNarrativeGenerated = true
-        console.log('[save-plant] narrative LT generated', {
-          plantId,
-          chars: nar.detales.length,
-          elapsedMs: nar.elapsedMs,
-          sources: derivedTox.sources,
-        })
       } else {
-        // Fallback į LT placeholder iš deriveToxicityServer (jau LT-friendly)
         details.toxicityNarrativeGenerated = false
-        console.warn('[save-plant] narrative gen failed, using placeholder', {
-          plantId,
-          elapsedMs: nar.elapsedMs,
-          error: nar.error,
-        })
+        console.warn('[save-plant] narrative gen failed — placeholder fallback', plantId)
       }
+      details.toxicitySources = derivedTox.sources
+    } else if (nar.aiSupplementaryHazard) {
+      // DB tyli BET AI auditor pridėjo gap-fill (versija plus aktivuota).
+      // Saugom su atskiru `aiSupplementaryHazard` lauku audit'ui +
+      // minimal pavojai entry, kad UI rodytų badge'ą.
+      console.warn('[save-plant] aiSupplementaryHazard ACTIVATED', {
+        plantId, latin: latinName,
+        sup: nar.aiSupplementaryHazard,
+      })
+      const sup = nar.aiSupplementaryHazard
+      details.savybes = {
+        ...(details.savybes ?? {}),
+        aiSupplementaryHazard: sup,
+        pavojai: [{
+          tipas:    'toksiskas',
+          target:   sup.target === 'abiem' ? 'zmonems' : sup.target,
+          severity: sup.severity,
+          detales:  `AI papildomas pavojus (${sup.evidence})`,
+        }],
+        pavojingumas: {
+          yra:     true,
+          lygis:   sup.severity,
+          detales: sup.reason,
+        },
+      }
+      details.toxicitySources = ['ai-supplementary']
     }
+    // else: DB tyli + AI grąžino null → safe plant, nieks nepridedam
 
     // ── 4. Build full plant doc (catalog + user) ────────────
     // Spread order — same kaip client'o fetchDetails:

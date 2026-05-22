@@ -1,14 +1,16 @@
 /**
- * toxicityNarrativeGenerator — mini AI call'as TIK toxicity narrative'ui
- * iš MŪSŲ DB SOURCES (ASPCA + PFAF).
+ * toxicityNarrativeGenerator — toxicity narrative + aiSupplementaryHazard
+ * AI call'as. Dabar 6b versija plus (gap-fill aktyvuotas).
  *
- * VAIDMUO (post user-test #11): vartotojo „D strict" sprendimas — AI yra
- * vertėjas/strukturizatorius, ne kūrėjas. Jis gauna MŪSŲ source duomenis
- * (ASPCA toxic-to + PFAF knownHazards EN text) ir grąžina:
- *   • LT narrative warning-label style (3-5 sakiniai)
+ * VAIDMUO: D strict architecture priemonė — AI turi DVI roles:
+ *   (A) TRANSLATOR — kai mūsų ASPCA/PFAF turi entry, AI verčia EN → LT
+ *       (narrative.detales).
+ *   (B) AUDITOR — kai mūsų DB tyli BET augalas yra žinomas
+ *       hospitalizacijos rizikos source'as, AI flag'ina su griežtu
+ *       evidence reikalavimu (narrative.aiSupplementaryHazard).
  *
- * AI'us NEPRIDEDA savo training'o info. Jei mūsų source tyli — nieks
- * nesikuria. Tas yra MŪSŲ DB AUTHORITY principas.
+ * Detali D-strict logika + whitelist'as gyvena `toxicityNarrativePrompts.js`
+ * (shared'inamas su server-side mirror'u).
  *
  * USAGE (fetchDetails post-step):
  *   const narrative = await generateToxicityNarrative({
@@ -16,16 +18,19 @@
  *     latinName: 'Aconitum napellus',
  *     derivedToxicity,  // {pavojai, pavojingumas, sources, hasToxicity}
  *   })
- *   if (narrative) details.savybes.pavojingumas.detales = narrative
+ *   // narrative = { detales: string|null, aiSupplementaryHazard: object|null }
  *
- * Cost: ~$0.0008 per call. Triggerinama TIK kai derivedToxicity.hasToxicity=true.
- * Latency: ~5-15s (Claude Sonnet). Galima ateityje switch'inti į Haiku
- * dar greitesniam call'ui.
+ * RETURN SHAPE:
+ *   { detales: string|null, aiSupplementaryHazard: object|null }
+ *
+ * Note: anksčiau (Step 6a) grąžindavo string. Step 6b — keičiama į objektą,
+ * kad caller'is gautų abu lauks. Caller'iai (fetchDetails, runDStrictTest)
+ * atnaujinti.
+ *
+ * Cost: ~$0.0008 per call. Triggerinama VISADA (6b versija plus).
+ * Latency: ~5-15s.
  */
 
-// Schema + system prompt extract'inti į shared modulį (Variant B Step 6a).
-// Client'as + server'is naudoja tą patį source-of-truth, kad narrative'ai
-// būtų vienodi neatsižvelgiant į flow'ą.
 import { NARRATIVE_TOOL, TRANSLATOR_SYSTEM } from './toxicityNarrativePrompts.js'
 
 /**
@@ -33,32 +38,34 @@ import { NARRATIVE_TOOL, TRANSLATOR_SYSTEM } from './toxicityNarrativePrompts.js
  * @param {Function} opts.claudeCall — Anthropic API wrapper
  * @param {string} opts.latinName
  * @param {object} opts.derivedToxicity — output of deriveToxicityFromSources
- * @returns {Promise<string|null>} LT narrative arba null jei nepavyko
+ * @returns {Promise<{detales: string|null, aiSupplementaryHazard: object|null}>}
  */
 export async function generateToxicityNarrative({ claudeCall, latinName, derivedToxicity }) {
-  if (!derivedToxicity?.hasToxicity) return null
+  const empty = { detales: null, aiSupplementaryHazard: null }
 
-  // Build SOURCE TEXT — tiktai mūsų DB grindiniu (no AI knowledge)
+  // Build SOURCE TEXT
   const sourceLines = [`PLANT: ${latinName}`]
   sourceLines.push('')
-  sourceLines.push('STRUCTURED TOXICITY DATA (from our DB — authoritative):')
 
-  for (const p of derivedToxicity.pavojai) {
-    sourceLines.push(`  • tipas=${p.tipas}, target=${p.target}, severity=${p.severity} — ${p.detales}`)
-  }
-
-  // pavojingumas.detales already contains LT placeholder + PFAF EN citation (per deriveToxicity)
-  // Extract just the PFAF/ASPCA raw text for translation
-  if (derivedToxicity.pavojingumas?.detales) {
+  if (derivedToxicity?.hasToxicity) {
+    sourceLines.push('STRUCTURED TOXICITY DATA (from our DB — authoritative):')
+    for (const p of derivedToxicity.pavojai) {
+      sourceLines.push(`  • tipas=${p.tipas}, target=${p.target}, severity=${p.severity} — ${p.detales}`)
+    }
+    if (derivedToxicity.pavojingumas?.detales) {
+      sourceLines.push('')
+      sourceLines.push('SOURCE TEXT (translate into Lithuanian narrative):')
+      sourceLines.push(derivedToxicity.pavojingumas.detales)
+    }
     sourceLines.push('')
-    sourceLines.push('SOURCE TEXT (translate into Lithuanian narrative):')
-    sourceLines.push(derivedToxicity.pavojingumas.detales)
+    sourceLines.push(`Sources used: ${derivedToxicity.sources.join(' + ')}`)
+    sourceLines.push('')
+    sourceLines.push('TASK: Fill `detales` field with Lithuanian narrative (2-3 sentences) from above source. `aiSupplementaryHazard` should be null — our DB already covers this plant.')
+  } else {
+    sourceLines.push('STRUCTURED TOXICITY DATA: (empty — our DB has no entry for this plant)')
+    sourceLines.push('')
+    sourceLines.push('TASK: `detales` = null (nothing to translate). Evaluate `aiSupplementaryHazard` per AUDITOR rules in system prompt: ONLY fill if plant genus is on the whitelist AND meets ALL criteria. Default = null.')
   }
-
-  sourceLines.push('')
-  sourceLines.push(`Sources used: ${derivedToxicity.sources.join(' + ')}`)
-  sourceLines.push('')
-  sourceLines.push('TASK: Generate Lithuanian consumer warning label (2-3 sentences) from above source. Translator role only. Step 6a: aiSupplementaryHazard MUST be null.')
 
   const userMessage = sourceLines.join('\n')
 
@@ -73,10 +80,13 @@ export async function generateToxicityNarrative({ claudeCall, latinName, derived
     })
 
     const block = response.content?.find(b => b.type === 'tool_use' && b.name === 'toxicity_narrative')
-    const narrative = block?.input?.detales ?? null
-    return narrative
+    const out = block?.input ?? {}
+    return {
+      detales: out.detales ?? null,
+      aiSupplementaryHazard: out.aiSupplementaryHazard ?? null,
+    }
   } catch (e) {
     console.warn('[toxicityNarrativeGenerator] failed:', e?.message)
-    return null
+    return empty
   }
 }
