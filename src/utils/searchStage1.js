@@ -49,16 +49,14 @@
 import { lookupGenus, lookupPlant } from './preDb.js'
 import { resolveLt, resolveLatin } from './ltDictionary.js'
 import { resolveCanonical, getReclassification } from './latinResolver.js'
+import { loadJson } from './dataLoader.js'
 
 // Lazy-load ASPCA genus map (built from build-aspca-genus-map.mjs)
 let aspcaMapCache = null
 async function getAspcaMap() {
   if (aspcaMapCache) return aspcaMapCache
   try {
-    const url = new URL('../../data/aspca-genus-map.json', import.meta.url)
-    const res = await fetch(url)
-    if (!res.ok) return {}
-    const data = await res.json()
+    const data = await loadJson('aspca-genus-map.json', import.meta.url)
     aspcaMapCache = data.toxicityByGenus ?? {}
     return aspcaMapCache
   } catch {
