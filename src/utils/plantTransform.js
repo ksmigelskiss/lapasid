@@ -284,7 +284,12 @@ export function fromAIResult(aiResult) {
     : 'unverified'
 
   return {
-    id: makeId(),
+    // Honor aiResult.id jei pre-set (e.g. Variant B dual-write — klientas
+    // generuoja plantId iš anksto, perduoda į addToDashboard ir POST
+    // /api/save-plant ta pati ID, kad serverio merge:true enrichment'as
+    // patektų į TĄ PATĮ doc'ą, ne kurtų antrą). Default'ai į naują makeId()
+    // kai id nepateiktas — visi senesni call site'ai.
+    id: aiResult.id ?? makeId(),
     verificationStatus,
     aiConfidence,
     aiMatchLevel: aiResult.matchLevel ?? null,

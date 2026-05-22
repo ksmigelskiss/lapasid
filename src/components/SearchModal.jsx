@@ -7,7 +7,8 @@ import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight, CheckCircle2 }
 import { fetchPhotos, resizeImage, fetchWikipediaContext, rehostExternalImage } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
-import { normalizeAIResponse } from '../utils/plantTransform'
+import { normalizeAIResponse, makeId } from '../utils/plantTransform'
+import { useAuth } from '../hooks/useAuth'
 import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId } from '../utils/catalog'
 import { getCachedSearchResponse, setCachedSearchResponse } from '../utils/searchResponseCache'
 import { searchStage1 } from '../utils/searchStage1'
@@ -2500,6 +2501,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                       <SaveButton
                         label="Pirkau, turiu!"
                         result={resultForSave}
+                        kategorija="auginama"
                         className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 disabled:opacity-60 transition-colors"
                         onSave={onAddToDashboard}
                         onClose={onClose}
@@ -2509,6 +2511,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                       <SaveButton
                         label="Pridėti į biblioteką"
                         result={resultForSave}
+                        kategorija="nori"
                         className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 disabled:opacity-60 transition-colors"
                         onSave={onAddToWishlist}
                         onClose={onClose}
@@ -2762,8 +2765,13 @@ function SavingOverlay() {
 // Optimizacija: jei result jau turi care info (pvz. iš library-first +
 // mergeWithSeries — admin curated tikrai pilna info), praleidžiam Phase 2
 // AI call'ą. Save'as tampa instant'as + sutaupom $0.01 per save.
-function SaveButton({ label, result, className, onSave, onClose, onSavingChange }) {
+function SaveButton({ label, result, className, onSave, onClose, onSavingChange, kategorija = 'auginama' }) {
   const [saving, setSaving] = useState(false)
+  const { collectionId } = useAuth()
+  // Variant B feature flag — set VITE_USE_SERVERSIDE_SAVE=1 Vercel'io env'e
+  // įjungti server-side save flow'ą (POST /api/save-plant + waitUntil).
+  // Default OFF — behavior'as ID-INTIŠKAS šios feature'os iki Variant B retake'ui.
+  const useServerSide = import.meta.env.VITE_USE_SERVERSIDE_SAVE === '1'
 
   const handleClick = async () => {
     setSaving(true)
@@ -2787,11 +2795,63 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange 
       // Skip Phase 2 jei result jau turi care info (mergeWithSeries iš
       // library-first). laistymasIntervalas yra patikimas indikatorius — jei
       // yra, tai reiškia merge'as įvyko ir kiti care field'ai irgi pildomi.
+      // Fast path BENDRAS abiem flag stat'om — jokios Phase 2 nereikia.
       if (resultWithStorageImage.laistymasIntervalas) {
         onSave(resultWithStorageImage)
         onClose()
         return
       }
+
+      // ── VARIANT B: server-side save (flag-on) ─────────────
+      // DUAL-WRITE pattern:
+      //   1. Klientas iškart write'ina slim baseResult plant'ą per
+      //      addToDashboard/addToWishlist (writes per Firebase JS SDK).
+      //      User'is mato augalą savo bibliotekoje iš karto.
+      //   2. POST /api/save-plant fire-and-forget — server'is enrich'ina
+      //      AI Phase 2 care info per Firebase Admin SDK (merge:true).
+      //      User'iui nereikia laukti AI; pakeitimas atsiranda real-time
+      //      per Firestore listener'į usePlants hook'e (~10-30s).
+      //   3. Modal'is closes iškart.
+      // BENEFITS: user'is uždarymas modal'į NEBEKANCELIUOJA Anthropic call'o.
+      // Server'is dirba savo darbą iki galo (waitUntil).
+      if (useServerSide) {
+        const plantId = makeId()
+        const resultWithId = { ...resultWithStorageImage, id: plantId }
+        onSave(resultWithId)
+        try {
+          const idToken = await auth.currentUser?.getIdToken().catch(() => null)
+          if (idToken && collectionId) {
+            // Fire-and-forget — nelaukim 202. UI nepriklauso nuo šio API.
+            // Jei klysta (network, server'is fail), klientas vis tiek
+            // turi slim plant'ą savo bibliotekoje (žemiau onSave).
+            fetch('/api/save-plant', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`,
+              },
+              body: JSON.stringify({
+                latinName: resultWithStorageImage.latinName,
+                name:      resultWithStorageImage.name,
+                baseResult: resultWithStorageImage,
+                colId:     collectionId,
+                plantId,
+                kategorija,
+              }),
+            }).then(r => {
+              if (!r.ok) console.warn('[SaveButton] /api/save-plant status:', r.status)
+            }).catch(e => console.warn('[SaveButton] /api/save-plant POST failed:', e?.message))
+          } else {
+            console.warn('[SaveButton] no idToken/collectionId — skipping server enrich')
+          }
+        } catch (e) {
+          console.warn('[SaveButton] server-save dispatch failed:', e?.message)
+        }
+        onClose()
+        return
+      }
+
+      // ── CLIENT-SIDE Phase 2 (flag-off, current flow) ──────
       // Perduodam resultWithStorageImage kaip baseResult — kad fetchDetails
       // catalog write'as gautų image (rehost'intas Storage URL), aprasymas,
       // kilme, savybes iš Phase 1 SLIM mode'o.

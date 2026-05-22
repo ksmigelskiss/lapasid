@@ -67,10 +67,19 @@ export async function saveUserPlantServer({ uid, colId, plantId, aiResult, kateg
   const clean = stripUndefinedDeep(plant)
 
   try {
+    // merge:true — DUAL-WRITE pattern (Variant B). Klientas pirmasis rašo
+    // slim baseResult doc'ą per Firebase JS SDK (kategorija, data_prideta,
+    // status, timeline ir kt. personal field'ai). Server'is enrich'ina
+    // AI Phase 2 care info — kad NEPAlaužtų client'o personal field'ų,
+    // merge'inam, ne overwrite'inam.
+    //
+    // Jei kuris field'as konfliktuoja (e.g. lotyniskas), server'is laimi
+    // (jis vėliau atrašytas). Bet šituose lauke server'is grąžina TĄ PATĮ
+    // value (canonical iš `latinName` param'o), todėl konflikto faktiškai nėra.
     await adminFirestore()
       .collection('collections').doc(colId)
       .collection('plants').doc(plantId)
-      .set(clean, { merge: false })
+      .set(clean, { merge: true })
     return { ok: true, plantId }
   } catch (e) {
     console.warn('[user-plant-server] write failed:', plantId, e?.message)
