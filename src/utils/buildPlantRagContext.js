@@ -29,6 +29,7 @@
 
 import { lookupPlant, getRawDb } from './preDb.js'
 import { resolveLt } from './ltDictionary.js'
+import { loadJson } from './dataLoader.js'
 
 // Lazy loaders for other DB files
 let pfafCache = null
@@ -36,20 +37,22 @@ let aspcaCache = null
 
 async function loadPfaf() {
   if (pfafCache) return pfafCache
-  const url = new URL('../../data/pfaf.json', import.meta.url)
-  const res = await fetch(url)
-  if (!res.ok) return { results: {} }
-  pfafCache = await res.json()
-  return pfafCache
+  try {
+    pfafCache = await loadJson('pfaf.json', import.meta.url)
+    return pfafCache
+  } catch {
+    return { results: {} }
+  }
 }
 
 async function loadAspca() {
   if (aspcaCache) return aspcaCache
-  const url = new URL('../../data/aspca-toxicity.json', import.meta.url)
-  const res = await fetch(url)
-  if (!res.ok) return { toxicity: {} }
-  aspcaCache = await res.json()
-  return aspcaCache
+  try {
+    aspcaCache = await loadJson('aspca-toxicity.json', import.meta.url)
+    return aspcaCache
+  } catch {
+    return { toxicity: {} }
+  }
 }
 
 // ── Helpers ───────────────────────────────────────────────────
