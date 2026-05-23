@@ -63,15 +63,15 @@ export function getPlantEnrichmentState(plant) {
   if (startedAt > completedAt) {
     const ageMs = Date.now() - startedAt
     if (Number.isNaN(ageMs)) return 'unknown'
-    if (ageMs < ENRICHMENT_TIMEOUT_MS) return 'enriching'
-    // Diagnostic — testavom „strofantas pasidare nepavyko nors buvo OK"
-    console.log('[plantState] FAILED (timeout)', {
-      id: plant.id, latin: plant.lotyniskas,
-      startedAt: plant.enrichmentStartedAt,
-      completedAt: plant.phase2CompletedAt,
-      ageMs, threshold: ENRICHMENT_TIMEOUT_MS,
-    })
-    return 'failed'  // timed out (>90s) without completion
+    if (ageMs < ENRICHMENT_TIMEOUT_MS) return 'enriching'  // recent activity
+    // Timed out (>90s) — BET LEGACY DATA check:
+    // Plant'as gali turėti seną startedAt (saved pre-phase2CompletedAt era
+    // Step 6a/6b) IR jau turėti Phase 2 data. Tokiu atveju enrichment'as
+    // pasibaigė sėkmingai, tiesiog completion marker'is nebuvo rašytas tame
+    // build'e. Jei laistymasIntervalas (= Phase 2 required field) yra → treat
+    // kaip 'enriched' (legacy).
+    if (plant.laistymasIntervalas) return 'enriched'
+    return 'failed'  // truly stuck — timeout + no Phase 2 data
   }
 
   // Completed: completedAt exists and is most recent activity
