@@ -55,12 +55,22 @@ function fmtDate(str) {
 
 
 function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
-  const historyPhotos   = (plant.timeline ?? []).filter(e => e.type === 'photo' && e.imageUrl)
-  const useHistory      = plant.useHistoryPhoto !== false
-  const [photos, setPhotos]     = useState([])   // online photos
-  const [idx, setIdx]           = useState(0)
-  const [loading, setLoading]   = useState(false)
-  const [searched, setSearched] = useState(false)
+  // Step 6u — PhotoSheet rewrite. Unified design po stack-on-top chaos'o:
+  //   • Drop'inta iNat live search (redundant — plant.photos[] jau cache'ina
+  //     search'o metu surinktas referencias)
+  //   • Galerija = plant.photos[] iš Stage 1 fetch'o (Brave + Wiki + iNat)
+  //   • Mūsų istorija = timeline.photo events (user'io augimo nuotraukos)
+  //   • Select-then-confirm UX: tap thumb → highlight → „Išsaugoti" button
+  //     (saugiau nei instant tap-to-set, leidžia browse'inti prieš commit)
+  //   • Camera + Upload — instant flow (user intent jau aiškus po file pick)
+  const historyPhotos = (plant.timeline ?? []).filter(e => e.type === 'photo' && e.imageUrl)
+  const galleryPhotos = (plant.photos ?? []).filter(Boolean)
+  const useHistory    = plant.useHistoryPhoto !== false
+
+  // selectedPhoto — pasirinkta thumb, dar nepatvirtinta. fromHistory tracking'as
+  // kad onSave gautų teisingą second-arg flag'ą (timeline event source vs
+  // search-time gallery).
+  const [selected, setSelected] = useState(null)  // { url, fromHistory } | null
 
   const isDesktop = useIsDesktop()
   const host = useDetailHost()
@@ -72,19 +82,33 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
     try { onSave(await resizeImage(file)) } catch {}
   }
 
-  const handleSearch = async () => {
-    setLoading(true)
-    setSearched(false)
-    const found = await fetchPhotos(plant.lotyniskas)
-    setPhotos(found)
-    setIdx(0)
-    setLoading(false)
-    setSearched(true)
+  const handleSave = () => {
+    if (!selected) return
+    onSave(selected.url, selected.fromHistory)
+    onClose()
   }
 
-  const current = photos[idx] ?? null
-  const hasPrev = idx > 0
-  const hasNext = idx < photos.length - 1
+  const PhotoThumb = ({ url, fromHistory, keyHint }) => {
+    const isSelected = selected?.url === url
+    return (
+      <button
+        key={keyHint ?? url}
+        onClick={() => setSelected({ url, fromHistory })}
+        className={`relative aspect-square rounded-2xl overflow-hidden border-2 transition-all ${
+          isSelected
+            ? 'border-forest-600 ring-2 ring-forest-600/30'
+            : 'border-bone-400/40 hover:border-forest-400'
+        }`}
+      >
+        <PlantImage url={url} size="thumb" alt="" className="w-full h-full object-cover" />
+        {isSelected && (
+          <div className="absolute top-1 right-1 w-5 h-5 bg-forest-600 rounded-full flex items-center justify-center">
+            <Check size={12} className="text-bone" strokeWidth={3} />
+          </div>
+        )}
+      </button>
+    )
+  }
 
   const tree = (
     <div className={useDesktopPanel
@@ -96,7 +120,7 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
         transition={{ duration: 0.2 }} onPointerDown={onClose}
       />
       <motion.div
-        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-4 pt-3 pb-8 border-t border-bone-400/40"
+        className="relative w-full max-w-[430px] bg-bone-50 rounded-t-4xl px-4 pt-3 pb-8 border-t border-bone-400/40 max-h-[85vh] overflow-y-auto"
         initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
         onPointerDown={e => e.stopPropagation()}
@@ -108,8 +132,8 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
           Pakeisti nuotrauką
         </p>
 
-        <div className="space-y-2">
-          {/* History auto-sync toggle */}
+        <div className="space-y-4">
+          {/* History auto-sync toggle (lieka kaip yra) */}
           {historyPhotos.length > 0 && (
             <button
               onClick={onToggleHistoryPhoto}
@@ -118,9 +142,9 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
               }`}
             >
               <div className="flex items-center gap-3">
-                <Camera size={20} className={useHistory ? 'text-bone' : 'text-forest-500'} />
+                <RefreshCw size={20} className={useHistory ? 'text-bone' : 'text-forest-500'} />
                 <div className="text-left">
-                  <p className="font-display text-sm font-semibold tracking-tight">Naudoti iš istorijos</p>
+                  <p className="font-display text-sm font-semibold tracking-tight">Auto iš istorijos</p>
                   <p className={`text-xs mt-0.5 ${useHistory ? 'text-bone/70' : 'text-forest-500'}`}>
                     {useHistory ? 'Naujos istorijos nuotraukos → profilis' : 'Išjungta — profilis fiksuotas'}
                   </p>
@@ -132,98 +156,61 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
             </button>
           )}
 
-          {/* Online photo browser */}
-          {!searched && !loading && (
-            <button
-              className="w-full flex items-center gap-4 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 rounded-2xl px-4 py-3.5 transition-colors"
-              onClick={handleSearch}
-            >
-              <span className="text-forest-500"><Search size={22} /></span>
-              <div className="text-left flex-1">
-                <p className="font-display text-sm font-semibold tracking-tight text-forest-800">Rasti internete (iNaturalist)</p>
-                <p className="text-xs text-forest-500 italic mt-0.5">{plant.lotyniskas}</p>
-              </div>
-            </button>
-          )}
-
-          {loading && (
-            <div className="flex items-center gap-3 bg-bone-50 border border-bone-400/40 rounded-2xl px-4 py-3.5">
-              <span className="text-forest-500"><Loader2 size={22} className="animate-spin" /></span>
-              <p className="text-sm text-forest-600">Ieškoma nuotraukų...</p>
-            </div>
-          )}
-
-          {searched && photos.length === 0 && (
-            <div className="bg-terracotta-50 border border-terracotta-200/60 rounded-2xl px-4 py-3 text-center">
-              <p className="text-sm text-terracotta-600 font-semibold">Nerasta nuotraukų internete</p>
-            </div>
-          )}
-
-          {searched && current && (
+          {/* GALERIJA — plant.photos[] iš Stage 1 fetch'o */}
+          {galleryPhotos.length > 0 && (
             <div className="space-y-2">
-              {/* Preview */}
-              <div className="relative rounded-2xl overflow-hidden bg-bone-300" style={{ height: 200 }}>
-                <PlantImage url={current} size="detail" eager alt="" className="w-full h-full object-cover" />
-                {/* Prev / Next */}
-                <div className="absolute inset-0 flex items-center justify-between px-2">
-                  <button
-                    disabled={!hasPrev}
-                    onClick={() => setIdx(i => i - 1)}
-                    className="w-9 h-9 bg-black/40 backdrop-blur-sm rounded-btn flex items-center justify-center text-bone text-base disabled:opacity-20"
-                  >‹</button>
-                  <button
-                    disabled={!hasNext}
-                    onClick={() => setIdx(i => i + 1)}
-                    className="w-9 h-9 bg-black/40 backdrop-blur-sm rounded-btn flex items-center justify-center text-bone text-base disabled:opacity-20"
-                  >›</button>
-                </div>
-                {/* Counter */}
-                <div className="absolute bottom-2 left-0 right-0 flex justify-center">
-                  <span className="font-mono text-[10px] text-bone bg-black/40 backdrop-blur-sm rounded-full px-2 py-0.5 tracking-[0.14em]">
-                    {idx + 1} / {photos.length}
-                  </span>
-                </div>
+              <div className="flex items-center gap-3">
+                <p className="font-mono text-[11px] font-semibold text-forest-700 uppercase tracking-[0.18em]">Galerija</p>
+                <div className="flex-1 h-px bg-bone-400/60" />
               </div>
-              <button
-                onClick={() => { onSave(current); onClose() }}
-                className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
-              >
-                Naudoti šią nuotrauką
-              </button>
-            </div>
-          )}
-
-          {/* From history */}
-          {historyPhotos.length > 0 && (
-            <div>
-              <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.18em] px-1 mb-2 mt-2">Iš istorijos</p>
-              <div className="flex gap-2 overflow-x-auto scrollbar-none pb-1">
-                {historyPhotos.map(e => (
-                  <button
-                    key={e.id}
-                    onClick={() => { onSave(e.imageUrl, true); onClose() }}
-                    className="flex-shrink-0 w-20 h-20 rounded-2xl overflow-hidden border-2 border-bone-400/40 hover:border-forest-400 active:border-forest-600 transition-all"
-                  >
-                    <PlantImage url={e.imageUrl} size="thumb" alt="" className="w-full h-full object-cover" />
-                  </button>
+              <div className="grid grid-cols-3 gap-2">
+                {galleryPhotos.map((url, i) => (
+                  <PhotoThumb key={`g-${i}`} url={url} fromHistory={false} />
                 ))}
               </div>
             </div>
           )}
 
-          {/* From camera / gallery */}
-          <label className="flex items-center gap-4 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 rounded-2xl px-4 py-3.5 cursor-pointer transition-colors">
-            <span className="text-forest-500"><Camera size={22} /></span>
-            <span className="font-display text-sm font-semibold tracking-tight text-forest-800">Fotografuoti</span>
-            <input type="file" accept="image/*" capture="environment" className="hidden"
-              onChange={e => { handleFile(e.target.files[0]); e.target.value = '' }} />
-          </label>
-          <label className="flex items-center gap-4 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 rounded-2xl px-4 py-3.5 cursor-pointer transition-colors">
-            <span className="text-forest-500"><ImageIcon size={22} /></span>
-            <span className="font-display text-sm font-semibold tracking-tight text-forest-800">Pasirinkti iš galerijos</span>
-            <input type="file" accept="image/*" className="hidden"
-              onChange={e => { handleFile(e.target.files[0]); e.target.value = '' }} />
-          </label>
+          {/* MŪSŲ ISTORIJA — timeline photo events */}
+          {historyPhotos.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <p className="font-mono text-[11px] font-semibold text-forest-700 uppercase tracking-[0.18em]">Mūsų istorija</p>
+                <div className="flex-1 h-px bg-bone-400/60" />
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {historyPhotos.map(e => (
+                  <PhotoThumb key={`h-${e.id}`} url={e.imageUrl} fromHistory />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Saugoti button — patvirtina selection iš Galerijos arba Istorijos */}
+          {selected && (
+            <button
+              onClick={handleSave}
+              className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors"
+            >
+              Išsaugoti
+            </button>
+          )}
+
+          {/* Capture / Upload — instant flows (joko select-confirm) */}
+          <div className="space-y-2">
+            <label className="flex items-center gap-4 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 rounded-2xl px-4 py-3.5 cursor-pointer transition-colors">
+              <span className="text-forest-500"><Camera size={22} /></span>
+              <span className="font-display text-sm font-semibold tracking-tight text-forest-800">Fotografuoti</span>
+              <input type="file" accept="image/*" capture="environment" className="hidden"
+                onChange={e => { handleFile(e.target.files[0]); e.target.value = '' }} />
+            </label>
+            <label className="flex items-center gap-4 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 rounded-2xl px-4 py-3.5 cursor-pointer transition-colors">
+              <span className="text-forest-500"><ImageIcon size={22} /></span>
+              <span className="font-display text-sm font-semibold tracking-tight text-forest-800">Įkelti iš įrenginio</span>
+              <input type="file" accept="image/*" className="hidden"
+                onChange={e => { handleFile(e.target.files[0]); e.target.value = '' }} />
+            </label>
+          </div>
 
           <button
             className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300 hover:bg-bone-400/70 transition-colors"
