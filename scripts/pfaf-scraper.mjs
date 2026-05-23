@@ -72,9 +72,19 @@ async function fetchUrlRetry(url, maxAttempts = 3) {
 // ── Extract structured data from PFAF HTML page ───────────────
 
 function extractPfafData(html, latin, url) {
-  // Empty page check (PFAF returns 200 for missing plants — empty form)
-  if (!/Edibility Rating|Medicinal Rating|Known Hazards/.test(html)) {
-    return { latin, found: false, pfafUrl: url }
+  // Empty page check — PFAF returns HTTP 200 + template page'ą trūkstamiems augalams.
+  // Template'as turi „Edibility Rating", „Medicinal Rating", „Known Hazards" LABEL'IUS
+  // be content'o, todėl ankstesnis check'as (pre-2026-05-24 bug) false-positive'ino
+  // 7413 entries kaip found:true su tuščiu turiniu.
+  //
+  // Naujasis check'as: ar lblCommanName span turi ne-tuščią content'ą,
+  // ARBA ar yra `<b>Common Name</b>` su tikru tekstu po jo.
+  const commonNameSpanMatch = html.match(/lblCommanName[^>]*>([\s\S]*?)<\/span>/i)
+  const commonNameContent = commonNameSpanMatch
+    ? commonNameSpanMatch[1].replace(/<[^>]+>/g, '').replace(/&nbsp;/g, '').trim()
+    : null
+  if (!commonNameContent) {
+    return { latin, found: false, pfafUrl: url, _reason: 'no-common-name-content' }
   }
 
   // Star ratings — active = `PFAF_searchV1b_NN.gif`, grey = `..._NNGrey.gif`
@@ -161,8 +171,13 @@ function extractPfafData(html, latin, url) {
   }
 
   // ── Medicinal Uses ────────────────────────────────────────
+  // BUG FIX 2026-05-24 — ankstesnis regex `Medicinal Uses[\s\S]*?` match'indavo
+  // PIRMĄ „Medicinal Uses" occurrence, kuri PFAF page'e yra NAVIGATION LINK
+  // (pos ~80k HTML). Realus content yra `<h2>Medicinal Uses</h2>` (~pos 97k).
+  // Tas false-positive grąžindavo `medicinalUses: ""` arba HTML residue.
+  // Po fix'o: anchor į h2 tag'ą (kaip extractH2Section daro kitur).
   let medicinalUses = null
-  const medUsesMatch = html.match(/Medicinal Uses[\s\S]*?(?:<br\s*\/?>)?([\s\S]*?)(?:Other Uses|Cultivation details|<h2|<div\s+class=["']subhead)/i)
+  const medUsesMatch = html.match(/<h2[^>]*>Medicinal Uses<\/h2>([\s\S]*?)(?:<h2|<div\s+class=["']subhead)/i)
   if (medUsesMatch) {
     medicinalUses = medUsesMatch[1].replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim()
     if (medicinalUses.length > 800) medicinalUses = medicinalUses.slice(0, 800) + '...'
