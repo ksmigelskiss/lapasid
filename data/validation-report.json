@@ -1,0 +1,1230 @@
+{
+  "generatedAt": "2026-05-23T22:50:34.679Z",
+  "source_files_checked": [
+    "pre-db.json",
+    "lt-names.json",
+    "gaspadorius-detail.json",
+    "aspca-toxicity.json",
+    "aspca-genus-map.json",
+    "pfaf.json",
+    "inat-names.json",
+    "latin-synonyms-reverse.json",
+    "lt-indoor-whitelist.json",
+    "curated-300.json"
+  ],
+  "issue_counts": {
+    "toxicity_pet_human_split": 29,
+    "family_mismatch": 2,
+    "curated300_no_lt_name": 6,
+    "orchid_contamination_remaining": 2,
+    "curated300_skeleton_pfaf": 163,
+    "whitelist_not_in_curated": 0,
+    "curated_not_in_whitelist": 0,
+    "reverse_map_conflicts": 1
+  },
+  "total_issues": 203,
+  "issues": {
+    "toxicity_pet_human_split": [
+      {
+        "genus": "LILIUM",
+        "aspcaToxicTo": [
+          "cats"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 0,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "HEDERA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 0,
+        "pfafMedicinal": 3,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "TRADESCANTIA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 1,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "FICUS",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 0,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "NERIUM",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 0,
+        "pfafMedicinal": 2,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "CYCAS",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 1,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "SANSEVIERIA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs"
+        ],
+        "pfafEdibility": 0,
+        "pfafMedicinal": 2,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "MONSTERA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs"
+        ],
+        "pfafEdibility": 4,
+        "pfafMedicinal": 0,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "ALOCASIA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 3,
+        "pfafMedicinal": 2,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "ALOE",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 5,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "ANDROMEDA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 0,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "ARUM",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 1,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "ASPARAGUS",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 0,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "BEGONIA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 0,
+        "pfafMedicinal": 2,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "CALLA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 2,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "IRIS",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 1,
+        "pfafMedicinal": 3,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "CLEMATIS",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 4,
+        "pfafMedicinal": 2,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "DRACAENA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 3,
+        "pfafMedicinal": 0,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "COLOCASIA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 4,
+        "pfafMedicinal": 2,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "GLORIOSA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 0,
+        "pfafMedicinal": 4,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "HYDRANGEA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 3,
+        "pfafMedicinal": 1,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "LANTANA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 4,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "VERBENA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 1,
+        "pfafMedicinal": 2,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "LOBELIA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 0,
+        "pfafMedicinal": 3,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "VINCA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 0,
+        "pfafMedicinal": 3,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "WISTERIA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 0,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "YUCCA",
+        "aspcaToxicTo": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafEdibility": 3,
+        "pfafMedicinal": 1,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "ALYSSUM",
+        "aspcaToxicTo": [
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 0,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      },
+      {
+        "genus": "ECHIUM",
+        "aspcaToxicTo": [
+          "horses"
+        ],
+        "pfafEdibility": 2,
+        "pfafMedicinal": 0,
+        "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
+      }
+    ],
+    "family_mismatch": [
+      {
+        "genus": "Bergenia",
+        "preDbFamily": "SAXIFRAGACEAE",
+        "ltFamily": "Savaitės straipsniai",
+        "issue": "ltFamily looks suspicious (disambig/artifact)"
+      },
+      {
+        "genus": "Trollius",
+        "preDbFamily": "RANUNCULACEAE",
+        "ltFamily": "Savaitės straipsniai",
+        "issue": "ltFamily looks suspicious (disambig/artifact)"
+      }
+    ],
+    "curated300_no_lt_name": [
+      {
+        "latinName": "Cephalotus",
+        "tier": 3,
+        "notes": ""
+      },
+      {
+        "latinName": "Curio",
+        "tier": 3,
+        "notes": "whitelist: String of pearls (formerly Senecio rowleyanus)"
+      },
+      {
+        "latinName": "Haworthiopsis",
+        "tier": 3,
+        "notes": ""
+      },
+      {
+        "latinName": "Pachypodium",
+        "tier": 3,
+        "notes": ""
+      },
+      {
+        "latinName": "Radermachera",
+        "tier": 3,
+        "notes": "whitelist: China doll plant — indoor"
+      },
+      {
+        "latinName": "Rhoipsaphis",
+        "tier": 3,
+        "notes": ""
+      }
+    ],
+    "orchid_contamination_remaining": [
+      {
+        "genus": "Laelia",
+        "suspectName": "Orchidėja laelia",
+        "sources": [
+          "wiki",
+          "derlingas"
+        ]
+      },
+      {
+        "genus": "Odontoglossum",
+        "suspectName": "Orchidėja odontoglossum",
+        "sources": [
+          "wiki"
+        ]
+      }
+    ],
+    "curated300_skeleton_pfaf": [
+      {
+        "latinName": "Kalanchoe",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Pilea",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Spathiphyllum",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Philodendron",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Crassula arborescens",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Ceropegia woodii",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Epipremnum pinnatum",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Bougainvillea",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Clivia",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Dieffenbachia",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Anthurium",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Nepenthes",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Schlumbergera",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Araucaria heterophylla",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Lotus berthelotii",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Senecio cruentus",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Syngonium",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Tillandsia",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Streptocarpus",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Cattleya",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Columnea",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Epiphyllum",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Hoya",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Echeveria",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Phalaenopsis",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Zamioculcas",
+        "tier": 1,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Mammillaria",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Paphiopedilum",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Adenium",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Fatsia",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Nematanthus",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Aphelandra",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Ctenanthe",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Exacum affine",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Globba winitii",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Phlebodium aureum",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Rhapis",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Beaucarnea",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Microsorum",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Allamanda",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Chamaecereus",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Macropiper",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Tacitus",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Thunbergia",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Aichryson",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Alonsoa",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Amaryllis",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Anastatica",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Ansellia",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Archontophoenix",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Ariocarpus",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Astrophytum",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Beschorneria",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Borzicactus",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Brassavola",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Ceratopteris",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Cleistocactus",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Cochlioda",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Copiapoa",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Darlingtonia",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Dendrochilum",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Dioon",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Dischidia",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Dizygotheca",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Dorotheanthus",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Dyckia",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Episcia",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Epithelantha",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Eucharis",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Eustoma",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Felicia",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Ferocactus",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Frailea",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Galtonia",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Gymnocalycium",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Haageocereus",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Ixia",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Ixiolirion",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Jacaranda",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Juanulloa",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Kaempferia",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Lampranthus",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Latania",
+        "tier": 2,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Aeonium",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Peperomia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Saintpaulia jonantha",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Aglaonema",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Beloperone guttata",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Brunfelsia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Caladium",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Caryota mitis",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Clusia rosea",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Cryptanthus",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Cymbidium",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Fittonia verschaffeltii",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Haworthia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Laelia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Miltonia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Neoregelia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Nidularium",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Pandanus veitchii",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Stephanotis floribunda",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Tetrastigma voinierianum",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Davallia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Chamaedorea elegans",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Codiaeum",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Cyclamen persicum",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Xanthosoma lindenii",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Platycerium",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Rhoeo spathacea",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Schefflera",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Delosperma",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Hippeastrum",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Chlorophytum",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Aeschynanthus speciosus",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Anigozanthos flavidus",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Browallia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Crossandra infundibuliformis",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Dionaea muscipula",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Eranthemum pulchellum",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Gardenia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Gloxinia sylvatica",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Iresine",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Microlepia speluncae",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Odontoglossum",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Pavonia multiflora",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Pisonia umbellifera",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Reinwardtia indica",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Rhipsalidopsis",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Rhoicissus capensis",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Scirpus cernuus",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Sinningia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Smithiantha",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Soleirolia soleirolii",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Sparmannia africana",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Vriesea",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Zebrina",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Achimenes",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Freesia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Strelitzia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Alpinia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Billbergia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Brassia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Calanthe",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Cephalocereus",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Coelogyne",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Coryphantha",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Curcuma",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Disocactus",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Espostoa",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Eucomis",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Gasteria",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Guzmania",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Lithops",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Nemesia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Phragmipedium",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Rebutia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Rhipsalis",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Stapelia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Vanda",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Leuchtenbergia",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Lycaste",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      },
+      {
+        "latinName": "Lygodium",
+        "tier": 3,
+        "note": "PFAF entry was skeleton (template) — flipped to found:false"
+      }
+    ],
+    "whitelist_not_in_curated": [],
+    "curated_not_in_whitelist": [],
+    "reverse_map_conflicts": [
+      {
+        "legacyName": "Kentia belmoreana",
+        "mappedTo": "Hoodia belmoreana",
+        "issue": "Suspicious — verify if mapping correct"
+      }
+    ]
+  }
+}

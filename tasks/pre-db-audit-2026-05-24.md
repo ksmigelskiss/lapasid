@@ -24,7 +24,7 @@ ASPCA fix jau commit'intas (6dec3e3 — split toxic/non-toxic). Likę šaltiniai
 - [x] **ETAPAS 2** lt-names.json audit + cross-validate ✅
 - [x] **ETAPAS 3** iNat reverse-synonym integration ✅ (AHS species re-parse skipped → task #44)
 - [x] **ETAPAS 4** Indoor whitelist + curated-300 regeneration ✅
-- [ ] **ETAPAS 5** Cross-source validation pipeline
+- [x] **ETAPAS 5** Cross-source validation pipeline ✅
 - [ ] **WRAP-UP** memory + tasks update
 
 ## Progress log
@@ -106,3 +106,25 @@ ASPCA fix jau commit'intas (6dec3e3 — split toxic/non-toxic). Likę šaltiniai
 - Pelargonium grandiflorum LT name truncated parenthesis — gaspadorius scrape upstream
 - Lowercase LT names (cosmetic) — botanical authors style, lt-names refresh needed
 - T2 weird artifacts: Arundo „nendrės vardas", Polystichum „spyglinis Punktfarn", Ceratopteris „Homfarn", Coleus „buntmesai" — upstream lt-names cleanup (task #43 jau egzistuoja)
+
+### ETAPAS 5 — Cross-source validation pipeline (DONE)
+
+**Padaryta:**
+- `scripts/validate-pre-db.mjs` — automatinis discrepancy detector tarp visus 10 šaltinius (pre-db, lt-names, gasp, ASPCA, PFAF, iNat, reverse map, whitelist, curated-300)
+- `data/validation-report.json` — 203 issues per 8 kategorijas
+- 4 tikri issues fix'inti: Bergenia + Trollius „Savaitės straipsniai" cleared, Kentia belmoreana → Howea belmoreana (buvo blogai mapped į Hoodia)
+
+**Report'o suvestinė:**
+
+| Kategorija | Count | Impact |
+|---|---|---|
+| toxicity_pet_human_split | 29 | INFO — Aloe, Lilium, Hedera, Tradescantia: voice persona must clearly split human vs pet |
+| family_mismatch | 2 → 0 (fixed) | Bergenia, Trollius cleared |
+| curated300_no_lt_name | 6 | Expected — T3 specialty (Cephalotus, Curio, Haworthiopsis, etc.) |
+| orchid_contamination_remaining | 2 | FALSE POSITIVES — Laelia, Odontoglossum yra TIKRI Orchidaceae |
+| curated300_skeleton_pfaf | 163 | Expected — PFAF orientuotas į edibles |
+| whitelist_not_in_curated | 0 | ✓ |
+| curated_not_in_whitelist | 0 | ✓ |
+| reverse_map_conflicts | 1 → 0 (fixed) | Kentia belmoreana fixed |
+
+**Strategiškai:** pipeline egzistuoja, gali būti paleidžiamas bet kada (`node scripts/validate-pre-db.mjs`). Tas duoda continuous data quality monitoring per visus future scrape refresh'us.

@@ -5271,7 +5271,7 @@
       "ltAllForms": [
         "Bergenija"
       ],
-      "ltFamily": "Savaitės straipsniai",
+      "ltFamily": null,
       "wikidataId": "Q156699",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Bergenija",
       "sources": [
@@ -5295,6 +5295,10 @@
         "sodospalvosCategory": "geles-daugiametes",
         "inat": "Bergenija",
         "inatSynonymsCount": 0
+      },
+      "_fixApplied": {
+        "at": "2026-05-24",
+        "reason": "cleared Wiki disambig artifact \"Savaitės straipsniai\""
       }
     },
     "Berkheya": {
@@ -40759,7 +40763,7 @@
         "Burbulis",
         "lotyniuotas"
       ],
-      "ltFamily": "Savaitės straipsniai",
+      "ltFamily": null,
       "wikidataId": "Q161588",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Burbulis",
       "sources": [
@@ -40781,6 +40785,10 @@
         "sodospalvosCategory": "geles-daugiametes",
         "inat": null,
         "inatSynonymsCount": 0
+      },
+      "_fixApplied": {
+        "at": "2026-05-24",
+        "reason": "cleared Wiki disambig artifact \"Savaitės straipsniai\""
       }
     },
     "Tropaeolum": {

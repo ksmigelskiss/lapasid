@@ -2560,10 +2560,11 @@
       ]
     },
     "Kentia belmoreana": {
-      "canonical": "Hoodia belmoreana",
+      "canonical": "Howea belmoreana",
       "sources": [
-        "pre-db-species"
-      ]
+        "manual-fix-2026-05-24"
+      ],
+      "previousCanonical": "Hoodia belmoreana (incorrect mapping)"
     },
     "Kenta forsterana": {
       "canonical": "Hoodia forsterana",
