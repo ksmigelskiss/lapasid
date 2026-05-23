@@ -93,6 +93,32 @@ export async function saveToCatalogServer(plant) {
   if (!id) return { ok: false, reason: 'no_id' }
   const entry = toCatalogEntry(plant)
   if (!Object.keys(entry).length) return { ok: false, reason: 'empty_entry' }
+
+  // Step 6t — CATALOG IMAGE FREEZE po pirmojo save'o.
+  // PRIES: kiekvienas re-enrich + user'io plant.image pakeitimas (custom upload)
+  //        perrašydavo catalog.image. Tas darė silent drift: per kelis re-enrich
+  //        cycles catalog'as galiausiai turėdavo USER'io custom foto kaip
+  //        global representative — nors architektūriškai catalog turi būti
+  //        Stage 1 metu pasirinktas representative shot'as.
+  //
+  // PO: skaitytojam esamą catalog doc'ą. Jei jau turi image — strip'iname
+  //     entry.image prieš merge:true → existing image PRESERVED.
+  //     Pirmasis save'as set'ina image (no existing → eina pro). Sekantys
+  //     save'ai/re-enrich UPDATE'ina kitus laukus (aprasymas, care, narrative),
+  //     BET image lieka frozen.
+  //
+  // Admin override ateityje (AdminPanel'is) galės eksplicitiškai pakeisti
+  // catalog.image be šitos restriction'os (admin SDK direct write).
+  try {
+    const existingDoc = await adminFirestore().collection('catalog').doc(id).get()
+    if (existingDoc.exists && existingDoc.data().image) {
+      delete entry.image
+      console.log('[catalog-server] image freeze — existing preserved', id)
+    }
+  } catch (e) {
+    console.warn('[catalog-server] freeze check failed (continuing):', e?.message)
+  }
+
   const clean = stripUndefinedDeep({ ...entry, updatedAt: new Date().toISOString() })
   try {
     await adminFirestore().collection('catalog').doc(id).set(clean, { merge: true })
