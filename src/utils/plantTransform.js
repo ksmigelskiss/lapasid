@@ -300,6 +300,22 @@ export function fromAIResult(aiResult) {
     // UI date label'ams. Mums reikia tiksli ISO timestamp'a kad galėtumėm
     // skaičiuoti 90s timing window'ą enrichment state'ui.
     ...(aiResult.enrichmentStartedAt ? { enrichmentStartedAt: aiResult.enrichmentStartedAt } : {}),
+    // Step 6t — propagate server'io enrichment completion + error markers.
+    // ROOT CAUSE rastas testuojant Kalateja re-enrich (logs rodė
+    // completedAt: undefined nors phase2 data buvo):
+    //   • Server'io processPlant fullPlant include'a phase2CompletedAt + null
+    //   • saveUserPlantServer calls fromAIResult(fullPlant)
+    //   • fromAIResult buvo nepropaguodavo šių lauks → setDoc merge:true
+    //     RAŠĖ visą care info BET NE completion marker'į
+    //   • Klient'as matydavo startedAt set + completedAt missing → 'failed'
+    //     per 90s timeout — false negative
+    //
+    // enrichmentError naudoja `!== undefined` (ne truthy) kad galėtų patekti
+    // explicit null (server'io success path: enrichmentError: null clear'ina
+    // ankstesnį error'ą).
+    ...(aiResult.phase2CompletedAt ? { phase2CompletedAt: aiResult.phase2CompletedAt } : {}),
+    ...(aiResult.enrichmentError !== undefined ? { enrichmentError: aiResult.enrichmentError } : {}),
+    ...(aiResult.aprasymasSource ? { aprasymasSource: aiResult.aprasymasSource } : {}),
     verificationStatus,
     aiConfidence,
     aiMatchLevel: aiResult.matchLevel ?? null,
