@@ -22,7 +22,7 @@ ASPCA fix jau commit'intas (6dec3e3 — split toxic/non-toxic). Likę šaltiniai
 
 - [x] **ETAPAS 1** PFAF audit + fix ✅
 - [x] **ETAPAS 2** lt-names.json audit + cross-validate ✅
-- [ ] **ETAPAS 3** iNat reverse-synonym integration + AHS species re-parse
+- [x] **ETAPAS 3** iNat reverse-synonym integration ✅ (AHS species re-parse skipped → task #44)
 - [ ] **ETAPAS 4** Indoor whitelist (`data/lt-indoor-whitelist.json`)
 - [ ] **ETAPAS 5** Cross-source validation pipeline
 - [ ] **WRAP-UP** memory + tasks update
@@ -66,3 +66,23 @@ ASPCA fix jau commit'intas (6dec3e3 — split toxic/non-toxic). Likę šaltiniai
 - 3+ non-plant artifact entries pre-db.json'e (Rita, Valia, Darwin). Task #43
 
 **Post-fix confidence distribution:** high=440, mid=466, null=749 (2 stripped to null)
+
+### ETAPAS 3 — iNat reverse-synonym integration (DONE — AHS skipped į task #44)
+
+**Padaryta:**
+- `scripts/extend-latin-synonyms.mjs` — pridėjom 28 žinomas major taxonomy migrations į `data/latin-synonyms-reverse.json`:
+  - Sansevieria genus + species → Dracaena (2017 Mwanza et al.)
+  - Saintpaulia → Streptocarpus sect. Saintpaulia (2017 Nishii et al.)
+  - Old trade synonyms: Zygocactus → Schlumbergera, Kentia → Howea, Pothos aureus → Epipremnum aureum, Crassula portulacea → Crassula ovata, etc.
+- `api/_lib/latinResolver-server.js` — server mirror sukurtas (auto-loads, idempotent)
+- `src/utils/buildPlantRagContext.js` + server mirror — wire'inta TRY-ORIGINAL-FIRST → CANONICAL FALLBACK pattern:
+  - Pre-DB lookup'as: pirma try original (Saintpaulia), jei null — try canonical (Streptocarpus)
+  - PFAF lookup'as: original first, canonical fallback
+  - ASPCA lookup'as: original first, canonical fallback
+- RAG context'as gauna „Taxonomy: reclassified" notė kai migration relevant, su skirtingu wording'u kuris path naudotas
+
+**Test atskleidimas:** Sansevieria → Dracaena perdaug įmanomas (Dracaena PFAF rich), Saintpaulia → Streptocarpus migration veikia (abu pre-db'oje), bet PFAF abu found:false. T.y. real impact LT'iškame batch'e: Sansevieria gauna PFAF medicinal/edibility info iš Dracaena entry.
+
+**AHS species re-parse skipped:** AHS species level `description` lauke turi parsing artifact'us (Aloe vera = „.", Dieffenbachia 'Amoena' cross-ref). BET RAG builder'is naudoja Beckett description prioritetu, todėl ne blocker. Task #44 future.
+
+**Closes #39** (iNat reverse-synonym fallback) per integration.

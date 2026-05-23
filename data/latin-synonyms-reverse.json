@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-05-21T10:24:44.842Z",
-  "totalEntries": 1103,
+  "totalEntries": 1131,
   "fromMultipleSources": 0,
   "reverseMap": {
     "Leucojum autumnale (Autumn snowflake)": {
@@ -6620,6 +6620,176 @@
       "sources": [
         "pfaf-latinSynonyms"
       ]
+    },
+    "Sansevieria": {
+      "canonical": "Dracaena",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Sansevieria trifasciata": {
+      "canonical": "Dracaena trifasciata",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Sansevieria cylindrica": {
+      "canonical": "Dracaena angolensis",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Sansevieria masoniana": {
+      "canonical": "Dracaena masoniana",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Sansevieria hahnii": {
+      "canonical": "Dracaena trifasciata",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Sansevieria zeylanica": {
+      "canonical": "Dracaena zeylanica",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Sansevieria laurentii": {
+      "canonical": "Dracaena trifasciata",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Sansevieria moonshine": {
+      "canonical": "Dracaena trifasciata",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Sansevieria bacularis": {
+      "canonical": "Dracaena bacularis",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Sansevieria stuckyi": {
+      "canonical": "Dracaena stuckyi",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Saintpaulia": {
+      "canonical": "Streptocarpus",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Saintpaulia ionantha": {
+      "canonical": "Streptocarpus ionanthus",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Saintpaulia confusa": {
+      "canonical": "Streptocarpus confusus",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Saintpaulia grandifolia": {
+      "canonical": "Streptocarpus grandifolius",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Saintpaulia teitensis": {
+      "canonical": "Streptocarpus teitensis",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Zygocactus": {
+      "canonical": "Schlumbergera",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Kentia": {
+      "canonical": "Howea",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Kentia forsteriana": {
+      "canonical": "Howea forsteriana",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Howeia": {
+      "canonical": "Howea",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Howeia forsteriana": {
+      "canonical": "Howea forsteriana",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Crassula portulacea": {
+      "canonical": "Crassula ovata",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Crassula argentea": {
+      "canonical": "Crassula ovata",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Cotyledon ovata": {
+      "canonical": "Crassula ovata",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Scindapsus aureus": {
+      "canonical": "Epipremnum aureum",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Pothos aureus": {
+      "canonical": "Epipremnum aureum",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Rhaphidophora aurea": {
+      "canonical": "Epipremnum aureum",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Ficus pandurata": {
+      "canonical": "Ficus lyrata",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
+    },
+    "Zamioculcas lanceolata": {
+      "canonical": "Zamioculcas zamiifolia",
+      "sources": [
+        "major-taxonomy-migration-manual-2026-05-24"
+      ]
     }
-  }
+  },
+  "extendedAt": "2026-05-23T22:22:48.282Z",
+  "extensionNote": "Major taxonomy migrations added manually 2026-05-24 — Sansevieria→Dracaena, Saintpaulia→Streptocarpus, plus trade synonyms."
 }

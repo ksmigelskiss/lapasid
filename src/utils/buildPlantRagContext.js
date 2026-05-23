@@ -29,6 +29,7 @@
 
 import { lookupPlant, getRawDb } from './preDb.js'
 import { resolveLt } from './ltDictionary.js'
+import { resolveCanonical, getReclassification } from './latinResolver.js'
 
 // Lazy loaders for other DB files
 let pfafCache = null
@@ -103,14 +104,46 @@ export async function buildPlantRagContext(latinName, options = {}) {
   const sections = []
   const sourcesUsed = new Set()
 
-  // ── IDENTITY (always) ───────────────────────────────────────
-  const plant = await lookupPlant(latinName)
-  const ltEntry = await resolveLt(latinName)
+  // ── TAXONOMY MIGRATION RESOLVE (2026-05-24) ──────────────────
+  // STRATEGY: TRY ORIGINAL FIRST → CANONICAL FALLBACK
+  //
+  // Rationale: kai user'is įveda „Saintpaulia ionantha", jis nori INFO APIE
+  // TĄ rūšį. Jei mūsų pre-DB turi Saintpaulia entry (ji buvo standalone
+  // iki 2017 m. migration'o), naudojam jį — care info specifiškas.
+  // BET jei pre-DB null (Wikipedia/iNat jau migravo, mes ne) — fall back
+  // į canonical (Streptocarpus). Geriau partial info nei nieko.
+  //
+  // PFAF/ASPCA lookup'us — bandom abu (original + canonical), pirmas
+  // grąžinantis data laimi. Tas saugiausias path'as.
+  const canonicalName = await resolveCanonical(latinName)
+  const reclassification = canonicalName !== latinName
+    ? await getReclassification(latinName)
+    : null
+
+  // ── IDENTITY (try original first, canonical as fallback) ──────
+  let plant = await lookupPlant(latinName)
+  let ltEntry = await resolveLt(latinName)
+  let lookupName = latinName
+  let usedCanonicalFallback = false
+
+  if (!plant?.genus && reclassification) {
+    plant = await lookupPlant(canonicalName)
+    ltEntry = await resolveLt(canonicalName)
+    lookupName = canonicalName
+    usedCanonicalFallback = true
+  }
 
   sections.push(`=== VERIFIED FACTS about ${latinName} ===\n`)
 
   const idLines = []
   idLines.push(`Latin: ${latinName}`)
+  if (reclassification) {
+    const note = usedCanonicalFallback
+      ? `(originalui DB tylėjo — info paimta iš ${reclassification.canonical})`
+      : `(mūsų DB turi originalą; ${reclassification.canonical} taikspatcheckintas)`
+    idLines.push(`Taxonomy: reclassified → ${reclassification.canonical} ${note}`)
+    sourcesUsed.add('taxonomy-migration')
+  }
   if (plant?.genus?.family) {
     idLines.push(`Family: ${plant.genus.family} [sources: ${plant.genus.inSources.join(', ')}]`)
     plant.genus.inSources.forEach(s => sourcesUsed.add(s))
@@ -133,8 +166,11 @@ export async function buildPlantRagContext(latinName, options = {}) {
 
   // ── PFAF data ───────────────────────────────────────────────
   const pfaf = await loadPfaf()
+  // PFAF lookup — try original first, then canonical (post-migration)
   const pfafEntry = pfaf.results?.[latinName]
-                  ?? pfaf.results?.[latinName.split(/\s+/)[0]]  // genus fallback
+                  ?? pfaf.results?.[latinName.split(/\s+/)[0]]
+                  ?? (reclassification ? pfaf.results?.[canonicalName] : null)
+                  ?? (reclassification ? pfaf.results?.[canonicalName.split(/\s+/)[0]] : null)
 
   if (pfafEntry?.found) {
     sourcesUsed.add('pfaf')
@@ -225,7 +261,11 @@ TUŠČIAS pavojai[] = SCHEMA KLAIDA šiam augalui (turi knownHazards data).`,
   // ── ASPCA toxicity (high authority) ─────────────────────────
   // Anksčiau "VERIFIED — authoritative" + "⚠️" markeriai padarė AI atsargia.
   // Naujasis ton'as: clear action plan + Lithuanian narrative requirement.
-  const aspcaEntry = await findAspcaEntry(latinName, pfafEntry?.commonNameEn)
+  // ASPCA lookup — try original first, then canonical
+  let aspcaEntry = await findAspcaEntry(latinName, pfafEntry?.commonNameEn)
+  if (!aspcaEntry && reclassification) {
+    aspcaEntry = await findAspcaEntry(canonicalName, pfafEntry?.commonNameEn)
+  }
   if (aspcaEntry) {
     sourcesUsed.add('aspca')
     sections.push(

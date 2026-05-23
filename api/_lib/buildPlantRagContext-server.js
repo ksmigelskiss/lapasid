@@ -22,6 +22,7 @@
 import { lookupPlantServer } from './preDb-server.js'
 import { resolveLtServer } from './ltDictionary-server.js'
 import { loadJson } from './dataLoader-server.js'
+import { resolveCanonicalServer, getReclassificationServer } from './latinResolver-server.js'
 
 async function loadPfaf() {
   try {
@@ -79,14 +80,38 @@ export async function buildPlantRagContextServer(latinName, options = {}) {
   const sections = []
   const sourcesUsed = new Set()
 
-  // ── IDENTITY ────────────────────────────────────────────────
-  const plant = await lookupPlantServer(latinName)
-  const ltEntry = await resolveLtServer(latinName)
+  // ── TAXONOMY MIGRATION RESOLVE (2026-05-24) ──────────────────
+  // MIRROR src/utils/buildPlantRagContext.js — TRY-ORIGINAL-FIRST pattern.
+  // Reverse map turi major migrations: Sansevieria→Dracaena, Saintpaulia→Streptocarpus.
+  const canonicalName = await resolveCanonicalServer(latinName)
+  const reclassification = canonicalName !== latinName
+    ? await getReclassificationServer(latinName)
+    : null
+
+  // Try original first; canonical fallback only if original missing
+  let plant = await lookupPlantServer(latinName)
+  let ltEntry = await resolveLtServer(latinName)
+  let lookupName = latinName
+  let usedCanonicalFallback = false
+
+  if (!plant?.genus && reclassification) {
+    plant = await lookupPlantServer(canonicalName)
+    ltEntry = await resolveLtServer(canonicalName)
+    lookupName = canonicalName
+    usedCanonicalFallback = true
+  }
 
   sections.push(`=== VERIFIED FACTS about ${latinName} ===\n`)
 
   const idLines = []
   idLines.push(`Latin: ${latinName}`)
+  if (reclassification) {
+    const note = usedCanonicalFallback
+      ? `(originalui DB tylėjo — info paimta iš ${reclassification.canonical})`
+      : `(mūsų DB turi originalą; ${reclassification.canonical} pažymėtas info)`
+    idLines.push(`Taxonomy: reclassified → ${reclassification.canonical} ${note}`)
+    sourcesUsed.add('taxonomy-migration')
+  }
   if (plant?.genus?.family) {
     idLines.push(`Family: ${plant.genus.family} [sources: ${plant.genus.inSources.join(', ')}]`)
     plant.genus.inSources.forEach(s => sourcesUsed.add(s))
@@ -109,8 +134,11 @@ export async function buildPlantRagContextServer(latinName, options = {}) {
 
   // ── PFAF data ───────────────────────────────────────────────
   const pfaf = await loadPfaf()
+  // PFAF lookup — try original first, then canonical
   const pfafEntry = pfaf.results?.[latinName]
                   ?? pfaf.results?.[latinName.split(/\s+/)[0]]
+                  ?? (reclassification ? pfaf.results?.[canonicalName] : null)
+                  ?? (reclassification ? pfaf.results?.[canonicalName.split(/\s+/)[0]] : null)
 
   if (pfafEntry?.found) {
     sourcesUsed.add('pfaf')
@@ -192,7 +220,11 @@ TUŠČIAS pavojai[] = SCHEMA KLAIDA šiam augalui (turi knownHazards data).`,
   }
 
   // ── ASPCA toxicity (high authority) ─────────────────────────
-  const aspcaEntry = await findAspcaEntry(latinName, pfafEntry?.commonNameEn)
+  // ASPCA lookup — try original first, then canonical
+  let aspcaEntry = await findAspcaEntry(latinName, pfafEntry?.commonNameEn)
+  if (!aspcaEntry && reclassification) {
+    aspcaEntry = await findAspcaEntry(canonicalName, pfafEntry?.commonNameEn)
+  }
   if (aspcaEntry) {
     sourcesUsed.add('aspca')
     sections.push(
