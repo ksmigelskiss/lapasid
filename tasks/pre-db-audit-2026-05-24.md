@@ -23,7 +23,7 @@ ASPCA fix jau commit'intas (6dec3e3 — split toxic/non-toxic). Likę šaltiniai
 - [x] **ETAPAS 1** PFAF audit + fix ✅
 - [x] **ETAPAS 2** lt-names.json audit + cross-validate ✅
 - [x] **ETAPAS 3** iNat reverse-synonym integration ✅ (AHS species re-parse skipped → task #44)
-- [ ] **ETAPAS 4** Indoor whitelist (`data/lt-indoor-whitelist.json`)
+- [x] **ETAPAS 4** Indoor whitelist + curated-300 regeneration ✅
 - [ ] **ETAPAS 5** Cross-source validation pipeline
 - [ ] **WRAP-UP** memory + tasks update
 
@@ -86,3 +86,23 @@ ASPCA fix jau commit'intas (6dec3e3 — split toxic/non-toxic). Likę šaltiniai
 **AHS species re-parse skipped:** AHS species level `description` lauke turi parsing artifact'us (Aloe vera = „.", Dieffenbachia 'Amoena' cross-ref). BET RAG builder'is naudoja Beckett description prioritetu, todėl ne blocker. Task #44 future.
 
 **Closes #39** (iNat reverse-synonym fallback) per integration.
+
+### ETAPAS 4 — Indoor whitelist + curated-300 regeneration (DONE)
+
+**Padaryta:**
+- `scripts/build-lt-indoor-whitelist.mjs` + `data/lt-indoor-whitelist.json` — 357 manualiai filtered indoor genera (T1=195, T2=154, T3=8)
+- Methodology: indoor source (Beckett/Cheng/gasp) + LT confidence + outdoor blacklist (200+ genera) + 15 famous-indoor-species overrides + 35+ specialty additions
+- `scripts/generate-curated-300.mjs` modifikuotas — naudoja whitelist kaip primary filter (vietoj Beckett tiesioginio)
+- Bonus fix: cross-genus contamination filter pick'ant species (drop'ina gasp entries kur ltName ne sutampa su whitelist canonical)
+
+**Results:**
+- T1=50, T2=100, T3=150 (exact targets)
+- Mainstream 17/17 visi T1 (PHILODENDRON, MONSTERA, FICUS, SANSEVIERIA, EPIPREMNUM, SPATHIPHYLLUM, CALATHEA, ALOE, ECHEVERIA, ANTHURIUM, BEGONIA, PHALAENOPSIS, CRASSULA, ZAMIOCULCAS, PILEA, KALANCHOE, OXALIS)
+- Outdoor sanity: 13/15 absent (Senecio + Hedera gray-zone, leftover acceptable — užtikrinta whitelist'e dėl indoor narių S. rowleyanus + Hedera helix indoor hobby)
+- PFAF rich coverage: 294/300 (98%)
+- Syngonium/Schefflera orchid contamination FIXED (gaspadorius scrape contamination drop'ina dar 6 entries — Pelargonium, Lotus, Saintpaulia, Tolmiea)
+
+**Žinomos T2/T3 quality issues (future tasks):**
+- Pelargonium grandiflorum LT name truncated parenthesis — gaspadorius scrape upstream
+- Lowercase LT names (cosmetic) — botanical authors style, lt-names refresh needed
+- T2 weird artifacts: Arundo „nendrės vardas", Polystichum „spyglinis Punktfarn", Ceratopteris „Homfarn", Coleus „buntmesai" — upstream lt-names cleanup (task #43 jau egzistuoja)
