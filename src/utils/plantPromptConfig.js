@@ -150,9 +150,9 @@ export const TOOL_DETAILS = {
       idomybes: {
         type: 'array',
         items: { type: 'string' },
-        minItems: 2,
+        minItems: 0,
         maxItems: 4,
-        description: 'REQUIRED — array of 2-3 fun facts in Lithuanian. DO NOT return empty array. Pick from: history, etymology, ecological role, cultural significance, unusual biology, geographic origin story, breeding history, traditional uses. If you cannot think of one — invent reasonable facts based on the genus characteristics, but NEVER skip this field.',
+        description: 'Array of 0-4 fun facts in Lithuanian. Acceptable categories: history (verifiable persons/dates), etymology (cited or well-known sources), ecological role, cultural significance (well-documented folklore), unusual biology, geographic origin story, traditional uses (medicine/food with literature backing). NEVER fabricate specific claims — do NOT invent etymology like „vardas kilo iš X" without a real source, do NOT attribute fake historical episodes, do NOT cite imaginary scientific studies. If uncertain about a specific fact — return empty array [] (perfectly acceptable, much better than invented content). When including folklore that may be apocryphal — hedge with „pasakojama, kad..." or „anekdotinė istorija mini...". REAL verifiable facts (e.g. NASA Clean Air Study 1989 confirmed plants, named botanists like Joseph Dieffenbach, traditional medicinal uses documented in pharmacopoeia) are ENCOURAGED.',
       },
       savybes: {
         type: 'object',

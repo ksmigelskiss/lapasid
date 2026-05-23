@@ -153,8 +153,26 @@ console.log('[aspca-map] loading sources...')
 const aspca  = JSON.parse(readFileSync(ASPCA, 'utf-8'))
 const preDb  = JSON.parse(readFileSync(PRE_DB, 'utf-8'))
 
+// BUG FIX 2026-05-24 — filter'inam tik TOXIC entries iš naujosios v2 schema'os.
+// Pre-fix scraper'is laikė non-toxic kaip toxic, todėl genus-map gaudavo
+// false positives (Saintpaulia, Chlorophytum etc.). Naujasis scraper'is
+// pažymi entry su `safetyStatus`, čia tiesiog filter'inam pagal jį.
+//
+// Sanity: v1 (pre-fix) schema'oje field'o nebuvo — fallback: jei
+// `safetyStatus` undefined, manyti 'toxic' (legacy behavior).
+const aspcaEntries = Object.entries(aspca.toxicity)
+const toxicEntries = aspcaEntries.filter(([slug, entry]) => {
+  const status = entry.safetyStatus ?? 'toxic' // legacy fallback
+  return status === 'toxic'
+})
+const filteredOut = aspcaEntries.length - toxicEntries.length
+console.log(`[aspca-map] schema: v${aspca.schemaVersion ?? 1}, filtered out ${filteredOut} non-toxic entries (e.g. African Violet, Spider Plant)`)
+
 const preDbGenera = new Set(Object.keys(preDb.genera).map(g => g.toLowerCase()))
-console.log(`[aspca-map] pre-DB: ${preDbGenera.size} genera | ASPCA: ${Object.keys(aspca.toxicity).length} toxic plants`)
+console.log(`[aspca-map] pre-DB: ${preDbGenera.size} genera | ASPCA toxic-only: ${toxicEntries.length} plants`)
+
+// Convert filtered toxic entries to object for downstream compatibility
+const aspcaToxic = Object.fromEntries(toxicEntries)
 
 // Build genus → ASPCA entries map
 const genusMap = new Map() // GENUS → { entries: [], matchSources: [] }
@@ -177,7 +195,7 @@ function addMatch(genus, entry, matchType) {
 
 // PASS 1: Manual map (highest priority)
 let manualHits = 0
-for (const [slug, entry] of Object.entries(aspca.toxicity)) {
+for (const [slug, entry] of Object.entries(aspcaToxic)) {
   if (MANUAL_MAP[slug]) {
     addMatch(MANUAL_MAP[slug], entry, 'manual')
     manualHits++
@@ -187,7 +205,7 @@ console.log(`[aspca-map] manual map: ${manualHits} entries matched`)
 
 // PASS 2: Match by displayName containing pre-DB genus word
 let displayNameHits = 0
-for (const [slug, entry] of Object.entries(aspca.toxicity)) {
+for (const [slug, entry] of Object.entries(aspcaToxic)) {
   if (MANUAL_MAP[slug]) continue // already matched
   const words = entry.displayName.toLowerCase().split(/[\s'\-,()]+/).filter(Boolean)
   for (const w of words) {
@@ -202,7 +220,7 @@ console.log(`[aspca-map] displayName match: ${displayNameHits} entries`)
 
 // PASS 3: Match by slug words
 let slugHits = 0
-for (const [slug, entry] of Object.entries(aspca.toxicity)) {
+for (const [slug, entry] of Object.entries(aspcaToxic)) {
   if (MANUAL_MAP[slug]) continue
   // Skip if already matched in pass 2
   const alreadyMatched = [...genusMap.values()].some(m =>
@@ -243,7 +261,9 @@ const inPreDb = Object.keys(output).filter(g => preDb.genera[g]).length
 console.log()
 console.log('=== ASPCA-GENUS MAP RESULTS ===')
 console.log(`Total pre-DB genera:         ${preDbGenera.size}`)
-console.log(`Total ASPCA entries:         ${Object.keys(aspca.toxicity).length}`)
+console.log(`Total ASPCA entries (raw):   ${Object.keys(aspca.toxicity).length}`)
+console.log(`  Toxic entries used:        ${toxicEntries.length}`)
+console.log(`  Non-toxic filtered out:    ${filteredOut}`)
 console.log(`Unique pre-DB genera with toxicity:  ${totalMatched} (${(totalMatched/preDbGenera.size*100).toFixed(0)}%)`)
 console.log()
 console.log('Sample top hits:')
