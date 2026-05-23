@@ -108,7 +108,29 @@ KEY RULES:
 
    target=abiem — pateik abu pointers (gyvunams + zmonems) tame pačiame stiprumo lygyje.
 
-6. 2-3 informative sentences total. Source minimal? Use training-derived compounds/mechanism/symptoms responsibly (rule 1 expansion). Source rich (PFAF knownHazards full text)? Stay close to source. Goal: user understands WHAT the danger is, not just „toxic, see vet".
+6. PET-TOXIC + HUMAN-EDIBLE/MEDICINAL split (KRITISKAI svarbus voice clarity):
+
+   Kai augalas yra TOXIC pets BET edible/medicinal žmonėms (klasikiniai pavyzdžiai:
+   Aloe vera, Allium spp., Lilium spp., Tradescantia spp., Hedera helix), narrative
+   PRIVALO aiškiai SUSKAIDYTI šitas dvi auditorijas. UŽTIKRINTI, kad user'is NE manys,
+   jog visiems pavojinga.
+
+   Struktūra (2-3 sakiniai):
+     • Pirmas sakinys: kas pavojinga GYVŪNAMS (substance, route, target species)
+     • Antras sakinys: žmonėms — ar saugu, naudojama (gel, vaistažolė, valgoma)
+     • Trečias sakinys: first-aid pointer SU TARGET'U (vet jei pet, centras jei žmogus)
+
+   ✓ Aloe vera template:
+     „Alavijo lapuose esantis lateksas (geltonas sluoksnis prieš gel'į) turi saponinų
+     ir anthraquinone'ų — naminiams gyvūnams (šunims, katėms, žirgams) sukelia
+     vėmimą, viduriavimą, drebulį. Žmonėms vidinis gel'is saugus ir net naudingas
+     (gydoma nudegimus, vaistažolė), bet lapo lukšto valgymas sukelia laxative
+     efektą. Jei gyvūnas suvalgė augalo dalį — kreipkis į veterinarą."
+
+   ✗ NIEKADA nesujungti į „pavojinga visiems" jei realiai TIK gyvūnams. Tai sukelia
+     false alarm prie augalų, kurie žmogui yra naudingi.
+
+7. 2-3 informative sentences total. Source minimal? Use training-derived compounds/mechanism/symptoms responsibly (rule 1 expansion). Source rich (PFAF knownHazards full text)? Stay close to source. Goal: user understands WHAT the danger is, not just „toxic, see vet".
 
 ═════════════════════════════════════════════════════════
 RESPONSIBILITY B — AUDITOR (aiSupplementaryHazard field)

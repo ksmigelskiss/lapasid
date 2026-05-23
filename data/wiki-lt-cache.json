@@ -1,0 +1,2966 @@
+{
+  "generatedAt": "2026-05-23T23:21:16.032Z",
+  "totalEntries": 300,
+  "totalFound": 182,
+  "entries": {
+    "Kalanchoe": {
+      "queried": [
+        "Kalankė"
+      ],
+      "matched": "Kalankė",
+      "title": "Kalankė",
+      "extract": "Kalankė (Kalanchoe) – storalapinių (Crassulaceae) šeimos sukulentinių augalų gentis, kurioje yra apie 125-150 rūšių, augančių Pietų Afrikoje, Pietų ir Pietryčių Azijoje ir Pietų Amerikoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Raudonziede_kalanke_resize.JPG/330px-Raudonziede_kalanke_resize.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kalank%C4%97",
+      "found": true
+    },
+    "Dracaena": {
+      "queried": [
+        "Dracena"
+      ],
+      "matched": "Dracena",
+      "title": "Dracena",
+      "extract": "Dracena (Dracaena) – tai smidrinių šeimos (Asparagaceae), sukulentinių krūmokšnių, krūmų ir mažesne dalimi medžių gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Kanarischer_Drachenbaum_in_Icod_de_los_Vinos.jpg/330px-Kanarischer_Drachenbaum_in_Icod_de_los_Vinos.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Dracena",
+      "found": true
+    },
+    "Monstera deliciosa": {
+      "queried": [
+        "Monstera nuostabioji",
+        "Monstera deliciosa"
+      ],
+      "matched": "Monstera deliciosa",
+      "title": "Nuostabioji monstera",
+      "extract": "Nuostabioji monstera – aroninių (Araceae) šeimos monsterų (Monstera) genties augalų rūšis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Monstera_deliciosa4.jpg/330px-Monstera_deliciosa4.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Nuostabioji_monstera",
+      "found": true
+    },
+    "Oxalis triangularis": {
+      "queried": [
+        "Burokėliažolė trikampė",
+        "Oxalis triangularis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Maranta": {
+      "queried": [
+        "Maranta"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Pilea": {
+      "queried": [
+        "Pilėja"
+      ],
+      "matched": "Pilėja",
+      "title": "Pilėja",
+      "extract": "Pilėja (Pilea) – dilgėlinių (Urticaceae) šeimos augalų gentis. Paplitusi tropinio, subtropinio drėgno klimato kraštuose.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Pilea_peperomioides.jpg/330px-Pilea_peperomioides.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Pil%C4%97ja",
+      "found": true
+    },
+    "Spathiphyllum": {
+      "queried": [
+        "Spatifilis papėdžialapis",
+        "Spathiphyllum"
+      ],
+      "matched": "Spathiphyllum",
+      "title": "Vėzdūnė",
+      "extract": "Vėzdūnė arba Papėdžialapis – aroninių (Araceae) šeimos Monsteroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Spathiphyllum_floribundum1.jpg/330px-Spathiphyllum_floribundum1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/V%C4%97zd%C5%ABn%C4%97",
+      "found": true
+    },
+    "Philodendron": {
+      "queried": [
+        "Filodendras"
+      ],
+      "matched": "Filodendras",
+      "title": "Filodendras",
+      "extract": "Filodendras (Philodendron) – aroninių (Araceae) šeimos Aroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Starr_031108-0220_Philodendron_bipinnatifidum.jpg/330px-Starr_031108-0220_Philodendron_bipinnatifidum.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Filodendras",
+      "found": true
+    },
+    "Crassula arborescens": {
+      "queried": [
+        "Storalapis",
+        "Crassula arborescens"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Ceropegia woodii": {
+      "queried": [
+        "Ceropegija",
+        "Ceropegia woodii"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Epipremnum pinnatum": {
+      "queried": [
+        "Skindapas"
+      ],
+      "matched": "Skindapas",
+      "title": "Skindapas",
+      "extract": "Skindapas (Epipremnum) – aroninių (Araceae) šeimos Monsteroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Epipremnum_pinnatum_var.jpg/330px-Epipremnum_pinnatum_var.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Skindapas",
+      "found": true
+    },
+    "Sansevieria trifasciata": {
+      "queried": [
+        "Sansevjera trijuostė",
+        "Sansevieria trifasciata"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Impatiens nolitangere": {
+      "queried": [
+        "Sprigė"
+      ],
+      "matched": "Sprigė",
+      "title": "Sprigė",
+      "extract": "Sprigė (Impatiens) - spriginių (Balsaminaceae) šeimos gentis, kuriai priklauso apie 850-1000 plačiai šiauriniame pusrutulyje ir tropikuose paplitusių augalų rūšių. Genties pavadinimas iš lotynų k. impatiens – nepakenčiąs; prinokę vaisiai nuo menkiausio prisilietimo sprogsta ir sąvaros, spirališkai susisukdamos, išsviedžia sėklas.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Sprige001.JPG/330px-Sprige001.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Sprig%C4%97",
+      "found": true
+    },
+    "Pelargonium grandiflorum": {
+      "queried": [
+        "Pelargonija didžiažiedė (karališkoji",
+        "Pelargonium grandiflorum"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Begonia": {
+      "queried": [
+        "Begonija",
+        "Begonia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Bougainvillea": {
+      "queried": [
+        "Bugenvilija"
+      ],
+      "matched": "Bugenvilija",
+      "title": "Bugenvilija",
+      "extract": "Bugenvilija (Bougainvillea) – dyvinutinių (Nyctaginaceae) šeimos augalų gentis. Pavadinta jūrininko Luiso Antuano de Bugenvilio (1729-1811), kuris vadovavo pirmajai prancūzų kelionei aplink pasaulį garbei.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Bougainvillea_glabra.JPG/330px-Bougainvillea_glabra.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Bugenvilija",
+      "found": true
+    },
+    "Clivia": {
+      "queried": [
+        "Klivija"
+      ],
+      "matched": "Klivija",
+      "title": "Klivija",
+      "extract": "Klivija (Clivia) – amarilinių (Amaryllidaceae) šeimos augalų gentis. Kilę iš Pietų Afrikos. Neturi svogūno kaip kiti šios šeimos atstovai. Klivijų yra 4 pagrindinės rūšys: raudonoji klivija, Gardeno klivija, bestiebė klivija ir kilnioji klivija, bet šiuo metu yra išvesta daugybė clivia miniata ir kitų klivijų veislių. Šio augalo pavadinimas kilęs iš 1866 m. mirusios Nortunberlendo hercogienės Scharlote Clive vardo.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Klivija1_resize.JPG/330px-Klivija1_resize.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Klivija",
+      "found": true
+    },
+    "Dieffenbachia": {
+      "queried": [
+        "Difenbachija"
+      ],
+      "matched": "Difenbachija",
+      "title": "Difenbachija",
+      "extract": "Difenbachija (Dieffenbachia) – aroninių (Araceae) šeimos Aroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Colpfl29.jpg/330px-Colpfl29.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Difenbachija",
+      "found": true
+    },
+    "Zantedeschia": {
+      "queried": [
+        "Kalijos",
+        "Zantedeschia"
+      ],
+      "matched": "Zantedeschia",
+      "title": "Kalija",
+      "extract": "Kalija (Zantedeschia) – aroninių (Araceae) šeimos Aroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Calla_lily.jpg/330px-Calla_lily.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kalija",
+      "found": true
+    },
+    "Aloe": {
+      "queried": [
+        "Alavijas"
+      ],
+      "matched": "Alavijas",
+      "title": "Alavijas",
+      "extract": "Alavijas, dažnai vadinamas alijošiumi (Aloe) – plėnūninių šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Aloe_aculeata_-_Botanischer_Garten_-_Heidelberg%2C_Germany_-_DSC01324.jpg/330px-Aloe_aculeata_-_Botanischer_Garten_-_Heidelberg%2C_Germany_-_DSC01324.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Alavijas",
+      "found": true
+    },
+    "Anthurium": {
+      "queried": [
+        "Anturis"
+      ],
+      "matched": "Anturis",
+      "title": "Anturis",
+      "extract": "Anturis (Anthurium) – aroninių (Araceae) šeimos Pothoideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Anthurium_andraeanum2.jpg/330px-Anthurium_andraeanum2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Anturis",
+      "found": true
+    },
+    "Cyperus": {
+      "queried": [
+        "Viksvuolė"
+      ],
+      "matched": "Viksvuolė",
+      "title": "Viksvuolė",
+      "extract": "Viksvuolė (Cyperus) – viksvuolinių (Cyperaceae) šeimos augalų gentis, kurios pavadinimas kildinamas iš graikų k. žodžio kyperos – maloniai kvepiantis; šių augalų šaknys yra malonaus kvapo. Tai daugiamečiai arba vienamečiai augalai. Jų stiebas lapuotas, o lapai trieliai. Žiedai sutelkti puokštės arba skėčio pavidalo žiedynuose.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Chufa.jpg/330px-Chufa.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Viksvuol%C4%97",
+      "found": true
+    },
+    "Nepenthes": {
+      "queried": [
+        "Ąsotenis"
+      ],
+      "matched": "Ąsotenis",
+      "title": "Ąsotenis",
+      "extract": "Ąsotenis (Nepenthes) – ąsoteninių (Nepenthaceae) šeimos vabzdžiaėdžių augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Nepenthes_truncata_highlandPitcher1.jpg/330px-Nepenthes_truncata_highlandPitcher1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/%C4%84sotenis",
+      "found": true
+    },
+    "Schlumbergera": {
+      "queried": [
+        "Kaktusas kalėdinis",
+        "Schlumbergera"
+      ],
+      "matched": "Schlumbergera",
+      "title": "Plokštenis",
+      "extract": "Plokštenis (Schlumbergera) – kaktusinių (Cactaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Hatiora_%C3%97graeseri_flower.jpg/330px-Hatiora_%C3%97graeseri_flower.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Plok%C5%A1tenis",
+      "found": true
+    },
+    "Sedum": {
+      "queried": [
+        "Šilokas"
+      ],
+      "matched": "Šilokas",
+      "title": "Šilokas",
+      "extract": "Šilokas (Sedum) – storlapinių (Crassulaceae) šeimos augalų gentis. Jai priklauso apie 400 sukulentinių augalų, paplitusių šiaurės pusrutulyje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/SedumAcre001.JPG/330px-SedumAcre001.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/%C5%A0ilokas",
+      "found": true
+    },
+    "Solanum": {
+      "queried": [
+        "Kiauliauogė"
+      ],
+      "matched": "Kiauliauogė",
+      "title": "Kiauliauogė",
+      "extract": "Kiauliauogė (Solanum) – notreliažiedžių (Lamiidae) poklasio bulvinių (Solanaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Solanum_nigrum_fruit_black.jpg/330px-Solanum_nigrum_fruit_black.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kiauliauog%C4%97",
+      "found": true
+    },
+    "Tradescantia": {
+      "queried": [
+        "Tradeskantė",
+        "Tradescantia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Araucaria heterophylla": {
+      "queried": [
+        "Araukarija"
+      ],
+      "matched": "Araukarija",
+      "title": "Araukarija",
+      "extract": "Araukarija (Araucaria) – spygliuočių medžių gentis, priklausanti araukarijinių (Araucariaceae) šeimai. Auga Naujojoje Kaledonijoje, Norfolko saloje, rytų Australijoje, Naujojoje Gvinėjoje, Argentinoje, Čilėje, pietų Brazilijoje. Dauguma rūšių saugomos. Genties pavadinimas kilo nuo indėnų araukanų (mapučių) genties, gyvenančios Čilėje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Araucaria_angustifolia.jpg/330px-Araucaria_angustifolia.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Araukarija",
+      "found": true
+    },
+    "Ficus": {
+      "queried": [
+        "Fikas"
+      ],
+      "matched": "Fikas",
+      "title": "Fikusas",
+      "extract": "Fikusas (Ficus) – šilkmedinių (Moraceae) šeimos augalų gentis, kuriai priklauso visžaliai medžiai, krūmai ir lianos.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Ficus_carica7.jpg/330px-Ficus_carica7.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Fikusas",
+      "found": true
+    },
+    "Hedera helix": {
+      "queried": [
+        "Gebenė"
+      ],
+      "matched": "Gebenė",
+      "title": "Gebenė",
+      "extract": "Gebenė (Hedera) – aralijinių (Araliaceae) šeimos sumedėjusių lianų gentis. Auga Pietų, Vakarų, centrinėje Europoje, Šiaurės Afrikoje, centrinėje, pietų, rytų Azijoje. Auga ant uolų, medžių, pasiekia 25–30 m aukštį.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Hedera_hibernica_with_berries.JPG/330px-Hedera_hibernica_with_berries.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Geben%C4%97",
+      "found": true
+    },
+    "Lotus berthelotii": {
+      "queried": [
+        "Garždenis"
+      ],
+      "matched": "Garždenis",
+      "title": "Garždenis",
+      "extract": "Garždenis (Lotus) – pupinių (Fabaceae) šeimos Faboideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Hornklee.jpg/330px-Hornklee.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Gar%C5%BEdenis",
+      "found": true
+    },
+    "Passiflora": {
+      "queried": [
+        "Pasiflora"
+      ],
+      "matched": "Pasiflora",
+      "title": "Pasiflora",
+      "extract": "Pasiflora (Passiflora) – pasiflorinių (Passifloraceae) šeimos augalų gentis. Dauguma rūšių – vijokliniai augalai, taip pat gentyje yra krūmų, žolinių augalų.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Passion_flower_%281%29.jpg/330px-Passion_flower_%281%29.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Pasiflora",
+      "found": true
+    },
+    "Scutellaria": {
+      "queried": [
+        "Kalpokė"
+      ],
+      "matched": "Kalpokė",
+      "title": "Kalpokė",
+      "extract": "Kalpokė (Scutellaria) – notrelinių (Lamiaceae) šeimos augalų gentis, kuriai priklauso daugiametės žolės, o kituose kraštuose puskrūmiai arba lianos.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Scutellaria_alpina_3b.JPG/330px-Scutellaria_alpina_3b.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kalpok%C4%97",
+      "found": true
+    },
+    "Senecio cruentus": {
+      "queried": [
+        "Žilė cinenarija",
+        "Senecio cruentus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Syngonium": {
+      "queried": [
+        "Singonis"
+      ],
+      "matched": "Singonis",
+      "title": "Singonis",
+      "extract": "Singonis (Syngonium) – aroninių (Araceae) šeimos Aroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Zingiber_malaysianum.jpg/330px-Zingiber_malaysianum.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Singonis",
+      "found": true
+    },
+    "Aechmea": {
+      "queried": [
+        "Echmėja"
+      ],
+      "matched": "Echmėja",
+      "title": "Echmėja",
+      "extract": "Echmėja (Aechmea) – bromelijinių (Bromeliaceae) šeimos augalų gentis, kuriai priklauso daug epifitinių rūšių. Genties pavadinimas kildinamas iš graikų k. žodžio aichme – ietgalis; žiedynas panašus į ietgalį.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Aechmea_fasciata_inflorescence.jpg/330px-Aechmea_fasciata_inflorescence.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Echm%C4%97ja",
+      "found": true
+    },
+    "Tillandsia": {
+      "queried": [
+        "Tilandsija"
+      ],
+      "matched": "Tilandsija",
+      "title": "Tilandsija",
+      "extract": "Tilandsija (Tillandsia) – bromelijinių (Bromeliaceae) šeimos augalų gentis, kuriai priklauso smulkūs su puošniais lapais augalai. Gentis pavadinta suomių botaniko Elias Tillandz garbei.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Bromeliaceae01.jpg/330px-Bromeliaceae01.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Tilandsija",
+      "found": true
+    },
+    "Acorus gramineus": {
+      "queried": [
+        "Ajeras viksvinis",
+        "Acorus gramineus"
+      ],
+      "matched": "Acorus gramineus",
+      "title": "Siauralapis ajeras",
+      "extract": "Siauralapis ajeras – ajerinių (Acoraceae) šeimos ajerų (Acorus) genties augalų rūšis. Auga nuo Himalajų iki Japonijos, Tailando, Filipinų.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Acorus_gramineus.jpg/330px-Acorus_gramineus.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Siauralapis_ajeras",
+      "found": true
+    },
+    "Asparagus": {
+      "queried": [
+        "Smidras"
+      ],
+      "matched": "Smidras",
+      "title": "Smidras",
+      "extract": "Smidras (Asparagus) – smidrinių (Asparagaceae) šeimos augalų gentis. Paplitusi Eurazijoje ir Afrikoje, daugiausia atogrąžų ir paatogrąžių, nedaug rūšių – vidutiniškai šilto klimato srityse.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Shatavari_%28Hindi-_%E0%A4%B6%E0%A4%A4%E0%A4%BE%E0%A4%B5%E0%A4%B0%E0%A5%80%29_%284745632082%29.jpg/330px-Shatavari_%28Hindi-_%E0%A4%B6%E0%A4%A4%E0%A4%BE%E0%A4%B5%E0%A4%B0%E0%A5%80%29_%284745632082%29.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Smidras",
+      "found": true
+    },
+    "Streptocarpus": {
+      "queried": [
+        "Streptokarpas"
+      ],
+      "matched": "Streptokarpas",
+      "title": "Streptokarpas",
+      "extract": "Streptokarpas (Streptocarpus) – gesnerijinių (Gesneriaceae) šeimos augalų gentis, kuri labai artima sanpaulijoms.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Streptocarpus_parviflorus_1.jpg/330px-Streptocarpus_parviflorus_1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Streptokarpas",
+      "found": true
+    },
+    "Euphorbia": {
+      "queried": [
+        "Karpažolė"
+      ],
+      "matched": "Karpažolė",
+      "title": "Karpažolė",
+      "extract": "Karpažolė (Euphorbia) – karpažolinių (Euphorbiaceae) šeimos augalų gentis. Gentyje yra apie 2000 rūšių.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Dygliuotoji_karpazole1.JPG/330px-Dygliuotoji_karpazole1.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Karpa%C5%BEol%C4%97",
+      "found": true
+    },
+    "Yucca": {
+      "queried": [
+        "Juka",
+        "Yucca"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Calathea": {
+      "queried": [
+        "Kalatėja",
+        "Calathea"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Cattleya": {
+      "queried": [
+        "Katlėja"
+      ],
+      "matched": "Katlėja",
+      "title": "Katlėja",
+      "extract": "Katlėja (Cattleya) – gegužraibinių (Ochidaceae) šeimos augalų gentis, kuri 1824 m. pavadinta gėlininko Viljamo Katlėjaus garbei. Šis gėlininkas katlėjų stiebelius kartu su kerpių kolekcija gavo iš Pietų Amerikos ir pasodino Londono priemiestyje buvusioje oranžerijoje. Po kurio laiko augalas pražydo.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Colpfl04b.jpg/330px-Colpfl04b.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Katl%C4%97ja",
+      "found": true
+    },
+    "Columnea": {
+      "queried": [
+        "Kolumnėja"
+      ],
+      "matched": "Kolumnėja",
+      "title": "Kolumnėja",
+      "extract": "Kolumnėja (Columnea) – gesnerijinių (Gesneriaceae) šeimos augalų gentis, kuriai priklauso žydinčios epifitinės žolės ir puskrūmiai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Columnea_crassifolia_-_Lemaire.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kolumn%C4%97ja",
+      "found": true
+    },
+    "Epiphyllum": {
+      "queried": [
+        "Kaktusai lapiniai",
+        "Epiphyllum"
+      ],
+      "matched": "Epiphyllum",
+      "title": "Lapenis",
+      "extract": "Lapenis (Epiphyllum) – kaktusinių (Cactaceae) šeimos epifitinių augalų gentis. Auga Pietų Amerikoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Epiphyllum1.jpg/330px-Epiphyllum1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Lapenis",
+      "found": true
+    },
+    "Hoya": {
+      "queried": [
+        "Vaškuolė",
+        "Hoya"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Echeveria": {
+      "queried": [
+        "Eševerija",
+        "Echeveria"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Phalaenopsis": {
+      "queried": [
+        "Falenopsis"
+      ],
+      "matched": "Falenopsis",
+      "title": "Falenopsis",
+      "extract": "Falenopsis (Phalaenopsis) – gegužraibinių (Orchidaceae) šeimos augalų gentis, kuriai priklauso dauguma epifitinių ir kelios litofitinės orchidėjos. Gentį aprašė 1826 m. Bliumė (Blume). Pavadinimas iš gr. phalaina – drugys ir opsis – panašus; kai kurių rūšių žiedai panašūs į skrendantį drugį. Ant žiedkočio būna keli žiedai. Rūpestingai prižiūrimo falenopsio žiedkotis užauga ilgesnis, ant jo randasi naujų žiedų. Senieji žiedai išlieka patrauklūs mažiausiai mėnesį, o paskui nuvysta ir nukrinta.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Phalaenopsis_bellina_%271901%27_%28Rchb.f.%29_Christenson-_Brittonia_47-_58_%281995%29._20210706_204143.jpg/330px-Phalaenopsis_bellina_%271901%27_%28Rchb.f.%29_Christenson-_Brittonia_47-_58_%281995%29._20210706_204143.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Falenopsis",
+      "found": true
+    },
+    "Zamioculcas": {
+      "queried": [
+        "Zamiokulkas"
+      ],
+      "matched": "Zamiokulkas",
+      "title": "Zamiokulkas",
+      "extract": "Zamiokulkas (Zamioculcas) – aroninių (Araceae) šeimos Aroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Zamioculcas_zamiifolia_2.jpg/330px-Zamioculcas_zamiifolia_2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Zamiokulkas",
+      "found": true
+    },
+    "Jasminum": {
+      "queried": [
+        "Jasminaitis",
+        "Jasminum"
+      ],
+      "matched": "Jasminum",
+      "title": "Jazminaitis",
+      "extract": "Jazminaitis (Jasminum) – alyvmedinių (Oleaceae) šeimos augalų gentis, kurią sudaro ~200 rūšių, paplitusių Eurazijos, Afrikos ir Australijos bei Okeanijos atogrąžų ir šiltųjų vidutinių platumų juostose.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Jasminum_officinale-IMG_3470.jpg/330px-Jasminum_officinale-IMG_3470.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Jazminaitis",
+      "found": true
+    },
+    "Mammillaria": {
+      "queried": [
+        "Kaktusas karpuotasis",
+        "Mammillaria"
+      ],
+      "matched": "Mammillaria",
+      "title": "Mamiliarija",
+      "extract": "Mamiliarija (Mammillaria) – kaktusinių (Cactaceae) šeimos augalų gentis. Pavadinimas iš lotynų k. žodžio mammillae – speneliai. Būdingiausias požymis – areolės sandara. Areolė padalinta į dvi ryškiai besiskiriančias dalis, kurių viena yra gumburėlio viršuje, o kita prie jos pagrindo. Ta dalis, kuri yra gumburėlio viršuje, dažnai būna su dygliais, o prie pagrindo – be dyglių, tik su plaukeliais ir pumpurėliu, iš kurio išauga žiedai ir vaisiai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Mammillaria_%28aka%29.jpg/330px-Mammillaria_%28aka%29.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Mamiliarija",
+      "found": true
+    },
+    "Paphiopedilum": {
+      "queried": [
+        "Raibuolė"
+      ],
+      "matched": "Raibuolė",
+      "title": "Raibuolė",
+      "extract": "Raibuolė (Paphiopedilum) – gegužraibinių (Ochidaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Paphiopedilum_henryanum_Orchi_001.jpg/330px-Paphiopedilum_henryanum_Orchi_001.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Raibuol%C4%97",
+      "found": true
+    },
+    "Piper": {
+      "queried": [
+        "Pipiras"
+      ],
+      "matched": "Pipiras",
+      "title": "Pipiras",
+      "extract": "Šis straipsnis – apie augalų gentį. Apie genetiškai nesusijusių augalų kategoriją, vadinamus pipirais, žiūrėkite straipsnį pipirai (prieskonis)",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Piper_nigrum_dsc00198.jpg/330px-Piper_nigrum_dsc00198.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Pipiras",
+      "found": true
+    },
+    "Adenium": {
+      "queried": [
+        "tinūtras",
+        "Adenium"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Fatsia": {
+      "queried": [
+        "fatsija",
+        "Fatsia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Nematanthus": {
+      "queried": [
+        "Nematantas"
+      ],
+      "matched": "Nematantas",
+      "title": "Nematantas",
+      "extract": "Nematantas (Nematanthus) – gesnerijinių (Gesneriaceae) šeimos epifitinių augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Nematanthus_gregarius1.jpg/330px-Nematanthus_gregarius1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Nematantas",
+      "found": true
+    },
+    "Aphelandra": {
+      "queried": [
+        "Alefandra",
+        "Aphelandra"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Callistemon citrinus": {
+      "queried": [
+        "Kalisfemonas gelsvasis",
+        "Callistemon citrinus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Ctenanthe": {
+      "queried": [
+        "Ktenantė",
+        "Ctenanthe"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Exacum affine": {
+      "queried": [
+        "Žibutės persų",
+        "Exacum affine"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Globba winitii": {
+      "queried": [
+        "Globa"
+      ],
+      "matched": "Globa",
+      "title": "Globa",
+      "extract": "Globa – asmeniui negalint savarankiškai veikti teismo nustatomas teisinis statusas, kai pripažinus asmenį neveiksniu, jis praranda visas savo teises, jam skiriamas globėjas. Teismas, pripažinęs asmenį neveiksniu ar ribotai veiksniu, privalo nedelsdamas pradėti bylą dėl globos ar rūpybos nustatymo šiam asmeniui.",
+      "thumbnail": null,
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Globa",
+      "found": true
+    },
+    "Gynura": {
+      "queried": [
+        "Ginura",
+        "Gynura"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Phlebodium aureum": {
+      "queried": [
+        "Papartis auksuotasis flebodis",
+        "Phlebodium aureum"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Rhapis": {
+      "queried": [
+        "Palmė rapipalmė",
+        "Rhapis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Beaucarnea": {
+      "queried": [
+        "Riestalapis nukaris",
+        "Beaucarnea"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Microsorum": {
+      "queried": [
+        "Kengūros letena",
+        "Microsorum"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Allamanda": {
+      "queried": [
+        "Alamanda",
+        "Allamanda"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Chamaecereus": {
+      "queried": [
+        "Echinopsis"
+      ],
+      "matched": "Echinopsis",
+      "title": "Echinopsis",
+      "extract": "Echinopsis (Echinopsis) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso medžius primenantys ir rutuliškos formos kaktusai. Auga Pietų Amerikoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Trichocereus_chiloensis_2.jpg/330px-Trichocereus_chiloensis_2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Echinopsis",
+      "found": true
+    },
+    "Cheiranthus": {
+      "queried": [
+        "Tvertikas"
+      ],
+      "matched": "Tvertikas",
+      "title": "Tvertikas",
+      "extract": "Tvertikas (Erysimum) – bastutinių (Brassicaceae) šeimos augalų gentis, kuriai priklauso įvairiamečiai augalai, apaugę plaukeliais. Jų lapai sveiki. Vainiklapiai geltoni, violetiniai arba balti.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Gewone_steenraket_plant.jpg/330px-Gewone_steenraket_plant.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Tvertikas",
+      "found": true
+    },
+    "Macropiper": {
+      "queried": [
+        "Pipirai",
+        "Macropiper"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Persea": {
+      "queried": [
+        "persja",
+        "Persea"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Polystichum": {
+      "queried": [
+        "spyglinis Punktfarn",
+        "Polystichum"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Selaginella": {
+      "queried": [
+        "plaušaplaisis",
+        "Selaginella"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Tacitus": {
+      "queried": [
+        "Serentis"
+      ],
+      "matched": "Serentis",
+      "title": "Serentis",
+      "extract": "Serentis – astrinių (Asteraceae) šeimos augalų gentis, kilusi iš Amerikos. Ją sudaro 56 vienmečių ir dvimečių augalų rūšys.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Tagetes_1.jpg/330px-Tagetes_1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Serentis",
+      "found": true
+    },
+    "Tagetes": {
+      "queried": [
+        "serenitė",
+        "Tagetes"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Thunbergia": {
+      "queried": [
+        "tunbergija"
+      ],
+      "matched": "tunbergija",
+      "title": "Tunbergija",
+      "extract": "Tunbergija (Thunbergia) – akantinių (Acanthaceae) šeimos augalų gentis. Žinoma apie 150 rūšių, paplitusių atogrąžose ir subtropikuose – Užsachario Afrikoje, Madagaskare, Pietų Azijoje, Naujojoje Gvinėjoje, Australijoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Thunbergia_alata_IV.jpg/330px-Thunbergia_alata_IV.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Tunbergija",
+      "found": true
+    },
+    "Acacia": {
+      "queried": [
+        "Akacija"
+      ],
+      "matched": "Akacija",
+      "title": "Akacija",
+      "extract": "Akacija (Acacia) – pupinių (fabaceae) šeimos Mimosoideae pošeimio augalų gentis. Pagal Cronquist sistemą – priklauso Mimosaceae šeimai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Acacia_covenyi02.jpg/330px-Acacia_covenyi02.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Akacija",
+      "found": true
+    },
+    "Acalypha": {
+      "queried": [
+        "Akolifa",
+        "Acalypha"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Aichryson": {
+      "queried": [
+        "putlenis",
+        "Aichryson"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Alonsoa": {
+      "queried": [
+        "Alonsoa"
+      ],
+      "matched": "Alonsoa",
+      "title": "Alonsoa",
+      "extract": "Alonsoa – bervidinių (Scrophulariaceae) šeimos žolinių ir krūminių augalų gentis, paplitusi Centrinėje Amerikoje ir Pietų Amerikos vakaruose.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Alonsoa_meridionalis2.jpg/330px-Alonsoa_meridionalis2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Alonsoa",
+      "found": true
+    },
+    "Amaryllis": {
+      "queried": [
+        "amarilis",
+        "Amaryllis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Amorphophallus": {
+      "queried": [
+        "Amorfofalas"
+      ],
+      "matched": "Amorfofalas",
+      "title": "Amorfofalas",
+      "extract": "Amorfofalas, Lavongėlė, Velnio liežuvis (Amorphophallus) – aroninių (Araceae) šeimos Aroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Titan-arum1web.jpg/330px-Titan-arum1web.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Amorfofalas",
+      "found": true
+    },
+    "Anastatica": {
+      "queried": [
+        "atgaiva",
+        "Anastatica"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Annona": {
+      "queried": [
+        "Anona"
+      ],
+      "matched": "Anona",
+      "title": "Anona",
+      "extract": "Anona (Annona) – anoninių (Annonaceae) šeimos augalų gentis. Ją sudaro 110 rūšių, kilusių iš Amerikos ir Afrikos tropikų. Pavadinimas anona kilęs iš tainų žodžio, reiškiančio „vaisius“.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Annona_muricata-guan%C3%A1bana.jpg/330px-Annona_muricata-guan%C3%A1bana.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Anona",
+      "found": true
+    },
+    "Ansellia": {
+      "queried": [
+        "Afrikinė anzelija"
+      ],
+      "matched": "Afrikinė anzelija",
+      "title": "Afrikinė anzelija",
+      "extract": "Afrikinė anzelija arba leopardinė orchidėja – gegužraibinių (Orchidaceae) šeimos augalas, priklausantis monotipinei anzelijos (Ansellia) genčiai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Ansellia_gigantea_nilotica.jpg/330px-Ansellia_gigantea_nilotica.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Afrikin%C4%97_anzelija",
+      "found": true
+    },
+    "Arachis": {
+      "queried": [
+        "Valgomasis arachis"
+      ],
+      "matched": "Valgomasis arachis",
+      "title": "Valgomasis arachis",
+      "extract": "Valgomasis arachis, dar vadinamas žemės riešutu, arachisu – pupinių (Fabaceae) šeimos augalas, kilęs iš Pietų ir Centrinės Amerikos.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Peanut_9417.jpg/330px-Peanut_9417.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Valgomasis_arachis",
+      "found": true
+    },
+    "Archontophoenix": {
+      "queried": [
+        "Dygfinikis",
+        "Archontophoenix"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Ariocarpus": {
+      "queried": [
+        "Ariokarpas"
+      ],
+      "matched": "Ariokarpas",
+      "title": "Ariokarpas",
+      "extract": "Ariokarpas (Ariocarpus) – kaktusinių (Cactaceae) šeimos augalų gentis. Auga Meksikoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Ariocarpus_fissuratus_1.jpg/330px-Ariocarpus_fissuratus_1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Ariokarpas",
+      "found": true
+    },
+    "Arisaema": {
+      "queried": [
+        "Žingis"
+      ],
+      "matched": "Žingis",
+      "title": "Žingis",
+      "extract": "Žingis (Arisaema) – aroninių (Araceae) šeimos Aroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Arisaema_triphyllum_fruit.jpg/330px-Arisaema_triphyllum_fruit.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/%C5%BDingis",
+      "found": true
+    },
+    "Arundo": {
+      "queried": [
+        "nendrės vardas",
+        "Arundo"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Astrophytum": {
+      "queried": [
+        "Žvaigždinas"
+      ],
+      "matched": "Žvaigždinas",
+      "title": "Žvaigždinas",
+      "extract": "Žvaigždinas (Astrophytum) – kaktusinių (Cactaceae) šeimos augalų gentis. Dėl savo išvaizdos kartais vadinami „gyvaisiais akmenimis“.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Astrophytum_asterias.jpg/330px-Astrophytum_asterias.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/%C5%BDvaig%C5%BEdinas",
+      "found": true
+    },
+    "Aucuba": {
+      "queried": [
+        "japoninė aukuba",
+        "Aucuba"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Azolla": {
+      "queried": [
+        "azolė",
+        "Azolla"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Beschorneria": {
+      "queried": [
+        "Bešornerija"
+      ],
+      "matched": "Bešornerija",
+      "title": "Bešornerija",
+      "extract": "Bešornerija (Beschorneria) – agavinių (Agavaceae) šeimos sukulentinių augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Beschorneria_albiflora_4.jpg/330px-Beschorneria_albiflora_4.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Be%C5%A1ornerija",
+      "found": true
+    },
+    "Bletilla": {
+      "queried": [
+        "Kryputė"
+      ],
+      "matched": "Kryputė",
+      "title": "Kryputė",
+      "extract": "Kryputė (Bletilla) – gegužraibinių (Ochidaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Bletilla_striata2.jpg/330px-Bletilla_striata2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kryput%C4%97",
+      "found": true
+    },
+    "Boehmeria": {
+      "queried": [
+        "hemirija",
+        "Boehmeria"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Borzicactus": {
+      "queried": [
+        "slėpulis"
+      ],
+      "matched": "slėpulis",
+      "title": "Slėpulis",
+      "extract": "Slėpulis, lapulis (Cleistocactus) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso koloniškos išvaizdos kaktusai, paplitę Peru, Urugvajuje, Bolivijoje ir Argentinoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Cleistocactus_strausii2.jpg/330px-Cleistocactus_strausii2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Sl%C4%97pulis",
+      "found": true
+    },
+    "Brassavola": {
+      "queried": [
+        "Vaurutė"
+      ],
+      "matched": "Vaurutė",
+      "title": "Vaurutė",
+      "extract": "Vaurutė (Brassavola) – gegužraibinių (Ochidaceae) šeimos augalų gentis, kuriai priklauso epifitinės ir litofitinės orchidėjos. Iš pailgėjusio šakniastiebio išauga vienas viršūninis lapas. Žiedai balti ar gelsvai balti.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Brassavola_nodosa_Orchi_03.jpg/330px-Brassavola_nodosa_Orchi_03.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Vaurut%C4%97",
+      "found": true
+    },
+    "Bulbophyllum": {
+      "queried": [
+        "Gumblapis"
+      ],
+      "matched": "Gumblapis",
+      "title": "Gumblapis",
+      "extract": "Gumblapis (Bulbophyllum) – gegužraibinių (Ochidaceae) šeimos augalų gentis. Tai viena iš didžiausių augalų karalystės genčių, apimanti daugiau nei 1800 rūšių. Pirmą kartą gentį aprašė prancūzų botanikas Louis-Marie Aubert du Petit-Thouars \nsavo knygoje „Histoire particulière des plantes orchidées recueillies sur les trois Iles Australes d’Afrique, de France, de Bourbon et de Madagascar“. Genties pavadinimas iš lotynų k. žodžio bulbus – gumbas ir gr. phyllon – lapas. Augalai turi pailgėjusius, šl...",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Bulbophyllum_medusae.jpg/330px-Bulbophyllum_medusae.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Gumblapis",
+      "found": true
+    },
+    "Carica": {
+      "queried": [
+        "Melionmedis"
+      ],
+      "matched": "Melionmedis",
+      "title": "Melionmedis",
+      "extract": "Melionmedis (Carica) – melionmedinių (Caricaceae) šeimos augalų gentis, kuriai priklauso viena rūšis – papajinis melionmedis, kurio vaisius – papaja.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Papayabaum.jpg/330px-Papayabaum.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Melionmedis",
+      "found": true
+    },
+    "Carnegiea": {
+      "queried": [
+        "Didžioji karnegija"
+      ],
+      "matched": "Didžioji karnegija",
+      "title": "Didžioji karnegija",
+      "extract": "Didžioji karnegija – kaktusinių (Cactaceae) šeimos, monotipinės karnegijos (Carnegiea) genties kaktusas.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Sahuaros_en_%C3%8Dmuris.jpg/330px-Sahuaros_en_%C3%8Dmuris.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Did%C5%BEioji_karnegija",
+      "found": true
+    },
+    "Carpobrotus": {
+      "queried": [
+        "Svaidulis"
+      ],
+      "matched": "Svaidulis",
+      "title": "Svaidulis",
+      "extract": "Svaidulis (Carpobrotus) – pluoštagėlių (Aizoaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Carpobrotus_edulis_a.JPG/330px-Carpobrotus_edulis_a.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Svaidulis",
+      "found": true
+    },
+    "Ceratopteris": {
+      "queried": [
+        "Homfarn",
+        "Ceratopteris"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Chamaerops": {
+      "queried": [
+        "chamerops",
+        "Chamaerops"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Choisya": {
+      "queried": [
+        "čiozenė",
+        "Choisya"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Clarkia": {
+      "queried": [
+        "klarkija",
+        "Clarkia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Cleistocactus": {
+      "queried": [
+        "Slėpulis"
+      ],
+      "matched": "Slėpulis",
+      "title": "Slėpulis",
+      "extract": "Slėpulis, lapulis (Cleistocactus) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso koloniškos išvaizdos kaktusai, paplitę Peru, Urugvajuje, Bolivijoje ir Argentinoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Cleistocactus_strausii2.jpg/330px-Cleistocactus_strausii2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Sl%C4%97pulis",
+      "found": true
+    },
+    "Cochlioda": {
+      "queried": [
+        "Sraigva"
+      ],
+      "matched": "Sraigva",
+      "title": "Sraigva",
+      "extract": "Sraigva (Cochlioda) – gegužraibinių (Ochidaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Cochlioda_noezliana_-_Larsen.jpg/330px-Cochlioda_noezliana_-_Larsen.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Sraigva",
+      "found": true
+    },
+    "Coffea": {
+      "queried": [
+        "Kavamedis"
+      ],
+      "matched": "Kavamedis",
+      "title": "Kavamedis",
+      "extract": "Kavamedis (Coffea) – raudinių (Rubiaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/FruitColors.jpg/330px-FruitColors.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kavamedis",
+      "found": true
+    },
+    "Coleus": {
+      "queried": [
+        "buntmesai",
+        "Coleus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Copiapoa": {
+      "queried": [
+        "Miglinėlis"
+      ],
+      "matched": "Miglinėlis",
+      "title": "Miglinėlis",
+      "extract": "Miglinėlis (Copiapoa) – kaktusinių (Cactaceae) šeimos augalų gentis, paplitusi Čilės šiaurinėje dalyje priekrančių dykumose. Kaktusai koloniškos ar cilindriškos išvaizdos.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Copiapoa_cinerea_1.jpg/330px-Copiapoa_cinerea_1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Miglin%C4%97lis",
+      "found": true
+    },
+    "Corypha": {
+      "queried": [
+        "kuodas",
+        "Corypha"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Cotyledon": {
+      "queried": [
+        "duršas",
+        "Cotyledon"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Crinum": {
+      "queried": [
+        "krinumas",
+        "Crinum"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Curculigo": {
+      "queried": [
+        "kurkuligas",
+        "Curculigo"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Darlingtonia": {
+      "queried": [
+        "Kaliforninė darlingtonija"
+      ],
+      "matched": "Kaliforninė darlingtonija",
+      "title": "Kaliforninė darlingtonija",
+      "extract": "Kaliforninė darlingtonija – saracėnijinių (Sarraceniaceae) šeimos vabzdžiaėdis augalas, vienintelis darlingtonijos (Darlingtonia) gentyje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Darlingtonia_californica_ne9.JPG/330px-Darlingtonia_californica_ne9.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kalifornin%C4%97_darlingtonija",
+      "found": true
+    },
+    "Dendrochilum": {
+      "queried": [
+        "Medlielė"
+      ],
+      "matched": "Medlielė",
+      "title": "Medlielė",
+      "extract": "Medlielė (Dendrochilum) – gegužraibinių (Ochidaceae) šeimos augalų gentis, kuriai priklauso epifitinės, litofitinės ir kelios dirvožemyje augančios orchidėjų rūšys. Genties pavadinimas iš graikų k. žodžių: dendron – medis, cheilos – lūpa; augalai turi didelę lūpą. Gentį 1825 m. aprašė Karlas Blumė.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Dendrochilum_longifolium_Orchi_03.jpg/330px-Dendrochilum_longifolium_Orchi_03.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Medliel%C4%97",
+      "found": true
+    },
+    "Dioon": {
+      "queried": [
+        "Kiaušvis"
+      ],
+      "matched": "Kiaušvis",
+      "title": "Kiaušvis",
+      "extract": "Kiaušvis (Dioon) – zamijinių (Zamiaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Dioon_edule03.jpg/330px-Dioon_edule03.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kiau%C5%A1vis",
+      "found": true
+    },
+    "Dioscorea": {
+      "queried": [
+        "Dioskorėja"
+      ],
+      "matched": "Dioskorėja",
+      "title": "Dioskorėja",
+      "extract": "Dioskorėja (Dioscorea) – dioskorėjinių (Dioscoreaceae) šeimos augalų gentis. Dauguma jų – kultūriniai augalai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/YamsatBrixtonMarket.jpg/330px-YamsatBrixtonMarket.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Dioskor%C4%97ja",
+      "found": true
+    },
+    "Dischidia": {
+      "queried": [
+        "skelas",
+        "Dischidia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Dizygotheca": {
+      "queried": [
+        "dizigoteka",
+        "Dizygotheca"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Dorotheanthus": {
+      "queried": [
+        "chvatka",
+        "Dorotheanthus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Dyckia": {
+      "queried": [
+        "Skruobenė"
+      ],
+      "matched": "Skruobenė",
+      "title": "Skruobenė",
+      "extract": "Skruobenė (Dyckia) – bromelijinių (Bromeliaceae) šeimos augalų gentis. Sudaro 125 rūšys, paplitusios Pietų Amerikos pietinėje dalyje. Auga saulėtose, šiltose vietose, iki 2000 m aukščio virš jūros lygio.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Dyckia_remotiflora_1.jpg/330px-Dyckia_remotiflora_1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Skruoben%C4%97",
+      "found": true
+    },
+    "Ecballium": {
+      "queried": [
+        "tryškėnis",
+        "Ecballium"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Encephalartos": {
+      "queried": [
+        "Galvonis"
+      ],
+      "matched": "Galvonis",
+      "title": "Galvonis",
+      "extract": "Galvonis (Encephalartos) – zamijinių (Zamiaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Encephalartos_lebomboensis_-_Lebombo_cycad_-_desc-fruiting_stalk.jpg/330px-Encephalartos_lebomboensis_-_Lebombo_cycad_-_desc-fruiting_stalk.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Galvonis",
+      "found": true
+    },
+    "Epidendrum": {
+      "queried": [
+        "Epidendras"
+      ],
+      "matched": "Epidendras",
+      "title": "Epidendras",
+      "extract": "Epidendras (Epidendrum) – gegužraibinių (Ochidaceae) šeimos augalų gentis, kuriai priklauso epifitinės orchidėjos. Graikiškai epidendrum reiškia „augantis ant medžio“.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Epidendrum_ciliare0.jpg/330px-Epidendrum_ciliare0.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Epidendras",
+      "found": true
+    },
+    "Episcia": {
+      "queried": [
+        "Ritlenis"
+      ],
+      "matched": "Ritlenis",
+      "title": "Ritlenis",
+      "extract": "Ritlenis (Episcia) – gesnerijinių (Gesneriaceae) šeimos augalų gentis, kuriai priklauso žolės su dėmėtais lapais ir ryškiais žiedais.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Episcia_cupreata.jpg/330px-Episcia_cupreata.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Ritlenis",
+      "found": true
+    },
+    "Epithelantha": {
+      "queried": [
+        "Epitelanta"
+      ],
+      "matched": "Epitelanta",
+      "title": "Epitelanta",
+      "extract": "Epitelanta (Epithelantha) – kaktusinių (Cactaceae) šeimos rutuliškos formos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Epithelantha_micromeris1000.jpg/330px-Epithelantha_micromeris1000.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Epitelanta",
+      "found": true
+    },
+    "Erythrina": {
+      "queried": [
+        "Raudūnė"
+      ],
+      "matched": "Raudūnė",
+      "title": "Raudūnė",
+      "extract": "Raudūnė (Erythrina) – pupinių (Fabaceae) šeimos Faboideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Erythrina_crista-galli_2-2.jpg/330px-Erythrina_crista-galli_2-2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Raud%C5%ABn%C4%97",
+      "found": true
+    },
+    "Eucharis": {
+      "queried": [
+        "eucharis",
+        "Eucharis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Eugenia": {
+      "queried": [
+        "eugenija"
+      ],
+      "matched": "eugenija",
+      "title": "Eugenija",
+      "extract": "Eugenija – graikų kilmės moteriškos giminės vardas. Vardadieniai – rugsėjo 15 d. ir gruodžio 25 d.",
+      "thumbnail": null,
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Eugenija",
+      "found": true
+    },
+    "Eustoma": {
+      "queried": [
+        "Ešolcija Eustoma",
+        "Eustoma"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Felicia": {
+      "queried": [
+        "felicijė",
+        "Felicia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Ferocactus": {
+      "queried": [
+        "Ferokaktusas"
+      ],
+      "matched": "Ferokaktusas",
+      "title": "Ferokaktusas",
+      "extract": "Ferokaktusas (Ferocactus) – kaktusinių (Cactaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Ferocactus_chrysacanthus_1.jpg/330px-Ferocactus_chrysacanthus_1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Ferokaktusas",
+      "found": true
+    },
+    "Fortunella": {
+      "queried": [
+        "Kinkanas"
+      ],
+      "matched": "Kinkanas",
+      "title": "Kinkanas",
+      "extract": "Kinkanas (Fortunella) – rūtinių (Rutaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/8/82/Kumquat.jpeg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kinkanas",
+      "found": true
+    },
+    "Frailea": {
+      "queried": [
+        "Frailėja"
+      ],
+      "matched": "Frailėja",
+      "title": "Frailėja",
+      "extract": "Frailėja (Frailea) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso rutulišką ar cilindrižką išvaizdą turintys kaktusai, paplitę Brazilijoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Frailea_pumila1000.jpg/330px-Frailea_pumila1000.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Frail%C4%97ja",
+      "found": true
+    },
+    "Galtonia": {
+      "queried": [
+        "Galtonija"
+      ],
+      "matched": "Galtonija",
+      "title": "Galtonija",
+      "extract": "Galtonija (Galtonia) – smidrinių (Asparagaceae) augalų gentis. Lietuvoje gana retai gėlynuose auginama balsvoji galtonija. Augalas iki 100 cm aukščio. Žydi birželio – rugpjūčio mėn.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Galtonia_candicans_20070810-1335-175.jpg/330px-Galtonia_candicans_20070810-1335-175.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Galtonija",
+      "found": true
+    },
+    "Gossypium": {
+      "queried": [
+        "Vilnamedis"
+      ],
+      "matched": "Vilnamedis",
+      "title": "Vilnamedis",
+      "extract": "Vilnamedis (Gossypium) – dedešvinių (Malvaceae) šeimos augalų gentis, kuriai priklauso vienametės ir daugiametės žolės, rečiau krūmai. Iš tų augalų gaunamas pluoštas arba pūkai vadinami medvilne, aliejus – vilnamedžio aliejus.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Gossypium_hirsutum_BotGard1105openFruit.jpg/330px-Gossypium_hirsutum_BotGard1105openFruit.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Vilnamedis",
+      "found": true
+    },
+    "Gymnocalycium": {
+      "queried": [
+        "Nuogulis"
+      ],
+      "matched": "Nuogulis",
+      "title": "Nuogulis",
+      "extract": "Nuogulis (Gymnocalycium) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso 4-15 cm dydžio rutuliškos išvaizdos kaktusai su ryškiais žiedais.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Gymnocalcium_baldianium.jpg/330px-Gymnocalcium_baldianium.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Nuogulis",
+      "found": true
+    },
+    "Haageocereus": {
+      "queried": [
+        "stulpinėlis",
+        "Haageocereus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Heliotropium": {
+      "queried": [
+        "Heliotropas"
+      ],
+      "matched": "Heliotropas",
+      "title": "Heliotropas",
+      "extract": "Heliotropas (Heliotropium) – agurklinių (Boraginaceae) augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Heliotropium_peruvianum.jpg/330px-Heliotropium_peruvianum.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Heliotropas",
+      "found": true
+    },
+    "Ixia": {
+      "queried": [
+        "iksija",
+        "Ixia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Ixiolirion": {
+      "queried": [
+        "Mėlynutiniai"
+      ],
+      "matched": "Mėlynutiniai",
+      "title": "Mėlynutiniai",
+      "extract": "Mėlynutiniai (Ixioliriaceae) – magnolijūnų (Magnoliophyta) augalų šeima, kurioje vienintelė gentis – mėlynutė (Ixiolirion) su 4 rūšimis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/IMG_3965-Ixiolirion_tataricum.jpg/330px-IMG_3965-Ixiolirion_tataricum.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/M%C4%97lynutiniai",
+      "found": true
+    },
+    "Jacaranda": {
+      "queried": [
+        "Palisandramedis"
+      ],
+      "matched": "Palisandramedis",
+      "title": "Palisandramedis",
+      "extract": "Palisandramedis (Jacaranda) – magnolijūnų (Magnoliophyta) skyriaus, bignonijinių (Bignoniaceae) šeimos augalų gentis, kuriai priklauso krūmai ir medžiai. Daugumos rūšių žiedai mėlyni.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Jacaranda-mimosifolia-Mascarin.jpg/330px-Jacaranda-mimosifolia-Mascarin.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Palisandramedis",
+      "found": true
+    },
+    "Juanulloa": {
+      "queried": [
+        "Juanulloa"
+      ],
+      "matched": "Juanulloa",
+      "title": "Juanulloa",
+      "extract": "Juanulloa – bulvinių (Solanaceae) šeimos augalų gentis. Paplitusi Centrinėje ir Pietų Amerikoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Juanulloa_parasitica.jpg/330px-Juanulloa_parasitica.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Juanulloa",
+      "found": true
+    },
+    "Kaempferia": {
+      "queried": [
+        "Imbierutis"
+      ],
+      "matched": "Imbierutis",
+      "title": "Imbierutis",
+      "extract": "Imbierutis (Kaempferia) – imbierinių (Zingiberaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Galangal.web.jpg/330px-Galangal.web.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Imbierutis",
+      "found": true
+    },
+    "Lagenaria": {
+      "queried": [
+        "butelis"
+      ],
+      "matched": "butelis",
+      "title": "Butelis",
+      "extract": "Butelis – talpyklė, dažniausiai aukštas indas, paprastai cilindro formos, su siauru kakliuku, patogiu užkimšti kamščiu ar uždaryti dangteliu. Dideli buteliai dar kartais vadinami didbuteliais.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Bouteille.jpg/330px-Bouteille.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Butelis",
+      "found": true
+    },
+    "Lampranthus": {
+      "queried": [
+        "lamprantas",
+        "Lampranthus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Latania": {
+      "queried": [
+        "latania",
+        "Latania"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Sempervivum": {
+      "queried": [
+        "Šilropė"
+      ],
+      "matched": "Šilropė",
+      "title": "Šilropė",
+      "extract": "Šilropė (Sempervivum) – storalapinių (Crassulaceae) šeimos sukulentinių augalų gentis. Mokslinėje literatūroje išskiriamos 40-60 rūšių. Anksčiau buvo aprašytos bent 200 rūšių, tačiau daugelis jų nebėra laikomos atskiromis rūšimis. Yra išvesta apie 3000 šilropių veislių auginamų soduose ir gėlynuose. Tai daugiamečiai, visžaliai augalai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Stogine_silrope.JPG/330px-Stogine_silrope.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/%C5%A0ilrop%C4%97",
+      "found": true
+    },
+    "Aeonium": {
+      "queried": [
+        "ramdis",
+        "Aeonium"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Cephalotus": {
+      "queried": [
+        "Cephalotus"
+      ],
+      "matched": "Cephalotus",
+      "title": "Pūslinis kriauklenis",
+      "extract": "Pūslinis kriauklenis – kriaukleninių (Cephalotaceae) šeimos vabzdžiaėdis augalas. Vienintelė rūšis kriauklenio (Cephalotus) gentyje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Cephalotus_follicularis001.jpg/330px-Cephalotus_follicularis001.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/P%C5%ABslinis_kriauklenis",
+      "found": true
+    },
+    "Curio": {
+      "queried": [
+        "Curio"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Haworthiopsis": {
+      "queried": [
+        "Haworthiopsis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Pachypodium": {
+      "queried": [
+        "Pachypodium"
+      ],
+      "matched": "Pachypodium",
+      "title": "Tukvis",
+      "extract": "Tukvis (Pachypodium) – stepukinių (Apocynaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Pachypodium_geayi1.jpg/330px-Pachypodium_geayi1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Tukvis",
+      "found": true
+    },
+    "Radermachera": {
+      "queried": [
+        "Radermachera"
+      ],
+      "matched": "Radermachera",
+      "title": "Rentenis",
+      "extract": "Rentenis (Radermachera) – bignonijinių (Bignoniaceae) šeimos augalų gentis, kuriai priklauso visžaliai, 5-40 m aukščio medžiai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Radermachera_sinica.jpg/330px-Radermachera_sinica.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Rentenis",
+      "found": true
+    },
+    "Rhoipsaphis": {
+      "queried": [
+        "Rhoipsaphis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Peperomia": {
+      "queried": [
+        "Peperomija",
+        "Peperomia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Saintpaulia jonantha": {
+      "queried": [
+        "Sanpaulija našlaitinė",
+        "Saintpaulia jonantha"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Washingtonia": {
+      "queried": [
+        "Palmė vašingtonija",
+        "Washingtonia"
+      ],
+      "matched": "Washingtonia",
+      "title": "Vašingtonija",
+      "extract": "Vašingtonija (Washingtonia) – arekinių (Arecaceae) palmių šeimos gentis, kilusi iš pietvakarinių Jungtinių Amerikos Valstijų ir Šiaurės Vakarų Meksikos.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Washingtonia_filifera.jpg/330px-Washingtonia_filifera.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Va%C5%A1ingtonija",
+      "found": true
+    },
+    "Adiantum": {
+      "queried": [
+        "Adijantas",
+        "Adiantum"
+      ],
+      "matched": "Adiantum",
+      "title": "Adiantas",
+      "extract": "Adiantas (Adiantum) – adiantinių šeimos paparčių gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Adiantum_pedatum_09905.JPG/330px-Adiantum_pedatum_09905.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Adiantas",
+      "found": true
+    },
+    "Aglaonema": {
+      "queried": [
+        "Aglaonema"
+      ],
+      "matched": "Aglaonema",
+      "title": "Aglaonema",
+      "extract": "Aglaonema (Aglaonema) – aroninių (Araceae) šeimos Aroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Aglaonema_commutatum2.jpg/330px-Aglaonema_commutatum2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Aglaonema",
+      "found": true
+    },
+    "Alocasia": {
+      "queried": [
+        "Alokazija"
+      ],
+      "matched": "Alokazija",
+      "title": "Alokazija",
+      "extract": "Alokazija (Alocasia) – aroninių (Araceae) šeimos Aroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/AlocasiaMacrorrhizaFlower.jpg/330px-AlocasiaMacrorrhizaFlower.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Alokazija",
+      "found": true
+    },
+    "Ananas": {
+      "queried": [
+        "Ananasas"
+      ],
+      "matched": "Ananasas",
+      "title": "Ananasas",
+      "extract": "Ananasas (Ananas) – bromelijinių (Bromeliaceae) šeimos augalų gentis. Labiausiai žinoma ir plačiai paplitusi kultūrinė rūšis – valgomasis ananasas, kurios vaisius – ananasas.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Starr_020630-0018_Ananas_comosus.jpg/330px-Starr_020630-0018_Ananas_comosus.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Ananasas",
+      "found": true
+    },
+    "Beloperone guttata": {
+      "queried": [
+        "Beloperonė"
+      ],
+      "matched": "Beloperonė",
+      "title": "Justicija (augalas)",
+      "extract": "Justicija (Justicia) – akantinių (Acanthaceae) šeimos augalų gentis, kurią sudaro ~420 rūšių. Tai krūmai ir puskrūmiai, kilę daugiausia iš Amerikos. Lapai kiaušiniški ir šiek tiek pūkuoti. Žiedai primena krevetes, trumpalaikiai. Dalis rūšių auginamos kaip kambariniai augalai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Justicia_brandegeeana.jpg/330px-Justicia_brandegeeana.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Justicija_(augalas)",
+      "found": true
+    },
+    "Blechnum": {
+      "queried": [
+        "Unksmenė"
+      ],
+      "matched": "Unksmenė",
+      "title": "Unksmenė",
+      "extract": "Unksmenė (Blechnum) – unksmeninių (Blechnaceae) šeimos augalų gentis, priklausanti papartūnams.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Blechnum_spicant2.jpg/330px-Blechnum_spicant2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Unksmen%C4%97",
+      "found": true
+    },
+    "Brunfelsia": {
+      "queried": [
+        "Brunfelsija"
+      ],
+      "matched": "Brunfelsija",
+      "title": "Brunfelsija",
+      "extract": "Brunfelsija (Brunfelsia) – bulvinių (Solanaceae) šeimos augalų gentis. Paplitusi neotropinėje srityje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Brunfelsia_uniflora.jpg/330px-Brunfelsia_uniflora.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Brunfelsija",
+      "found": true
+    },
+    "Caladium": {
+      "queried": [
+        "Kaladis"
+      ],
+      "matched": "Kaladis",
+      "title": "Kaladis",
+      "extract": "Kaladis (Caladium) – aroninių (Araceae) šeimos Aroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Caladium_bicolor_%27Florida_Sweetheart%27_Plant_2220px.jpg/330px-Caladium_bicolor_%27Florida_Sweetheart%27_Plant_2220px.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kaladis",
+      "found": true
+    },
+    "Caryota mitis": {
+      "queried": [
+        "Palmė karijota",
+        "Caryota mitis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Clusia rosea": {
+      "queried": [
+        "Kluzija",
+        "Clusia rosea"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Cryptanthus": {
+      "queried": [
+        "Kriptantas"
+      ],
+      "matched": "Kriptantas",
+      "title": "Kriptantas",
+      "extract": "Kriptantas (Cryptanthus) – bromelijinių (Bromeliaceae) šeimos augalų gentis, kuriai priklauso dirvožemyje augantys augalai. Genties pavadinimas iš graikų k. žodžių: kryptos – slaptas ir anthos – žiedas; augalo žiedai pasislėpę tarp pažiedžių ir visai nepuošnūs.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Cryptanthus_zonatus_BotGardBln1105a.JPG/330px-Cryptanthus_zonatus_BotGardBln1105a.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kriptantas",
+      "found": true
+    },
+    "Cymbidium": {
+      "queried": [
+        "Cimbidis"
+      ],
+      "matched": "Cimbidis",
+      "title": "Cimbidis",
+      "extract": "Cimbidis (Cymbidium) – gegužraibinių (Ochidaceae) šeimos epifitinių ir pusiau litofitinių augalų gentis. Šaknys storos ir mėsingos, lapai standūs ir ilgi, išaugantys iš apvalių gumbų. Žiedų kekės taip pat auga iš gumbų ir žydi labai ilgai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Cymbidium_dayanum_Orchi_04.jpg/330px-Cymbidium_dayanum_Orchi_04.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Cimbidis",
+      "found": true
+    },
+    "Fittonia verschaffeltii": {
+      "queried": [
+        "Fitonija"
+      ],
+      "matched": "Fitonija",
+      "title": "Fitonija",
+      "extract": "Fitonija (Fittonia) – akantinių (Acanthaceae) šeimos augalų gentis, kuriai priklauso augalai su smulkiais, įvairiaspalvių gyslelių išvagotais lapais. Tai šliaužiantys augalai, kilę iš drėgnų tropikų miškų. Jų lapeliai smulkūs, ovalo formos, išraizgyti spalvingų lapagyslių tinklo. Gamtoje šie augalai žydi smulkiais geltonais žiedais, tačiau auginami uždarose patalpose jie retai tepražysta.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Colpfl25.jpg/330px-Colpfl25.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Fitonija",
+      "found": true
+    },
+    "Gloriosa": {
+      "queried": [
+        "Glorioza"
+      ],
+      "matched": "Glorioza",
+      "title": "Glorioza",
+      "extract": "Glorioza (Gloriosa) - lelijinių augalų (Liliaceae) šeimos gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Flame_Lily.jpg/330px-Flame_Lily.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Glorioza",
+      "found": true
+    },
+    "Haworthia": {
+      "queried": [
+        "Avortija",
+        "Haworthia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Laelia": {
+      "queried": [
+        "Orchidėja laelia",
+        "Laelia"
+      ],
+      "matched": "Laelia",
+      "title": "Laišva",
+      "extract": "Laišva (Laelia) – gegužraibinių (Ochidaceae) šeimos augalų gentis, kuriai priklauso daugiausia epifitinės ir kelios litofitinės orchidėjos. Stiebas trumpas, kai kurių rūšių iki 1 m ilgio. Žiedynas receminis, iki 30 cm ilgio, su 8 žiedais.\nŽiedai būna įvairių spalvų – nuo baltos ir geltonos iki raudonos ir violetinės. Polinarijų sudaro 8 polinijos, pagal tai atskiriama nuo labai panašių katlėjų, kurios turi 4 polinijas.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Laelia_gouldiana-003.jpg/330px-Laelia_gouldiana-003.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Lai%C5%A1va",
+      "found": true
+    },
+    "Miltonia": {
+      "queried": [
+        "Miltonija"
+      ],
+      "matched": "Miltonija",
+      "title": "Miltonija",
+      "extract": "Miltonija (Miltonia) – gegužraibinių (Orchidaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Miltonia_spectabilis_var_moreliana2.jpg/330px-Miltonia_spectabilis_var_moreliana2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Miltonija",
+      "found": true
+    },
+    "Neoregelia": {
+      "queried": [
+        "Neoregelija"
+      ],
+      "matched": "Neoregelija",
+      "title": "Neoregelija",
+      "extract": "Neoregelija (Neoregelia) – bromelijinių (Bromeliaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Neoregelia_carolinae_BotGardBln310505a.jpg/330px-Neoregelia_carolinae_BotGardBln310505a.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Neoregelija",
+      "found": true
+    },
+    "Nidularium": {
+      "queried": [
+        "Nidularijus"
+      ],
+      "matched": "Nidularijus",
+      "title": "Nidularijus",
+      "extract": "Nidularijus (Nidularium) – bromelijinių (Bromeliaceae) šeimos augalų gentis su puošniais lapais. Genties pavadinimas iš lotynų k. žodžio nidus – lizdas. Vienų rūšių lapai abipus žali, o kitų – apatinė pusė raudona arba purpurinė. Žiedynas menkai išsivystęs.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Nidularium_fulgens_HabitusInflorescence_BotGardBln090f6.JPG/330px-Nidularium_fulgens_HabitusInflorescence_BotGardBln090f6.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Nidularijus",
+      "found": true
+    },
+    "Pandanus veitchii": {
+      "queried": [
+        "Pandanas"
+      ],
+      "matched": "Pandanas",
+      "title": "Pandanas",
+      "extract": "Pandanas (Pandanus) – pandaninių (Pandanaceae) šeimos vienaskilčių augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Pandanus_tectorius.jpg/330px-Pandanus_tectorius.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Pandanas",
+      "found": true
+    },
+    "Stephanotis floribunda": {
+      "queried": [
+        "Stefanotis",
+        "Stephanotis floribunda"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Tetrastigma voinierianum": {
+      "queried": [
+        "Tetrastigma",
+        "Tetrastigma voinierianum"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Cycas revoluta": {
+      "queried": [
+        "Cikas"
+      ],
+      "matched": "Cikas",
+      "title": "Cikas",
+      "extract": "Cikas (Cycas) – tai plikasėklių grupei, cikūnų (Cycadophyta) skyriui ir monotipinei cikinių (Cycadaceae) šeimai priskiriama archajiška augalų gentis. Visžaliai daugiamečiai sumedėję augalai natūraliai paplitę tropikuose ir subtropikuose. Šiuo metu priskiriama 117 rūšių.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Cycas_circinalis.jpg/330px-Cycas_circinalis.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Cikas",
+      "found": true
+    },
+    "Davallia": {
+      "queried": [
+        "Davalija",
+        "Davallia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Chamaedorea elegans": {
+      "queried": [
+        "Palmė grakščioji chamedorėja",
+        "Chamaedorea elegans"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Codiaeum": {
+      "queried": [
+        "Krotonas",
+        "Codiaeum"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Cyclamen persicum": {
+      "queried": [
+        "Ciklamenas"
+      ],
+      "matched": "Ciklamenas",
+      "title": "Ciklamenas",
+      "extract": "Ciklamenas (Cyclamen) – mirsininių šeimos gentis. Lietuvoje auginami tik kaip dekoratyviniai augalai darželiuose ir namuose.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Cyclamen_cyprium.jpg/330px-Cyclamen_cyprium.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Ciklamenas",
+      "found": true
+    },
+    "Sabal": {
+      "queried": [
+        "Palmė sabalpalmė",
+        "Sabal"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Xanthosoma lindenii": {
+      "queried": [
+        "Ksontosoma Lindeno",
+        "Xanthosoma lindenii"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Pachira macrocarpa": {
+      "queried": [
+        "Pachira",
+        "Pachira macrocarpa"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Platycerium": {
+      "queried": [
+        "Papartis plačiaragis",
+        "Platycerium"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Rhoeo spathacea": {
+      "queried": [
+        "Rėjus"
+      ],
+      "matched": "Rėjus",
+      "title": "Rėjus",
+      "extract": "Rėjus – senovės miestas Irane, dabartinė Teherano miesto dalis. Klestėjo nuo VI a. pr. m. e. iki XIII a. IX–XIII a. buvo dailės ir keramikos centras. 1139 m. čia pastatytas Togrulbeko bokštas – mauzoliejus.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Abdolazim2.jpg/330px-Abdolazim2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/R%C4%97jus",
+      "found": true
+    },
+    "Schefflera": {
+      "queried": [
+        "Šeflera",
+        "Schefflera"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Carex": {
+      "queried": [
+        "Viksva"
+      ],
+      "matched": "Viksva",
+      "title": "Viksva",
+      "extract": "Viksva (Carex) – lelijažiedžių (Liliidae) poklasio viksvuolinių (Cyperaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Carex_acutiformis_eF.jpg/330px-Carex_acutiformis_eF.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Viksva",
+      "found": true
+    },
+    "Celosia": {
+      "queried": [
+        "Celiozija"
+      ],
+      "matched": "Celiozija",
+      "title": "Celiozija",
+      "extract": "Celiozija (Celosia) – burnotinių (Amaranthaceae) šeimos augalų gentis, kuriai priklauso vienametės arba daugiametės žolės su stačiais, šakotais stiebais. Lapai auga pražangiai; jie kiaušiniški. Žiedai sukrauti varpos ar šluotelės pavidalo žiedynuose. Vaisius – daugiasėklė dėžutė.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/CelosiaCristata.jpg/330px-CelosiaCristata.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Celiozija",
+      "found": true
+    },
+    "Delosperma": {
+      "queried": [
+        "mudrę",
+        "Delosperma"
+      ],
+      "matched": "Delosperma",
+      "title": "Mudrė",
+      "extract": "Mudrė (Delosperma) – pluoštagėlinių (Aizoaceae) šeimos sukulentinių augalų gentis. Paplitusi Pietų ir Rytų Afrikoje. Dalis rūšių turi psichodelinio alkaloido dimetiltriptamino.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Delosperma_nubigenum_a1.jpg/330px-Delosperma_nubigenum_a1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Mudr%C4%97",
+      "found": true
+    },
+    "Hippeastrum": {
+      "queried": [
+        "meilenis"
+      ],
+      "matched": "meilenis",
+      "title": "Meilenis",
+      "extract": "Meilenis (Hippeastrum) – amarilinių (Amaryllidaceae) šeimos augalų gentis, kurioje yra apie 80 rūšių ir labai daug veislių. Liaudyje šie augalai vadinami amariliais.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Meilenis.JPG/330px-Meilenis.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Meilenis",
+      "found": true
+    },
+    "Asplenium": {
+      "queried": [
+        "Kalnarūtė"
+      ],
+      "matched": "Kalnarūtė",
+      "title": "Kalnarūtė",
+      "extract": "Kalnarūtė (Asplenium) – kalnarūtiečių (Aspleniales) eilės, kalnarūtinių šeimos (Aspleniaceae) augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Asplenium-viride.jpg/330px-Asplenium-viride.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kalnar%C5%ABt%C4%97",
+      "found": true
+    },
+    "Cereus": {
+      "queried": [
+        "stulpenis"
+      ],
+      "matched": "stulpenis",
+      "title": "Stulpenis",
+      "extract": "Stulpenis (Cereus) – kaktusinių (Cactaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Cereus_repandus.jpg/330px-Cereus_repandus.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Stulpenis",
+      "found": true
+    },
+    "Chlorophytum": {
+      "queried": [
+        "Chlorofitas"
+      ],
+      "matched": "Chlorofitas",
+      "title": "Chlorofitas",
+      "extract": "Chlorofitas (Chlorophytum) – smidrinių (Asparagaceae) šeimos augalų gentis, kuriai priklauso visažaliai augalai, kilę iš Pietų Afrikos. Auga tankiais skrotelių kuokštais, iš kurių išaugina ilgas palaipas. Ant palaipų krauna mažus baltus žiedus ir ataugas, iš kurių galima užsiauginti naują augalą.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/ChlorophytumCapense.jpg/330px-ChlorophytumCapense.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Chlorofitas",
+      "found": true
+    },
+    "Dryopteris": {
+      "queried": [
+        "Papartis"
+      ],
+      "matched": "Papartis",
+      "title": "Papartūnai",
+      "extract": "Papartūnai (Pteridophyta) – eukariotų (Eukaryota) domeno augalų (Plantae) karalystės skyrius. Priklauso sporinių induočių grupei.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Blechnum_spicant2.jpg/330px-Blechnum_spicant2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Papart%C5%ABnai",
+      "found": true
+    },
+    "Echinocactus": {
+      "queried": [
+        "ežiakaktusis"
+      ],
+      "matched": "ežiakaktusis",
+      "title": "Ežiakaktusis",
+      "extract": "Ežiakaktusis (Echinocactus) – kaktusinių (Cactaceae) šeimos rutuliškos formos augalų gentis, kuriai būdingi stambūs dygliai ir smulkūs žiedai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Echinocactus_grusonii_%28aka%29.jpg/330px-Echinocactus_grusonii_%28aka%29.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/E%C5%BEiakaktusis",
+      "found": true
+    },
+    "Eschscholzia": {
+      "queried": [
+        "EŠOLCIJA",
+        "Eschscholzia"
+      ],
+      "matched": "Eschscholzia",
+      "title": "Ešolcija",
+      "extract": "Ešolcija (Eschscholzia) – aguoninių (Papaveraceae) šeimos augalų gentis, kurioje yra 12 rūšių. Lietuvoje gėlynuose auginama viena rūšis – geltonžiedė ešolcija. Augalas 30-50 cm aukščio. Lapai plunksniškai suskaldyti į linijiškas skilteles. Vainiklapiai geltoni su oranžiniu pamatu. Žiedai atsidaro tik saulėtą dieną, o apsiniaukusią ir vakare jie užsidaro. Žydi birželio – rugsėjo mėn.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/California_poppy_1.jpg/330px-California_poppy_1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/E%C5%A1olcija",
+      "found": true
+    },
+    "Glechoma": {
+      "queried": [
+        "Tramažolė"
+      ],
+      "matched": "Tramažolė",
+      "title": "Tramažolė",
+      "extract": "Tramažolė (Glechoma) – notrelinių (Lamiaceae) šeimos augalų gentis, kurioje yra apie 12 rūšių. Tai daugiametės žolės su šliaužiančiu ar kylančiu stiebu ir širdiškais lapais. Žiedai sukrauti lapų pažastyse. Vainikėlis melsvas. Auga miškuose, upių pakrantėse, patvoriuose.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Illustration_Glechoma_hederacea0.jpg/330px-Illustration_Glechoma_hederacea0.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Trama%C5%BEol%C4%97",
+      "found": true
+    },
+    "Hibiscus": {
+      "queried": [
+        "Kinrožė"
+      ],
+      "matched": "Kinrožė",
+      "title": "Kinrožė",
+      "extract": "Kinrožė (Hibiscus) – dedešvinių (Malvaceae) šeimos augalų gentis. Ją sudaro keli šimtai augalų rūšių, paplitusių viso pasaulio tropiniuose ir subtropiniuose kraštuose. Į šią gentį įeina vienmečiai ir daugiamečiai žoliniai augalai, krūmai bei nedideli medeliai. Kinrožės pasižymi dideliais, spalvingais žiedais su ilgomis piestelėmis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Hibiscus_insularis.jpg/330px-Hibiscus_insularis.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kinro%C5%BE%C4%97",
+      "found": true
+    },
+    "Humulus": {
+      "queried": [
+        "Apynys"
+      ],
+      "matched": "Apynys",
+      "title": "Apynys",
+      "extract": "Apynys (Humulus) – kanapinių (Cannabaceae) šeimos augalų gentis. Paplitusi Šiaurės pusrutulyje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Humulus_Japonicus_female.jpg/330px-Humulus_Japonicus_female.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Apynys",
+      "found": true
+    },
+    "Linaria": {
+      "queried": [
+        "Linažolė"
+      ],
+      "matched": "Linažolė",
+      "title": "Linažolė",
+      "extract": "Linažolė, bambažolė (Linaria) – gyslotinių (Plantaginaceae) šeimos augalų gentis, kuriai priklauso daugiametės ar vienmetės žolės arba puskrūmiai. Pavadinimas kilęs nuo paprastosios linažolės lapų, kurie yra panašūs į lino.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Linaria_Vulgaris_Mill.jpg/330px-Linaria_Vulgaris_Mill.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Lina%C5%BEol%C4%97",
+      "found": true
+    },
+    "Mimosa": {
+      "queried": [
+        "Mimoza"
+      ],
+      "matched": "Mimoza",
+      "title": "Mimoza",
+      "extract": "Mimoza (Mimosa) – pupinių (Fabaceae) šeimos Mimosoideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Mimosa_pudica_HabitusLeavesInflorescences_BotGardBln0906a.jpg/330px-Mimosa_pudica_HabitusLeavesInflorescences_BotGardBln0906a.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Mimoza",
+      "found": true
+    },
+    "Pereskia": {
+      "queried": [
+        "Pereskija"
+      ],
+      "matched": "Pereskija",
+      "title": "Pereskija",
+      "extract": "Pereskija (Pereskia) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso lapus ir dygliuotą stiebą turintys kaktusai. Išvaizda panašūs į laukines rožes. Senesni augalai panašūs į medelius. Stiebas iki 1 m aukščio, tačiau laipiojančios rūšys gali siekti net iki 5 m. Žiedai 1-5 cm skersmens. Jie būna balti, geltoni, raudoni, susitelkę į žiedynus. Ramybės periodu lapus gali numesti.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Pereskia_grandifolia2.jpg/330px-Pereskia_grandifolia2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Pereskija",
+      "found": true
+    },
+    "Polygala": {
+      "queried": [
+        "Putokšlė"
+      ],
+      "matched": "Putokšlė",
+      "title": "Putokšlė",
+      "extract": "Putokšlė (Polygala) – putokšlinių (Polygalaceae) šeimos augalų gentis. Gentį sudaro apie 500 augalų rūšių. Lietuvoje auga šios rūšys:Karčioji putokšlė \nSkiauterėtoji putokšlė \nPaprastoji putokšlė \nVolfgango putokšlė ",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Polygala_comosa001.JPG/330px-Polygala_comosa001.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Putok%C5%A1l%C4%97",
+      "found": true
+    },
+    "Aeschynanthus speciosus": {
+      "queried": [
+        "Eschinanatas",
+        "Aeschynanthus speciosus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Anigozanthos flavidus": {
+      "queried": [
+        "Kengūros letena",
+        "Anigozanthos flavidus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Ardisia crenata": {
+      "queried": [
+        "Ardizija",
+        "Ardisia crenata"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Aspidistra elatior": {
+      "queried": [
+        "Aspidistra aukštoji",
+        "Aspidistra elatior"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Browallia": {
+      "queried": [
+        "Brovalija",
+        "Browallia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Calceolaria crenatiflora": {
+      "queried": [
+        "Kalceoliarija",
+        "Calceolaria crenatiflora"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Catharanthus roseus": {
+      "queried": [
+        "Katarantas",
+        "Catharanthus roseus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Cissus": {
+      "queried": [
+        "Lamstas",
+        "Cissus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Clerodendrum": {
+      "queried": [
+        "Šventmedis",
+        "Clerodendrum"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Cocos nucifera": {
+      "queried": [
+        "Palmė riešutinė kokospalmė",
+        "Cocos nucifera"
+      ],
+      "matched": "Cocos nucifera",
+      "title": "Riešutinė kokospalmė",
+      "extract": "Riešutinė kokospalmė – arekinių (Arecaceae) šeimos augalas, aptinkamas tropinio klimato sričių jūrų pakrantėse, beveik prie pat vandens linijos.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/1859-Martinique.web.jpg/330px-1859-Martinique.web.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Rie%C5%A1utin%C4%97_kokospalm%C4%97",
+      "found": true
+    },
+    "Cordyline australis": {
+      "queried": [
+        "Kordilina",
+        "Cordyline australis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Crossandra infundibuliformis": {
+      "queried": [
+        "Krosandra",
+        "Crossandra infundibuliformis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Cyrtomium falcatum": {
+      "queried": [
+        "Cirtomis pjautuviškasis",
+        "Cyrtomium falcatum"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Dionaea muscipula": {
+      "queried": [
+        "Musėkautas jautrusis",
+        "Dionaea muscipula"
+      ],
+      "matched": "Dionaea muscipula",
+      "title": "Jautrusis musėkautas",
+      "extract": "Jautrusis musėkautas – saulašarinių (Droseraceae) šeimos vabzdžiaėdis augalas, priklausantis monotipinei musėkauto (Dionaea) genčiai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Venus_Flytrap_showing_trigger_hairs.jpg/330px-Venus_Flytrap_showing_trigger_hairs.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Jautrusis_mus%C4%97kautas",
+      "found": true
+    },
+    "Eranthemum pulchellum": {
+      "queried": [
+        "Erantema",
+        "Eranthemum pulchellum"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Gardenia": {
+      "queried": [
+        "Gardenija",
+        "Gardenia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Gloxinia sylvatica": {
+      "queried": [
+        "Achimenė"
+      ],
+      "matched": "Achimenė",
+      "title": "Achimenė",
+      "extract": "Achimenė (Achimenes) – gesnerijinių (Gesneriaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Achimenes_erecta.jpg/330px-Achimenes_erecta.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Achimen%C4%97",
+      "found": true
+    },
+    "Grevillea robusta": {
+      "queried": [
+        "Grevilėja didžioji",
+        "Grevillea robusta"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Iresine": {
+      "queried": [
+        "Irezinė",
+        "Iresine"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Leptospermum scoparium": {
+      "queried": [
+        "Arbatmedis australiškasis",
+        "Leptospermum scoparium"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Microlepia speluncae": {
+      "queried": [
+        "Mikrolepija",
+        "Microlepia speluncae"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Myrtus communis": {
+      "queried": [
+        "Mirta paprastoji",
+        "Myrtus communis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Odontoglossum": {
+      "queried": [
+        "Orchidėja odontoglossum",
+        "Odontoglossum"
+      ],
+      "matched": "Odontoglossum",
+      "title": "Liežuvė",
+      "extract": "Liežuvė (Odontoglossum) – gegužraibinių (Ochidaceae) šeimos augalų gentis, kuriai priklauso epifitinės ir rečiau ant žemės augančios orchidėjos. Pavadinimas iš graikų k. žodžių: odon – dantis ir glossa – liežuvis; ant lūpos pagrindo yra 2 danties pavidalo išaugos. Gentį pirmą kartą taip pavadino 1816 m. Karlas Kuntas. Aukštikalnėse augančių augalų žiedynas su maždaug 150 žiedų, o žemumose – apie 20. Žiedai balti, raudoni, purpuriniai, rudi, geltoni ir kt.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Odontoglossum_tenue_Orchi_01.jpg/330px-Odontoglossum_tenue_Orchi_01.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Lie%C5%BEuv%C4%97",
+      "found": true
+    },
+    "Ophiopogon": {
+      "queried": [
+        "Gyvatbarzdė ilgalapė",
+        "Ophiopogon"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Pavonia multiflora": {
+      "queried": [
+        "Povonija",
+        "Pavonia multiflora"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Phoenix": {
+      "queried": [
+        "Palmė finikas",
+        "Phoenix"
+      ],
+      "matched": "Phoenix",
+      "title": "Finiksas",
+      "extract": "Finiksas – miestas JAV pietvakariuose, Arizonos valstijos sostinė. 1,44 mln. gyventojų (2010 m.). Tarptautinis oro uostas. Tai didelis mokslo pramonės centras, gaminamos aviacijos prietaisai ir mašinos, raketos, išvystyta radioelektronikos, chemijos, maisto pramonė. Yra universitetas.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Flag_of_Phoenix%2C_Arizona.svg/langlt-330px-Flag_of_Phoenix%2C_Arizona.svg.png",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Finiksas",
+      "found": true
+    },
+    "Pisonia umbellifera": {
+      "queried": [
+        "Ratiklė skėtinė",
+        "Pisonia umbellifera"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Reinwardtia indica": {
+      "queried": [
+        "Reinwardtia indica"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Rhipsalidopsis": {
+      "queried": [
+        "Kaktusas velykinis",
+        "Rhipsalidopsis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Rhoicissus capensis": {
+      "queried": [
+        "Kaplamstis",
+        "Rhoicissus capensis"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Scirpus cernuus": {
+      "queried": [
+        "Viksvamedis",
+        "Scirpus cernuus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Sinningia": {
+      "queried": [
+        "Gloksinija",
+        "Sinningia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Smithiantha": {
+      "queried": [
+        "Smitianta",
+        "Smithiantha"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Soleirolia soleirolii": {
+      "queried": [
+        "Elksinė"
+      ],
+      "matched": "Elksinė",
+      "title": "Gulsčioji elksinė",
+      "extract": "Gulsčioji elksinė arba gulsčioji soleirolija – dilgėlinių (Urticaceae) šeimos augalų rūšis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Soleirolia_soleirolii001.JPG/330px-Soleirolia_soleirolii001.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Guls%C4%8Dioji_elksin%C4%97",
+      "found": true
+    },
+    "Sparmannia africana": {
+      "queried": [
+        "Sparmanija afrikinė",
+        "Sparmannia africana"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Tolmiea menziesii": {
+      "queried": [
+        "Bambukas"
+      ],
+      "matched": "Bambukas",
+      "title": "Bambukiniai",
+      "extract": "Bambukiniai (Bambusoideae) – miglinių (Poaceae) šeimos daugiamečių, visažalių augalų pošeimis. Paplitę tropinio ir subtropinio klimato zonose, daugiausia Pietryčių ir Rytų Azijoje, Himalajuose, Pietų Amerikoje, JAV.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Bamboo_forest.jpg/330px-Bamboo_forest.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Bambukiniai",
+      "found": true
+    },
+    "Vriesea": {
+      "queried": [
+        "Fryzija"
+      ],
+      "matched": "Fryzija",
+      "title": "Fryzija",
+      "extract": "Fryzija – Nyderlandų provincija, esanti šalies šiaurinėje dalyje. Šiaurėje ribojasi su Šiaurės jūra, rytuose su Groningeno ir Drentės, pietuose su Overeiselio ir Flevolando provincijomis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Frisian_flag.svg/langlt-330px-Frisian_flag.svg.png",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Fryzija",
+      "found": true
+    },
+    "Zebrina": {
+      "queried": [
+        "Zebrina"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Achimenes": {
+      "queried": [
+        "Achimenė"
+      ],
+      "matched": "Achimenė",
+      "title": "Achimenė",
+      "extract": "Achimenė (Achimenes) – gesnerijinių (Gesneriaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Achimenes_erecta.jpg/330px-Achimenes_erecta.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Achimen%C4%97",
+      "found": true
+    },
+    "Gerbera": {
+      "queried": [
+        "Gerbera"
+      ],
+      "matched": "Gerbera",
+      "title": "Gerbera",
+      "extract": "Gerbera (Gerbera) – astrinių (Asteraceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Arctotis.jpg/330px-Arctotis.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Gerbera",
+      "found": true
+    },
+    "Amaranthus": {
+      "queried": [
+        "Burnotis"
+      ],
+      "matched": "Burnotis",
+      "title": "Burnotis",
+      "extract": "Burnotis (Amaranthus) – burnotinių (Amaranthaceae) šeimos augalų gentis, kuriai priklauso vienamečiai arba daugiamečiai žoliniai augalai su šakotu stiebu. Lapai pražanginiai, įvairūs – kiaušiniški, lancetiški, elipsiški ir kt. formų. Žiedai smulkūs, susitelkę kamuolėliais tankiose varpose, galvutėse. Vaisius – dėžutė.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Illustration_Amaranthus_retroflexus0.jpg/330px-Illustration_Amaranthus_retroflexus0.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Burnotis",
+      "found": true
+    },
+    "Aristolochia": {
+      "queried": [
+        "Kartuolė"
+      ],
+      "matched": "Kartuolė",
+      "title": "Paprastoji kartuolė",
+      "extract": "Paprastoji kartuolė, kartuolė, kartenėle, kartukas – karpžuvių žuvis, priklausanti karpinių (Cyprinidae) šeimai. Kūnas aukštas ir plokščias, iki 10 cm ilgio. Galva maža, žiotys mažos. Nugara tamsiai žalsva. Šonai sidabriški su ryškia žalsvai melsvo atspalvio juostele, ypač uodeginėje kūno dalyje. Akys gelsvos su oranžine dėmelė viršuje. Žvynai stambūs. Šoninėje linijoje 4-7 žvynai. Pelekai pilkšvi.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Rhodeus_sericeus.jpg/330px-Rhodeus_sericeus.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Paprastoji_kartuol%C4%97",
+      "found": true
+    },
+    "Cassia": {
+      "queried": [
+        "kasija",
+        "Cassia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Echium": {
+      "queried": [
+        "Ežeinis"
+      ],
+      "matched": "Ežeinis",
+      "title": "Ežeinis",
+      "extract": "Ežeinis (Echium) – agurklinių (Boraginaceae) šeimos augalų gentis, kuriai priklauso žoliniai augalai arba puskrūmiai, apaugę šiurkščiais plaukeliais. Jų lapai lancetiški, išsidėstę pražangiai. Žiedai sutelkti į suktukus.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Natternkopf_oe.jpg/330px-Natternkopf_oe.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/E%C5%BEeinis",
+      "found": true
+    },
+    "Helichrysum": {
+      "queried": [
+        "Šlamutis"
+      ],
+      "matched": "Šlamutis",
+      "title": "Šlamutis",
+      "extract": "Šlamutis (Helichrysum) – astrinių (Asteraceae) šeimos augalų gentis. Graikiškai helios – saulė, chrysos – auksas; žiedai geltoni kaip auksas. Augalai su nedideliais daugiažiedžiais graižais.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Helichrysum_bracteatum3.jpg/330px-Helichrysum_bracteatum3.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/%C5%A0lamutis",
+      "found": true
+    },
+    "Ipomoea": {
+      "queried": [
+        "Sukutis"
+      ],
+      "matched": "Sukutis",
+      "title": "Sukutis",
+      "extract": "Sukutis (Ipomoea) – vijoklinių (Convolvulaceae) šeimos augalų gentis. Jai priklauso vienamečiai ir daugiamečiai augalai: žolės, lianos, krūmai ir žemi medžiai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Ipomoea_indica.JPG/330px-Ipomoea_indica.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Sukutis",
+      "found": true
+    },
+    "Lantana": {
+      "queried": [
+        "lantana",
+        "Lantana"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Laurus": {
+      "queried": [
+        "Lauramedis"
+      ],
+      "matched": "Lauramedis",
+      "title": "Lauramedis",
+      "extract": "Lauramedis (Laurus) – lauramedinių (Lauraceae) šeimos augalų gentis, paplitusi Pietų Europoje, Šiaurės Afrikoje, Azorų ir Kanarų salose ir kt. Užauga iki 20 m aukščio. Džiovinti kilniojo lauramedžio lapai, vadinami lauro lapais, vartojami kaip prieskonis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Illustration_Laurus_nobilis0.jpg/330px-Illustration_Laurus_nobilis0.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Lauramedis",
+      "found": true
+    },
+    "Plectranthus": {
+      "queried": [
+        "Cimbžieda",
+        "Plectranthus"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Ricinus": {
+      "queried": [
+        "Ricinmedis"
+      ],
+      "matched": "Ricinmedis",
+      "title": "Paprastasis ricinmedis",
+      "extract": "Paprastasis ricinmedis – karpažolinių šeimos (Euphorbiaceae) stambus žolinis augalas. Natūraliai auga Viduržemio jūros regiono rytuose, Indijoje, Rytų Afrikoje, tačiau dabar auginamas daugelyje kraštų.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Ricinus_communis001.JPG/330px-Ricinus_communis001.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Paprastasis_ricinmedis",
+      "found": true
+    },
+    "Tropaeolum": {
+      "queried": [
+        "Nasturtė"
+      ],
+      "matched": "Nasturtė",
+      "title": "Nasturtė",
+      "extract": "Nasturtė (Tropaeolum) – magnolijūnų (Magnoliophyta) augalų gentis, priklausanti monotipinei nasturtinių šeimai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Did%C5%BEioji_nasturte_%28Tropaeolum_majus%29.JPG/330px-Did%C5%BEioji_nasturte_%28Tropaeolum_majus%29.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Nasturt%C4%97",
+      "found": true
+    },
+    "Agave": {
+      "queried": [
+        "agava"
+      ],
+      "matched": "agava",
+      "title": "Agava",
+      "extract": "Agava (Agave) – smidrinių (Asparagaceae) šeimos augalų gentis. Beveik visos rūšys yra monokarpinės – pražysta tik kartą gyvenime ir nunyksta, kai subrandina sėklas. Žiedai sukrauti dideliame stulpo pavidalo žiedyne, gelsvai žali, kvapūs, apdulkina lapanosiai šikšnosparniai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Agave002.jpg/330px-Agave002.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Agava",
+      "found": true
+    },
+    "Colocasia": {
+      "queried": [
+        "Kolokazija"
+      ],
+      "matched": "Kolokazija",
+      "title": "Kolokazija",
+      "extract": "Kolokazija (Colocasia) – aroninių (Araceae) šeimos Aroideae pošeimio augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Inhamechines1.jpg/330px-Inhamechines1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kolokazija",
+      "found": true
+    },
+    "Freesia": {
+      "queried": [
+        "Frezija"
+      ],
+      "matched": "Frezija",
+      "title": "Frezija",
+      "extract": "Frezija (Freesia) – vilkdalginių (Iridaceae) šeimos daugiamečių svogūninių augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Freesia_hybrida2374996983.jpg/330px-Freesia_hybrida2374996983.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Frezija",
+      "found": true
+    },
+    "Sarracenia": {
+      "queried": [
+        "Saracėnija"
+      ],
+      "matched": "Saracėnija",
+      "title": "Saracėnija",
+      "extract": "Saracėnija (Sarracenia) – saracėnijinių (Sarraceniaceae) šeimos vabzdžiaėdžių augalų gentis. Rūšys sparčiai nyksta dėl augimo buveinių naikinimo. Augalai turi šakniastiebius, iš kurių atželia. Turi specifines gaudykles, į kurias įkrenta vabzdžiai, atskridę rinkti nektaro.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Sarracenia_Flava_JPG01.jpg/330px-Sarracenia_Flava_JPG01.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Sarac%C4%97nija",
+      "found": true
+    },
+    "Strelitzia": {
+      "queried": [
+        "Strelicija"
+      ],
+      "matched": "Strelicija",
+      "title": "Strelicija",
+      "extract": "Strelicija (Strelitzia) – strelicijinių (Strelitziaceae) šeimos augalų gentis, auganti Pietų Afrikos Respublikoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Strelitzia_nicolai.jpg/330px-Strelitzia_nicolai.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Strelicija",
+      "found": true
+    },
+    "Alpinia": {
+      "queried": [
+        "Alpinija"
+      ],
+      "matched": "Alpinija",
+      "title": "Alpinija",
+      "extract": "Alpinija (Alpinia) – imbierinių (Zingiberaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Alpina_purpurata_purpurata0.jpg/330px-Alpina_purpurata_purpurata0.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Alpinija",
+      "found": true
+    },
+    "Billbergia": {
+      "queried": [
+        "Bilbergija"
+      ],
+      "matched": "Bilbergija",
+      "title": "Bilbergija",
+      "extract": "Bilbergija (Billbergia) – bromelijinių (Bromeliaceae) šeimos augalų gentis. Pavadinta švedų zoologo, botaniko Gustaf Johan Billberg garbei.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Billbergia_horrida_HabitusInflorescence_BotGardBln0906c.jpg/330px-Billbergia_horrida_HabitusInflorescence_BotGardBln0906c.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Bilbergija",
+      "found": true
+    },
+    "Brassia": {
+      "queried": [
+        "Brasija"
+      ],
+      "matched": "Brasija",
+      "title": "Brasija",
+      "extract": "Brasija (Brassia) – gegužraibinių (Orchidaceae) šeimos epifitinių orchidėjų gentis, pavadinta anglų botaniko, rinkusio augalus Afrikoje, Viljamo Braso garbei.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Brassia_maculata.jpg/330px-Brassia_maculata.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Brasija",
+      "found": true
+    },
+    "Caesalpinia": {
+      "queried": [
+        "Cezalpinija"
+      ],
+      "matched": "Cezalpinija",
+      "title": "Cezalpinija",
+      "extract": "Cezalpinija (Caesalpinia) – pupinių (Fabaceae) šeimai priklausanti medingų augalų gentis, auganti pasaulio tropikuose ir subtropikuose. Pavadinta italų botaniko Andrea Cesalpino garbei.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Caesalpinia_gilliesii_1.jpg/330px-Caesalpinia_gilliesii_1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Cezalpinija",
+      "found": true
+    },
+    "Calanthe": {
+      "queried": [
+        "Kalantė"
+      ],
+      "matched": "Kalantė",
+      "title": "Kalantė",
+      "extract": "Kalantė (Calanthe) – gegužraibinių (Ochidaceae) šeimos augalų gentis, kuriai priklauso dirvožemyje augančios orchidėjos. Žiedynas gana ilgas, stačias. Žydi kelis mėnesius, nes žiedai skleidžiasi paeiliui, pradedant nuo žiedyno apačios viršūnės link. Dekoratyvinis augalas.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Calanthe_discolor1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Kalant%C4%97",
+      "found": true
+    },
+    "Cephalocereus": {
+      "queried": [
+        "žvakidis"
+      ],
+      "matched": "žvakidis",
+      "title": "Žvakidis",
+      "extract": "Žvakidis (Cephalocereus) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso cilindriškos išvaizdos, lėtai augantys kaktusai. Paplitę Meksikoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Cephalocereus_senilis_24.jpg/330px-Cephalocereus_senilis_24.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/%C5%BDvakidis",
+      "found": true
+    },
+    "Ceratonia": {
+      "queried": [
+        "Ceratonija"
+      ],
+      "matched": "Ceratonija",
+      "title": "Ceratonija",
+      "extract": "Ceratonija (Ceratonia) – pupinių (Fabaceae) šeimos Caesalpinioideae pošeimio dvinamių augalų gentis. Ceratonijos yra endeminės Viduržemio jūros regione.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Ceratonia_siliqua%2C_total.jpg/330px-Ceratonia_siliqua%2C_total.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Ceratonija",
+      "found": true
+    },
+    "Coelogyne": {
+      "queried": [
+        "Ertmenė"
+      ],
+      "matched": "Ertmenė",
+      "title": "Ertmenė",
+      "extract": "Ertmenė (Coelogyne) – gegužraibinių (Ochidaceae) šeimos augalų gentis, kuri aprašyta 1825 m. pagal Nepale aptiktą skiauterėtąją ertmenę. Genties pavadinimas iš dviejų graikiškų žodžių: koelos – tuščiaviduris ir gyne – moteriškas, nes šios genties augalų piestelės purkos yra su ertme.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Coelogyne_fimbriata_Orchi_03.jpg/330px-Coelogyne_fimbriata_Orchi_03.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Ertmen%C4%97",
+      "found": true
+    },
+    "Coryphantha": {
+      "queried": [
+        "korifanta"
+      ],
+      "matched": "korifanta",
+      "title": "Korifanta",
+      "extract": "Korifanta (Coryphantha) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso cilindriškos ir rutuliškos formos kaktusai. Tai viena iš didžiausių kaktusų genčių. Paplitę pietų JAV, Meksikoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Nightbloomingcactus.jpg/330px-Nightbloomingcactus.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Korifanta",
+      "found": true
+    },
+    "Curcuma": {
+      "queried": [
+        "Ciberžolė"
+      ],
+      "matched": "Ciberžolė",
+      "title": "Ciberžolė",
+      "extract": "Ciberžolė (Curcuma) – imbierinių (Zingiberaceae) šeimos augalų gentis. Daugumos rūšių stiebai ir šakniastiebiai turi eterinių aliejų ir geltonų dažų (kurkumino) bei auginamos kaip prieskoniai ar vaistiniai augalai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Curcuma_aeruginosa1.jpg/330px-Curcuma_aeruginosa1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Ciber%C5%BEol%C4%97",
+      "found": true
+    },
+    "Disocactus": {
+      "queried": [
+        "skridinaitis"
+      ],
+      "matched": "skridinaitis",
+      "title": "Skridinaitis",
+      "extract": "Skridinaitis (Disocactus) – kaktusinių (Cactaceae) šeimos augalų gentis. Stiebas rutuliškas. Auga Meksikoje, Pietų Amerikoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Disocactus_ackermannii.JPG/330px-Disocactus_ackermannii.JPG",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Skridinaitis",
+      "found": true
+    },
+    "Echinocereus": {
+      "queried": [
+        "ežiažvakis"
+      ],
+      "matched": "ežiažvakis",
+      "title": "Ežiažvakis",
+      "extract": "Ežiažvakis (Echinocereus) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso cilindrišką išvaizdą turintys kaktusai. Auga JAV pietinėje dalyje ir Meksikoje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Echinocereus_fendleri1.jpg/330px-Echinocereus_fendleri1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/E%C5%BEia%C5%BEvakis",
+      "found": true
+    },
+    "Espostoa": {
+      "queried": [
+        "stulpis"
+      ],
+      "matched": "stulpis",
+      "title": "Stulpis",
+      "extract": "Stulpis, vilnastulpis (Espostoa) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso koloniškos išvaizdos kaktusai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Espostoa_lanata-IMG_1935.jpg/330px-Espostoa_lanata-IMG_1935.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Stulpis",
+      "found": true
+    },
+    "Eucomis": {
+      "queried": [
+        "Eukomiai",
+        "Eucomis"
+      ],
+      "matched": "Eucomis",
+      "title": "Eucomis",
+      "extract": "Eucomis – hiacintinių (Hyacinthaceae) šeimos daugiamečių svogūninių augalų gentis iš Pietų Afrikos.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Eucomis_autumnalis_2.jpg/330px-Eucomis_autumnalis_2.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Eucomis",
+      "found": true
+    },
+    "Gasteria": {
+      "queried": [
+        "gasterija",
+        "Gasteria"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Guzmania": {
+      "queried": [
+        "Guzmanija"
+      ],
+      "matched": "Guzmanija",
+      "title": "Guzmanija",
+      "extract": "Guzmanija (Guzmania) – bromelijinių (Bromeliaceae) šeimos augalų gentis, kuriai priklauso visžaliai epifitiniai augalai. Gentis aprašyta 1802 metais ir pavadinta ispanų botaniko A. Gusmano garbei.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Bromeliaceae03.jpg/330px-Bromeliaceae03.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Guzmanija",
+      "found": true
+    },
+    "Hedychium": {
+      "queried": [
+        "Saldylis"
+      ],
+      "matched": "Saldylis",
+      "title": "Saldylis",
+      "extract": "Saldylis (Hedychium) – imbierinių (Zingiberaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Hedychium_longicornutum.jpg/330px-Hedychium_longicornutum.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Saldylis",
+      "found": true
+    },
+    "Lithops": {
+      "queried": [
+        "litopsis",
+        "Lithops"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Livistona": {
+      "queried": [
+        "livistona",
+        "Livistona"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Nemesia": {
+      "queried": [
+        "nemėzija",
+        "Nemesia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Opuntia": {
+      "queried": [
+        "opuncija"
+      ],
+      "matched": "opuncija",
+      "title": "Opuncija",
+      "extract": "Opuncija (Opuntia) – kaktusinių (Cactaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Opuntia_microdasys_%2817389718835%29.jpg/330px-Opuntia_microdasys_%2817389718835%29.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Opuncija",
+      "found": true
+    },
+    "Phragmipedium": {
+      "queried": [
+        "Vyžūnė"
+      ],
+      "matched": "Vyžūnė",
+      "title": "Vyžūnė",
+      "extract": "Vyžūnė (Phragmipedium) – gegužraibinių (Ochidaceae) šeimos augalų gentis, kuriai priklauso dirvožemyje augančios, epifitinės ir litofitinės orchidėjos. Stiebas iki 80 cm aukščio, su 2-3 žiedais.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Phragmipedium_schlimii_Orchi_01.jpg/330px-Phragmipedium_schlimii_Orchi_01.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Vy%C5%BE%C5%ABn%C4%97",
+      "found": true
+    },
+    "Rebutia": {
+      "queried": [
+        "rebutija"
+      ],
+      "matched": "rebutija",
+      "title": "Rebutija",
+      "extract": "Rebutija, rebucija (Rebutia) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso koloniškos formos, maži, su spalvingais žiedais kaktusai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Rebutia_heliosa_cavasensis_1.jpg/330px-Rebutia_heliosa_cavasensis_1.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Rebutija",
+      "found": true
+    },
+    "Rhipsalis": {
+      "queried": [
+        "Ripsalis"
+      ],
+      "matched": "Ripsalis",
+      "title": "Ripsalis",
+      "extract": "Ripsalis (Rhipsalis) – kaktusinių (Cactaceae) šeimos augalų gentis, kuriai priklauso epifitiniai bedygliai kaktusai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Rhipsalis_teres.jpg/330px-Rhipsalis_teres.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Ripsalis",
+      "found": true
+    },
+    "Stapelia": {
+      "queried": [
+        "stapelija",
+        "Stapelia"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Vanda": {
+      "queried": [
+        "Vandos",
+        "Vanda"
+      ],
+      "matched": "Vanda",
+      "title": "Vanda (ežeras)",
+      "extract": "Vanda – ežeras Rytų Antarktidoje, Viktorijos Žemėje, Raito slėnyje.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Lake_Vanda_2016_01.jpg/330px-Lake_Vanda_2016_01.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Vanda_(e%C5%BEeras)",
+      "found": true
+    },
+    "Zephyranthes": {
+      "queried": [
+        "Zefyrantas"
+      ],
+      "matched": "Zefyrantas",
+      "title": "Zefyrantas",
+      "extract": "Zefyrantas (Zephyranthes) – amarilinių (Amaryllidaceae) šeimos augalų gentis. Genties pavadinimas kildinamas iš gr. zephyros 'vakarinis vėjas' + gr. anthos 'žiedas'.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Zephyranthes_candida.jpg/330px-Zephyranthes_candida.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Zefyrantas",
+      "found": true
+    },
+    "Zingiber": {
+      "queried": [
+        "Imbieras"
+      ],
+      "matched": "Imbieras",
+      "title": "Imbieras",
+      "extract": "Imbieras (Zingiber) – imbierinių (Zingiberaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Ginger_-_Hawaii.jpg/330px-Ginger_-_Hawaii.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Imbieras",
+      "found": true
+    },
+    "Valeriana": {
+      "queried": [
+        "Valerijonas"
+      ],
+      "matched": "Valerijonas",
+      "title": "Valerijonas",
+      "extract": "Valerijonas (Valeriana) – valerijoninių (Valerianaceae) šeimos augalų gentis.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Valeriana_officinalis_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-143.jpg/330px-Valeriana_officinalis_-_K%C3%B6hler%E2%80%93s_Medizinal-Pflanzen-143.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Valerijonas",
+      "found": true
+    },
+    "Leuchtenbergia": {
+      "queried": [
+        "Švelnioji kresnuolė"
+      ],
+      "matched": "Švelnioji kresnuolė",
+      "title": "Švelnioji kresnuolė",
+      "extract": "Švelnioji kresnuolė, arba loichtenbergija – kaktusinių (Cactaceae) šeimos augalų gentis, priklausanti monotipinei kresnuolės (Leuchtenbergia) genčiai.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Leuchtenbergia_principis_2020-07-18_02.jpg/330px-Leuchtenbergia_principis_2020-07-18_02.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/%C5%A0velnioji_kresnuol%C4%97",
+      "found": true
+    },
+    "Luffa": {
+      "queried": [
+        "plaušenė",
+        "Luffa"
+      ],
+      "matched": null,
+      "found": false
+    },
+    "Lycaste": {
+      "queried": [
+        "Likastė"
+      ],
+      "matched": "Likastė",
+      "title": "Likastė",
+      "extract": "Likastė (Lycaste) – gegužraibinių (Ochidaceae) šeimos augalų gentis, kurią pirmą kartą aprašė Džonas Lindlis. Žiedai žalsvai geltoni ar balsvai rožiniai. Kai kurių rūšių žiedai kvapūs.",
+      "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Lycaste_virginalis_Orchi_07.jpg/330px-Lycaste_virginalis_Orchi_07.jpg",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Likast%C4%97",
+      "found": true
+    },
+    "Lygodium": {
+      "queried": [
+        "ligodis",
+        "Lygodium"
+      ],
+      "matched": null,
+      "found": false
+    }
+  }
+}

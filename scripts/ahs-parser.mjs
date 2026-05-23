@@ -74,7 +74,49 @@ let fullText = pageTexts.map(p => p.text).join(' ')
 // We do a targeted swap: digit "1" preceded by uppercase letters/space and
 // followed by uppercase letters → swap to "I".
 fullText = fullText.replace(/\b1([A-Z]{3,})/g, 'I$1')
-console.log(`[ahs] total text length: ${fullText.length} chars`)
+
+// ── Step A: OCR space-insertion de-spacing (2026-05-24, task #44) ──
+// Bad EPUB OCR frequently inserts spaces inside ALL-CAPS words at unpredictable
+// positions, e.g. "CHI RITA GESNERIACEAE" should be "CHIRITA GESNERIACEAE".
+// Caused 14+ truncation artifacts (RITA→CHIRITA, DARWIN→DARWINIA, etc.).
+//
+// Conservative pre-processing — glue all-caps fragments that look like
+// OCR-split genus or family names. Two patterns:
+//
+// Pattern 1: 3+ consecutive all-caps tokens with at least one 1-2 chars
+//   "NYMAN I A AITON IACEAE" → "NYMANIA AITONIACEAE"
+//   "SCROPH U LARIACEAE" → "SCROPHULARIACEAE"
+fullText = fullText.replace(
+  /\b([A-Z]+(?:\s+[A-Z]{1,3}){2,}\s+[A-Z]+)\b/g,
+  (m) => m.replace(/\s+/g, '')
+)
+
+// Pattern 2: 2-token splits before family suffixes
+//   "CHI RITA GESNERIACEAE" → "CHIRITA GESNERIACEAE"
+//   "DARWIN IA MYRTACEAE" → "DARWINIA MYRTACEAE"
+//   "HAMAM ELI DACEAE" → "HAMAMELIDACEAE"  (already handled by pattern 1)
+//
+// Only glue when followed by a known family suffix word — minimizes risk
+// of breaking legitimate two-word constructs.
+fullText = fullText.replace(
+  /\b([A-Z]{3,})\s+([A-Z]{2,5})(?=\s+[A-Z]+(?:ACEAE|IDAE|EAE|OSAE|TAE))/g,
+  '$1$2'
+)
+
+// Pattern 3: ALL-CAPS root + 2 short single-letter tokens (catches "DARWIN I A",
+// "NYMAN I A", "FUSCH I A", etc.) — runs of single-letter caps almost certainly
+// OCR artifacts in genus context.
+fullText = fullText.replace(
+  /\b([A-Z]{3,})\s+([A-Z]{1,3})\s+([A-Z]{1,3})\b/g,
+  '$1$2$3'
+)
+
+// Pattern 4: family suffix with single-letter prefix split — "M ELIACEAE" → "MELIACEAE"
+fullText = fullText.replace(
+  /\b([A-Z])\s+([A-Z]+(?:ACEAE|IDAE|EAE))\b/g,
+  '$1$2'
+)
+console.log(`[ahs] total text length after de-spacing: ${fullText.length} chars`)
 
 // ── Step 2: Split into genus blocks ────────────────────────────
 //
@@ -373,8 +415,48 @@ function parseGenusBlock(block) {
 const parsedBlocks = blocks.map(parseGenusBlock)
 
 // Filter blocks with at least 1 entry (drop misdetections)
-const valid = parsedBlocks.filter(b => b.entryCount > 0)
+let valid = parsedBlocks.filter(b => b.entryCount > 0)
 console.log(`[ahs] parsed ${parsedBlocks.length} blocks, ${valid.length} have entries`)
+
+// ── Truncation sanity check (2026-05-24, task #44) ──────────────
+// OCR space-insertion inside ALL-CAPS words sukelia truncation:
+//   "CHI RITA GESNERIACEAE" → parser ima "RITA" (paskutinis token before family)
+//   "NYMAN I A AITON IACEAE" → parser ima "AITON" instead of "NYMANIA"
+//   "DARWIN I A" → "DARWIN" instead of DARWINIA
+//
+// Sanity check: ALL entries iš to paties genus turi pradėti su tos pačios raidės
+// abbrev (e.g. "Chirita lavandulacea" entries pradeda su "C.", ne su "R.").
+// Jei genus first letter != entries[0].latinAbbrev[0] — TAI IS TRUNCATION ARTIFACT.
+//
+// Drop tokius blocks — paliekam tik validūs genera. Tai 15-min safe fix iš
+// AHS investigation agent reportą.
+const truncationArtifacts = []
+valid = valid.filter(b => {
+  const firstEntryAbbrev = b.entries[0]?.latinAbbrev
+  if (!firstEntryAbbrev) return true // no abbrev to check
+  // latinAbbrev is "G. species" format — pirma raidė yra abbrev letter
+  const firstAbbrevChar = firstEntryAbbrev[0]
+  if (firstAbbrevChar !== b.genus[0]) {
+    truncationArtifacts.push({
+      genus: b.genus,
+      firstEntryAbbrev,
+      family: b.family,
+      hint: `entry "${firstEntryAbbrev}" doesn't match genus first letter "${b.genus[0]}" — likely OCR truncation`,
+    })
+    return false  // drop block
+  }
+  return true
+})
+
+if (truncationArtifacts.length > 0) {
+  console.log(`[ahs] dropped ${truncationArtifacts.length} truncation artifacts (OCR space-insertion bugs):`)
+  for (const a of truncationArtifacts.slice(0, 20)) {
+    console.log(`      • "${a.genus}" (entries start with "${a.firstEntryAbbrev}.") — ${a.family}`)
+  }
+  if (truncationArtifacts.length > 20) {
+    console.log(`      ... and ${truncationArtifacts.length - 20} more`)
+  }
+}
 
 // ── Step 4: Merge duplicate genera (running headers across pages) ──
 const merged = new Map()
