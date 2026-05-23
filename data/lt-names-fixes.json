@@ -1,0 +1,144 @@
+{
+  "generatedAt": "2026-05-24T00:00:00.000Z",
+  "auditedAt": "2026-05-24",
+  "totalEntriesAudited": 1655,
+  "totalFixes": 7,
+  "fixes": {
+    "Syngonium": {
+      "currentLtName": "Singonis",
+      "correctLtName": "Singonis",
+      "currentSynonyms": ["Orchidėja bulbophyllum longiflorum"],
+      "correctSynonyms": [],
+      "currentLtAllForms": ["Singonis", "Orchidėja bulbophyllum longiflorum"],
+      "correctLtAllForms": ["Singonis"],
+      "currentConflicts": "Orchidėja bulbophyllum longiflorum (gaspadorius)",
+      "correctConflicts": null,
+      "reason": "Orchidaceae cross-contamination from gaspadorius scraper — Syngonium is Araceae, not an orchid. The 'Orchidėja bulbophyllum longiflorum' label belongs to a completely different orchid species.",
+      "evidence": "https://lt.wikipedia.org/wiki/Singonis (Wikidata Q2448411, confirmed Araceae family). Primary name 'Singonis' is already correct.",
+      "action": "drop_synonym"
+    },
+    "Schefflera": {
+      "currentLtName": "Šeflera",
+      "correctLtName": "Šeflera",
+      "currentSynonyms": ["Nėrūnė"],
+      "correctSynonyms": [],
+      "currentLtAllForms": ["Šeflera", "Nėrūnė"],
+      "correctLtAllForms": ["Šeflera"],
+      "currentConflicts": "Nėrūnė (inat)",
+      "correctConflicts": null,
+      "reason": "iNat reverse-synonym contamination — 'Nėrūnė' is the LT name for an unrelated genus (likely Centaurea or similar), not Schefflera. Schefflera (Araliaceae) has no other established LT name besides 'Šeflera'.",
+      "evidence": "Pre-db confirms Schefflera → Araliaceae. Primary 'Šeflera' is the established LT form (gaspadorius source). 'Nėrūnė' came from inat reverse-lookup error and does not appear in any LT botanical reference for Schefflera.",
+      "action": "drop_synonym"
+    },
+    "Stephanandra": {
+      "currentLtName": "Arabidopsis thaliana",
+      "correctLtName": null,
+      "currentSynonyms": [],
+      "correctSynonyms": [],
+      "currentLtAllForms": ["Arabidopsis thaliana"],
+      "correctLtAllForms": [],
+      "reason": "CRITICAL: ltName is set to a completely unrelated species ('Arabidopsis thaliana' — thale cress, Brassicaceae). Stephanandra is a Rosaceae genus and has no established LT common name. Source 'plants' (data/plants.json) appears corrupted at this entry. Plus plantsJsonFamily='Rosaceae' is correct but the name was misassigned.",
+      "evidence": "Wikipedia (en) lists no Lithuanian translation for Stephanandra. Latin 'Arabidopsis thaliana' is the model organism mouse-ear cress — entirely different family (Brassicaceae). Pre-db family=ROSACEAE confirms genus is real, just no LT name available.",
+      "action": "clear_ltname",
+      "manualReviewNeeded": true
+    },
+    "Reinwardtia": {
+      "currentLtName": "Reinwardtia indica",
+      "correctLtName": null,
+      "currentSynonyms": [],
+      "correctSynonyms": [],
+      "currentLtAllForms": ["Reinwardtia indica"],
+      "correctLtAllForms": [],
+      "reason": "ltName is the species Latin binomial ('Reinwardtia indica'), not a Lithuanian name. Reinwardtia is a monotypic-ish genus (Linaceae) with no established LT common name. Source 'gaspadorius' likely scraped the Latin epithet as label.",
+      "evidence": "Wikipedia (en) lists no Lithuanian translation. Common EN names are 'yellow flax' / 'pyoli'. No LT form found in derlingas, sodospalvos, or wiki LT.",
+      "action": "clear_ltname",
+      "manualReviewNeeded": true
+    },
+    "Hoya": {
+      "currentLtName": "Vaškuolė",
+      "correctLtName": "Vaškuolė",
+      "currentSynonyms": ["Vaškuolė (reikšmės)"],
+      "correctSynonyms": [],
+      "currentLtAllForms": ["Vaškuolė", "Vaškuolė (reikšmės)"],
+      "correctLtAllForms": ["Vaškuolė"],
+      "currentLtFamily": "Nuorodiniai straipsniai",
+      "correctLtFamily": null,
+      "reason": "Wikipedia disambiguation page suffix '(reikšmės)' leaked into synonyms; ltFamily was set to 'Nuorodiniai straipsniai' (Wikipedia category 'Reference articles'), which is not a taxonomic family. Primary name 'Vaškuolė' is correct.",
+      "evidence": "wikiUrl points to 'Vaškuolė_(reikšmės)' which is a disambiguation page, not a botanical article. Hoya is Apocynaceae (formerly Asclepiadaceae).",
+      "action": "drop_disambig_suffix_and_clear_family"
+    },
+    "Lotus": {
+      "currentLtName": "Garždenis",
+      "correctLtName": "Garždenis",
+      "currentSynonyms": ["Lotus (reikšmės)"],
+      "correctSynonyms": [],
+      "currentLtAllForms": ["Garždenis", "Lotus (reikšmės)"],
+      "correctLtAllForms": ["Garždenis"],
+      "currentLtFamily": "Nuorodiniai straipsniai",
+      "correctLtFamily": null,
+      "reason": "Same disambiguation leak pattern. 'Lotus (reikšmės)' is the Wikipedia disambiguation page title, not a botanical synonym.",
+      "evidence": "Lotus is a Fabaceae genus. 'Garždenis' is the established LT name.",
+      "action": "drop_disambig_suffix_and_clear_family"
+    },
+    "Vanda": {
+      "currentLtName": "Vandos",
+      "correctLtName": "Vandos",
+      "currentSynonyms": ["Vanda (ežeras)"],
+      "correctSynonyms": [],
+      "currentLtAllForms": ["Vandos", "Vanda (ežeras)"],
+      "correctLtAllForms": ["Vandos"],
+      "reason": "Wikipedia disambiguation suffix '(ežeras)' — refers to a lake in Antarctica, not the orchid genus Vanda. Primary name 'Vandos' is correct.",
+      "evidence": "Wikidata confirms Vanda is an orchid genus (Orchidaceae). 'Vanda (ežeras)' Wikipedia article is about an Antarctic lake.",
+      "action": "drop_disambig_suffix"
+    }
+  },
+  "secondaryFixesFamilyOnly": {
+    "comment": "These entries have ltFamily='Nuorodiniai straipsniai' (Wikipedia disambig category, not a real family). The ltName is correct or acceptable; only ltFamily needs clearing.",
+    "entries": {
+      "Acer": { "currentLtFamily": "Nuorodiniai straipsniai", "correctLtFamily": "Klevoniai", "note": "ltName='Acer' is suspect (should be 'Klevas' per Wikipedia https://lt.wikipedia.org/wiki/Klevas), but secondary; primary issue is family field." },
+      "Andromeda": { "currentLtFamily": "Nuorodiniai straipsniai", "correctLtFamily": null, "note": "ltName='Balžuva' is correct." },
+      "Darwin": { "currentLtFamily": "Nuorodiniai straipsniai", "correctLtFamily": null, "note": "ENTIRE entry suspect — 'Darwin' is not a real plant genus (botanical genus is 'Darwinia'). Likely pre-db artifact. manualReviewNeeded.", "manualReviewNeeded": true },
+      "Iris": { "currentLtFamily": "Nuorodiniai straipsniai", "correctLtFamily": "Vilkdalginiai", "note": "ltName='Vilkdalgis' is correct." },
+      "Mandragora": { "currentLtFamily": "Nuorodiniai straipsniai", "correctLtFamily": "Bulviniai", "note": "ltName='Mandragora' (=Latin) is acceptable LT loan word." },
+      "Salvia": { "currentLtFamily": "Nuorodiniai straipsniai", "correctLtFamily": "Notreliniai", "note": "ltName='Šalavijas' is correct." },
+      "Thymus": { "currentLtFamily": "Nuorodiniai straipsniai", "correctLtFamily": "Notreliniai", "note": "ltName='Čiobrelis' is correct." },
+      "Yucca": { "currentLtFamily": "Nuorodiniai straipsniai", "correctLtFamily": "Smidriniai", "note": "ltName='Juka' is correct." }
+    }
+  },
+  "knownNonPlantEntries": {
+    "comment": "Genera names that have wiki articles about non-plants (people, concepts, lakes). The pre-db.json may list them as plant genera (which could be artifacts of source scraping). Audit decision: do NOT fix here — escalate to pre-db audit task.",
+    "entries": {
+      "Rita": "wiki article is about a Hindu philosophical concept (universal cosmic law). Pre-db lists Rita as Gesneriaceae — possibly a real monotypic genus, but wiki link is wrong. manualReviewNeeded.",
+      "Valia": "wiki article is about willpower (psychology). Pre-db lists Valia as Asclepiadaceae — likely a real genus but wiki link is wrong. manualReviewNeeded.",
+      "Darwin": "Disambig page (scientist + city). Genus 'Darwin' does not exist in botany; 'Darwinia' does. Likely pre-db data corruption."
+    }
+  },
+  "auditSummary": {
+    "totalEntries": 1655,
+    "confidenceDistribution": {
+      "high": 440,
+      "mid": 468,
+      "null": 747
+    },
+    "sourceDistribution": {
+      "wiki": 550,
+      "plants": 406,
+      "inat": 344,
+      "sodospalvos": 185,
+      "derlingas": 110,
+      "gaspadorius": 97,
+      "manual": 1
+    },
+    "withWikidataId": 574,
+    "withConflictsField": 374,
+    "emptyLtNameEntries": 747,
+    "emptyEntriesWithSources": 0,
+    "criticalBugsFound": {
+      "orchidContamination": 1,
+      "speciesLatinAsLtName": 2,
+      "disambigSuffixInLt": 3,
+      "disambigCategoryAsFamily": 10,
+      "iNatReverseLookupContamination": 1
+    }
+  }
+}

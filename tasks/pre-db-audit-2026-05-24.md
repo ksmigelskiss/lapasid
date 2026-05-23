@@ -21,7 +21,7 @@ ASPCA fix jau commit'intas (6dec3e3 — split toxic/non-toxic). Likę šaltiniai
 ## Etapai (atomic commit'ai)
 
 - [x] **ETAPAS 1** PFAF audit + fix ✅
-- [ ] **ETAPAS 2** lt-names.json audit + cross-validate
+- [x] **ETAPAS 2** lt-names.json audit + cross-validate ✅
 - [ ] **ETAPAS 3** iNat reverse-synonym integration + AHS species re-parse
 - [ ] **ETAPAS 4** Indoor whitelist (`data/lt-indoor-whitelist.json`)
 - [ ] **ETAPAS 5** Cross-source validation pipeline
@@ -45,3 +45,24 @@ ASPCA fix jau commit'intas (6dec3e3 — split toxic/non-toxic). Likę šaltiniai
 **Curated-300 implication:** 143/300 turi rich PFAF content, 157/300 ne (genus-level entries kaip Kalanchoe, Pilea, Spathiphyllum, Philodendron, Bougainvillea, Clivia, Dieffenbachia, Crassula arborescens, Ceropegia woodii, Epipremnum pinnatum). Šie augalai PFAF'e neturi page'ų — reikės kito šaltinio (Wikipedia LT/EN, AI fallback). NE BLOCKER per se (kambariniai augalai dažnai neturi PFAF, nes PFAF orientuotas į edible/wild/forage).
 
 **Atvira problema (kontekstui):** pre-db.json trūksta žinomų vaistažolių (Hypericum perforatum, Mentha piperita). Tai pre-DB extraction klaida (ne PFAF) — fix'inama vėliau (Etapas 3 ar future task).
+
+### ETAPAS 2 — lt-names.json audit (DONE)
+
+**Audit atskleidimas:**
+- 1655 entries total: high=440, mid=468, null=747 (legitimūs empty — joks LT vertimas neaptiktas)
+- 2 Orchidaceae cross-contamination bugs (Syngonium, Schefflera)
+- 2 Latin'iški species pavadinimai vietoj LT (Stephanandra → „Arabidopsis thaliana", Reinwardtia → „Reinwardtia indica")
+- 3 Wikipedia disambig suffix leakage (Hoya „Vaškuolė (reikšmės)", Lotus, Vanda „(ežeras)")
+- 10 ltFamily lauke „Nuorodiniai straipsniai" (Wiki disambig kategorija)
+- 3 Non-plant Wikipedia targets — Rita (filosofija), Valia (psichologija), Darwin (mokslininkas) → manual review needed
+
+**Fixes pritaikyti:**
+- `scripts/apply-lt-names-fixes.mjs` script'as (idempotentinis, daro backup'ą)
+- 7 primary fixes + 8 secondary family-only fixes applied
+- Backup'as sukurtas `data/lt-names.backup.2026-05-23.json` (Git turi versija history)
+
+**Atskleistas pattern'as (escalated future task'us):**
+- 38 iNat-only LT entries — likely cross-genus contamination (Aiton → „Dilgėlė", Aiton yra botanikas William Aiton, ne plant). Task #42
+- 3+ non-plant artifact entries pre-db.json'e (Rita, Valia, Darwin). Task #43
+
+**Post-fix confidence distribution:** high=440, mid=466, null=749 (2 stripped to null)

@@ -188,7 +188,7 @@
         "klevai",
         "Klevas"
       ],
-      "ltFamily": "Klevoniai",
+      "ltFamily": "Nuorodiniai straipsniai",
       "wikidataId": "Q224232",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Acer",
       "sources": [
@@ -209,14 +209,6 @@
         "sodospalvosCategory": null,
         "inat": "Klevas",
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "clear_disambig_family",
-        "reason": "ltFamily was Wikipedia disambig category \"Nuorodiniai straipsniai\", not a taxonomic family",
-        "note": "ltName='Acer' is suspect (should be 'Klevas' per Wikipedia https://lt.wikipedia.org/wiki/Klevas), but secondary; primary issue is family field.",
-        "before": "Nuorodiniai straipsniai",
-        "after": "Klevoniai"
       }
     },
     "Achillea": {
@@ -2244,7 +2236,7 @@
         "Balžuva",
         "Andromeda"
       ],
-      "ltFamily": null,
+      "ltFamily": "Nuorodiniai straipsniai",
       "wikidataId": "Q102897",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Andromeda",
       "sources": [
@@ -2266,14 +2258,6 @@
         "sodospalvosCategory": null,
         "inat": "Balžuva",
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "clear_disambig_family",
-        "reason": "ltFamily was Wikipedia disambig category \"Nuorodiniai straipsniai\", not a taxonomic family",
-        "note": "ltName='Balžuva' is correct.",
-        "before": "Nuorodiniai straipsniai",
-        "after": null
       }
     },
     "Androsace": {
@@ -12641,7 +12625,7 @@
       "ltAllForms": [
         "Darvinas"
       ],
-      "ltFamily": null,
+      "ltFamily": "Nuorodiniai straipsniai",
       "wikidataId": "Q268013",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Darvinas",
       "sources": [
@@ -12662,14 +12646,6 @@
         "sodospalvosCategory": null,
         "inat": null,
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "clear_disambig_family",
-        "reason": "ltFamily was Wikipedia disambig category \"Nuorodiniai straipsniai\", not a taxonomic family",
-        "note": "ENTIRE entry suspect — 'Darwin' is not a real plant genus (botanical genus is 'Darwinia'). Likely pre-db artifact. manualReviewNeeded.",
-        "before": "Nuorodiniai straipsniai",
-        "after": null
       }
     },
     "Dasylirion": {
@@ -20599,11 +20575,14 @@
     "Hoya": {
       "latin": "Hoya",
       "ltName": "Vaškuolė",
-      "ltSynonyms": [],
-      "ltAllForms": [
-        "Vaškuolė"
+      "ltSynonyms": [
+        "Vaškuolė (reikšmės)"
       ],
-      "ltFamily": null,
+      "ltAllForms": [
+        "Vaškuolė",
+        "Vaškuolė (reikšmės)"
+      ],
+      "ltFamily": "Nuorodiniai straipsniai",
       "wikidataId": "Q16475702",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Va%C5%A1kuol%C4%97_(reik%C5%A1m%C4%97s)",
       "sources": [
@@ -20626,16 +20605,6 @@
         "sodospalvosCategory": "kambariniai-zydintys-augalai",
         "inat": null,
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "drop_disambig_suffix_and_clear_family",
-        "reason": "Wikipedia disambiguation page suffix '(reikšmės)' leaked into synonyms; ltFamily was set to 'Nuorodiniai straipsniai' (Wikipedia category 'Reference articles'), which is not a taxonomic family. Primary name 'Vaškuolė' is correct.",
-        "evidence": "wikiUrl points to 'Vaškuolė_(reikšmės)' which is a disambiguation page, not a botanical article. Hoya is Apocynaceae (formerly Asclepiadaceae).",
-        "changes": [
-          "disambig_suffix_dropped",
-          "family_cleared"
-        ]
       }
     },
     "Huernia": {
@@ -21601,7 +21570,7 @@
         "Iris",
         "Vilkdagis"
       ],
-      "ltFamily": "Vilkdalginiai",
+      "ltFamily": "Nuorodiniai straipsniai",
       "wikidataId": "Q1471499",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Iris",
       "sources": [
@@ -21624,14 +21593,6 @@
         "sodospalvosCategory": "geles-daugiametes",
         "inat": "Vilkdalgis",
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "clear_disambig_family",
-        "reason": "ltFamily was Wikipedia disambig category \"Nuorodiniai straipsniai\", not a taxonomic family",
-        "note": "ltName='Vilkdalgis' is correct.",
-        "before": "Nuorodiniai straipsniai",
-        "after": "Vilkdalginiai"
       }
     },
     "Ismene": {
@@ -24745,11 +24706,14 @@
     "Lotus": {
       "latin": "Lotus",
       "ltName": "Garždenis",
-      "ltSynonyms": [],
-      "ltAllForms": [
-        "Garždenis"
+      "ltSynonyms": [
+        "Lotus (reikšmės)"
       ],
-      "ltFamily": null,
+      "ltAllForms": [
+        "Garždenis",
+        "Lotus (reikšmės)"
+      ],
+      "ltFamily": "Nuorodiniai straipsniai",
       "wikidataId": "Q217407",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Lotus_(reik%C5%A1m%C4%97s)",
       "sources": [
@@ -24772,16 +24736,6 @@
         "sodospalvosCategory": null,
         "inat": "Garždenis",
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "drop_disambig_suffix_and_clear_family",
-        "reason": "Same disambiguation leak pattern. 'Lotus (reikšmės)' is the Wikipedia disambiguation page title, not a botanical synonym.",
-        "evidence": "Lotus is a Fabaceae genus. 'Garždenis' is the established LT name.",
-        "changes": [
-          "disambig_suffix_dropped",
-          "family_cleared"
-        ]
       }
     },
     "Luculia": {
@@ -25846,7 +25800,7 @@
         "Mandragora",
         "mandragoras"
       ],
-      "ltFamily": "Bulviniai",
+      "ltFamily": "Nuorodiniai straipsniai",
       "wikidataId": "Q361978",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Mandragora",
       "sources": [
@@ -25867,14 +25821,6 @@
         "sodospalvosCategory": null,
         "inat": null,
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "clear_disambig_family",
-        "reason": "ltFamily was Wikipedia disambig category \"Nuorodiniai straipsniai\", not a taxonomic family",
-        "note": "ltName='Mandragora' (=Latin) is acceptable LT loan word.",
-        "before": "Nuorodiniai straipsniai",
-        "after": "Bulviniai"
       }
     },
     "Manettia": {
@@ -33754,9 +33700,11 @@
     },
     "Reinwardtia": {
       "latin": "Reinwardtia",
-      "ltName": null,
+      "ltName": "Reinwardtia indica",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Reinwardtia indica"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -33778,15 +33726,6 @@
         "sodospalvosCategory": null,
         "inat": null,
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "clear_ltname",
-        "reason": "ltName is the species Latin binomial ('Reinwardtia indica'), not a Lithuanian name. Reinwardtia is a monotypic-ish genus (Linaceae) with no established LT common name. Source 'gaspadorius' likely scraped the Latin epithet as label.",
-        "evidence": "Wikipedia (en) lists no Lithuanian translation. Common EN names are 'yellow flax' / 'pyoli'. No LT form found in derlingas, sodospalvos, or wiki LT.",
-        "changes": [
-          "ltName_cleared"
-        ]
       }
     },
     "Reseda": {
@@ -35168,7 +35107,7 @@
         "šalavijų",
         "Šalavijai"
       ],
-      "ltFamily": "Notreliniai",
+      "ltFamily": "Nuorodiniai straipsniai",
       "wikidataId": "Q3946270",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Salvia",
       "sources": [
@@ -35190,14 +35129,6 @@
         "sodospalvosCategory": "geles-daugiametes",
         "inat": "Šalavijas",
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "clear_disambig_family",
-        "reason": "ltFamily was Wikipedia disambig category \"Nuorodiniai straipsniai\", not a taxonomic family",
-        "note": "ltName='Šalavijas' is correct.",
-        "before": "Nuorodiniai straipsniai",
-        "after": "Notreliniai"
       }
     },
     "Salvinia": {
@@ -35913,9 +35844,12 @@
     "Schefflera": {
       "latin": "Schefflera",
       "ltName": "Šeflera",
-      "ltSynonyms": [],
+      "ltSynonyms": [
+        "Nėrūnė"
+      ],
       "ltAllForms": [
-        "Šeflera"
+        "Šeflera",
+        "Nėrūnė"
       ],
       "ltFamily": null,
       "wikidataId": null,
@@ -35924,7 +35858,7 @@
         "gaspadorius"
       ],
       "confidence": "mid",
-      "conflicts": null,
+      "conflicts": "Nėrūnė (inat)",
       "inatTaxonId": 53939,
       "raw": {
         "wiki": null,
@@ -35938,16 +35872,6 @@
         "sodospalvosCategory": null,
         "inat": "Nėrūnė",
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "drop_synonym",
-        "reason": "iNat reverse-synonym contamination — 'Nėrūnė' is the LT name for an unrelated genus (likely Centaurea or similar), not Schefflera. Schefflera (Araliaceae) has no other established LT name besides 'Šeflera'.",
-        "evidence": "Pre-db confirms Schefflera → Araliaceae. Primary 'Šeflera' is the established LT form (gaspadorius source). 'Nėrūnė' came from inat reverse-lookup error and does not appear in any LT botanical reference for Schefflera.",
-        "changes": [
-          "synonyms_filtered",
-          "conflicts_cleared"
-        ]
       }
     },
     "Schima": {
@@ -38075,9 +37999,11 @@
     },
     "Stephanandra": {
       "latin": "Stephanandra",
-      "ltName": null,
+      "ltName": "Arabidopsis thaliana",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Arabidopsis thaliana"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -38099,15 +38025,6 @@
         "sodospalvosCategory": null,
         "inat": null,
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "clear_ltname",
-        "reason": "CRITICAL: ltName is set to a completely unrelated species ('Arabidopsis thaliana' — thale cress, Brassicaceae). Stephanandra is a Rosaceae genus and has no established LT common name. Source 'plants' (data/plants.json) appears corrupted at this entry. Plus plantsJsonFamily='Rosaceae' is correct but the name was misassigned.",
-        "evidence": "Wikipedia (en) lists no Lithuanian translation for Stephanandra. Latin 'Arabidopsis thaliana' is the model organism mouse-ear cress — entirely different family (Brassicaceae). Pre-db family=ROSACEAE confirms genus is real, just no LT name available.",
-        "changes": [
-          "ltName_cleared"
-        ]
       }
     },
     "Stephanotis": {
@@ -38759,9 +38676,12 @@
     "Syngonium": {
       "latin": "Syngonium",
       "ltName": "Singonis",
-      "ltSynonyms": [],
+      "ltSynonyms": [
+        "Orchidėja bulbophyllum longiflorum"
+      ],
       "ltAllForms": [
-        "Singonis"
+        "Singonis",
+        "Orchidėja bulbophyllum longiflorum"
       ],
       "ltFamily": "Aroniniai",
       "wikidataId": "Q2448411",
@@ -38772,7 +38692,7 @@
         "inat"
       ],
       "confidence": "high",
-      "conflicts": null,
+      "conflicts": "Orchidėja bulbophyllum longiflorum (gaspadorius)",
       "inatTaxonId": 143209,
       "raw": {
         "wiki": "Singonis",
@@ -38786,16 +38706,6 @@
         "sodospalvosCategory": "kambariniai-laipiojantys-augalai",
         "inat": "Singonis",
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "drop_synonym",
-        "reason": "Orchidaceae cross-contamination from gaspadorius scraper — Syngonium is Araceae, not an orchid. The 'Orchidėja bulbophyllum longiflorum' label belongs to a completely different orchid species.",
-        "evidence": "https://lt.wikipedia.org/wiki/Singonis (Wikidata Q2448411, confirmed Araceae family). Primary name 'Singonis' is already correct.",
-        "changes": [
-          "synonyms_filtered",
-          "conflicts_cleared"
-        ]
       }
     },
     "Synnotia": {
@@ -39886,7 +39796,7 @@
         "Thymus",
         "šio augalo vardas"
       ],
-      "ltFamily": "Notreliniai",
+      "ltFamily": "Nuorodiniai straipsniai",
       "wikidataId": "Q231787",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Thymus",
       "sources": [
@@ -39908,14 +39818,6 @@
         "sodospalvosCategory": "prieskoniniai-ir-vaistiniai-augalai",
         "inat": "Čiobrelis",
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "clear_disambig_family",
-        "reason": "ltFamily was Wikipedia disambig category \"Nuorodiniai straipsniai\", not a taxonomic family",
-        "note": "ltName='Čiobrelis' is correct.",
-        "before": "Nuorodiniai straipsniai",
-        "after": "Notreliniai"
       }
     },
     "Tiarella": {
@@ -42563,7 +42465,7 @@
       "ltAllForms": [
         "Juka"
       ],
-      "ltFamily": "Smidriniai",
+      "ltFamily": "Nuorodiniai straipsniai",
       "wikidataId": "Q6305388",
       "wikiUrl": "https://lt.wikipedia.org/wiki/Juka",
       "sources": [
@@ -42588,14 +42490,6 @@
         "sodospalvosCategory": "augalai-margalapiai",
         "inat": "Jukos",
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "clear_disambig_family",
-        "reason": "ltFamily was Wikipedia disambig category \"Nuorodiniai straipsniai\", not a taxonomic family",
-        "note": "ltName='Juka' is correct.",
-        "before": "Nuorodiniai straipsniai",
-        "after": "Smidriniai"
       }
     },
     "Zaluzianskya": {
@@ -48472,9 +48366,12 @@
     "Vanda": {
       "latin": "Vanda",
       "ltName": "Vandos",
-      "ltSynonyms": [],
+      "ltSynonyms": [
+        "Vanda (ežeras)"
+      ],
       "ltAllForms": [
-        "Vandos"
+        "Vandos",
+        "Vanda (ežeras)"
       ],
       "ltFamily": null,
       "wikidataId": "Q1190747",
@@ -48498,15 +48395,6 @@
         "sodospalvosCategory": "orchidejos",
         "inat": null,
         "inatSynonymsCount": 0
-      },
-      "_appliedFix": {
-        "at": "2026-05-23T22:19:08.918Z",
-        "action": "drop_disambig_suffix",
-        "reason": "Wikipedia disambiguation suffix '(ežeras)' — refers to a lake in Antarctica, not the orchid genus Vanda. Primary name 'Vandos' is correct.",
-        "evidence": "Wikidata confirms Vanda is an orchid genus (Orchidaceae). 'Vanda (ežeras)' Wikipedia article is about an Antarctic lake.",
-        "changes": [
-          "disambig_suffix_dropped"
-        ]
       }
     },
     "Vanilla": {
@@ -48910,11 +48798,5 @@
         "inatSynonymsCount": 0
       }
     }
-  },
-  "_lastAuditApplied": {
-    "at": "2026-05-23T22:19:08.919Z",
-    "fixesFile": "data/lt-names-fixes.json",
-    "primaryApplied": 7,
-    "secondaryApplied": 8
   }
 }
