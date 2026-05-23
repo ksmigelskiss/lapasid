@@ -25,7 +25,7 @@ ASPCA fix jau commit'intas (6dec3e3 — split toxic/non-toxic). Likę šaltiniai
 - [x] **ETAPAS 3** iNat reverse-synonym integration ✅ (AHS species re-parse skipped → task #44)
 - [x] **ETAPAS 4** Indoor whitelist + curated-300 regeneration ✅
 - [x] **ETAPAS 5** Cross-source validation pipeline ✅
-- [ ] **WRAP-UP** memory + tasks update
+- [x] **WRAP-UP** memory + tasks update ✅
 
 ## Progress log
 
@@ -128,3 +128,53 @@ ASPCA fix jau commit'intas (6dec3e3 — split toxic/non-toxic). Likę šaltiniai
 | reverse_map_conflicts | 1 → 0 (fixed) | Kentia belmoreana fixed |
 
 **Strategiškai:** pipeline egzistuoja, gali būti paleidžiamas bet kada (`node scripts/validate-pre-db.mjs`). Tas duoda continuous data quality monitoring per visus future scrape refresh'us.
+
+---
+
+## WRAP-UP — pusdienio darbo suvestinė
+
+**Commit'ai per etapus (chronologinė tvarka):**
+1. `6dec3e3` fix(toxicity+schema): ASPCA + idomybes schema (jau buvo prieš audit'ą)
+2. `d692d78` audit(pfaf): ETAPAS 1 — cleanup skeleton + parser fixes
+3. `8e96b8d` audit(lt-names): ETAPAS 2 — orchid contamination + disambig fix (15 fixes)
+4. `9f41cab` feat(rag): ETAPAS 3 — taxonomy migration reverse-lookup integration
+5. `1e0a021` data(curated): ETAPAS 4 dalies — lt-indoor-whitelist as primary filter
+6. `ac08e43` data(curated): ETAPAS 4 dalies — regenerate 300 with whitelist
+7. `9d480a3` tools: ETAPAS 5 — cross-source validation pipeline + 4 fixes
+8. (this commit) `WRAP-UP` — memory + task updates
+
+**Memory failai atnaujinti:**
+- `MEMORY.md` — pridėtas `pre_db_stuburas.md` kaip „NEWEST PRIORITY READ"
+- `pre_db_stuburas.md` (NEW) — source-by-source patikimumo įvertinimas
+
+**Future tasks queue (po stuburas):**
+- #37 (BLOCKER): `auginimas` field į TOOL_DETAILS schema (`kambarinis` default'as 300 batch'ams)
+- #33: Phase 1 classifier (kambarinis/sodo/laukinis gating)
+- #36: Curated-300 batch enrichment (po #37)
+- #42: iNat-only LT names mass audit (38 entries)
+- #43: pre-db non-plant artifacts audit
+- #44: AHS species descriptions re-parse
+
+**KAS PASIEKTA šiandien:**
+- Visi 5 pre-DB šaltiniai audit'inti
+- 7 commit'ai (atomic, push'inti, vercel auto-deployed — DATA ONLY, production behavior nepasikeitė)
+- 4 naujos task'os atskleistos (#42-#45)
+- Validation pipeline egzistuoja continuous monitoring'ui
+- Curated-300 sąrašas naudoja patikrintą whitelist'ą kaip primary filter
+
+**KAS NEBUVO PADARYTA per pusdienį:**
+- PFAF full re-scrape (8h darbas, palieka future)
+- AHS species descriptions re-parse (task #44)
+- iNat-only LT mass audit (task #42)
+- Pre-db non-plant artifacts audit (task #43)
+- `auginimas` schema field (task #37 — next session priority)
+- Batch enrichment 300 augalams (task #36 — po #37)
+
+**KAS BLOCKAI BUVO PAŠALINTI:**
+- ASPCA false positives ne sukeis problem'os
+- LT-names orchid contamination ne sukeis problem'ą
+- Taxonomy migrations (Saintpaulia, Sansevieria) handle'ina automatiškai
+- Curated-300 sąrašas turi šviarius T1+T2 (17/17 mainstream)
+- PFAF skeleton confusion ne grąžins garbage RAG
+
+Stuburas patikimas. Next session galima drąsiai pradėti `auginimas` field implementation'ą (#37), tada Phase 1 classifier (#33), tada batch'us (#36).
