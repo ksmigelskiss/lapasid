@@ -63,15 +63,26 @@ export function getPlantEnrichmentState(plant) {
   if (startedAt > completedAt) {
     const ageMs = Date.now() - startedAt
     if (Number.isNaN(ageMs)) return 'unknown'
-    if (ageMs < ENRICHMENT_TIMEOUT_MS) return 'enriching'  // recent activity
-    // Timed out (>90s) — BET LEGACY DATA check:
-    // Plant'as gali turėti seną startedAt (saved pre-phase2CompletedAt era
-    // Step 6a/6b) IR jau turėti Phase 2 data. Tokiu atveju enrichment'as
-    // pasibaigė sėkmingai, tiesiog completion marker'is nebuvo rašytas tame
-    // build'e. Jei laistymasIntervalas (= Phase 2 required field) yra → treat
-    // kaip 'enriched' (legacy).
-    if (plant.laistymasIntervalas) return 'enriched'
-    return 'failed'  // truly stuck — timeout + no Phase 2 data
+    if (ageMs < ENRICHMENT_TIMEOUT_MS) return 'enriching'
+    // Timed out (>90s) → 'failed'. Apima:
+    //   • Server hard crash (Vercel function dies prieš final write)
+    //   • Legacy plant'ai iš Step 6a/6b eros (saved kai phase2CompletedAt
+    //     dar nebuvo rašomas) — user'iui aiškus „NE PAVYKO" su retry path'u.
+    //     Re-enrich per ActionMenu → modern fields atsiranda, state taisosi.
+    //
+    // Sąmoningas trade-off: NEpridėjom legacy compat shim'o (e.g. „jei
+    // laistymasIntervalas exists → enriched"), kad kodas liktų švarus +
+    // honest state'as. Visus plant'us reikės re-enrich vis tiek, kad gautų
+    // naujus voice/narrative/source field'us, todėl „failed" yra teisingas
+    // signal'as „šitam reikia refresh".
+    console.log('[plantState] FAILED (timeout)', {
+      id: plant.id, latin: plant.lotyniskas,
+      startedAt: plant.enrichmentStartedAt,
+      completedAt: plant.phase2CompletedAt,
+      hasLaistymas: !!plant.laistymasIntervalas,
+      ageMs, threshold: ENRICHMENT_TIMEOUT_MS,
+    })
+    return 'failed'
   }
 
   // Completed: completedAt exists and is most recent activity
