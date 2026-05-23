@@ -599,6 +599,7 @@ export default function App() {
                 setSearchInitialQuery('')
                 setSearchAutoCamera(false)
                 setTab('biblioteka')
+                console.log('[App] onAddToWishlist → biblioteka tab', { newId: newPlant?.id, archiveCountAtCall: archive.length })
                 // Step 6i — DiscoveryToast trigger TIK kai augalas ėjo per
                 // Phase 2 enrichment'ą (t.y. nebuvo catalog fast-path).
                 // Fast-path turi laistymasIntervalas iš karto → joko AI

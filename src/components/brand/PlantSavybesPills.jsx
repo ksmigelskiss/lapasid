@@ -178,6 +178,16 @@ export default function PlantSavybesPills({ plant }) {
   // Nothing to show?
   if (!hasPavojai && !hasValgomumas && !hasVaistinis) return null
 
+  // Step 6r — stiprus + zmonems case: PlantSafetyCallout (rendered ABOVE
+  // šito komponento PlantDetail'yje) jau parodys narrative su skull headline.
+  // Suppress narrative duplicate čia — pills lieka, bet text'as eina į callout'ą.
+  const showsSafetyCallout = !!(
+    pavojaiDetales && (
+      s?.pavojai?.some(p => p.severity === 'stiprus' && p.target === 'zmonems') ||
+      (s?.pavojingumas?.yra && s?.pavojingumas?.lygis === 'stiprus')
+    )
+  )
+
   return (
     <div className="space-y-4">
       {/* PAVOJAI — grupuojama pagal Žmonėms / Gyvūnams sub-sekcijomis */}
@@ -202,7 +212,7 @@ export default function PlantSavybesPills({ plant }) {
             <TargetGroup target="gyvunams" pills={pavojaiByTarget.gyvunams} />
           )}
 
-          {pavojaiDetales && (
+          {pavojaiDetales && !showsSafetyCallout && (
             <p className="text-[13px] text-forest-700 leading-relaxed pt-1">{pavojaiDetales}</p>
           )}
         </div>

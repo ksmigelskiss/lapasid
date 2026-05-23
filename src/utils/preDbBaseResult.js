@@ -58,9 +58,31 @@ export async function buildPreDbBaseResult(stage1, preview, opts = {}) {
   // ── Kilmė — pre-DB origin laukas ────────────────────────────
   const kilme = stage1.origin ?? null
 
-  // ── Image — Wikipedia photo > iNat photo ─────────────────────
+  // ── Image — Brave > Wikipedia > iNat (Step 6j priority) ──────
   const image = preview?.bestPhoto?.url ?? null
   const imageSource = preview?.bestPhoto?.source ?? null
+
+  // ── Photos gallery — Step 6r: pre-DB hit kelyje irgi turim multi-photo
+  // pasirinkimą (anksciau gallery tik AI Phase 1 enrich() path'e). User'is
+  // dabar Phase 1 modal'e galės cycle'inti per ~3-5 nuotraukas ir pasirinkti
+  // mėgstamiausią — vietoj atsitiktinai pirmo Brave kolaž'o.
+  //
+  // Šaltinių susiliejimas:
+  //   1. Brave images (gardener-style, jei includeBrave=true Phase 0.5)
+  //   2. Wiki photo (single image fallback'as)
+  //   3. iNat photo (single image fallback'as)
+  // Deduplicate'inam URL'us. Mažiausiai vienas, jei nieks nerasta — null.
+  const braveImages = (preview?.brave?.images ?? []).map(img => img?.url).filter(Boolean)
+  const wikiPhotoUrl = preview?.wikiPhoto?.url ?? null
+  const inatPhotoUrl = preview?.iNatPhoto?.url ?? null
+  const photoSet = new Set()
+  const photos = []
+  for (const url of [...braveImages, wikiPhotoUrl, inatPhotoUrl]) {
+    if (url && !photoSet.has(url)) {
+      photoSet.add(url)
+      photos.push(url)
+    }
+  }
 
   // ── Savybės — toxicity iš derivedToxicity (ASPCA + PFAF kombo) ──
   // Anksčiau šis lookup'as tik per stage1.toxicity (vien ASPCA), bet ASPCA
@@ -103,6 +125,7 @@ export async function buildPreDbBaseResult(stage1, preview, opts = {}) {
     // Visual
     image,
     imageSource,
+    photos,             // Step 6r — gallery iš Brave + Wiki + iNat (deduped)
     wikipediaUrl,
 
     // Family / taxonomy

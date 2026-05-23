@@ -166,6 +166,13 @@ export function usePlants(collectionId, viewerToken = null) {
 
     const plants = [...byId.values()]
     const next   = { plants, zinynas: safeMeta.zinynas ?? [], zones: safeMeta.zones ?? [], settings: safeMeta.settings ?? {} }
+    // Step 6r diagnostic — sekam ar snapshot fire'inasi su naujais plant'ais
+    // (post-save) ar overwriting'a optimistic local state'ą stale data
+    console.log('[usePlants] applySnapshot', {
+      subPlantCount: subPlants.length,
+      mergedPlantCount: plants.length,
+      ids: plants.map(p => p.id).slice(0, 5),
+    })
     setData(next)
 
     // ── ONE-TIME localStorage → Firestore migration ─────────────────────
@@ -336,13 +343,23 @@ export function usePlants(collectionId, viewerToken = null) {
   // kuris kartais būna stale dėl React render timing'o.
   const addToDashboard = useCallback((aiResult) => {
     const plant = { ...fromAIResult(aiResult), kategorija: 'auginama' }
-    update(prev => ({ ...prev, plants: [plant, ...prev.plants] }))
+    console.log('[usePlants] addToDashboard', { id: plant.id, name: plant.lietuviškas, kategorija: plant.kategorija })
+    update(prev => {
+      const next = { ...prev, plants: [plant, ...prev.plants] }
+      console.log('[usePlants] addToDashboard NEXT', { plantCount: next.plants.length, firstId: next.plants[0]?.id })
+      return next
+    })
     return plant
   }, [update])
 
   const addToWishlist = useCallback((aiResult) => {
     const plant = { ...fromAIResult(aiResult), kategorija: 'nori' }
-    update(prev => ({ ...prev, plants: [plant, ...prev.plants] }))
+    console.log('[usePlants] addToWishlist', { id: plant.id, name: plant.lietuviškas, kategorija: plant.kategorija })
+    update(prev => {
+      const next = { ...prev, plants: [plant, ...prev.plants] }
+      console.log('[usePlants] addToWishlist NEXT', { plantCount: next.plants.length, firstId: next.plants[0]?.id })
+      return next
+    })
     return plant
   }, [update])
 

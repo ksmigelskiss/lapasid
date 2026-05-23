@@ -609,12 +609,14 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
       <DormancyCard plant={plant} section={section} />
 
 
-      {/* ── Savybes pill'ai (granuliariai toksiškumas + valgomumas + vaistinis).
-            Backward compat fallback'ina į seną `plant.toksiskas` boolean'ą. ── */}
-      <PlantSavybesPills plant={plant} />
-
-      {/* ── Stipraus toksiškumo žmonėms papildomas callout (kad neignoruotų). ── */}
+      {/* Step 6r — stiprus toxicity callout JE PRIEŠ pills (anksciau buvo po,
+            su duplicate narrative). Dabar callout = single source of narrative
+            stiprus žmonėms atveju; pills below renders be teksto. */}
       <PlantSafetyCallout plant={plant} />
+
+      {/* ── Savybes pill'ai (granuliariai toksiškumas + valgomumas + vaistinis).
+            Narrative suppressed kai stiprus žmonėms case — eina į callout. ── */}
+      <PlantSavybesPills plant={plant} />
 
       {/* ── Quick stats — editorial table (mono caps label + Bricolage value). ── */}
       <div className="divide-y divide-bone-400/30">
