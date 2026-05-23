@@ -106,21 +106,35 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
   console.log('[save-plant] START', { uid, latin: latinName, plantId, colId })
 
   try {
-    // ── 0. Idempotency check ────────────────────────────────
-    // Variant B retry'aus + dual-write race apsauga — jei plant doc'as jau
-    // turi phase2CompletedAt (success'as), processPlant netryptina antrą
-    // sykį. Idempotent: callers can safely retry without duplicating cost.
-    // Failed state'as (enrichmentError set, phase2CompletedAt missing) leidžia
-    // retry — overwrites error per success path.
+    // ── 0. Idempotency check (Step 6s — timestamp comparison) ────
+    // Plant gali turėti istoriškai phase2CompletedAt (prev save), BET dabar
+    // turėti naujesnį enrichmentStartedAt (re-enrich request iš UI). Tokiu
+    // atveju NEturime skip'inti — naujas request laukia processing'o.
+    //
+    // Logic: skip TIK kai completion is at-least-as-recent kaip last start
+    //        (no pending request).
     try {
       const { adminFirestore } = await import('./_lib/firestore-admin.js')
       const snap = await adminFirestore()
         .collection('collections').doc(colId)
         .collection('plants').doc(plantId)
         .get()
-      if (snap.exists && snap.data().phase2CompletedAt) {
-        console.log('[save-plant] IDEMPOTENT skip — phase2CompletedAt exists', plantId)
-        return
+      if (snap.exists) {
+        const data = snap.data() ?? {}
+        const completedAt = data.phase2CompletedAt
+          ? new Date(data.phase2CompletedAt).getTime()
+          : 0
+        const startedAt = data.enrichmentStartedAt
+          ? new Date(data.enrichmentStartedAt).getTime()
+          : 0
+        if (completedAt > 0 && completedAt >= startedAt) {
+          console.log('[save-plant] IDEMPOTENT skip — completedAt >= startedAt', {
+            plantId,
+            completedAt: data.phase2CompletedAt,
+            startedAt: data.enrichmentStartedAt ?? '(missing)',
+          })
+          return
+        }
       }
     } catch (e) {
       // Idempotency check fail'inasi — vis tiek tęsiam (saugiau nei skip'inti)

@@ -33,36 +33,50 @@ const ENRICHMENT_TIMEOUT_MS = 90 * 1000  // 90s — typical Phase 2 = 10-30s, 3x
 /**
  * @param {object} plant — Firestore plant doc (collections/{colId}/plants/{plantId})
  * @returns {'enriched'|'enriching'|'failed'|'unknown'}
+ *
+ * LOGIC (Step 6s — timestamp comparison for re-enrich support):
+ *   Plant cycle gali atsikartoti (initial save → re-enrich → re-enrich).
+ *   enrichmentStartedAt bumps prieš kiekvieną POST /api/save-plant.
+ *   phase2CompletedAt bumps po server'io sėkmingo pipeline.
+ *
+ *   Jei startedAt > completedAt → vyksta naujas cikl'as („enriching" arba „failed"
+ *                                  jei timing'as išsekęs).
+ *   Jei completedAt >= startedAt → ankstesnis ciklas baigtas, dabar idle („enriched").
+ *
+ *   Šitas pattern'as palaiko:
+ *     • Initial save (startedAt set, completedAt nedoresnis) → enriching
+ *     • Successful completion (completedAt > startedAt) → enriched
+ *     • Manual re-enrich (klient'as bumps startedAt > completedAt) → enriching vėl
+ *     • Server failure (startedAt set, completedAt prieš tai, enrichmentError set) → failed
  */
 export function getPlantEnrichmentState(plant) {
   if (!plant) return 'unknown'
 
-  // 1. Explicit success signal — Variant E primary
-  if (plant.phase2CompletedAt) return 'enriched'
+  const startedAt = plant.enrichmentStartedAt
+    ? new Date(plant.enrichmentStartedAt).getTime()
+    : 0
+  const completedAt = plant.phase2CompletedAt
+    ? new Date(plant.phase2CompletedAt).getTime()
+    : 0
 
-  // 2. Derived success signal — Phase 2 AI required field
-  //    (backup'as: jei phase2CompletedAt skip'inta dėl race, vis tiek matom)
+  // Active enrichment cycle: startedAt is more recent than completedAt
+  if (startedAt > completedAt) {
+    const ageMs = Date.now() - startedAt
+    if (Number.isNaN(ageMs)) return 'unknown'
+    if (ageMs < ENRICHMENT_TIMEOUT_MS) return 'enriching'
+    return 'failed'  // timed out (>90s) without completion
+  }
+
+  // Completed: completedAt exists and is most recent activity
+  if (completedAt > 0) return 'enriched'
+
+  // No timestamps yet, but has Phase 2 data (legacy plants saved pre-Variant B)
   if (plant.laistymasIntervalas) return 'enriched'
 
-  // 3. Explicit failure signal — server'io processPlant catch block
+  // Explicit failure marker (rare — kai timestamps missing dėl race)
   if (plant.enrichmentError) return 'failed'
 
-  // 4. Legacy plant (no enrichmentStartedAt — Variant B flag-off saves arba
-  //    senesni plant'ai) — neturime ką spręsti, palieka normaliai.
-  //
-  //    PASTABA: ankstesnė versija naudojo `data_prideta` timing'ui, BET
-  //    `data_prideta` yra TIK YYYY-MM-DD (be valandų). new Date(date_only)
-  //    parse'inasi į midnight UTC — bet kuris save'as po midnight'o iš karto
-  //    atrodo „seniai" (>90s) → false 'failed' state'as. Dabar naudojam ISO
-  //    timestamp `enrichmentStartedAt` kurį SaveButton flag-on path'as rašo.
-  if (!plant.enrichmentStartedAt) return 'unknown'
-
-  // 5. Timing fallback — apima hard crash atvejus, kai server'is mirė PRIEŠ
-  //    enrichmentError write'ą.
-  const ageMs = Date.now() - new Date(plant.enrichmentStartedAt).getTime()
-  if (Number.isNaN(ageMs)) return 'unknown'    // invalid timestamp → legacy
-  if (ageMs < ENRICHMENT_TIMEOUT_MS) return 'enriching'
-  return 'failed'
+  return 'unknown'
 }
 
 /**

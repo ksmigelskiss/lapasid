@@ -456,22 +456,33 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
   const isEnriching = enrichmentState === 'enriching'
   const isFailed    = enrichmentState === 'failed'
 
-  // Step 6h — retry handler
-  // Re-POST /api/save-plant su esamais plant doc fields. Server'io
-  // idempotency check'as ne'block'ina (phase2CompletedAt nėra failed state'e),
-  // tad processPlant pradeda iš naujo. Sėkmingai → phase2CompletedAt set +
-  // enrichmentError: null overwrite → state pereina į 'enriched'.
+  // Step 6h — retry handler + Step 6s — re-enrich shared helper
+  // reEnrichPlant: bump enrichmentStartedAt + clear enrichmentError →
+  // POST /api/save-plant. Server idempotency check po Step 6s upgrade
+  // mato startedAt > completedAt → processPlant pradeda naują ciklą.
+  // Listener'is auto-updates plant doc'ą kai server'is baigia (su nauju
+  // phase2CompletedAt + naujais aprasymas/care/narrative laukais).
   const [retrying, setRetrying] = useState(false)
-  const handleRetry = async () => {
-    if (retrying) return
-    setRetrying(true)
+  const [showActionMenu, setShowActionMenu] = useState(false)
+
+  const reEnrichPlant = async () => {
+    const idToken = await auth.currentUser?.getIdToken().catch(() => null)
+    if (!idToken || !collectionId) {
+      console.warn('[re-enrich] missing auth/collectionId')
+      return false
+    }
+    // 1. Bump startedAt + clear error per setDoc merge:true.
+    //    Tas Firestore listener auto-rerender'ins kortelę kaip 'enriching'.
     try {
-      const idToken = await auth.currentUser?.getIdToken().catch(() => null)
-      if (!idToken || !collectionId) {
-        console.warn('[retry] missing auth/collectionId')
-        setRetrying(false)
-        return
-      }
+      await setDoc(doc(db, 'collections', collectionId, 'plants', plant.id), {
+        enrichmentStartedAt: new Date().toISOString(),
+        enrichmentError: null,
+      }, { merge: true })
+    } catch (e) {
+      console.warn('[re-enrich] firestore startedAt bump failed:', e?.message)
+    }
+    // 2. POST /api/save-plant — server'is matys startedAt > completedAt → run.
+    try {
       const res = await fetch('/api/save-plant', {
         method: 'POST',
         headers: {
@@ -481,8 +492,6 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
         body: JSON.stringify({
           latinName: plant.lotyniskas,
           name:      plant.lietuviškas,
-          // baseResult — pass existing plant doc (slim version) kaip resource.
-          // Server'is gauna identity + image + slim savybes + sources kontekstą.
           baseResult: {
             latinName: plant.lotyniskas,
             name: plant.lietuviškas,
@@ -499,16 +508,29 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
         }),
       })
       if (!res.ok) {
-        console.warn('[retry] HTTP', res.status)
-      } else {
-        console.log('[retry] dispatched — listener updatins UI po server completion')
-        // Listener'is auto-updates kortelę kai phase2CompletedAt patenka per merge:true
+        console.warn('[re-enrich] HTTP', res.status)
+        return false
       }
+      console.log('[re-enrich] dispatched — listener updatins UI po server completion')
+      return true
     } catch (e) {
-      console.warn('[retry] failed:', e?.message)
-    } finally {
-      setRetrying(false)
+      console.warn('[re-enrich] POST failed:', e?.message)
+      return false
     }
+  }
+
+  // Failed-banner retry button (PlantDetail viduje) — staying in detail
+  const handleRetry = async () => {
+    if (retrying) return
+    setRetrying(true)
+    try { await reEnrichPlant() } finally { setRetrying(false) }
+  }
+
+  // Step 6s — action menu „Atnaujinti AI duomenis" — closes detail
+  const handleMenuReEnrich = async () => {
+    setShowActionMenu(false)
+    await reEnrichPlant()
+    onClose?.()  // close detail → user grįžta į library, mato loading overlay
   }
 
   return (
@@ -1596,13 +1618,42 @@ export default function PlantDetail({
             className="flex items-center gap-3 px-4 pb-2"
             style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
           >
-            <button
-              onClick={() => setShowPhoto(true)}
-              className="flex items-center justify-center text-forest-400 active:text-forest-700 transition-colors px-1 py-2 flex-shrink-0"
-              aria-label="Pakeisti nuotrauką"
-            >
-              <MoreHorizontal size={20} />
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowActionMenu(v => !v)}
+                className="flex items-center justify-center text-forest-400 active:text-forest-700 transition-colors px-1 py-2 flex-shrink-0"
+                aria-label="Veiksmai"
+              >
+                <MoreHorizontal size={20} />
+              </button>
+              {/* Step 6s — Action menu (dropdown'as analogiškas StatusMenu).
+                  Šiandien turi: pakeisti nuotrauką + re-enrich. Ateityje gali
+                  būti pridėta: eksportas, share, delete, etc. */}
+              {showActionMenu && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowActionMenu(false)} />
+                  <div className="absolute left-0 top-full mt-2 bg-bone rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/50 overflow-hidden z-[200] min-w-[220px]">
+                    <p className="font-mono text-[9.5px] font-medium text-forest-500 uppercase tracking-[0.18em] px-3 pt-2.5 pb-1.5">Veiksmai</p>
+                    <div className="px-1 pb-1 space-y-px">
+                      <button
+                        onClick={() => { setShowActionMenu(false); setShowPhoto(true) }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
+                      >
+                        <Camera size={14} className="flex-shrink-0" />
+                        <span className="font-display text-sm font-semibold tracking-tight">Pakeisti nuotrauką</span>
+                      </button>
+                      <button
+                        onClick={handleMenuReEnrich}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
+                      >
+                        <RefreshCw size={14} className="flex-shrink-0" />
+                        <span className="font-display text-sm font-semibold tracking-tight">Atnaujinti AI duomenis</span>
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
 
             {/* Zone — clickable, atidaro ZonePicker */}
             {section === 'auginama' && zones.length > 0 && (
