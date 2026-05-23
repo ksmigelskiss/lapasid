@@ -1135,6 +1135,36 @@
         "inatSynonymsCount": 0
       }
     },
+    "Aiton": {
+      "latin": "Aiton",
+      "ltName": "Dilgėlė",
+      "ltSynonyms": [],
+      "ltAllForms": [
+        "Dilgėlė"
+      ],
+      "ltFamily": null,
+      "wikidataId": null,
+      "wikiUrl": null,
+      "sources": [
+        "inat"
+      ],
+      "confidence": "mid",
+      "conflicts": null,
+      "inatTaxonId": 51886,
+      "raw": {
+        "wiki": null,
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": "Dilgėlė",
+        "inatSynonymsCount": 0
+      }
+    },
     "Akebia": {
       "latin": "Akebia",
       "ltName": "Akebija",
@@ -1348,9 +1378,11 @@
     },
     "All": {
       "latin": "All",
-      "ltName": null,
+      "ltName": "Plaukiojančiosios antys",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Plaukiojančiosios antys"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -1370,23 +1402,8 @@
         "sodospalvos": null,
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
-        "inat": null,
-        "inatSynonymsCount": 0,
-        "_inat_quarantined": "Plaukiojančiosios antys"
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "clear_ltname",
-        "category": "broken_genus_stub_plus_contamination",
-        "reason": "'All' is broken parser stub of 'Allamanda' (species 'cathartica' = Allamanda cathartica, Apocynaceae). iNat returned 'Plaukiojančiosios antys' = duckweed (Lemnaceae), an aquatic floating plant — completely unrelated to a tropical Apocynaceae vine.",
-        "evidence": "pre-db family 'APOCYNACEAE', species 'cathartica'. Allamanda cathartica is a known yellow-flowered tropical climber. 'Plaukiojančiosios antys' refers to Lemna/duckweed.",
-        "changes": [
-          "raw_inat_quarantined",
-          "ltName_cleared"
-        ],
-        "before": {
-          "ltName": "Plaukiojančiosios antys"
-        }
+        "inat": "Plaukiojančiosios antys",
+        "inatSynonymsCount": 0
       }
     },
     "Allium": {
@@ -1772,9 +1789,11 @@
     },
     "Amaranth": {
       "latin": "Amaranth",
-      "ltName": null,
+      "ltName": "Burnotis",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Burnotis"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -1794,23 +1813,8 @@
         "sodospalvos": null,
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
-        "inat": null,
-        "inatSynonymsCount": 0,
-        "_inat_quarantined": "Burnotis"
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "clear_ltname",
-        "category": "broken_genus_stub_lt_name_correct_for_real_genus",
-        "reason": "'Amaranth' is broken parser stub of 'Amaranthus'. While 'Burnotis' IS the correct LT name for Amaranthus, the GENUS KEY itself is invalid — keeping ltName on a non-existent genus stub will cause confusion when pre-db re-parse drops this entry. Clear ltName here; the real Amaranthus entry (if it exists separately) should retain Burnotis.",
-        "evidence": "pre-db family 'AMARANTHACEAE' confirms intent was Amaranthus. Will be deleted by pre-db re-parse (task #44).",
-        "changes": [
-          "raw_inat_quarantined",
-          "ltName_cleared"
-        ],
-        "before": {
-          "ltName": "Burnotis"
-        }
+        "inat": "Burnotis",
+        "inatSynonymsCount": 0
       }
     },
     "Amaryllis": {
@@ -4846,9 +4850,11 @@
     },
     "Barba": {
       "latin": "Barba",
-      "ltName": null,
+      "ltName": "Raganė",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Raganė"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -4868,23 +4874,8 @@
         "sodospalvos": null,
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
-        "inat": null,
-        "inatSynonymsCount": 0,
-        "_inat_quarantined": "Raganė"
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "clear_ltname",
-        "category": "broken_genus_stub_plus_contamination",
-        "reason": "'Barba' is broken parser stub of unclear origin (pre-db family CRASSULACEAE suggests Sempervivum/Echeveria context). iNat returned 'Raganė' which is the LT name for Clematis (Ranunculaceae) — wrong family entirely.",
-        "evidence": "pre-db family 'CRASSULACEAE' (succulents); 'Raganė' = Clematis per LT botanical sources (Wikipedia). No taxonomic relationship between Crassulaceae and Ranunculaceae.",
-        "changes": [
-          "raw_inat_quarantined",
-          "ltName_cleared"
-        ],
-        "before": {
-          "ltName": "Raganė"
-        }
+        "inat": "Raganė",
+        "inatSynonymsCount": 0
       }
     },
     "Barbarea": {
@@ -5621,6 +5612,32 @@
         "sodospalvos": "Bilbergija svyrančioji",
         "sodospalvosFamily": null,
         "sodospalvosCategory": "kambariniai-zydintys-augalai",
+        "inat": null,
+        "inatSynonymsCount": 0
+      }
+    },
+    "Blech": {
+      "latin": "Blech",
+      "ltName": null,
+      "ltSynonyms": [],
+      "ltAllForms": [],
+      "ltFamily": null,
+      "wikidataId": null,
+      "wikiUrl": null,
+      "sources": [],
+      "confidence": null,
+      "conflicts": null,
+      "inatTaxonId": 83892,
+      "raw": {
+        "wiki": null,
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
         "inat": null,
         "inatSynonymsCount": 0
       }
@@ -7370,6 +7387,36 @@
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
         "inat": null,
+        "inatSynonymsCount": 0
+      }
+    },
+    "Capri": {
+      "latin": "Capri",
+      "ltName": "Sausmedis",
+      "ltSynonyms": [],
+      "ltAllForms": [
+        "Sausmedis"
+      ],
+      "ltFamily": null,
+      "wikidataId": null,
+      "wikiUrl": null,
+      "sources": [
+        "inat"
+      ],
+      "confidence": "mid",
+      "conflicts": null,
+      "inatTaxonId": 51874,
+      "raw": {
+        "wiki": null,
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": "Sausmedis",
         "inatSynonymsCount": 0
       }
     },
@@ -12591,6 +12638,44 @@
         "inatSynonymsCount": 0
       }
     },
+    "Darwin": {
+      "latin": "Darwin",
+      "ltName": "Darvinas",
+      "ltSynonyms": [],
+      "ltAllForms": [
+        "Darvinas"
+      ],
+      "ltFamily": null,
+      "wikidataId": "Q268013",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Darvinas",
+      "sources": [
+        "wiki"
+      ],
+      "confidence": "mid",
+      "conflicts": null,
+      "inatTaxonId": 9476,
+      "raw": {
+        "wiki": "Darvinas",
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": null,
+        "inatSynonymsCount": 0
+      },
+      "_appliedFix": {
+        "at": "2026-05-23T22:19:08.918Z",
+        "action": "clear_disambig_family",
+        "reason": "ltFamily was Wikipedia disambig category \"Nuorodiniai straipsniai\", not a taxonomic family",
+        "note": "ENTIRE entry suspect — 'Darwin' is not a real plant genus (botanical genus is 'Darwinia'). Likely pre-db artifact. manualReviewNeeded.",
+        "before": "Nuorodiniai straipsniai",
+        "after": null
+      }
+    },
     "Dasylirion": {
       "latin": "Dasylirion",
       "ltName": null,
@@ -14914,6 +14999,32 @@
         "inatSynonymsCount": 0
       }
     },
+    "Elanth": {
+      "latin": "Elanth",
+      "ltName": null,
+      "ltSynonyms": [],
+      "ltAllForms": [],
+      "ltFamily": null,
+      "wikidataId": null,
+      "wikiUrl": null,
+      "sources": [],
+      "confidence": null,
+      "conflicts": null,
+      "inatTaxonId": null,
+      "raw": {
+        "wiki": null,
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": null,
+        "inatSynonymsCount": 0
+      }
+    },
     "Eleutherococcus": {
       "latin": "Eleutherococcus",
       "ltName": "laisvas",
@@ -16653,6 +16764,32 @@
         "inatSynonymsCount": 0
       }
     },
+    "Ferae": {
+      "latin": "Ferae",
+      "ltName": null,
+      "ltSynonyms": [],
+      "ltAllForms": [],
+      "ltFamily": null,
+      "wikidataId": null,
+      "wikiUrl": null,
+      "sources": [],
+      "confidence": null,
+      "conflicts": null,
+      "inatTaxonId": null,
+      "raw": {
+        "wiki": null,
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": null,
+        "inatSynonymsCount": 0
+      }
+    },
     "Ferocactus": {
       "latin": "Ferocactus",
       "ltName": "Ferokaktusas",
@@ -16872,9 +17009,11 @@
     },
     "Forsyth": {
       "latin": "Forsyth",
-      "ltName": null,
+      "ltName": "Forsitija",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Forsitija"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -16894,23 +17033,8 @@
         "sodospalvos": null,
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
-        "inat": null,
-        "inatSynonymsCount": 0,
-        "_inat_quarantined": "Forsitija"
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "clear_ltname",
-        "category": "broken_genus_stub_lt_name_correct_for_real_genus",
-        "reason": "'Forsyth' is broken parser stub of 'Forsythia'. 'Forsitija' is correct, but genus key is invalid.",
-        "evidence": "pre-db family 'OLEACEAE', species 'ovata,suspensa' = Forsythia. To be removed by pre-db re-parse.",
-        "changes": [
-          "raw_inat_quarantined",
-          "ltName_cleared"
-        ],
-        "before": {
-          "ltName": "Forsitija"
-        }
+        "inat": "Forsitija",
+        "inatSynonymsCount": 0
       }
     },
     "Fothergilla": {
@@ -18948,6 +19072,32 @@
         "inatSynonymsCount": 0
       }
     },
+    "Hamam": {
+      "latin": "Hamam",
+      "ltName": null,
+      "ltSynonyms": [],
+      "ltAllForms": [],
+      "ltFamily": null,
+      "wikidataId": null,
+      "wikiUrl": null,
+      "sources": [],
+      "confidence": null,
+      "conflicts": null,
+      "inatTaxonId": 51971,
+      "raw": {
+        "wiki": null,
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": null,
+        "inatSynonymsCount": 0
+      }
+    },
     "Hardenbergia": {
       "latin": "Hardenbergia",
       "ltName": null,
@@ -19192,6 +19342,32 @@
         "inatSynonymsCount": 0
       }
     },
+    "Heivi": {
+      "latin": "Heivi",
+      "ltName": null,
+      "ltSynonyms": [],
+      "ltAllForms": [],
+      "ltFamily": null,
+      "wikidataId": null,
+      "wikiUrl": null,
+      "sources": [],
+      "confidence": null,
+      "conflicts": null,
+      "inatTaxonId": null,
+      "raw": {
+        "wiki": null,
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": null,
+        "inatSynonymsCount": 0
+      }
+    },
     "Helenium": {
       "latin": "Helenium",
       "ltName": "Saulainė",
@@ -19350,24 +19526,6 @@
         "sodospalvosCategory": null,
         "inat": "Bangminiai",
         "inatSynonymsCount": 0
-      },
-      "_needsManualReview": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "reason": "'Bangminiai' is not found in standard LT botanical sources for Heliconia. LT sources predominantly use 'Helikonija'. 'Bangminis' may be a niche/dialectal name or an iNat invention.",
-        "suggestedReplacement": "Helikonija"
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "manual_review",
-        "category": "ambiguous",
-        "reason": "'Bangminiai' is not found in standard LT botanical sources for Heliconia. LT sources predominantly use 'Helikonija'. 'Bangminis' may be a niche/dialectal name or an iNat invention.",
-        "evidence": "kambarinesgeles.lt, gardenex-lt use 'Helikonija'. 'Banginiai' search returns only whale-related results.",
-        "changes": [
-          "flagged_for_manual_review"
-        ],
-        "before": {
-          "ltName": "Bangminiai"
-        }
       }
     },
     "Heliopsis": {
@@ -20568,6 +20726,36 @@
         "inatSynonymsCount": 0
       }
     },
+    "Hyaci": {
+      "latin": "Hyaci",
+      "ltName": "Žydrė",
+      "ltSynonyms": [],
+      "ltAllForms": [
+        "Žydrė"
+      ],
+      "ltFamily": null,
+      "wikidataId": null,
+      "wikiUrl": null,
+      "sources": [
+        "inat"
+      ],
+      "confidence": "mid",
+      "conflicts": null,
+      "inatTaxonId": 50921,
+      "raw": {
+        "wiki": null,
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": "Žydrė",
+        "inatSynonymsCount": 0
+      }
+    },
     "Hyacinthella": {
       "latin": "Hyacinthella",
       "ltName": null,
@@ -20783,24 +20971,6 @@
         "sodospalvosCategory": null,
         "inat": "Vandenikė",
         "inatSynonymsCount": 0
-      },
-      "_needsManualReview": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "reason": "'Vandenikė' is not found in standard LT botanical/aquarium sources for Hygrophila. Aquarium sources retain 'Hygrophila' (Latin) without LT equivalent.",
-        "suggestedReplacement": null
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "manual_review",
-        "category": "ambiguous",
-        "reason": "'Vandenikė' is not found in standard LT botanical/aquarium sources for Hygrophila. Aquarium sources retain 'Hygrophila' (Latin) without LT equivalent.",
-        "evidence": "akvariumas.net, akvazoo.lt use 'Hygrophila' directly with no LT common name.",
-        "changes": [
-          "flagged_for_manual_review"
-        ],
-        "before": {
-          "ltName": "Vandenikė"
-        }
       }
     },
     "Hylocereus": {
@@ -21600,6 +21770,32 @@
         "wiki": null,
         "plantsJson": "iksija",
         "plantsJsonFamily": "Iridaceae",
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": null,
+        "inatSynonymsCount": 0
+      }
+    },
+    "Ixioli": {
+      "latin": "Ixioli",
+      "ltName": null,
+      "ltSynonyms": [],
+      "ltAllForms": [],
+      "ltFamily": null,
+      "wikidataId": null,
+      "wikiUrl": null,
+      "sources": [],
+      "confidence": null,
+      "conflicts": null,
+      "inatTaxonId": 460634,
+      "raw": {
+        "wiki": null,
+        "plantsJson": null,
+        "plantsJsonFamily": null,
         "plantsJsonFlags": [],
         "derlingas": null,
         "derlingasOccurrences": 0,
@@ -25133,9 +25329,11 @@
     },
     "Macadam": {
       "latin": "Macadam",
-      "ltName": null,
+      "ltName": "Makadamija",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Makadamija"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -25155,23 +25353,8 @@
         "sodospalvos": null,
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
-        "inat": null,
-        "inatSynonymsCount": 0,
-        "_inat_quarantined": "Makadamija"
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "clear_ltname",
-        "category": "broken_genus_stub_lt_name_correct_for_real_genus",
-        "reason": "'Macadam' is broken parser stub of 'Macadamia'. Pre-db family is also wrong (LEGUMINOSAE — Macadamia is Proteaceae). Double-broken entry.",
-        "evidence": "Species 'integrifolia' = Macadamia integrifolia. LT name Makadamija is correct for the real genus.",
-        "changes": [
-          "raw_inat_quarantined",
-          "ltName_cleared"
-        ],
-        "before": {
-          "ltName": "Makadamija"
-        }
+        "inat": "Makadamija",
+        "inatSynonymsCount": 0
       }
     },
     "Macfadyena": {
@@ -28313,9 +28496,11 @@
     },
     "Nicotian": {
       "latin": "Nicotian",
-      "ltName": null,
+      "ltName": "Tabakas",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Tabakas"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -28335,23 +28520,8 @@
         "sodospalvos": null,
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
-        "inat": null,
-        "inatSynonymsCount": 0,
-        "_inat_quarantined": "Tabakas"
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "clear_ltname",
-        "category": "broken_genus_stub_lt_name_correct_for_real_genus",
-        "reason": "'Nicotian' is broken parser stub of 'Nicotiana'. 'Tabakas' is correct for Nicotiana.",
-        "evidence": "pre-db family 'SOLANACEAE', species 'affinis,alata' = Nicotiana. To be removed by pre-db re-parse.",
-        "changes": [
-          "raw_inat_quarantined",
-          "ltName_cleared"
-        ],
-        "before": {
-          "ltName": "Tabakas"
-        }
+        "inat": "Tabakas",
+        "inatSynonymsCount": 0
       }
     },
     "Nidularium": {
@@ -29917,9 +30087,11 @@
     },
     "Paeon": {
       "latin": "Paeon",
-      "ltName": null,
+      "ltName": "Bijūnas",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Bijūnas"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -29939,23 +30111,8 @@
         "sodospalvos": null,
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
-        "inat": null,
-        "inatSynonymsCount": 0,
-        "_inat_quarantined": "Bijūnas"
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "clear_ltname",
-        "category": "broken_genus_stub_lt_name_correct_for_real_genus",
-        "reason": "'Paeon' is broken parser stub of 'Paeonia'. 'Bijūnas' is correct.",
-        "evidence": "pre-db family 'PAEONIACEAE', 27 species incl. 'mascula' = Paeonia. Real Paeonia entry should retain Bijūnas separately.",
-        "changes": [
-          "raw_inat_quarantined",
-          "ltName_cleared"
-        ],
-        "before": {
-          "ltName": "Bijūnas"
-        }
+        "inat": "Bijūnas",
+        "inatSynonymsCount": 0
       }
     },
     "Paliurus": {
@@ -31932,11 +32089,43 @@
         "inatSynonymsCount": 0
       }
     },
+    "Plantagi": {
+      "latin": "Plantagi",
+      "ltName": "Dumblialaiškis",
+      "ltSynonyms": [],
+      "ltAllForms": [
+        "Dumblialaiškis"
+      ],
+      "ltFamily": null,
+      "wikidataId": null,
+      "wikiUrl": null,
+      "sources": [
+        "inat"
+      ],
+      "confidence": "mid",
+      "conflicts": null,
+      "inatTaxonId": 60254,
+      "raw": {
+        "wiki": null,
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": "Dumblialaiškis",
+        "inatSynonymsCount": 0
+      }
+    },
     "Platan": {
       "latin": "Platan",
-      "ltName": null,
+      "ltName": "Platanas",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Platanas"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -31956,23 +32145,8 @@
         "sodospalvos": null,
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
-        "inat": null,
-        "inatSynonymsCount": 0,
-        "_inat_quarantined": "Platanas"
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "clear_ltname",
-        "category": "broken_genus_stub_lt_name_correct_for_real_genus",
-        "reason": "'Platan' is broken parser stub of 'Platanus'. 'Platanas' is correct.",
-        "evidence": "pre-db family 'PLATANACEAE', species 'orientalis' = Platanus orientalis.",
-        "changes": [
-          "raw_inat_quarantined",
-          "ltName_cleared"
-        ],
-        "before": {
-          "ltName": "Platanas"
-        }
+        "inat": "Platanas",
+        "inatSynonymsCount": 0
       }
     },
     "Platycerium": {
@@ -34253,6 +34427,36 @@
         "inatSynonymsCount": 0
       }
     },
+    "Rita": {
+      "latin": "Rita",
+      "ltName": "Rita",
+      "ltSynonyms": [],
+      "ltAllForms": [
+        "Rita"
+      ],
+      "ltFamily": null,
+      "wikidataId": "Q194437",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Rita",
+      "sources": [
+        "wiki"
+      ],
+      "confidence": "mid",
+      "conflicts": null,
+      "inatTaxonId": 91787,
+      "raw": {
+        "wiki": "Rita",
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": null,
+        "inatSynonymsCount": 0
+      }
+    },
     "Robinia": {
       "latin": "Robinia",
       "ltName": "Robinija",
@@ -36129,6 +36333,36 @@
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
         "inat": "Skopolija",
+        "inatSynonymsCount": 0
+      }
+    },
+    "Scroph": {
+      "latin": "Scroph",
+      "ltName": "Bervidis",
+      "ltSynonyms": [],
+      "ltAllForms": [
+        "Bervidis"
+      ],
+      "ltFamily": null,
+      "wikidataId": null,
+      "wikiUrl": null,
+      "sources": [
+        "inat"
+      ],
+      "confidence": "mid",
+      "conflicts": null,
+      "inatTaxonId": 50809,
+      "raw": {
+        "wiki": null,
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": "Bervidis",
         "inatSynonymsCount": 0
       }
     },
@@ -41025,6 +41259,36 @@
         "inatSynonymsCount": 0
       }
     },
+    "Valia": {
+      "latin": "Valia",
+      "ltName": "Valia",
+      "ltSynonyms": [],
+      "ltAllForms": [
+        "Valia"
+      ],
+      "ltFamily": null,
+      "wikidataId": "Q364340",
+      "wikiUrl": "https://lt.wikipedia.org/wiki/Valia",
+      "sources": [
+        "wiki"
+      ],
+      "confidence": "mid",
+      "conflicts": null,
+      "inatTaxonId": 1083332,
+      "raw": {
+        "wiki": "Valia",
+        "plantsJson": null,
+        "plantsJsonFamily": null,
+        "plantsJsonFlags": [],
+        "derlingas": null,
+        "derlingasOccurrences": 0,
+        "sodospalvos": null,
+        "sodospalvosFamily": null,
+        "sodospalvosCategory": null,
+        "inat": null,
+        "inatSynonymsCount": 0
+      }
+    },
     "Vallea": {
       "latin": "Vallea",
       "ltName": null,
@@ -43985,9 +44249,11 @@
     },
     "Chamaecereus": {
       "latin": "Chamaecereus",
-      "ltName": null,
+      "ltName": "Echinopsis",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Echinopsis"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -44007,23 +44273,8 @@
         "sodospalvos": null,
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
-        "inat": null,
-        "inatSynonymsCount": 0,
-        "_inat_quarantined": "Echinopsis"
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "clear_ltname",
-        "category": "latin_genus_name_as_lt_name",
-        "reason": "Chamaecereus silvestrii is a real cactus (now reclassified as Echinopsis chamaecereus). However the value 'Echinopsis' is the LATIN genus name, not a Lithuanian common name. iNat returned the new Latin name as 'LT name' due to taxonomic merger confusion in the reverse-lookup.",
-        "evidence": "'Echinopsis' is universally Latin/scientific. LT sources use 'Kaktusas' or 'Riešutinis kaktusas' for this plant. Setting ltName=null is safer than retaining a Latin label that masquerades as Lithuanian.",
-        "changes": [
-          "raw_inat_quarantined",
-          "ltName_cleared"
-        ],
-        "before": {
-          "ltName": "Echinopsis"
-        }
+        "inat": "Echinopsis",
+        "inatSynonymsCount": 0
       }
     },
     "Chamaelaucium": {
@@ -48042,9 +48293,11 @@
     },
     "Tacitus": {
       "latin": "Tacitus",
-      "ltName": null,
+      "ltName": "Serentis",
       "ltSynonyms": [],
-      "ltAllForms": [],
+      "ltAllForms": [
+        "Serentis"
+      ],
       "ltFamily": null,
       "wikidataId": null,
       "wikiUrl": null,
@@ -48064,23 +48317,8 @@
         "sodospalvos": null,
         "sodospalvosFamily": null,
         "sodospalvosCategory": null,
-        "inat": null,
-        "inatSynonymsCount": 0,
-        "_inat_quarantined": "Serentis"
-      },
-      "_appliedInatFix": {
-        "at": "2026-05-23T23:09:11.301Z",
-        "action": "clear_ltname",
-        "category": "real_contamination",
-        "reason": "Tacitus bellus = Graptopetalum bellum (Crassulaceae, succulent). 'Serentis' is the LT name for Tagetes (marigold, Asteraceae) — completely different family. iNat reverse-lookup contaminated.",
-        "evidence": "VLE/Wikipedia LT: 'Serentis' = Tagetes (Asteraceae). Tacitus/Graptopetalum has no established standalone LT common name; sukulentas-themed names would apply but not 'Serentis'.",
-        "changes": [
-          "raw_inat_quarantined",
-          "ltName_cleared"
-        ],
-        "before": {
-          "ltName": "Serentis"
-        }
+        "inat": "Serentis",
+        "inatSynonymsCount": 0
       }
     },
     "Tapeinocheilos": {
@@ -48686,32 +48924,5 @@
     "fixesFile": "data/lt-names-fixes.json",
     "primaryApplied": 7,
     "secondaryApplied": 8
-  },
-  "_lastInatAuditApplied": {
-    "at": "2026-05-23T23:09:11.303Z",
-    "fixesFile": "data/lt-names-inat-fixes.json",
-    "task": "#42",
-    "clearLtNameApplied": 15,
-    "manualReviewFlagged": 2
-  },
-  "_lastArtifactFixApplied": {
-    "at": "2026-05-23T23:09:11.466Z",
-    "taskRef": "#43 — Audit pre-db.json non-plant artifacts",
-    "removed": [
-      "Aiton",
-      "Blech",
-      "Capri",
-      "Darwin",
-      "Elanth",
-      "Ferae",
-      "Hamam",
-      "Heivi",
-      "Hyaci",
-      "Ixioli",
-      "Plantagi",
-      "Rita",
-      "Scroph",
-      "Valia"
-    ]
   }
 }

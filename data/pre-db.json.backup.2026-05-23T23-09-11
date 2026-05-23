@@ -7117,6 +7117,41 @@
       "chengProfile": null,
       "speciesCount": 2
     },
+    "AITON": {
+      "genus": "AITON",
+      "family": "ELIACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "one species of evergreen, springflowering shrub, grown for its flowers and fruits. Needs full light and fertile, welldrained soil. Water container specimens moderately when in full growth, less at other times. Propagate by seed in spring or by semiripe cuttings in summer.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "capensis": {
+          "speciesKey": "capensis",
+          "latinName": "Aiton capensis",
+          "species": "capensis",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 456,
+          "description": ", illus. p.456.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 1
+    },
     "AKEBIA": {
       "genus": "AKEBIA",
       "family": "LARDIZABALACEAE",
@@ -26977,6 +27012,73 @@
       "chengProfile": null,
       "speciesCount": 16
     },
+    "BLECH": {
+      "genus": "BLECH",
+      "family": "NACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "evergreen or deciduous ferns. Prefers partial shade and fibrous, moist, peaty soil. Remove faded fronds regularly. Propagate by division in spring.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "radicans": {
+          "speciesKey": "radicans",
+          "latinName": "Blech radicans",
+          "species": "radicans",
+          "cultivar": null,
+          "commonName": "European chain fern",
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 8,
+            "usdaMax": 9,
+            "ahsMin": 9,
+            "ahsMax": 8
+          },
+          "dimensions": {
+            "heightImp": "4ft",
+            "heightMetric": "1.2m",
+            "spreadImp": "2ft",
+            "spreadMetric": "60cm"
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Vigorous, evergreen, spreading fern. H 4ft (1.2m), S 2ft (60cm). Large, broadly lanceshaped, coarsely divided, arching, midgreen fronds have narrowly oval pinnae. Z8-9 H9-8.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "unigemmata": {
+          "speciesKey": "unigemmata",
+          "latinName": "Blech unigemmata",
+          "species": "unigemmata",
+          "cultivar": null,
+          "commonName": "Asian chain fern",
+          "synonyms": [],
+          "zones": null,
+          "dimensions": {
+            "heightImp": "3ft",
+            "heightMetric": "lm",
+            "spreadImp": "10ft",
+            "spreadMetric": "3m"
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Evergreen, spreading fern. H 3ft (lm), S 10ft (3m). Is very similar to",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 2
+    },
     "BLECHNUM": {
       "genus": "BLECHNUM",
       "family": "BLECHNACEAE",
@@ -34119,6 +34221,207 @@
       },
       "chengProfile": null,
       "speciesCount": 2
+    },
+    "CAPRI": {
+      "genus": "CAPRI",
+      "family": "FOLIACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "deciduous, summer-flowering shrubs. Is similar to Weigela. Needs partial shade or full sun and moderately fertile, well-drained soil. To keep the shrub neat, remove 2- and 3-year-old stems in winter or after flowering. Propagate by semiripe cuttings in late summer or by hardwood cuttings in fall.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "sessilifolia": {
+          "speciesKey": "sessilifolia",
+          "latinName": "Capri sessilifolia",
+          "species": "sessilifolia",
+          "cultivar": null,
+          "commonName": "Southern bush honeysuckle",
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 4,
+            "usdaMax": 8,
+            "ahsMin": 8,
+            "ahsMax": 1
+          },
+          "dimensions": {
+            "heightImp": "3-5ft",
+            "heightMetric": "1-1. 5m",
+            "spreadImp": null,
+            "spreadMetric": null
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Deciduous, spreading shrub. H and S 3-5ft (1-1. 5m). Narrowly oval, pointed, serrated, green leaves are often copper-tinted when young. Has terminal and lateral clusters of tubular, pale yellow flowers in summer. To treat as an herbaceous perennial, cut back to ground level each spring and apply mulch and fertilizer. Z4-8 H8-1.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "formosa": {
+          "speciesKey": "formosa",
+          "latinName": "Capri formosa",
+          "species": "formosa",
+          "cultivar": null,
+          "commonName": "Himalayan honeysuckle",
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 7,
+            "usdaMax": 9,
+            "ahsMin": 9,
+            "ahsMax": 6
+          },
+          "dimensions": {
+            "heightImp": "6ft",
+            "heightMetric": "2m",
+            "spreadImp": null,
+            "spreadMetric": null
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Deciduous, upright shrub. H and S 6ft (2m). Has blue-green shoots and slender, oval, dark green leaves. In summer and early fall, small, funnel-shaped, white flowers are produced at tip of each pendent cluster of purplish-red bracts and are followed by spherical, reddish-purple fruits. Cut weak shoots to ground level in early spring. Z7-9 H9-6. LEYMUS GRAMINEAE/POACEAE ~ See also GRASSES, BAMBOOS, RUSHES, and SEDGES.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "arenarius": {
+          "speciesKey": "arenarius",
+          "latinName": "Capri arenarius",
+          "species": "arenarius",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [
+            "Elymus arenarius"
+          ],
+          "zones": {
+            "usdaMin": 4,
+            "usdaMax": 10,
+            "ahsMin": 10,
+            "ahsMax": 1
+          },
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": "Vigorous, spreading, herbaceous, rhizomatous, perennial grass. H to 5ft (1.5m), S indefinite. Has broad, glaucous leaves. Produces sturdy, terminal spikes of grayish-green flowers on erect stems in late summer. Is useful for binding coastal dunes. Z4-10 H10-1.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "borealis": {
+          "speciesKey": "borealis",
+          "latinName": "Capri borealis",
+          "species": "borealis",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 363,
+          "description": ", illus. p.363.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "perennis": {
+          "speciesKey": "perennis",
+          "latinName": "Capri perennis",
+          "species": "perennis",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ".",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "parnassi": {
+          "speciesKey": "parnassi",
+          "latinName": "Capri parnassi",
+          "species": "parnassi",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 364,
+          "description": ", illus. p.364.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "albus": {
+          "speciesKey": "albus",
+          "latinName": "Capri albus",
+          "species": "albus",
+          "cultivar": null,
+          "commonName": "Snowberry",
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 3,
+            "usdaMax": 7,
+            "ahsMin": 7,
+            "ahsMax": 1
+          },
+          "dimensions": {
+            "heightImp": "6ft",
+            "heightMetric": "2m",
+            "spreadImp": null,
+            "spreadMetric": null
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Z3-7 H7-1. var. laevigatus (illus. p.142) is a vigorous, deciduous, dense shrub, part upright, part arching. H and S 6ft (2m). Pink flowers, in summer, are followed by large, marblelike, white fruits. Rounded leaves are dark green. S. x chenaultii 'Hancock'. Deciduous, procumbent, dense shrub. H 3ft (lm), S 10ft (3m). Has oval, bronze leaves maturing to bright green. White flowers are produced from early to mid-summer. Small, spherical, deep lilac-pink fruits are sparsely borne. Makes excellent groundcover. Z4-7 H7-1.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "orbiculatus": {
+          "speciesKey": "orbiculatus",
+          "latinName": "Capri orbiculatus",
+          "species": "orbiculatus",
+          "cultivar": null,
+          "commonName": "Coralberry, Indian currant",
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 2,
+            "usdaMax": 7,
+            "ahsMin": 7,
+            "ahsMax": 1
+          },
+          "dimensions": {
+            "heightImp": "6ft",
+            "heightMetric": "2m",
+            "spreadImp": null,
+            "spreadMetric": null
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Deciduous, bushy, dense shrub. H and S 6ft (2m). Has white or pink flowers in late summer and early fall, followed by spherical, deep purplish-red fruits. Oval leaves are dark green. Does best after a hot summer. Z2-7 H7-1. 'Foliis Variegatis', syn.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 8
     },
     "CAPSICUM": {
       "genus": "CAPSICUM",
@@ -57675,6 +57978,51 @@
       "chengProfile": null,
       "speciesCount": 1
     },
+    "DARWIN": {
+      "genus": "DARWIN",
+      "family": "MYRTACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "evergreen, spring-flowering shrubs, grown for their flowers and overall appearance. Needs full light and moist, neutral to acid soil, not rich in nitrogen. Water moderately when in full growth, sparingly at other times. Propagate by seed in spring or by semiripe cuttings in late summer. 560 Is difficult to root and to grow in _ a greenhouse.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "citriodora": {
+          "speciesKey": "citriodora",
+          "latinName": "Darwin citriodora",
+          "species": "citriodora",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 9,
+            "usdaMax": 11,
+            "ahsMin": 12,
+            "ahsMax": 9
+          },
+          "dimensions": {
+            "heightImp": "2-4ft",
+            "heightMetric": "60cm-1.2m",
+            "spreadImp": null,
+            "spreadMetric": null
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Evergreen, rounded, wellbranched shrub. H and S 2-4ft (60cm-1.2m). Oblong to broadly lance-shaped, bluegreen leaves are lemon-scented when bruised. In spring produces pendent, terminal heads of usually 4 small, tubular, yellow or red flowers, each surrounded by 2 red or yellowish bracts. Z9-11 H12-9.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 1
+    },
     "DASYLIRION": {
       "genus": "DASYLIRION",
       "family": "DRACAENACEAE/ASPARAGACEAE",
@@ -67509,6 +67857,51 @@
       "chengProfile": null,
       "speciesCount": 2
     },
+    "ELANTH": {
+      "genus": "ELANTH",
+      "family": "IACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "summer-flowering, rhizomatous perennials. Prefers full sun and moist, peaty soil. May be difficult to cultivate. Propagate by seed in fall.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "tenax": {
+          "speciesKey": "tenax",
+          "latinName": "Elanth tenax",
+          "species": "tenax",
+          "cultivar": null,
+          "commonName": "Bear grass",
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 5,
+            "usdaMax": 8,
+            "ahsMin": 8,
+            "ahsMax": 5
+          },
+          "dimensions": {
+            "heightImp": "3-4ft",
+            "heightMetric": "1-1. 2m",
+            "spreadImp": null,
+            "spreadMetric": null
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Clump-forming perennial. H 3-4ft (1-1. 2m), S l-2ft (3060cm). Star-shaped, white flowers, with violet anthers, are borne in dense, terminal racemes in summer. Has tufted, linear, rough-margined, mid-green, basal leaves, glaucous blue-green beneath. Z5-8 H8-5.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 1
+    },
     "ELEUTHEROCOCCUS": {
       "genus": "ELEUTHEROCOCCUS",
       "family": "ARALIACEAE",
@@ -74840,6 +75233,85 @@
       },
       "chengProfile": null,
       "speciesCount": 4
+    },
+    "FERAE": {
+      "genus": "FERAE",
+      "family": "ACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "summer-flowering, often shortlived perennials, some of which have culinary and medicinal uses. Grows in sun or shade and in any well-drained soil. Remove seed heads when produced, otherwise plants may die. Propagate by seed when ripe.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "archangelica": {
+          "speciesKey": "archangelica",
+          "latinName": "Ferae archangelica",
+          "species": "archangelica",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 219,
+          "description": ", illus. p.219. ANGELONIA",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "vulgare": {
+          "speciesKey": "vulgare",
+          "latinName": "Ferae vulgare",
+          "species": "vulgare",
+          "cultivar": null,
+          "commonName": "Common fennel",
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 6,
+            "usdaMax": 9,
+            "ahsMin": 9,
+            "ahsMax": 6
+          },
+          "dimensions": {
+            "heightImp": "6ft",
+            "heightMetric": "2m",
+            "spreadImp": "172ft",
+            "spreadMetric": "45cm"
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Z6-9 H9-6. 'Purpureum' is an erect, branching perennial. H 6ft (2m), S 172ft (45cm). Has very finely divided, hair-like, bronze leaves and, in summer, large, flat umbels of small, yellow flowers.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "wallichianum": {
+          "speciesKey": "wallichianum",
+          "latinName": "Ferae wallichianum",
+          "species": "wallichianum",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 230,
+          "description": ", illus. p.230.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 3
     },
     "FEROCACTUS": {
       "genus": "FEROCACTUS",
@@ -86062,6 +86534,90 @@
       "chengProfile": null,
       "speciesCount": 6
     },
+    "HAMAM": {
+      "genus": "HAMAM",
+      "family": "ELIDACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "one species of deciduous, fallflowering shrub, grown for its overall appearance and fall color. Needs partial shade and rich, moist but not wet, neutral to acid soil. Propagate by layering in spring or by seed when ripe or in spring.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "cercidifolius": {
+          "speciesKey": "cercidifolius",
+          "latinName": "Hamam cercidifolius",
+          "species": "cercidifolius",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 141,
+          "description": ", illus. p.141.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "henryi": {
+          "speciesKey": "henryi",
+          "latinName": "Hamam henryi",
+          "species": "henryi",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 6,
+            "usdaMax": 9,
+            "ahsMin": 9,
+            "ahsMax": 6
+          },
+          "dimensions": {
+            "heightImp": "25ft",
+            "heightMetric": "8m",
+            "spreadImp": null,
+            "spreadMetric": null
+          },
+          "minTemp": null,
+          "seeRef": "Osmanthus delavayi",
+          "illusPage": null,
+          "description": ". Deciduous, spreading, sometimes shrubby tree. H and S 25ft (8m). Has oval, toothed, glossy, bright green leaves, and long, pendent, green catkins in late spring. Z6-9 H9-6. Siphonosmanthus delavayi. See Osmanthus delavayi.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "sinensis": {
+          "speciesKey": "sinensis",
+          "latinName": "Hamam sinensis",
+          "species": "sinensis",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": {
+            "heightImp": "15ft",
+            "heightMetric": "5m",
+            "spreadImp": "12ft",
+            "spreadMetric": "4m"
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Evergreen, upright shrub. H 15ft (5m), S 12ft (4m). Leaves are oval, glossy and dark green. Flowers lack petals but have showy, dense clusters of redtinged, yellow anthers in late winter or early spring. Zll H12-10. SYMPHORICARPOS",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 3
+    },
     "HARDENBERGIA": {
       "genus": "HARDENBERGIA",
       "family": "LEGUMINOSAE/PAPILIONACEAE",
@@ -87669,6 +88225,90 @@
       },
       "chengProfile": null,
       "speciesCount": 1
+    },
+    "HEIVI": {
+      "genus": "HEIVI",
+      "family": "EROCALLIDACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "evergreen perennials, grown for their bold, sword-shaped leaves. Requires sun and moist but well-drained soil. Propagate by division or seed in spring. P 'Bronze Baby'. Evergreen, upright perennial. H and S 18-24in (45-60cm). Has tufts of bold, stiff, pointed, wine-red leaves. Panicles of reddish flowers are occasionally produced on purplish stems in summer. Z9-11 H12-6. P colensoi. See",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "cookianum": {
+          "speciesKey": "cookianum",
+          "latinName": "Heivi cookianum",
+          "species": "cookianum",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". P cookianum, syn.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "colensoi": {
+          "speciesKey": "colensoi",
+          "latinName": "Heivi colensoi",
+          "species": "colensoi",
+          "cultivar": null,
+          "commonName": "Mountain flax",
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 9,
+            "usdaMax": 11,
+            "ahsMin": 12,
+            "ahsMax": 1
+          },
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 216,
+          "description": ". Evergreen, upright perennial. H 3— 6ft (l-2m), S 1ft (30cm). Has tufts of swordshaped, dark green leaves. Panicles of tubular, pale yellowish-green flowers are borne in summer. Z9-11 H12-1. 'Black Adder' has burgundy-black leaves, subsp. hookeri 'Tricolor' has leaves striped vertically with red, yellow and green. 'Variegatum' has cream-striped leaves. P 'Dazzler', illus. p.216.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "tenax": {
+          "speciesKey": "tenax",
+          "latinName": "Heivi tenax",
+          "species": "tenax",
+          "cultivar": null,
+          "commonName": "New Zealand flax",
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 9,
+            "usdaMax": 11,
+            "ahsMin": 12,
+            "ahsMax": 6
+          },
+          "dimensions": {
+            "heightImp": "10ft",
+            "heightMetric": "3m",
+            "spreadImp": null,
+            "spreadMetric": null
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Evergreen, upright perennial. H 10ft (3m), S 3— 6ft (l-2m). Has tufts of sword-shaped, stiff, dark green leaves. Panicles of tubular, dull red flowers are produced on short, slightly glaucous green stems in summer. Thrives by the sea. Z9-11 H12-6. 'Aurora' has leaves vertically striped with red, bronze, salmon-pink and yellow. Purpureum Group, H 6— 8ft (2-2.5m), S 3ft (lm), has rich reddish-purple to dark copper leaves. Z9-11 HI 1-2. 'Veitchianum', syn.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 3
     },
     "HELENIUM": {
       "genus": "HELENIUM",
@@ -92965,6 +93605,428 @@
       },
       "chengProfile": null,
       "speciesCount": 1
+    },
+    "HYACI": {
+      "genus": "HYACI",
+      "family": "NTHACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "spring- to summer-flowering bulbs. Needs a sunny, well-drained site. Is difficult to cultivate in all but warm, dry areas; in cool, damp climates, protect in a cool greenhouse. Requires ample water in spring, followed by a hot, dry period during its summer dormancy. Propagate by seed in fall.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "undulata": {
+          "speciesKey": "undulata",
+          "latinName": "Hyaci undulata",
+          "species": "undulata",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 9,
+            "usdaMax": 10,
+            "ahsMin": 10,
+            "ahsMax": 9
+          },
+          "dimensions": {
+            "heightImp": "8-20in",
+            "heightMetric": "20-50cm",
+            "spreadImp": "4-6in",
+            "spreadMetric": "10-15cm"
+          },
+          "minTemp": null,
+          "seeRef": "Yucca",
+          "illusPage": null,
+          "description": ". Spring- to summerflowering bulb. H 8-20in (20-50cm), S 4-6in (10-15cm). Has a basal cluster of long, narrow, wavy-margined, semierect or prostrate leaves. Sturdy stems each bear a spike of upward-facing, funnelshaped, white flowers, with a central, green stripe along each of the 6 petals. Z9-10 H10-9. Hesperoyucca. See Yucca.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "plumbea": {
+          "speciesKey": "plumbea",
+          "latinName": "Hyaci plumbea",
+          "species": "plumbea",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [
+            "Scilla natalensis"
+          ],
+          "zones": {
+            "usdaMin": 9,
+            "usdaMax": 10,
+            "ahsMin": 10,
+            "ahsMax": 9
+          },
+          "dimensions": {
+            "heightImp": "12-18in",
+            "heightMetric": "30-45cm",
+            "spreadImp": "6-8in",
+            "spreadMetric": "15-20cm"
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": "Clumpforming summer-flowering bulb H12-18in (30-45cm) S 6-8in (15-20cm). Has lanceshaped, semierect, finely hairy basal leaves with a long spike of up to 100 flatish blue flowers, each one 5/8-3/4in (1.5-2cm) across. Z9-10 H10-9",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "adlamii": {
+          "speciesKey": "adlamii",
+          "latinName": "Hyaci adlamii",
+          "species": "adlamii",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": "Ledebouria cooperi",
+          "illusPage": null,
+          "description": ". See Ledebouria cooperi.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "bifolia": {
+          "speciesKey": "bifolia",
+          "latinName": "Hyaci bifolia",
+          "species": "bifolia",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 3,
+            "usdaMax": 8,
+            "ahsMin": 8,
+            "ahsMax": 1
+          },
+          "dimensions": {
+            "heightImp": "2-6in",
+            "heightMetric": "5-1 5cm",
+            "spreadImp": null,
+            "spreadMetric": null
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Early spring-flowering bulb. H 2-6in (5-1 5cm), S l-2in (2.5-5cm). Has 2 narrowly strap-shaped, semierect, basal leaves that widen towards tips. Stem bears one-sided spike of up to 20 star-shaped, purple-blue, pink or white flowers. Z3-8 H8-1.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "campanulata": {
+          "speciesKey": "campanulata",
+          "latinName": "Hyaci campanulata",
+          "species": "campanulata",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": "Hyacinthoides x massartiana",
+          "illusPage": null,
+          "description": ". See Hyacinthoides x massartiana.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "chinensis": {
+          "speciesKey": "chinensis",
+          "latinName": "Hyaci chinensis",
+          "species": "chinensis",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". See",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "scilloides": {
+          "speciesKey": "scilloides",
+          "latinName": "Hyaci scilloides",
+          "species": "scilloides",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ".",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "cooperi": {
+          "speciesKey": "cooperi",
+          "latinName": "Hyaci cooperi",
+          "species": "cooperi",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": "Ledebouria cooperi",
+          "illusPage": null,
+          "description": ". See Ledebouria cooperi.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "hispanica": {
+          "speciesKey": "hispanica",
+          "latinName": "Hyaci hispanica",
+          "species": "hispanica",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": "Hyacinthoides x massartiana",
+          "illusPage": null,
+          "description": ". See Hyacinthoides x massartiana. 695",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "italica": {
+          "speciesKey": "italica",
+          "latinName": "Hyaci italica",
+          "species": "italica",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": "Hyacinthoides italica",
+          "illusPage": null,
+          "description": ". See Hyacinthoides italica. (c) 2012 Dorling Kindersley. All Rights Reserved. SCINDAPSUS",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "japonica": {
+          "speciesKey": "japonica",
+          "latinName": "Hyaci japonica",
+          "species": "japonica",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". See",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "litardierei": {
+          "speciesKey": "litardierei",
+          "latinName": "Hyaci litardierei",
+          "species": "litardierei",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ", syn.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "pratensis": {
+          "speciesKey": "pratensis",
+          "latinName": "Hyaci pratensis",
+          "species": "pratensis",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 6,
+            "usdaMax": 9,
+            "ahsMin": 9,
+            "ahsMax": 6
+          },
+          "dimensions": {
+            "heightImp": "4-10in",
+            "heightMetric": "10-25cm",
+            "spreadImp": "2-3in",
+            "spreadMetric": "5-8cm"
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Clumpforming, early summer-flowering bulb. H 4-10in (10-25cm), S 2-3in (5-8cm). Produces up to 5 narrowly strap-shaped, semierect, basal leaves. Stem bears dense spike of flat, star-shaped, violet flowers. Z6-9 H9-6.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "mischtschenkoana": {
+          "speciesKey": "mischtschenkoana",
+          "latinName": "Hyaci mischtschenkoana",
+          "species": "mischtschenkoana",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ", syn.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "tubergeniana": {
+          "speciesKey": "tubergeniana",
+          "latinName": "Hyaci tubergeniana",
+          "species": "tubergeniana",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 420,
+          "description": ", S. 'Tubergeniana', illus. p.420.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "non-scripta": {
+          "speciesKey": "non-scripta",
+          "latinName": "Hyaci non-scripta",
+          "species": "non-scripta",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": "Hyacinthoides nonscripta",
+          "illusPage": null,
+          "description": ". See Hyacinthoides nonscripta.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "nutans": {
+          "speciesKey": "nutans",
+          "latinName": "Hyaci nutans",
+          "species": "nutans",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": "Hyacinthoides non-scripta",
+          "illusPage": null,
+          "description": ". See Hyacinthoides non-scripta.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "peruviana": {
+          "speciesKey": "peruviana",
+          "latinName": "Hyaci peruviana",
+          "species": "peruviana",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 423,
+          "description": ", illus. p.423.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "siberica": {
+          "speciesKey": "siberica",
+          "latinName": "Hyaci siberica",
+          "species": "siberica",
+          "cultivar": null,
+          "commonName": "Siberian squill. Spring squill",
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 5,
+            "usdaMax": 8,
+            "ahsMin": 8,
+            "ahsMax": 5
+          },
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 416,
+          "description": ". Z5-8 H8-5. 'Alba', illus. p.416. 'Atrocoerulea', illus. p.420.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "socialis": {
+          "speciesKey": "socialis",
+          "latinName": "Hyaci socialis",
+          "species": "socialis",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": "Ledehouria socialis",
+          "illusPage": null,
+          "description": ". See Ledehouria socialis.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "violacea": {
+          "speciesKey": "violacea",
+          "latinName": "Hyaci violacea",
+          "species": "violacea",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": "Ledebouria socialis",
+          "illusPage": null,
+          "description": ". See Ledebouria socialis.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 21
     },
     "HYACINTHELLA": {
       "genus": "HYACINTHELLA",
@@ -99241,6 +100303,58 @@
       },
       "chengProfile": null,
       "speciesCount": 5
+    },
+    "IXIOLI": {
+      "genus": "IXIOLI",
+      "family": "RIACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "bulbs, grown for their funnelshaped flowers mainly in spring. Needs a sheltered, sunny site and well-drained soil that becomes hot and dry in summer to ripen the bulb. Propagate by seed or offsets in fall.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "montanum": {
+          "speciesKey": "montanum",
+          "latinName": "Ixioli montanum",
+          "species": "montanum",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Seel, tataricum.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "tataricum": {
+          "speciesKey": "tataricum",
+          "latinName": "Ixioli tataricum",
+          "species": "tataricum",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ", syn.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 2
     },
     "IXORA": {
       "genus": "IXORA",
@@ -139994,6 +141108,156 @@
       "chengProfile": null,
       "speciesCount": 13
     },
+    "PLANTAGI": {
+      "genus": "PLANTAGI",
+      "family": "NACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "spring-, summer- or fallflowering annuals, biennials and perennials, useful for rock gardens and borders. Prefers sun or partial shade and well-drained soil. Propagate by seed in fall or spring. Self-seeds freely.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "alpina": {
+          "speciesKey": "alpina",
+          "latinName": "Plantagi alpina",
+          "species": "alpina",
+          "cultivar": null,
+          "commonName": "Alpine toadflax",
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 4,
+            "usdaMax": 9,
+            "ahsMin": 9,
+            "ahsMax": 1
+          },
+          "dimensions": {
+            "heightImp": "6in",
+            "heightMetric": "15cm",
+            "spreadImp": "4-6in",
+            "spreadMetric": "10-15cm"
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Tuft-forming, compact, annual, biennial or short-lived perennial with a sparse root system. H 6in (15cm), S 4-6in (10-15cm). Has whorls of 623 (c) 2012 Dorling Kindersley. All Rights Reserved. LINDERA linear to lance-shaped, fleshy, gray-green leaves. A succession of snapdragon-like, yellow-centered, purple-violet flowers is borne in loose racemes in summer. Z4-9 H9-1.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "dalmatica": {
+          "speciesKey": "dalmatica",
+          "latinName": "Plantagi dalmatica",
+          "species": "dalmatica",
+          "cultivar": null,
+          "commonName": "Dalmation toadflax",
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Upright perennial. H 3— 4ft (1-1. 2m), S 2ft (60cm). Is similar to",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "genistifolia": {
+          "speciesKey": "genistifolia",
+          "latinName": "Plantagi genistifolia",
+          "species": "genistifolia",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 5,
+            "usdaMax": 8,
+            "ahsMin": 8,
+            "ahsMax": 5
+          },
+          "dimensions": {
+            "heightImp": "2-4ft",
+            "heightMetric": "60cm-1.2m",
+            "spreadImp": "9in",
+            "spreadMetric": "23cm"
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ", but has much larger, golden-yellow flowers and broader, more glaucous leaves. Z5-8 H8-5.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "maroccana": {
+          "speciesKey": "maroccana",
+          "latinName": "Plantagi maroccana",
+          "species": "maroccana",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": {
+            "heightImp": "8in",
+            "heightMetric": "20cm",
+            "spreadImp": "6in",
+            "spreadMetric": "15cm"
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": "'Fairy Lights'. Fastgrowing, erect, bushy annual. H 8in (20cm), S 6in (15cm). Has lance-shaped, pale green leaves. Tiny, snapdragon-like flowers, in shades of red, pink, purple, yellow or white, are borne throughout summer. H9-1.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "purpurea": {
+          "speciesKey": "purpurea",
+          "latinName": "Plantagi purpurea",
+          "species": "purpurea",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": {
+            "usdaMin": 5,
+            "usdaMax": 8,
+            "ahsMin": 8,
+            "ahsMax": 5
+          },
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 232,
+          "description": ". Upright perennial. H 2— 3ft (60cm-lm), S 2ft (60cm). From mid- to late summer, racemes of snapdragon-like, purplish-blue flowers, touched with white at throats, are produced above narrowly oval, gray-green leaves. Z5-8 H8-5. 'Canon J. Went', illus. p.232.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "triornithophora": {
+          "speciesKey": "triornithophora",
+          "latinName": "Plantagi triornithophora",
+          "species": "triornithophora",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 239,
+          "description": ", illus. p.239.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 6
+    },
     "PLATAN": {
       "genus": "PLATAN",
       "family": "PLATANACEAE",
@@ -152206,6 +153470,58 @@
       "chengProfile": null,
       "speciesCount": 1
     },
+    "RITA": {
+      "genus": "RITA",
+      "family": "GESNERIACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "evergreen perennials or subshrubs, grown for their flowers. Requires well-drained soil, a fairly humid atmosphere and a light position out of direct sunlight. Propagate by tip cuttings in summer or, if available, seed in late winter or spring.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "lavandulacea": {
+          "speciesKey": "lavandulacea",
+          "latinName": "Rita lavandulacea",
+          "species": "lavandulacea",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 473,
+          "description": ", illus. p.473.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "sinensis": {
+          "speciesKey": "sinensis",
+          "latinName": "Rita sinensis",
+          "species": "sinensis",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Evergreen, stemless, rosetted perennial. H to 6in (15cm), S lOin (25cm) or more. Has oval, almost fleshy leaves, the corrugated, hairy surfaces usually patterned with silver marks. In spring-summer, clusters of tubular, lavender flowers are held above leaves. Z14-15 Hll-10.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 2
+    },
     "ROBINIA": {
       "genus": "ROBINIA",
       "family": "LEGUMINOSAE/PAPILIONACEAE",
@@ -160835,6 +162151,80 @@
       },
       "chengProfile": null,
       "speciesCount": 1
+    },
+    "SCROPH": {
+      "genus": "SCROPH",
+      "family": "PLANTACINACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "evergreen subshrubs and softstemmed perennials, grown for their shallowly cup-shaped, summer flowers. Makes good bedding plants in containers and borders. Needs sun and fertile, moist but well-drained soil. Propagate by seed or softwood cuttings in spring.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "angustifolia": {
+          "speciesKey": "angustifolia",
+          "latinName": "Scroph angustifolia",
+          "species": "angustifolia",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 311,
+          "description": "AngelMist Series 'AngelMist Lavender Stripe', illus. p.311. ANGRAECUM ORCHIDACEAE See also ORCHIDS.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "sesquipedale": {
+          "speciesKey": "sesquipedale",
+          "latinName": "Scroph sesquipedale",
+          "species": "sesquipedale",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": 468,
+          "description": ", illus. p.468. ANGULOA Cradle orchid , Tulip orchid ORCHIDACEAE ~ See also ORCHIDS.",
+          "sources": [
+            "ahs"
+          ]
+        },
+        "clowesii": {
+          "speciesKey": "clowesii",
+          "latinName": "Scroph clowesii",
+          "species": "clowesii",
+          "cultivar": null,
+          "commonName": "Cradle orchid",
+          "synonyms": [],
+          "zones": null,
+          "dimensions": {
+            "heightImp": "24in",
+            "heightMetric": "60cm",
+            "spreadImp": null,
+            "spreadMetric": null
+          },
+          "minTemp": null,
+          "seeRef": null,
+          "illusPage": null,
+          "description": ". Deciduous, epiphytic orchid for a cool greenhouse. H 24in (60cm). Fragrant, erect, cup-shaped, lemon-yellow flowers, 4in (10cm) long, each with a loosely hinged, yellow lip, are produced singly in early summer. Broadly oval, ribbed leaves are 18in (45cm) long. Grow in partial shade in summer. Z13-15 Hll-10.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 3
     },
     "SCROPHULARIA": {
       "genus": "SCROPHULARIA",
@@ -179330,6 +180720,41 @@
       },
       "chengProfile": null,
       "speciesCount": 2
+    },
+    "VALIA": {
+      "genus": "VALIA",
+      "family": "ASCLEPIADACEAE",
+      "familySource": "ahs",
+      "commonName": null,
+      "commonNameSource": null,
+      "origin": null,
+      "kind": null,
+      "etymology": null,
+      "introText": "clump-forming or carpeting, perennial succulents with short, thick, leafless stems; is closely related to Stapelia. Star-shaped flowers have thick, fleshy petals recurved at tips. Requires partial shade and very welldrained soil. Propagate by seed or stem cuttings in spring or summer.",
+      "inSources": [
+        "ahs"
+      ],
+      "species": {
+        "corderoyi": {
+          "speciesKey": "corderoyi",
+          "latinName": "Valia corderoyi",
+          "species": "corderoyi",
+          "cultivar": null,
+          "commonName": null,
+          "synonyms": [],
+          "zones": null,
+          "dimensions": null,
+          "minTemp": null,
+          "seeRef": "Justicia adhatoda",
+          "illusPage": 493,
+          "description": ", illus. p.493. Duvernoia adhatodoides. See Justicia adhatoda.",
+          "sources": [
+            "ahs"
+          ]
+        }
+      },
+      "chengProfile": null,
+      "speciesCount": 1
     },
     "VALLEA": {
       "genus": "VALLEA",
@@ -204249,25 +205674,5 @@
       },
       "speciesCount": 1
     }
-  },
-  "_lastArtifactFixApplied": {
-    "at": "2026-05-23T23:09:11.427Z",
-    "taskRef": "#43 — Audit pre-db.json non-plant artifacts",
-    "removed": [
-      "AITON",
-      "BLECH",
-      "CAPRI",
-      "DARWIN",
-      "ELANTH",
-      "FERAE",
-      "HAMAM",
-      "HEIVI",
-      "HYACI",
-      "IXIOLI",
-      "PLANTAGI",
-      "RITA",
-      "SCROPH",
-      "VALIA"
-    ]
   }
 }

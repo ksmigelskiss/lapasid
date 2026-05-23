@@ -1,0 +1,160 @@
+{
+  "auditedAt": "2026-05-24",
+  "taskRef": "#43 — Audit pre-db.json non-plant artifacts",
+  "totalPreDbGenera": 1655,
+  "totalSuspects": 14,
+  "methodology": "Identified parser-corrupted genus entries where AHS PDF page break / column wrap truncated genus name and family name. Verified via beckett-clean.txt cross-reference and Wikidata Q-code lookups.",
+  "artifacts": [
+    "AITON",
+    "BLECH",
+    "CAPRI",
+    "DARWIN",
+    "ELANTH",
+    "FERAE",
+    "HAMAM",
+    "HEIVI",
+    "HYACI",
+    "IXIOLI",
+    "PLANTAGI",
+    "RITA",
+    "SCROPH",
+    "VALIA"
+  ],
+  "legitimateLookingSuspect": [
+    "These 63 genera have broken/truncated family names but are otherwise real plant genera — covered by task #44 (re-parse AHS species descriptions)"
+  ],
+  "manualReview": [],
+  "fixes": {
+    "AITON": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: genus name AITONIA was truncated to AITON, family MELIACEAE truncated to ELIACEAE. Original Thunberg Aitonia capensis renamed to Nymania capensis by Lindberg.",
+      "realGenus": "AITONIA (now NYMANIA)",
+      "realFamily": "MELIACEAE",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Aiton",
+      "wrongLtNameAttribution": "inat 51886 = Urtica (Dilgėlė, nettle) — random nearest match"
+    },
+    "BLECH": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: BLECHNUM truncated to BLECH, family fragment NACEAE remains (from BLECHNACEAE).",
+      "realGenus": "BLECHNUM",
+      "realFamily": "BLECHNACEAE",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Blech",
+      "wrongLtNameAttribution": "inat 83892, no LT name"
+    },
+    "CAPRI": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: CAPRIFOLIUM truncated to CAPRI, family fragment FOLIACEAE remains (from CAPRIFOLIACEAE).",
+      "realGenus": "CAPRIFOLIUM (now LONICERA)",
+      "realFamily": "CAPRIFOLIACEAE",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Capri",
+      "wrongLtNameAttribution": "inat 51874 = Lonicera (Sausmedis) — accidentally semi-correct, but mapping was a coincidence"
+    },
+    "DARWIN": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: DARWINIA truncated to DARWIN. Species Darwin citriodora should be Darwinia citriodora.",
+      "realGenus": "DARWINIA",
+      "realFamily": "MYRTACEAE",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Darwin",
+      "wrongLtNameAttribution": "wikidata Q268013 (Charles Darwin disambiguation page) — wrong"
+    },
+    "ELANTH": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: ELANTH not a real genus; could be fragment of multiple genera (HELIANTHUS, DIANTHUS, etc.) — species Elanth tenax suggests PHORMIUM tenax (Phormiaceae).",
+      "realGenus": "ZANTEDESCHIA / DIANELLA / unknown",
+      "realFamily": "unclear",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Elanth",
+      "wrongLtNameAttribution": "no LT name"
+    },
+    "FERAE": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: FERULA truncated to FERAE, family UMBELLIFERAE truncated to ACEAE. Species Ferae archangelica = Angelica archangelica.",
+      "realGenus": "FERULA",
+      "realFamily": "APIACEAE/UMBELLIFERAE",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Ferae",
+      "wrongLtNameAttribution": "no LT name"
+    },
+    "HAMAM": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: HAMAMELIS truncated to HAMAM, family HAMAMELIDACEAE truncated to ELIDACEAE.",
+      "realGenus": "HAMAMELIS",
+      "realFamily": "HAMAMELIDACEAE",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Hamam",
+      "wrongLtNameAttribution": "inat 51971, no LT name"
+    },
+    "HEIVI": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: HEIVI not a real genus; species Heivi cookianum/colensoi/tenax map to PHORMIUM (Phormiaceae). Family fragment EROCALLIDACEAE = HEMEROCALLIDACEAE truncation.",
+      "realGenus": "HEBE / PHORMIUM",
+      "realFamily": "unclear",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Heivi",
+      "wrongLtNameAttribution": "no LT name"
+    },
+    "HYACI": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: HYACINTHUS truncated to HYACI, family HYACINTHACEAE truncated to NTHACEAE.",
+      "realGenus": "HYACINTHUS",
+      "realFamily": "HYACINTHACEAE",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Hyaci",
+      "wrongLtNameAttribution": "inat 50921 = Žydrė — wrong genus"
+    },
+    "IXIOLI": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: IXIOLIRION truncated to IXIOLI, family fragment RIACEAE remains.",
+      "realGenus": "IXIOLIRION",
+      "realFamily": "IXIOLIRIACEAE/AMARYLLIDACEAE",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Ixioli",
+      "wrongLtNameAttribution": "inat 460634, no LT name"
+    },
+    "PLANTAGI": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: PLANTAGO truncated to PLANTAGI, family PLANTAGINACEAE truncated to NACEAE.",
+      "realGenus": "PLANTAGO",
+      "realFamily": "PLANTAGINACEAE",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Plantagi",
+      "wrongLtNameAttribution": "inat 60254 = Dumblialaiškis — wrong genus"
+    },
+    "RITA": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: CHIRITA truncated to RITA. Beckett confirms Chirita lavandulacea + Chirita sinensis exist.",
+      "realGenus": "CHIRITA (now PRIMULINA)",
+      "realFamily": "GESNERIACEAE",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Rita",
+      "wrongLtNameAttribution": "wikidata Q194437 = Hindu Rta religious concept — non-plant"
+    },
+    "SCROPH": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: SCROPHULARIA truncated to SCROPH, family fragment PLANTACINACEAE = corrupted PLANTAGINACEAE/SCROPHULARIACEAE merge.",
+      "realGenus": "SCROPHULARIA",
+      "realFamily": "SCROPHULARIACEAE",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Scroph",
+      "wrongLtNameAttribution": "inat 50809 = Bervidis (Sambucus elder) — wrong genus"
+    },
+    "VALIA": {
+      "action": "delete",
+      "reason": "AHS PDF parsing artifact: DUVALIA truncated to VALIA. Duvalia corderoyi is a real succulent species.",
+      "realGenus": "DUVALIA",
+      "realFamily": "APOCYNACEAE (Asclepiadoideae)",
+      "deleteFromPreDb": true,
+      "deleteFromLtNames": "Valia",
+      "wrongLtNameAttribution": "wikidata Q364340 = philosophical will concept — non-plant"
+    }
+  },
+  "notes": [
+    "curated-300.json was checked for artifact contamination — 0 matches found, no impact.",
+    "These 14 artifacts polluted lt-names.json by matching to wrong Wikidata Q-codes (people/concepts) or random iNat taxonIds.",
+    "After deletion, future AHS re-parse (task #44) should restore real CHIRITA/DARWINIA/DUVALIA/HYACINTHUS/PLANTAGO/SCROPHULARIA/etc. entries cleanly."
+  ]
+}

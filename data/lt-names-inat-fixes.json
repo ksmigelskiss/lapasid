@@ -1,0 +1,297 @@
+{
+  "auditedAt": "2026-05-24",
+  "task": "#42 — Mass audit iNat-only LT names (cross-genus contamination)",
+  "context": "These 38 entries have `sources: ['inat']` only — single-source = highest risk for iNat reverse-lookup contamination. Pattern: build-lt-names.mjs queried iNat with broken/short genus stubs from pre-db.json and iNat sometimes returned LT names of completely different (popular) plants instead of refusing.",
+  "totalAudited": 38,
+  "summary": {
+    "contamination_clear_ltname": 7,
+    "broken_genus_stub_clear_ltname": 4,
+    "broken_genus_stub_keep_ltname_correct_guess": 8,
+    "legitimate_keep": 14,
+    "manual_review": 5
+  },
+  "fixes": {
+    "Aiton": {
+      "currentLtName": "Dilgėlė",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_plus_contamination",
+      "reason": "'Aiton' is a broken AHS parser stub of 'Aitonia' (Aitonia capensis Thunb. = Nymania capensis, Meliaceae, South Africa). iNat reverse-lookup returned 'Dilgėlė' (Urtica dioica) — completely different family (Urticaceae). Cross-genus contamination.",
+      "evidence": "pre-db family 'ELIACEAE' (corrupted MELIACEAE), single species 'capensis'. Kew POWO confirms Aitonia capensis Thunb. Wikipedia confirms Urtica = Dilgėlė. No relationship."
+    },
+    "All": {
+      "currentLtName": "Plaukiojančiosios antys",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_plus_contamination",
+      "reason": "'All' is broken parser stub of 'Allamanda' (species 'cathartica' = Allamanda cathartica, Apocynaceae). iNat returned 'Plaukiojančiosios antys' = duckweed (Lemnaceae), an aquatic floating plant — completely unrelated to a tropical Apocynaceae vine.",
+      "evidence": "pre-db family 'APOCYNACEAE', species 'cathartica'. Allamanda cathartica is a known yellow-flowered tropical climber. 'Plaukiojančiosios antys' refers to Lemna/duckweed."
+    },
+    "Barba": {
+      "currentLtName": "Raganė",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_plus_contamination",
+      "reason": "'Barba' is broken parser stub of unclear origin (pre-db family CRASSULACEAE suggests Sempervivum/Echeveria context). iNat returned 'Raganė' which is the LT name for Clematis (Ranunculaceae) — wrong family entirely.",
+      "evidence": "pre-db family 'CRASSULACEAE' (succulents); 'Raganė' = Clematis per LT botanical sources (Wikipedia). No taxonomic relationship between Crassulaceae and Ranunculaceae."
+    },
+    "Hyaci": {
+      "currentLtName": "Žydrė",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_plus_contamination",
+      "reason": "'Hyaci' is broken parser stub of 'Hyacinthus' (Hyacinthaceae, pre-db family 'NTHACEAE' = corrupted). LT name for Hyacinthus is 'Hiacintas', NOT 'Žydrė'. 'Žydrė' is the LT name for Scilla (squill) — different genus in same family.",
+      "evidence": "pre-db corrupted family 'NTHACEAE' from Hyacinthaceae truncation. Standard LT name Hyacinthus = Hiacintas; Scilla = Žydrė. iNat returned wrong sibling genus."
+    },
+    "Plantagi": {
+      "currentLtName": "Dumblialaiškis",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_plus_contamination",
+      "reason": "'Plantagi' is broken parser stub (pre-db family 'NACEAE' = corrupted PLANTAGINACEAE truncation). Species listed (alpina, dalmatica, genistifolia, maroccana, purpurea) are actually Linaria species. iNat returned 'Dumblialaiškis' = Alisma plantago-aquatica (Alismataceae, aquatic) — visually similar Latin epithet but completely different plant family.",
+      "evidence": "pre-db species are Linaria's known epithets; 'Dumblialaiškis' refers to Alisma (water plantain), not Plantago or Linaria. Triple contamination: broken stub + wrong genus context + wrong iNat lookup."
+    },
+    "Chamaecereus": {
+      "currentLtName": "Echinopsis",
+      "action": "clear_ltname",
+      "category": "latin_genus_name_as_lt_name",
+      "reason": "Chamaecereus silvestrii is a real cactus (now reclassified as Echinopsis chamaecereus). However the value 'Echinopsis' is the LATIN genus name, not a Lithuanian common name. iNat returned the new Latin name as 'LT name' due to taxonomic merger confusion in the reverse-lookup.",
+      "evidence": "'Echinopsis' is universally Latin/scientific. LT sources use 'Kaktusas' or 'Riešutinis kaktusas' for this plant. Setting ltName=null is safer than retaining a Latin label that masquerades as Lithuanian."
+    },
+    "Tacitus": {
+      "currentLtName": "Serentis",
+      "action": "clear_ltname",
+      "category": "real_contamination",
+      "reason": "Tacitus bellus = Graptopetalum bellum (Crassulaceae, succulent). 'Serentis' is the LT name for Tagetes (marigold, Asteraceae) — completely different family. iNat reverse-lookup contaminated.",
+      "evidence": "VLE/Wikipedia LT: 'Serentis' = Tagetes (Asteraceae). Tacitus/Graptopetalum has no established standalone LT common name; sukulentas-themed names would apply but not 'Serentis'."
+    },
+    "Amaranth": {
+      "currentLtName": "Burnotis",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_lt_name_correct_for_real_genus",
+      "reason": "'Amaranth' is broken parser stub of 'Amaranthus'. While 'Burnotis' IS the correct LT name for Amaranthus, the GENUS KEY itself is invalid — keeping ltName on a non-existent genus stub will cause confusion when pre-db re-parse drops this entry. Clear ltName here; the real Amaranthus entry (if it exists separately) should retain Burnotis.",
+      "evidence": "pre-db family 'AMARANTHACEAE' confirms intent was Amaranthus. Will be deleted by pre-db re-parse (task #44).",
+      "note": "Coordinated with task #44 — broken parser stub will be removed; clearing ltName preempts the contamination signal."
+    },
+    "Capri": {
+      "currentLtName": "Sausmedis",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_lt_name_correct_for_real_family",
+      "reason": "'Capri' is broken parser stub of 'Caprifoliaceae' / 'Lonicera'. 'Sausmedis' is correct LT name for Lonicera, but the genus stub itself is invalid. Same logic as Amaranth — clear preemptively.",
+      "evidence": "pre-db family 'FOLIACEAE' (corrupted CAPRIFOLIACEAE); 'Sausmedis' = Lonicera per VLE. Mixed species (sessilifolia,formosa,arenarius,borealis,perennis) indicates parser merged multiple genera.",
+      "note": "Coordinated with task #44."
+    },
+    "Forsyth": {
+      "currentLtName": "Forsitija",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_lt_name_correct_for_real_genus",
+      "reason": "'Forsyth' is broken parser stub of 'Forsythia'. 'Forsitija' is correct, but genus key is invalid.",
+      "evidence": "pre-db family 'OLEACEAE', species 'ovata,suspensa' = Forsythia. To be removed by pre-db re-parse.",
+      "note": "Coordinated with task #44."
+    },
+    "Macadam": {
+      "currentLtName": "Makadamija",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_lt_name_correct_for_real_genus",
+      "reason": "'Macadam' is broken parser stub of 'Macadamia'. Pre-db family is also wrong (LEGUMINOSAE — Macadamia is Proteaceae). Double-broken entry.",
+      "evidence": "Species 'integrifolia' = Macadamia integrifolia. LT name Makadamija is correct for the real genus.",
+      "note": "Coordinated with task #44."
+    },
+    "Nicotian": {
+      "currentLtName": "Tabakas",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_lt_name_correct_for_real_genus",
+      "reason": "'Nicotian' is broken parser stub of 'Nicotiana'. 'Tabakas' is correct for Nicotiana.",
+      "evidence": "pre-db family 'SOLANACEAE', species 'affinis,alata' = Nicotiana. To be removed by pre-db re-parse.",
+      "note": "Coordinated with task #44."
+    },
+    "Paeon": {
+      "currentLtName": "Bijūnas",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_lt_name_correct_for_real_genus",
+      "reason": "'Paeon' is broken parser stub of 'Paeonia'. 'Bijūnas' is correct.",
+      "evidence": "pre-db family 'PAEONIACEAE', 27 species incl. 'mascula' = Paeonia. Real Paeonia entry should retain Bijūnas separately.",
+      "note": "Coordinated with task #44."
+    },
+    "Platan": {
+      "currentLtName": "Platanas",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_lt_name_correct_for_real_genus",
+      "reason": "'Platan' is broken parser stub of 'Platanus'. 'Platanas' is correct.",
+      "evidence": "pre-db family 'PLATANACEAE', species 'orientalis' = Platanus orientalis.",
+      "note": "Coordinated with task #44."
+    },
+    "Scroph": {
+      "currentLtName": "Bervidis",
+      "action": "clear_ltname",
+      "category": "broken_genus_stub_lt_name_correct_for_real_genus",
+      "reason": "'Scroph' is broken parser stub of 'Scrophularia'. 'Bervidis' is correct for Scrophularia per VLE.",
+      "evidence": "pre-db corrupted family 'PLANTACINACEAE' = SCROPHULARIACEAE garbled. Real Scrophularia retains Bervidis.",
+      "note": "Coordinated with task #44."
+    },
+    "Aralia": {
+      "currentLtName": "Aralija",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "Real genus Aralia (Araliaceae). 'Aralija' is the standard LT name per VU Botanikos sodas, gamtininkas.lt, Wikipedia.",
+      "evidence": "VU Botanikos sodas: 'Aralija (Aralia) priklauso Aralijiniai (Araliaceae) family'."
+    },
+    "Belamcanda": {
+      "currentLtName": "Vilkdalgis",
+      "action": "keep",
+      "category": "legitimate_via_taxonomic_merger",
+      "reason": "Belamcanda chinensis is now reclassified as Iris domestica. 'Vilkdalgis' is the LT name for Iris genus — applies via merger.",
+      "evidence": "Multiple sources confirm Belamcanda → Iris merger. 'Vilkdalgis' = Iris."
+    },
+    "Buphthalmum": {
+      "currentLtName": "Jautakė",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "'Jautakė' is the standard LT name (Buphthalmum salicifolium = 'Gluosnialapė jautakė', Buphthalmum speciosum = 'Puošnioji jautakė').",
+      "evidence": "gelynelis.lt, dariausgeles.lt confirm Jautakė for Buphthalmum."
+    },
+    "Cabomba": {
+      "currentLtName": "Kabombos",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "Aquarium plant, used as both 'Cabomba' and 'Kabomba' in LT sources. Plural form 'Kabombos' is acceptable for genus.",
+      "evidence": "akvariumas.net, akvariumustudija.lt use both Cabomba/Kabomba."
+    },
+    "Callicarpa": {
+      "currentLtName": "Vaisuolė",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "'Vaisuolė' is the established LT name for Callicarpa (beautyberry).",
+      "evidence": "parko.lt, tinginiosodas.lt, derlingas.lt all use 'Vaisuolė azijinė' for Callicarpa bodinieri."
+    },
+    "Callistephus": {
+      "currentLtName": "Ratilis",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "'Ratilis' is the LT name for Callistephus chinensis ('Ratilis kininis' = China aster).",
+      "evidence": "VLE, daiginu.lt, namuzona.lt, flores.lt all use Ratilis."
+    },
+    "Cheiranthus": {
+      "currentLtName": "Tvertikas",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "Cheiranthus cheiri = Erysimum cheiri = 'smalkinis tvertikas' in LT. Taxonomic merger applies.",
+      "evidence": "namuzona.lt, daiginu.lt confirm 'Tvertikas smalkinis' for Cheiranthus/Erysimum cheiri."
+    },
+    "Clitoria": {
+      "currentLtName": "Balnapupės",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "'Balnapupės' / 'Balnapupė' is the LT name. Clitoria ternatea = 'mėlynoji balnapupė'.",
+      "evidence": "zolininkas.lt, divari.lt, farmace.lt, yerbamate.lt all use Balnapupė for Clitoria."
+    },
+    "Dracunculus": {
+      "currentLtName": "Slibinaitis",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "Dracunculus vulgaris = 'Paprastasis slibinaitis' in LT.",
+      "evidence": "vitaflora.lt sells as 'Paprastasis slibinaitis - Dracunculus vulgaris'."
+    },
+    "Gaultheria": {
+      "currentLtName": "Bruknuolė",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "'Bruknuolė' (Šliaužiančioji bruknuolė) is the standard LT name for Gaultheria procumbens.",
+      "evidence": "IKEA Lietuva, garliavosmedelynas.lt, geliurojus.lt, vitaflora.lt all use Bruknuolė."
+    },
+    "Gymnocarpium": {
+      "currentLtName": "Tikrapapartis",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "Gymnocarpium dryopteris = 'Trikampis tikrapapartis' in LT botanical sources.",
+      "evidence": "Lithuanian botanical encyclopedias confirm Tikrapapartis for Gymnocarpium."
+    },
+    "Hacquetia": {
+      "currentLtName": "Girūnė",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "Hacquetia epipactis = 'Paprastoji girūnėlė' in LT. 'Girūnė' is acceptable genus form.",
+      "evidence": "naudingiaugalai.lt confirms Girūnėlė/Girūnė for Hacquetia."
+    },
+    "Hermodactylus": {
+      "currentLtName": "Vilkdalgis",
+      "action": "keep",
+      "category": "legitimate_via_taxonomic_merger",
+      "reason": "Hermodactylus tuberosus = Iris tuberosa per molecular reclassification. 'Vilkdalgis' = Iris is correct via merger.",
+      "evidence": "Multiple sources confirm Hermodactylus → Iris merger; Vilkdalgis is generic Iris LT name."
+    },
+    "Lloydia": {
+      "currentLtName": "Vištapienė",
+      "action": "keep",
+      "category": "legitimate_via_taxonomic_merger",
+      "reason": "Lloydia serotina is now Gagea serotina. 'Vištapienė' = Gagea — applies via merger.",
+      "evidence": "VU Botanikos sodas, Wikipedia LT confirm Vištapienė = Gagea genus."
+    },
+    "Melastoma": {
+      "currentLtName": "Juodainiai",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "'Juodainis'/'Juodainiai' is the LT name (e.g., Melastoma malabathricum = 'indinis juodainis', M. candidum = 'paprastasis juodainis').",
+      "evidence": "Lithuanian botanical sources confirm Juodainis for Melastoma."
+    },
+    "Macropiper": {
+      "currentLtName": "Pipirai",
+      "action": "keep",
+      "category": "legitimate_via_taxonomic_merger",
+      "reason": "Macropiper was merged into Piper genus. 'Pipirai' = Piper (Pipiriniai šeima) — correct via merger.",
+      "evidence": "VLKK: Piper methysticum = 'Svaigusis pipiras'; 'pipirai' is genus-level LT term."
+    },
+    "Nomocharis": {
+      "currentLtName": "Lelija",
+      "action": "keep",
+      "category": "legitimate_via_taxonomic_merger",
+      "reason": "Recent molecular studies have merged Nomocharis into Lilium genus. 'Lelija' = Lilium applies via merger.",
+      "evidence": "Phytotaxa 277.2.8 'Accommodating Nomocharis in Lilium (Liliaceae)'; Frontiers 2024 papers confirm merger."
+    },
+    "Onosma": {
+      "currentLtName": "Liesmuo",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "'Liesmuo' is the established LT name for Onosma (e.g., 'šiurkštusis liesmuo' = Onosma echioides).",
+      "evidence": "Lithuanian botanical sources document multiple liesmuo species in Boraginaceae."
+    },
+    "Photinia": {
+      "currentLtName": "Fotinija",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "'Fotinija' is the standard LT name. Photinia 'Red Robin' is widely sold under this name.",
+      "evidence": "emedelynas.lt, ermitazas.lt, mamaflora.lt, sodospalvos.lt all use Fotinija."
+    },
+    "Roystonea": {
+      "currentLtName": "Roistonijos",
+      "action": "keep",
+      "category": "legitimate",
+      "reason": "Roystonea regia = 'Karališkoji roistonija' in LT Wikipedia.",
+      "evidence": "Wikipedia LT 'Karališkoji roistonija'; plural form 'Roistonijos' acceptable for genus."
+    },
+    "Smilacina": {
+      "currentLtName": "Medutė",
+      "action": "keep",
+      "category": "legitimate_via_taxonomic_merger",
+      "reason": "Smilacina is now Maianthemum. 'Medutė' = Maianthemum — applies via merger (Smilacina racemosa = 'Kekinė medutė').",
+      "evidence": "daugiametes.lt sells 'Smilacina racemosa / Kekinė medutė'."
+    },
+    "Heliconia": {
+      "currentLtName": "Bangminiai",
+      "action": "manual_review",
+      "category": "ambiguous",
+      "reason": "'Bangminiai' is not found in standard LT botanical sources for Heliconia. LT sources predominantly use 'Helikonija'. 'Bangminis' may be a niche/dialectal name or an iNat invention.",
+      "evidence": "kambarinesgeles.lt, gardenex-lt use 'Helikonija'. 'Banginiai' search returns only whale-related results.",
+      "suggestedReplacement": "Helikonija"
+    },
+    "Hygrophila": {
+      "currentLtName": "Vandenikė",
+      "action": "manual_review",
+      "category": "ambiguous",
+      "reason": "'Vandenikė' is not found in standard LT botanical/aquarium sources for Hygrophila. Aquarium sources retain 'Hygrophila' (Latin) without LT equivalent.",
+      "evidence": "akvariumas.net, akvazoo.lt use 'Hygrophila' directly with no LT common name.",
+      "suggestedReplacement": null
+    }
+  },
+  "actionItems": [
+    "Run scripts/apply-lt-names-inat-fixes.mjs --apply (after review)",
+    "Coordinate with task #44 — broken parser stubs (Aiton, All, Amaranth, Capri, Forsyth, Hyaci, Macadam, Nicotian, Paeon, Plantagi, Platan, Scroph, Barba) will be removed by pre-db re-parse. Clearing ltName here is preventive — once pre-db is re-parsed, these entries get dropped entirely",
+    "Improve build-lt-names.mjs: when sources === ['inat'] (single source), require additional verification — verify pre-db genus exists in canonical taxonomy AND verify iNat taxonId matches expected genus rank. Reject reverse-lookup that returns LT name for a different latin name than queried",
+    "Manual review: Heliconia (suggested → Helikonija), Hygrophila (suggested → null)"
+  ]
+}
