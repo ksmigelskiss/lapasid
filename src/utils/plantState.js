@@ -64,6 +64,13 @@ export function getPlantEnrichmentState(plant) {
     const ageMs = Date.now() - startedAt
     if (Number.isNaN(ageMs)) return 'unknown'
     if (ageMs < ENRICHMENT_TIMEOUT_MS) return 'enriching'
+    // Diagnostic — testavom „strofantas pasidare nepavyko nors buvo OK"
+    console.log('[plantState] FAILED (timeout)', {
+      id: plant.id, latin: plant.lotyniskas,
+      startedAt: plant.enrichmentStartedAt,
+      completedAt: plant.phase2CompletedAt,
+      ageMs, threshold: ENRICHMENT_TIMEOUT_MS,
+    })
     return 'failed'  // timed out (>90s) without completion
   }
 
@@ -74,7 +81,13 @@ export function getPlantEnrichmentState(plant) {
   if (plant.laistymasIntervalas) return 'enriched'
 
   // Explicit failure marker (rare — kai timestamps missing dėl race)
-  if (plant.enrichmentError) return 'failed'
+  if (plant.enrichmentError) {
+    console.log('[plantState] FAILED (explicit error, no timestamps)', {
+      id: plant.id, latin: plant.lotyniskas,
+      error: plant.enrichmentError,
+    })
+    return 'failed'
+  }
 
   return 'unknown'
 }
