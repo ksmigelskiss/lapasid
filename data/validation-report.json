@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-23T22:50:34.679Z",
+  "generatedAt": "2026-05-23T23:14:35.269Z",
   "source_files_checked": [
     "pre-db.json",
     "lt-names.json",
@@ -14,7 +14,7 @@
   ],
   "issue_counts": {
     "toxicity_pet_human_split": 29,
-    "family_mismatch": 2,
+    "family_mismatch": 0,
     "curated300_no_lt_name": 6,
     "orchid_contamination_remaining": 2,
     "curated300_skeleton_pfaf": 163,
@@ -22,7 +22,7 @@
     "curated_not_in_whitelist": 0,
     "reverse_map_conflicts": 1
   },
-  "total_issues": 203,
+  "total_issues": 201,
   "issues": {
     "toxicity_pet_human_split": [
       {
@@ -337,20 +337,7 @@
         "note": "Pets toxic, humans (semi-)safe — voice persona must clearly split"
       }
     ],
-    "family_mismatch": [
-      {
-        "genus": "Bergenia",
-        "preDbFamily": "SAXIFRAGACEAE",
-        "ltFamily": "Savaitės straipsniai",
-        "issue": "ltFamily looks suspicious (disambig/artifact)"
-      },
-      {
-        "genus": "Trollius",
-        "preDbFamily": "RANUNCULACEAE",
-        "ltFamily": "Savaitės straipsniai",
-        "issue": "ltFamily looks suspicious (disambig/artifact)"
-      }
-    ],
+    "family_mismatch": [],
     "curated300_no_lt_name": [
       {
         "latinName": "Cephalotus",
@@ -1221,9 +1208,9 @@
     "curated_not_in_whitelist": [],
     "reverse_map_conflicts": [
       {
-        "legacyName": "Kentia belmoreana",
-        "mappedTo": "Hoodia belmoreana",
-        "issue": "Suspicious — verify if mapping correct"
+        "legacyName": "Kenta forsterana",
+        "mappedTo": "Hoodia forsterana",
+        "issue": "Hoodia is cactus — only valid mapping if legacy is cactus-related"
       }
     ]
   }

@@ -2567,10 +2567,12 @@
       "previousCanonical": "Hoodia belmoreana (incorrect mapping)"
     },
     "Kenta forsterana": {
-      "canonical": "Hoodia forsterana",
+      "canonical": "Howea forsteriana",
       "sources": [
-        "pre-db-species"
-      ]
+        "manual-fix-truncation-2026-05-24"
+      ],
+      "previousCanonical": "Hoodia forsterana (incorrect, truncated Kentia forsteriana palm)",
+      "truncationOf": "Kentia forsteriana"
     },
     "‘Silver Pink’": {
       "canonical": "Hoya purpureo-fusca",

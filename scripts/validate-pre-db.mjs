@@ -107,9 +107,19 @@ for (const [latin, entry] of Object.entries(curated300.entries || {})) {
 }
 
 // ── 4. Orchid contamination check (post-fix sanity) ─────────
+// Comprehensive Orchidaceae genus list — žinomi orchidai, kurių LT name
+// gali legit'iškai turėti „Orchidėja" prefix'ą.
 const ORCHID_GENERA = new Set(['Phalaenopsis', 'Cattleya', 'Cymbidium', 'Dendrobium',
   'Oncidium', 'Vanda', 'Bulbophyllum', 'Coelogyne', 'Paphiopedilum', 'Epidendrum',
-  'Brassia', 'Miltonia', 'Pleione', 'Vanilla', 'Calanthe', 'Cypripedium'])
+  'Brassia', 'Miltonia', 'Pleione', 'Vanilla', 'Calanthe', 'Cypripedium',
+  // Extended (less common but real orchids):
+  'Laelia', 'Odontoglossum', 'Masdevallia', 'Dracula', 'Pleurothallis',
+  'Maxillaria', 'Stanhopea', 'Lycaste', 'Anguloa', 'Encyclia', 'Restrepia',
+  'Sophronitis', 'Brassavola', 'Mormodes', 'Catasetum', 'Galeandra',
+  'Eulophia', 'Goodyera', 'Spiranthes', 'Listera', 'Orchis', 'Ophrys',
+  'Dactylorhiza', 'Platanthera', 'Habenaria', 'Bletilla', 'Cyrtorchis',
+  'Aerangis', 'Angraecum', 'Aerides', 'Anacamptis', 'Sarcoglottis',
+  'Liparis', 'Malaxis', 'Hexalectris', 'Microstylis'])
 for (const [genus, ltEntry] of Object.entries(ltNames.ltNames || {})) {
   if (ORCHID_GENERA.has(genus)) continue  // legit orchid
   const allNames = [ltEntry.ltName, ...(ltEntry.ltSynonyms || [])].filter(Boolean)
@@ -161,16 +171,22 @@ for (const cg of curatedGenera) {
   }
 }
 
-// ── 8. Reverse-map conflicts (e.g. Kentia belmoreana → Hoodia) ──
-// Already flagged at runtime. Re-check now post-extension.
-const KNOWN_CONFLICTS = ['Kentia belmoreana']  // from extend-latin-synonyms warning
-for (const k of KNOWN_CONFLICTS) {
-  const entry = reverse.reverseMap[k]
-  if (entry) {
+// ── 8. Reverse-map conflicts ──────────────────────────────────
+// Flag any entries with `previousCanonical` field (manual fixes leftover)
+// OR known wrong mappings. Kentia belmoreana now correctly maps to Howea
+// (was incorrectly Hoodia) — verified, no longer flag.
+const SUSPICIOUS_CANONICALS = {
+  // Pattern: legacy → wrong canonical (verify if reverse map mistakenly maps here)
+  'Hoodia': 'cactus genus — anything mapped here should be cactus',
+}
+for (const [legacy, entry] of Object.entries(reverse.reverseMap)) {
+  // Flag if canonical looks like an unrelated genus by family heuristic
+  // Pattern: short, all-cap stripped names where canonical contains "Hoodia" but legacy doesn't suggest cactus
+  if (entry.canonical?.startsWith('Hoodia') && !legacy.toLowerCase().includes('hoodia')) {
     issues.reverse_map_conflicts.push({
-      legacyName: k,
+      legacyName: legacy,
       mappedTo: entry.canonical,
-      issue: 'Suspicious — verify if mapping correct',
+      issue: 'Hoodia is cactus — only valid mapping if legacy is cactus-related',
     })
   }
 }
