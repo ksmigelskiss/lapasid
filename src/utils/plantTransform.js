@@ -316,6 +316,11 @@ export function fromAIResult(aiResult) {
     ...(aiResult.phase2CompletedAt ? { phase2CompletedAt: aiResult.phase2CompletedAt } : {}),
     ...(aiResult.enrichmentError !== undefined ? { enrichmentError: aiResult.enrichmentError } : {}),
     ...(aiResult.aprasymasSource ? { aprasymasSource: aiResult.aprasymasSource } : {}),
+    // 2026-05-24 — propagate auginimas kategorija (#37) + infoConfidence
+    // Pamoka: schema required + AI generuoja BET fromAIResult turi
+    // explicit propagation. Auto-spread NĖRA — žinome iš Step 6t bug'o.
+    ...(aiResult.auginimas ? { auginimas: aiResult.auginimas } : { auginimas: 'kambarinis' }),
+    ...(aiResult.infoConfidence ? { infoConfidence: aiResult.infoConfidence } : {}),
     verificationStatus,
     aiConfidence,
     aiMatchLevel: aiResult.matchLevel ?? null,

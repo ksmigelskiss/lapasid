@@ -206,11 +206,43 @@ export const TOOL_DETAILS = {
       // su senesniais render'iais kol viskas migravo.
       toksiskas:       { type: 'boolean', description: 'Backward compat — true jei pavojingumas.yra=true.' },
       toksiskumo_info: { type: ['string', 'null'], description: 'Backward compat — pavojingumas.detales copy.' },
+
+      // ── auginimas (kategorija — 2026-05-24, task #37) ────────
+      // KRITISKAI: rusinio lygio kategorija, NE per-augalui auginimo vieta.
+      // Sansevieria visada „kambarinis" (nepriklauso ar augintojas turi
+      // ji viduje ar balkone vasara). Berzas visada „laukinis".
+      //
+      // Default'as 300 batch'ams = „kambarinis" (mes apsirubezijom).
+      // AI Phase 2 turi grazinti tinkama vert'e pagal augalo realybe —
+      // override default jei matomi sodo / laukinis signal'ai.
+      //
+      // Naudojama Phase 1 classifier'iui (task #33) — gate'a kambarinis-only
+      // search'ui ir future sodo/laukinis pipeline'ams.
+      auginimas: {
+        type: 'string',
+        enum: ['kambarinis', 'sodo', 'laukinis'],
+        description: 'Augalo RUSINE kategorija (NE auginimo vieta). kambarinis=tropic/subtropic rūšis, gyvena viduje (Sansevieria, Monstera, Spathiphyllum, Aloe). sodo=ornamentinis arba produktyvus sodo augalas (rožės, bijūnai, daržoves, vaistažoles, dekoratyviniai krūmai). laukinis=LT pievų/miškų rūšis (beržas, pakalnutė, ramunė). Per kuratą 300 batch — visi kambarinis defaults; pasirinkti kita TIK jei RAG signalas akivaizdus.',
+      },
+
+      // ── infoConfidence (computed patikimumas — 2026-05-24) ────
+      // Bendras Phase 2 output patikimumas. Specialist'ui flag'as:
+      // aukstas → spot-check 5-10%; vidutinis → reviewable subset;
+      // zemas → kritiska peržiūra reikalinga (toxicity claims!).
+      //
+      // AI computes pagal RAG source agreement:
+      //   • Wiki EN extract found + Pre-DB has genus + (PFAF or ASPCA) + LT name high → aukstas
+      //   • 2-3 sources confirm, AI fill genus-level → vidutinis
+      //   • 0-1 source agreement, dauguma AI generated → zemas
+      infoConfidence: {
+        type: 'string',
+        enum: ['aukstas', 'vidutinis', 'zemas'],
+        description: 'Bendras šio augalo info patikimumas (computed pagal RAG source agreement). aukstas=visi pagrindiniai laukai patvirtinti per multi-source RAG (pre-db Beckett/Cheng + PFAF + ASPCA jei pavojinga + Wiki + LT name high conf). vidutinis=2-3 sources confirm, kai kurie laukai AI fill iš genus-level knowledge be specific RAG support. zemas=0-1 source agreement, dauguma AI generated be RAG verification — TOXICITY claims šitam kategorijoj turi būti specialist re-verified. UI rodys badge.',
+      },
     },
     required: ['laistymasIntervalas', 'tresimas', 'dormancyInfo', 'prieziura',
                'substratas', 'persodinimas', 'ziemojimas', 'dauginimas', 'problemos',
                'sviesa', 'vanduo', 'tipas', 'augimo_greitis', 'sunkumas', 'idomybes', 'savybes',
-               'aprasymas', 'kilme'],
+               'aprasymas', 'kilme', 'auginimas', 'infoConfidence'],
                // ltSynonyms NEEINA į required — tuščias array OK kai nežinai folk name'o
   },
 }
