@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-23T23:14:35.269Z",
+  "generatedAt": "2026-05-24T01:12:04.496Z",
   "source_files_checked": [
     "pre-db.json",
     "lt-names.json",
@@ -16,13 +16,13 @@
     "toxicity_pet_human_split": 29,
     "family_mismatch": 0,
     "curated300_no_lt_name": 6,
-    "orchid_contamination_remaining": 2,
+    "orchid_contamination_remaining": 0,
     "curated300_skeleton_pfaf": 163,
     "whitelist_not_in_curated": 0,
     "curated_not_in_whitelist": 0,
-    "reverse_map_conflicts": 1
+    "reverse_map_conflicts": 0
   },
-  "total_issues": 201,
+  "total_issues": 198,
   "issues": {
     "toxicity_pet_human_split": [
       {
@@ -370,23 +370,7 @@
         "notes": ""
       }
     ],
-    "orchid_contamination_remaining": [
-      {
-        "genus": "Laelia",
-        "suspectName": "Orchidėja laelia",
-        "sources": [
-          "wiki",
-          "derlingas"
-        ]
-      },
-      {
-        "genus": "Odontoglossum",
-        "suspectName": "Orchidėja odontoglossum",
-        "sources": [
-          "wiki"
-        ]
-      }
-    ],
+    "orchid_contamination_remaining": [],
     "curated300_skeleton_pfaf": [
       {
         "latinName": "Kalanchoe",
@@ -1206,12 +1190,6 @@
     ],
     "whitelist_not_in_curated": [],
     "curated_not_in_whitelist": [],
-    "reverse_map_conflicts": [
-      {
-        "legacyName": "Kenta forsterana",
-        "mappedTo": "Hoodia forsterana",
-        "issue": "Hoodia is cactus — only valid mapping if legacy is cactus-related"
-      }
-    ]
+    "reverse_map_conflicts": []
   }
 }
