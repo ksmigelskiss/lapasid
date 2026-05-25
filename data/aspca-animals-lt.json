@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-05-25",
+  "source": "ASPCA toxicTo array elements → LT lokalizacija",
+  "note": "ASPCA naudoja EN animal terms ('cats', 'dogs', 'horses') savo toxicTo array'uose. Šis dictionary yra deterministic lookup mūsų deriveToxicityFromSources'iui, kad Phase 1 raw text būtų LT'iškai.",
+  "terms": {
+    "cats": "katėms",
+    "dogs": "šunims",
+    "horses": "žirgams",
+    "rabbits": "triušiams",
+    "guinea pigs": "jūrų kiaulytėms",
+    "ferrets": "kanijoms",
+    "birds": "paukščiams"
+  }
+}

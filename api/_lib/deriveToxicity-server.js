@@ -36,6 +36,25 @@ async function loadAspcaGenusMap() {
   } catch { return {} }
 }
 
+async function loadAnimalTerms() {
+  try {
+    const data = await loadJson('aspca-animals-lt.json')
+    return data.terms ?? {}
+  } catch { return {} }
+}
+
+// Strip PFAF reference markers like [311], [301], etc. — clean text for display
+function stripPfafMarkers(text) {
+  if (!text) return text
+  return text.replace(/\s*\[\s*\d+\s*\]/g, '').replace(/\s+/g, ' ').trim()
+}
+
+// Translate ASPCA animal terms array → LT comma-separated string
+function translateAnimalTargets(targets, terms) {
+  if (!targets || targets.length === 0) return ''
+  return targets.map(t => terms[t.toLowerCase()] ?? t).join(', ')
+}
+
 // ── Severity heuristic iš PFAF knownHazards textą ─────────────
 // MIRROR src/utils/deriveToxicity.js derivePfafSeverity() — IDENTIŠKAS.
 
@@ -124,6 +143,7 @@ export async function deriveToxicityFromSourcesServer(latinName) {
   // ── 1. ASPCA via genus map ───────────────────────────────────
   const aspcaMap = await loadAspcaGenusMap()
   const aspcaEntry = aspcaMap[genusKey]
+  const animalTerms = await loadAnimalTerms()
 
   if (aspcaEntry) {
     result.hasToxicity = true
@@ -131,20 +151,21 @@ export async function deriveToxicityFromSourcesServer(latinName) {
 
     const severity = aspcaEntry.confidence === 'high' ? 'vidutinis' : 'silpnas'
     const targets = aspcaEntry.toxicTo ?? []
+    const targetsLt = translateAnimalTargets(targets, animalTerms)
 
     if (targets.length > 0) {
       result.pavojai.push({
         tipas: 'toksiskas',
         target: 'gyvunams',
         severity,
-        detales: `${targets.join(', ')} (ASPCA)`,
+        detales: `${targetsLt} (ASPCA)`,
       })
     }
 
     result.pavojingumas = {
       yra: true,
       lygis: severity,
-      detales: `ASPCA: toksiškas ${targets.join(', ')}. Konsultuokitės su veterinaru. Šaltinis: ${aspcaEntry.matchedEntries?.[0]?.detailUrl ?? 'https://www.aspca.org/pet-care/animal-poison-control'}`,
+      detales: `ASPCA: toksiškas ${targetsLt}. Konsultuokitės su veterinaru. Šaltinis: ${aspcaEntry.matchedEntries?.[0]?.detailUrl ?? 'https://www.aspca.org/pet-care/animal-poison-control'}`,
     }
   }
 
@@ -180,7 +201,15 @@ export async function deriveToxicityFromSourcesServer(latinName) {
       : severity === 'vidutinis' ? 'Toksiškas augalas — venkite nurijimo ir kontakto su sultimis. Kreipkitės į veterinarą jei įvyko apsinuodijimas.'
       : 'Augalas gali sukelti dirginimą — venkite kontakto su sultimis.'
 
-      const pfafCitation = `\n\nŠaltinis (PFAF, anglų k.): "${pfafEntry.knownHazards.slice(0, 300)}${pfafEntry.knownHazards.length > 300 ? '...' : ''}"`
+      // 2026-05-25 — prefer LT pre-translated knownHazardsLt if available,
+      // kitaip strip EN markers + truncate. Pre-DB batch translate (PFAF) — žr.
+      // scripts/translate-pfaf-hazards.mjs (post-2026-05-25).
+      const hazardText = pfafEntry.knownHazardsLt
+        ? pfafEntry.knownHazardsLt
+        : stripPfafMarkers(pfafEntry.knownHazards)
+      const hazardTruncated = hazardText.slice(0, 300) + (hazardText.length > 300 ? '...' : '')
+      const lang = pfafEntry.knownHazardsLt ? '' : ', anglų k.'
+      const pfafCitation = `\n\nŠaltinis (PFAF${lang}): "${hazardTruncated}"`
 
       if (!result.pavojingumas.yra) {
         result.pavojingumas = {

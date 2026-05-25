@@ -27,6 +27,30 @@
 let aspcaCache = null
 let pfafCache = null
 let aspcaGenusMapCache = null
+let animalTermsCache = null
+
+async function loadAnimalTerms() {
+  if (animalTermsCache) return animalTermsCache
+  try {
+    const url = new URL('../../data/aspca-animals-lt.json', import.meta.url)
+    const res = await fetch(url)
+    if (!res.ok) return {}
+    const data = await res.json()
+    animalTermsCache = data.terms ?? {}
+    return animalTermsCache
+  } catch { return {} }
+}
+
+// Strip PFAF reference markers like [311], [301], etc.
+function stripPfafMarkers(text) {
+  if (!text) return text
+  return text.replace(/\s*\[\s*\d+\s*\]/g, '').replace(/\s+/g, ' ').trim()
+}
+
+function translateAnimalTargets(targets, terms) {
+  if (!targets || targets.length === 0) return ''
+  return targets.map(t => terms[t.toLowerCase()] ?? t).join(', ')
+}
 
 async function loadAspca() {
   if (aspcaCache) return aspcaCache
@@ -187,6 +211,7 @@ export async function deriveToxicityFromSources(latinName) {
   // ── 1. ASPCA via genus map (manual + scraped crosswalk) ──
   const aspcaMap = await loadAspcaGenusMap()
   const aspcaEntry = aspcaMap[genusKey]
+  const animalTerms = await loadAnimalTerms()
 
   if (aspcaEntry) {
     result.hasToxicity = true
@@ -194,26 +219,22 @@ export async function deriveToxicityFromSources(latinName) {
 
     const severity = aspcaEntry.confidence === 'high' ? 'vidutinis' : 'silpnas'
     const targets = aspcaEntry.toxicTo ?? []
+    // 2026-05-25 — translate cats/dogs/horses → katėms/šunims/žirgams
+    const targetsLt = translateAnimalTargets(targets, animalTerms)
 
-    // VIENAS pavojai entry per UNIQUE tipas+target+severity kombinaciją.
-    // ASPCA targets (cats/dogs/horses) visi yra 'gyvunams' Lithuanian'ai,
-    // todėl nepridedam 3 dublikuotų badge'ų UI'e. Detales sujungia visus
-    // pet category'us kaip žmogiškai skaitomas list'as.
-    // (2026-05-22 dedupe fix po user test #12 — anksčiau Monstera rodė
-    // "TOKSIŠKA TOKSIŠKA TOKSIŠKA" — 3 vienodi badge'ai.)
     if (targets.length > 0) {
       result.pavojai.push({
         tipas: 'toksiskas',
         target: 'gyvunams',
         severity,
-        detales: `${targets.join(', ')} (ASPCA)`,
+        detales: `${targetsLt} (ASPCA)`,
       })
     }
 
     result.pavojingumas = {
       yra: true,
       lygis: severity,
-      detales: `ASPCA: toksiškas ${targets.join(', ')}. Konsultuokitės su veterinaru. Šaltinis: ${aspcaEntry.matchedEntries?.[0]?.detailUrl ?? 'https://www.aspca.org/pet-care/animal-poison-control'}`,
+      detales: `ASPCA: toksiškas ${targetsLt}. Konsultuokitės su veterinaru. Šaltinis: ${aspcaEntry.matchedEntries?.[0]?.detailUrl ?? 'https://www.aspca.org/pet-care/animal-poison-control'}`,
     }
   }
 
@@ -265,7 +286,15 @@ export async function deriveToxicityFromSources(latinName) {
       : severity === 'vidutinis' ? 'Toksiškas augalas — venkite nurijimo ir kontakto su sultimis. Kreipkitės į veterinarą jei įvyko apsinuodijimas.'
       : 'Augalas gali sukelti dirginimą — venkite kontakto su sultimis.'
 
-      const pfafCitation = `\n\nŠaltinis (PFAF, anglų k.): "${pfafEntry.knownHazards.slice(0, 300)}${pfafEntry.knownHazards.length > 300 ? '...' : ''}"`
+      // 2026-05-25 — prefer LT pre-translated knownHazardsLt if available,
+      // kitaip strip EN markers + truncate. Pre-DB batch translate per
+      // scripts/translate-pfaf-hazards.mjs.
+      const hazardText = pfafEntry.knownHazardsLt
+        ? pfafEntry.knownHazardsLt
+        : stripPfafMarkers(pfafEntry.knownHazards)
+      const hazardTruncated = hazardText.slice(0, 300) + (hazardText.length > 300 ? '...' : '')
+      const lang = pfafEntry.knownHazardsLt ? '' : ', anglų k.'
+      const pfafCitation = `\n\nŠaltinis (PFAF${lang}): "${hazardTruncated}"`
 
       if (!result.pavojingumas.yra) {
         result.pavojingumas = {
