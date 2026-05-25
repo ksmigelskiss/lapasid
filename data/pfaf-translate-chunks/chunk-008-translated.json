@@ -1,0 +1,256 @@
+{
+  "chunkIndex": 8,
+  "totalChunks": 20,
+  "entries": [
+    {
+      "latin": "Echinocactus texensis",
+      "knownHazards": "Spines remain hazardous despite the spineless fruits. Confirm identification and legality before harvesting.",
+      "knownHazardsLt": "Nors vaisiai be spyglių, patys spygliai išlieka pavojingi. Prieš skinant — įsitikink, kad rūšį atpažįsti tiksliai ir kad rinkti čia teisėta."
+    },
+    {
+      "latin": "Echinocereus",
+      "knownHazards": "The core safety issue is mechanical rather than chemical: spines on the fruit and plant can cause injury, and spines may persist even after brushing. A second “safety” issue is conservation—some Echinocereus populations/varieties are protected in parts of their range, so harvest should be avoided where collection is restricted.",
+      "knownHazardsLt": "Pagrindinis pavojus mechaninis, ne cheminis: spygliai ant vaisių ir augalo gali sužeisti, o smulkūs spygliukai dažnai lieka net nuvalius. Antras dalykas — apsauga: kai kurios Echinocereus populiacijos savo arealo dalyse yra saugomos, todėl ten, kur rinkti draudžiama, geriau nesiartink."
+    },
+    {
+      "latin": "Echinocereus enneacanthus",
+      "knownHazards": "Mechanical spine risk; avoid collecting from protected populations; avoid fruits with heavy fungal rot or insect damage.",
+      "knownHazardsLt": "Mechaninis spyglių pavojus. Iš saugomų populiacijų nerink. Venk vaisių su stipriu grybiniu puviniu ar vabzdžių pažeidimais."
+    },
+    {
+      "latin": "Echinocereus triglochidiatus",
+      "knownHazards": "Mechanical spine hazard; local protections may apply. In some areas claretcup forms are conservation-sensitive, so treat harvest as inappropriate unless you are certain collection is legal and sustainable.",
+      "knownHazardsLt": "Mechaninis spyglių pavojus. Kai kur gali galioti vietinė apsauga — tam tikrose vietovėse claretcup formos jautrios, todėl nerink, jei nesi tikras, kad tai teisėta ir tvaru."
+    },
+    {
+      "latin": "Echium",
+      "knownHazards": "Introduced to Australia, South Africa, and the United States, where it is an invasive weed. Due to a high concentration of pyrrolizidine alkaloids, it is poisonous to grazing livestock, especially those with simple digestive systems, such as horses. Skin irritant. Wear gloves and other protective equipment when handling.",
+      "knownHazardsLt": "Australijoje, Pietų Afrikoje ir JAV — invazinė piktžolė. Dėl didelės pirolizidino alkaloidų koncentracijos nuodingas ganomiems gyvuliams, ypač tiems, kurių virškinimo sistema paprasta — pavyzdžiui, arkliams. Dirgina odą. Dirbdamas mūvėk pirštines ir naudok kitas apsaugos priemones."
+    },
+    {
+      "latin": "Echium plantagineum",
+      "knownHazards": "Introduced to Australia, South Africa, and the United States, where it is an invasive weed. Due to a high concentration of pyrrolizidine alkaloids, it is poisonous to grazing livestock, especially those with simple digestive systems, such as horses. Skin irritant. Wear gloves and other protective equipment when handling.",
+      "knownHazardsLt": "Australijoje, Pietų Afrikoje ir JAV — invazinė piktžolė. Dėl didelės pirolizidino alkaloidų koncentracijos nuodingas ganomiems gyvuliams, ypač tiems, kurių virškinimo sistema paprasta — pavyzdžiui, arkliams. Dirgina odą. Dirbdamas mūvėk pirštines ir naudok kitas apsaugos priemones."
+    },
+    {
+      "latin": "Echium vulgare",
+      "knownHazards": "The leaves are poisonous[20]. No cases of poisoning have ever been recorded for this plant[76]. The bristly hairs on the leaves and stems can cause severe dermatitis[207].",
+      "knownHazardsLt": "Lapai nuodingi. Apsinuodijimo atvejų, tiesa, niekada nebuvo užregistruota. Šeriuoti plaukeliai ant lapų ir stiebų gali sukelti stiprų dermatitą."
+    },
+    {
+      "latin": "Eichhornia",
+      "knownHazards": "Eating the plant, which is reported to contain HCN, alkaloid, and triterpenoid, may induce itching[269]. Fresh plants contain prickly crystals[269]. Plants sprayed with 2,4-D may accumulate lethal doses of nitrates[269].",
+      "knownHazardsLt": "Augale aptinkama vandenilio cianido (HCN), alkaloidų ir triterpenoidų — nurijus gali kelti niežulį. Šviežiuose augaluose yra dygių kristalų. Augaluose, purkštuose 2,4-D herbicidu, gali susikaupti mirtinos nitratų dozės."
+    },
+    {
+      "latin": "Eichhornia crassipes",
+      "knownHazards": "Eating the plant, which is reported to contain HCN, alkaloid, and triterpenoid, may induce itching[269]. Fresh plants contain prickly crystals[269]. Plants sprayed with 2,4-D may accumulate lethal doses of nitrates[269].",
+      "knownHazardsLt": "Augale aptinkama vandenilio cianido (HCN), alkaloidų ir triterpenoidų — nurijus gali kelti niežulį. Šviežiuose augaluose yra dygių kristalų. Augaluose, purkštuose 2,4-D herbicidu, gali susikaupti mirtinos nitratų dozės."
+    },
+    {
+      "latin": "Elaeagnus umbellata",
+      "knownHazards": "E. umbellata has the potential of becoming one of the most troublesome adventive shrubs in the central and eastern United States.",
+      "knownHazardsLt": "E. umbellata turi potencialo tapti viena nemaloniausių introdukuotų krūmų rūšių JAV centrinėje ir rytinėje dalyse."
+    },
+    {
+      "latin": "Encephalartos",
+      "knownHazards": "Seed is poisonous if ingested. Consumption of the seeds can lead to liver cancer[398]. All parts of plant are poisonous if ingested. Plant has spines or sharp edges; use extreme caution when handling.",
+      "knownHazardsLt": "Sėklos nurijus nuodingos. Sėklų vartojimas gali sukelti kepenų vėžį. Visos augalo dalys nurijus nuodingos. Augalas turi spyglių arba aštrių briaunų — dirbdamas elkis itin atsargiai."
+    },
+    {
+      "latin": "Epidendrum",
+      "knownHazards": "Calcium oxalate crystals are present in the plant, which may cause dermatitis in vanilla workers[310 ].(Handling plant may cause skin irritation or allergic reaction )",
+      "knownHazardsLt": "Augale yra kalcio oksalatų kristalų, kurie vanilės darbininkams gali sukelti dermatitą. Liečiant augalą galima odos dirginimo ar alerginė reakcija."
+    },
+    {
+      "latin": "Epilobium",
+      "knownHazards": "Fireweed is generally considered safe to eat in moderate quantities, but several parts—particularly roots, mature stems, and older leaves—contain irritating compounds that cause acrid or peppery sensations. Oxalates in leaves may cause mouth or throat irritation, especially when eaten raw. Cooking reduces but does not eliminate harsh flavours. As with many wild greens, overconsumption may cause digestive discomfort. Individuals with sensitivity to oxalates should exercise caution. An infusion of the leaves is said to stupefy a person[4].",
+      "knownHazardsLt": "Gauromis vyriais (fireweed) saikingai valgyti paprastai saugu, bet kai kuriose dalyse — ypač šaknyse, subrendusiuose stiebuose ir senesniuose lapuose — yra dirginančių junginių, sukeliančių aitrų ar pipirinį pojūtį. Lapuose esantys oksalatai gali dirginti burną ar gerklę, ypač valgant žalius. Verdant aštrumas sumažėja, bet visiškai neišnyksta. Kaip su daugeliu laukinių žalumynų — persivalgius gali sutrikti virškinimas. Jautriems oksalatams žmonėms verta būti atsargiems. Sakoma, kad lapų užpilas gali apsvaiginti."
+    },
+    {
+      "latin": "Erigeron",
+      "knownHazards": "Skin contact with the plant can cause dermatitis in some people[222]. No acute toxicity reported. However, strong resins and plant secondary compounds may cause gastrointestinal irritation. Not suitable for frequent or regular consumption.",
+      "knownHazardsLt": "Kai kuriems žmonėms odos kontaktas su augalu gali sukelti dermatitą. Ūmaus toksiškumo nepranešta. Vis dėlto stiprios dervos ir augalo antriniai junginiai gali dirginti virškinamąjį traktą. Netinka dažnai ar reguliariai vartoti."
+    },
+    {
+      "latin": "Eriobotrya",
+      "knownHazards": "The seed is slightly poisonous. This report probably refers to the hydrogen cyanide that is found in many plants of this family, the seed should only be used in small amounts if it is bitter[K]. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLt": "Sėkla šiek tiek nuodinga. Tai tikriausiai susiję su vandenilio cianidu, kuris randamas daugelyje šios šeimos augalų. Jei sėkla karti — vartok tik mažais kiekiais. Mažomis dozėmis vandenilio cianidas skatina kvėpavimą ir gerina virškinimą, taip pat manoma, kad gali būti naudingas gydant vėžį. Tačiau perdozavus jis gali sukelti kvėpavimo nepakankamumą ir net mirtį."
+    },
+    {
+      "latin": "Eriobotrya japonica",
+      "knownHazards": "The seed is slightly poisonous. This report probably refers to the hydrogen cyanide that is found in many plants of this family, the seed should only be used in small amounts if it is bitter[K]. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLt": "Sėkla šiek tiek nuodinga. Tai tikriausiai susiję su vandenilio cianidu, kuris randamas daugelyje šios šeimos augalų. Jei sėkla karti — vartok tik mažais kiekiais. Mažomis dozėmis vandenilio cianidas skatina kvėpavimą ir gerina virškinimą, taip pat manoma, kad gali būti naudingas gydant vėžį. Tačiau perdozavus jis gali sukelti kvėpavimo nepakankamumą ir net mirtį."
+    },
+    {
+      "latin": "Eriogonum",
+      "knownHazards": "Use caution with roots because harvesting kills or damages perennial plants. Seeds should be properly cleaned and cooked or toasted. Avoid plants growing on contaminated roadsides or mining-influenced soils.",
+      "knownHazardsLt": "Su šaknimis elkis atsargiai — jas kasdamas užmuši arba sužalosi daugiamečius augalus. Sėklas tinkamai išvalyk ir išvirk arba paskrudink. Venk augalų, augančių prie užterštų pakelių ar kasybos paveiktuose dirvožemiuose."
+    },
+    {
+      "latin": "Erysimum cheiri",
+      "knownHazards": "The plant is said to be poisonous if used in large quantities[7].",
+      "knownHazardsLt": "Sakoma, kad vartojamas dideliais kiekiais augalas nuodingas."
+    },
+    {
+      "latin": "Erythrina",
+      "knownHazards": "The plant contains alkaloids that have powerful narcotic and purgative effects[200]. The seeds of all members of this genus are said to be poisonous[274].",
+      "knownHazardsLt": "Augale yra alkaloidų, pasižyminčių stipriu narkotiniu ir vidurius laisvinančiu poveikiu. Sakoma, kad visų šios genties atstovų sėklos yra nuodingos."
+    },
+    {
+      "latin": "Erythrina crista-galli",
+      "knownHazards": "The plant contains alkaloids that have powerful narcotic and purgative effects[200]. The seeds of all members of this genus are said to be poisonous[274].",
+      "knownHazardsLt": "Augale yra alkaloidų, pasižyminčių stipriu narkotiniu ir vidurius laisvinančiu poveikiu. Sakoma, kad visų šios genties atstovų sėklos yra nuodingos."
+    },
+    {
+      "latin": "Erythronium",
+      "knownHazards": "Although no records of toxicity have been seen for this species, the following notes have been seen for another member of this genus and so some caution is advised. Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, kitam šios genties atstovui tokie duomenys užfiksuoti, tad atsargumas patartinas. Odos kontaktas su svogūnėliais jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Erythronium americanum",
+      "knownHazards": "Although no records of toxicity have been seen for this species, the following notes have been seen for another member of this genus and so some caution is advised. Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, kitam šios genties atstovui tokie duomenys užfiksuoti, tad atsargumas patartinas. Odos kontaktas su svogūnėliais jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Erythronium californicum",
+      "knownHazards": "Although no records of toxicity have been seen for this species, the following notes have been seen for another member of this genus and so some caution is advised. Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, kitam šios genties atstovui tokie duomenys užfiksuoti, tad atsargumas patartinas. Odos kontaktas su svogūnėliais jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Erythronium dens-canis",
+      "knownHazards": "Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLt": "Odos kontaktas su svogūnėliais jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Erythronium grandiflorum",
+      "knownHazards": "Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLt": "Odos kontaktas su svogūnėliais jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Erythronium hendersonii",
+      "knownHazards": "Although no records of toxicity have been seen for this species, the following notes have been seen for another member of this genus and so some caution is advised. Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, kitam šios genties atstovui tokie duomenys užfiksuoti, tad atsargumas patartinas. Odos kontaktas su svogūnėliais jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Erythronium oregonum",
+      "knownHazards": "The bulbs have been suspected of poisoning poultry[256]. The following notes have also been seen for another member of this genus - skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLt": "Įtariama, kad svogūnėliai yra nunuodiję naminius paukščius. Apie kitą šios genties atstovą taip pat užfiksuota: odos kontaktas su svogūnėliais jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Erythronium revolutum",
+      "knownHazards": "Although no records of toxicity have been seen for this species, the following notes have been seen for another member of this genus and so some caution is advised. Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, kitam šios genties atstovui tokie duomenys užfiksuoti, tad atsargumas patartinas. Odos kontaktas su svogūnėliais jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Erythronium tuolumnense",
+      "knownHazards": "Although no records of toxicity have been seen for this species, the following notes have been seen for another member of this genus and so some caution is advised. Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, kitam šios genties atstovui tokie duomenys užfiksuoti, tad atsargumas patartinas. Odos kontaktas su svogūnėliais jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Eschscholzia",
+      "knownHazards": "No records of toxicity have been seen but this species belongs to a family that contains many poisonous plants. Some caution is therefore advised.",
+      "knownHazardsLt": "Toksiškumo duomenų nėra, bet ši rūšis priklauso šeimai, kurioje daug nuodingų augalų. Todėl šiek tiek atsargumo nepakenks."
+    },
+    {
+      "latin": "Eschscholzia californica",
+      "knownHazards": "No records of toxicity have been seen but this species belongs to a family that contains many poisonous plants. Some caution is therefore advised.",
+      "knownHazardsLt": "Toksiškumo duomenų nėra, bet ši rūšis priklauso šeimai, kurioje daug nuodingų augalų. Todėl šiek tiek atsargumo nepakenks."
+    },
+    {
+      "latin": "Eucalyptus",
+      "knownHazards": "None Known",
+      "knownHazardsLt": "Nežinoma jokių pavojų."
+    },
+    {
+      "latin": "Eucalyptus camaldulensis",
+      "knownHazards": "Citronellal, an essential oil found in most Eucalyptus species is reported to be mutagenic when used in isolation[269]. In large doses, oil of eucalyptus, like so many essential oils has caused fatalities from intestinal irritation[269]. Death is reported from ingestion of 4 - 24 ml of essential oils, but recoveries are also reported for the same amount[269]. Symptoms include gastroenteric burning and irritation, nausea, vomiting, diarrhoea, oxygen deficiency, ,weakness, dizziness, stupor, difficult respiration, delirium, paralysis, convulsions, and death, usually due to respiratory failure[269].",
+      "knownHazardsLt": "Citronelalis — eterinis aliejus, randamas daugumoje eukaliptų rūšių — pranešama, kad gryna forma yra mutageniškas. Didelėmis dozėmis eukaliptų aliejus, kaip ir daugelis eterinių aliejų, dėl žarnyno dirginimo yra sukėlęs mirtinų atvejų. Mirtys pranešamos nurijus 4–24 ml eterinių aliejų, bet pasitaikė ir pasveikimo atvejų prarijus tokį pat kiekį. Simptomai: virškinamojo trakto deginimas ir dirginimas, pykinimas, vėmimas, viduriavimas, deguonies stoka, silpnumas, galvos svaigimas, mieguistumas, sunkus kvėpavimas, kliedesys, paralyžius, traukuliai, mirtis — paprastai dėl kvėpavimo nepakankamumo."
+    },
+    {
+      "latin": "Eucalyptus citriodora",
+      "knownHazards": "Citronellal, an essential oil found in most Eucalyptus species is reported to be mutagenic when used in isolation[269]. In large doses, oil of eucalyptus, like so many essential oils has caused fatalities from intestinal irritation[269]. Death is reported from ingestion of 4 - 24 ml of essential oils, but recoveries are also reported for the same amount[269]. Symptoms include gastroenteric burning and irritation, nausea, vomiting, diarrhoea, oxygen deficiency, ,weakness, dizziness, stupor, difficult respiration, delirium, paralysis, convulsions, and death, usually due to respiratory failure[269].",
+      "knownHazardsLt": "Citronelalis — eterinis aliejus, randamas daugumoje eukaliptų rūšių — pranešama, kad gryna forma yra mutageniškas. Didelėmis dozėmis eukaliptų aliejus, kaip ir daugelis eterinių aliejų, dėl žarnyno dirginimo yra sukėlęs mirtinų atvejų. Mirtys pranešamos nurijus 4–24 ml eterinių aliejų, bet pasitaikė ir pasveikimo atvejų prarijus tokį pat kiekį. Simptomai: virškinamojo trakto deginimas ir dirginimas, pykinimas, vėmimas, viduriavimas, deguonies stoka, silpnumas, galvos svaigimas, mieguistumas, sunkus kvėpavimas, kliedesys, paralyžius, traukuliai, mirtis — paprastai dėl kvėpavimo nepakankamumo."
+    },
+    {
+      "latin": "Eucalyptus coccifera",
+      "knownHazards": "Citronellal, an essential oil found in most Eucalyptus species is reported to be mutagenic when used in isolation[269]. In large doses, oil of eucalyptus, like so many essential oils has caused fatalities from intestinal irritation[269]. Death is reported from ingestion of 4 - 24 ml of essential oils, but recoveries are also reported for the same amount[269]. Symptoms include gastroenteric burning and irritation, nausea, vomiting, diarrhoea, oxygen deficiency, ,weakness, dizziness, stupor, difficult respiration, delirium, paralysis, convulsions, and death, usually due to respiratory failure[269].",
+      "knownHazardsLt": "Citronelalis — eterinis aliejus, randamas daugumoje eukaliptų rūšių — pranešama, kad gryna forma yra mutageniškas. Didelėmis dozėmis eukaliptų aliejus, kaip ir daugelis eterinių aliejų, dėl žarnyno dirginimo yra sukėlęs mirtinų atvejų. Mirtys pranešamos nurijus 4–24 ml eterinių aliejų, bet pasitaikė ir pasveikimo atvejų prarijus tokį pat kiekį. Simptomai: virškinamojo trakto deginimas ir dirginimas, pykinimas, vėmimas, viduriavimas, deguonies stoka, silpnumas, galvos svaigimas, mieguistumas, sunkus kvėpavimas, kliedesys, paralyžius, traukuliai, mirtis — paprastai dėl kvėpavimo nepakankamumo."
+    },
+    {
+      "latin": "Eucalyptus globulus",
+      "knownHazards": "Citronellal, an essential oil found in most Eucalyptus species is reported to be mutagenic when used in isolation[269]. In large doses, oil of eucalyptus, like so many essential oils has caused fatalities from intestinal irritation[269]. Death is reported from ingestion of 4 - 24 ml of essential oils, but recoveries are also reported for the same amount[269]. Symptoms include gastroenteric burning and irritation, nausea, vomiting, diarrhoea, oxygen deficiency, ,weakness, dizziness, stupor, difficult respiration, delirium, paralysis, convulsions, and death, usually due to respiratory failure[269]. The plant is reported to cause contact dermatitis. Sensitive persons may develop urticaria from handling the foliage and other parts of the plant[269]. Avoid if on treatment for diabetes mellitus....",
+      "knownHazardsLt": "Citronelalis — eterinis aliejus, randamas daugumoje eukaliptų rūšių — pranešama, kad gryna forma yra mutageniškas. Didelėmis dozėmis eukaliptų aliejus, kaip ir daugelis eterinių aliejų, dėl žarnyno dirginimo yra sukėlęs mirtinų atvejų. Mirtys pranešamos nurijus 4–24 ml eterinių aliejų, bet pasitaikė ir pasveikimo atvejų prarijus tokį pat kiekį. Simptomai: virškinamojo trakto deginimas ir dirginimas, pykinimas, vėmimas, viduriavimas, deguonies stoka, silpnumas, galvos svaigimas, mieguistumas, sunkus kvėpavimas, kliedesys, paralyžius, traukuliai, mirtis — paprastai dėl kvėpavimo nepakankamumo. Pranešama, kad augalas sukelia kontaktinį dermatitą. Jautrūs žmonės, liesdami lapus ar kitas dalis, gali patirti dilgėlinę. Venk, jei gydaisi nuo cukrinio diabeto."
+    },
+    {
+      "latin": "Eucalyptus gunnii",
+      "knownHazards": "Citronellal, an essential oil found in most Eucalyptus species is reported to be mutagenic when used in isolation[269]. In large doses, oil of eucalyptus, like so many essential oils has caused fatalities from intestinal irritation[269]. Death is reported from ingestion of 4 - 24 ml of essential oils, but recoveries are also reported for the same amount[269]. Symptoms include gastroenteric burning and irritation, nausea, vomiting, diarrhoea, oxygen deficiency, ,weakness, dizziness, stupor, difficult respiration, delirium, paralysis, convulsions, and death, usually due to respiratory failure[269].",
+      "knownHazardsLt": "Citronelalis — eterinis aliejus, randamas daugumoje eukaliptų rūšių — pranešama, kad gryna forma yra mutageniškas. Didelėmis dozėmis eukaliptų aliejus, kaip ir daugelis eterinių aliejų, dėl žarnyno dirginimo yra sukėlęs mirtinų atvejų. Mirtys pranešamos nurijus 4–24 ml eterinių aliejų, bet pasitaikė ir pasveikimo atvejų prarijus tokį pat kiekį. Simptomai: virškinamojo trakto deginimas ir dirginimas, pykinimas, vėmimas, viduriavimas, deguonies stoka, silpnumas, galvos svaigimas, mieguistumas, sunkus kvėpavimas, kliedesys, paralyžius, traukuliai, mirtis — paprastai dėl kvėpavimo nepakankamumo."
+    },
+    {
+      "latin": "Eucalyptus johnstonii",
+      "knownHazards": "Citronellal, an essential oil found in most Eucalyptus species is reported to be mutagenic when used in isolation[269]. In large doses, oil of eucalyptus, like so many essential oils has caused fatalities from intestinal irritation[269]. Death is reported from ingestion of 4 - 24 ml of essential oils, but recoveries are also reported for the same amount[269]. Symptoms include gastroenteric burning and irritation, nausea, vomiting, diarrhoea, oxygen deficiency, ,weakness, dizziness, stupor, difficult respiration, delirium, paralysis, convulsions, and death, usually due to respiratory failure[269].",
+      "knownHazardsLt": "Citronelalis — eterinis aliejus, randamas daugumoje eukaliptų rūšių — pranešama, kad gryna forma yra mutageniškas. Didelėmis dozėmis eukaliptų aliejus, kaip ir daugelis eterinių aliejų, dėl žarnyno dirginimo yra sukėlęs mirtinų atvejų. Mirtys pranešamos nurijus 4–24 ml eterinių aliejų, bet pasitaikė ir pasveikimo atvejų prarijus tokį pat kiekį. Simptomai: virškinamojo trakto deginimas ir dirginimas, pykinimas, vėmimas, viduriavimas, deguonies stoka, silpnumas, galvos svaigimas, mieguistumas, sunkus kvėpavimas, kliedesys, paralyžius, traukuliai, mirtis — paprastai dėl kvėpavimo nepakankamumo."
+    },
+    {
+      "latin": "Eucalyptus pauciflora",
+      "knownHazards": "Citronellal, an essential oil found in most Eucalyptus species is reported to be mutagenic when used in isolation[269]. In large doses, oil of eucalyptus, like so many essential oils has caused fatalities from intestinal irritation[269]. Death is reported from ingestion of 4 - 24 ml of essential oils, but recoveries are also reported for the same amount[269]. Symptoms include gastroenteric burning and irritation, nausea, vomiting, diarrhoea, oxygen deficiency, ,weakness, dizziness, stupor, difficult respiration, delirium, paralysis, convulsions, and death, usually due to respiratory failure[269].",
+      "knownHazardsLt": "Citronelalis — eterinis aliejus, randamas daugumoje eukaliptų rūšių — pranešama, kad gryna forma yra mutageniškas. Didelėmis dozėmis eukaliptų aliejus, kaip ir daugelis eterinių aliejų, dėl žarnyno dirginimo yra sukėlęs mirtinų atvejų. Mirtys pranešamos nurijus 4–24 ml eterinių aliejų, bet pasitaikė ir pasveikimo atvejų prarijus tokį pat kiekį. Simptomai: virškinamojo trakto deginimas ir dirginimas, pykinimas, vėmimas, viduriavimas, deguonies stoka, silpnumas, galvos svaigimas, mieguistumas, sunkus kvėpavimas, kliedesys, paralyžius, traukuliai, mirtis — paprastai dėl kvėpavimo nepakankamumo."
+    },
+    {
+      "latin": "Eucalyptus pauciflora niphophila",
+      "knownHazards": "Citronellal, an essential oil found in most Eucalyptus species is reported to be mutagenic when used in isolation[269]. In large doses, oil of eucalyptus, like so many essential oils has caused fatalities from intestinal irritation[269]. Death is reported from ingestion of 4 - 24 ml of essential oils, but recoveries are also reported for the same amount[269]. Symptoms include gastroenteric burning and irritation, nausea, vomiting, diarrhoea, oxygen deficiency, ,weakness, dizziness, stupor, difficult respiration, delirium, paralysis, convulsions, and death, usually due to respiratory failure[269].",
+      "knownHazardsLt": "Citronelalis — eterinis aliejus, randamas daugumoje eukaliptų rūšių — pranešama, kad gryna forma yra mutageniškas. Didelėmis dozėmis eukaliptų aliejus, kaip ir daugelis eterinių aliejų, dėl žarnyno dirginimo yra sukėlęs mirtinų atvejų. Mirtys pranešamos nurijus 4–24 ml eterinių aliejų, bet pasitaikė ir pasveikimo atvejų prarijus tokį pat kiekį. Simptomai: virškinamojo trakto deginimas ir dirginimas, pykinimas, vėmimas, viduriavimas, deguonies stoka, silpnumas, galvos svaigimas, mieguistumas, sunkus kvėpavimas, kliedesys, paralyžius, traukuliai, mirtis — paprastai dėl kvėpavimo nepakankamumo."
+    },
+    {
+      "latin": "Eucalyptus perriniana",
+      "knownHazards": "Citronellal, an essential oil found in most Eucalyptus species is reported to be mutagenic when used in isolation[269]. In large doses, oil of eucalyptus, like so many essential oils has caused fatalities from intestinal irritation[269]. Death is reported from ingestion of 4 - 24 ml of essential oils, but recoveries are also reported for the same amount[269]. Symptoms include gastroenteric burning and irritation, nausea, vomiting, diarrhoea, oxygen deficiency, ,weakness, dizziness, stupor, difficult respiration, delirium, paralysis, convulsions, and death, usually due to respiratory failure[269].",
+      "knownHazardsLt": "Citronelalis — eterinis aliejus, randamas daugumoje eukaliptų rūšių — pranešama, kad gryna forma yra mutageniškas. Didelėmis dozėmis eukaliptų aliejus, kaip ir daugelis eterinių aliejų, dėl žarnyno dirginimo yra sukėlęs mirtinų atvejų. Mirtys pranešamos nurijus 4–24 ml eterinių aliejų, bet pasitaikė ir pasveikimo atvejų prarijus tokį pat kiekį. Simptomai: virškinamojo trakto deginimas ir dirginimas, pykinimas, vėmimas, viduriavimas, deguonies stoka, silpnumas, galvos svaigimas, mieguistumas, sunkus kvėpavimas, kliedesys, paralyžius, traukuliai, mirtis — paprastai dėl kvėpavimo nepakankamumo."
+    },
+    {
+      "latin": "Eucalyptus viminalis",
+      "knownHazards": "Citronellal, an essential oil found in most Eucalyptus species is reported to be mutagenic when used in isolation[269]. In large doses, oil of eucalyptus, like so many essential oils has caused fatalities from intestinal irritation[269]. Death is reported from ingestion of 4 - 24 ml of essential oils, but recoveries are also reported for the same amount[269]. Symptoms include gastroenteric burning and irritation, nausea, vomiting, diarrhoea, oxygen deficiency, ,weakness, dizziness, stupor, difficult respiration, delirium, paralysis, convulsions, and death, usually due to respiratory failure[269].",
+      "knownHazardsLt": "Citronelalis — eterinis aliejus, randamas daugumoje eukaliptų rūšių — pranešama, kad gryna forma yra mutageniškas. Didelėmis dozėmis eukaliptų aliejus, kaip ir daugelis eterinių aliejų, dėl žarnyno dirginimo yra sukėlęs mirtinų atvejų. Mirtys pranešamos nurijus 4–24 ml eterinių aliejų, bet pasitaikė ir pasveikimo atvejų prarijus tokį pat kiekį. Simptomai: virškinamojo trakto deginimas ir dirginimas, pykinimas, vėmimas, viduriavimas, deguonies stoka, silpnumas, galvos svaigimas, mieguistumas, sunkus kvėpavimas, kliedesys, paralyžius, traukuliai, mirtis — paprastai dėl kvėpavimo nepakankamumo."
+    },
+    {
+      "latin": "Eugenia uniflora",
+      "knownHazards": "The seeds are extremely resinous and toxic[ 303 ].(Pollen may cause allergic reaction)",
+      "knownHazardsLt": "Sėklos itin sakingos ir toksiškos. Žiedadulkės gali sukelti alerginę reakciją."
+    },
+    {
+      "latin": "Euonymus",
+      "knownHazards": "Although no records of toxicity have been seen for this species, a number of plants in this genus are suspected of being poisonous and so some caution is advised.",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, įtariama, kad nemažai šios genties augalų yra nuodingi — tad atsargumas patartinas."
+    },
+    {
+      "latin": "Euonymus alatus",
+      "knownHazards": "Although no records of toxicity have been seen for this species, a number of plants in this genus are suspected of being poisonous and so some caution is advised.",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, įtariama, kad nemažai šios genties augalų yra nuodingi — tad atsargumas patartinas."
+    },
+    {
+      "latin": "Euonymus europaeus",
+      "knownHazards": "Poisonous. No further details.",
+      "knownHazardsLt": "Nuodingas. Detalesnių duomenų nėra."
+    },
+    {
+      "latin": "Euonymus fimbriatus",
+      "knownHazards": "Although no records of toxicity have been seen for this species, a number of plants in this genus are suspected of being poisonous and so some caution is advised.",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, įtariama, kad nemažai šios genties augalų yra nuodingi — tad atsargumas patartinas."
+    },
+    {
+      "latin": "Euonymus fortunei",
+      "knownHazards": "Although no records of toxicity have been seen for this species, a number of plants in this genus are suspected of being poisonous and so some caution is advised.",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, įtariama, kad nemažai šios genties augalų yra nuodingi — tad atsargumas patartinas."
+    },
+    {
+      "latin": "Euonymus hamiltonianus",
+      "knownHazards": "Although no records of toxicity have been seen for this species, a number of plants in this genus are suspected of being poisonous and so some caution is advised.",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, įtariama, kad nemažai šios genties augalų yra nuodingi — tad atsargumas patartinas."
+    },
+    {
+      "latin": "Euonymus hamiltonianus sieboldianus",
+      "knownHazards": "Although no records of toxicity have been seen for this species, a number of plants in this genus are suspected of being poisonous and so some caution is advised.",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, įtariama, kad nemažai šios genties augalų yra nuodingi — tad atsargumas patartinas."
+    }
+  ]
+}

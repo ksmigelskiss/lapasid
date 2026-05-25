@@ -1,0 +1,256 @@
+{
+  "chunkIndex": 15,
+  "totalChunks": 20,
+  "entries": [
+    {
+      "latin": "Phlox subulata",
+      "knownHazards": "None Known",
+      "knownHazardsLt": "Nežinoma jokių pavojų."
+    },
+    {
+      "latin": "Phoenix",
+      "knownHazards": "Spines or sharp edges",
+      "knownHazardsLt": "Turi spyglių arba aštrių briaunų."
+    },
+    {
+      "latin": "Phoenix canariensis",
+      "knownHazards": "Spines or sharp edges",
+      "knownHazardsLt": "Turi spyglių arba aštrių briaunų."
+    },
+    {
+      "latin": "Phoenix dactylifera",
+      "knownHazards": "Plant has spines or sharp edges; use extreme caution when handling",
+      "knownHazardsLt": "Augalas turi spyglių ir aštrių briaunų — liesdamas būk itin atsargus."
+    },
+    {
+      "latin": "Physalis",
+      "knownHazards": "Although no specific mention has been seen for this species, it belongs to a genus where many of the members have poisonous leaves and stems, though the full ripe fruits are usually edible[19, 65].",
+      "knownHazardsLt": "Apie šią rūšį konkrečių žinių nėra, bet ji priklauso genčiai, kurios daugumos atstovų lapai ir stiebai nuodingi. Pilnai prinokę vaisiai paprastai valgomi."
+    },
+    {
+      "latin": "Physalis alkekengi",
+      "knownHazards": "All parts of the plant, except the ripe fruit, are poisonous[19, 65, 238].",
+      "knownHazardsLt": "Visos augalo dalys, išskyrus prinokusius vaisius, nuodingos."
+    },
+    {
+      "latin": "Phytolacca",
+      "knownHazards": "The leaves are poisonous. They are said to be safe to eat when young, the toxins developing as they grow older. According to another report it is only a form with reddish purple flowers and a purple root that is poisonous[178].",
+      "knownHazardsLt": "Lapai nuodingi. Sakoma, kad jauni lapai saugūs — toksinai susikaupia jiems pasenus. Kitas šaltinis teigia, kad nuodinga tik forma su rausvai violetiniais žiedais ir violetine šaknimi."
+    },
+    {
+      "latin": "Phytolacca americana",
+      "knownHazards": "The leaves are poisonous[21, 62, 76, 95]. They are said to be safe to eat when young, the toxins developing as the plants grow older. Another report says that the seeds and root are poisonous. The plant sap can cause dermatitis in sensitive people[222]. The plant contains substances that cause cell division and can damage chromosomes. These substances can be absorbed through any abrasions in the skin, potentially causing serious blood aberratins, and so it is strongly recommended that the people wear gloves when handling the plant[222, 274]. Avoid during pregnancy. Even children consume even 1 berry emergency poison treatment should be instituted. Up to 10 berries are considered harmless for adults [301].",
+      "knownHazardsLt": "Lapai nuodingi. Sakoma, kad jauni lapai saugūs — toksinai susikaupia augalui senstant. Kitas šaltinis nurodo, kad sėklos ir šaknys nuodingos. Augalo sultys gali sukelti dermatitą jautriems žmonėms. Augale yra medžiagų, kurios sukelia ląstelių dalijimąsi ir gali pažeisti chromosomas. Šios medžiagos gali įsisavinti per odos nubrozdinimus ir sukelti rimtų kraujo pažeidimų, todėl dirbant su augalu primygtinai rekomenduojama mūvėti pirštines. Venk nėštumo metu. Jei vaikas suvalgo bent 1 uogą, būtina skubi pagalba dėl apsinuodijimo. Iki 10 uogų suaugusiam laikoma nepavojinga."
+    },
+    {
+      "latin": "Picrasma",
+      "knownHazards": "Some care needs to be exercised when ingesting this plant since excess doses can lead to gastric irritation and vomiting[254 ].",
+      "knownHazardsLt": "Nurijus šį augalą reikia atsargumo — per didelės dozės gali sudirginti skrandį ir sukelti vėmimą."
+    },
+    {
+      "latin": "Pieris",
+      "knownHazards": "The plant is poisonous[174].",
+      "knownHazardsLt": "Augalas nuodingas."
+    },
+    {
+      "latin": "Pieris japonica",
+      "knownHazards": "The plant is poisonous[174].",
+      "knownHazardsLt": "Augalas nuodingas."
+    },
+    {
+      "latin": "Pinus",
+      "knownHazards": "The oleoresin (Canada balsam) is reported to produce dermatitis when applied as perfume[222, 269]. The foliage has also induced contact dermatitis[269].",
+      "knownHazardsLt": "Sakai (Kanados balzamas), naudojami kvepalams, gali sukelti dermatitą. Spygliai taip pat gali sukelti kontaktinį dermatitą."
+    },
+    {
+      "latin": "Pinus contorta",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Pinus densiflora",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Pinus halepensis",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222]. Avoid if allergies. Avoid internally if suffering from asthma or bronchitis. The astringent taste may cause stomach discomfort [301].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą. Venk, jei turi alergijų. Nevartok vidiniam naudojimui sergant astma ar bronchitu. Sutraukiantis skonis gali sukelti skrandžio diskomfortą."
+    },
+    {
+      "latin": "Pinus jeffreyi",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Pinus mugo",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Pinus nigra",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Pinus patula",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Pinus pinaster",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222]. Avoid if allergies. Avoid internally if suffering from asthma or bronchitis. The astringent taste may cause stomach discomfort [301].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą. Venk, jei turi alergijų. Nevartok vidiniam naudojimui sergant astma ar bronchitu. Sutraukiantis skonis gali sukelti skrandžio diskomfortą."
+    },
+    {
+      "latin": "Pinus pinea",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Pinus ponderosa",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Pinus pumila",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Pinus radiata",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Pinus sylvestris",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Pinus wallichiana",
+      "knownHazards": "The wood, sawdust and resins from various species of pine can cause dermatitis in sensitive people[222].",
+      "knownHazardsLt": "Įvairių pušų rūšių mediena, pjuvenos ir sakai jautriems žmonėms gali sukelti dermatitą."
+    },
+    {
+      "latin": "Piper",
+      "knownHazards": "Chewing betel quids can lead to cancers in the mouth and on the tongue [254].",
+      "knownHazardsLt": "Betelio kramtymas gali sukelti burnos ir liežuvio vėžį."
+    },
+    {
+      "latin": "Pittosporum",
+      "knownHazards": "Although no mention has been found for this species, some members of this genus contain saponins. Saponins are found in many foods, such as some beans, and although they are fairly toxic to people they are poorly absorbed by the body and most pass straight through without any problem. They are also broken down if the food is thoroughly cooked for a long time. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLt": "Apie šią rūšį žinių nėra, bet kai kuriuose šios genties atstovuose yra saponinų. Saponinų randama daugelyje maisto produktų, pavyzdžiui, kai kuriose pupelėse — nors jie gana toksiški žmonėms, organizmas juos prastai įsisavina ir didžioji dalis prabėga be jokios žalos. Saponinai taip pat suyra ilgai ir kruopščiai virinant maistą. Saponinai daug toksiškesni kai kuriems gyviams, pavyzdžiui, žuvims — medžiotojų gentys tradiciškai jų dideliais kiekiais beria į upelius ar ežerus, kad apsvaigintų ar užmuštų žuvis."
+    },
+    {
+      "latin": "Pittosporum crassifolium",
+      "knownHazards": "This plant contains saponins[153]. Saponins are found in many foods, such as some beans, and although they are fairly toxic to people they are poorly absorbed by the body and most pass straight through without any problem. They are also broken down if the food is thoroughly cooked for a long time. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLt": "Šiame augale yra saponinų. Saponinų randama daugelyje maisto produktų, pavyzdžiui, kai kuriose pupelėse — nors jie gana toksiški žmonėms, organizmas juos prastai įsisavina ir didžioji dalis prabėga be jokios žalos. Saponinai taip pat suyra ilgai ir kruopščiai virinant maistą. Saponinai daug toksiškesni kai kuriems gyviams, pavyzdžiui, žuvims — medžiotojų gentys tradiciškai jų dideliais kiekiais beria į upelius ar ežerus, kad apsvaigintų ar užmuštų žuvis."
+    },
+    {
+      "latin": "Pittosporum eugenioides",
+      "knownHazards": "Although no mention has been found for this species, some members of this genus contain saponins. Saponins are found in many foods, such as some beans, and although they are fairly toxic to people they are poorly absorbed by the body and most pass straight through without any problem. They are also broken down if the food is thoroughly cooked for a long time.",
+      "knownHazardsLt": "Apie šią rūšį žinių nėra, bet kai kuriuose šios genties atstovuose yra saponinų. Saponinų randama daugelyje maisto produktų, pavyzdžiui, kai kuriose pupelėse — nors jie gana toksiški žmonėms, organizmas juos prastai įsisavina ir didžioji dalis prabėga be jokios žalos. Saponinai taip pat suyra ilgai ir kruopščiai virinant maistą."
+    },
+    {
+      "latin": "Pittosporum ralphii",
+      "knownHazards": "This plant contains saponins[152, 154]. Saponins are found in many foods, such as some beans, and although they are fairly toxic to people they are poorly absorbed by the body and most pass straight through without any problem. They are also broken down if the food is thoroughly cooked for a long time. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLt": "Šiame augale yra saponinų. Saponinų randama daugelyje maisto produktų, pavyzdžiui, kai kuriose pupelėse — nors jie gana toksiški žmonėms, organizmas juos prastai įsisavina ir didžioji dalis prabėga be jokios žalos. Saponinai taip pat suyra ilgai ir kruopščiai virinant maistą. Saponinai daug toksiškesni kai kuriems gyviams, pavyzdžiui, žuvims — medžiotojų gentys tradiciškai jų dideliais kiekiais beria į upelius ar ežerus, kad apsvaigintų ar užmuštų žuvis."
+    },
+    {
+      "latin": "Pittosporum tenuifolium",
+      "knownHazards": "This plant contains saponins[152, 154]. Saponins are found in many foods, such as some beans, and although they are fairly toxic to people they are poorly absorbed by the body and most pass straight through without any problem. They are also broken down if the food is thoroughly cooked for a long time. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLt": "Šiame augale yra saponinų. Saponinų randama daugelyje maisto produktų, pavyzdžiui, kai kuriose pupelėse — nors jie gana toksiški žmonėms, organizmas juos prastai įsisavina ir didžioji dalis prabėga be jokios žalos. Saponinai taip pat suyra ilgai ir kruopščiai virinant maistą. Saponinai daug toksiškesni kai kuriems gyviams, pavyzdžiui, žuvims — medžiotojų gentys tradiciškai jų dideliais kiekiais beria į upelius ar ežerus, kad apsvaigintų ar užmuštų žuvis."
+    },
+    {
+      "latin": "Pittosporum undulatum",
+      "knownHazards": "This plant contains saponins[152, 154]. Saponins are found in many foods, such as some beans, and although they are fairly toxic to people they are poorly absorbed by the body and most pass straight through without any problem. They are also broken down if the food is thoroughly cooked for a long time. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLt": "Šiame augale yra saponinų. Saponinų randama daugelyje maisto produktų, pavyzdžiui, kai kuriose pupelėse — nors jie gana toksiški žmonėms, organizmas juos prastai įsisavina ir didžioji dalis prabėga be jokios žalos. Saponinai taip pat suyra ilgai ir kruopščiai virinant maistą. Saponinai daug toksiškesni kai kuriems gyviams, pavyzdžiui, žuvims — medžiotojų gentys tradiciškai jų dideliais kiekiais beria į upelius ar ežerus, kad apsvaigintų ar užmuštų žuvis."
+    },
+    {
+      "latin": "Platycodon",
+      "knownHazards": "The root is poisonous[116]. The older, basal leaves are also said to be slightly toxic[179]. If these reports are true then this is an exceptional species in a family that is generally free of toxins and often used for food[K].",
+      "knownHazardsLt": "Šaknis nuodinga. Senesni, prie pagrindo augantys lapai taip pat laikomi šiek tiek toksiškais. Jei šie pranešimai teisingi — tai išskirtinė rūšis šeimoje, kuri paprastai neturi toksinų ir dažnai vartojama maistui."
+    },
+    {
+      "latin": "Platycodon grandiflorus",
+      "knownHazards": "The root is poisonous[116]. The older, basal leaves are also said to be slightly toxic[179]. If these reports are true then this is an exceptional species in a family that is generally free of toxins and often used for food[K].",
+      "knownHazardsLt": "Šaknis nuodinga. Senesni, prie pagrindo augantys lapai taip pat laikomi šiek tiek toksiškais. Jei šie pranešimai teisingi — tai išskirtinė rūšis šeimoje, kuri paprastai neturi toksinų ir dažnai vartojama maistui."
+    },
+    {
+      "latin": "Podophyllum",
+      "knownHazards": "We have seen no reports of toxicity for this species but all parts of the plant, except the fully ripe fruit, are almost certainly poisonous[K].",
+      "knownHazardsLt": "Apie šios rūšies toksiškumą duomenų nėra, bet beveik tikrai visos augalo dalys, išskyrus visiškai prinokusius vaisius, yra nuodingos."
+    },
+    {
+      "latin": "Podophyllum hexandrum",
+      "knownHazards": "The leaves and the roots are poisonous[2]. Only the root is poisonous, it is more toxic than P. peltatum[19].",
+      "knownHazardsLt": "Lapai ir šaknys nuodingi. Pagal kitą šaltinį nuodinga tik šaknis — ji toksiškesnė už P. peltatum."
+    },
+    {
+      "latin": "Podophyllum peltatum",
+      "knownHazards": "The leaves and the roots are very poisonous[1, 4, 19, 62, 222].",
+      "knownHazardsLt": "Lapai ir šaknys labai nuodingi."
+    },
+    {
+      "latin": "Polygala",
+      "knownHazards": "Although no specific mention has been seen for this species, at least one member of this genus is said to be poisonous in large quantities.",
+      "knownHazardsLt": "Apie šią rūšį konkrečių žinių nėra, bet bent vienas šios genties atstovas dideliais kiekiais laikomas nuodingu."
+    },
+    {
+      "latin": "Polygonatum",
+      "knownHazards": "The fruit and seed are possibly poisonous[65].",
+      "knownHazardsLt": "Vaisiai ir sėklos galimai nuodingi."
+    },
+    {
+      "latin": "Polygonatum biflorum",
+      "knownHazards": "The fruit and seed are possibly poisonous[65].",
+      "knownHazardsLt": "Vaisiai ir sėklos galimai nuodingi."
+    },
+    {
+      "latin": "Polygonatum commutatum",
+      "knownHazards": "The fruit and seed are thought to be poisonous[65].",
+      "knownHazardsLt": "Vaisiai ir sėklos laikomi nuodingais."
+    },
+    {
+      "latin": "Polygonatum multiflorum",
+      "knownHazards": "Large quantities of the fruits are poisonous[10, 19, 65]. It has laxative properties and can increase the laxative effects of aloe, rhamnus, senna & yellow dock. May lead to gastrointestinal irritation with prolonged use. Overdose leads to nausea, diarrhoea, gastric complaints [301].",
+      "knownHazardsLt": "Dideli kiekiai vaisių nuodingi. Augalas turi vidurius laisvinančių savybių ir gali sustiprinti alavijo, šaltekšnio, senos bei rūgštyno laisvinamąjį poveikį. Ilgai vartojant gali sudirginti virškinamąjį traktą. Perdozavus gali ištikti pykinimas, viduriavimas, skrandžio negalavimai."
+    },
+    {
+      "latin": "Polygonatum odoratum",
+      "knownHazards": "The fruits are poisonous[9, 10, 19, 65].",
+      "knownHazardsLt": "Vaisiai nuodingi."
+    },
+    {
+      "latin": "Polypodium",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Apie šios rūšies toksiškumą duomenų nėra, bet nemažai paparčių turi kancerogenų, todėl patartina atsargumas. Dauguma paparčių taip pat turi tiaminazės — fermento, kuris atima iš organizmo vitamino B kompleksą. Mažais kiekiais šis fermentas nepakenks žmogui, kurio mityba pakankamai gausi vitamino B, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio arba kruopščiai išdžiovinus — tad augalą virinant tiaminazė pašalinama."
+    },
+    {
+      "latin": "Polypodium glycyrrhiza",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Apie šios rūšies toksiškumą duomenų nėra, bet nemažai paparčių turi kancerogenų, todėl patartina atsargumas. Dauguma paparčių taip pat turi tiaminazės — fermento, kuris atima iš organizmo vitamino B kompleksą. Mažais kiekiais šis fermentas nepakenks žmogui, kurio mityba pakankamai gausi vitamino B, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio arba kruopščiai išdžiovinus — tad augalą virinant tiaminazė pašalinama."
+    },
+    {
+      "latin": "Polypodium vulgare",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Apie šios rūšies toksiškumą duomenų nėra, bet nemažai paparčių turi kancerogenų, todėl patartina atsargumas. Dauguma paparčių taip pat turi tiaminazės — fermento, kuris atima iš organizmo vitamino B kompleksą. Mažais kiekiais šis fermentas nepakenks žmogui, kurio mityba pakankamai gausi vitamino B, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio arba kruopščiai išdžiovinus — tad augalą virinant tiaminazė pašalinama."
+    },
+    {
+      "latin": "Polyscias",
+      "knownHazards": "Handling plant may cause skin irritation or allergic reaction",
+      "knownHazardsLt": "Liečiant augalą gali sudirgti oda arba kilti alerginė reakcija."
+    },
+    {
+      "latin": "Polystichum",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Apie šios rūšies toksiškumą duomenų nėra, bet nemažai paparčių turi kancerogenų, todėl patartina atsargumas. Dauguma paparčių taip pat turi tiaminazės — fermento, kuris atima iš organizmo vitamino B kompleksą. Mažais kiekiais šis fermentas nepakenks žmogui, kurio mityba pakankamai gausi vitamino B, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio arba kruopščiai išdžiovinus — tad augalą virinant tiaminazė pašalinama."
+    },
+    {
+      "latin": "Polystichum acrostichoides",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Apie šios rūšies toksiškumą duomenų nėra, bet nemažai paparčių turi kancerogenų, todėl patartina atsargumas. Dauguma paparčių taip pat turi tiaminazės — fermento, kuris atima iš organizmo vitamino B kompleksą. Mažais kiekiais šis fermentas nepakenks žmogui, kurio mityba pakankamai gausi vitamino B, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio arba kruopščiai išdžiovinus — tad augalą virinant tiaminazė pašalinama."
+    }
+  ]
+}
