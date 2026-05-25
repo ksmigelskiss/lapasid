@@ -2595,7 +2595,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                 Slim AI mode'as (serijos disambiguation) — irgi grąžina
                 tik latinName + candidates, šis blokas vis tiek netrukdys
                 (savybes tuščia → nieks nerodysim). */}
-            <Phase1SlimPreview result={result} />
+            <Phase1SlimPreview result={result} isDuplicate={!!duplicate} />
 
             {/* Actions — perduodam result'ą su CURRENTLY VISIBLE photo
                 (atsižvelgiama į photoIdx iš hero gallery cycling'o), kad
@@ -2807,7 +2807,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
 // Slim versija — user'is matosi tik tai, kuo gali pasitikėti, ir
 // ekonomiškai sprendžia ar pridėti augalą (kuriam tada AI Phase 2
 // surinks pilną info).
-function Phase1SlimPreview({ result }) {
+function Phase1SlimPreview({ result, isDuplicate = false }) {
   if (!result) return null
 
   const hasToxicity = result.savybes?.pavojai?.length > 0 ||
@@ -2816,7 +2816,14 @@ function Phase1SlimPreview({ result }) {
   // Step 6m — discovery hint: jei augalas NĖRA mūsų catalog'e (= bus Phase 2
   // enrichment), rodom invitation banner'į. Heuristika: catalog hit'as
   // grąžina baseResult su laistymasIntervalas (full care info). Be jo — nauja.
-  const isNewToCatalog = !result.laistymasIntervalas
+  //
+  // 2026-05-25 fix: BET — jei user'is JAU augina šitą rūšį (duplicate matched
+  // per lotyniskas EXACT), Atradimas banner'is yra MISLEADING (user matytų
+  // „Šio augalo bibliotekoje neturime" + drauge DuplicateBanner „Jau augini" —
+  // konfliktinis UX). Suppress'inam Atradimas kai duplicate egzistuoja.
+  // Tas reali situacija: user'is pridėjo augalą anksčiau, Phase 2 enrichment'as
+  // nepavyko / buvo nutrauktas → catalog tuščias, bet plant'as collection'oje.
+  const isNewToCatalog = !result.laistymasIntervalas && !isDuplicate
 
   // Source links — Wiki LT/EN + iNat (jei taxon ID žinomas). Logika mirror'as
   // PlantDetail.jsx — naudoja direct article URL jei wikiLtFound/wikiEnFound,
