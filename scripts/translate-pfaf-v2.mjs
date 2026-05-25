@@ -9,7 +9,7 @@
 // style guidelines + two-agent consensus (translator + verifier per chunk).
 //
 // USER STYLE GUIDELINES (encoded in master prompt):
-//   • TRUMPAS: 1-3 sentences default, max 4-5 if rich content
+//   • TRUMPAS: 1-2 sentences default, max 3 if rich (4+ = verifier flag)
 //   • SEVERITY KALIBRACIJA: proportional — „nuoding" → „labai toksišk" →
 //     „net mažais kiekiais gali būti mirtinas". NIEKADA „MIRTINAS UŽMUŠ MIRSI"
 //   • TIESI KALBA: „vienas lapas vaikui pavojingas" ne theatrical drama

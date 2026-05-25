@@ -15,11 +15,14 @@ V2 yra **fresh EN → LT translate** per tave su explicit style guidelines +
 
 ## User style guidelines (PRIVALOMA laikytis)
 
-### 1. TRUMPUMAS
-- Default: **1-3 sakiniai**
-- Rich content (EN > 300 chars): max **4-5 sakiniai**
-- NIEKADA 7-8 sakinių wall'o
-- Kiekvienas sakinys turi unique info — nepasiruošti
+### 1. TRUMPUMAS (KRITISKAI)
+- Default: **1-2 sakiniai**
+- Rich content (EN > 300 chars): max **3 sakiniai** — tik jei būtina
+- NIEKADA 4+ sakinių wall'o, jokios verbose elaboration
+- Kiekvienas sakinys PRIVALOMAS turėti unique info — nepasikartoti
+- ✅ „Visas augalas labai toksiškas. Vienas lapas vaikui gali būti mirtinas."
+- ❌ „Augalas turi įvairių junginių. Visos dalys nuodingos. Net mažas
+   kiekis pavojingas. Vaikams ypač rizikinga..." (4 sakiniai = trim į 1-2)
 
 ### 2. SEVERITY KALIBRACIJA (proportional, ne theatrical)
 - Baseline: „nuodingas" / „toksiškas"
@@ -129,7 +132,7 @@ TASK: Verify each entry's knownHazardsLtV2 against knownHazards (EN source).
      → dideliais kiekiais)
 
 2. STYLE COMPLIANCE:
-   - Length: 1-3 sentences default, max 4-5 if rich content?
+   - Length: 1-2 sentences default, max 3 if truly rich. **4+ sentences = flag!**
    - Severity calibration: proportional or over-dramatic?
    - Tiesi kalba (no theatrical „TRAGIŠKA PABAIGA"-style)?
    - PFAF disclaimer absent?
