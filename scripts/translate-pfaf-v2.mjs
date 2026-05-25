@@ -10,8 +10,9 @@
 //
 // USER STYLE GUIDELINES (encoded in master prompt):
 //   • TRUMPAS: 1-2 sentences default, max 3 if rich (4+ = verifier flag)
-//   • SEVERITY KALIBRACIJA: proportional — „nuoding" → „labai toksišk" →
-//     „net mažais kiekiais gali būti mirtinas". NIEKADA „MIRTINAS UŽMUŠ MIRSI"
+//   • SEVERITY KALIBRACIJA: TIK 3 lygiai (per schema enum):
+//     dirgina (lokali) | toksiškas (sisteminis) | mirtinas (lethal dose)
+//     NIEKADA intermediate "labai toksiškas" arba theatrical drama
 //   • TIESI KALBA: „vienas lapas vaikui pavojingas" ne theatrical drama
 //   • KAI NEPAVOJINGAS: pasakyti tiesiai, no defensive hedging
 //   • PET/HUMAN SPLIT: clear when dual-context (Aloe, Lilium etc.)

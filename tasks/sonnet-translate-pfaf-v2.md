@@ -24,15 +24,36 @@ V2 yra **fresh EN → LT translate** per tave su explicit style guidelines +
 - ❌ „Augalas turi įvairių junginių. Visos dalys nuodingos. Net mažas
    kiekis pavojingas. Vaikams ypač rizikinga..." (4 sakiniai = trim į 1-2)
 
-### 2. SEVERITY KALIBRACIJA (proportional, ne theatrical)
-- Baseline: „nuodingas" / „toksiškas"
-- Aukštesnis: „labai toksiškas" / „stiprus pavojus"
-- Lethal: „net mažais kiekiais gali būti mirtinas"
-- ❌ NIEKADA „MIRTINAS UŽMUŠ MIRSI" theatrical drama
-- ❌ NIEKADA „net pirštais palietus, kai kuriems žmonėms ima tirpti oda"
-   tone (overstated kai realybėje mažas tirpimas)
-- ✅ TIESI: „Vienas lapas vaikui gali būti mirtinas." (žodis „mirtinas"
-   leistinas KAI lethal in realistic dose)
+### 2. SEVERITY KALIBRACIJA — TIK 3 LYGIAI (NE intensifiers, NE drama)
+
+Mūsų schema turi 3 narrative severity lygius. Naudok TIK juos —
+NE intermediate variants kaip „labai toksiškas" arba „šiek tiek nuodingas".
+
+**Lygis 1: DIRGINA** (lokali reakcija, ne sisteminis pavojus)
+  • EN cues: irritating, contact dermatitis, mild rash, skin irritation
+  • LT: „dirgina odą" / „dirgina burną" / „gali sukelti dermatitą"
+  • Tonas: informuoti, be panikos
+  • ✅ „Sultys jautriems žmonėms gali sukelti dermatitą."
+
+**Lygis 2: TOKSIŠKAS** (sisteminis pavojus, BET realiai survivable)
+  • EN cues: toxic, poisonous, vomiting, nausea, gastrointestinal upset
+  • LT: „toksiškas" (be intensifiers — NE „labai toksiškas")
+  • Tonas: be gąsdinimu, bet user'is turi žinoti
+  • ✅ „Visos augalo dalys toksiškos. Nurijus sukelia vėmimą, viduriavimą."
+
+**Lygis 3: MIRTINAS** (lethal in realistic dose)
+  • EN cues: highly toxic, lethal, fatal, deadly, death recorded,
+    „one seed/leaf can kill", „fatal in small amounts"
+  • LT: „mirtinas" arba „net mažais kiekiais mirtinas"
+  • Tonas: be gąsdinimu, BET su konkrečiu perspėjimu — „tikrai atsargiai"
+  • ✅ „Visos dalys mirtinos. Vienas lapas vaikui gali būti mirtinas."
+
+❌ NIEKADA:
+  • „labai toksiškas" (intensifier — ne mūsų taxonomy)
+  • „MIRTINAS UŽMUŠ MIRSI" drama
+  • „net pirštais palietus, kai kuriems žmonėms ima tirpti oda"
+     (overstated kai realybėje silpnas tirpimas)
+  • „tragiška pabaiga" tipo žodžiai
 
 ### 3. TIESI KALBA
 - ✅ „Vienas lapas vaikui pavojingas"
@@ -123,8 +144,11 @@ TASK: Verify each entry's knownHazardsLtV2 against knownHazards (EN source).
 
 1. FACT FIDELITY:
    - All compound names preserved? (glikozid/saponin/alkaloid/oksalat/etc.)
-   - Severity intensity matches EN? (highly toxic → labai toksiškas, ne tik
-     „toksiškas"; mild → silpnas, ne „labai")
+   - Severity LYGIS matches EN? Use ONLY 3 levels: dirgina / toksiškas / mirtinas.
+     Flag jeigu „labai toksiškas" arba kitas intermediate intensifier.
+     EN „highly toxic" + lethal dose evidence → „mirtinas", ne „labai toksiškas".
+     EN „toxic" be lethal evidence → „toksiškas" (be intensifier).
+     EN „mild irritation" → „dirgina".
    - Targets preserved? (cats/dogs/horses → katėms/šunims/žirgams)
    - Mechanisms preserved? (skin contact → odos kontaktas/palietus;
      ingestion → nurijus/suvalgius)
