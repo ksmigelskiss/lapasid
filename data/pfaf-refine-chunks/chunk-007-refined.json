@@ -1,0 +1,306 @@
+{
+  "chunkIndex": 7,
+  "totalChunks": 19,
+  "entries": [
+    {
+      "latin": "Delphinium nudicaule",
+      "knownHazards": "All parts of the plant are toxic[172]. The plant is most toxic when it is young[200].",
+      "knownHazardsLt": "Visos augalo dalys toksiškos. Toksiškiausias augalas yra jaunas.",
+      "knownHazardsLtRefined": "Visos augalo dalys toksiškos — pavojingiausias jis būna jaunas, pačioje augimo pradžioje."
+    },
+    {
+      "latin": "Dianella tasmanica",
+      "knownHazards": "The fruit of this species can cause irritation to the digestive tract[193].",
+      "knownHazardsLt": "Šios rūšies vaisiai gali sudirginti virškinimo traktą.",
+      "knownHazardsLtRefined": "Šios rūšies vaisiai gali dirginti virškinimo traktą."
+    },
+    {
+      "latin": "Dianthus superbus",
+      "knownHazards": "The plant contains saponins but apparently in quantities too low to cause harm[179]. Although fairly toxic, saponins are poorly absorbed by the body and most pass straight through without harm. Saponins are found in many foods, such as beans. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLt": "Augale yra saponinų, bet kiekiai per maži, kad pakenktų. Nors saponinai gana toksiški, organizmas juos prastai absorbuoja — dauguma praeina kiaurai be jokios žalos. Saponinų rasi daugelyje produktų, pavyzdžiui, pupelėse. Kai kuriems padarams, ypač žuvims, saponinai daug toksiškesni — medžiotojų gentys tradiciškai jų pildavo į upelius ar ežerus, kad žuvis apsvaigintų ar užmuštų.",
+      "knownHazardsLtRefined": "Augale yra saponinų, tačiau jų kiekis per mažas, kad pakenktų. Nors saponinai patys savaime gana toksiški, organizmas juos prastai įsisavina — didžioji dalis praeina kiaurai nepadarydama žalos. Saponinų yra daugelyje įprastų maisto produktų, kaip antai pupelėse. Žuvims ir kai kuriems kitiems padarams jie daug pavojingesni: medžiotojų gentys nuo seno jų pildavo į upelius ar ežerus, kad žuvis apsvaigintų ar užmuštų."
+    },
+    {
+      "latin": "Dicentra",
+      "knownHazards": "The plant is potentially poisonous and can also cause skin rashes[222].",
+      "knownHazardsLt": "Augalas potencialiai nuodingas ir taip pat gali sukelti odos bėrimus.",
+      "knownHazardsLtRefined": "Augalas potencialiai nuodingas ir gali sukelti odos bėrimus."
+    },
+    {
+      "latin": "Dicentra cucullaria",
+      "knownHazards": "The plant is potentially poisonous and can also cause skin rashes[222].",
+      "knownHazardsLt": "Augalas potencialiai nuodingas ir taip pat gali sukelti odos bėrimus.",
+      "knownHazardsLtRefined": "Augalas potencialiai nuodingas ir gali sukelti odos bėrimus."
+    },
+    {
+      "latin": "Dicentra eximia",
+      "knownHazards": "Fatal in large quantities. Symptoms include: trembling, staggering, vomiting, diarrhea, convulsions and labored breathing. Skin irritation after repeated contact with the cell sap is mild and short-lasting.",
+      "knownHazardsLt": "Mirtinas dideliais kiekiais. Simptomai: drebulys, svirduliavimas, vėmimas, viduriavimas, traukuliai ir apsunkintas kvėpavimas. Odos sudirginimas po pakartotinio kontakto su ląstelių sultimis yra silpnas ir trumpalaikis.",
+      "knownHazardsLtRefined": "Dideliais kiekiais mirtinas. Apsinuodijus ima drebėti, svyruoti, prasideda vėmimas, viduriavimas, traukuliai ir sunkėja kvėpavimas. Pakartotinai liečiant ląstelių sultis oda šiek tiek parausta, tačiau dirginimas trumpalaikis."
+    },
+    {
+      "latin": "Dicentra spectabilis",
+      "knownHazards": "The plant is potentially poisonous and can also cause skin rashes[222].",
+      "knownHazardsLt": "Augalas potencialiai nuodingas ir taip pat gali sukelti odos bėrimus.",
+      "knownHazardsLtRefined": "Augalas potencialiai nuodingas ir gali sukelti odos bėrimus."
+    },
+    {
+      "latin": "Dicksonia",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nerasta, nemažai papartinių augalų turi kancerogenų, tad atsargumas patartinas. Daugelyje papartinių taip pat yra tiaminazės — fermento, kuris organizme naikina B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba pakankama ir gausi B vitaminų, bet dideli kiekiai gali sukelti rimtų sveikatos problemų. Karštis ar kruopštus džiovinimas fermentą sunaikina, todėl augalą išvirus tiaminazė pašalinama.",
+      "knownHazardsLtRefined": "Tiesioginių duomenų apie šios rūšies toksiškumą nėra, tačiau nemažai papartinių turi kancerogenų — atsargumas nepakenks. Be to, daugelyje papartinių veisiasi tiaminazė: šis fermentas organizme ardo B grupės vitaminus. Mažais kiekiais jis nepakenks gerai besimaitinančiam žmogui, tačiau dideli kiekiai gali sukelti rimtų sveikatos sutrikimų. Fermentą sunaikina karštis ar kruopštus džiovinimas, tad išvirti — pakanka."
+    },
+    {
+      "latin": "Dicksonia antarctica",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nerasta, nemažai papartinių augalų turi kancerogenų, tad atsargumas patartinas. Daugelyje papartinių taip pat yra tiaminazės — fermento, kuris organizme naikina B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba pakankama ir gausi B vitaminų, bet dideli kiekiai gali sukelti rimtų sveikatos problemų. Karštis ar kruopštus džiovinimas fermentą sunaikina, todėl augalą išvirus tiaminazė pašalinama.",
+      "knownHazardsLtRefined": "Tiesioginių duomenų apie šios rūšies toksiškumą nėra, tačiau nemažai papartinių turi kancerogenų — atsargumas nepakenks. Be to, daugelyje papartinių veisiasi tiaminazė: šis fermentas organizme ardo B grupės vitaminus. Mažais kiekiais jis nepakenks gerai besimaitinančiam žmogui, tačiau dideli kiekiai gali sukelti rimtų sveikatos sutrikimų. Fermentą sunaikina karštis ar kruopštus džiovinimas, tad išvirti — pakanka."
+    },
+    {
+      "latin": "Dioscorea",
+      "knownHazards": "Edible species of Dioscorea have opposite leaves whilst poisonous species have alternate leaves[ 174 ]. The uncooked tuber of this species is toxic, and is said to produce narcosis[ 332 ]. Saponin is present and cooking renders the tubers safe to eat[ 332 ].",
+      "knownHazardsLt": "Valgomos Dioscorea rūšys turi priešingus lapus, o nuodingosios — pakaitinius. Nevirtas šios rūšies gumbas toksiškas, sakoma, sukelia narkozę. Yra saponinų, bet virimas gumbus padaro saugiais valgyti.",
+      "knownHazardsLtRefined": "Atpažinti rūšį svarbu: valgomosios Dioscorea rūšys turi priešingai išsidėsčiusius lapus, o nuodingosios — pakaitinius. Nevirtas šios rūšies gumbas toksiškas ir, kaip teigiama, gali sukelti narkozę. Jame yra saponinų, tačiau kruopštus virimas gumbus padaro saugiais valgyti."
+    },
+    {
+      "latin": "Dioscorea bulbifera",
+      "knownHazards": "Edible species of Dioscorea have opposite leaves whilst poisonous species have alternate leaves[ 174 ]. The aerial bulbs of this species contain toxic substances, including the alkaloid dioscorine[ 300 ]. This can be destroyed by thorough cooking[ 300 ]. Asiatic forms of the plant usually contain less alkaloids than plants originating in Africa[ 300 ]. There are forms that are almost or entirely free of toxins[ 332 ].(Parts of plant are poisonous if ingested)",
+      "knownHazardsLt": "Valgomos Dioscorea rūšys turi priešingus lapus, o nuodingosios — pakaitinius. Šios rūšies oriniuose svogūnėliuose yra toksiškų medžiagų, įskaitant alkaloidą dioskoriną. Tai sunaikinama kruopščiai išverdant. Azijietiškose augalo formose paprastai mažiau alkaloidų nei augančiose Afrikoje. Yra formų, kurios beveik arba visiškai be toksinų. (Augalo dalys nurijus nuodingos.)",
+      "knownHazardsLtRefined": "Atpažinti rūšį svarbu: valgomosios Dioscorea rūšys turi priešingai išsidėsčiusius lapus, o nuodingosios — pakaitinius. Oriniuose šios rūšies svogūnėliuose yra toksiškų medžiagų, tarp jų — alkaloidą dioskorinų. Kruopštus virimas juos sunaikina. Azijietiškose augalo formose alkaloidų paprastai mažiau nei afrikietiškose; kai kurios formos beveik arba visiškai be toksinų. Augalo dalys nurijus nuodingos."
+    },
+    {
+      "latin": "Diplazium",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens, so some caution is advisable [200 ]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities, this enzyme will not harm people eating an adequate diet rich in vitamin B, though large amounts can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase [172 ].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nerasta, nemažai papartinių augalų turi kancerogenų, tad atsargumas patartinas. Daugelyje papartinių taip pat yra tiaminazės — fermento, kuris organizme naikina B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba pakankama ir gausi B vitaminų, bet dideli kiekiai gali sukelti rimtų sveikatos problemų. Karštis ar kruopštus džiovinimas fermentą sunaikina, todėl augalą išvirus tiaminazė pašalinama.",
+      "knownHazardsLtRefined": "Tiesioginių duomenų apie šios rūšies toksiškumą nėra, tačiau nemažai papartinių turi kancerogenų — atsargumas nepakenks. Be to, daugelyje papartinių veisiasi tiaminazė: šis fermentas organizme ardo B grupės vitaminus. Mažais kiekiais jis nepakenks gerai besimaitinančiam žmogui, tačiau dideli kiekiai gali sukelti rimtų sveikatos sutrikimų. Fermentą sunaikina karštis ar kruopštus džiovinimas, tad išvirti — pakanka."
+    },
+    {
+      "latin": "Diplazium esculentum",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens, so some caution is advisable [200 ]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities, this enzyme will not harm people eating an adequate diet rich in vitamin B, though large amounts can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase [172 ].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nerasta, nemažai papartinių augalų turi kancerogenų, tad atsargumas patartinas. Daugelyje papartinių taip pat yra tiaminazės — fermento, kuris organizme naikina B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba pakankama ir gausi B vitaminų, bet dideli kiekiai gali sukelti rimtų sveikatos problemų. Karštis ar kruopštus džiovinimas fermentą sunaikina, todėl augalą išvirus tiaminazė pašalinama.",
+      "knownHazardsLtRefined": "Tiesioginių duomenų apie šios rūšies toksiškumą nėra, tačiau nemažai papartinių turi kancerogenų — atsargumas nepakenks. Be to, daugelyje papartinių veisiasi tiaminazė: šis fermentas organizme ardo B grupės vitaminus. Mažais kiekiais jis nepakenks gerai besimaitinančiam žmogui, tačiau dideli kiekiai gali sukelti rimtų sveikatos sutrikimų. Fermentą sunaikina karštis ar kruopštus džiovinimas, tad išvirti — pakanka."
+    },
+    {
+      "latin": "Dodecatheon meadia",
+      "knownHazards": "The strongest caution is the plant's chemistry. Shootingstars contain saponins capable of causing severe digestive upset and cellular irritation, and the foliage often gives practical warning through its soapy, acrid taste. Even if some populations are milder than others, this is not a plant to treat casually as a salad ingredient. Another important caution is conservation: some regional populations have limited distribution, and collection should always be minimal and lawful. Calflora lists Primula pauciflora in California as a plant of limited distribution.",
+      "knownHazardsLt": "Stipriausias įspėjimas — augalo chemija. Žvaigždutės turi saponinų, kurie gali sukelti rimtų virškinimo sutrikimų ir ląstelių sudirginimą, o lapija dažnai pati įspėja muiluotu, aitriu skoniu. Net jei kai kurios populiacijos švelnesnės už kitas, šio augalo neverta laikyti įprastu salotų ingredientu. Kitas svarbus aspektas — apsauga: kai kurios regioninės populiacijos paplitę ribotai, todėl rinkimas visada turi būti minimalus ir teisėtas. Kalifornijoje Primula pauciflora įvardyta kaip riboto paplitimo augalas.",
+      "knownHazardsLtRefined": "Pagrindinis pavojus — augalo chemija. Žvaigždutėse gausu saponinų, galinčių sukelti stiprių virškinimo sutrikimų ir dirginti ląsteles; pati lapija įspėja muiluotu, aitriu skoniu. Net ir švelnesnių populiacijų augalų neverta dėti į salotas — tai ne įprastas daržovių augalas. Svarbu ir apsaugos klausimas: kai kurios regioninės populiacijos paplitę labai ribotai, todėl rinkimas turi būti minimalus ir tik teisėtas. Kalifornijoje Primula pauciflora įrašyta kaip riboto paplitimo augalas."
+    },
+    {
+      "latin": "Dodonaea",
+      "knownHazards": "The leaves are slightly cyanogenic[152]. They are also said to contain saponins[181]. Although quite toxic, saponins are poorly absorbed by the body and most pass straight through without any problems. Saponins can be found in a number of common foods such as some types of beans. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLt": "Lapai šiek tiek cianogeniniai. Sakoma, kad juose taip pat yra saponinų. Nors saponinai gana toksiški, organizmas juos prastai absorbuoja — dauguma praeina kiaurai be jokių problemų. Saponinų rasi daugelyje įprastų produktų, pavyzdžiui, kai kuriose pupelėse. Kai kuriems padarams, ypač žuvims, saponinai daug toksiškesni — medžiotojų gentys tradiciškai jų pildavo į upelius ar ežerus, kad žuvis apsvaigintų ar užmuštų.",
+      "knownHazardsLtRefined": "Lapai šiek tiek cianogeniniai ir, kaip teigiama, turi saponinų. Nors saponinai patys savaime gana toksiški, organizmas juos prastai įsisavina — didžioji dalis praeina kiaurai nepadarydama žalos. Saponinų yra ir daugelyje įprastų maisto produktų, kaip antai kai kuriose pupelėse. Žuvims ir kitiems padarams jie daug pavojingesni: medžiotojų gentys nuo seno jų pildavo į upelius ar ežerus žuvims apsvaiginti ar užmušti."
+    },
+    {
+      "latin": "Dodonaea viscosa",
+      "knownHazards": "The leaves are slightly cyanogenic[152]. They are also said to contain saponins[181]. Although quite toxic, saponins are poorly absorbed by the body and most pass straight through without any problems. Saponins can be found in a number of common foods such as some types of beans. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLt": "Lapai šiek tiek cianogeniniai. Sakoma, kad juose taip pat yra saponinų. Nors saponinai gana toksiški, organizmas juos prastai absorbuoja — dauguma praeina kiaurai be jokių problemų. Saponinų rasi daugelyje įprastų produktų, pavyzdžiui, kai kuriose pupelėse. Kai kuriems padarams, ypač žuvims, saponinai daug toksiškesni — medžiotojų gentys tradiciškai jų pildavo į upelius ar ežerus, kad žuvis apsvaigintų ar užmuštų.",
+      "knownHazardsLtRefined": "Lapai šiek tiek cianogeniniai ir, kaip teigiama, turi saponinų. Nors saponinai patys savaime gana toksiški, organizmas juos prastai įsisavina — didžioji dalis praeina kiaurai nepadarydama žalos. Saponinų yra ir daugelyje įprastų maisto produktų, kaip antai kai kuriose pupelėse. Žuvims ir kitiems padarams jie daug pavojingesni: medžiotojų gentys nuo seno jų pildavo į upelius ar ežerus žuvims apsvaiginti ar užmušti."
+    },
+    {
+      "latin": "Dolichos",
+      "knownHazards": "The seed and green parts of the plant contain an insecticide (probably rotenone) and might be poisonous to people[196].",
+      "knownHazardsLt": "Sėklose ir žaliosiose augalo dalyse yra insekticido (tikriausiai rotenono) ir žmonėms gali būti nuodinga.",
+      "knownHazardsLtRefined": "Sėklose ir žaliosiose augalo dalyse aptinkama insekticido — tikriausiai rotenono — kuris žmonėms gali būti nuodingas."
+    },
+    {
+      "latin": "Drimys winteri",
+      "knownHazards": "The sap of this plant can cause serious inflammation if it comes into contact with the eyes[139].",
+      "knownHazardsLt": "Šio augalo sultys, patekusios į akis, gali sukelti rimtą uždegimą.",
+      "knownHazardsLtRefined": "Augalo sultys, patekusios į akis, sukelia rimtą uždegimą — saugotis."
+    },
+    {
+      "latin": "Drosera",
+      "knownHazards": "The plant is slightly toxic according to one report[147].",
+      "knownHazardsLt": "Pagal vieną šaltinį augalas šiek tiek toksiškas.",
+      "knownHazardsLtRefined": "Pagal vieną šaltinį augalas šiek tiek toksiškas."
+    },
+    {
+      "latin": "Dryas",
+      "knownHazards": "The primary caution relates to cyanogenic compounds that may be present in small amounts. These compounds can release hydrocyanic acid, which is toxic. Proper preparation—specifically reheating the strained tea—helps mitigate this risk. Consumption should remain moderate, and experimental or alternative preparation methods, such as cold infusion, should be avoided. As with many alpine plants, overharvesting should also be avoided due to slow growth rates and fragile habitats.",
+      "knownHazardsLt": "Pagrindinis įspėjimas susijęs su cianogeniniais junginiais, kurių gali būti nedideliais kiekiais. Šie junginiai gali išskirti toksišką cianido rūgštį. Tinkamas paruošimas — konkrečiai, perkoštos arbatos pakartotinis pakaitinimas — padeda sumažinti šią riziką. Vartojimas turi išlikti saikingas, o eksperimentinių ar alternatyvių paruošimo būdų, pavyzdžiui, šalto užpilo, reikia vengti. Kaip ir su daugeliu alpinių augalų, derliaus reikia neperžengti — augimas lėtas, o buveinės pažeidžiamos.",
+      "knownHazardsLtRefined": "Augale gali slypėti nedideli kiekiai cianogeninių junginių, galinčių išskirti toksišką cianido rūgštį. Riziką mažina tinkamas paruošimas: perkošta arbata turi būti dar kartą pakaitinta. Vartoti saikingai, vengti šalto užpilo ar kitų neišbandytų paruošimo būdų. Kaip ir daugelis alpinių augalų, šis auga labai lėtai ir gyvena pažeidžiamose buveinėse — rinkti tik minimaliai."
+    },
+    {
+      "latin": "Dryas octopetala",
+      "knownHazards": "The primary caution relates to cyanogenic compounds that may be present in small amounts. These compounds can release hydrocyanic acid, which is toxic. Proper preparation—specifically reheating the strained tea—helps mitigate this risk. Consumption should remain moderate, and experimental or alternative preparation methods, such as cold infusion, should be avoided. As with many alpine plants, overharvesting should also be avoided due to slow growth rates and fragile habitats.",
+      "knownHazardsLt": "Pagrindinis įspėjimas susijęs su cianogeniniais junginiais, kurių gali būti nedideliais kiekiais. Šie junginiai gali išskirti toksišką cianido rūgštį. Tinkamas paruošimas — konkrečiai, perkoštos arbatos pakartotinis pakaitinimas — padeda sumažinti šią riziką. Vartojimas turi išlikti saikingas, o eksperimentinių ar alternatyvių paruošimo būdų, pavyzdžiui, šalto užpilo, reikia vengti. Kaip ir su daugeliu alpinių augalų, derliaus reikia neperžengti — augimas lėtas, o buveinės pažeidžiamos.",
+      "knownHazardsLtRefined": "Augale gali slypėti nedideli kiekiai cianogeninių junginių, galinčių išskirti toksišką cianido rūgštį. Riziką mažina tinkamas paruošimas: perkošta arbata turi būti dar kartą pakaitinta. Vartoti saikingai, vengti šalto užpilo ar kitų neišbandytų paruošimo būdų. Kaip ir daugelis alpinių augalų, šis auga labai lėtai ir gyvena pažeidžiamose buveinėse — rinkti tik minimaliai."
+    },
+    {
+      "latin": "Dryopteris",
+      "knownHazards": "Although we have found no reports for this species, a number of ferns contain carcinogens so some caution is advisable[200]. The fresh plant contains thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172]. However, there have been reports for other species of ferns suggesting that even cooked fronds can have a long term harmful effect. Some caution is therefore advised.",
+      "knownHazardsLt": "Nors apie šią rūšį duomenų nerasta, nemažai papartinių augalų turi kancerogenų, tad atsargumas patartinas. Šviežiame augale yra tiaminazės — fermento, kuris organizme naikina B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba pakankama ir gausi B vitaminų, bet dideli kiekiai gali sukelti rimtų sveikatos problemų. Karštis ar kruopštus džiovinimas fermentą sunaikina, todėl augalą išvirus tiaminazė pašalinama. Vis dėlto apie kitas papartinių rūšis yra pranešimų, kad net išvirtos lapijos gali turėti ilgalaikį žalingą poveikį. Todėl atsargumas patartinas.",
+      "knownHazardsLtRefined": "Tiesioginių duomenų apie šios rūšies toksiškumą nėra, tačiau nemažai papartinių turi kancerogenų — atsargumas nepakenks. Šviežiame augale veisiasi tiaminazė, ardanti organizme B grupės vitaminus. Mažais kiekiais ji nepakenks gerai besimaitinančiam žmogui, tačiau dideli kiekiai gali sukelti rimtų sveikatos sutrikimų. Fermentą sunaikina karštis ar kruopštus džiovinimas — išvirti pakanka. Tačiau apie giminingus paparčius pranešta, kad net išvirtos lapijos ilgainiui gali daryti žalą, tad atsargumas patartinas ir čia."
+    },
+    {
+      "latin": "Dryopteris carthusiana",
+      "knownHazards": "Although we have found no reports for this species, a number of ferns contain carcinogens so some caution is advisable[200]. The fresh plant contains thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172]. However, there have been reports for other species of ferns suggesting that even cooked fronds can have a long term harmful effect. Some caution is therefore advised.",
+      "knownHazardsLt": "Nors apie šią rūšį duomenų nerasta, nemažai papartinių augalų turi kancerogenų, tad atsargumas patartinas. Šviežiame augale yra tiaminazės — fermento, kuris organizme naikina B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba pakankama ir gausi B vitaminų, bet dideli kiekiai gali sukelti rimtų sveikatos problemų. Karštis ar kruopštus džiovinimas fermentą sunaikina, todėl augalą išvirus tiaminazė pašalinama. Vis dėlto apie kitas papartinių rūšis yra pranešimų, kad net išvirtos lapijos gali turėti ilgalaikį žalingą poveikį. Todėl atsargumas patartinas.",
+      "knownHazardsLtRefined": "Tiesioginių duomenų apie šios rūšies toksiškumą nėra, tačiau nemažai papartinių turi kancerogenų — atsargumas nepakenks. Šviežiame augale veisiasi tiaminazė, ardanti organizme B grupės vitaminus. Mažais kiekiais ji nepakenks gerai besimaitinančiam žmogui, tačiau dideli kiekiai gali sukelti rimtų sveikatos sutrikimų. Fermentą sunaikina karštis ar kruopštus džiovinimas — išvirti pakanka. Tačiau apie giminingus paparčius pranešta, kad net išvirtos lapijos ilgainiui gali daryti žalą, tad atsargumas patartinas ir čia."
+    },
+    {
+      "latin": "Dryopteris dilatata",
+      "knownHazards": "Although we have found no reports for this species, a number of ferns contain carcinogens so some caution is advisable[200]. The fresh plant contains thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172]. However, there have been reports for other species of ferns suggesting that even cooked fronds can have a long term harmful effect. Some caution is therefore advised.",
+      "knownHazardsLt": "Nors apie šią rūšį duomenų nerasta, nemažai papartinių augalų turi kancerogenų, tad atsargumas patartinas. Šviežiame augale yra tiaminazės — fermento, kuris organizme naikina B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba pakankama ir gausi B vitaminų, bet dideli kiekiai gali sukelti rimtų sveikatos problemų. Karštis ar kruopštus džiovinimas fermentą sunaikina, todėl augalą išvirus tiaminazė pašalinama. Vis dėlto apie kitas papartinių rūšis yra pranešimų, kad net išvirtos lapijos gali turėti ilgalaikį žalingą poveikį. Todėl atsargumas patartinas.",
+      "knownHazardsLtRefined": "Tiesioginių duomenų apie šios rūšies toksiškumą nėra, tačiau nemažai papartinių turi kancerogenų — atsargumas nepakenks. Šviežiame augale veisiasi tiaminazė, ardanti organizme B grupės vitaminus. Mažais kiekiais ji nepakenks gerai besimaitinančiam žmogui, tačiau dideli kiekiai gali sukelti rimtų sveikatos sutrikimų. Fermentą sunaikina karštis ar kruopštus džiovinimas — išvirti pakanka. Tačiau apie giminingus paparčius pranešta, kad net išvirtos lapijos ilgainiui gali daryti žalą, tad atsargumas patartinas ir čia."
+    },
+    {
+      "latin": "Dryopteris filix-mas",
+      "knownHazards": "Although we have found no reports for this species, a number of ferns contain carcinogens so some caution is advisable[200]. The fresh plant contains thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172]. However, there have been reports for other species of ferns suggesting that even cooked fronds can have a long term harmful effect. Some caution is therefore advised.",
+      "knownHazardsLt": "Nors apie šią rūšį duomenų nerasta, nemažai papartinių augalų turi kancerogenų, tad atsargumas patartinas. Šviežiame augale yra tiaminazės — fermento, kuris organizme naikina B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba pakankama ir gausi B vitaminų, bet dideli kiekiai gali sukelti rimtų sveikatos problemų. Karštis ar kruopštus džiovinimas fermentą sunaikina, todėl augalą išvirus tiaminazė pašalinama. Vis dėlto apie kitas papartinių rūšis yra pranešimų, kad net išvirtos lapijos gali turėti ilgalaikį žalingą poveikį. Todėl atsargumas patartinas.",
+      "knownHazardsLtRefined": "Tiesioginių duomenų apie šios rūšies toksiškumą nėra, tačiau nemažai papartinių turi kancerogenų — atsargumas nepakenks. Šviežiame augale veisiasi tiaminazė, ardanti organizme B grupės vitaminus. Mažais kiekiais ji nepakenks gerai besimaitinančiam žmogui, tačiau dideli kiekiai gali sukelti rimtų sveikatos sutrikimų. Fermentą sunaikina karštis ar kruopštus džiovinimas — išvirti pakanka. Tačiau apie giminingus paparčius pranešta, kad net išvirtos lapijos ilgainiui gali daryti žalą, tad atsargumas patartinas ir čia."
+    },
+    {
+      "latin": "Dryopteris marginalis",
+      "knownHazards": "Although we have found no reports for this species, a number of ferns contain carcinogens so some caution is advisable[200]. The fresh plant contains thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172]. However, there have been reports for other species of ferns suggesting that even cooked fronds can have a long term harmful effect. Some caution is therefore advised.",
+      "knownHazardsLt": "Nors apie šią rūšį duomenų nerasta, nemažai papartinių augalų turi kancerogenų, tad atsargumas patartinas. Šviežiame augale yra tiaminazės — fermento, kuris organizme naikina B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba pakankama ir gausi B vitaminų, bet dideli kiekiai gali sukelti rimtų sveikatos problemų. Karštis ar kruopštus džiovinimas fermentą sunaikina, todėl augalą išvirus tiaminazė pašalinama. Vis dėlto apie kitas papartinių rūšis yra pranešimų, kad net išvirtos lapijos gali turėti ilgalaikį žalingą poveikį. Todėl atsargumas patartinas.",
+      "knownHazardsLtRefined": "Tiesioginių duomenų apie šios rūšies toksiškumą nėra, tačiau nemažai papartinių turi kancerogenų — atsargumas nepakenks. Šviežiame augale veisiasi tiaminazė, ardanti organizme B grupės vitaminus. Mažais kiekiais ji nepakenks gerai besimaitinančiam žmogui, tačiau dideli kiekiai gali sukelti rimtų sveikatos sutrikimų. Fermentą sunaikina karštis ar kruopštus džiovinimas — išvirti pakanka. Tačiau apie giminingus paparčius pranešta, kad net išvirtos lapijos ilgainiui gali daryti žalą, tad atsargumas patartinas ir čia."
+    },
+    {
+      "latin": "Dryopteris sieboldii",
+      "knownHazards": "Although we have found no reports for this species, a number of ferns contain carcinogens so some caution is advisable[200]. The fresh plant contains thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172]. However, there have been reports for other species of ferns suggesting that even cooked fronds can have a long term harmful effect. Some caution is therefore advised.",
+      "knownHazardsLt": "Nors apie šią rūšį duomenų nerasta, nemažai papartinių augalų turi kancerogenų, tad atsargumas patartinas. Šviežiame augale yra tiaminazės — fermento, kuris organizme naikina B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba pakankama ir gausi B vitaminų, bet dideli kiekiai gali sukelti rimtų sveikatos problemų. Karštis ar kruopštus džiovinimas fermentą sunaikina, todėl augalą išvirus tiaminazė pašalinama. Vis dėlto apie kitas papartinių rūšis yra pranešimų, kad net išvirtos lapijos gali turėti ilgalaikį žalingą poveikį. Todėl atsargumas patartinas.",
+      "knownHazardsLtRefined": "Tiesioginių duomenų apie šios rūšies toksiškumą nėra, tačiau nemažai papartinių turi kancerogenų — atsargumas nepakenks. Šviežiame augale veisiasi tiaminazė, ardanti organizme B grupės vitaminus. Mažais kiekiais ji nepakenks gerai besimaitinančiam žmogui, tačiau dideli kiekiai gali sukelti rimtų sveikatos sutrikimų. Fermentą sunaikina karštis ar kruopštus džiovinimas — išvirti pakanka. Tačiau apie giminingus paparčius pranešta, kad net išvirtos lapijos ilgainiui gali daryti žalą, tad atsargumas patartinas ir čia."
+    },
+    {
+      "latin": "Dudleya",
+      "knownHazards": "The main caution is conservation rather than toxicity. Many Dudleya species are protected or vulnerable to poaching, and collection may be prohibited in many places except in a true survival situation. Plants should never be taken from parks, preserves, or known protected populations. Also avoid gathering from roadcuts, contaminated slopes, or landscaped specimens that may have been treated.",
+      "knownHazardsLt": "Pagrindinis įspėjimas yra apsauga, o ne toksiškumas. Daugelis Dudleya rūšių saugomos arba pažeidžiamos brakonieriavimo, ir rinkimas daugelyje vietų gali būti draudžiamas, išskyrus tikro išlikimo situacijas. Augalų niekada neimk iš parkų, draustinių ar žinomų saugomų populiacijų. Taip pat venk rinkti prie kelio iškasų, užterštų šlaitų ar dekoratyvinių egzempliorių, kurie galėjo būti apdoroti.",
+      "knownHazardsLtRefined": "Didžiausias pavojus čia — ne toksiškumas, o apsaugos klausimas. Daugelis Dudleya rūšių yra saugomos arba nuolat brakonieriaujamos, tad rinkti draudžiama daugelyje vietų — išimtis tik tikra išlikimo situacija. Niekada neimk augalų iš parkų, draustinių ar žinomų saugomų populiacijų. Taip pat vengti rinkimo prie kelio iškasų, užterštų šlaitų ar dekoratyvinių egzempliorių, kurie galėjo būti apdoroti chemikalais."
+    },
+    {
+      "latin": "Dudleya pulverulenta",
+      "knownHazards": "This species is precisely the sort of Dudleya for which conservation caution matters. Collection pressure on Californian dudleyas is well known, and many species are protected or vulnerable. Even if technically edible, chalk dudleya should not be treated as a casual food plant outside a true emergency or a clearly lawful, managed situation.",
+      "knownHazardsLt": "Ši rūšis būtent tas Dudleya tipas, kuriam apsaugos atsargumas labai svarbus. Spaudimas Kalifornijos dudlejoms gerai žinomas, daugelis rūšių saugomos arba pažeidžiamos. Net jei techniškai valgoma, kreidinės dudlejos negalima laikyti įprastu maistiniu augalu — tik tikru ekstremaliu atveju arba aiškiai teisėtoje, valdomoje situacijoje.",
+      "knownHazardsLtRefined": "Ši rūšis — kaip tik toks Dudleya, kuriam apsaugos klausimas itin aktualus. Brakonieriavimo spaudimas Kalifornijos dudlejoms gerai žinomas, daugelis rūšių saugomos ar pažeidžiamos. Net jei kreidinė dudleja techniškai valgoma, rinkti ją galima tik tikros ekstremalios situacijos atveju arba aiškiai teisėtai ir prižiūrint — ne kasdieniniam maistui."
+    },
+    {
+      "latin": "Ecballium",
+      "knownHazards": "Poisonous in large quantities[7] (this probably refers to the fruit). The juice of the fruit is irritative to some skins[148].",
+      "knownHazardsLt": "Nuodingas dideliais kiekiais (tikriausiai kalbama apie vaisių). Vaisių sultys kai kurioms odoms dirginančios.",
+      "knownHazardsLtRefined": "Dideliais kiekiais nuodingas — greičiausiai tai pasakytina apie vaisius. Vaisių sultys kai kuriems žmonėms dirgina odą."
+    },
+    {
+      "latin": "Ecballium elaterium",
+      "knownHazards": "Poisonous in large quantities[7] (this probably refers to the fruit). The juice of the fruit is irritative to some skins[148].",
+      "knownHazardsLt": "Nuodingas dideliais kiekiais (tikriausiai kalbama apie vaisių). Vaisių sultys kai kurioms odoms dirginančios.",
+      "knownHazardsLtRefined": "Dideliais kiekiais nuodingas — greičiausiai tai pasakytina apie vaisius. Vaisių sultys kai kuriems žmonėms dirgina odą."
+    },
+    {
+      "latin": "Echinacea",
+      "knownHazards": "possible suppression of immunity with habitual use. High doses over 1000 mg may cause dizziness. Use of herb for 10-14 days recommended followed by a short break.",
+      "knownHazardsLt": "Įprastinis vartojimas gali slopinti imunitetą. Didelės dozės virš 1000 mg gali sukelti svaigulį. Rekomenduojama žolelę vartoti 10–14 dienų, po to padaryti trumpą pertrauką.",
+      "knownHazardsLtRefined": "Ilgalaikis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg sukelia svaigulį. Rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką."
+    },
+    {
+      "latin": "Echinacea angustifolia",
+      "knownHazards": "possible suppression of immunity with habitual use. High doses over 1000 mg may cause dizziness. Use of herb for 10-14 days recommended followed by a short break.",
+      "knownHazardsLt": "Įprastinis vartojimas gali slopinti imunitetą. Didelės dozės virš 1000 mg gali sukelti svaigulį. Rekomenduojama žolelę vartoti 10–14 dienų, po to padaryti trumpą pertrauką.",
+      "knownHazardsLtRefined": "Ilgalaikis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg sukelia svaigulį. Rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką."
+    },
+    {
+      "latin": "Echinacea purpurea",
+      "knownHazards": "Possible suppression of immunity with habitual use. High doses over 1000 mg may cause dizziness. Use of herb for 10-14 days recommended followed by a short break.",
+      "knownHazardsLt": "Įprastinis vartojimas gali slopinti imunitetą. Didelės dozės virš 1000 mg gali sukelti svaigulį. Rekomenduojama žolelę vartoti 10–14 dienų, po to padaryti trumpą pertrauką.",
+      "knownHazardsLtRefined": "Ilgalaikis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg sukelia svaigulį. Rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką."
+    },
+    {
+      "latin": "Echinocactus",
+      "knownHazards": "Harvesting stems kills the plant and may violate legal protections. Given its slow growth, removal should be considered only in genuine survival situations. Spines are formidable and require careful handling.",
+      "knownHazardsLt": "Stiebų derliaus nuėmimas augalą užmuša ir gali pažeisti teisinę apsaugą. Atsižvelgiant į lėtą augimą, naikinimas turėtų būti svarstomas tik tikrose išlikimo situacijose. Spygliai įspūdingi, reikalauja atsargaus elgesio.",
+      "knownHazardsLtRefined": "Stiebų skinimas augalą žudo ir gali pažeisti jo teisinę apsaugą. Augalas auga labai lėtai, todėl jo naikinti neverta — nebent tikra išlikimo situacija. Spygliai galingi ir reikalauja itin atsargaus elgesio."
+    },
+    {
+      "latin": "Echinocactus horizonthalonius",
+      "knownHazards": "Harvesting stems kills the plant and may violate legal protections. Given its slow growth, removal should be considered only in genuine survival situations. Spines are formidable and require careful handling.",
+      "knownHazardsLt": "Stiebų derliaus nuėmimas augalą užmuša ir gali pažeisti teisinę apsaugą. Atsižvelgiant į lėtą augimą, naikinimas turėtų būti svarstomas tik tikrose išlikimo situacijose. Spygliai įspūdingi, reikalauja atsargaus elgesio.",
+      "knownHazardsLtRefined": "Stiebų skinimas augalą žudo ir gali pažeisti jo teisinę apsaugą. Augalas auga labai lėtai, todėl jo naikinti neverta — nebent tikra išlikimo situacija. Spygliai galingi ir reikalauja itin atsargaus elgesio."
+    },
+    {
+      "latin": "Echinocactus texensis",
+      "knownHazards": "Spines remain hazardous despite the spineless fruits. Confirm identification and legality before harvesting.",
+      "knownHazardsLt": "Nors vaisiai be spyglių, patys spygliai išlieka pavojingi. Prieš skinant — įsitikink, kad rūšį atpažįsti tiksliai ir kad rinkti čia teisėta.",
+      "knownHazardsLtRefined": "Vaisiai be spyglių, tačiau pats augalas jų turi — saugotis. Prieš renkant būtina tiksliai atpažinti rūšį ir įsitikinti, kad rinkimas toje vietoje teisėtas."
+    },
+    {
+      "latin": "Echinocereus",
+      "knownHazards": "The core safety issue is mechanical rather than chemical: spines on the fruit and plant can cause injury, and spines may persist even after brushing. A second \"safety\" issue is conservation—some Echinocereus populations/varieties are protected in parts of their range, so harvest should be avoided where collection is restricted.",
+      "knownHazardsLt": "Pagrindinis pavojus mechaninis, ne cheminis: spygliai ant vaisių ir augalo gali sužeisti, o smulkūs spygliukai dažnai lieka net nuvalius. Antras dalykas — apsauga: kai kurios Echinocereus populiacijos savo arealo dalyse yra saugomos, todėl ten, kur rinkti draudžiama, geriau nesiartink.",
+      "knownHazardsLtRefined": "Pagrindinis pavojus čia mechaninis, ne cheminis: spygliai ant vaisių ir augalo sužeidžia, o smulkūs spygliukai dažnai lieka net ir nuvalius. Be to, kai kurios Echinocereus populiacijos savo arealo dalyse yra saugomos — ten, kur rinkimas draudžiamas, nesiartink."
+    },
+    {
+      "latin": "Echinocereus enneacanthus",
+      "knownHazards": "Mechanical spine risk; avoid collecting from protected populations; avoid fruits with heavy fungal rot or insect damage.",
+      "knownHazardsLt": "Mechaninis spyglių pavojus. Iš saugomų populiacijų nerink. Venk vaisių su stipriu grybiniu puviniu ar vabzdžių pažeidimais.",
+      "knownHazardsLtRefined": "Spygliai kelia mechaninį pavojų — atsargiai. Iš saugomų populiacijų nerink. Atmesti vaisius su ryškiu grybiniu puviniu ar vabzdžių pažeidimais."
+    },
+    {
+      "latin": "Echinocereus triglochidiatus",
+      "knownHazards": "Mechanical spine hazard; local protections may apply. In some areas claretcup forms are conservation-sensitive, so treat harvest as inappropriate unless you are certain collection is legal and sustainable.",
+      "knownHazardsLt": "Mechaninis spyglių pavojus. Kai kur gali galioti vietinė apsauga — tam tikrose vietovėse claretcup formos jautrios, todėl nerink, jei nesi tikras, kad tai teisėta ir tvaru.",
+      "knownHazardsLtRefined": "Spygliai kelia mechaninį pavojų. Kai kuriose vietovėse ši rūšis saugoma — nerink, jei nesi tikras, kad tai teisėta ir tvaru."
+    },
+    {
+      "latin": "Echium",
+      "knownHazards": "Introduced to Australia, South Africa, and the United States, where it is an invasive weed. Due to a high concentration of pyrrolizidine alkaloids, it is poisonous to grazing livestock, especially those with simple digestive systems, such as horses. Skin irritant. Wear gloves and other protective equipment when handling.",
+      "knownHazardsLt": "Australijoje, Pietų Afrikoje ir JAV — invazinė piktžolė. Dėl didelės pirolizidino alkaloidų koncentracijos nuodingas ganomiems gyvuliams, ypač tiems, kurių virškinimo sistema paprasta — pavyzdžiui, arkliams. Dirgina odą. Dirbdamas mūvėk pirštines ir naudok kitas apsaugos priemones.",
+      "knownHazardsLtRefined": "Australijoje, Pietų Afrikoje ir JAV plinta kaip invazinė piktžolė. Didelė pirolizidino alkaloidų koncentracija augalą daro pavojingą ganomai gyvulijai — ypač arkliai, kurių virškinimo sistema paprastesnė. Dirgina odą: dirbant būtinos pirštinės ir kita apsauginė apranga."
+    },
+    {
+      "latin": "Echium plantagineum",
+      "knownHazards": "Introduced to Australia, South Africa, and the United States, where it is an invasive weed. Due to a high concentration of pyrrolizidine alkaloids, it is poisonous to grazing livestock, especially those with simple digestive systems, such as horses. Skin irritant. Wear gloves and other protective equipment when handling.",
+      "knownHazardsLt": "Australijoje, Pietų Afrikoje ir JAV — invazinė piktžolė. Dėl didelės pirolizidino alkaloidų koncentracijos nuodingas ganomiems gyvuliams, ypač tiems, kurių virškinimo sistema paprasta — pavyzdžiui, arkliams. Dirgina odą. Dirbdamas mūvėk pirštines ir naudok kitas apsaugos priemones.",
+      "knownHazardsLtRefined": "Australijoje, Pietų Afrikoje ir JAV plinta kaip invazinė piktžolė. Didelė pirolizidino alkaloidų koncentracija augalą daro pavojingą ganomai gyvulijai — ypač arkliai, kurių virškinimo sistema paprastesnė. Dirgina odą: dirbant būtinos pirštinės ir kita apsauginė apranga."
+    },
+    {
+      "latin": "Echium vulgare",
+      "knownHazards": "The leaves are poisonous[20]. No cases of poisoning have ever been recorded for this plant[76]. The bristly hairs on the leaves and stems can cause severe dermatitis[207].",
+      "knownHazardsLt": "Lapai nuodingi. Apsinuodijimo atvejų, tiesa, niekada nebuvo užregistruota. Šeriuoti plaukeliai ant lapų ir stiebų gali sukelti stiprų dermatitą.",
+      "knownHazardsLtRefined": "Lapai nuodingi, nors apsinuodijimo atvejų niekada neužregistruota. Tačiau šeriuoti plaukeliai ant lapų ir stiebų gali sukelti stiprų dermatitą — pirštinės privalomos."
+    },
+    {
+      "latin": "Eichhornia",
+      "knownHazards": "Eating the plant, which is reported to contain HCN, alkaloid, and triterpenoid, may induce itching[269]. Fresh plants contain prickly crystals[269]. Plants sprayed with 2,4-D may accumulate lethal doses of nitrates[269].",
+      "knownHazardsLt": "Augale aptinkama vandenilio cianido (HCN), alkaloidų ir triterpenoidų — nurijus gali kelti niežulį. Šviežiuose augaluose yra dygių kristalų. Augaluose, purkštuose 2,4-D herbicidu, gali susikaupti mirtinos nitratų dozės.",
+      "knownHazardsLtRefined": "Augale yra vandenilio cianido (HCN), alkaloidų ir triterpenoidų — suvalgytas gali sukelti niežulį. Šviežiuose augaluose slypi dygūs kristalai. Augaluose, apdorotuose 2,4-D herbicidu, gali susikaupti mirtinos nitratų dozės."
+    },
+    {
+      "latin": "Eichhornia crassipes",
+      "knownHazards": "Eating the plant, which is reported to contain HCN, alkaloid, and triterpenoid, may induce itching[269]. Fresh plants contain prickly crystals[269]. Plants sprayed with 2,4-D may accumulate lethal doses of nitrates[269].",
+      "knownHazardsLt": "Augale aptinkama vandenilio cianido (HCN), alkaloidų ir triterpenoidų — nurijus gali kelti niežulį. Šviežiuose augaluose yra dygių kristalų. Augaluose, purkštuose 2,4-D herbicidu, gali susikaupti mirtinos nitratų dozės.",
+      "knownHazardsLtRefined": "Augale yra vandenilio cianido (HCN), alkaloidų ir triterpenoidų — suvalgytas gali sukelti niežulį. Šviežiuose augaluose slypi dygūs kristalai. Augaluose, apdorotuose 2,4-D herbicidu, gali susikaupti mirtinos nitratų dozės."
+    },
+    {
+      "latin": "Elaeagnus umbellata",
+      "knownHazards": "E. umbellata has the potential of becoming one of the most troublesome adventive shrubs in the central and eastern United States.",
+      "knownHazardsLt": "E. umbellata turi potencialo tapti viena nemaloniausių introdukuotų krūmų rūšių JAV centrinėje ir rytinėje dalyse.",
+      "knownHazardsLtRefined": "E. umbellata gali tapti viena invazingiausių introdukuotų krūmų rūšių JAV centrinėje ir rytinėje dalyse."
+    },
+    {
+      "latin": "Encephalartos",
+      "knownHazards": "Seed is poisonous if ingested. Consumption of the seeds can lead to liver cancer[398]. All parts of plant are poisonous if ingested. Plant has spines or sharp edges; use extreme caution when handling.",
+      "knownHazardsLt": "Sėklos nurijus nuodingos. Sėklų vartojimas gali sukelti kepenų vėžį. Visos augalo dalys nurijus nuodingos. Augalas turi spyglių arba aštrių briaunų — dirbdamas elkis itin atsargiai.",
+      "knownHazardsLtRefined": "Sėklos nuodingos: nurijus gali sukelti kepenų vėžį. Nuodingos ir visos kitos augalo dalys. Be to, augalas turi spyglių ar aštrių briaunų — dirbant reikia itin didelio atsargumo."
+    },
+    {
+      "latin": "Epidendrum",
+      "knownHazards": "Calcium oxalate crystals are present in the plant, which may cause dermatitis in vanilla workers[310 ].(Handling plant may cause skin irritation or allergic reaction )",
+      "knownHazardsLt": "Augale yra kalcio oksalatų kristalų, kurie vanilės darbininkams gali sukelti dermatitą. Liečiant augalą galima odos dirginimo ar alerginė reakcija.",
+      "knownHazardsLtRefined": "Augale yra kalcio oksalatų kristalų, galinčių sukelti dermatitą — tai žinoma iš vanilės pramonės darbuotojų patirties. Liečiant augalą gali atsirasti odos dirginimas arba alerginė reakcija."
+    },
+    {
+      "latin": "Epilobium",
+      "knownHazards": "Fireweed is generally considered safe to eat in moderate quantities, but several parts—particularly roots, mature stems, and older leaves—contain irritating compounds that cause acrid or peppery sensations. Oxalates in leaves may cause mouth or throat irritation, especially when eaten raw. Cooking reduces but does not eliminate harsh flavours. As with many wild greens, overconsumption may cause digestive discomfort. Individuals with sensitivity to oxalates should exercise caution. An infusion of the leaves is said to stupefy a person[4].",
+      "knownHazardsLt": "Gauromis vyriais (fireweed) saikingai valgyti paprastai saugu, bet kai kuriose dalyse — ypač šaknyse, subrendusiuose stiebuose ir senesniuose lapuose — yra dirginančių junginių, sukeliančių aitrų ar pipirinį pojūtį. Lapuose esantys oksalatai gali dirginti burną ar gerklę, ypač valgant žalius. Verdant aštrumas sumažėja, bet visiškai neišnyksta. Kaip su daugeliu laukinių žalumynų — persivalgius gali sutrikti virškinimas. Jautriems oksalatams žmonėms verta būti atsargiems. Sakoma, kad lapų užpilas gali apsvaiginti.",
+      "knownHazardsLtRefined": "Saikingai vartojamas augalas paprastai saugus, tačiau šaknyse, subrendusiuose stiebuose ir senesniuose lapuose yra dirginančių junginių, sukeliančių aitrų ar pipirinį pojūtį. Lapų oksalatai dirgina burną ir gerklę — ypač valgant žalius; verdant aštrumas sumažėja, bet visai neišnyksta. Persivalgius gali sutrikti virškinimas, o jautriems oksalatams žmonėms verta papildomai saugotis. Teigiama, kad lapų užpilas gali apsvaiginti."
+    },
+    {
+      "latin": "Erigeron",
+      "knownHazards": "Skin contact with the plant can cause dermatitis in some people[222]. No acute toxicity reported. However, strong resins and plant secondary compounds may cause gastrointestinal irritation. Not suitable for frequent or regular consumption.",
+      "knownHazardsLt": "Kai kuriems žmonėms odos kontaktas su augalu gali sukelti dermatitą. Ūmaus toksiškumo nepranešta. Vis dėlto stiprios dervos ir augalo antriniai junginiai gali dirginti virškinamąjį traktą. Netinka dažnai ar reguliariai vartoti.",
+      "knownHazardsLtRefined": "Kai kuriems žmonėms oda, palietusi augalą, parausta ir suserga dermatitu. Ūmaus toksiškumo nepranešta, tačiau stiprios dervos ir antriniai junginiai gali dirginti virškinimo traktą. Augalas netinka dažnam ar reguliariam vartojimui."
+    }
+  ]
+}

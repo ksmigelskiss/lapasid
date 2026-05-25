@@ -1,0 +1,306 @@
+{
+  "chunkIndex": 6,
+  "totalChunks": 19,
+  "entries": [
+    {
+      "latin": "Convallaria",
+      "knownHazards": "All parts of the plant are poisonous[7, 10, 19]. However, the toxic principle is very poorly absorbed when taken orally so poisoning is unlikely to occur[65].",
+      "knownHazardsLt": "Visos augalo dalys nuodingos. Tačiau toksiškos medžiagos labai prastai pasisavinamos nurijus, todėl apsinuodijimas mažai tikėtinas.",
+      "knownHazardsLtRefined": "Visos augalo dalys nuodingos — tačiau toksiškos medžiagos, nurijus, pasisavinamos labai prastai, todėl rimtas apsinuodijimas mažai tikėtinas."
+    },
+    {
+      "latin": "Convallaria majalis",
+      "knownHazards": "All parts of the plant are poisonous[7, 10, 19]. However, the toxic principle is very poorly absorbed when taken orally so poisoning is unlikely to occur[65]. The leaves can be a mild skin irritant[22]. Overdose may lead to nausea, vomiting, stupor, colour perception disorders, and cardiac arrhythmias. Internal use preparations no longer considered safe [301].",
+      "knownHazardsLt": "Visos augalo dalys nuodingos. Tačiau toksiškos medžiagos labai prastai pasisavinamos nurijus, todėl apsinuodijimas mažai tikėtinas. Lapai gali šiek tiek dirginti odą. Perdozavus galima pykinimas, vėmimas, sąmonės sutrikimas, spalvų suvokimo sutrikimai ir širdies aritmijos. Vidiniam vartojimui skirti preparatai nebelaikomi saugiais.",
+      "knownHazardsLtRefined": "Visos augalo dalys nuodingos, nors nurijus toksiškos medžiagos pasisavinamos labai prastai — rimtas apsinuodijimas mažai tikėtinas. Lapai gali šiek tiek dirginti odą. Perdozavimas atneša pykinimą, vėmimą, sąmonės drumstimą, spalvų suvokimo sutrikimus ir širdies aritmijas. Preparatai vidiniam vartojimui nebėra laikomi saugiais."
+    },
+    {
+      "latin": "Convolvulus",
+      "knownHazards": "This species is said to be purgative[173], some caution is advised.",
+      "knownHazardsLt": "Ši rūšis laikoma vidurius laisvinančia — patartina atsargiai.",
+      "knownHazardsLtRefined": "Ši rūšis turi vidurius laisvinančių savybių — vartok atsargiai."
+    },
+    {
+      "latin": "Coriaria",
+      "knownHazards": "The seed is poisonous[1]. The plant is toxic to grazing mammals[192]. Most, if not all members of this genus are poisonous, though it is said that the fruit is safe to eat[K]..",
+      "knownHazardsLt": "Sėklos nuodingos. Augalas toksiškas ganomiems žinduoliams. Dauguma, jei ne visi šios genties augalai yra nuodingi, nors vaisius laikomas saugiu valgyti.",
+      "knownHazardsLtRefined": "Sėklos nuodingos, o augalas toksiškas visiems ganomiems žinduoliams. Dauguma šios genties augalų — jei ne visi — yra nuodingi, nors vaisius laikomas saugiu valgyti."
+    },
+    {
+      "latin": "Coriaria terminalis",
+      "knownHazards": "The seed may be poisonous[1]. Although we have no more information, it is reasonable to assume that other parts of the plant are also toxic.",
+      "knownHazardsLt": "Sėklos gali būti nuodingos. Nors daugiau informacijos neturime, pagrįsta manyti, kad ir kitos augalo dalys toksiškos.",
+      "knownHazardsLtRefined": "Sėklos gali būti nuodingos — ir nors tikslesnių duomenų nėra, pagrįsta manyti, kad kitos augalo dalys irgi toksiškos."
+    },
+    {
+      "latin": "Cornus florida",
+      "knownHazards": "There is a report that the fruit is poisonous for humans[229].",
+      "knownHazardsLt": "Yra pranešimų, kad vaisiai žmonėms nuodingi.",
+      "knownHazardsLtRefined": "Bent vienas pranešimas perspėja, kad vaisiai žmonėms nuodingi."
+    },
+    {
+      "latin": "Cornus sanguinea",
+      "knownHazards": "Contrary to some reports, the fruit is not poisonous, but the leaves can cause skin irritations to sensitive people[65].",
+      "knownHazardsLt": "Priešingai nei kai kuriuose pranešimuose teigiama, vaisiai nėra nuodingi, tačiau lapai jautriems žmonėms gali sudirginti odą.",
+      "knownHazardsLtRefined": "Vaisiai — priešingai kai kuriems pranešimams — nėra nuodingi, tačiau lapai gali sudirginti jautrią odą."
+    },
+    {
+      "latin": "Coronilla",
+      "knownHazards": "Although no mention of toxicity has been seen for this species, some members of the genus are poisonous[9, 13, 19, 65] and so some caution is advised.",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą duomenų nėra, kai kurie šios genties augalai yra nuodingi — patartina atsargiai.",
+      "knownHazardsLtRefined": "Šios konkrečios rūšies toksiškumo duomenų nėra, tačiau kai kurie genties nariai nuodingi — elgkis atsargiai."
+    },
+    {
+      "latin": "Corydalis",
+      "knownHazards": "Although no specific mention has been seen for this species, there is a report that Corydalis species are potentially toxic in moderate doses[222].",
+      "knownHazardsLt": "Nors konkrečių duomenų apie šią rūšį nėra, pranešama, kad Corydalis genties rūšys gali būti toksiškos jau vidutinėmis dozėmis.",
+      "knownHazardsLtRefined": "Konkrečių duomenų apie šią rūšį nėra, tačiau Corydalis gentis laikoma potencialiai toksiška jau vidutinėmis dozėmis."
+    },
+    {
+      "latin": "Corydalis ambigua",
+      "knownHazards": "Although no specific mention has been seen for this species, there is a report that Corydalis species are potentially toxic in moderate doses[222].",
+      "knownHazardsLt": "Nors konkrečių duomenų apie šią rūšį nėra, pranešama, kad Corydalis genties rūšys gali būti toksiškos jau vidutinėmis dozėmis.",
+      "knownHazardsLtRefined": "Konkrečių duomenų apie šią rūšį nėra, tačiau Corydalis gentis laikoma potencialiai toksiška jau vidutinėmis dozėmis."
+    },
+    {
+      "latin": "Corydalis cava",
+      "knownHazards": "Although no specific mention has been seen for this species, there is a report that Corydalis species are potentially toxic in moderate doses[222].",
+      "knownHazardsLt": "Nors konkrečių duomenų apie šią rūšį nėra, pranešama, kad Corydalis genties rūšys gali būti toksiškos jau vidutinėmis dozėmis.",
+      "knownHazardsLtRefined": "Konkrečių duomenų apie šią rūšį nėra, tačiau Corydalis gentis laikoma potencialiai toksiška jau vidutinėmis dozėmis."
+    },
+    {
+      "latin": "Corydalis solida",
+      "knownHazards": "The plant is poisonous[19, 65].",
+      "knownHazardsLt": "Augalas nuodingas.",
+      "knownHazardsLtRefined": "Augalas nuodingas."
+    },
+    {
+      "latin": "Corynocarpus",
+      "knownHazards": "The seed is poisonous raw[65, 173].",
+      "knownHazardsLt": "Žalios sėklos nuodingos.",
+      "knownHazardsLtRefined": "Žalios sėklos nuodingos."
+    },
+    {
+      "latin": "Corynocarpus laevigatus",
+      "knownHazards": "The seed is poisonous raw[65, 173].",
+      "knownHazardsLt": "Žalios sėklos nuodingos.",
+      "knownHazardsLtRefined": "Žalios sėklos nuodingos."
+    },
+    {
+      "latin": "Cotin",
+      "knownHazards": "Skin contact with this plant can cause dermatitis in sensitive people[200]. Though related to several poisonous species, this species is definitely not poisonous[65].",
+      "knownHazardsLt": "Kontaktas su oda jautriems žmonėms gali sukelti dermatitą. Nors augalas giminingas keletui nuodingų rūšių, ši rūšis tikrai nenuodinga.",
+      "knownHazardsLtRefined": "Jautriems žmonėms tiesioginis kontaktas su augalu gali sukelti dermatitą. Nors gentainiai nuodingi, ši rūšis tikrai nenuodinga."
+    },
+    {
+      "latin": "Cotyledon",
+      "knownHazards": "The main caution is conservation rather than toxicity. Many Dudleya species are protected or vulnerable to poaching, and collection may be prohibited in many places except in a true survival situation. Plants should never be taken from parks, preserves, or known protected populations. Also avoid gathering from roadcuts, contaminated slopes, or landscaped specimens that may have been treated.",
+      "knownHazardsLt": "Pagrindinis dėmesys čia ne toksiškumas, o apsauga. Daug Dudleya rūšių yra saugomos arba pažeidžiamos brakonierių, ir jų rinkimas daugelyje vietų draudžiamas — nebent tikra išgyvenimo situacija. Niekada nerinkite augalų iš parkų, rezervatų ar žinomų saugomų populiacijų. Taip pat venkite kelkraščių, užterštų šlaitų ar dekoratyvinių augalų, kurie galėjo būti apdoroti chemikalais.",
+      "knownHazardsLtRefined": "Čia svarbiau ne toksiškumas, o apsauga. Daugelis Dudleya rūšių yra saugomos arba pažeidžiamos brakonierių, o rinkimas daugelyje vietų draudžiamas — išimtis tik tikra išgyvenimo situacija. Niekada nerink iš parkų, rezervatų ar žinomų saugomų populiacijų. Venk ir kelkraščių, užterštų šlaitų bei dekoratyvinių augalų, kurie galėjo būti apdoroti chemikalais."
+    },
+    {
+      "latin": "Crepis",
+      "knownHazards": "Latex-bearing greens can be rough on sensitive stomachs, and bitterness often increases with age. Treat first-time use as a \"small serving\" plant. Avoid plants from sprayed roadsides, contaminated soils, or heavy livestock-waste areas, and avoid any specimens with obvious mold, rot, or heavy insect damage.",
+      "knownHazardsLt": "Augalai su pieno sultimis jautriems skrandžiams gali būti per stiprūs, o kartumas dažnai didėja augalui senstant. Pirmą kartą ragaukite tik mažą porciją. Venkite augalų nuo apdorotų kelkraščių, užterštų dirvožemių ar vietų, kur daug gyvulių išmatų. Praleiskite augalus su akivaizdžiu pelėsiu, puviniu ar smarkiu vabzdžių pakenkimu.",
+      "knownHazardsLtRefined": "Augalai su pieno sultimis gali sudirginti jautrų skrandį, o kartumas stiprėja augalui senstant — pirmą kartą paragauk tik nedaug. Venk augalų nuo apdorotų kelkraščių, užterštų dirvožemių ar gyvulių ganyklų. Augalus su pelėsiu, puviniais ar stipriu vabzdžių pakenkimu aplenkite."
+    },
+    {
+      "latin": "Crinum",
+      "knownHazards": "The bulb is said to be poisonous[270].",
+      "knownHazardsLt": "Svogūnėlis laikomas nuodingu.",
+      "knownHazardsLtRefined": "Svogūnėlis nuodingas."
+    },
+    {
+      "latin": "Crinum asiaticum",
+      "knownHazards": "The bulb is said to be poisonous[270].",
+      "knownHazardsLt": "Svogūnėlis laikomas nuodingu.",
+      "knownHazardsLtRefined": "Svogūnėlis nuodingas."
+    },
+    {
+      "latin": "Crinum bulbispermum",
+      "knownHazards": "One report says that the plant is toxic to mammals, but gives no indication as to the degree of toxicity.",
+      "knownHazardsLt": "Vienas šaltinis nurodo, kad augalas toksiškas žinduoliams, tačiau toksiškumo laipsnio nepatikslina.",
+      "knownHazardsLtRefined": "Vienas šaltinis nurodo augalo toksiškumą žinduoliams, tačiau toksiškumo laipsnio nenusako."
+    },
+    {
+      "latin": "Crocus nudiflorus",
+      "knownHazards": "The following reports are for C. sativus. They quite possibly also apply to this species. The plant is poisonous[21]. The plant is perfectly safe in normal usage but 5 - 10 grams of saffron has been known to cause death[65].",
+      "knownHazardsLt": "Tolimesnė informacija apie C. sativus — visai tikėtina, kad tinka ir šiai rūšiai. Augalas nuodingas. Įprastomis dozėmis augalas visiškai saugus, tačiau 5–10 gramų šafrano yra sukėlę mirtį.",
+      "knownHazardsLtRefined": "Ši informacija žinoma apie C. sativus — ir visai tikėtina, kad taikytina šiai rūšiai. Augalas nuodingas: įprastomis dozėmis saugus, tačiau 5–10 gramų šafrano gali būti mirtina dozė."
+    },
+    {
+      "latin": "Crocus sativus",
+      "knownHazards": "The plant is poisonous[21]. The plant is perfectly safe in normal usage but 5 - 10 grams of saffron has been known to cause death[65].",
+      "knownHazardsLt": "Augalas nuodingas. Įprastomis dozėmis augalas visiškai saugus, tačiau 5–10 gramų šafrano yra sukėlę mirtį.",
+      "knownHazardsLtRefined": "Augalas nuodingas: įprastomis dozėmis visiškai saugus, tačiau 5–10 gramų šafrano gali būti mirtina dozė."
+    },
+    {
+      "latin": "Crotalaria",
+      "knownHazards": "The seeds of many Crotalaria species contain toxic pyrrolizidine alkaloids. Trichodesmine is the principal toxic alkaloid in Crotalaria juncea[ 303 ]. The seeds are reported to contain trypsin inhibitors; they are said to be poisonous to cattle, and they can poison both horses and pigs[ 303 ].",
+      "knownHazardsLt": "Daugelio Crotalaria rūšių sėklose yra toksiškų pirolizidino alkaloidų. Pagrindinis toksiškas alkaloidas Crotalaria juncea sėklose yra trichodesminas. Pranešama, kad sėklose yra tripsino inhibitorių; jos laikomos nuodingomis galvijams, gali apnuodyti arklius ir kiaules.",
+      "knownHazardsLtRefined": "Daugelio Crotalaria rūšių sėklose yra toksiškų pirolizidino alkaloidų — Crotalaria juncea pagrindinis iš jų yra trichodesminas. Sėklose taip pat yra tripsino inhibitorių; jos nuodingos galvijams ir gali apnuodyti arklius bei kiaules."
+    },
+    {
+      "latin": "Crotalaria juncea",
+      "knownHazards": "The seeds of many Crotalaria species contain toxic pyrrolizidine alkaloids. Trichodesmine is the principal toxic alkaloid in Crotalaria juncea[ 303 ]. The seeds are reported to contain trypsin inhibitors; they are said to be poisonous to cattle, and they can poison both horses and pigs[ 303 ].",
+      "knownHazardsLt": "Daugelio Crotalaria rūšių sėklose yra toksiškų pirolizidino alkaloidų. Pagrindinis toksiškas alkaloidas Crotalaria juncea sėklose yra trichodesminas. Pranešama, kad sėklose yra tripsino inhibitorių; jos laikomos nuodingomis galvijams, gali apnuodyti arklius ir kiaules.",
+      "knownHazardsLtRefined": "Sėklose gausu toksiškų pirolizidino alkaloidų — šios rūšies pagrindinis iš jų yra trichodesminas. Jose yra ir tripsino inhibitorių; sėklos nuodingos galvijams ir gali apnuodyti arklius bei kiaules."
+    },
+    {
+      "latin": "Cyathea",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą pranešimų neradome, daugelyje paparčių yra kancerogenų — patartina atsargiai. Daug paparčių taip pat turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba yra visavertė ir gausi B vitaminų, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio ar kruopštaus džiovinimo — todėl išvirus augalą tiaminazė pašalinama.",
+      "knownHazardsLtRefined": "Šiai rūšiai toksiškumo pranešimų nėra, tačiau daugelyje paparčių yra kancerogenų — elgkis atsargiai. Be to, paparčiai dažnai turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Visavertę mitybą valgančiam žmogui nedideli kiekiai nekenkia, tačiau didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė suyra kaitinant ar kruopščiai džiovinant — išvirus augalas tampa saugus."
+    },
+    {
+      "latin": "Cyathea dealbata",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą pranešimų neradome, daugelyje paparčių yra kancerogenų — patartina atsargiai. Daug paparčių taip pat turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba yra visavertė ir gausi B vitaminų, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio ar kruopštaus džiovinimo — todėl išvirus augalą tiaminazė pašalinama.",
+      "knownHazardsLtRefined": "Šiai rūšiai toksiškumo pranešimų nėra, tačiau daugelyje paparčių yra kancerogenų — elgkis atsargiai. Be to, paparčiai dažnai turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Visavertę mitybą valgančiam žmogui nedideli kiekiai nekenkia, tačiau didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė suyra kaitinant ar kruopščiai džiovinant — išvirus augalas tampa saugus."
+    },
+    {
+      "latin": "Cyathea medullaris",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą pranešimų neradome, daugelyje paparčių yra kancerogenų — patartina atsargiai. Daug paparčių taip pat turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba yra visavertė ir gausi B vitaminų, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio ar kruopštaus džiovinimo — todėl išvirus augalą tiaminazė pašalinama.",
+      "knownHazardsLtRefined": "Šiai rūšiai toksiškumo pranešimų nėra, tačiau daugelyje paparčių yra kancerogenų — elgkis atsargiai. Be to, paparčiai dažnai turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Visavertę mitybą valgančiam žmogui nedideli kiekiai nekenkia, tačiau didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė suyra kaitinant ar kruopščiai džiovinant — išvirus augalas tampa saugus."
+    },
+    {
+      "latin": "Cycas",
+      "knownHazards": "The plants contain alkaloids of carcinogens and also an amino-acid that causes chronic nervous disorders[200]. Regular consumption of the plant leads to severe health problems and death. This toxic principle can be removed if the food is properly prepared but consumption of the plant still cannot be recommended because its use often means the death of the plant and it is becoming rare in the wild.",
+      "knownHazardsLt": "Augaluose yra alkaloidų, turinčių kancerogeninių savybių, ir aminorūgšties, sukeliančios lėtinius nervų sutrikimus. Nuolatinis šio augalo vartojimas veda prie rimtų sveikatos problemų ir mirties. Tinkamai paruošus maistą toksiškas pradas pašalinamas, tačiau augalo vartoti vis tiek nerekomenduojama — dažnai tai reiškia augalo žūtį, o gamtoje jis tampa retas.",
+      "knownHazardsLtRefined": "Augale yra kancerogeninių savybių turinčių alkaloidų ir aminorūgšties, sukeliančios lėtinius nervų sutrikimus. Nuolat vartojant gresia rimtos sveikatos pasekmės ir mirtis. Tinkamai paruošus toksiškas pradas pašalinamas, tačiau vartoti vis tiek nerekomenduojama — dažnai tai reiškia augalo žūtį, o gamtoje jis jau tampa retas."
+    },
+    {
+      "latin": "Cycas revoluta",
+      "knownHazards": "The plants contain alkaloids of carcinogens and also an amino-acid that causes chronic nervous disorders[200]. Regular consumption of the plant leads to severe health problems and death. This toxic principle can be removed if the food is properly prepared but consumption of the plant still cannot be recommended because its use often means the death of the plant and it is becoming rare in the wild.",
+      "knownHazardsLt": "Augaluose yra alkaloidų, turinčių kancerogeninių savybių, ir aminorūgšties, sukeliančios lėtinius nervų sutrikimus. Nuolatinis šio augalo vartojimas veda prie rimtų sveikatos problemų ir mirties. Tinkamai paruošus maistą toksiškas pradas pašalinamas, tačiau augalo vartoti vis tiek nerekomenduojama — dažnai tai reiškia augalo žūtį, o gamtoje jis tampa retas.",
+      "knownHazardsLtRefined": "Augale yra kancerogeninių savybių turinčių alkaloidų ir aminorūgšties, sukeliančios lėtinius nervų sutrikimus. Nuolat vartojant gresia rimtos sveikatos pasekmės ir mirtis. Tinkamai paruošus toksiškas pradas pašalinamas, tačiau vartoti vis tiek nerekomenduojama — dažnai tai reiškia augalo žūtį, o gamtoje jis jau tampa retas."
+    },
+    {
+      "latin": "Cydonia",
+      "knownHazards": "The seed is poisonous[200]. Like many of the species in the family Rosaceae it contains hydrogen cyanide (this is the substance that gives almonds their characteristic flavour). In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLt": "Sėklos nuodingos. Kaip ir daugumoje Rosaceae šeimos rūšių, jose yra vandenilio cianido — tos pačios medžiagos, kuri suteikia migdolams būdingą skonį. Mažais kiekiais vandenilio cianidas stimuliuoja kvėpavimą ir gerina virškinimą, taip pat teigiama, kad gali būti naudingas gydant vėžį. Tačiau perdozavus gali sutrikti kvėpavimas ar net ištikti mirtis.",
+      "knownHazardsLtRefined": "Sėklos nuodingos — kaip ir daugelyje Rosaceae šeimos rūšių, jose yra vandenilio cianido, suteikiančio migdolams būdingą skonį. Nedideliais kiekiais jis stimuliuoja kvėpavimą ir gerina virškinimą, tačiau perdozavus gali sutrikti kvėpavimas ar net ištikti mirtis."
+    },
+    {
+      "latin": "Cydonia oblonga",
+      "knownHazards": "The seed is poisonous[200]. Like many of the species in the family Rosaceae it contains hydrogen cyanide (this is the substance that gives almonds their characteristic flavour). In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLt": "Sėklos nuodingos. Kaip ir daugumoje Rosaceae šeimos rūšių, jose yra vandenilio cianido — tos pačios medžiagos, kuri suteikia migdolams būdingą skonį. Mažais kiekiais vandenilio cianidas stimuliuoja kvėpavimą ir gerina virškinimą, taip pat teigiama, kad gali būti naudingas gydant vėžį. Tačiau perdozavus gali sutrikti kvėpavimas ar net ištikti mirtis.",
+      "knownHazardsLtRefined": "Sėklos nuodingos — kaip ir daugelyje Rosaceae šeimos rūšių, jose yra vandenilio cianido, suteikiančio migdolams būdingą skonį. Nedideliais kiekiais jis stimuliuoja kvėpavimą ir gerina virškinimą, tačiau perdozavus gali sutrikti kvėpavimas ar net ištikti mirtis."
+    },
+    {
+      "latin": "Cyperus",
+      "knownHazards": "Because nutsedges often grow in wet or aquatic habitats, they may harbor parasites. Cooking is essential to ensure safety. Textures can be fibrous and somewhat irritating in some species, but tubers and seeds are the most worthwhile parts [2-3].",
+      "knownHazardsLt": "Kadangi viksvuolės dažnai auga drėgnose ar vandens buveinėse, jose gali būti parazitų. Saugumui užtikrinti būtina virti. Kai kurių rūšių tekstūra gali būti pluoštinga ir kiek dirginanti, tačiau gumbai ir sėklos yra vertingiausios dalys.",
+      "knownHazardsLtRefined": "Viksvuolės dažnai auga drėgnose ar vandens buveinėse — jose gali gyventi parazitai, todėl virti būtina. Kai kurių rūšių masė pluoštinga ir gali šiek tiek dirginti, tačiau gumbai ir sėklos yra vertingiausios valgomosios dalys."
+    },
+    {
+      "latin": "Cyrtomium fortunei",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą pranešimų neradome, daugelyje paparčių yra kancerogenų — patartina atsargiai. Daug paparčių taip pat turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba yra visavertė ir gausi B vitaminų, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio ar kruopštaus džiovinimo — todėl išvirus augalą tiaminazė pašalinama.",
+      "knownHazardsLtRefined": "Šiai rūšiai toksiškumo pranešimų nėra, tačiau daugelyje paparčių yra kancerogenų — elgkis atsargiai. Be to, paparčiai dažnai turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Visavertę mitybą valgančiam žmogui nedideli kiekiai nekenkia, tačiau didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė suyra kaitinant ar kruopščiai džiovinant — išvirus augalas tampa saugus."
+    },
+    {
+      "latin": "Cystopteris",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą pranešimų neradome, daugelyje paparčių yra kancerogenų — patartina atsargiai. Daug paparčių taip pat turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba yra visavertė ir gausi B vitaminų, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio ar kruopštaus džiovinimo — todėl išvirus augalą tiaminazė pašalinama.",
+      "knownHazardsLtRefined": "Šiai rūšiai toksiškumo pranešimų nėra, tačiau daugelyje paparčių yra kancerogenų — elgkis atsargiai. Be to, paparčiai dažnai turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Visavertę mitybą valgančiam žmogui nedideli kiekiai nekenkia, tačiau didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė suyra kaitinant ar kruopščiai džiovinant — išvirus augalas tampa saugus."
+    },
+    {
+      "latin": "Cystopteris bulbifera",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą pranešimų neradome, daugelyje paparčių yra kancerogenų — patartina atsargiai. Daug paparčių taip pat turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba yra visavertė ir gausi B vitaminų, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio ar kruopštaus džiovinimo — todėl išvirus augalą tiaminazė pašalinama.",
+      "knownHazardsLtRefined": "Šiai rūšiai toksiškumo pranešimų nėra, tačiau daugelyje paparčių yra kancerogenų — elgkis atsargiai. Be to, paparčiai dažnai turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Visavertę mitybą valgančiam žmogui nedideli kiekiai nekenkia, tačiau didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė suyra kaitinant ar kruopščiai džiovinant — išvirus augalas tampa saugus."
+    },
+    {
+      "latin": "Cystopteris fragilis",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLt": "Nors apie šios rūšies toksiškumą pranešimų neradome, daugelyje paparčių yra kancerogenų — patartina atsargiai. Daug paparčių taip pat turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Mažais kiekiais šis fermentas nepakenks žmonėms, kurių mityba yra visavertė ir gausi B vitaminų, tačiau dideli kiekiai gali sukelti rimtų sveikatos problemų. Fermentas suyra nuo karščio ar kruopštaus džiovinimo — todėl išvirus augalą tiaminazė pašalinama.",
+      "knownHazardsLtRefined": "Šiai rūšiai toksiškumo pranešimų nėra, tačiau daugelyje paparčių yra kancerogenų — elgkis atsargiai. Be to, paparčiai dažnai turi tiaminazės — fermento, kuris naikina organizmo B grupės vitaminus. Visavertę mitybą valgančiam žmogui nedideli kiekiai nekenkia, tačiau didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė suyra kaitinant ar kruopščiai džiovinant — išvirus augalas tampa saugus."
+    },
+    {
+      "latin": "Cytisus",
+      "knownHazards": "Can cause paralysis or death in extreme cases [1-2].",
+      "knownHazardsLt": "Kraštutiniais atvejais gali sukelti paralyžių ar mirtį.",
+      "knownHazardsLtRefined": "Kraštutiniais atvejais gresia paralyžius arba mirtis."
+    },
+    {
+      "latin": "Cytisus scoparius",
+      "knownHazards": "Poisonous[10, 19, 65]. The plant is of extremely low or zero toxicity[76].",
+      "knownHazardsLt": "Nuodingas. Kiti šaltiniai teigia, kad augalo toksiškumas itin mažas arba lygus nuliui.",
+      "knownHazardsLtRefined": "Augalas nuodingas, nors kiti šaltiniai jo toksiškumą laiko itin mažu arba nuliniu."
+    },
+    {
+      "latin": "Daphne",
+      "knownHazards": "All parts of the plant are poisonous[76]. Skin contact with the sap can cause dermatitis in some people[200].",
+      "knownHazardsLt": "Visos augalo dalys nuodingos. Kontaktas su sultimis kai kuriems žmonėms gali sukelti dermatitą.",
+      "knownHazardsLtRefined": "Visos augalo dalys nuodingos. Sultys, patekusios ant odos, kai kuriems žmonėms sukelia dermatitą."
+    },
+    {
+      "latin": "Daphne bholua",
+      "knownHazards": "All parts of the plant are poisonous[76]. Skin contact with the sap can cause dermatitis in some people[200].",
+      "knownHazardsLt": "Visos augalo dalys nuodingos. Kontaktas su sultimis kai kuriems žmonėms gali sukelti dermatitą.",
+      "knownHazardsLtRefined": "Visos augalo dalys nuodingos. Sultys, patekusios ant odos, kai kuriems žmonėms sukelia dermatitą."
+    },
+    {
+      "latin": "Daphne genkwa",
+      "knownHazards": "All parts of the plant are poisonous[76]. Skin contact with the sap can cause dermatitis in some people[200].",
+      "knownHazardsLt": "Visos augalo dalys nuodingos. Sulčių kontaktas su oda kai kuriems žmonėms sukelia dermatitą.",
+      "knownHazardsLtRefined": "Visos augalo dalys nuodingos. Sultys, patekusios ant odos, kai kuriems žmonėms sukelia dermatitą."
+    },
+    {
+      "latin": "Daphne laureola",
+      "knownHazards": "All parts of the plant are poisonous[200]. Skin contact with the sap can cause dermatitis in some people[65, 200].",
+      "knownHazardsLt": "Visos augalo dalys nuodingos. Sulčių kontaktas su oda kai kuriems žmonėms sukelia dermatitą.",
+      "knownHazardsLtRefined": "Visos augalo dalys nuodingos. Sultys, patekusios ant odos, kai kuriems žmonėms sukelia dermatitą."
+    },
+    {
+      "latin": "Daphne mezereum",
+      "knownHazards": "All parts of the plant are highly toxic[7, 10, 19, 65]. Skin contact with the sap can cause dermatitis in some people[65, 200].",
+      "knownHazardsLt": "Visos augalo dalys labai toksiškos. Sulčių kontaktas su oda kai kuriems žmonėms sukelia dermatitą.",
+      "knownHazardsLtRefined": "Visos augalo dalys labai toksiškos. Sultys, patekusios ant odos, kai kuriems žmonėms sukelia dermatitą."
+    },
+    {
+      "latin": "Daphne odora",
+      "knownHazards": "All parts of the plant are poisonous[200]. Skin contact with the sap can cause dermatitis in some people[65, 200].",
+      "knownHazardsLt": "Visos augalo dalys nuodingos. Sulčių kontaktas su oda kai kuriems žmonėms sukelia dermatitą.",
+      "knownHazardsLtRefined": "Visos augalo dalys nuodingos. Sultys, patekusios ant odos, kai kuriems žmonėms sukelia dermatitą."
+    },
+    {
+      "latin": "Darwin",
+      "knownHazards": "The seeds may be poisonous[274].",
+      "knownHazardsLt": "Sėklos gali būti nuodingos.",
+      "knownHazardsLtRefined": "Sėklos gali būti nuodingos."
+    },
+    {
+      "latin": "Dasylirion",
+      "knownHazards": "The leaves are heavily armed with stout marginal teeth and a hard terminal spine, making harvest physically hazardous without gloves, eye protection, and careful positioning. Crowns are large and often embedded in rocky soils, so extraction requires heavy effort. Harvesting the crown kills the plant and should therefore be reserved for genuine necessity or deliberate, legal management. Flower stalks are the most sustainable edible part because cutting them does not kill the plant. Flowers often contain many insects and should be inspected and preferably cooked. As with many desert plants, collection should be avoided from contaminated roadsides, industrial sites, or protected populations.",
+      "knownHazardsLt": "Lapai stipriai apsiginklavę — tvirti pakraščio dantukai ir kietas viršūnės spyglys daro derliaus nuėmimą fiziškai pavojingą be pirštinių, akių apsaugos ir atsargaus pozicionavimo. Vainikai dideli, dažnai įsmigę į uolingą dirvą, todėl ištraukimas reikalauja didelio darbo. Vainiko nupjovimas augalą užmuša, todėl tai derėtų daryti tik tikros būtinybės ar sąmoningo, teisėto valdymo atveju. Žiedkočiai — tvariausia valgoma dalis, nes jų pjovimas augalo neužmuša. Žieduose dažnai pilna vabzdžių, todėl reikia juos apžiūrėti ir geriausia išvirti. Kaip ir su daugeliu dykumos augalų, venk rinkti prie užterštų kelių, pramoninių vietų ar saugomų populiacijų.",
+      "knownHazardsLtRefined": "Lapai stipriai apsiginklavę — tvirti pakraščio dantukai ir kietas viršūnės spyglys daro lapų nuėmimą fiziškai pavojingą be pirštinių ir akių apsaugos. Vainikai dideli ir dažnai įsmigę į uolingą dirvą — ištraukimui prireiks jėgos. Vainiko nupjovimas augalą užmuša, todėl to imkis tik tikros būtinybės atveju. Žiedkočiai — tvariausia valgoma dalis: juos nupjovus augalas išlieka gyvas. Žieduose dažnai pilna vabzdžių — apžiūrėk ir virkite. Venk rinkti prie užterštų kelių, pramoninių vietų ar saugomų populiacijų."
+    },
+    {
+      "latin": "Dasylirion texanum",
+      "knownHazards": "Texas sotol carries the same physical hazards as other sotols: sharp marginal teeth and terminal leaf spines. Gloves and careful handling are essential. Crown harvest is destructive. Insect contamination of flowers is likely and cooking is recommended. Local legality and sustainability should always be considered before harvest.",
+      "knownHazardsLt": "Teksaso sotolis kelia tokius pat fizinius pavojus kaip ir kiti sotoliai — aštrūs pakraščio dantukai ir lapų viršūnių spygliai. Pirštinės ir atsargus elgesys būtini. Vainiko nuėmimas yra destruktyvus. Žieduose tikėtinas vabzdžių užterštumas, todėl rekomenduojama virti. Prieš renkant visada įvertink vietinį teisėtumą ir tvarumą.",
+      "knownHazardsLtRefined": "Teksaso sotolis kelia tokius pat fizinius pavojus kaip visi sotoliai — aštrūs pakraščio dantukai ir lapų viršūnių spygliai. Pirštinės ir atsargus elgesys būtini. Vainiko nuėmimas augalą sunaikina. Žieduose tikėtini vabzdžiai — virkite prieš valgant. Prieš rinkdamas visada įvertink vietos taisykles ir tvarumą."
+    },
+    {
+      "latin": "Delphinium",
+      "knownHazards": "All parts of the plant are poisonous in large doses[4, 21, 65]. The seed is especially toxic[4].",
+      "knownHazardsLt": "Visos augalo dalys didelėmis dozėmis nuodingos. Sėklos ypač toksiškos.",
+      "knownHazardsLtRefined": "Visos augalo dalys didelėmis dozėmis nuodingos — sėklos ypač."
+    },
+    {
+      "latin": "Delphinium brunonianum",
+      "knownHazards": "All parts of the plant are toxic[65, 172]. The plant is most toxic when it is young[200].",
+      "knownHazardsLt": "Visos augalo dalys toksiškos. Toksiškiausias augalas yra jaunas.",
+      "knownHazardsLtRefined": "Visos augalo dalys toksiškos — labiausiai, kol augalas dar jaunas."
+    },
+    {
+      "latin": "Delphinium consolida",
+      "knownHazards": "All parts of the plant are poisonous in large doses[4, 21, 65]. The seed is especially toxic[4].",
+      "knownHazardsLt": "Visos augalo dalys didelėmis dozėmis nuodingos. Sėklos ypač toksiškos.",
+      "knownHazardsLtRefined": "Visos augalo dalys didelėmis dozėmis nuodingos — sėklos ypač."
+    }
+  ]
+}
