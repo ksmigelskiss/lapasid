@@ -329,7 +329,14 @@ export function fromAIResult(aiResult) {
     aiCultivarsExist: aiResult.cultivarsExist ?? null,
     aiVerifiedAt: new Date().toISOString(),
     lotyniskas:  aiResult.latinName ?? '',
-    lietuviškas: aiResult.name ?? '',
+    // 2026-05-25 fix: Phase 2 AI gali generuoti species-qualified LT name
+    // (aiResult.lietuviskas) per TOOL_DETAILS schema rule. Tas override'ina
+    // Phase 1 baseResult.name (genus-only iš lt-names.json). Jei AI nesugeneravo
+    // (Phase 1 baseResult arba slim AI mode), fallback'inam į aiResult.name.
+    // Pavyzdys: aiResult.lietuviskas = "Dracena trijuostė"
+    //          aiResult.name = "Dracena" (Phase 1 genus-only)
+    //          → lietuviškas = "Dracena trijuostė" (species-qualified wins)
+    lietuviškas: aiResult.lietuviskas ?? aiResult.name ?? '',
     emoji:       aiResult.emoji ?? '🌿',
     tipas:       aiResult.tipas ?? '',
     augimo_greitis: aiResult.augimo_greitis ?? '',

@@ -2552,6 +2552,15 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <h3 className="font-display text-xl font-semibold tracking-tight text-bone leading-tight">{result.name}</h3>
                   <p className="text-sm text-bone/70 italic mt-1">{result.latinName}</p>
+                  {/* 2026-05-25 — taxonomy migration note. Rodom kitą side
+                      (jei latinName yra obsolete → modern; jei canonical → anksčiau). */}
+                  {result.reclassification && (
+                    <p className="text-[10px] text-bone/50 mt-0.5 font-mono uppercase tracking-[0.12em]">
+                      {result.latinName === result.reclassification.obsolete
+                        ? `modern: ${result.reclassification.canonical}`
+                        : `anksčiau: ${result.reclassification.obsolete}`}
+                    </p>
+                  )}
                   {(result.inatLtName || result.sinonimai?.length > 0 || result.englishNames?.length > 0) && (
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {result.inatLtName && (
@@ -2575,6 +2584,13 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                 <div className="flex-1 min-w-0">
                   <h3 className="font-display text-lg font-semibold tracking-tight text-forest-800 leading-tight">{result.name}</h3>
                   <p className="text-sm text-forest-500 italic mt-1">{result.latinName}</p>
+                  {result.reclassification && (
+                    <p className="text-[10px] text-forest-500/70 mt-0.5 font-mono uppercase tracking-[0.12em]">
+                      {result.latinName === result.reclassification.obsolete
+                        ? `modern: ${result.reclassification.canonical}`
+                        : `anksčiau: ${result.reclassification.obsolete}`}
+                    </p>
+                  )}
                   {(result.inatLtName || result.sinonimai?.length > 0) && (
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {result.inatLtName && <span className="font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-forest-600 bg-forest-100 rounded px-1.5 py-0.5">{result.inatLtName}</span>}

@@ -127,46 +127,84 @@ export async function searchStage1(userQuery) {
   }
 
   // ── LAYER 1: DB lookup ─────────────────────────────────────
+  //
+  // TRY-ORIGINAL-FIRST pattern (2026-05-25 fix):
+  // PRIES: code'as pirma resolveCanonical'ino (Sansevieria trifasciata →
+  // Dracaena trifasciata), tada lookupPlant. BET pre-DB Dracaena.species
+  // NETURI trifasciata entry'o (Beckett 1993 dar nematė 2017 migration'o),
+  // tai gauni genus-level fallback su WRONG species content (e.g. marginata
+  // description'as patenka).
+  //
+  // PO: try original FIRST — jei pre-DB turi „Sansevieria trifasciata"
+  // species (TURI — su rich Beckett content), naudoji ją. Tik jei
+  // original neturi SPECIES level (plant.species == null), bandai canonical.
+  // RAG layer'yje (buildPlantRagContext) jau wire'inta tas pats pattern'as.
   let latin = null
-  let ltMatchedFrom = null  // 'direct' | 'reverse' | null
+  let plant = null
+  let ltEntry = null
+  let reclass = null
+  let ltMatchedFrom = null  // 'direct' | 'reverse' | 'reclassified' | null
 
   if (parsed.type === 'latin') {
-    // Check if obsolete name → redirect
-    const canonical = await resolveCanonical(parsed.latin)
-    latin = canonical
-    ltMatchedFrom = canonical !== parsed.latin ? 'reclassified' : 'direct'
+    // Step 1: try ORIGINAL latin (pre-canonical). Jei pre-DB turi species —
+    // naudojam jį (rich content from legacy taxonomy).
+    plant = await lookupPlant(parsed.latin)
+    ltEntry = await resolveLt(parsed.latin)
+    reclass = await getReclassification(parsed.latin)
+
+    if (plant?.species) {
+      // Original has species-level content — naudojam su reclass note (jei yra)
+      latin = parsed.latin
+      ltMatchedFrom = reclass ? 'reclassified-with-original-content' : 'direct'
+    } else {
+      // Original neturi species (arba neturi genus). Bandyk canonical.
+      const canonical = await resolveCanonical(parsed.latin)
+      if (canonical !== parsed.latin) {
+        const canonPlant = await lookupPlant(canonical)
+        if (canonPlant?.genus) {
+          plant = canonPlant
+          ltEntry = await resolveLt(canonical)
+          latin = canonical
+          ltMatchedFrom = 'reclassified'
+        } else {
+          // Net canonical neradom — palikt original latin, gausim genus-only
+          // arba pre-DB miss path'ą
+          latin = parsed.latin
+          ltMatchedFrom = 'direct'
+        }
+      } else {
+        latin = parsed.latin
+        ltMatchedFrom = 'direct'
+      }
+    }
   } else if (parsed.type === 'lt') {
     // Reverse lookup: LT → Latin
     const resolved = await resolveLatin(parsed.ltName)
     if (resolved) {
       latin = resolved
+      plant = await lookupPlant(latin)
+      ltEntry = await resolveLt(latin)
+      reclass = await getReclassification(latin)
       ltMatchedFrom = 'reverse'
     }
   }
 
-  if (latin) {
-    // We have a Latin name — lookup in pre-DB
-    const plant = await lookupPlant(latin)
-    const ltEntry = await resolveLt(latin)
-    const reclass = await getReclassification(parsed.latin || latin)
-
-    if (plant?.genus) {
-      // Successful DB hit
-      const aspcaMap = await getAspcaMap()
-      const toxicity = aspcaMap[plant.genus.genus] ?? null
-      const result = buildSlimResult({
-        latin,
-        plant,
-        ltEntry,
-        reclass,
-        toxicity,
-        layer: 'db',
-        elapsedMs: Date.now() - startTime,
-        userQuery,
-        ltMatchedFrom,
-      })
-      return result
-    }
+  if (plant?.genus) {
+    // Successful DB hit
+    const aspcaMap = await getAspcaMap()
+    const toxicity = aspcaMap[plant.genus.genus] ?? null
+    const result = buildSlimResult({
+      latin,
+      plant,
+      ltEntry,
+      reclass,
+      toxicity,
+      layer: 'db',
+      elapsedMs: Date.now() - startTime,
+      userQuery,
+      ltMatchedFrom,
+    })
+    return result
   }
 
   // ── FALLBACK: jei Latin lookup miss'ino ir input ASCII (klasifikatorius

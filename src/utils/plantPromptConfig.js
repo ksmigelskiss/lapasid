@@ -67,6 +67,22 @@ export const TOOL_DETAILS = {
         description: 'LT folk/vernacular names jei zinai (e.g. Maranta -> ["Maldos augalas"], Crassula -> ["Pinigu medis"]). Tik PRIDEK names cia, nedubliuok jei jie jau yra zinomi rusies (ziur. RAG ltName). Tuscias array OK kai folk name nezinai. NESVARSTYK descriptors (e.g. „zolinis augalas") kaip names.',
       },
 
+      // ── PRIMARY LT NAME (species-qualified, 2026-05-25 fix) ───
+      // PRIES: lt-names.json turi tik GENUS-level entries (visi Dracaena
+      // species gauna „Dracena", visi Begonia gauna „Begonija"). User'is
+      // mato library'ėj dvi „Dracena" korteles (marginata + trifasciata),
+      // nedidelės skirtingo iš tikrųjų rūšies.
+      //
+      // PO: Phase 2 AI generuoja species-qualified LT name pagal LT
+      // botanikos konvenciją (gaspadorius pavyzdžiai: 83 multi-word
+      // entries — „Aspidistra aukštoji", „Begonija aukštoji", „Ajeras
+      // viksvinis", „Chrizantema indinė", „Cirtomis pjautuviškasis").
+      // Tas override'ina baseResult.lietuviškas (genus-only Phase 1 fallback).
+      lietuviskas: {
+        type: 'string',
+        description: 'LT vardas (overrides genus-only Phase 1 fallback). Logika: jei latinName yra GENUS-level (vienas zodis, e.g. Maranta) - grazink genus LT name (Maranta). Jei SPECIES-level (du zodziai, e.g. Dracaena trifasciata) - privalomai generuok species-qualified LT name pagal LT botanikos konvencija: arba [Genus LT] [adjective species qualifier] (gaspadorius pavyzdziai: Aspidistra aukstoji, Begonija aukstoji, Ajeras viksvinis, Chrizantema indine, Cirtomis pjautuviskasis), arba [Adjective] [genus LT] (Trijuoste dracena, Marginatoji dracena). JEI nezinai LT species adjective - naudok Latin epithet kaip qualifier: Dracena trifasciata. NIEKADA negrazink tik genus name (e.g. Dracena) kai latinName yra species-level - tas sukuria identicnas etiketes skirtingoms rusims.',
+      },
+
       // ── CARE INFO (laistymas, tresimas, etc.) ────────────────
       laistymasIntervalas: {
         type: 'object',
@@ -242,7 +258,7 @@ export const TOOL_DETAILS = {
     required: ['laistymasIntervalas', 'tresimas', 'dormancyInfo', 'prieziura',
                'substratas', 'persodinimas', 'ziemojimas', 'dauginimas', 'problemos',
                'sviesa', 'vanduo', 'tipas', 'augimo_greitis', 'sunkumas', 'idomybes', 'savybes',
-               'aprasymas', 'kilme', 'auginimas', 'infoConfidence'],
+               'aprasymas', 'kilme', 'auginimas', 'infoConfidence', 'lietuviskas'],
                // ltSynonyms NEEINA į required — tuščias array OK kai nežinai folk name'o
   },
 }
