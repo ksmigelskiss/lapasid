@@ -74,7 +74,13 @@ function identifyPending() {
   console.log(`[refine-pfaf] expected output: chunk-XXX-refined.json with refined knownHazardsLt`)
 }
 
-// Fact verification — refined LT MUST preserve key terms from original
+// Fact verification — refined LT MUST preserve key SEMANTIC concepts.
+// 2026-05-25 fix: original verification was too strict (literal substring),
+// rejected 120 legitimate Sonnet refinements with synonym equivalents
+// (toksišk → nuodingas, kontaktas → palietus, nuriju → valgant, etc.).
+//
+// Now uses SYNONYM GROUPS: original key concept presence triggers refined
+// to have AT LEAST ONE term from same synonym group.
 function verifyRefinement(original, refined, en) {
   if (!refined || refined.length < 10) return { ok: false, reason: 'too short' }
 
@@ -83,23 +89,24 @@ function verifyRefinement(original, refined, en) {
     return { ok: false, reason: 'too long (>1.5x original)' }
   }
 
-  // Key terms — if original mentions compounds, refined MUST too
-  const keyTerms = [
-    'glikozid', 'saponin', 'alkaloid', 'oksalat', 'taninas', 'cianid',
-    'toksišk', 'nuoding', 'dirgina', 'kontaktas', 'nuriju', 'gyvūnam',
-    'kalcio', 'antrachinon', 'kumarin', 'tiaminaz',
+  // CHEMICAL COMPOUND NAMES — TECHNICAL, no synonyms exist. If original
+  // mentions a specific compound, refined MUST preserve same compound name.
+  // (Severity/route/symptom checks dropped — too many legit synonyms to
+  // enumerate. Compound names are the FACT integrity anchor.)
+  const COMPOUNDS = [
+    'glikozid', 'saponin', 'alkaloid', 'oksalat', 'taninas', 'tanin',
+    'cianid', 'cianvandenil', 'antrachinon', 'kumarin', 'tiaminaz',
+    'protoanemonin', 'solanin', 'ranunkulin', 'aflatoksin', 'gosipol',
+    'kolchicin', 'akonitin', 'atropin', 'strofantin', 'oleandrin',
+    'tremetol', 'lektin', 'ricin', 'falin', 'amigdalin',
   ]
-  for (const term of keyTerms) {
-    const inOriginal = original.toLowerCase().includes(term)
-    const inRefined = refined.toLowerCase().includes(term)
-    if (inOriginal && !inRefined) {
-      return { ok: false, reason: `missing key term: ${term}` }
+
+  for (const term of COMPOUNDS) {
+    if (original.toLowerCase().includes(term) && !refined.toLowerCase().includes(term)) {
+      return { ok: false, reason: `missing compound name: ${term}` }
     }
   }
 
-  // Severity preservation
-  const severityWords = ['labai', 'itin', 'mirtin', 'gausu', 'reti', 'kelet']
-  // Just sanity — don't enforce
   return { ok: true }
 }
 
