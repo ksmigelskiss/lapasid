@@ -47,6 +47,19 @@ function stripPfafMarkers(text) {
   return text.replace(/\s*\[\s*\d+\s*\]/g, '').replace(/\s+/g, ' ').trim()
 }
 
+// Smart truncation — cuts at last sentence boundary BEFORE maxLen.
+// Prevents mid-word cuts (user feedback 2026-05-25). MIRROR server.
+function smartTruncate(text, maxLen = 600) {
+  if (!text || text.length <= maxLen) return text
+  const slice = text.slice(0, maxLen)
+  const lastDot = Math.max(slice.lastIndexOf('. '), slice.lastIndexOf('.'))
+  if (lastDot > maxLen * 0.6) {
+    return slice.slice(0, lastDot + 1)
+  }
+  const lastSpace = slice.lastIndexOf(' ')
+  return (lastSpace > 0 ? slice.slice(0, lastSpace) : slice) + '...'
+}
+
 function translateAnimalTargets(targets, terms) {
   if (!targets || targets.length === 0) return ''
   return targets.map(t => terms[t.toLowerCase()] ?? t).join(', ')
@@ -286,13 +299,12 @@ export async function deriveToxicityFromSources(latinName) {
       : severity === 'vidutinis' ? 'Toksiškas augalas — venkite nurijimo ir kontakto su sultimis. Kreipkitės į veterinarą jei įvyko apsinuodijimas.'
       : 'Augalas gali sukelti dirginimą — venkite kontakto su sultimis.'
 
-      // 2026-05-25 — prefer LT pre-translated knownHazardsLt if available,
-      // kitaip strip EN markers + truncate. Pre-DB batch translate per
-      // scripts/translate-pfaf-hazards.mjs.
+      // 2026-05-25 — prefer LT pre-translated knownHazardsLt + smart truncate
+      // (sentence boundary, no mid-word cuts).
       const hazardText = pfafEntry.knownHazardsLt
         ? pfafEntry.knownHazardsLt
         : stripPfafMarkers(pfafEntry.knownHazards)
-      const hazardTruncated = hazardText.slice(0, 300) + (hazardText.length > 300 ? '...' : '')
+      const hazardTruncated = smartTruncate(hazardText, 600)
       const lang = pfafEntry.knownHazardsLt ? '' : ', anglų k.'
       const pfafCitation = `\n\nŠaltinis (PFAF${lang}): "${hazardTruncated}"`
 

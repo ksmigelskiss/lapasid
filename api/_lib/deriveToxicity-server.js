@@ -49,6 +49,25 @@ function stripPfafMarkers(text) {
   return text.replace(/\s*\[\s*\d+\s*\]/g, '').replace(/\s+/g, ' ').trim()
 }
 
+// Smart truncation — cuts at last sentence boundary BEFORE maxLen, ne raw char.
+// Prevents „...kruo..." mid-word cuts (user feedback 2026-05-25).
+function smartTruncate(text, maxLen = 600) {
+  if (!text || text.length <= maxLen) return text
+  const slice = text.slice(0, maxLen)
+  // Find last sentence end (period + space or period + end)
+  const lastDot = Math.max(
+    slice.lastIndexOf('. '),
+    slice.lastIndexOf('.'),
+  )
+  if (lastDot > maxLen * 0.6) {
+    // Sentence end found in reasonable position — cut there clean
+    return slice.slice(0, lastDot + 1)
+  }
+  // No sentence break — fall back to word boundary
+  const lastSpace = slice.lastIndexOf(' ')
+  return (lastSpace > 0 ? slice.slice(0, lastSpace) : slice) + '...'
+}
+
 // Translate ASPCA animal terms array → LT comma-separated string
 function translateAnimalTargets(targets, terms) {
   if (!targets || targets.length === 0) return ''
@@ -202,12 +221,12 @@ export async function deriveToxicityFromSourcesServer(latinName) {
       : 'Augalas gali sukelti dirginimą — venkite kontakto su sultimis.'
 
       // 2026-05-25 — prefer LT pre-translated knownHazardsLt if available,
-      // kitaip strip EN markers + truncate. Pre-DB batch translate (PFAF) — žr.
-      // scripts/translate-pfaf-hazards.mjs (post-2026-05-25).
+      // kitaip strip EN markers + truncate. Smart truncation cuts at sentence
+      // boundary (no „...kruo..." mid-word cuts — user feedback).
       const hazardText = pfafEntry.knownHazardsLt
         ? pfafEntry.knownHazardsLt
         : stripPfafMarkers(pfafEntry.knownHazards)
-      const hazardTruncated = hazardText.slice(0, 300) + (hazardText.length > 300 ? '...' : '')
+      const hazardTruncated = smartTruncate(hazardText, 600)
       const lang = pfafEntry.knownHazardsLt ? '' : ', anglų k.'
       const pfafCitation = `\n\nŠaltinis (PFAF${lang}): "${hazardTruncated}"`
 
