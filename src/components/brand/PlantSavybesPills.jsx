@@ -14,6 +14,38 @@ import { Skull, Apple, BadgeCheck, HeartPlus, User, Cat, AlertTriangle } from 'l
  * PAVOJAI sekciją su generiniu ATSARGIAI pill'u + `toksiskumo_info` kaip body.
  */
 
+// ── renderWithLinks — replace inline URLs su clickable hyperlink (2026-05-25) ─
+//
+// Pre-DB toxicity detales turi inline „Šaltinis: https://www.aspca.org/..." text'us.
+// Raw URL'as užima 2-3 eilutes (~80 chars), be jokio user value — vienintelis
+// purpose'as yra verify, BET clickable. Konvertuojam į trumpą hyperlink'ą.
+function renderWithLinks(text) {
+  if (!text) return null
+  // Regex: catch „Šaltinis: <URL>" arba just standalone URL
+  const parts = text.split(/(Šaltinis:?\s*https?:\/\/[^\s]+|https?:\/\/[^\s]+)/g)
+  return parts.map((part, i) => {
+    const match = part.match(/^(Šaltinis:?\s*)?(https?:\/\/[^\s]+)$/)
+    if (match) {
+      const url = match[2]
+      const prefix = match[1] || ''
+      const label = url.includes('aspca.org') ? 'ASPCA'
+                  : url.includes('pfaf.org') ? 'PFAF'
+                  : url.includes('wikipedia') ? 'Wikipedia'
+                  : 'šaltinis'
+      return (
+        <span key={i}>
+          {prefix && 'Šaltinis: '}
+          <a href={url} target="_blank" rel="noopener noreferrer"
+             className="underline text-forest-700/80 hover:text-forest-700 transition-colors">
+            {label} ↗
+          </a>
+        </span>
+      )
+    }
+    return part
+  })
+}
+
 // ── Section header — mono caps + hairline ────────────────────
 
 // Section header — Lygis 1 hierarchijoje. Sutampa su PlantDetail'o `Section`
@@ -213,7 +245,7 @@ export default function PlantSavybesPills({ plant }) {
           )}
 
           {pavojaiDetales && !showsSafetyCallout && (
-            <p className="text-[13px] text-forest-700 leading-relaxed pt-1">{pavojaiDetales}</p>
+            <p className="text-[13px] text-forest-700 leading-relaxed pt-1">{renderWithLinks(pavojaiDetales)}</p>
           )}
         </div>
       )}
