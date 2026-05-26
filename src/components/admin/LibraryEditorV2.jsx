@@ -1818,7 +1818,16 @@ function buildTabDirtyMap(draft, originalDraft, entryType) {
 // ── Helpers ──────────────────────────────────────────────────────
 
 function fieldDirty(current, original) {
-  return JSON.stringify(current) !== JSON.stringify(original ?? '')
+  // Treat null/undefined/empty-string as equivalent (admin'as nemato skirtumo
+  // tarp jų UI'e). Tuščias array/object — taip pat equivalent į null
+  // (nepasakytume „pakeitė" jei buvo undefined ir tapo []).
+  const norm = (v) => {
+    if (v == null || v === '') return ''
+    if (Array.isArray(v) && v.length === 0) return ''
+    if (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0) return ''
+    return JSON.stringify(v)
+  }
+  return norm(current) !== norm(original)
 }
 
 function defaultValueFor(_k) { return '' }
