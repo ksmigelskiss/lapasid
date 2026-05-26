@@ -34,9 +34,11 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import {
   Search, ChevronRight, ChevronDown, ImageOff, Layers, Eye, Filter,
-  Save, RotateCcw, Trash2, AlertTriangle, X, CheckCircle2,
+  Save, RotateCcw, Trash2, AlertTriangle, X, CheckCircle2, Plus, Minus,
+  Image as ImageIcon, Type, BookOpen, Droplet, Skull, Tag, Info,
 } from 'lucide-react'
 import { ProfileContent } from '../PlantDetail'
+import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS, LIFECYCLES } from '../../utils/taxonGroups'
 
 const WIDGET = 'bg-bone-50 rounded-2xl border border-bone-400/40 shadow-[0_1px_3px_rgba(28,58,42,0.06),0_4px_14px_rgba(28,58,42,0.05)]'
 const MIN_WIDTH_PX = 1280
@@ -47,6 +49,69 @@ const FILTERS = [
   { id: 'modified',   label: 'Pakeisti'    },  // _batchEnrichedAt < 7d
   { id: 'standalone', label: 'Standalone' },
   { id: 'series',     label: 'Serijos'     },
+]
+
+// ── Schema enums (chip select'iams) ──────────────────────────────────
+//
+// Schema'os realios enum reikšmės yra schema'os pirmas language layer'is —
+// silpnas/vidutinis/stiprus. UI label'ai = vartotojui draugiški terminai
+// (dirgina/toksiškas/mirtinas — user spec'as 2026-05-25). Tooltip rodo
+// abu — kad admin'as žinotų, kas iš tikrųjų rašoma DB.
+const SEVERITY_OPTS = [
+  { value: 'silpnas',   label: 'Dirgina',   help: 'Vietinis kontaktas — odos/burnos dirginimas, ne sisteminis. (schema: silpnas)' },
+  { value: 'vidutinis', label: 'Toksiškas', help: 'Reikšminga žala — vėmimas, viduriavimas, paralys. (schema: vidutinis)' },
+  { value: 'stiprus',   label: 'Mirtinas',  help: 'Net mažais kiekiais — mirtinai pavojinga. (schema: stiprus)' },
+]
+const TIPAS_OPTS = [
+  { value: 'toksiskas',    label: 'Toksiška'    },
+  { value: 'alergiskas',   label: 'Alergiška'   },
+  { value: 'dirginantis',  label: 'Dirginanti'  },
+]
+const TARGET_OPTS = [
+  { value: 'zmonems',  label: 'Žmonėms'  },
+  { value: 'gyvunams', label: 'Gyvūnams' },
+]
+const SUNKUMAS_OPTS = [
+  { value: 1, label: '1 · labai lengvas' },
+  { value: 2, label: '2 · lengvas' },
+  { value: 3, label: '3 · vidutinis' },
+  { value: 4, label: '4 · iššūkis' },
+  { value: 5, label: '5 · tik patyrusiems' },
+]
+const AUGINIMAS_OPTS = [
+  { value: 'kambarinis', label: 'Kambarinis' },
+  { value: 'sodo',       label: 'Sodo'       },
+  { value: 'laukinis',   label: 'Laukinis'   },
+]
+const INFO_CONFIDENCE_OPTS = [
+  { value: 'aukstas',   label: 'Aukštas'   },
+  { value: 'vidutinis', label: 'Vidutinis' },
+  { value: 'zemas',     label: 'Žemas'     },
+]
+const AUGIMO_GREITIS_OPTS = [
+  { value: 'lėtas',     label: 'Lėtas'     },
+  { value: 'vidutinis', label: 'Vidutinis' },
+  { value: 'greitas',   label: 'Greitas'   },
+]
+
+// ── Tab definitions ──────────────────────────────────────────────────
+//
+// Tab'ai matomi center pane'o viršuje. Cultivar'as turi pilną 7-tab'ų rinkinį,
+// Series — sutrumpintą (be Foto/Toksiškumas/Klasifikacija — netaikoma).
+const CULTIVAR_TABS = [
+  { id: 'identification', label: 'Identifikacija', Icon: Type        },
+  { id: 'photo',          label: 'Foto',            Icon: ImageIcon   },
+  { id: 'descriptions',   label: 'Aprašymai',       Icon: BookOpen    },
+  { id: 'care',           label: 'Priežiūra',       Icon: Droplet     },
+  { id: 'toxicity',       label: 'Toksiškumas',     Icon: Skull       },
+  { id: 'classification', label: 'Klasifikacija',   Icon: Tag         },
+  { id: 'meta',           label: 'Meta',            Icon: Info        },
+]
+const SERIES_TABS = [
+  { id: 'identification', label: 'Identifikacija', Icon: Type     },
+  { id: 'descriptions',   label: 'Aprašymai',       Icon: BookOpen },
+  { id: 'care',           label: 'Care šablonas',   Icon: Droplet  },
+  { id: 'meta',           label: 'Meta',            Icon: Info     },
 ]
 
 // ── Main export ─────────────────────────────────────────────────────
@@ -89,6 +154,9 @@ export default function LibraryEditorV2({
 
   // ── Unsaved-changes guard modal
   const [pendingNav, setPendingNav] = useState(null)  // { id, type } pending switch
+
+  // ── Active tab (per entry — reset'inamas kai keisis entry)
+  const [activeTab, setActiveTab] = useState('identification')
 
   // ── URL routing — ?edit=docId
   const hydratedRef = useRef(false)
@@ -151,6 +219,7 @@ export default function LibraryEditorV2({
     setDraft(norm)
     setOriginalDraft(norm)
     setSaveError(null)
+    setActiveTab('identification')  // reset tab kai keičiam entry
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, selectedType])
 
@@ -186,9 +255,29 @@ export default function LibraryEditorV2({
     return () => window.removeEventListener('beforeunload', handler)
   }, [dirty])
 
-  // ── Update draft field (passed to form components)
-  const updateField = useCallback((key, value) => {
-    setDraft(d => d ? { ...d, [key]: value } : d)
+  // ── Update draft field — path-aware (supports nested keys).
+  //
+  // path = string ('lotyniskas') ARBA nested ('savybes.pavojingumas.lygis').
+  // value = naujas value (any type — string, array, object, null).
+  // Object'us klonuojam (structuredClone) kad React detect'intų ref pakeitimą
+  // ir re-render'intų reliable. Performance OK — draft'as 30-50 field'ų,
+  // structuredClone'as ~0.1ms.
+  const updateField = useCallback((path, value) => {
+    setDraft(d => {
+      if (!d) return d
+      if (!path.includes('.')) return { ...d, [path]: value }
+      const keys = path.split('.')
+      const next = structuredClone(d)
+      let cur = next
+      for (let i = 0; i < keys.length - 1; i++) {
+        if (cur[keys[i]] == null || typeof cur[keys[i]] !== 'object') {
+          cur[keys[i]] = {}
+        }
+        cur = cur[keys[i]]
+      }
+      cur[keys[keys.length - 1]] = value
+      return next
+    })
   }, [])
 
   // ── Save handler
@@ -295,6 +384,9 @@ export default function LibraryEditorV2({
         onSave={() => handleSave()}
         onDiscard={handleDiscard}
         onDelete={handleDelete}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        taxonGroups={taxonGroups}
       />
       <RightPanePreview entry={selectedEntry} draft={draft} entryType={selectedType} />
 
@@ -652,6 +744,8 @@ function CenterPaneEditor({
   entry, entryType, draft, originalDraft, updateField,
   dirty, saving, saveError, savedToast,
   onSave, onDiscard, onDelete,
+  activeTab, setActiveTab,
+  taxonGroups,
 }) {
   if (!entry || !draft) {
     return (
@@ -664,7 +758,9 @@ function CenterPaneEditor({
     )
   }
 
-  // Count dirty fields for save button label
+  // Count dirty fields for save button label (top-level diff'as).
+  // NESTED field'ai (savybes.pavojai[], careInfo.*) skaičiuojami kaip 1 dirty
+  // jei subtree pakeistas — kad chip badge neblendintų.
   const dirtyCount = useMemo(() => {
     if (!dirty || !originalDraft) return 0
     let n = 0
@@ -673,6 +769,17 @@ function CenterPaneEditor({
     }
     return n
   }, [draft, originalDraft, dirty])
+
+  // Per-tab dirty count — UI tab indicator'iui (rodome dot'ą prie tab'o jei
+  // jame yra pakeistų field'ų).
+  const tabDirtyMap = useMemo(() => {
+    if (!dirty || !originalDraft) return {}
+    return buildTabDirtyMap(draft, originalDraft, entryType)
+  }, [draft, originalDraft, dirty, entryType])
+
+  const tabs = entryType === 'series' ? SERIES_TABS : CULTIVAR_TABS
+  const activeTabExists = tabs.some(t => t.id === activeTab)
+  const effectiveActiveTab = activeTabExists ? activeTab : tabs[0].id
 
   return (
     <div className={`${WIDGET} flex flex-col h-full overflow-hidden relative`}>
@@ -712,6 +819,7 @@ function CenterPaneEditor({
             </button>
           </div>
         </div>
+
         {saveError && (
           <div className="mx-5 mb-3 px-3 py-2 bg-terracotta-50 border border-terracotta-200/60 rounded-md text-[11px] text-terracotta-700 flex items-start gap-2">
             <AlertTriangle size={11} className="flex-shrink-0 mt-0.5" />
@@ -724,29 +832,35 @@ function CenterPaneEditor({
             <span>Išsaugota.</span>
           </div>
         )}
+
+        {/* Tab navigation */}
+        <div className="px-3 pb-0 flex items-center gap-0.5 overflow-x-auto">
+          {tabs.map(t => (
+            <TabButton
+              key={t.id}
+              tab={t}
+              active={effectiveActiveTab === t.id}
+              dirty={tabDirtyMap[t.id]}
+              onClick={() => setActiveTab(t.id)}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Body — Etapas 3 įdės pilnus tab'us. Dabar: bazinis identifikacijos
-          form'as + raw JSON viewer kitiems laukams. Tai pakankama testavimui
-          save/discard flow'o. */}
+      {/* Tab content body */}
       <div className="flex-1 overflow-y-auto p-5">
-        <BasicIdentForm
+        <TabContent
+          tabId={effectiveActiveTab}
+          entry={entry}
+          entryType={entryType}
           draft={draft}
           originalDraft={originalDraft}
           updateField={updateField}
-          entryType={entryType}
+          taxonGroups={taxonGroups}
         />
-        <details className="mt-6">
-          <summary className="cursor-pointer font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 mb-2">
-            Visi laukai (raw JSON) — Etapas 3 įdės struktūrizuotus tabs'us
-          </summary>
-          <pre className="text-[10px] text-forest-500 font-mono bg-bone-100 p-3 rounded overflow-auto max-h-[40vh]">
-            {JSON.stringify(draft, null, 2)}
-          </pre>
-        </details>
       </div>
 
-      {/* Danger zone — apačioje */}
+      {/* Danger zone */}
       <div className="flex-shrink-0 border-t border-bone-400/40 bg-terracotta-50/40 px-5 py-2.5">
         <button
           onClick={onDelete}
@@ -760,56 +874,463 @@ function CenterPaneEditor({
   )
 }
 
-// ── Basic identification form (Etapas 2 placeholder; Etapas 3 expand to 7 tabs) ─
-
-function BasicIdentForm({ draft, originalDraft, updateField, entryType }) {
-  if (entryType === 'series') {
-    return (
-      <div className="space-y-3 max-w-2xl">
-        <FormRow label="Genus" dirty={fieldDirty(draft.genus, originalDraft?.genus)}>
-          <TextInput value={draft.genus ?? ''} onChange={v => updateField('genus', v)} />
-        </FormRow>
-        <FormRow label="Pavadinimas" dirty={fieldDirty(draft.name, originalDraft?.name)}>
-          <TextInput value={draft.name ?? ''} onChange={v => updateField('name', v)} />
-        </FormRow>
-        <FormRow label="Tipas" dirty={fieldDirty(draft.type, originalDraft?.type)}>
-          <TextInput value={draft.type ?? ''} onChange={v => updateField('type', v)} />
-        </FormRow>
-      </div>
-    )
-  }
+function TabButton({ tab, active, dirty, onClick }) {
+  const { Icon } = tab
   return (
-    <div className="space-y-3 max-w-2xl">
-      <FormRow label="Lotyniškas" dirty={fieldDirty(draft.lotyniskas, originalDraft?.lotyniskas)}>
-        <TextInput
-          value={draft.lotyniskas ?? ''}
-          onChange={v => updateField('lotyniskas', v)}
-          placeholder="Kalanchoe blossfeldiana"
-        />
+    <button
+      onClick={onClick}
+      className={`relative flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.12em] font-mono transition-colors border-b-2 ${
+        active
+          ? 'text-forest-800 border-forest-700'
+          : 'text-forest-500 border-transparent hover:text-forest-700 hover:bg-bone-100/60'
+      }`}
+    >
+      <Icon size={11} />
+      {tab.label}
+      {dirty && (
+        <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-terracotta-500" title="Pakeista" />
+      )}
+    </button>
+  )
+}
+
+// ── Tab content dispatcher ───────────────────────────────────────────
+
+function TabContent({ tabId, entry, entryType, draft, originalDraft, updateField, taxonGroups }) {
+  const props = { entry, entryType, draft, originalDraft, updateField, taxonGroups }
+  if (entryType === 'series') {
+    switch (tabId) {
+      case 'identification': return <TabIdentificationSeries {...props} />
+      case 'descriptions':   return <TabDescriptionsSeries {...props} />
+      case 'care':           return <TabCareSeries {...props} />
+      case 'meta':           return <TabMeta {...props} />
+      default:               return null
+    }
+  }
+  switch (tabId) {
+    case 'identification': return <TabIdentificationCultivar {...props} />
+    case 'photo':          return <TabPhoto {...props} />
+    case 'descriptions':   return <TabDescriptionsCultivar {...props} />
+    case 'care':           return <TabCareCultivar {...props} />
+    case 'toxicity':       return <TabToxicity {...props} />
+    case 'classification': return <TabClassification {...props} />
+    case 'meta':           return <TabMeta {...props} />
+    default:               return null
+  }
+}
+
+// ── Tab: Identifikacija (cultivar) ───────────────────────────────────
+
+function TabIdentificationCultivar({ entry, draft, originalDraft, updateField, taxonGroups }) {
+  return (
+    <div className="space-y-4 max-w-2xl">
+      <FormRow label="Lotyniškas" dirty={fieldDirty(draft.lotyniskas, originalDraft?.lotyniskas)} helper={`Genus + species (pvz. „Kalanchoe blossfeldiana"). Cultivar: „Sansevieria trifasciata 'Laurentii'".`}>
+        <TextInput value={draft.lotyniskas ?? ''} onChange={v => updateField('lotyniskas', v)} placeholder="Kalanchoe blossfeldiana" />
       </FormRow>
       <FormRow label="Lietuviškas" dirty={fieldDirty(draft.lietuviškas, originalDraft?.lietuviškas)}>
-        <TextInput
-          value={draft.lietuviškas ?? ''}
-          onChange={v => updateField('lietuviškas', v)}
-          placeholder="Kalankė"
-        />
+        <TextInput value={draft.lietuviškas ?? ''} onChange={v => updateField('lietuviškas', v)} placeholder="Kalankė" />
       </FormRow>
-      <FormRow label="Image URL" dirty={fieldDirty(draft.image, originalDraft?.image)}>
-        <TextInput
-          value={draft.image ?? ''}
-          onChange={v => updateField('image', v)}
-          placeholder="https://upload.wikimedia.org/..."
-        />
+      <FormRow label="Lietuviški sinonimai" dirty={fieldDirty(draft.sinonimai, originalDraft?.sinonimai)} helper="Vienas po kito — Enter pridėti. Naudojami paieškoje (alternative names).">
+        <StringArrayChips value={draft.sinonimai ?? []} onChange={v => updateField('sinonimai', v)} placeholder="pvz. Madagaskaro kalankė" />
       </FormRow>
-      {draft.image && (
-        <img
-          src={draft.image}
-          alt=""
-          className="max-w-[280px] max-h-40 object-contain rounded-md bg-bone-200"
-        />
+      <FormRow label="Serija (taxonGroup)" dirty={fieldDirty(draft.taxonGroupId, originalDraft?.taxonGroupId)} helper="Jei priklauso serijai — paveldės jos care šabloną.">
+        <select
+          value={draft.taxonGroupId ?? ''}
+          onChange={e => updateField('taxonGroupId', e.target.value || null)}
+          className="w-full bg-bone-50 border border-bone-400/40 rounded-md px-2 py-1.5 text-xs text-forest-700 focus:outline-none focus:border-forest-500"
+        >
+          <option value="">— standalone (be serijos) —</option>
+          {taxonGroups.map(g => (
+            <option key={g.id} value={g.id}>{g.genus} {g.name} ({g.type})</option>
+          ))}
+        </select>
+      </FormRow>
+      <FormRow label="Auginimo kontekstas" dirty={fieldDirty(draft.auginimas, originalDraft?.auginimas)} helper="Kur šis augalas dažniausiai auga Lietuvoje.">
+        <ChipSelect value={draft.auginimas} onChange={v => updateField('auginimas', v)} options={AUGINIMAS_OPTS} allowEmpty />
+      </FormRow>
+      <FormRow label="Info confidence" dirty={fieldDirty(draft.infoConfidence, originalDraft?.infoConfidence)} helper="Kiek šios kortelės info'ai patikima — kalibracija PFAF/ASPCA atveju.">
+        <ChipSelect value={draft.infoConfidence} onChange={v => updateField('infoConfidence', v)} options={INFO_CONFIDENCE_OPTS} allowEmpty />
+      </FormRow>
+      <div className="text-[10px] text-forest-400 font-mono pt-2 border-t border-bone-400/30">
+        ID: <span className="text-forest-500">{entry.id}</span>
+      </div>
+    </div>
+  )
+}
+
+// ── Tab: Identifikacija (series) ─────────────────────────────────────
+
+function TabIdentificationSeries({ entry, draft, originalDraft, updateField }) {
+  return (
+    <div className="space-y-4 max-w-2xl">
+      <FormRow label="Genus" dirty={fieldDirty(draft.genus, originalDraft?.genus)}>
+        <TextInput value={draft.genus ?? ''} onChange={v => updateField('genus', v)} placeholder="Sansevieria" />
+      </FormRow>
+      <FormRow label="Pavadinimas" dirty={fieldDirty(draft.name, originalDraft?.name)} helper="Serijos vidinis pavadinimas — paprastai species ar cultivar grupė.">
+        <TextInput value={draft.name ?? ''} onChange={v => updateField('name', v)} placeholder="trifasciata" />
+      </FormRow>
+      <FormRow label="Tipas" dirty={fieldDirty(draft.type, originalDraft?.type)} helper="Taksonominis lygis.">
+        <Select value={draft.type ?? ''} onChange={v => updateField('type', v)} options={['', ...TAXON_GROUP_TYPES]} />
+      </FormRow>
+      <FormRow label="Tipas (laisva forma)" dirty={fieldDirty(draft.tipas, originalDraft?.tipas)} helper="LT-friendly augalo tipas (kambarinis, sodinis, etc.).">
+        <TextInput value={draft.tipas ?? ''} onChange={v => updateField('tipas', v)} placeholder="kambarinis" />
+      </FormRow>
+      <div className="text-[10px] text-forest-400 font-mono pt-2 border-t border-bone-400/30">
+        ID: <span className="text-forest-500">{entry.id}</span>
+      </div>
+    </div>
+  )
+}
+
+// ── Tab: Foto ────────────────────────────────────────────────────────
+
+function TabPhoto({ draft, originalDraft, updateField }) {
+  const dirtyImg = fieldDirty(draft.image, originalDraft?.image)
+  return (
+    <div className="space-y-4 max-w-2xl">
+      <FormRow label="Image URL" dirty={dirtyImg} helper="Wiki Commons (upload.wikimedia.org) ar iNaturalist (static.inaturalist.org / inaturalist-open-data.s3.amazonaws.com). Catalog freeze: pirmas save'as nustato, vėlesni išlieka.">
+        <TextInput value={draft.image ?? ''} onChange={v => updateField('image', v)} placeholder="https://upload.wikimedia.org/..." />
+      </FormRow>
+      {draft.image ? (
+        <div className="space-y-1.5">
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-forest-500">Peržiūra</p>
+          <div className="bg-bone-200 rounded-lg overflow-hidden border border-bone-400/40 max-w-md">
+            <img src={draft.image} alt="" className="w-full max-h-80 object-contain" />
+          </div>
+          <p className="text-[10px] text-forest-400 font-mono break-all">{draft.image}</p>
+        </div>
+      ) : (
+        <div className="text-center py-12 px-6 bg-bone-100 rounded-lg border border-dashed border-bone-400/60">
+          <ImageOff size={24} className="text-forest-300 mx-auto mb-2" />
+          <p className="text-xs text-forest-500">Nuotraukos URL'as nenurodytas.</p>
+          <p className="text-[10px] text-forest-400 mt-1">
+            Batch script'as auto-fetch'ina Wiki/iNat nuotraukas. Manualiai
+            galima įvesti viršuje.
+          </p>
+        </div>
       )}
     </div>
   )
+}
+
+// ── Tab: Aprašymai (cultivar) ────────────────────────────────────────
+
+function TabDescriptionsCultivar({ entry, draft, originalDraft, updateField }) {
+  return (
+    <div className="space-y-4 max-w-3xl">
+      <FormRow label="Aprašymas" dirty={fieldDirty(draft.aprasymas, originalDraft?.aprasymas)} helper={`„Sodininkas friend" stilius — LT vartotojui draugiškas tekstas.`}>
+        <TextArea value={draft.aprasymas} onChange={v => updateField('aprasymas', v)} rows={5} />
+      </FormRow>
+      <FormRow label="Kilmė" dirty={fieldDirty(draft.kilme, originalDraft?.kilme)} helper="Iš kur augalas — geografinė kilmė + buveinė.">
+        <TextInput value={draft.kilme ?? ''} onChange={v => updateField('kilme', v)} placeholder="Madagaskaras (atogrąžų pievos)" />
+      </FormRow>
+      <FormRow label="Įdomybės" dirty={fieldDirty(draft.idomybes, originalDraft?.idomybes)} helper="3-7 įdomių faktų — kiekvienas atskira eilutė. Naudojami plant detail screen'e.">
+        <TextArea value={draft.idomybes} onChange={v => updateField('idomybes', v)} rows={5} placeholder={'Faktas 1\nFaktas 2\nFaktas 3'} />
+      </FormRow>
+      <ProvenanceBadge entry={entry} />
+    </div>
+  )
+}
+
+function TabDescriptionsSeries({ draft, originalDraft, updateField }) {
+  return (
+    <div className="space-y-4 max-w-3xl">
+      <FormRow label="Aprašymas" dirty={fieldDirty(draft.aprasymas, originalDraft?.aprasymas)}>
+        <TextArea value={draft.aprasymas} onChange={v => updateField('aprasymas', v)} rows={5} />
+      </FormRow>
+      <FormRow label="Įdomybės" dirty={fieldDirty(draft.idomybes, originalDraft?.idomybes)}>
+        <TextArea value={draft.idomybes} onChange={v => updateField('idomybes', v)} rows={4} />
+      </FormRow>
+    </div>
+  )
+}
+
+// ── Tab: Priežiūra (cultivar — flat fields) ─────────────────────────
+
+function TabCareCultivar({ draft, originalDraft, updateField }) {
+  return (
+    <div className="space-y-4 max-w-3xl">
+      <FormRow label="Šviesa" dirty={fieldDirty(draft.sviesa, originalDraft?.sviesa)}>
+        <TextArea value={draft.sviesa} onChange={v => updateField('sviesa', v)} rows={2} placeholder="Ryški netiesioginė, 2-4h tiesioginės ryto saulės" />
+      </FormRow>
+      <FormRow label="Vanduo" dirty={fieldDirty(draft.vanduo, originalDraft?.vanduo)}>
+        <TextArea value={draft.vanduo} onChange={v => updateField('vanduo', v)} rows={2} placeholder="Vidutiniai poreikiai — kas 7d vasarą, kas 14d žiemą" />
+      </FormRow>
+      <FormRow label="Substratas" dirty={fieldDirty(draft.substratas, originalDraft?.substratas)}>
+        <TextArea value={draft.substratas} onChange={v => updateField('substratas', v)} rows={2} />
+      </FormRow>
+      <FormRow label="Persodinimas" dirty={fieldDirty(draft.persodinimas, originalDraft?.persodinimas)}>
+        <TextArea value={draft.persodinimas} onChange={v => updateField('persodinimas', v)} rows={2} />
+      </FormRow>
+      <FormRow label="Žiemojimas" dirty={fieldDirty(draft.ziemojimas, originalDraft?.ziemojimas)}>
+        <TextArea value={draft.ziemojimas} onChange={v => updateField('ziemojimas', v)} rows={2} />
+      </FormRow>
+      <FormRow label="Tręšimas" dirty={fieldDirty(draft.tresimas, originalDraft?.tresimas)}>
+        <TextArea value={draft.tresimas} onChange={v => updateField('tresimas', v)} rows={2} />
+      </FormRow>
+      <FormRow label="Priežiūra (kita)" dirty={fieldDirty(draft.prieziura, originalDraft?.prieziura)}>
+        <TextArea value={draft.prieziura} onChange={v => updateField('prieziura', v)} rows={2} />
+      </FormRow>
+    </div>
+  )
+}
+
+// ── Tab: Care šablonas (series — structured careInfo.*) ─────────────
+
+function TabCareSeries({ draft, originalDraft, updateField }) {
+  return (
+    <div className="space-y-4 max-w-3xl">
+      <div className="text-[11px] text-forest-500 bg-bone-100 px-3 py-2 rounded-md border border-bone-400/40">
+        <strong>Care šablonas</strong> — paveldimas visiems serijos cultivar'ams per <code className="font-mono">mergeWithSeries()</code>. Object'iniai laukai (sviesa, vanduo, ...) edit'inami kaip JSON. Structured editor'iai — sekantis etapas.
+      </div>
+      <FormRow label="Šviesa (object)" dirty={fieldDirty(draft.careInfo?.sviesa, originalDraft?.careInfo?.sviesa)}>
+        <JsonField value={draft.careInfo?.sviesa} onChange={v => updateField('careInfo.sviesa', v)} />
+      </FormRow>
+      <FormRow label="Vanduo (object)" dirty={fieldDirty(draft.careInfo?.vanduo, originalDraft?.careInfo?.vanduo)}>
+        <JsonField value={draft.careInfo?.vanduo} onChange={v => updateField('careInfo.vanduo', v)} />
+      </FormRow>
+      <FormRow label="Laistymo intervalas (object)" dirty={fieldDirty(draft.careInfo?.laistymasIntervalas, originalDraft?.careInfo?.laistymasIntervalas)}>
+        <JsonField value={draft.careInfo?.laistymasIntervalas} onChange={v => updateField('careInfo.laistymasIntervalas', v)} />
+      </FormRow>
+      <FormRow label="Tręšimas (object)" dirty={fieldDirty(draft.careInfo?.tresimas, originalDraft?.careInfo?.tresimas)}>
+        <JsonField value={draft.careInfo?.tresimas} onChange={v => updateField('careInfo.tresimas', v)} />
+      </FormRow>
+      <FormRow label="Priežiūra (object)" dirty={fieldDirty(draft.careInfo?.prieziura, originalDraft?.careInfo?.prieziura)}>
+        <JsonField value={draft.careInfo?.prieziura} onChange={v => updateField('careInfo.prieziura', v)} />
+      </FormRow>
+      <FormRow label="Substratas (text)" dirty={fieldDirty(draft.careInfo?.substratas, originalDraft?.careInfo?.substratas)}>
+        <TextArea value={draft.careInfo?.substratas} onChange={v => updateField('careInfo.substratas', v)} rows={2} />
+      </FormRow>
+      <FormRow label="Persodinimas (text)" dirty={fieldDirty(draft.careInfo?.persodinimas, originalDraft?.careInfo?.persodinimas)}>
+        <TextArea value={draft.careInfo?.persodinimas} onChange={v => updateField('careInfo.persodinimas', v)} rows={2} />
+      </FormRow>
+      <FormRow label="Žiemojimas (text)" dirty={fieldDirty(draft.careInfo?.ziemojimas, originalDraft?.careInfo?.ziemojimas)}>
+        <TextArea value={draft.careInfo?.ziemojimas} onChange={v => updateField('careInfo.ziemojimas', v)} rows={2} />
+      </FormRow>
+    </div>
+  )
+}
+
+// ── Tab: Toksiškumas ────────────────────────────────────────────────
+
+function TabToxicity({ entry, draft, originalDraft, updateField }) {
+  const savybes = draft.savybes ?? {}
+  const orig = originalDraft?.savybes ?? {}
+  const pavojai = Array.isArray(savybes.pavojai) ? savybes.pavojai : []
+  const pavojingumas = savybes.pavojingumas ?? { yra: false, lygis: null, detales: '' }
+
+  // Update'as helper'is — savybes nested update'ams, kad mažiau verbose.
+  const setSav = (subKey, value) => {
+    const next = { ...(savybes ?? {}), [subKey]: value }
+    updateField('savybes', next)
+  }
+  const setPavSub = (key, value) => {
+    const nextPav = { ...pavojingumas, [key]: value }
+    setSav('pavojingumas', nextPav)
+  }
+
+  return (
+    <div className="space-y-5 max-w-3xl">
+      {/* Pavojingumas summary card */}
+      <div className="bg-bone-100 border border-bone-400/40 rounded-lg p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <h4 className="font-display text-sm font-semibold text-forest-800">Pavojingumas (badge)</h4>
+          <ToggleSwitch
+            checked={!!pavojingumas.yra}
+            onChange={v => setPavSub('yra', v)}
+            label={pavojingumas.yra ? 'Pavojingas' : 'Saugus'}
+          />
+        </div>
+        {pavojingumas.yra && (
+          <>
+            <FormRow label="Lygis" dirty={fieldDirty(pavojingumas.lygis, orig?.pavojingumas?.lygis)}>
+              <ChipSelect
+                value={pavojingumas.lygis}
+                onChange={v => setPavSub('lygis', v)}
+                options={SEVERITY_OPTS}
+              />
+            </FormRow>
+            <FormRow label="Detalės (narrative + URL)" dirty={fieldDirty(pavojingumas.detales, orig?.pavojingumas?.detales)} helper="LT proza. URL'us (ASPCA, PFAF, Pet Poison) auto-link'ina renderWithLinks().">
+              <TextArea value={pavojingumas.detales} onChange={v => setPavSub('detales', v)} rows={6} />
+            </FormRow>
+          </>
+        )}
+      </div>
+
+      {/* Pavojai[] row editor */}
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="font-display text-sm font-semibold text-forest-800">
+            Pavojai (struktūrizuoti)
+            {fieldDirty(pavojai, orig?.pavojai) && <span className="ml-2 text-terracotta-600 text-xs">●</span>}
+          </h4>
+          <button
+            onClick={() => setSav('pavojai', [...pavojai, { tipas: 'toksiskas', target: 'zmonems', severity: 'vidutinis', detales: '' }])}
+            className="inline-flex items-center gap-1 px-2 py-1 rounded-btn-sm text-[11px] font-medium bg-forest-100 text-forest-700 hover:bg-forest-200 transition-colors"
+          >
+            <Plus size={11} /> Pridėti
+          </button>
+        </div>
+        {pavojai.length === 0 ? (
+          <p className="text-xs text-forest-400 italic py-3 text-center bg-bone-100 rounded-md border border-dashed border-bone-400/40">
+            Nėra struktūrizuotų pavojų. Pridėk įrašą, jei žinomas toksiškumas.
+          </p>
+        ) : (
+          <ul className="space-y-2">
+            {pavojai.map((p, idx) => (
+              <PavojaiRow
+                key={idx}
+                pavojus={p}
+                onChange={(next) => {
+                  const arr = [...pavojai]
+                  arr[idx] = next
+                  setSav('pavojai', arr)
+                }}
+                onDelete={() => {
+                  const arr = pavojai.filter((_, i) => i !== idx)
+                  setSav('pavojai', arr)
+                }}
+              />
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* aiSupplementaryHazard read-only display */}
+      {savybes.aiSupplementaryHazard && (
+        <div className="bg-amber-50/60 border border-amber-200/60 rounded-lg p-3">
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-amber-700 mb-1">
+            AI supplementary hazard (auditoriaus pridėtas gap-fill)
+          </p>
+          <pre className="text-[10px] font-mono text-forest-700 whitespace-pre-wrap">
+            {JSON.stringify(savybes.aiSupplementaryHazard, null, 2)}
+          </pre>
+        </div>
+      )}
+      <ProvenanceBadge entry={entry} />
+    </div>
+  )
+}
+
+function PavojaiRow({ pavojus, onChange, onDelete }) {
+  return (
+    <li className="bg-bone-50 border border-bone-400/40 rounded-md p-3 space-y-2">
+      <div className="grid grid-cols-3 gap-2">
+        <div>
+          <label className="font-mono text-[9px] uppercase tracking-[0.12em] text-forest-500 block mb-1">Tipas</label>
+          <Select
+            value={pavojus.tipas ?? ''}
+            onChange={v => onChange({ ...pavojus, tipas: v })}
+            options={['', ...TIPAS_OPTS.map(o => o.value)]}
+            optionLabels={Object.fromEntries(TIPAS_OPTS.map(o => [o.value, o.label]))}
+          />
+        </div>
+        <div>
+          <label className="font-mono text-[9px] uppercase tracking-[0.12em] text-forest-500 block mb-1">Target</label>
+          <Select
+            value={pavojus.target ?? ''}
+            onChange={v => onChange({ ...pavojus, target: v })}
+            options={['', ...TARGET_OPTS.map(o => o.value)]}
+            optionLabels={Object.fromEntries(TARGET_OPTS.map(o => [o.value, o.label]))}
+          />
+        </div>
+        <div>
+          <label className="font-mono text-[9px] uppercase tracking-[0.12em] text-forest-500 block mb-1">Severity</label>
+          <Select
+            value={pavojus.severity ?? ''}
+            onChange={v => onChange({ ...pavojus, severity: v })}
+            options={['', ...SEVERITY_OPTS.map(o => o.value)]}
+            optionLabels={Object.fromEntries(SEVERITY_OPTS.map(o => [o.value, o.label]))}
+          />
+        </div>
+      </div>
+      <div>
+        <label className="font-mono text-[9px] uppercase tracking-[0.12em] text-forest-500 block mb-1">Detalės</label>
+        <TextInput value={pavojus.detales ?? ''} onChange={v => onChange({ ...pavojus, detales: v })} placeholder="pvz. ASPCA: katėms, šunims" />
+      </div>
+      <div className="flex justify-end">
+        <button
+          onClick={onDelete}
+          className="inline-flex items-center gap-1 px-2 py-1 rounded-btn-sm text-[10px] font-medium text-terracotta-600 hover:bg-terracotta-50"
+        >
+          <Minus size={10} /> Šalinti
+        </button>
+      </div>
+    </li>
+  )
+}
+
+// ── Tab: Klasifikacija ──────────────────────────────────────────────
+
+function TabClassification({ draft, originalDraft, updateField }) {
+  return (
+    <div className="space-y-4 max-w-2xl">
+      <FormRow label="Tipas (laisva forma)" dirty={fieldDirty(draft.tipas, originalDraft?.tipas)} helper={`LT-friendly tipas — pvz. „Sultingas", „Tropinis daugiametis".`}>
+        <TextInput value={draft.tipas ?? ''} onChange={v => updateField('tipas', v)} />
+      </FormRow>
+      <FormRow label="Sunkumas" dirty={fieldDirty(draft.sunkumas, originalDraft?.sunkumas)} helper="Schema: integer 1-5. UI rodo 1=labai lengvas → 5=tik patyrusiems.">
+        <ChipSelect value={draft.sunkumas} onChange={v => updateField('sunkumas', v)} options={SUNKUMAS_OPTS} allowEmpty />
+      </FormRow>
+      <FormRow label="Augimo greitis" dirty={fieldDirty(draft.augimo_greitis, originalDraft?.augimo_greitis)}>
+        <ChipSelect value={draft.augimo_greitis} onChange={v => updateField('augimo_greitis', v)} options={AUGIMO_GREITIS_OPTS} allowEmpty />
+      </FormRow>
+      <FormRow label="Kontekstas (cultivation)" dirty={fieldDirty(draft.cultivationContext, originalDraft?.cultivationContext)}>
+        <Select value={draft.cultivationContext ?? ''} onChange={v => updateField('cultivationContext', v)} options={['', ...CULTIVATION_CONTEXTS]} />
+      </FormRow>
+      <FormRow label="Lifecycle" dirty={fieldDirty(draft.lifecycle, originalDraft?.lifecycle)}>
+        <Select value={draft.lifecycle ?? ''} onChange={v => updateField('lifecycle', v)} options={['', ...LIFECYCLES]} />
+      </FormRow>
+      <FormRow label="Hardiness" dirty={fieldDirty(draft.hardiness, originalDraft?.hardiness)} helper={`USDA zona arba °C ribos. Pvz. „USDA 9-11, -1°C".`}>
+        <TextInput value={draft.hardiness ?? ''} onChange={v => updateField('hardiness', v)} placeholder="USDA 9-11, -1°C" />
+      </FormRow>
+    </div>
+  )
+}
+
+// ── Tab: Meta (read-only) ───────────────────────────────────────────
+
+function TabMeta({ entry, entryType, draft }) {
+  // Meta tab'as rodo Firestore metadata + batch provenance — read-only,
+  // skirta admin'ui suprasti, iš kur atėjo duomenys.
+  return (
+    <div className="space-y-3 max-w-xl">
+      <MetaRow k="ID" v={entry.id} mono />
+      <MetaRow k="Tipas" v={entryType} />
+      <MetaRow k="Atnaujinta" v={shortDate(entry.updatedAt)} />
+      {entry._batchSource && (
+        <>
+          <MetaRow k="Batch source" v={entry._batchSource} mono />
+          <MetaRow k="Batch enriched" v={shortDate(entry._batchEnrichedAt)} />
+        </>
+      )}
+      {entry.taxonGroupId && (
+        <MetaRow k="Serija (taxonGroupId)" v={entry.taxonGroupId} mono />
+      )}
+      <details className="pt-3 border-t border-bone-400/30">
+        <summary className="cursor-pointer font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 mb-2">
+          Pilnas draft JSON (debug)
+        </summary>
+        <pre className="text-[10px] text-forest-500 font-mono bg-bone-100 p-3 rounded overflow-auto max-h-[50vh]">
+          {JSON.stringify(draft, null, 2)}
+        </pre>
+      </details>
+    </div>
+  )
+}
+
+function MetaRow({ k, v, mono }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3 text-xs border-b border-bone-400/20 py-1.5">
+      <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-forest-400">{k}</span>
+      <span className={`text-forest-700 text-right max-w-[60%] truncate ${mono ? 'font-mono text-[11px]' : ''}`}>{v ?? '—'}</span>
+    </div>
+  )
+}
+
+function shortDate(iso) {
+  if (!iso) return '—'
+  try { return new Date(iso).toLocaleDateString('lt-LT', { year: 'numeric', month: 'short', day: 'numeric' }) }
+  catch { return '—' }
 }
 
 // ── Right pane: live ProfileContent preview ───────────────────────
@@ -998,6 +1519,300 @@ function TextInput({ value, onChange, placeholder }) {
       className="w-full bg-bone-50 border border-bone-400/40 rounded-md px-2 py-1.5 text-sm text-forest-800 placeholder:text-forest-300 focus:outline-none focus:border-forest-500"
     />
   )
+}
+
+function TextArea({ value, onChange, rows = 3, placeholder }) {
+  // Defensive — array → newline-separated, object → JSON, string → as is.
+  // Mirror'as su v1, kad legacy data nesujauktų editor'iaus.
+  let displayValue = ''
+  if (Array.isArray(value)) {
+    displayValue = value.map(v => typeof v === 'string' ? v : JSON.stringify(v)).join('\n')
+  } else if (typeof value === 'object' && value !== null) {
+    displayValue = JSON.stringify(value, null, 2)
+  } else if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+      try {
+        const parsed = JSON.parse(trimmed)
+        if (Array.isArray(parsed)) {
+          displayValue = parsed.map(v => typeof v === 'string' ? v : JSON.stringify(v)).join('\n')
+        } else {
+          displayValue = value
+        }
+      } catch { displayValue = value }
+    } else {
+      displayValue = value
+    }
+  }
+  return (
+    <textarea
+      value={displayValue}
+      onChange={e => onChange(e.target.value)}
+      rows={rows}
+      placeholder={placeholder}
+      className="w-full bg-bone-50 border border-bone-400/40 rounded-md px-2 py-1.5 text-xs text-forest-800 leading-relaxed focus:outline-none focus:border-forest-500 resize-none"
+    />
+  )
+}
+
+function Select({ value, onChange, options, optionLabels }) {
+  return (
+    <select
+      value={value ?? ''}
+      onChange={e => onChange(e.target.value)}
+      className="w-full bg-bone-50 border border-bone-400/40 rounded-md px-2 py-1.5 text-xs text-forest-700 focus:outline-none focus:border-forest-500"
+    >
+      {options.map(opt => (
+        <option key={opt || '_'} value={opt}>
+          {optionLabels?.[opt] ?? opt ?? ''}
+          {opt === '' && '— nenurodyta —'}
+        </option>
+      ))}
+    </select>
+  )
+}
+
+/**
+ * ChipSelect — radio-style chip group'as enumeruotam pasirinkimui. Geriau nei
+ * <select> kai opcijos mažai (3-5) ir aiškiai matomos — admin'as iškart mato
+ * visus pasirinkimus, neturi click'inti dropdown'o.
+ *
+ * options = [{ value, label, help }] — `help` rodomas kaip tooltip + apačioje
+ * po pasirinkimo (severity kalibracijai svarbu, kad admin'as suprastų ką
+ * renka).
+ *
+ * allowEmpty = true → galima atšaukti pasirinkimą (chip su X).
+ */
+function ChipSelect({ value, onChange, options, allowEmpty = false }) {
+  const selected = options.find(o => o.value === value)
+  return (
+    <div className="space-y-1.5">
+      <div className="flex flex-wrap items-center gap-1.5">
+        {options.map(opt => {
+          const isSelected = opt.value === value
+          return (
+            <button
+              key={String(opt.value)}
+              onClick={() => onChange(opt.value)}
+              title={opt.help}
+              className={`px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors ${
+                isSelected
+                  ? 'bg-forest-700 text-bone'
+                  : 'bg-bone-200 text-forest-600 hover:bg-bone-300'
+              }`}
+            >
+              {opt.label}
+            </button>
+          )
+        })}
+        {allowEmpty && value != null && value !== '' && (
+          <button
+            onClick={() => onChange(null)}
+            title="Atšaukti pasirinkimą"
+            className="px-2 py-1 rounded-full text-[10px] font-medium text-forest-500 hover:bg-bone-200"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+      {selected?.help && (
+        <p className="text-[10px] text-forest-400 italic">{selected.help}</p>
+      )}
+    </div>
+  )
+}
+
+/**
+ * ToggleSwitch — boolean field'ams (savybes.pavojingumas.yra). Vizualiai
+ * iOS-style swap'as kad admin'ui būtų greitai aišku ar yra/ne.
+ */
+function ToggleSwitch({ checked, onChange, label }) {
+  return (
+    <button
+      onClick={() => onChange(!checked)}
+      className={`inline-flex items-center gap-2 group transition-opacity hover:opacity-90`}
+    >
+      <span className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
+        checked ? 'bg-terracotta-500' : 'bg-bone-300'
+      }`}>
+        <span className={`inline-block h-3.5 w-3.5 rounded-full bg-bone-50 shadow-sm transition-transform ${
+          checked ? 'translate-x-5' : 'translate-x-1'
+        }`} />
+      </span>
+      <span className={`text-[11px] font-medium ${checked ? 'text-terracotta-700' : 'text-forest-500'}`}>
+        {label}
+      </span>
+    </button>
+  )
+}
+
+/**
+ * StringArrayChips — string[] field'ui (pvz. sinonimai). Chip-style display
+ * su × removal'u + input apačioje su Enter / komma key bind'ais pridėjimui.
+ *
+ * Naudoja keyboard: Enter ar comma → pridėti. Backspace tuščiam input'e →
+ * pašalinti paskutinį chip'ą.
+ */
+function StringArrayChips({ value, onChange, placeholder }) {
+  const [input, setInput] = useState('')
+  const arr = Array.isArray(value) ? value : []
+
+  const add = () => {
+    const trimmed = input.trim()
+    if (!trimmed || arr.includes(trimmed)) {
+      setInput('')
+      return
+    }
+    onChange([...arr, trimmed])
+    setInput('')
+  }
+
+  const remove = (idx) => {
+    onChange(arr.filter((_, i) => i !== idx))
+  }
+
+  const onKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault()
+      add()
+    } else if (e.key === 'Backspace' && input === '' && arr.length > 0) {
+      e.preventDefault()
+      remove(arr.length - 1)
+    }
+  }
+
+  return (
+    <div className="bg-bone-50 border border-bone-400/40 rounded-md p-1.5 focus-within:border-forest-500 transition-colors">
+      <div className="flex flex-wrap gap-1.5">
+        {arr.map((s, idx) => (
+          <span
+            key={idx}
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-forest-100 text-forest-700 text-[11px]"
+          >
+            {s}
+            <button
+              onClick={() => remove(idx)}
+              className="text-forest-500 hover:text-forest-700"
+              title="Šalinti"
+            >
+              <X size={9} />
+            </button>
+          </span>
+        ))}
+        <input
+          type="text"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={onKeyDown}
+          onBlur={add}
+          placeholder={arr.length === 0 ? placeholder : ''}
+          className="flex-1 min-w-[100px] px-1 py-0.5 bg-transparent text-xs text-forest-800 placeholder:text-forest-300 focus:outline-none"
+        />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * JsonField — structured object editor'ius (taxonGroup careInfo.*). Pretty-
+ * printed JSON monospace. Invalid JSON visualus indikator'ius + raw save
+ * (geriau bloga data nei prarastas darbas).
+ *
+ * Etapas 4+ (sekantis darbas) pakeistų į structured form'as kiekvienam
+ * objektui (sviesa.poreikis, sviesa.tiesioginė_saulė, ...).
+ */
+function JsonField({ value, onChange, rows = 5 }) {
+  const [text, setText] = useState(() => jsonStringify(value))
+  const [valid, setValid] = useState(true)
+
+  useEffect(() => { setText(jsonStringify(value)); setValid(true) }, [value])
+
+  const handleChange = (next) => {
+    setText(next)
+    if (!next.trim()) { setValid(true); onChange(null); return }
+    try {
+      onChange(JSON.parse(next))
+      setValid(true)
+    } catch {
+      setValid(false)
+      onChange(next)
+    }
+  }
+
+  return (
+    <div>
+      <textarea
+        value={text}
+        onChange={e => handleChange(e.target.value)}
+        rows={rows}
+        className={`w-full bg-bone-50 border rounded-md px-2 py-1.5 font-mono text-[11px] text-forest-800 leading-relaxed focus:outline-none resize-none ${
+          valid ? 'border-bone-400/40 focus:border-forest-500' : 'border-terracotta-400 focus:border-terracotta-500'
+        }`}
+      />
+      <p className={`text-[10px] mt-0.5 px-0.5 ${valid ? 'text-forest-400' : 'text-terracotta-600'}`}>
+        {valid ? 'JSON formatas — keisk atsargiai.' : '⚠ Neteisingas JSON formatas. Save siųs raw tekstą.'}
+      </p>
+    </div>
+  )
+}
+
+function jsonStringify(val) {
+  if (val == null) return ''
+  if (typeof val === 'string') return val
+  try { return JSON.stringify(val, null, 2) } catch { return String(val ?? '') }
+}
+
+/**
+ * ProvenanceBadge — rodo, iš kur atėjo entry'is (batch source + data).
+ * Naudojama Aprašymai / Toksiškumas tab'uose, kur AI generuotas turinys gali
+ * būti pakeistas. Future: per-field provenance (kuriame field'e AI vs manual).
+ */
+function ProvenanceBadge({ entry }) {
+  if (!entry?._batchSource && !entry?._batchEnrichedAt) return null
+  return (
+    <div className="flex items-center gap-2 text-[10px] text-forest-500 bg-bone-100 px-2.5 py-1.5 rounded-md border border-bone-400/40">
+      <Info size={10} className="flex-shrink-0" />
+      <span>
+        Šaltinis: <span className="font-mono text-forest-600">{entry._batchSource}</span>
+        {entry._batchEnrichedAt && <span> · {shortDate(entry._batchEnrichedAt)}</span>}
+      </span>
+    </div>
+  )
+}
+
+// ── Tab-aware dirty mapping ─────────────────────────────────────────
+//
+// Kiekvienam tab'ui — kurie field'ai jam priklauso (kad galėtumėm parodyti
+// dot indicator'ių prie tab'o, jei jame yra pakeitimų). Kontrol'ė lieka
+// vienoje vietoje — keičiant tab'ų struktūrą, atnaujini čia.
+const TAB_FIELDS = {
+  identification: {
+    cultivar: ['lotyniskas', 'lietuviškas', 'sinonimai', 'taxonGroupId', 'auginimas', 'infoConfidence'],
+    series:   ['genus', 'name', 'type', 'tipas'],
+  },
+  photo:          { cultivar: ['image'], series: [] },
+  descriptions:   {
+    cultivar: ['aprasymas', 'kilme', 'idomybes'],
+    series:   ['aprasymas', 'idomybes'],
+  },
+  care: {
+    cultivar: ['sviesa', 'vanduo', 'substratas', 'persodinimas', 'ziemojimas', 'tresimas', 'prieziura'],
+    series:   ['careInfo'],
+  },
+  toxicity:       { cultivar: ['savybes'], series: [] },
+  classification: { cultivar: ['tipas', 'sunkumas', 'augimo_greitis', 'cultivationContext', 'lifecycle', 'hardiness'], series: [] },
+  meta:           { cultivar: [], series: [] },
+}
+
+function buildTabDirtyMap(draft, originalDraft, entryType) {
+  const map = {}
+  for (const [tabId, fieldsByType] of Object.entries(TAB_FIELDS)) {
+    const fields = fieldsByType[entryType] ?? []
+    map[tabId] = fields.some(f =>
+      JSON.stringify(draft[f]) !== JSON.stringify(originalDraft[f] ?? defaultValueFor(f)),
+    )
+  }
+  return map
 }
 
 // ── Helpers ──────────────────────────────────────────────────────
