@@ -1,0 +1,615 @@
+{
+  "generatedAt": "2026-05-26T16:45:00.000Z",
+  "totalProcessed": 87,
+  "resolved": [
+    {
+      "latin": "Artemisia absinthium",
+      "knownHazardsLtResolved": "Augale yra tujono — net nedideli kiekiai gali sukelti nervų sistemos sutrikimus, traukulius ir nemigą; perteklius sukelia haliucinacijas, intelekto sutrikimus, psichozę ir tremorą. Vengti sergantiems epilepsija, nėščiosioms ir žindančioms motinoms.",
+      "pattern": "C-insertion",
+      "status": "ok",
+      "note": "Added 'intelekto sutrikimus' to perteklius clause per EN absinthism list"
+    },
+    {
+      "latin": "Arum dioscoridis",
+      "knownHazardsLtResolved": "Augale yra kalcio oksalato kristalų, sukeliančių aštrų duriantį pojūtį burnoje ir ant liežuvio. Džiovinimas, terminis apdorojimas arba mirkimas vandenyje šią medžiagą neutralizuoja.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Replaced 'stiprų deginimo pojūtį' with 'aštrų duriantį pojūtį' — calcium oxalate is mechanical needle-prick, not burning"
+    },
+    {
+      "latin": "Arum italicum",
+      "knownHazardsLtResolved": "Augale yra kalcio oksalato kristalų, sukeliančių aštrų duriantį pojūtį burnoje ir ant liežuvio. Džiovinimas, terminis apdorojimas arba mirkimas vandenyje šią medžiagą neutralizuoja.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical fix as Arum dioscoridis — same EN source"
+    },
+    {
+      "latin": "Asplenium ceterach",
+      "knownHazardsLtResolved": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; dideli kiekiai gali sukelti rimtų sveikatos sutrikimų, tačiau terminis apdorojimas arba džiovinimas ją sunaikina.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Applied Asplenium genus knownHazardsLtFinal delta: inserted dose-severity clause before neutralization"
+    },
+    {
+      "latin": "Asplenium scolopendrium",
+      "knownHazardsLtResolved": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; dideli kiekiai gali sukelti rimtų sveikatos sutrikimų, tačiau terminis apdorojimas arba džiovinimas ją sunaikina.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Identical fix as Asplenium genus"
+    },
+    {
+      "latin": "Asplenium trichomanes",
+      "knownHazardsLtResolved": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; dideli kiekiai gali sukelti rimtų sveikatos sutrikimų, tačiau terminis apdorojimas arba džiovinimas ją sunaikina.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Identical fix as Asplenium genus"
+    },
+    {
+      "latin": "Calendula officinalis",
+      "knownHazardsLtResolved": "Nedidelė sensitizacijos ir kontaktinio dermatito rizika. Galima alergija jautriems astrinių (Asteraceae) šeimos augalams; išoriškai naudojant galimas nedidelis bėrimas.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "EN 'Low potential for sensitization' qualifier restored; complete text per suggestedFix"
+    },
+    {
+      "latin": "Calla",
+      "knownHazardsLtResolved": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų aštrų deginantį pojūtį burnoje ir liežuvyje. Kruopštus džiovinimas, virimas arba mirkymas vandenyje juos neutralizuoja.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Added 'aštrų' (sharp/pricking quality) and explicit 'liežuvyje' per suggestedFix"
+    },
+    {
+      "latin": "Calla palustris",
+      "knownHazardsLtResolved": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų aštrų deginantį pojūtį burnoje ir liežuvyje. Kruopštus džiovinimas, virimas arba mirkymas vandenyje juos neutralizuoja.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Identical fix as Calla"
+    },
+    {
+      "latin": "Catalpa",
+      "knownHazardsLtResolved": "Šaknys labai toksiškos.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "EN 'highly poisonous' → 'labai toksiškos'; 'stipriai' was non-standard LT phrasing"
+    },
+    {
+      "latin": "Catalpa bignonioides",
+      "knownHazardsLtResolved": "Šaknys labai toksiškos.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical fix as Catalpa"
+    },
+    {
+      "latin": "Colocasia",
+      "knownHazardsLtResolved": "Augale yra kalcio oksalato kristalų, kurie sukelia adatėlių dūrimo pojūtį burnoje ir liežuvyje — tačiau kruopščiai džiovinant, verdant arba mirkant vandenyje jie neutralizuojami.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Replaced 'aštrų deginimo pojūtį' with 'adatėlių dūrimo pojūtį' to match EN 'needles being stuck in'"
+    },
+    {
+      "latin": "Colocasia esculenta",
+      "knownHazardsLtResolved": "Augale yra kalcio oksalato kristalų, kurie sukelia adatėlių dūrimo pojūtį burnoje ir liežuvyje — tačiau kruopščiai džiovinant, verdant arba mirkant vandenyje jie neutralizuojami.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical fix as Colocasia"
+    },
+    {
+      "latin": "Dianthus superbus",
+      "knownHazardsLtResolved": "Augale esantys saponinai per maži, kad pakenktų, ir žmogaus organizme menkai įsisavinami. Žuvims saponinai žymiai žalingesni.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Replaced 'žalingi' with 'žymiai žalingesni' to preserve EN 'much more toxic'"
+    },
+    {
+      "latin": "Dodonaea",
+      "knownHazardsLtResolved": "Lapuose yra nedidelis kiekis cianidų junginių ir saponinų; saponinai žmogaus organizme menkai įsisavinami, tačiau žuvims žymiai žalingesni.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Replaced 'tačiau žuvims žalingi' with 'tačiau žuvims žymiai žalingesni' per EN 'much more toxic'"
+    },
+    {
+      "latin": "Dodonaea viscosa",
+      "knownHazardsLtResolved": "Lapuose yra nedidelis kiekis cianidų junginių ir saponinų; saponinai žmogaus organizme menkai įsisavinami, tačiau žuvims žymiai žalingesni.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical fix as Dodonaea"
+    },
+    {
+      "latin": "Dryopteris dilatata",
+      "knownHazardsLtResolved": "Paparčiuose gali būti kancerogenų; šviežiame augale yra tiaminazės — fermento, ardančio vitamino B kompleksą, o dideli kiekiai kenkia sveikatai. Tiaminazė sunaikinama kaitinant, tačiau kai kurių papartinių keptos lapų dalys gali daryti ilgalaikį žalingą poveikį.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Applied Dryopteris genus knownHazardsLtFinal: prepended carcinogen warning omitted in LtEdited"
+    },
+    {
+      "latin": "Dryopteris filix-mas",
+      "knownHazardsLtResolved": "Paparčiuose gali būti kancerogenų; šviežiame augale yra tiaminazės — fermento, ardančio vitamino B kompleksą, o dideli kiekiai kenkia sveikatai. Tiaminazė sunaikinama kaitinant, tačiau kai kurių papartinių keptos lapų dalys gali daryti ilgalaikį žalingą poveikį.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Identical fix as Dryopteris genus"
+    },
+    {
+      "latin": "Dryopteris marginalis",
+      "knownHazardsLtResolved": "Paparčiuose gali būti kancerogenų; šviežiame augale yra tiaminazės — fermento, ardančio vitamino B kompleksą, o dideli kiekiai kenkia sveikatai. Tiaminazė sunaikinama kaitinant, tačiau kai kurių papartinių keptos lapų dalys gali daryti ilgalaikį žalingą poveikį.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Identical fix as Dryopteris genus"
+    },
+    {
+      "latin": "Dryopteris sieboldii",
+      "knownHazardsLtResolved": "Paparčiuose gali būti kancerogenų; šviežiame augale yra tiaminazės — fermento, ardančio vitamino B kompleksą, o dideli kiekiai kenkia sveikatai. Tiaminazė sunaikinama kaitinant, tačiau kai kurių papartinių keptos lapų dalys gali daryti ilgalaikį žalingą poveikį.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Identical fix as Dryopteris genus"
+    },
+    {
+      "latin": "Epilobium",
+      "knownHazardsLtResolved": "Saikingas vartojimas laikomas saugiu, tačiau lapuose esantys oksalatai gali dirginti burną ir gerklę, ypač valgant žalius — virimas sumažina šį poveikį. Per didelis kiekis gali sukelti virškinimo sutrikimų; lapų nuoviras gali turėti apsvaiginantį poveikį. Jautriems oksalatams asmenims rekomenduojama atsargiai.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Added two omitted hazards: overconsumption digestive upset + stupefying effect of leaf infusion"
+    },
+    {
+      "latin": "Eriogonum",
+      "knownHazardsLtResolved": "Šaknų rinkimas žudo daugiamečius augalus — naudoti tik kraštutiniais atvejais. Sėklas prieš vartojant tinkamai išvalyti ir išvirti arba skrudinti. Nerinkti augalų, augančių prie užterštų kelių ar kasybos paveiktų dirvų.",
+      "pattern": "C-insertion",
+      "status": "ok",
+      "note": "Added soil contamination warning per EN 'Avoid plants growing on contaminated roadsides or mining-influenced soils'"
+    },
+    {
+      "latin": "Fallopia",
+      "knownHazardsLtResolved": "Lapuose yra oksalatų, kurie gali trukdyti mineralų įsisavinimui; sergantieji reumatu, artritu, podagra, inkstų akmenlige ar hiperacidumu turėtų vengti. Kai kuriais atvejais gali sukelti fotojautrumą — verdant oksalatų kiekis mažėja.",
+      "pattern": "C-insertion",
+      "status": "ok",
+      "note": "Inserted 'artritu' into conditions list — EN explicitly names arthritis"
+    },
+    {
+      "latin": "Gloriosa",
+      "knownHazardsLtResolved": "Visas augalas mirtinas — jame esantis alkaloidas kolchicinas sukelia viduriavimą, vėmimą, kraujagyslinį pažeidimą, inkstų toksiškumą ir centrinės nervų sistemos paralyžių. Perdozavus svogūnėlius, mirtis įvyksta dėl kvėpavimo slopinimo ir širdies bei kraujagyslių kolapso.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Fixed grammar: 'kraujagyslinių pažeidimą' (genitive) → 'kraujagyslinį pažeidimą' (accusative); 'nastoja' → 'įvyksta'"
+    },
+    {
+      "latin": "Gloriosa superba",
+      "knownHazardsLtResolved": "Visas augalas mirtinas — jame esantis alkaloidas kolchicinas sukelia viduriavimą, vėmimą, kraujagyslinį pažeidimą, inkstų toksiškumą ir centrinės nervų sistemos paralyžių. Perdozavus svogūnėlius, mirtis įvyksta dėl kvėpavimo slopinimo ir širdies bei kraujagyslių kolapso.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical grammar fixes as Gloriosa"
+    },
+    {
+      "latin": "Gymnocladus dioica",
+      "knownHazardsLtResolved": "Brendančiose sėklose yra cianido rūgšties ir saponinų — abu nukenksminami kaitinant 150 °C temperatūroje ne mažiau kaip 3 valandas. Saponinai žmonių virškinimo trakte praktiškai neįsisavinami, tačiau žuvims yra pavojingi.",
+      "pattern": "C-insertion",
+      "status": "ok",
+      "note": "Inserted 'kaip' — standard LT: 'ne mažiau kaip 3 valandas'"
+    },
+    {
+      "latin": "Hamam",
+      "knownHazardsLtResolved": "Dėl didelio taninų kiekio ilgalaikis vartojimas kelia vėžio riziką; vengti nėštumo ir žindymo metu. Jau 1 g suvartotas sukelia vėmimą, pykinimą ir žarnyno užsikimšimą; tepamas ant odos gali sukelti dermatitą.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Changed 'nerekomenduojama' → 'vengti' per EN 'Avoid'; added 'žarnyno užsikimšimą' per EN 'impaction'"
+    },
+    {
+      "latin": "Impatiens",
+      "knownHazardsLtResolved": "Augale yra kalcio oksalatų; žalio augalo nuolatinis vartojimas dideliais kiekiais gali kenkti. Kruopštus kaitinimas arba džiovinimas toksiną sunaikina. Sergantys reumatu, artritu, podagra, turintys inkstų akmenų ar padidėjusį rūgštingumą turėtų būti atsargūs.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Fixed broken relative clause 'kurie ... nuolatinis vartojimas gali kenkti' — two competing nominatives; restructured per suggestedFix"
+    },
+    {
+      "latin": "Impatiens balsamina",
+      "knownHazardsLtResolved": "Augale yra kalcio oksalatų; žalio augalo nuolatinis vartojimas dideliais kiekiais gali kenkti. Kruopštus kaitinimas arba džiovinimas toksiną sunaikina. Sergantys reumatu, artritu, podagra, turintys inkstų akmenų ar padidėjusį rūgštingumą turėtų būti atsargūs.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Identical fix as Impatiens"
+    },
+    {
+      "latin": "Lobelia",
+      "knownHazardsLtResolved": "Augalas gali būti toksiškas – jame yra alkaloidas lobelinas, kuris veikia nervų sistemą panašiai kaip nikotinas. Sultys dirgina odą.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Replaced 'Augalas toksiškas' with 'Augalas gali būti toksiškas' per EN 'potentially toxic'"
+    },
+    {
+      "latin": "Lobelia cardinalis",
+      "knownHazardsLtResolved": "Augalas gali būti toksiškas – jame yra alkaloidas lobelinas, kuris veikia nervų sistemą panašiai kaip nikotinas. Sultys dirgina odą.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical fix as Lobelia"
+    },
+    {
+      "latin": "Lobelia siphilitica",
+      "knownHazardsLtResolved": "Augalas gali būti toksiškas – jame yra alkaloidas lobelinas, kuris veikia nervų sistemą panašiai kaip nikotinas.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Replaced 'Augalas toksiškas' with 'Augalas gali būti toksiškas' per EN 'potentially poisonous'"
+    },
+    {
+      "latin": "Lysichiton",
+      "knownHazardsLtResolved": "Augale gausu kalcio oksalatų, kurie dirgina burną ir virškinamąjį traktą; kruopščiai išvirus ar išdžiovinus jie suyra.",
+      "pattern": "C-insertion",
+      "status": "ok",
+      "note": "Inserted 'kurie' to give 'dirgina' an explicit subject"
+    },
+    {
+      "latin": "Lysichiton americanus",
+      "knownHazardsLtResolved": "Augale gausu kalcio oksalatų, kurie dirgina burną ir virškinamąjį traktą; kruopščiai išvirus ar išdžiovinus jie suyra.",
+      "pattern": "C-insertion",
+      "status": "ok",
+      "note": "Identical fix as Lysichiton"
+    },
+    {
+      "latin": "Macleaya",
+      "knownHazardsLtResolved": "Sultys labai toksiškos.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Added 'labai' per EN 'very poisonous'"
+    },
+    {
+      "latin": "Macleaya cordata",
+      "knownHazardsLtResolved": "Sultys labai toksiškos.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical fix as Macleaya"
+    },
+    {
+      "latin": "Menispermum",
+      "knownHazardsLtResolved": "Visos augalo dalys toksiškos; vaisiai ypač pavojingi — užfiksuoti vaikų mirties atvejai suvalgius vaisių.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "EN distinguishes: all parts = poisonous; fruit = death. LT 'mirtinos' for all parts was severity overstatement"
+    },
+    {
+      "latin": "Menispermum canadense",
+      "knownHazardsLtResolved": "Visos augalo dalys toksiškos; vaisiai ypač pavojingi — užfiksuoti vaikų mirties atvejai suvalgius vaisių.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Identical fix as Menispermum"
+    },
+    {
+      "latin": "Monstera",
+      "knownHazardsLtResolved": "Visose dalyse yra kalcio oksalatų kristalų, kurie valgant žalią augalą dirgina burną, liežuvį ir gerklę; kaitinimas arba džiovinimas juos sunaikina. Sergantiems podagra, inkstų akmenlige, artritu, reumatizmu ar padidėjusiu rūgštingumu reikėtų vengti šio augalo; palietus gali dirginti odą.",
+      "pattern": "C-insertion",
+      "status": "ok",
+      "note": "Added 'reumatizmu' and 'padidėjusiu rūgštingumu' to complete all 5 EN conditions"
+    },
+    {
+      "latin": "Monstera deliciosa",
+      "knownHazardsLtResolved": "Visose dalyse yra kalcio oksalatų kristalų, kurie valgant žalią augalą dirgina burną, liežuvį ir gerklę; kaitinimas arba džiovinimas juos sunaikina. Sergantiems podagra, inkstų akmenlige, artritu, reumatizmu ar padidėjusiu rūgštingumu reikėtų vengti šio augalo; palietus gali dirginti odą.",
+      "pattern": "C-insertion",
+      "status": "ok",
+      "note": "Identical fix as Monstera"
+    },
+    {
+      "latin": "Phoenix",
+      "knownHazardsLtResolved": "Turi spyglių ar aštrių kraštų.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Restored disjunctive 'ar' per EN 'Spines or sharp edges'"
+    },
+    {
+      "latin": "Phoenix canariensis",
+      "knownHazardsLtResolved": "Turi spyglių ar aštrių kraštų.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical fix as Phoenix"
+    },
+    {
+      "latin": "Podophyllum peltatum",
+      "knownHazardsLtResolved": "Lapai ir šaknys labai toksiški.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Added 'labai' per EN 'very poisonous' [5 supporting references]"
+    },
+    {
+      "latin": "Polypodium",
+      "knownHazardsLtResolved": "Kai kuriose papartinėse rūšyse yra kancerogenų ir tiaminazės — fermento, ardančio vitaminus B; didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė sunaikinama kaitinant ar džiovinant.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Added dose-severity clause per EN 'large quantities can cause severe health problems'"
+    },
+    {
+      "latin": "Polypodium glycyrrhiza",
+      "knownHazardsLtResolved": "Kai kuriose papartinėse rūšyse yra kancerogenų ir tiaminazės — fermento, ardančio vitaminus B; didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė sunaikinama kaitinant ar džiovinant.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Identical fix as Polypodium"
+    },
+    {
+      "latin": "Polypodium vulgare",
+      "knownHazardsLtResolved": "Kai kuriose papartinėse rūšyse yra kancerogenų ir tiaminazės — fermento, ardančio vitaminus B; didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė sunaikinama kaitinant ar džiovinant.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Identical fix as Polypodium"
+    },
+    {
+      "latin": "Polystichum",
+      "knownHazardsLtResolved": "Kai kuriose papartinėse rūšyse yra kancerogenų ir tiaminazės — fermento, ardančio vitaminus B; didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė sunaikinama kaitinant ar džiovinant.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Identical fix as Polypodium"
+    },
+    {
+      "latin": "Polystichum acrostichoides",
+      "knownHazardsLtResolved": "Kai kuriose papartinėse rūšyse yra kancerogenų ir tiaminazės — fermento, ardančio vitaminus B; didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė sunaikinama kaitinant ar džiovinant.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Identical fix as Polypodium"
+    },
+    {
+      "latin": "Polystichum aculeatum",
+      "knownHazardsLtResolved": "Kai kuriose papartinėse rūšyse yra kancerogenų ir tiaminazės — fermento, ardančio vitaminus B; didelės dozės gali sukelti rimtų sveikatos sutrikimų. Tiaminazė sunaikinama kaitinant ar džiovinant.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Identical fix as Polypodium"
+    },
+    {
+      "latin": "Prunus avium",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Death endpoint added per EN 'can cause respiratory failure and even death'; applied consistently across all Prunus/Pyracantha entries"
+    },
+    {
+      "latin": "Rheum nobile",
+      "knownHazardsLtResolved": "Lapuose tikriausiai yra didelis kiekis oksalatų, kurie suriša kalcį ir sukelia mineralų trūkumą – vartoti nerekomenduojama jokiais kiekiais; virimas sumažina jų kiekį. Sergantiems podagra, artritu, inkstų akmenimis ar linkusiems į padidėjusį rūgštingumą reikia atsargumo.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Replaced 'valgyti nerekomenduojama' with 'vartoti nerekomenduojama jokiais kiekiais' per EN emphatic 'should not be eaten in any quantity'"
+    },
+    {
+      "latin": "Rheum palmatum",
+      "knownHazardsLtResolved": "Lapuose yra oksalatų, kurie suriša kalcį ir sukelia mineralų trūkumą; virimas sumažina jų kiekį. Ilgalaikis vartojimas gali sukelti elektrolitų disbalansą, padidėjusią aldosterono sekreciją, albumino ir kraujo atsiradimą šlapime bei žarnyno motorikos sutrikimus.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Fixed case: 'sutrikimų' (genitive) → 'sutrikimus' (accusative) to agree with all other list items governed by 'sukelti'"
+    },
+    {
+      "latin": "Salvia officinalis",
+      "knownHazardsLtResolved": "Vartojamas ilgai arba perdidelėmis dozėmis, toksiškas: sukelia nerimą, vėmimą, galvos svaigimą, tremorus ir traukulius. Draudžiamas nėštumo metu ir asmenims, linkusiems į konvulsijas.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Spelling: 'per didelėmis' → 'perdidelėmis' (per- merges as degree prefix)"
+    },
+    {
+      "latin": "Sansevieria trifasciata",
+      "knownHazardsLtResolved": "Augale yra glikozidų ir saponinų, todėl jis labai toksiškas. Saponinai žmogaus organizme prastai pasisavinami, tačiau žuvims mirtinai toksiški.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Added 'labai' per EN 'very toxic[311]'; removed redundant 'yra' in fish clause"
+    },
+    {
+      "latin": "Scopolia",
+      "knownHazardsLtResolved": "Šakniagumbiuose yra alkaloidų, panašių į Atropa belladonna, todėl augalas greičiausiai toksiškas; perdozavus atsiranda regėjimo sutrikimai, perkaitimas ir šlapinimosi sutrikimai. Draudžiama sergant uždaro kampo glaukoma, prostatos adenoma, tachikardija ar virškinamojo trakto obstrukcijomis.",
+      "pattern": "C-insertion",
+      "status": "ok",
+      "note": "Inserted 'greičiausiai' per EN 'probably fairly poisonous'"
+    },
+    {
+      "latin": "Scopolia carniolica",
+      "knownHazardsLtResolved": "Šakniagumbiuose yra alkaloidų, panašių į Atropa belladonna, todėl augalas greičiausiai toksiškas; perdozavus atsiranda regėjimo sutrikimai, perkaitimas ir šlapinimosi sutrikimai. Draudžiama sergant uždaro kampo glaukoma, prostatos adenoma, tachikardija ar virškinamojo trakto obstrukcijomis.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical fix as Scopolia"
+    },
+    {
+      "latin": "Scutellaria",
+      "knownHazardsLtResolved": "Veikia hepatotoksiškai. Nėštumo metu vengti – poveikis nežinomas.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Removed 'gali': EN 'Liver toxicity (hepatotoxicity)' is a confirmed fact, not a possibility"
+    },
+    {
+      "latin": "Sedum aizoon",
+      "knownHazardsLtResolved": "Nepavojingas, tačiau dideli kiekiai gali sukelti skrandžio sutrikimą.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Gender fix: 'Nepavojinga' (neuter/fem) → 'Nepavojingas' (masculine, agreeing with 'augalas')"
+    },
+    {
+      "latin": "Sedum kamtschaticum",
+      "knownHazardsLtResolved": "Nepavojingas, tačiau dideli kiekiai gali sukelti skrandžio sutrikimą.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical gender fix as Sedum aizoon"
+    },
+    {
+      "latin": "Sedum rupestre",
+      "knownHazardsLtResolved": "Nepavojingas, tačiau dideli kiekiai gali sukelti skrandžio sutrikimą.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical gender fix as Sedum aizoon"
+    },
+    {
+      "latin": "Sedum spathulifolium",
+      "knownHazardsLtResolved": "Nepavojingas, tačiau dideli kiekiai gali sukelti skrandžio sutrikimą.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Identical gender fix as Sedum aizoon"
+    },
+    {
+      "latin": "Senecio cineraria",
+      "knownHazardsLtResolved": "Augale yra pirolizidinų alkaloidų, kurie labai toksiški kepenims – vartoti viduje draudžiama.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Replaced 'mirtinai toksiški' with 'labai toksiški': EN 'highly toxic to liver', no lethal dose evidence"
+    },
+    {
+      "latin": "Serenoa repens",
+      "knownHazardsLtResolved": "Nevartoti kartu su hormoniniais vaistais, nėštumo ar žindymo metu; vartoti su maistu. Retai pasireiškia lengvas galvos skausmas, virškinimo sutrikimai, sumažėjęs libido vyrams, nugaros skausmas ar padidėjęs kraujospūdis.",
+      "pattern": "C-insertion",
+      "status": "ok",
+      "note": "Added 'vyrams' after 'libido' per EN 'May decrease libido in males'"
+    },
+    {
+      "latin": "Solanum",
+      "knownHazardsLtResolved": "Augalas priklauso bulvinių šeimai ir jame yra solanino tipo junginių — visos uogos laikytinos potencialiai toksiškos. Vartojimas gali sukelti virškinimo sutrikimus ar sunkesnius simptomus jautriems asmenims.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Added 'potencialiai': EN 'should be considered potentially toxic'"
+    },
+    {
+      "latin": "Turraea",
+      "knownHazardsLtResolved": "Žievė ir lapai naudojami kaip žuvų nuodai. Pjuvenos stipriai dirgina ir gali sukelti vidinį kraujavimą dirbantiems su šia mediena; būtina gera ventiliacija.",
+      "pattern": "D-manual",
+      "status": "ok",
+      "note": "Removed 'kvėpavimo takus' — EN does not specify what is irritated; LT addition was unsupported by source"
+    },
+    {
+      "latin": "Adiantum capillus-veneris",
+      "knownHazardsLtResolved": "Tiesioginio toksiškumo duomenų nėra, tačiau paparčiuose gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Dideli kiekiai gali sukelti rimtų sveikatos problemų; kaitinimas ar džiovinimas tiaminazę sunaikina.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Applied Adiantum genus refFix directly"
+    },
+    {
+      "latin": "Adiantum pedatum",
+      "knownHazardsLtResolved": "Tiesioginio toksiškumo duomenų nėra, tačiau paparčiuose gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Dideli kiekiai gali sukelti rimtų sveikatos problemų; kaitinimas ar džiovinimas tiaminazę sunaikina.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Identical fix as Adiantum capillus-veneris"
+    },
+    {
+      "latin": "Adiantum venustum",
+      "knownHazardsLtResolved": "Tiesioginio toksiškumo duomenų nėra, tačiau paparčiuose gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Dideli kiekiai gali sukelti rimtų sveikatos problemų; kaitinimas ar džiovinimas tiaminazę sunaikina.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Identical fix as Adiantum capillus-veneris"
+    },
+    {
+      "latin": "Ailanthus altissima",
+      "knownHazardsLtResolved": "Augalas galimai toksiškas; lapai toksiški naminiams gyvūnams; pjaunant medį gali atsirasti odos bėrimas.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Applied Ailanthus genus refFix: added opening 'galimai toksiškas' qualifier"
+    },
+    {
+      "latin": "Aloe vera",
+      "knownHazardsLtResolved": "Vartojant per burną gali sukelti virškinamojo trakto mėšlungį ir viduriavimą — dozę sumažinti. Reti nepageidaujami poveikiai: širdies ritmo sutrikimai, inkstų pažeidimas ir edema. Ilgalaikis gelio tepimas dirgina odą; ilgalaikis vartojimas mažina kalio kiekį ir sustiprina širdies vaistų (pvz. digoksino) poveikį.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Applied verifier-computed knownHazardsLtFinal from chunk-002: added rare adverse effects + fixed awkward 'tada dozę sumažinti'"
+    },
+    {
+      "latin": "Kalmia angustifolia",
+      "knownHazardsLtResolved": "Lapija nuodinga gyvūnams; visas augalas labai toksiškas.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Applied Kalmia genus knownHazardsLtFinal: 'mirtinai toksiškas' → 'labai toksiškas' per EN 'highly toxic'"
+    },
+    {
+      "latin": "Prunus dulcis",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Prunus avium template — death endpoint added"
+    },
+    {
+      "latin": "Prunus glandulosa",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Prunus avium template"
+    },
+    {
+      "latin": "Prunus jamasakura",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Prunus avium template"
+    },
+    {
+      "latin": "Prunus lusitanica",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Prunus avium template"
+    },
+    {
+      "latin": "Prunus mume",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Prunus avium template"
+    },
+    {
+      "latin": "Prunus sargentii",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Prunus avium template"
+    },
+    {
+      "latin": "Prunus serrula",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Prunus avium template"
+    },
+    {
+      "latin": "Prunus tenella",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Prunus avium template"
+    },
+    {
+      "latin": "Prunus tomentosa",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Prunus avium template"
+    },
+    {
+      "latin": "Prunus triloba",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Prunus avium template"
+    },
+    {
+      "latin": "Punica granatum",
+      "knownHazardsLtResolved": "Perdozavus atsiranda skrandžio dirginimas, vėmimas, galvos svaigimas, šaltkrėtis, regos sutrikimai, kolapsas; mirtina perdozė galima.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Applied Punica genus refFix: added 'kolapsas' and 'mirtina perdozė galima'"
+    },
+    {
+      "latin": "Pyracantha",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Applied Prunus avium template: death endpoint added per EN 'can cause respiratory failure and even death'"
+    },
+    {
+      "latin": "Pyracantha angustifolia",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Identical fix as Pyracantha"
+    },
+    {
+      "latin": "Pyracantha rogersiana",
+      "knownHazardsLtResolved": "Lapuose ir sėklose gali būti vandenilio cianido — nuodo, lengvai atpažįstamo pagal kartų skonį; įprastai jo kiekis per mažas, kad keltų pavojų. Didesnė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina; labai kartūs vaisiai ar sėklos nevalytini.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Identical fix as Pyracantha"
+    },
+    {
+      "latin": "Thespesia populnea",
+      "knownHazardsLtResolved": "Šaknis toksiška. Branduolinėje medienoje yra seskviterpenoidinių chinonų (mansononas D ir H, tesponas ir tespesponas), galinčių sukelti kontaktinį dermatitą.",
+      "pattern": "A-replace",
+      "status": "ok",
+      "note": "Fixed compound name: 'tespespozonas' → 'tespesponas' (EN 'thespesone'); updated list separator to 'ir'"
+    },
+    {
+      "latin": "Yucca filifera",
+      "knownHazardsLtResolved": "Šaknyse yra saponinų — žmonėms jie toksiški, tačiau prastai įsisavinami organizme ir ilgai kaitinant sunaikinami. Žuvims saponinai ypač toksiški.",
+      "pattern": "B-reference",
+      "status": "ok",
+      "note": "Applied Yucca genus refFix: restructured to state human toxicity first, then absorption context"
+    }
+  ]
+}
