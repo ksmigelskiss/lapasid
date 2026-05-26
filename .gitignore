@@ -24,3 +24,7 @@ data/.DS_Store
 data/beckett-*.txt
 data/plants.ts
 data/vle-search.html
+.env*.local
+
+# Batch enrichment — per-run state, regenerated each run
+data/batch-catalog-checkpoint.json

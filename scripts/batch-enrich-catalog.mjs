@@ -36,6 +36,7 @@ import { TOOL_DETAILS, PLANT_SYSTEM } from '../src/utils/plantPromptConfig.js'
 import { VOICE_PERSONA } from '../src/utils/plantVoicePersona.js'
 import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../src/utils/stage2Constants.js'
 import { normalizeAIResponse } from '../src/utils/plantTransform.js'
+import { fetchWikiPhoto } from '../src/utils/wikiApi.js'
 import { buildPlantRagContextServer } from '../api/_lib/buildPlantRagContext-server.js'
 import { deriveToxicityFromSourcesServer } from '../api/_lib/deriveToxicity-server.js'
 import { generateToxicityNarrativeServer } from '../api/_lib/toxicityNarrativeGenerator-server.js'
@@ -79,6 +80,43 @@ if (RESUME && existsSync(CHECKPOINT_PATH)) {
 
 function saveCheckpoint() {
   writeFileSync(CHECKPOINT_PATH, JSON.stringify(checkpoint, null, 2))
+}
+
+// ── iNat default_photo fallback (when Wiki returns no thumbnail) ──
+// iNat taxa API turi default_photo field net genus level'yje. Naudojame
+// kai Wiki grąžina disambiguation page (pvz. Dracaena = augalas + driežas)
+// be thumbnail'o. iNat URL'us pripažįsta catalog-server.js isPublicPhoto().
+async function fetchINatPhoto(latinName) {
+  if (!latinName) return null
+  try {
+    // Species first, tada genus fallback
+    const variants = [latinName]
+    const genus = latinName.split(/\s+/)[0]
+    if (genus && genus !== latinName) variants.push(genus)
+
+    for (const variant of variants) {
+      const res = await fetch(
+        `https://api.inaturalist.org/v1/taxa?q=${encodeURIComponent(variant)}&rank=species,genus&limit=5`,
+        { headers: { Accept: 'application/json' } },
+      )
+      if (!res.ok) continue
+      const data = await res.json()
+      // Filter: TIK plants (Plantae) — kad iNat search'as nepasiūlytų paukščių
+      // ar driežų su panašiu vardu (pvz. „Pilea" rezultatuose Dryocopus pileatus).
+      const plants = (data.results ?? []).filter(t => t.iconic_taxon_name === 'Plantae')
+      const exact = plants.find(
+        t => t.name?.toLowerCase() === variant.toLowerCase() && t.default_photo,
+      )
+      const anyWithPhoto = plants.find(t => t.default_photo)
+      const taxon = exact ?? anyWithPhoto
+      const url = taxon?.default_photo?.medium_url ?? taxon?.default_photo?.url ?? null
+      if (url) return url
+    }
+    return null
+  } catch (e) {
+    console.warn(`  ⚠ iNat photo fetch failed: ${e.message}`)
+    return null
+  }
 }
 
 // ── Phase 2 AI call (mirror api/save-plant.js processPlant) ──
@@ -130,8 +168,25 @@ async function processEntry(entry) {
   const aiResult = await callAIPhase2(latinName, ltName, rag.context)
 
   // 3. Backfill toxicity if AI missed
+  //
+  // DEFENSIVE: AI kartais grąžina savybes kaip JSON string'ą (ne object'ą) —
+  // schema confusion. JSON.parse'inam jei taip; jei parse fail — start fresh.
+  // Dracaena 2026-05-27 atvejis: savybes buvo string'as '{"pavojai":[...]}'
+  // → mutate'inant crashed su „Cannot create property 'pavojai' on string".
+  if (typeof aiResult.savybes === 'string') {
+    try {
+      aiResult.savybes = JSON.parse(aiResult.savybes)
+      console.log(`  ⚠ savybes was JSON string — parsed OK`)
+    } catch {
+      console.warn(`  ⚠ savybes was malformed string — replacing with {}`)
+      aiResult.savybes = {}
+    }
+  }
+  if (!aiResult.savybes || typeof aiResult.savybes !== 'object') {
+    aiResult.savybes = {}
+  }
+
   const derived = await deriveToxicityFromSourcesServer(latinName)
-  if (!aiResult.savybes) aiResult.savybes = {}
   if (!aiResult.savybes.pavojai || aiResult.savybes.pavojai.length === 0) {
     aiResult.savybes.pavojai = derived.pavojai
   }
@@ -154,12 +209,44 @@ async function processEntry(entry) {
     }
   }
 
-  // 5. Build catalog entry (minimal — NO photos, NO image — catalog freeze)
+  // 5. Catalog image — Wiki primary, iNat fallback.
+  // catalog-server.js turi image-freeze logiką: pirmas save set'ina,
+  // sekantys preserve existing. Jei catalog jau turi nuotrauką (user upload'as
+  // ar ankstesnis save) — batch'as NEperrašys.
+  //
+  // Strategija:
+  //   1. Wiki EN species → 2. Wiki LT species → 3. Wiki EN genus →
+  //   4. iNat species/genus default_photo
+  // iNat dažnai turi default photo'ą net kai Wiki returns disambiguation
+  // (pvz. Dracaena — Wiki disambiguation page be thumbnail, iNat turi).
+  let catalogImage = null
+  try {
+    let wiki = await fetchWikiPhoto(latinName, 'en', { thumbSize: 800 })
+    if (!wiki?.found) wiki = await fetchWikiPhoto(latinName, 'lt', { thumbSize: 800 })
+    if (!wiki?.found) {
+      const genus = latinName.split(/\s+/)[0]
+      if (genus && genus !== latinName) {
+        wiki = await fetchWikiPhoto(genus, 'en', { thumbSize: 800 })
+      }
+    }
+    if (wiki?.found && wiki.url) {
+      catalogImage = wiki.url
+    } else {
+      // iNat fallback — default_photo iš taxa search
+      const inatUrl = await fetchINatPhoto(latinName)
+      if (inatUrl) catalogImage = inatUrl
+    }
+  } catch (e) {
+    console.warn(`  ⚠ Photo fetch failed: ${e.message}`)
+  }
+
+  // 6. Build catalog entry (Wiki photo if first save — image-freeze protects existing)
   const catalogEntry = {
     lotyniskas: latinName,
     lietuviškas: aiResult.lietuviskas ?? ltName ?? '',
     sinonimai: aiResult.ltSynonyms ?? [],
     ...aiResult,
+    ...(catalogImage ? { image: catalogImage } : {}),
     // Provenance
     _batchEnrichedAt: new Date().toISOString(),
     _batchSource: 'curated-300-batch-v1',
