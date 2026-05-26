@@ -86,7 +86,7 @@ NIEKADA palikti EN markers LT output'e.
 ### 8. NO PFAF DISCLAIMER
 NIEKADA pridėti „Plants For A Future can not take responsibility..." prefix.
 
-## Workflow — TWO-AGENT CONSENSUS
+## Workflow — THREE-AGENT CONSENSUS
 
 ### Setup (orchestrator runs)
 
@@ -130,15 +130,92 @@ TASK: Translate each entry's knownHazards (EN) → knownHazardsLtV2 (LT).
 NE PALEISK apply — paliek orchestrator'iui po verifier pass.
 ```
 
-### Phase 2 — Verifier agents (5 paraleliai per turn)
+### Phase 2 — Literature editor agents (5 paraleliai per turn)
 
-Per chunk-NNN-translated.json spawn verifier with prompt:
+Per chunk-NNN-translated.json spawn LT literature/style editor with prompt:
 
 ```
 INPUT: ~/lapasid/data/pfaf-v2-chunks/chunk-NNN-translated.json
+OUTPUT: ~/lapasid/data/pfaf-v2-chunks/chunk-NNN-edited.json
+
+TASK: Lithuanian language POLISHING — polish each entry's knownHazardsLtV2
+for natural LT, fluent grammar, idiomatic phrasing. **NO content changes.**
+
+═══ EDITOR ROLE (NE creator) ═══
+
+Tu esi LT literature editor. Tavo darbas — sklandinti translator'iaus draft'ą
+į natūralią, sklandzią lietuvių kalbą. Kaip patyręs lietuvių kalbos žurnalo
+redaktorius, kuris polishuoja autoriaus rankraštį prieš spausdinimą.
+
+═══ EDITOR CHECKLIST ═══
+
+1. GRAMMAR AGREEMENT:
+   - Subject/predicate agreement (giminė, skaičius, asmuo)
+   - Pavyzdys BUG: „Augale yra glikozidų — laikomas labai toksiškais"
+     („laikomas" sg.masc. + „toksiškais" pl.instr. = mismatch)
+   - Fix: „Augalas turi glikozidų — labai toksiškas" (consistent singular)
+
+2. NATURAL LT (no calques):
+   - „kontaktas su oda" → „pakliuvus ant odos" arba „palietus" (more natural)
+   - „turi atvejų kai..." → „pasitaiko, kai..." arba „žinoma, kad..."
+   - „dažniausiai prasilenkia nekenkdami" → „nesusidaro žalos" (cleaner)
+
+3. SENTENCE FLOW:
+   - Smooth transitions, ne abrupt
+   - Ar jungtukai (tačiau, todėl, dėl to) naudojami logiškai?
+   - Punktuacija (kableliai, brūkšniai) — tinkama?
+
+4. WORD ECONOMY:
+   - Tautologijos (e.g. „nors nuodingi, bet prastai įsisavinami" — drop „bet")
+   - Adjective redundancy
+   - Implicit subjects (kai aiškūs iš konteksto, drop)
+
+5. TONE PRESERVATION:
+   - Severity level (dirgina/toksiškas/mirtinas) NEKEISTI
+   - Voice persona „Sodininkas friend" — direct, warm, ne formali
+   - NE dramatize'inti („tragiška pabaiga" tipas)
+   - NE de-escalate'inti (jeigu translator pasakė „mirtinas", palik)
+
+6. FACT PRESERVATION (HARD RULE):
+   - Compound names — KEEP ALL (glikozid, saponin, alkaloid, etc.)
+   - Severity intensity — KEEP (nedrop'inti „mirtinas" į „toksiškas")
+   - Targets — KEEP (katėms, šunims, žirgams, žmonėms)
+   - Mechanisms — KEEP (nurijus, palietus, etc.)
+   - Numbers/parts — KEEP (vienas lapas, sėklos, sultys)
+
+7. STYLE COMPLIANCE:
+   - 1-2 sakiniai default (3 max). Jei translator'is parašė 4+, trim.
+   - NIEKADA intermediate intensifiers („labai toksiškas")
+   - NIEKADA theatrical drama
+   - PFAF disclaimer absent
+   - Reference markers [NNN] absent
+
+═══ OUTPUT SCHEMA ═══
+{
+  chunkIndex,
+  totalChunks,
+  entries: [{
+    latin,
+    knownHazards,            // EN source (reference)
+    knownHazardsLtV2,        // translator's draft (reference)
+    knownHazardsLtEdited,    // YOUR polished version (final candidate)
+    changesNotes?: string    // optional: brief note kas pakeista
+  }]
+}
+
+NE PALEISK apply.
+```
+
+### Phase 3 — Verifier agents (5 paraleliai per turn)
+
+Per chunk-NNN-edited.json spawn verifier with prompt:
+
+```
+INPUT: ~/lapasid/data/pfaf-v2-chunks/chunk-NNN-edited.json
 OUTPUT: ~/lapasid/data/pfaf-v2-chunks/chunk-NNN-verified.json
 
-TASK: Verify each entry's knownHazardsLtV2 against knownHazards (EN source).
+TASK: Verify each entry's knownHazardsLtEdited (post-literature-editor) against
+knownHazards (EN source). Final gateway before catalog deployment.
 
 ═══ VERIFICATION CHECKLIST (per entry) ═══
 
@@ -174,10 +251,12 @@ TASK: Verify each entry's knownHazardsLtV2 against knownHazards (EN source).
   entries: [{
     latin,
     knownHazards,
-    knownHazardsLtV2,
+    knownHazardsLtV2,        // translator draft
+    knownHazardsLtEdited,    // literature editor polished
+    knownHazardsLtFinal,     // SAME as Edited if OK, OR your fix if minor issue
     status: 'ok' | 'flagged',
-    flagReason?: string,   // if flagged: brief description
-    suggestedFix?: string  // if flagged: proposed corrected LT
+    flagReason?: string,
+    suggestedFix?: string
   }]
 }
 
@@ -216,14 +295,18 @@ git push origin main
 Old refine chunks `data/pfaf-refine-chunks/` paliekam as historical reference.
 Mūsų `_lthazardsRefined` flag'as paliekamas ant v2-flagged entries (= still Sonnet refined output kept as fallback).
 
-## Expected timing
+## Expected timing (3-pass)
 
 - Identify: ~5s
 - Phase 1 (translator): 32 chunks × ~3-4min × 5 paraleliai = ~25min
-- Phase 2 (verifier): same = ~25min
+- Phase 2 (literature editor): same = ~25min
+- Phase 3 (verifier): same = ~25min
 - Apply: ~10s
 - Manual review (jei flagged): variable
-- **Total: ~55-60min** Sonnet session
+- **Total: ~80-90min** Sonnet session
+
+Trade-off: extra 25min effort (3rd agent pass) buys grammar/style polishing
+PRIES verifier gateway. Saugiau toxicity content zona.
 
 ## Cost
 

@@ -94,7 +94,12 @@ function applyAll() {
     for (const item of verified.entries) {
       const entry = d.results[item.latin]
       if (!entry) { skipped++; continue }
-      if (!item.knownHazardsLtV2) { skipped++; continue }
+      // 3-pass output: prefer knownHazardsLtFinal (post-verifier), fallback to
+      // knownHazardsLtEdited (post-literature-editor), fallback to V2 (draft)
+      const finalLt = item.knownHazardsLtFinal
+                   ?? item.knownHazardsLtEdited
+                   ?? item.knownHazardsLtV2
+      if (!finalLt) { skipped++; continue }
 
       if (item.status === 'flagged') {
         flagged++
@@ -105,8 +110,8 @@ function applyAll() {
         continue
       }
 
-      // OK status — replace existing knownHazardsLt
-      entry.knownHazardsLt = item.knownHazardsLtV2
+      // OK status — replace existing knownHazardsLt with 3-pass final
+      entry.knownHazardsLt = finalLt
       entry._lthazardsV2 = true
       entry._lthazardsV2At = new Date().toISOString()
       // Clear old refinement marker
