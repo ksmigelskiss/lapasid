@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 8,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Chamaecytisus albus",
+      "knownHazards": "Like many other plants in the Fabaceae family, Chamaecytisus species can contain alkaloids (notably cytisine), which are toxic when ingested in significant quantities. Cytisine can cause Nausea and vomiting, Abdominal pain, and Respiratory issues in severe cases. Pets, livestock, and humans (especially children) should avoid consuming parts of the plant. Allergenic Potential: Some individuals may develop skin irritation or allergic reactions when handling the plant, particularly during flowering or seed pod development.",
+      "knownHazardsLtV2": "Augalas turi alkaloidų (ypač citiziną), kurie yra toksiški — sukelia pykinimą, vėmimą, pilvo skausmus ir kvėpavimo sutrikimus. Vaikai, naminiai gyvūnai ir gyvuliai turi vengti augalo dalių; oda gali dirginti liečiant augalą žydėjimo metu.",
+      "knownHazardsLtEdited": "Augale yra alkaloidų (ypač citizino), kurie toksiški — sukelia pykinimą, vėmimą, pilvo skausmus ir kvėpavimo sutrikimus. Vaikai, naminiai gyvūnai ir gyvuliai neturėtų vartoti augalo dalių; palietus žydintį augalą, oda gali sudirgintiems.",
+      "changesNotes": "„Turi alkaloidų" → „yra alkaloidų" (natūraliau LT); „citiziną" → „citizino" (galininkas prie „yra ... ypač" — kilmininkas). „Oda gali dirginti" → „oda gali sudirgintiems" (reflexive forma aiškesnė). „Turi vengti" → „neturėtų vartoti" — sklandžiau."
+    },
+    {
+      "latin": "Chamaedaphne",
+      "knownHazards": "A toxin, called 'andromedotoxin' can be released from the plant if it is infused in boiling water[183]. See notes below regarding use of the plant for tea.",
+      "knownHazardsLtV2": "Verdant vandenyje iš augalo išsiskiria toksiška medžiaga andromedotoksinas — augalo nenaudoti arbatai.",
+      "knownHazardsLtEdited": "Verdant vandenyje iš augalo išsiskiria toksiška medžiaga andromedotoksinas — augalo arbatai nenaudoti.",
+      "changesNotes": "Žodžių tvarka pataisyta: „augalo nenaudoti arbatai" → „augalo arbatai nenaudoti" — sklandesnė lietuviška konstrukcija su ryškesne loginiu akcentu ant veiksmažodžio gale."
+    },
+    {
+      "latin": "Chamaedaphne calyculata",
+      "knownHazards": "A toxin, called 'andromedotoxin' can be released from the plant if it is infused in boiling water[183]. See notes below regarding use of the plant for tea.",
+      "knownHazardsLtV2": "Verdant vandenyje iš augalo išsiskiria toksiška medžiaga andromedotoksinas — augalo nenaudoti arbatai.",
+      "knownHazardsLtEdited": "Verdant vandenyje iš augalo išsiskiria toksiška medžiaga andromedotoksinas — augalo arbatai nenaudoti.",
+      "changesNotes": "Tas pats kaip Chamaedaphne: žodžių tvarka pataisyta."
+    },
+    {
+      "latin": "Chamaedorea",
+      "knownHazards": "The juice of the fruit of most members of this genus is said to be an irritant to the skin[ 297 ].",
+      "knownHazardsLtV2": "Vaisių sultys dirgina odą.",
+      "knownHazardsLtEdited": "Vaisių sultys dirgina odą.",
+      "changesNotes": "Pakeitimų nereikia — sakinys tikslus ir natūralus."
+    },
+    {
+      "latin": "Chamaemelum",
+      "knownHazards": "Patients with severe allergic responses to ragweed (ragwort) should be warned about the possible cross-sensitivity to chamomile and other members of the Asteraceae/Compositae family (e.g. echinacea, feverfew, milk thistle).",
+      "knownHazardsLtV2": "Alergiškiems ambrozijoms ar kitiems Asteraceae šeimos augalams (echinacea, didžioji ramunė, margainis) galima kryžminė reakcija į ramunėlę.",
+      "knownHazardsLtEdited": "Alergiškiems ambrozijoms ar kitiems Asteraceae šeimos augalams (ežiuolei, didžiajai ramunei, margainiui) galima kryžminė reakcija į ramunėlę.",
+      "changesNotes": "„echinacea" → „ežiuolei", „didžioji ramunė" → „didžiajai ramunei", „margainis" → „margainiui" — kilmininko linksnio serija dabar gramatiškai nuosekli (alergiškiems ... augalams: ežiuolei, didžiajai ramunei, margainiui)."
+    },
+    {
+      "latin": "Chamaemelum nobile",
+      "knownHazards": "Patients with severe allergic responses to ragweed (ragwort) should be warned about the possible cross-sensitivity to chamomile and other members of the Asteraceae/Compositae family (e.g. echinacea, feverfew, milk thistle).",
+      "knownHazardsLtV2": "Alergiškiems ambrozijoms ar kitiems Asteraceae šeimos augalams (echinacea, didžioji ramunė, margainis) galima kryžminė reakcija į ramunėlę.",
+      "knownHazardsLtEdited": "Alergiškiems ambrozijoms ar kitiems Asteraceae šeimos augalams (ežiuolei, didžiajai ramunei, margainiui) galima kryžminė reakcija į ramunėlę.",
+      "changesNotes": "Tas pats kaip Chamaemelum: linksniuotės sulygintos."
+    },
+    {
+      "latin": "Cheilanthes",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Daugelyje paparčių yra kancerogenų ir fermentas tiaminazė, naikinantis B grupės vitaminus — dideliais kiekiais gali sukelti rimtų sveikatos sutrikimų. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Daugelyje paparčių yra kancerogenų ir fermentas tiaminazė, naikinanti B grupės vitaminus — dideliais kiekiais ji gali sukelti rimtų sveikatos sutrikimų. Terminis apdorojimas tiaminazę sunaikina.",
+      "changesNotes": "„naikinantis" → „naikinanti" — tiaminazė yra mot. giminės, dalyvio giminė turi sutapti. Pridėtas „ji" antrajame sakinyje aiškumui."
+    },
+    {
+      "latin": "Cheiranthus",
+      "knownHazards": "The plant is said to be poisonous if used in large quantities[7].",
+      "knownHazardsLtV2": "Dideliais kiekiais vartojamas augalas yra toksiškas.",
+      "knownHazardsLtEdited": "Dideliais kiekiais vartojamas augalas yra toksiškas.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Cheiranthus cheiri",
+      "knownHazards": "The plant is said to be poisonous if used in large quantities[7].",
+      "knownHazardsLtV2": "Dideliais kiekiais vartojamas augalas yra toksiškas.",
+      "knownHazardsLtEdited": "Dideliais kiekiais vartojamas augalas yra toksiškas.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Chelidonium",
+      "knownHazards": "The whole plant is poisonous[7, 10, 19]. It is of very low toxicity and this is greatly reduced by drying the plant[65]. The stem juice is highly irritating and allergenic, it may cause paralysis[222]. Large doses cause sleepiness, skin irritation, respiratory tract irritation, violent coughing and dyspnoea[268]. It also stains the urine bright yellow and may cause ulcers[268]. May cause burning sensation in the mouth, nausea and vomiting. Avoid contact with eyes. Concerns of liver toxicity so avoid in those with liver disease. Not recommended during pregnancy and for children under 12 [301].",
+      "knownHazardsLtV2": "Visas augalas yra toksiškas; stiebo sultys stipriai dirgina odą ir akis, gali sukelti alerginę reakciją ir paralyžių — vengti kontakto su akimis. Didelės dozės sukelia mieguistumą, kvėpavimo takų dirginimą, pykinimą, vėmimą ir geltą šlapimą; kelia kepenų toksiškumo riziką — netinkami nėščiosioms ir vaikams iki 12 metų.",
+      "knownHazardsLtEdited": "Visas augalas yra toksiškas; stiebo sultys stipriai dirgina odą ir akis, gali sukelti alerginę reakciją ir paralyžių — vengti patekimo į akis. Didelės dozės sukelia mieguistumą, kvėpavimo takų dirginimą, pykinimą, vėmimą ir geltą šlapimą; kelia kepenų toksiškumo riziką — nerekomenduojamas nėščiosioms ir vaikams iki 12 metų.",
+      "changesNotes": "„Vengti kontakto su akimis" (kalkas iš EN „avoid contact with eyes") → „vengti patekimo į akis". „Netinkami" pakeista į „nerekomenduojamas" — gramatinis skaičiaus sutapimas su subjektu (augalas, vartojimas — vienaskaita)."
+    },
+    {
+      "latin": "Chelidonium majus",
+      "knownHazards": "The whole plant is poisonous[7, 10, 19]. It is of very low toxicity and this is greatly reduced by drying the plant[65]. The stem juice is highly irritating and allergenic, it may cause paralysis[222]. Large doses cause sleepiness, skin irritation, respiratory tract irritation, violent coughing and dyspnoea[268]. It also stains the urine bright yellow and may cause ulcers[268]. May cause burning sensation in the mouth, nausea and vomiting. Avoid contact with eyes. Concerns of liver toxicity so avoid in those with liver disease. Not recommended during pregnancy and for children under 12 [301].",
+      "knownHazardsLtV2": "Visas augalas yra toksiškas; stiebo sultys stipriai dirgina odą ir akis, gali sukelti alerginę reakciją ir paralyžių — vengti kontakto su akimis. Didelės dozės sukelia mieguistumą, kvėpavimo takų dirginimą, pykinimą, vėmimą ir geltą šlapimą; kelia kepenų toksiškumo riziką — netinkami nėščiosioms ir vaikams iki 12 metų.",
+      "knownHazardsLtEdited": "Visas augalas yra toksiškas; stiebo sultys stipriai dirgina odą ir akis, gali sukelti alerginę reakciją ir paralyžių — vengti patekimo į akis. Didelės dozės sukelia mieguistumą, kvėpavimo takų dirginimą, pykinimą, vėmimą ir geltą šlapimą; kelia kepenų toksiškumo riziką — nerekomenduojamas nėščiosioms ir vaikams iki 12 metų.",
+      "changesNotes": "Tas pats kaip Chelidonium."
+    },
+    {
+      "latin": "Chlorogalum",
+      "knownHazards": "The bulb contains saponins. Although fairly toxic, these substances are very poorly absorbed by the body and most of them simply pass straight through. Saponins are found in a number of common foods, including many beans. They are destroyed by thorough cooking[K]. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Svogūnėlyje yra saponinų — žmonių organizme jie prastai pasisavinami ir termiškai apdorojant sunaikinami. Žuvims saponinai yra daug toksiškesni.",
+      "knownHazardsLtEdited": "Svogūnėlyje yra saponinų — žmogaus organizme jie prastai pasisavinami ir termiškai apdorojus sunaikinami. Žuvims saponinai yra daug toksiškesni.",
+      "changesNotes": "„žmonių organizme" → „žmogaus organizme" (norminė forma kalbant apie organizmą kaip bendrą sąvoką). „Termiškai apdorojant" → „termiškai apdorojus" — padalyvio laiko pakeitimas: „apdorojus" (praeities padalyvis) tinkamesnis baigtiniam veiksmui."
+    },
+    {
+      "latin": "Chlorogalum pomeridianum",
+      "knownHazards": "The bulb contains saponins. Although fairly toxic, these substances are very poorly absorbed by the body and most of them simply pass straight through. Saponins are found in a number of common foods, including many beans. They are destroyed by thorough cooking[K]. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Svogūnėlyje yra saponinų — žmonių organizme jie prastai pasisavinami ir termiškai apdorojant sunaikinami. Žuvims saponinai yra daug toksiškesni.",
+      "knownHazardsLtEdited": "Svogūnėlyje yra saponinų — žmogaus organizme jie prastai pasisavinami ir termiškai apdorojus sunaikinami. Žuvims saponinai yra daug toksiškesni.",
+      "changesNotes": "Tas pats kaip Chlorogalum."
+    },
+    {
+      "latin": "Chrysanthemum segetum",
+      "knownHazards": "One report suggests that the plant contains coumarin[179]. If this is true it would be unwise to eat the leaves, especially if they are dried, since coumarin can prevent the blood from co-aggulating when there is a cut.",
+      "knownHazardsLtV2": "Augalas gali turėti kumarino, kuris trikdo kraujo krešėjimą — ypač vengtini džiovinti lapai.",
+      "knownHazardsLtEdited": "Augale gali būti kumarino, kuris trikdo kraujo krešėjimą — ypač vengtini džiovinti lapai.",
+      "changesNotes": "„Augalas gali turėti" → „Augale gali būti" — natūralesnė LT konstrukcija sudedamosioms medžiagoms žymėti."
+    },
+    {
+      "latin": "Cichorium intybus",
+      "knownHazards": "Chicory is generally regarded as safe and is widely consumed as food. The most practical safety concern for foragers is site contamination rather than plant chemistry, because chicory is so often found along roadsides, sprayed verges, industrial margins, and grazed areas. Harvest only from clean sites, wash thoroughly, and avoid plants from heavily polluted soils. As with many bitter greens and high-fiber roots, very large servings may cause digestive discomfort in sensitive individuals, especially if you are not accustomed to them, but this is a matter of tolerance rather than toxicity. Excessive and continued use may impair retinal function [268]. Slight potential for sensitization [301].",
+      "knownHazardsLtV2": "Paprastai saugus; didžiausia praktinė rizika — vietos tarša, todėl rinkti tik iš švarių vietų, gerai nuplauti. Ilgalaikis didelis vartojimas gali sutrikdyti tinklainės funkciją; gali dirginti jautrius asmenis.",
+      "knownHazardsLtEdited": "Paprastai saugus; didžiausia praktinė rizika — aplinkos tarša, todėl rinkti tik iš švarių vietų ir gerai nuplauti. Ilgalaikis gausus vartojimas gali sutrikdyti tinklainės funkciją; jautresniems asmenims gali sukelti alerginę reakciją.",
+      "changesNotes": "„Vietos tarša" → „aplinkos tarša" (aiškiau). Perteklinis kablelis prieš „gerai nuplauti" pašalintas, pridėtas „ir". „Didelis" → „gausus" (natūraliau su vartojimo kontekstu). „Gali dirginti jautrius asmenis" → „jautresniems asmenims gali sukelti alerginę reakciją" — tikslesnė medicininė formuluotė."
+    },
+    {
+      "latin": "Cimicifuga",
+      "knownHazards": "Although no specific mention of toxicity has been seen for this species, it does belong to a family that contains a number of toxic species and at least one species in this genus is said to be mildly poisonous. Some caution is therefore advised.",
+      "knownHazardsLtV2": "Konkrečių toksiškumo duomenų nėra, tačiau giminingos rūšys gali būti lengvai nuodingos — rekomenduojamas atsargumas.",
+      "knownHazardsLtEdited": "Konkrečių toksiškumo duomenų nėra, tačiau giminingos rūšys gali būti lengvai nuodingos — rekomenduojamas atsargumas.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Cimicifuga racemosa",
+      "knownHazards": "The plant is poisonous in large doses[7]. Large doses irritate nerve centres and may cause abortion[268]. Gastrointestinal disturbances, hypotension, nausea, headaches. Not recommended during pregnancy or while breastfeeding. Do not take concomitantly with iron [301].",
+      "knownHazardsLtV2": "Didelės dozės yra toksiškos — dirgina nervų centrus, gali sukelti virškinimo sutrikimus, pykinimą, hipotenzją ir galvos skausmą. Draudžiama nėštumo ir žindymo metu; nevartoti kartu su geležies preparatais.",
+      "knownHazardsLtEdited": "Didelės dozės toksiškos — dirgina nervų centrus, gali sukelti virškinimo sutrikimus, pykinimą, hipotenzją ir galvos skausmą. Nerekomenduojamas nėštumo ir žindymo metu; nevartoti kartu su geležies preparatais.",
+      "changesNotes": "„Yra toksiškos" → „toksiškos" (predikato „yra" perteklinis, kai kontekstas aiškus). „Draudžiama" → „nerekomenduojamas" — šaltinis sako „not recommended", ne „forbidden"; griežtumo kalibravimas."
+    },
+    {
+      "latin": "Cimicifuga simplex",
+      "knownHazards": "Although no specific mention of toxicity has been seen for this species, it does belong to a family that contains a number of toxic species and at least one species in this genus is said to be mildly poisonous. Some caution is therefore advised.",
+      "knownHazardsLtV2": "Konkrečių toksiškumo duomenų nėra, tačiau giminingos rūšys gali būti lengvai nuodingos — rekomenduojamas atsargumas.",
+      "knownHazardsLtEdited": "Konkrečių toksiškumo duomenų nėra, tačiau giminingos rūšys gali būti lengvai nuodingos — rekomenduojamas atsargumas.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Cinnamomum",
+      "knownHazards": "The plant is poisonous in large quantities[4]. Large doses can cause respiratory failure in children[268]. See the report below on medicinal uses for more information.",
+      "knownHazardsLtV2": "Dideliais kiekiais augalas yra toksiškas; vaikams didelės dozės gali sukelti kvėpavimo nepakankamumą.",
+      "knownHazardsLtEdited": "Dideliais kiekiais augalas toksiškas; vaikams didelės dozės gali sukelti kvėpavimo nepakankamumą.",
+      "changesNotes": "„Yra toksiškas" → „toksiškas" — glaustesnė predikato forma, natūralesnė LT."
+    },
+    {
+      "latin": "Cinnamomum camphor",
+      "knownHazards": "The plant is poisonous in large quantities[4]. Large doses can cause respiratory failure in children[268]. See the report below on medicinal uses for more information.",
+      "knownHazardsLtV2": "Dideliais kiekiais augalas yra toksiškas; vaikams didelės dozės gali sukelti kvėpavimo nepakankamumą.",
+      "knownHazardsLtEdited": "Dideliais kiekiais augalas toksiškas; vaikams didelės dozės gali sukelti kvėpavimo nepakankamumą.",
+      "changesNotes": "Tas pats kaip Cinnamomum."
+    },
+    {
+      "latin": "Citrus",
+      "knownHazards": "Plant has spines or sharp edges; use extreme caution when handling",
+      "knownHazardsLtV2": "Augalas turi spyglių arba aštrių kraštų — elgtis atsargiai.",
+      "knownHazardsLtEdited": "Augalas turi spyglių arba aštrių kraštų — elgtis atsargiai.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Citrus limon",
+      "knownHazards": "Low potential for sensitization through skin contact with volatile oil [301].",
+      "knownHazardsLtV2": "Eteriniai aliejai odoje gali sukelti nedidelę jautrinimo reakciją.",
+      "knownHazardsLtEdited": "Palietus odą, eteriniai aliejai gali sukelti nedidelę jautrinimo reakciją.",
+      "changesNotes": "„Eteriniai aliejai odoje" → „Palietus odą, eteriniai aliejai" — panaikinta kalkinė konstrukcija; kontaktas su oda perteikiamas natūraliu LT padalyviu."
+    },
+    {
+      "latin": "Citrus reticulata",
+      "knownHazards": "Avoid peel with dry cough or excessive red tongue or splitting blood [301].",
+      "knownHazardsLtV2": "Žievelės vengti esant sausam kosuliui, stipriai paraudusiam liežuviui ar kraujospjūviui.",
+      "knownHazardsLtEdited": "Žievelės vengti esant sausam kosuliui, ryškiai paraudusiam liežuviui ar kraujospjūviui.",
+      "changesNotes": "„Stipriai paraudusiam" → „ryškiai paraudusiam" — „ryškiai" tiksliau apibūdina spalvos intensyvumą (originale „excessive red")."
+    },
+    {
+      "latin": "Clematis flammula",
+      "knownHazards": "All parts of the plant are poisonous, the toxic principle is dissipated by heat or by drying[65].",
+      "knownHazardsLtV2": "Visos augalo dalys yra toksiškos; toksiškumas išnyksta kaitinant arba džiovinant.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos; toksiškumas išnyksta kaitinant arba džiovinant.",
+      "changesNotes": "„Yra toksiškos" → „toksiškos" — glaustesnė forma."
+    },
+    {
+      "latin": "Clematis orientalis",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, some if not all members of this genus are mildly poisonous. The toxic principle is dissipated by heat or by drying[65].",
+      "knownHazardsLtV2": "Tikslių toksiškumo duomenų nėra, tačiau daugelis tos pačios genties rūšių yra lengvai nuodingos; toksiškumas išnyksta kaitinant arba džiovinant.",
+      "knownHazardsLtEdited": "Tikslių toksiškumo duomenų nėra, tačiau daugelis tos pačios genties rūšių lengvai nuodingos; toksiškumas išnyksta kaitinant arba džiovinant.",
+      "changesNotes": "„Yra lengvai nuodingos" → „lengvai nuodingos" — predikato „yra" pašalintas kaip perteklinis."
+    },
+    {
+      "latin": "Clematis recta",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, some if not all members of this genus are mildly poisonous. The toxic principle is dissipated by heat or by drying[65].",
+      "knownHazardsLtV2": "Tikslių toksiškumo duomenų nėra, tačiau daugelis tos pačios genties rūšių yra lengvai nuodingos; toksiškumas išnyksta kaitinant arba džiovinant.",
+      "knownHazardsLtEdited": "Tikslių toksiškumo duomenų nėra, tačiau daugelis tos pačios genties rūšių lengvai nuodingos; toksiškumas išnyksta kaitinant arba džiovinant.",
+      "changesNotes": "Tas pats kaip Clematis orientalis."
+    },
+    {
+      "latin": "Clitoria",
+      "knownHazards": "Parts of the plant are poisonous. No further information given.",
+      "knownHazardsLtV2": "Dalys augalo yra nuodingos; detalesnės informacijos nėra.",
+      "knownHazardsLtEdited": "Kai kurios augalo dalys nuodingos; daugiau duomenų nėra.",
+      "changesNotes": "„Dalys augalo" → „Kai kurios augalo dalys" — originale „parts" (ne „all parts"), patikslinimas svarbus. „Yra nuodingos" → „nuodingos". „Detalesnės informacijos" → „daugiau duomenų" — paprastesnė, neutralesnė formuluotė."
+    },
+    {
+      "latin": "Coffea",
+      "knownHazards": "The seeds contain chlorogenic acid, which is a known allergen[238].",
+      "knownHazardsLtV2": "Sėklose yra chlorogeninės rūgšties, kuri yra žinomas alergenas.",
+      "knownHazardsLtEdited": "Sėklose yra chlorogeninės rūgšties — žinomo alergeno.",
+      "changesNotes": "Šalutinis sakinys „kuri yra žinomas alergenas" sutrumpintas į aiškinamąjį priedėlį „žinomo alergeno" — ekonomiškiau, sklandžiau."
+    },
+    {
+      "latin": "Coffea arabica",
+      "knownHazards": "The seeds contain chlorogenic acid, which is a known allergen[238].",
+      "knownHazardsLtV2": "Sėklose yra chlorogeninės rūgšties, kuri yra žinomas alergenas.",
+      "knownHazardsLtEdited": "Sėklose yra chlorogeninės rūgšties — žinomo alergeno.",
+      "changesNotes": "Tas pats kaip Coffea."
+    },
+    {
+      "latin": "Colchicum",
+      "knownHazards": "All parts of the plant, but especially the bulb[200], are poisonous[4, 7, 10, 19, 65]. They cause vomiting, violent purging, serious inflammation of the stomach and bowels, and death[232]. Handling the corms can cause skin allergies in some people[238].",
+      "knownHazardsLtV2": "Visos augalo dalys yra mirtinai nuodingos — ypač svogūnėlis; sukelia vėmimą, smarkią viduriavimą, stiprų skrandžio ir žarnyno uždegimą. Liečiant svogūnėlius oda gali dirginti.",
+      "knownHazardsLtEdited": "Visos augalo dalys mirtinai nuodingos, ypač svogūnėlis — sukelia vėmimą, stiprų viduriavimą ir skrandžio bei žarnyno uždegimą. Liečiant svogūnėlius gali atsirasti odos alergija.",
+      "changesNotes": "„Yra mirtinai nuodingos" → „mirtinai nuodingos". „Smarkią viduriavimą" → „stiprų viduriavimą" (viduriavimas yra vyriškos giminės). Perteklinis brūkšnys po svogūnėlio pakeistas kablelio ir brūkšnio kombinacija prie pasekmių. „Oda gali dirginti" → „gali atsirasti odos alergija" — sakinys buvo negramatiškas (dirginimas atsitinka odai, o ne oda dirgina)."
+    }
+  ]
+}

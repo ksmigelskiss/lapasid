@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 15,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Gloriosa",
+      "knownHazards": "The whole plant is highly toxic due to the presence of the alkaloid colchicine[293 , 310 ]. Diarrhoea, nausea, vomiting and abdominal pains are often the first signs of poisoning. The diarrhoea may become severe and haemorrhagic, and can thus lead to metabolic acidosis, dehydration, hypotension and shock. A burning sensation in the throat, stomach and skin may also be an early sign of intoxication. Severe reactions include extensive vascular damage and acute renal toxicity with oliguria and haematuria. The patients may develop convulsions, delirium, muscle weakness, neuropathy and ascending paralysis of the central nervous system. In patients who have taken an overdose of Gloriosa superba bulbs, death occurs as a result of respiratory depression and cardiovascular collapse[310 ].(All parts...",
+      "knownHazardsLtV2": "Visas augalas yra mirtinas — jame esantis alkaloidų kolchicinas sukelia viduriavimą, vėmimą, kraujagyslinį pažeidimą, inkstų toksiškumą ir centrinės nervų sistemos paralyžių. Perdozavus svogūnėlius, mirtis įvyksta dėl kvėpavimo slopinimo ir širdies bei kraujagyslių kolapso.",
+      "knownHazardsLtEdited": "Visas augalas mirtinas — jame esantis alkaloidas kolchicinas sukelia viduriavimą, vėmimą, kraujagyslinių pažeidimą, inkstų toksiškumą ir centrinės nervų sistemos paralyžių. Perdozavus svogūnėlius, mirtis nastoja dėl kvėpavimo slopinimo ir širdies bei kraujagyslių kolapso.",
+      "changesNotes": "Pašalinta nereikalinga jungtis 'yra' ('yra mirtinas' → 'mirtinas'). 'alkaloidų kolchicinas' (netinkama giminė/linksnis) pataisyta į 'alkaloidas kolchicinas'. 'kraujagyslinį pažeidimą' pataisyta į 'kraujagyslinių pažeidimą' (kilmininkas prie daugiskaitos). 'įvyksta' → 'nastoja' (natūralesnė medicininė LT formuluotė)."
+    },
+    {
+      "latin": "Gloriosa superba",
+      "knownHazards": "The whole plant is highly toxic due to the presence of the alkaloid colchicine[293 , 310 ]. Diarrhoea, nausea, vomiting and abdominal pains are often the first signs of poisoning. The diarrhoea may become severe and haemorrhagic, and can thus lead to metabolic acidosis, dehydration, hypotension and shock. A burning sensation in the throat, stomach and skin may also be an early sign of intoxication. Severe reactions include extensive vascular damage and acute renal toxicity with oliguria and haematuria. The patients may develop convulsions, delirium, muscle weakness, neuropathy and ascending paralysis of the central nervous system. In patients who have taken an overdose of Gloriosa superba bulbs, death occurs as a result of respiratory depression and cardiovascular collapse[310 ].(All parts...",
+      "knownHazardsLtV2": "Visas augalas yra mirtinas — jame esantis alkaloidų kolchicinas sukelia viduriavimą, vėmimą, kraujagyslinį pažeidimą, inkstų toksiškumą ir centrinės nervų sistemos paralyžių. Perdozavus svogūnėlius, mirtis įvyksta dėl kvėpavimo slopinimo ir širdies bei kraujagyslių kolapso.",
+      "knownHazardsLtEdited": "Visas augalas mirtinas — jame esantis alkaloidas kolchicinas sukelia viduriavimą, vėmimą, kraujagyslinių pažeidimą, inkstų toksiškumą ir centrinės nervų sistemos paralyžių. Perdozavus svogūnėlius, mirtis nastoja dėl kvėpavimo slopinimo ir širdies bei kraujagyslių kolapso.",
+      "changesNotes": "Tas pats kaip Gloriosa: pašalinta predikatyvi 'yra', pataisyta 'alkaloidų' → 'alkaloidas', 'kraujagyslinį' → 'kraujagyslinių', 'įvyksta' → 'nastoja'."
+    },
+    {
+      "latin": "Glycyrrhiza glabra",
+      "knownHazards": "A gross overdose of the root can cause oedema, high blood pressure and congestive heart failure[9, 65]. Do not use during premenstrual syndrome as water retention and bloating occur. If pregnant or have liver cirrhosis use with caution. Avoid using for more than 6 weeks. Excessive quantities may cause headache, sluggishness and potassium depletion [301].",
+      "knownHazardsLtV2": "Didelės šaknies dozės sukelia edemą, aukštą kraujospūdį ir širdies nepakankamumą; ilgiau nei 6 savaites vartoti nerekomenduojama. Draudžiama naudoti PMS metu, nėštumo metu ir esant kepenų cirozei; per didelės dozės sukelia galvos skausmą ir kalio trūkumą.",
+      "knownHazardsLtEdited": "Didelės šaknies dozės sukelia edemą, aukštą kraujospūdį ir širdies nepakankamumą; vartoti ilgiau nei 6 savaites nerekomenduojama. Nenaudoti PMS metu, nėštumo metu ar esant kepenų cirozei; per didelės dozės sukelia galvos skausmą ir kalio trūkumą.",
+      "changesNotes": "Inversion 'ilgiau nei 6 savaites vartoti' → 'vartoti ilgiau nei 6 savaites' (natūralesnė tvarka). 'Draudžiama' → 'Nenaudoti' (nuosaikesnis tonas, atitinkantis originalo 'avoid/use with caution'). 'nėštumo metu ir esant' → 'nėštumo metu ar esant' (loginis 'ar' prie alternatyvų sąrašo)."
+    },
+    {
+      "latin": "Gossypium herbaceum",
+      "knownHazards": "The plant, and especially the oil from the seed, contains gossypol. It is believed that this substance, when ingested, when ingested, causes reduced sperm levels and infertility in men[238 , 254 ].",
+      "knownHazardsLtV2": "Augalas ir ypač sėklų aliejus turi gossypolio — ši medžiaga, patekusi į organizmą, mažina spermatozoidų kiekį ir sukelia nevaisingumą vyrams.",
+      "knownHazardsLtEdited": "Augale, ypač sėklų aliejuje, yra gossypolio — ši medžiaga, patekusi į organizmą, mažina spermatozoidų kiekį ir sukelia nevaisingumą vyrams.",
+      "changesNotes": "'Augalas [...] turi gossypolio' → 'Augale [...] yra gossypolio' (natūrali LT konstrukcija su lokatyvu). 'ir ypač sėklų aliejus' → 'ypač sėklų aliejuje' (lokatyvas, suderintas su struktūra)."
+    },
+    {
+      "latin": "Grindelia",
+      "knownHazards": "Large doses used medicinally can irritate the kidneys[165].",
+      "knownHazardsLtV2": "Didelės medicininės dozės dirgina inkstus.",
+      "knownHazardsLtEdited": "Didelės medicininės dozės dirgina inkstus.",
+      "changesNotes": "Jokių pakeitimų — sakinys taisyklingas ir natūralus."
+    },
+    {
+      "latin": "Gymnocladus dioica",
+      "knownHazards": "The ripe seed contains hydrocyanic acid. This toxin can be destroyed by thoroughly heating the seed for at least 3 hours at 150°c[183]. The seed contains saponins[222]. Although toxic, these substances are very poorly absorbed by the body and so tend to pass through without causing harm. They are also broken down by heat so a long slow baking can destroy them. Saponins are found in many plants, including several that are often used for food, such as certain beans. It is not advisable to eat large quantities of food that contain saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Brendančios sėklos turi cianido rūgšties ir saponinų — abu nukenksminami kaitinant 150 °C temperatūroje ne mažiau 3 valandas. Saponinai žmonių virškinimo trakte praktiškai neįsisavinami, tačiau žuvims yra toksiškai pavojingi.",
+      "knownHazardsLtEdited": "Brendančiose sėklose yra cianido rūgšties ir saponinų — abu nukenksminami kaitinant 150 °C temperatūroje ne mažiau 3 valandas. Saponinai žmonių virškinimo trakte praktiškai neįsisavinami, tačiau žuvims yra pavojingi.",
+      "changesNotes": "'Brendančios sėklos turi' → 'Brendančiose sėklose yra' (lokatyvo konstrukcija). Pašalintas pleonazmas 'toksiškai pavojingi' → 'pavojingi' (pakanka vieno žodžio)."
+    },
+    {
+      "latin": "Gypsophila",
+      "knownHazards": "Although no mention has been seen for this species, at least one member of this genus has a root that is rich in saponins[2]. Although toxic, these substances are very poorly absorbed by the body and so tend to pass through without causing harm[65]. They are also broken down by heat so a long slow baking can destroy them. Saponins are found in many plants, including several that are often used for food, such as certain beans. It is advisable not to eat large quantities of food that contain saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Šaknys gali turėti saponinų, tačiau jie žmonių virškinimo trakte praktiškai neįsisavinami ir sunaikinami kaitinant. Saponinai yra toksiškai pavojingi žuvims.",
+      "knownHazardsLtEdited": "Šaknyse gali būti saponinų, tačiau jie žmonių virškinimo trakte praktiškai neįsisavinami ir sunaikinami kaitinant. Saponinai pavojingi žuvims.",
+      "changesNotes": "'Šaknys gali turėti' → 'Šaknyse gali būti' (lokatyvo konstrukcija). 'yra toksiškai pavojingi' → 'pavojingi' (pašalinta predikatyvi 'yra' ir pleonazmas 'toksiškai')."
+    },
+    {
+      "latin": "Gypsophila paniculata",
+      "knownHazards": "Although no mention has been seen for this species, at least one member of this genus has a root that is rich in saponins[2]. Although toxic, these substances are very poorly absorbed by the body and so tend to pass through without causing harm[65]. They are also broken down by heat so a long slow baking can destroy them. Saponins are found in many plants, including several that are often used for food, such as certain beans. It is advisable not to eat large quantities of food that contain saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Šaknys gali turėti saponinų, tačiau jie žmonių virškinimo trakte praktiškai neįsisavinami ir sunaikinami kaitinant. Saponinai yra toksiškai pavojingi žuvims.",
+      "knownHazardsLtEdited": "Šaknyse gali būti saponinų, tačiau jie žmonių virškinimo trakte praktiškai neįsisavinami ir sunaikinami kaitinant. Saponinai pavojingi žuvims.",
+      "changesNotes": "Tie patys pakeitimai kaip Gypsophila: lokatyvas 'Šaknyse gali būti', pašalinta 'yra toksiškai'."
+    },
+    {
+      "latin": "Hamam",
+      "knownHazards": "Avoid long-term use due to cancer risk (from high tannin content). Avoid during pregnancy and breastfeeding. 1g ingested can cause vomiting, nausea, impaction. Topical use may cause dermatitis [301].",
+      "knownHazardsLtV2": "Didelis taninų kiekis — ilgalaikis vartojimas kelia vėžio riziką; nerekomenduojama nėštumo ir žindymo metu. Jau 1 g suvartotas sukelia vėmimą ir pykinimą; išorinis naudojimas gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Dėl didelio taninų kiekio ilgalaikis vartojimas kelia vėžio riziką; nerekomenduojama nėštumo ir žindymo metu. Jau 1 g suvartotas sukelia vėmimą ir pykinimą; tepamas ant odos gali sukelti dermatitą.",
+      "changesNotes": "Nebaigta nominali struktūra 'Didelis taninų kiekis —' pertvaryta į priežasties konstrukciją 'Dėl didelio taninų kiekis'. 'išorinis naudojimas' (kalkė) → 'tepamas ant odos' (natūrali LT)."
+    },
+    {
+      "latin": "Hedera",
+      "knownHazards": "The plant is said to be poisonous in large doses[7, 10, 65, 76] although the leaves are eaten with impunity by various mammals without any noticeable harmful affects. The leaves and fruits contain the saponic glycoside hederagenin which, if ingested, can cause breathing difficulties and coma[274]. The sap can cause dermatitis with blistering and inflammation. This is apparently due to the presence of polyacetylene compounds[274].",
+      "knownHazardsLtV2": "Lapai ir vaisiai turi saponinio glikozido hederagenino — suvalgyti gali sukelti kvėpavimo sutrikimus ir komą. Sultys dėl poliacetilenų junginių dirgina odą ir gali sukelti dermatitą su pūslėmis.",
+      "knownHazardsLtEdited": "Lapuose ir vaisiuose yra saponinio glikozido hederagenino — suvalgyti gali sukelti kvėpavimo sutrikimus ir komą. Sultys, kuriose yra poliacetilenų junginių, dirgina odą ir gali sukelti dermatitą su pūslėmis.",
+      "changesNotes": "'Lapai ir vaisiai turi' → 'Lapuose ir vaisiuose yra' (lokatyvo konstrukcija). 'dėl poliacetilenų junginių' (trumpinys su 'dėl' skamba kaip priežastis, bet gramatiškai neaiški) → 'kuriose yra poliacetilenų junginių' (aiški atributinė konstrukcija)."
+    },
+    {
+      "latin": "Hedera helix",
+      "knownHazards": "The plant is said to be poisonous in large doses[7, 10, 65, 76] although the leaves are eaten with impunity by various mammals without any noticeable harmful affects. The leaves and fruits contain the saponic glycoside hederagenin which, if ingested, can cause breathing difficulties and coma[274]. The sap can cause dermatitis with blistering and inflammation. This is apparently due to the presence of polyacetylene compounds[274].",
+      "knownHazardsLtV2": "Lapai ir vaisiai turi saponinio glikozido hederagenino — suvalgyti gali sukelti kvėpavimo sutrikimus ir komą. Sultys dėl poliacetilenų junginių dirgina odą ir gali sukelti dermatitą su pūslėmis.",
+      "knownHazardsLtEdited": "Lapuose ir vaisiuose yra saponinio glikozido hederagenino — suvalgyti gali sukelti kvėpavimo sutrikimus ir komą. Sultys, kuriose yra poliacetilenų junginių, dirgina odą ir gali sukelti dermatitą su pūslėmis.",
+      "changesNotes": "Tie patys pakeitimai kaip Hedera: lokatyvas, atributinė junginių konstrukcija."
+    },
+    {
+      "latin": "Hedera nepalensis",
+      "knownHazards": "Although no specific mention has been seen for this species, the following notes are for the closely related Hedera helix and quite possibly are relavent here[K]. The plant is said to be poisonous in large doses[7, 10, 65, 76] although the leaves are eaten with impunity by various mammals without any noticeable harmful affects. The leaves and fruits contain the saponic glycoside hederagenin which, if ingested, can cause breathing difficulties and coma[274]. The sap can cause dermatitis with blistering and inflammation. This is apparently due to the presence of polyacetylene compounds[274].",
+      "knownHazardsLtV2": "Kaip ir artimoje rūšyje Hedera helix — lapai ir vaisiai turi saponinio glikozido hederagenino, kuris suvalgytas gali sukelti kvėpavimo sutrikimus ir komą. Sultys gali sukelti dermatitą su pūslėmis.",
+      "knownHazardsLtEdited": "Kaip ir artimoje rūšyje Hedera helix — lapuose ir vaisiuose yra saponinio glikozido hederagenino, kuris suvalgytas gali sukelti kvėpavimo sutrikimus ir komą. Sultys, kuriose yra poliacetilenų junginių, gali sukelti dermatitą su pūslėmis.",
+      "changesNotes": "'lapai ir vaisiai turi' → 'lapuose ir vaisiuose yra' (lokatyvas). Pridėta praleista informacija apie poliacetilenų junginius sultys (atspindi originalo faktą)."
+    },
+    {
+      "latin": "Helenium",
+      "knownHazards": "All parts of the plant contain the glycoside gudaldin and can cause toxic symptoms in grazing animals. Cows that have eaten even a small amount of the plant produce extremely bitter, distasteful milk, whilst honey from the flowers is said to be bitter[274].",
+      "knownHazardsLtV2": "Visos augalo dalys turi glikozido gualdino ir yra toksiškas ganomiems gyvuliams. Net nedidelis kiekis pažeidžia karvių pieną — jis tampa kartus; žiedų medus taip pat kartus.",
+      "knownHazardsLtEdited": "Visose augalo dalyse yra glikozido gualdino, kuris ganomiems gyvuliams toksiškas. Net nedidelis kiekis pažeidžia karvių pieną — jis tampa kartus; žiedų medus taip pat kartus.",
+      "changesNotes": "'Visos augalo dalys turi glikozido' → 'Visose augalo dalyse yra glikozido' (lokatyvas). 'ir yra toksiškas' → 'kuris [...] toksiškas' (šalina redundantinę kopulą 'yra' predikatyvinėje padėtyje, ryšys aiškesnis). Gramatikinė giminė 'toksiškas' (vyriška, atitinka 'glikozidas')."
+    },
+    {
+      "latin": "Helianthus",
+      "knownHazards": "The growing plant can accumulate nitrates, especially when fed on artificial fertilizers[76]. The pollen or plant extracts may cause allergic reactions[222].",
+      "knownHazardsLtV2": "Augalas gali kaupti nitratus, ypač naudojant mineralines trąšas. Žiedadulkės ar augalo ekstraktai gali sukelti alergines reakcijas.",
+      "knownHazardsLtEdited": "Augalas gali kaupti nitratus, ypač tręšiant mineralinėmis trąšomis. Žiedadulkės ar augalo ekstraktai gali sukelti alergines reakcijas.",
+      "changesNotes": "'naudojant mineralines trąšas' → 'tręšiant mineralinėmis trąšomis' (natūralesnė LT formuluotė, tiksliau perteikia reikšmę)."
+    },
+    {
+      "latin": "Helianthus annuus",
+      "knownHazards": "The growing plant can accumulate nitrates, especially when fed on artificial fertilizers[76]. The pollen or plant extracts may cause allergic reactions[222].",
+      "knownHazardsLtV2": "Augalas gali kaupti nitratus, ypač naudojant mineralines trąšas. Žiedadulkės ar augalo ekstraktai gali sukelti alergines reakcijas.",
+      "knownHazardsLtEdited": "Augalas gali kaupti nitratus, ypač tręšiant mineralinėmis trąšomis. Žiedadulkės ar augalo ekstraktai gali sukelti alergines reakcijas.",
+      "changesNotes": "Tas pats kaip Helianthus: 'naudojant mineralines trąšas' → 'tręšiant mineralinėmis trąšomis'."
+    },
+    {
+      "latin": "Heliotropium",
+      "knownHazards": "The seeds are poisonous[65].",
+      "knownHazardsLtV2": "Sėklos yra toksiškai pavojingos.",
+      "knownHazardsLtEdited": "Sėklos toksiškos.",
+      "changesNotes": "Pašalinta predikatyvi 'yra' ir pleonazmas 'toksiškai' — 'toksiškos' pakankama."
+    },
+    {
+      "latin": "Heliotropium arborescens",
+      "knownHazards": "The seeds are poisonous[65].",
+      "knownHazardsLtV2": "Sėklos yra toksiškai pavojingos.",
+      "knownHazardsLtEdited": "Sėklos toksiškos.",
+      "changesNotes": "Tas pats: pašalinta predikatyvi 'yra' ir pleonazmas 'toksiškai'."
+    },
+    {
+      "latin": "Helleborus",
+      "knownHazards": "All parts of the plant are poisonous[9, 10, 65], this poison can possibly be absorbed through the skin[76].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškai pavojingos; nuodai gali prasiskverbti per odą.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos; nuodai gali prasiskverbti per odą.",
+      "changesNotes": "Pašalintas pleonazmas 'toksiškai pavojingos' → 'toksiškos'."
+    },
+    {
+      "latin": "Helleborus foetidus",
+      "knownHazards": "All parts of the plant are poisonous[9, 10, 65], this poison can possibly be absorbed through the skin[76].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškai pavojingos; nuodai gali prasiskverbti per odą.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos; nuodai gali prasiskverbti per odą.",
+      "changesNotes": "Tas pats: 'toksiškai pavojingos' → 'toksiškos'."
+    },
+    {
+      "latin": "Helleborus niger",
+      "knownHazards": "All parts of the plant are poisonous[9, 10, 65], this poison can possibly be absorbed through the skin[76]. The fresh root can be a violent irritant to sensitive skin[244].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškai pavojingos, o nuodai gali prasiskverbti per odą. Šviežia šaknis stipriai dirgina jautrią odą.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos, o nuodai gali prasiskverbti per odą. Šviežia šaknis stipriai dirgina jautrią odą.",
+      "changesNotes": "Pašalintas pleonazmas 'toksiškai' iš 'toksiškai pavojingos' → 'toksiškos'. Antrasis sakinys taisyklingas."
+    },
+    {
+      "latin": "Helleborus viridis",
+      "knownHazards": "All parts of the plant are poisonous[9, 10, 65], this poison can possibly be absorbed through the skin[76].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškai pavojingos; nuodai gali prasiskverbti per odą.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos; nuodai gali prasiskverbti per odą.",
+      "changesNotes": "Tas pats: 'toksiškai pavojingos' → 'toksiškos'."
+    },
+    {
+      "latin": "Hemerocallis",
+      "knownHazards": "Large quantities of the leaves are said to be hallucinogenic. Blanching the leaves removes this hallucinatory component[205]. (This report does not make clear what it means by blanching, it could be excluding light from the growing shoots or immersing in boiling water[K].)",
+      "knownHazardsLtV2": "Dideliais kiekiais lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "knownHazardsLtEdited": "Dideliais kiekiais vartojami lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "changesNotes": "Pridėta 'vartojami' prie 'lapai' — patikslina prasmę (ne auginimo metu, bet valgant)."
+    },
+    {
+      "latin": "Hemerocallis aurantiaca",
+      "knownHazards": "Large quantities of the leaves are said to be hallucinogenic. Blanching the leaves removes this hallucinatory component[205]. (This report does not make clear what it means by blanching, it could be excluding light from the growing shoots or immersing in boiling water[K].)",
+      "knownHazardsLtV2": "Dideliais kiekiais lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "knownHazardsLtEdited": "Dideliais kiekiais vartojami lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "changesNotes": "Pridėta 'vartojami' kaip ir Hemerocallis."
+    },
+    {
+      "latin": "Hemerocallis citrina",
+      "knownHazards": "Large quantities of the leaves are said to be hallucinogenic. Blanching the leaves removes this hallucinatory component[205]. (This report does not make clear what it means by blanching, it could be excluding light from the growing shoots or immersing in boiling water[K].)",
+      "knownHazardsLtV2": "Dideliais kiekiais lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "knownHazardsLtEdited": "Dideliais kiekiais vartojami lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "changesNotes": "Pridėta 'vartojami'."
+    },
+    {
+      "latin": "Hemerocallis dumortieri",
+      "knownHazards": "Large quantities of the leaves are said to be hallucinogenic. Blanching the leaves removes this hallucinatory component[205]. (This report does not make clear what it means by blanching, it could be excluding light from the growing shoots or immersing in boiling water[K].)",
+      "knownHazardsLtV2": "Dideliais kiekiais lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "knownHazardsLtEdited": "Dideliais kiekiais vartojami lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "changesNotes": "Pridėta 'vartojami'."
+    },
+    {
+      "latin": "Hemerocallis fulva",
+      "knownHazards": "Large quantities of the leaves are said to be hallucinogenic[127, 137]. Blanching the leaves removes this hallucinatory component[205]. (This report does not make clear what it means by blanching, it could be excluding light from the growing shoots or immersing in boiling water[K].)",
+      "knownHazardsLtV2": "Dideliais kiekiais lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "knownHazardsLtEdited": "Dideliais kiekiais vartojami lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "changesNotes": "Pridėta 'vartojami'."
+    },
+    {
+      "latin": "Hemerocallis lilioasphodelus",
+      "knownHazards": "Large quantities of the leaves are said to be hallucinogenic. Blanching the leaves removes this hallucinatory component[205]. (This report does not make clear what it means by blanching, it could be excluding light from the growing shoots or immersing in boiling water[K].)",
+      "knownHazardsLtV2": "Dideliais kiekiais lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "knownHazardsLtEdited": "Dideliais kiekiais vartojami lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "changesNotes": "Pridėta 'vartojami'."
+    },
+    {
+      "latin": "Hemerocallis minor",
+      "knownHazards": "Large quantities of the leaves are said to be hallucinogenic. Blanching the leaves removes this hallucinatory component[205]. (This report does not make clear what it means by blanching, it could be excluding light from the growing shoots or immersing in boiling water[K].)",
+      "knownHazardsLtV2": "Dideliais kiekiais lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "knownHazardsLtEdited": "Dideliais kiekiais vartojami lapai gali sukelti haliucinacijas. Blanširavimas (apiplikymas verdančiu vandeniu arba auginimas tamsoje) pašalina šią savybę.",
+      "changesNotes": "Pridėta 'vartojami'."
+    },
+    {
+      "latin": "Hepatica",
+      "knownHazards": "Although no specific mention has been seen for this species, most plants in this family are poisonous. This toxicity is usually of a low order and the toxic principle is destroyed by heat or by drying[4, 10, 19, 65].",
+      "knownHazardsLtV2": "Dauguma šios šeimos augalų yra silpnai toksiški. Toksinės medžiagos sunaikinamos kaitinant arba džiovinant.",
+      "knownHazardsLtEdited": "Dauguma šios šeimos augalų silpnai toksiški. Toksinės medžiagos sunaikinamos kaitinant arba džiovinant.",
+      "changesNotes": "Pašalinta predikatyvi 'yra' pirmame sakinyje."
+    },
+    {
+      "latin": "Hepatica nobilis",
+      "knownHazards": "The plant is poisonous in large doses[13, 19, 21]. The toxic principle is dissipated by heat or drying[65].",
+      "knownHazardsLtV2": "Didelėmis dozėmis augalas yra toksiškai pavojingas. Toksinės medžiagos sunaikinamos kaitinant arba džiovinant.",
+      "knownHazardsLtEdited": "Didelėmis dozėmis augalas toksiškas. Toksinės medžiagos sunaikinamos kaitinant arba džiovinant.",
+      "changesNotes": "Pašalinta predikatyvi 'yra' ir pleonazmas 'toksiškai' — 'toksiškas' pakankama."
+    }
+  ]
+}

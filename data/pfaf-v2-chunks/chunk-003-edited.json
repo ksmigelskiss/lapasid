@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 3,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Aloysia",
+      "knownHazards": "The essential oil from the plant might sensitise the skin to sunlight[238]. Large doses of the tea can cause gastric irritation [301].",
+      "knownHazardsLtV2": "Eterinis aliejus gali padidinti odos jautrumą saulės šviesai. Didelės arbatos dozės dirgina skrandį.",
+      "knownHazardsLtEdited": "Eterinis aliejus gali padidinti odos jautrumą saulės šviesai. Didelės arbatos dozės dirgina skrandį.",
+      "changesNotes": "Tekstas taisyklingas ir natūralus — pakeitimų nereikia."
+    },
+    {
+      "latin": "Aloysia triphylla",
+      "knownHazards": "The essential oil from the plant might sensitise the skin to sunlight[238]. Large doses of the tea can cause gastric irritation [301].",
+      "knownHazardsLtV2": "Eterinis aliejus gali padidinti odos jautrumą saulės šviesai. Didelės arbatos dozės dirgina skrandį.",
+      "knownHazardsLtEdited": "Eterinis aliejus gali padidinti odos jautrumą saulės šviesai. Didelės arbatos dozės dirgina skrandį.",
+      "changesNotes": "Tekstas taisyklingas ir natūralus — pakeitimų nereikia."
+    },
+    {
+      "latin": "Alstroemeria",
+      "knownHazards": "Some people are sensitive to this plant and skin contact with the sap can cause them to get dermatitis[65].",
+      "knownHazardsLtV2": "Jautresnių žmonių oda, susilietus su sultimis, gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Jautresniems žmonėms, palietus sultis, gali atsirasti dermatitas.",
+      "changesNotes": "Pataisyta sakinio struktūra: kilmininkas „jautresnių žmonių oda" → naudininkas „jautresniems žmonėms"; „susilietus su sultimis" → „palietus sultis" (natūralesnė konstrukcija); „gali sukelti" → „gali atsirasti" (logiškesnis veiksmažodžio valdymas)."
+    },
+    {
+      "latin": "Alstroemeria aurea",
+      "knownHazards": "Some people are sensitive to this plant and skin contact with the sap can cause them to get dermatitis[65].",
+      "knownHazardsLtV2": "Jautresnių žmonių oda, susilietus su sultimis, gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Jautresniems žmonėms, palietus sultis, gali atsirasti dermatitas.",
+      "changesNotes": "Ta pati pataisa kaip Alstroemeria."
+    },
+    {
+      "latin": "Alstroemeria pelegrina",
+      "knownHazards": "Some people are sensitive to this plant and skin contact with the sap can cause them to get dermatitis[65].",
+      "knownHazardsLtV2": "Jautresnių žmonių oda, susilietus su sultimis, gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Jautresniems žmonėms, palietus sultis, gali atsirasti dermatitas.",
+      "changesNotes": "Ta pati pataisa kaip Alstroemeria."
+    },
+    {
+      "latin": "Alyssum",
+      "knownHazards": "The genus is poorly studied for edibility. Safety is not well established, so use sparingly until more is known.",
+      "knownHazardsLtV2": "Genties valgomumas menkai ištirtas — saugumas nepatvirtintas. Naudoti atsargiai, kol duomenų daugiau.",
+      "knownHazardsLtEdited": "Genties valgomumas menkai ištirtas, saugumas nepatvirtintas. Kol žinoma mažai, geriau naudoti atsargiai.",
+      "changesNotes": "Brūkšnys pakeistas kableliu (dvi glaudžiai susijusios mintys toje pačioje temoje); antrasis sakinys perrašytas natūraliau."
+    },
+    {
+      "latin": "Amaranthus caudatus",
+      "knownHazards": "No members of this genus are known to be poisonous, but when grown on nitrogen-rich soils they are known to concentrate nitrates in the leaves. This is especially noticeable on land where chemical fertilizers are used. Nitrates are implicated in stomach cancers, blue babies and some other health problems. It is inadvisable, therefore, to eat this plant if it is grown inorganically.",
+      "knownHazardsLtV2": "Lapuose kaupiasi nitratai, jei auginama azotu praturtintoje ar chemiškai tręštoje dirvoje. Nitratai siejami su skrandžio vėžiu ir methemoglobinemija kūdikiams, todėl nerekomenduojama vartoti ekologiškai neaugintos augalo dalies.",
+      "knownHazardsLtEdited": "Lapuose kaupiasi nitratai, kai auginama azotu turtingoje arba chemiškai tręštoje dirvoje. Nitratai siejami su skrandžio vėžiu ir methemoglobinemija kūdikiams, todėl neekologiškai užaugintos augalo dalys nerekomenduojamos vartoti.",
+      "changesNotes": "„jei auginama" → „kai auginama" (laiko sąlyga); „azotu praturtintoje" → „azotu turtingoje" (glaustesnė forma); sakinio pabaiga performuluota sklandžiau."
+    },
+    {
+      "latin": "Amaranthus hypochondriacus",
+      "knownHazards": "No members of this genus are known to be poisonous, but when grown on nitrogen-rich soils they are known to concentrate nitrates in the leaves. This is especially noticeable on land where chemical fertilizers are used. Nitrates are implicated in stomach cancers, blue babies and some other health problems. It is inadvisable, therefore, to eat this plant if it is grown inorganically.",
+      "knownHazardsLtV2": "Lapuose kaupiasi nitratai, jei auginama azotu praturtintoje ar chemiškai tręštoje dirvoje. Nitratai siejami su skrandžio vėžiu ir methemoglobinemija kūdikiams, todėl nerekomenduojama vartoti ekologiškai neaugintos augalo dalies.",
+      "knownHazardsLtEdited": "Lapuose kaupiasi nitratai, kai auginama azotu turtingoje arba chemiškai tręštoje dirvoje. Nitratai siejami su skrandžio vėžiu ir methemoglobinemija kūdikiams, todėl neekologiškai užaugintos augalo dalys nerekomenduojamos vartoti.",
+      "changesNotes": "Ta pati pataisa kaip Amaranthus caudatus."
+    },
+    {
+      "latin": "Amaranthus tricolor",
+      "knownHazards": "No members of this genus are known to be poisonous, but when grown on nitrogen-rich soils they are known to concentrate nitrates in the leaves. This is especially noticeable on land where chemical fertilizers are used. Nitrates are implicated in stomach cancers, blue babies and some other health problems. It is inadvisable, therefore, to eat this plant if it is grown inorganically.",
+      "knownHazardsLtV2": "Lapuose kaupiasi nitratai, jei auginama azotu praturtintoje ar chemiškai tręštoje dirvoje. Nitratai siejami su skrandžio vėžiu ir methemoglobinemija kūdikiams, todėl nerekomenduojama vartoti ekologiškai neaugintos augalo dalies.",
+      "knownHazardsLtEdited": "Lapuose kaupiasi nitratai, kai auginama azotu turtingoje arba chemiškai tręštoje dirvoje. Nitratai siejami su skrandžio vėžiu ir methemoglobinemija kūdikiams, todėl neekologiškai užaugintos augalo dalys nerekomenduojamos vartoti.",
+      "changesNotes": "Ta pati pataisa kaip Amaranthus caudatus."
+    },
+    {
+      "latin": "Amorphophallus",
+      "knownHazards": "We have one report that this plant is very toxic raw, though no more details are given[ 178 ]. It belongs to a family where most of the members contain calcium oxalate crystals. This substance is toxic fresh and, if eaten, makes the mouth, tongue and throat feel as if hundreds of small needles are digging in to them. However, calcium oxalate is easily broken down either by thoroughly cooking the plant or by fully drying it and, in either of these states, it is safe to eat the plant. People with a tendency to rheumatism, arthritis, gout, kidney stones and hyperacidity should take especial caution if including this plant in their diet[ 238 ]. (Parts of plant are poisonous if ingested)",
+      "knownHazardsLtV2": "Žalias augalas toksiškas — kalcio oksalato kristalai sukelia intensyvų degimą burnoje, liežuvyje ir gerklėje. Virimas arba visiškas išdžiovinimas saugiai sunaikina oksalatus. Sergantieji podagra, inkstų akmenimis, artritu ar pažeidžiančio skrandžio ligomis turėtų vengti šio augalo.",
+      "knownHazardsLtEdited": "Žalias augalas toksiškas — kalcio oksalato kristalai sukelia stiprų deginimą burnoje, liežuvyje ir gerklėje. Gerai išvirtas arba visiškai išdžiovintas augalas saugus. Sergantieji podagra, inkstų akmenligė, artritu ar padidėjusiu skrandžio rūgštingumu turėtų vengti šio augalo.",
+      "changesNotes": "„intensyvų degimą" → „stiprų deginimą" (tinkamesnis žodis fiziniam pojūčiui); „Virimas arba visiškas išdžiovinimas saugiai sunaikina oksalatus" → „Gerai išvirtas arba visiškai išdžiovintas augalas saugus" (aktyvesnė, glaustesnė forma); „pažeidžiančio skrandžio ligomis" → „padidėjusiu skrandžio rūgštingumu" (atitinka originalą — hyperacidity); „inkstų akmenimis" → „inkstų akmenlige" (tikslesnė medicinos terminija)."
+    },
+    {
+      "latin": "Amorphophallus konjac",
+      "knownHazards": "We have one report that this plant is very toxic raw, though no more details are given[ 178 ]. It belongs to a family where most of the members contain calcium oxalate crystals. This substance is toxic fresh and, if eaten, makes the mouth, tongue and throat feel as if hundreds of small needles are digging in to them. However, calcium oxalate is easily broken down either by thoroughly cooking the plant or by fully drying it and, in either of these states, it is safe to eat the plant. People with a tendency to rheumatism, arthritis, gout, kidney stones and hyperacidity should take especial caution if including this plant in their diet[ 238 ]. (Parts of plant are poisonous if ingested)",
+      "knownHazardsLtV2": "Žalias augalas toksiškas — kalcio oksalato kristalai sukelia intensyvų degimą burnoje, liežuvyje ir gerklėje. Virimas arba visiškas išdžiovinimas saugiai sunaikina oksalatus. Sergantieji podagra, inkstų akmenimis, artritu ar pažeidžiančio skrandžio ligomis turėtų vengti šio augalo.",
+      "knownHazardsLtEdited": "Žalias augalas toksiškas — kalcio oksalato kristalai sukelia stiprų deginimą burnoje, liežuvyje ir gerklėje. Gerai išvirtas arba visiškai išdžiovintas augalas saugus. Sergantieji podagra, inkstų akmenlige, artritu ar padidėjusiu skrandžio rūgštingumu turėtų vengti šio augalo.",
+      "changesNotes": "Ta pati pataisa kaip Amorphophallus."
+    },
+    {
+      "latin": "Amorphophallus rivieri",
+      "knownHazards": "We have one report that this plant is very toxic raw, though no more details are given[178]. It belongs to a family where most of the members contain calcium oxalate crystals. This substance is toxic fresh and, if eaten, makes the mouth, tongue and throat feel as if hundreds of small needles are digging in to them. However, calcium oxalate is easily broken down either by thoroughly cooking the plant or by fully drying it and, in either of these states, it is safe to eat the plant. People with a tendency to rheumatism, arthritis, gout, kidney stones and hyperacidity should take especial caution if including this plant in their diet[238].",
+      "knownHazardsLtV2": "Žalias augalas toksiškas — kalcio oksalato kristalai sukelia intensyvų degimą burnoje, liežuvyje ir gerklėje. Virimas arba visiškas išdžiovinimas saugiai sunaikina oksalatus. Sergantieji podagra, inkstų akmenimis, artritu ar pažeidžiančio skrandžio ligomis turėtų vengti šio augalo.",
+      "knownHazardsLtEdited": "Žalias augalas toksiškas — kalcio oksalato kristalai sukelia stiprų deginimą burnoje, liežuvyje ir gerklėje. Gerai išvirtas arba visiškai išdžiovintas augalas saugus. Sergantieji podagra, inkstų akmenlige, artritu ar padidėjusiu skrandžio rūgštingumu turėtų vengti šio augalo.",
+      "changesNotes": "Ta pati pataisa kaip Amorphophallus."
+    },
+    {
+      "latin": "Anagallis",
+      "knownHazards": "The seeds are slightly poisonous to some mammals, but no cases involving people are known[13, 76]. Skin contact with the plant can cause dermatitis in some people[76].",
+      "knownHazardsLtV2": "Sėklos šiek tiek toksiškos kai kuriems žinduoliams, tačiau žmonėms pavojaus nenustatyta. Kontaktas su augalu gali sukelti dermatitą jautresnėms asmenims.",
+      "knownHazardsLtEdited": "Sėklos šiek tiek toksiškos kai kuriems žinduoliams, tačiau žmonėms pavojaus nenustatyta. Palietus augalą, jautresniems asmenims gali atsirasti dermatitas.",
+      "changesNotes": "„Kontaktas su augalu" → „Palietus augalą" (natūralesnė LT konstrukcija vietoj calque); „gali sukelti dermatitą jautresnėms asmenims" → „jautresniems asmenims gali atsirasti dermatitas" (gramatinis linksnis: vietoje kilmininko tinkamesnis naudininkas)."
+    },
+    {
+      "latin": "Ananas comosus",
+      "knownHazards": "Parts of plant are poisonous if ingested",
+      "knownHazardsLtV2": "Kai kurios augalo dalys toksiškos surijus.",
+      "knownHazardsLtEdited": "Kai kurios augalo dalys toksiškos surijus.",
+      "changesNotes": "Tekstas taisyklingas — pakeitimų nereikia."
+    },
+    {
+      "latin": "Anchusa",
+      "knownHazards": "Hepatotoxicity (liver toxicity) and carcinogenicity [301]. Many members of this plant family contain a liver-damaging alkaloid and so internal usage is inadvisable[238].",
+      "knownHazardsLtV2": "Daugelis šios šeimos augalų turi kepenis pažeidžiančių alkaloidų, todėl vidinis vartojimas nerekomenduojamas. Nustatytas hepatotoksiškumas ir kancerogeninis poveikis.",
+      "knownHazardsLtEdited": "Daugelis šios šeimos augalų turi kepenims kenksmingų alkaloidų, todėl vidinis vartojimas nerekomenduojamas; nustatytas ir kancerogeninis poveikis.",
+      "changesNotes": "„kepenis pažeidžiančių" → „kepenims kenksmingų" (natūralesnė LT forma); antrasis sakinys sujungtas su pirmuoju per kabliataškį, nes faktai glaudžiai susiję; „hepatotoksiškumas" (termino pakartojimas) praleistas, nes mintis jau išreikšta „kepenims kenksmingų alkaloidų"."
+    },
+    {
+      "latin": "Andromeda",
+      "knownHazards": "A toxin, called 'andromedotoxin' can be released from the plant if it is infused in boiling water[183]. See notes below regarding use of the plant for tea.",
+      "knownHazardsLtV2": "Užplikius verdančiu vandeniu iš augalo gali išsiskirti toksinas andromedotoksinas — arbatos ruošimas nerekomenduojamas.",
+      "knownHazardsLtEdited": "Užplikius verdančiu vandeniu iš augalo gali išsiskirti toksinas andromedotoksinas, todėl arbatos iš jo ruošti nerekomenduojama.",
+      "changesNotes": "Brūkšnys pakeistas „todėl" (aiškesnis priežastinis ryšys); „arbatos ruošimas" → „arbatos iš jo ruošti" (glaustesnė, natūralesnė veiksmažodinė konstrukcija)."
+    },
+    {
+      "latin": "Andromeda polifolia",
+      "knownHazards": "A toxin, called 'andromedotoxin' can be released from the plant if it is infused in boiling water[183]. See notes below regarding use of the plant for tea.",
+      "knownHazardsLtV2": "Užplikius verdančiu vandeniu iš augalo gali išsiskirti toksinas andromedotoksinas — arbatos ruošimas nerekomenduojamas.",
+      "knownHazardsLtEdited": "Užplikius verdančiu vandeniu iš augalo gali išsiskirti toksinas andromedotoksinas, todėl arbatos iš jo ruošti nerekomenduojama.",
+      "changesNotes": "Ta pati pataisa kaip Andromeda."
+    },
+    {
+      "latin": "Anemone",
+      "knownHazards": "Although no specific mention has been seen for this species, many members of this genus contain protoanemonin, an irritating acrid oil that is an enzymatic breakdown product of the glycoside ranunculin. While protoanemonin can cause severe topical and gastrointestinal irritation, it is unstable and changes into harmless anemonin when plants are dried or heated[4, 10, 19, 65, 270].",
+      "knownHazardsLtV2": "Daugelis vėdryninių šeimos augalų turi protoanemonino — dirgančio aliejaus, susidarančio iš glikozido ranunkulino. Jis gali stipriai dirginti odą ir virškinamąjį traktą, tačiau džiovinant ar kaitinant virsta nekenksmigu anemoninu.",
+      "knownHazardsLtEdited": "Daugelis šios genties augalų turi protoanemonino — dirgančio aliejaus, susidarančio iš glikozido ranunkulino. Jis gali stipriai dirginti odą ir virškinamąjį traktą, tačiau džiovinant arba kaitinant virsta nekenksmigu anemoninu.",
+      "changesNotes": "„vėdryninių šeimos" → „šios genties" (šaltinis kalba apie gentį, ne šeimą; tikslesnė nuoroda kontekste); „ar" → „arba" (jungtukų vientisumas alternatyvoje)."
+    },
+    {
+      "latin": "Anemone narcissiflora",
+      "knownHazards": "Although no specific mention has been seen for this species, many members of this genus contain protoanemonin, an irritating acrid oil that is an enzymatic breakdown product of the glycoside ranunculin. While protoanemonin can cause severe topical and gastrointestinal irritation, it is unstable and changes into harmless anemonin when plants are dried or heated[4, 10, 19, 65, 270].",
+      "knownHazardsLtV2": "Daugelis vėdryninių šeimos augalų turi protoanemonino — dirgančio aliejaus, susidarančio iš glikozido ranunkulino. Jis gali stipriai dirginti odą ir virškinamąjį traktą, tačiau džiovinant ar kaitinant virsta nekenksmigu anemoninu.",
+      "knownHazardsLtEdited": "Daugelis šios genties augalų turi protoanemonino — dirgančio aliejaus, susidarančio iš glikozido ranunkulino. Jis gali stipriai dirginti odą ir virškinamąjį traktą, tačiau džiovinant arba kaitinant virsta nekenksmigu anemoninu.",
+      "changesNotes": "Ta pati pataisa kaip Anemone."
+    },
+    {
+      "latin": "Anemone nemorosa",
+      "knownHazards": "All parts of this plant contain protoanemonin, an irritating acrid oil that is an enzymatic breakdown product of the glycoside ranunculin. While protoanemonin can cause severe topical and gastrointestinal irritation, it is unstable and changes into harmless anemonin when plants are dried or heated[4, 10, 19, 65, 270]. Can be a dangerous and powerful depressant of the central nervous system and heart [301]. Avoid during pregnancy.",
+      "knownHazardsLtV2": "Visos augalo dalys turi protoanemonino (glikozido ranunkulino skilimo produkto), kuris stipriai dirgina odą ir virškinamąjį traktą; džiovinant ar kaitinant virsta nekenksmigu anemoninu. Toksiškas centrinei nervų sistemai ir širdžiai — naudoti atsargiai. Nėštumo metu vengti.",
+      "knownHazardsLtEdited": "Visos augalo dalys turi protoanemonino — glikozido ranunkulino skilimo produkto, — kuris stipriai dirgina odą ir virškinamąjį traktą; džiovinant arba kaitinant virsta nekenksmigu anemoninu. Slopina centrinę nervų sistemą ir širdies veiklą; nėštumo metu vengti.",
+      "changesNotes": "Skliaustelius aplink apibūdinimą pakeičia brūkšniai (glaistesnė LT stilistika); „ar" → „arba"; „Toksiškas centrinei nervų sistemai ir širdžiai — naudoti atsargiai. Nėštumo metu vengti." sulietas į vieną sakinį su kabliataškiu; „naudoti atsargiai" praleista — per švelnu šiame kontekste (originalas sako „dangerous and powerful depressant"), pakeista tikslesniu „slopina... veiklą"."
+    },
+    {
+      "latin": "Anemone rivularis",
+      "knownHazards": "Although no specific mention has been seen for this species, many members of this genus contain protoanemonin, an irritating acrid oil that is an enzymatic breakdown product of the glycoside ranunculin. While protoanemonin can cause severe topical and gastrointestinal irritation, it is unstable and changes into harmless anemonin when plants are dried or heated[4, 10, 19, 65, 270].",
+      "knownHazardsLtV2": "Daugelis vėdryninių šeimos augalų turi protoanemonino — dirgančio aliejaus, susidarančio iš glikozido ranunkulino. Jis gali stipriai dirginti odą ir virškinamąjį traktą, tačiau džiovinant ar kaitinant virsta nekenksmigu anemoninu.",
+      "knownHazardsLtEdited": "Daugelis šios genties augalų turi protoanemonino — dirgančio aliejaus, susidarančio iš glikozido ranunkulino. Jis gali stipriai dirginti odą ir virškinamąjį traktą, tačiau džiovinant arba kaitinant virsta nekenksmigu anemoninu.",
+      "changesNotes": "Ta pati pataisa kaip Anemone."
+    },
+    {
+      "latin": "Anemone vitifolia",
+      "knownHazards": "All parts of this plant contain protoanemonin, an irritating acrid oil that is an enzymatic breakdown product of the glycoside ranunculin. While protoanemonin can cause severe topical and gastrointestinal irritation, it is unstable and changes into harmless anemonin when plants are dried or heated[4, 10, 19, 65, 270]. The plant is toxic to maggots[147].",
+      "knownHazardsLtV2": "Visos augalo dalys turi protoanemonino (glikozido ranunkulino skilimo produkto), kuris stipriai dirgina odą ir virškinamąjį traktą; džiovinant ar kaitinant virsta nekenksmigu anemoninu. Augalas taip pat toksiškas musių lervoms.",
+      "knownHazardsLtEdited": "Visos augalo dalys turi protoanemonino — glikozido ranunkulino skilimo produkto, — kuris stipriai dirgina odą ir virškinamąjį traktą; džiovinant arba kaitinant virsta nekenksmigu anemoninu. Augalas toksiškas ir musių lervoms.",
+      "changesNotes": "Skliaustelius pakeičia brūkšniai; „ar" → „arba"; „taip pat toksiškas" → „toksiškas ir" (glaustesnė forma)."
+    },
+    {
+      "latin": "Anemonella",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, it belongs to a family that contains many toxic species. The toxins are not normally fairly mild in effect and they are usually destroyed by thoroughly heating or drying the plant.",
+      "knownHazardsLtV2": "Šeimoje yra toksiškų rūšių, nors konkrečių šios rūšies atvejų nenustatyta. Toksinai paprastai švelnaus poveikio ir sunaikinami kaitinant arba džiovinant.",
+      "knownHazardsLtEdited": "Šeimoje yra toksiškų rūšių, nors šiai rūšiai toksiškumas nepatvirtintas. Toksinai paprastai švelnaus poveikio ir sunaikinami kaitinant arba džiovinant.",
+      "changesNotes": "„konkrečių šios rūšies atvejų nenustatyta" → „šiai rūšiai toksiškumas nepatvirtintas" (glaustesnė, tikslesnė formuluotė)."
+    },
+    {
+      "latin": "Annona squamosa",
+      "knownHazards": "The seeds, leaves and roots are poisonous. Both an alkaloid, and hydrocyanic acid have been shown to occur in these parts of the plant.",
+      "knownHazardsLtV2": "Sėklos, lapai ir šaknys toksiškos — juose rasta alkaloidų ir cianhidrato rūgšties. Šių dalių vartoti negalima.",
+      "knownHazardsLtEdited": "Sėklos, lapai ir šaknys toksiškos — juose rasta alkaloidų ir cianhidrato rūgšties; šių dalių vartoti negalima.",
+      "changesNotes": "Du trumpi sakiniai sujungti kabliataškiu (glaudus ryšys, nereikia dviejų atskirų sakinių)."
+    },
+    {
+      "latin": "Antennaria dioica",
+      "knownHazards": "Allergic reaction may occur in subjects sensitive to rag weed, chrysanthemums, marigolds and daisies. May increase blood pressure. Safety during pregnancy is not known [301].",
+      "knownHazardsLtV2": "Gali sukelti alerginę reakciją ambrozijai, chrizantemoms, medetkoms ir ramunėlėms jautriems asmenims; gali pakelti kraujospūdį. Nėštumo metu saugumas nepatvirtintas.",
+      "knownHazardsLtEdited": "Ambrozijai, chrizantemoms, medetkoms ir ramunėlėms jautriems asmenims gali atsirasti alerginė reakcija; gali pakelti kraujospūdį. Nėštumo metu saugumas nepatvirtintas.",
+      "changesNotes": "„Gali sukelti alerginę reakciją ... jautriems asmenims" pertvarkyta — subjektas perkeltas į sakinio pradžią dėl natūralesnės LT žodžių tvarkos; „sukelti" → „atsirasti" (tinkamesnis valdymas su subjektu „reakcija")."
+    },
+    {
+      "latin": "Anthemis nobilis",
+      "knownHazards": "Patients with severe allergic responses to ragweed (ragwort) should be warned about the possible cross-sensitivity to chamomile and other members of the Asteraceae/Compositae family (e.g. echinacea, feverfew, milk thistle).",
+      "knownHazardsLtV2": "Stipriai ambrozijai alergiški asmenys gali reaguoti ir į ramunėlę bei kitus Asteraceae šeimos augalus (ežiuolę, saulaspindę, margainį).",
+      "knownHazardsLtEdited": "Stipriai ambrozijai alergiški asmenys gali reaguoti ir į ramunėlę bei kitus Asteraceae šeimos augalus (ežiuolę, saulaspindę, margainį).",
+      "changesNotes": "Tekstas taisyklingas ir natūralus — pakeitimų nereikia."
+    },
+    {
+      "latin": "Aquilegia",
+      "knownHazards": "Although no records of toxicity have been seen for this species, it belongs to a family that contains a number of mildly toxic species. It is therefore wise to exercise some caution. The flowers are probably perfectly safe to eat.",
+      "knownHazardsLtV2": "Šeimoje yra švelniai toksiškų rūšių, todėl rekomenduojama atsargumas. Žiedai tikriausiai saugūs vartoti.",
+      "knownHazardsLtEdited": "Šeimoje yra švelniai toksiškų rūšių, todėl rekomenduojamas atsargumas. Žiedai tikriausiai saugūs vartoti.",
+      "changesNotes": "Gramatinė pataisa: „rekomenduojama atsargumas" → „rekomenduojamas atsargumas" (vyriška giminė; „atsargumas" yra vyriškas daiktavardis)."
+    },
+    {
+      "latin": "Aquilegia canadensis",
+      "knownHazards": "Although no records of toxicity have been seen for this species, it belongs to a family that contains a number of mildly toxic species. It is therefore wise to exercise some caution. The flowers are probably perfectly safe to eat.",
+      "knownHazardsLtV2": "Šeimoje yra švelniai toksiškų rūšių, todėl rekomenduojama atsargumas. Žiedai tikriausiai saugūs vartoti.",
+      "knownHazardsLtEdited": "Šeimoje yra švelniai toksiškų rūšių, todėl rekomenduojamas atsargumas. Žiedai tikriausiai saugūs vartoti.",
+      "changesNotes": "Ta pati gramatinė pataisa kaip Aquilegia."
+    },
+    {
+      "latin": "Aquilegia coerulea",
+      "knownHazards": "Although no records of toxicity have been seen for this species, it belongs to a family that contains a number of mildly toxic species. It is therefore wise to exercise some caution. The flowers are probably perfectly safe to eat.",
+      "knownHazardsLtV2": "Šeimoje yra švelniai toksiškų rūšių, todėl rekomenduojama atsargumas. Žiedai tikriausiai saugūs vartoti.",
+      "knownHazardsLtEdited": "Šeimoje yra švelniai toksiškų rūšių, todėl rekomenduojamas atsargumas. Žiedai tikriausiai saugūs vartoti.",
+      "changesNotes": "Ta pati gramatinė pataisa kaip Aquilegia."
+    },
+    {
+      "latin": "Aquilegia flabellata",
+      "knownHazards": "Although no records of toxicity have been seen for this species, it belongs to a family that contains a number of mildly toxic species. It is therefore wise to exercise some caution. The flowers are probably perfectly safe to eat.",
+      "knownHazardsLtV2": "Šeimoje yra švelniai toksiškų rūšių, todėl rekomenduojama atsargumas. Žiedai tikriausiai saugūs vartoti.",
+      "knownHazardsLtEdited": "Šeimoje yra švelniai toksiškų rūšių, todėl rekomenduojamas atsargumas. Žiedai tikriausiai saugūs vartoti.",
+      "changesNotes": "Ta pati gramatinė pataisa kaip Aquilegia."
+    }
+  ]
+}

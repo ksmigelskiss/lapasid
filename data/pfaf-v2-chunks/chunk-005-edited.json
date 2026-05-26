@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 5,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Arum dioscoridis",
+      "knownHazards": "The plant contains calcium oxylate crystals. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten, but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water[65].",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų deginimo pojūtį burnoje ir ant liežuvio. Džiovinimas, terminis apdorojimas arba mirkimas vandenyje neutralizuoja šią medžiagą.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, sukeliančių stiprų deginimo pojūtį burnoje ir ant liežuvio. Džiovinimas, terminis apdorojimas arba mirkimas vandenyje šią medžiagą neutralizuoja.",
+      "changesNotes": "Pakeistas šalutinis sakinys į dalyvio konstrukciją ('sukeliančių'); pašalintas perteklinis 'šią' — patikslintas žodžių tvarka dėl sklandumo."
+    },
+    {
+      "latin": "Arum italicum",
+      "knownHazards": "The plant contains calcium oxylate crystals. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten, but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water[65].",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų deginimo pojūtį burnoje ir ant liežuvio. Džiovinimas, terminis apdorojimas arba mirkimas vandenyje neutralizuoja šią medžiagą.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, sukeliančių stiprų deginimo pojūtį burnoje ir ant liežuvio. Džiovinimas, terminis apdorojimas arba mirkimas vandenyje šią medžiagą neutralizuoja.",
+      "changesNotes": "Tas pats pakeitimas kaip Arum dioscoridis — dalyvio konstrukcija, žodžių tvarka."
+    },
+    {
+      "latin": "Aruncus",
+      "knownHazards": "Cyanogenic glycosides are found in the leaves[74].",
+      "knownHazardsLtV2": "Lapuose yra cianogeninių glikozidų.",
+      "knownHazardsLtEdited": "Lapuose yra cianogeninių glikozidų.",
+      "changesNotes": "Taisymų nereikia — sakinys tvarkingas."
+    },
+    {
+      "latin": "Aruncus dioicus",
+      "knownHazards": "Cyanogenic glycosides are found in the leaves[74].",
+      "knownHazardsLtV2": "Lapuose yra cianogeninių glikozidų.",
+      "knownHazardsLtEdited": "Lapuose yra cianogeninių glikozidų.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Asarum",
+      "knownHazards": "Although no reports of toxicity have been found for this plant, at least 3 other members of this genus have reports that the leaves are toxic[7, 19]. Some caution is therefore advised in the use of this plant.",
+      "knownHazardsLtV2": "Šiai rūšiai toksiškumas nepatvirtintas, tačiau bent 3 giminingos rūšys turi toksiškų lapų — rekomenduojamas atsargumas.",
+      "knownHazardsLtEdited": "Šiai rūšiai toksiškumas nepatvirtintas, tačiau bent 3 giminingos rūšys turi toksiškų lapų — rekomenduojamas atsargumas.",
+      "changesNotes": "Taisymų nereikia — sakinys sklandus ir tikslus."
+    },
+    {
+      "latin": "Asarum caudatum",
+      "knownHazards": "Although no reports of toxicity have been found for this plant, at least 3 other members of this genus have reports that the leaves are toxic[7, 19]. Some caution is therefore advised in the use of this plant.",
+      "knownHazardsLtV2": "Šiai rūšiai toksiškumas nepatvirtintas, tačiau bent 3 giminingos rūšys turi toksiškų lapų — rekomenduojamas atsargumas.",
+      "knownHazardsLtEdited": "Šiai rūšiai toksiškumas nepatvirtintas, tačiau bent 3 giminingos rūšys turi toksiškų lapų — rekomenduojamas atsargumas.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Asarum europaeum",
+      "knownHazards": "The plant is poisonous in large doses[13, 19], the toxin is neutralized by drying[7].",
+      "knownHazardsLtV2": "Didelėmis dozėmis toksiškas; džiovinimas neutralizuoja toksiną.",
+      "knownHazardsLtEdited": "Didelėmis dozėmis toksiškas; džiovinimas neutralizuoja toksiną.",
+      "changesNotes": "Taisymų nereikia — glaustas ir tikslus."
+    },
+    {
+      "latin": "Asarum shuttleworthii",
+      "knownHazards": "Although no reports of toxicity have been found for this plant, at least 3 other members of this genus have reports that the leaves are toxic[7, 19]. Some caution is therefore advised in the use of this plant.",
+      "knownHazardsLtV2": "Šiai rūšiai toksiškumas nepatvirtintas, tačiau bent 3 giminingos rūšys turi toksiškų lapų — rekomenduojamas atsargumas.",
+      "knownHazardsLtEdited": "Šiai rūšiai toksiškumas nepatvirtintas, tačiau bent 3 giminingos rūšys turi toksiškų lapų — rekomenduojamas atsargumas.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Asclepias",
+      "knownHazards": "Although no specific reports have been seen for this species, many, if not all, members of this genus contain toxic resinoids, alkaloids and cardiac glycosides[274]. They are usually avoided by grazing animals[274]. This species is said to be poisonous to livestock[228].",
+      "knownHazardsLtV2": "Giminės augalai paprastai turi toksiškų rezinoidų, alkaloidų ir širdies glikozidų; gyvuliai jų vengia. Ši rūšis laikoma toksiška gyvuliams.",
+      "knownHazardsLtEdited": "Giminės augaluose dažniausiai yra toksiškų rezinoidų, alkaloidų ir širdies glikozidų; gyvuliai jų vengia. Ši rūšis laikoma toksiška gyvuliams.",
+      "changesNotes": "'paprastai turi' → 'dažniausiai yra' — natūralesnė LT konstrukcija su inagininku."
+    },
+    {
+      "latin": "Asclepias hallii",
+      "knownHazards": "Although no specific reports have been seen for this species, many, if not all, members of this genus contain toxic resinoids, alkaloids and cardiac glycosides[274]. They are usually avoided by grazing animals[274].",
+      "knownHazardsLtV2": "Giminės augalai paprastai turi toksiškų rezinoidų, alkaloidų ir širdies glikozidų; gyvuliai jų vengia.",
+      "knownHazardsLtEdited": "Giminės augaluose dažniausiai yra toksiškų rezinoidų, alkaloidų ir širdies glikozidų; gyvuliai jų vengia.",
+      "changesNotes": "'paprastai turi' → 'dažniausiai yra' ir vietininkas 'augaluose' — natūralesnė LT konstrukcija."
+    },
+    {
+      "latin": "Asclepias syriaca",
+      "knownHazards": "Although no specific reports have been seen for this species, many, if not all, members of this genus contain toxic resinoids, alkaloids and cardiac glycosides[274]. They are usually avoided by grazing animals[274]. The older leaves are poisonous if eaten in large quantities[20, 21]. The plant contains cardioactive compounds and is potentially toxic[222].",
+      "knownHazardsLtV2": "Augale yra rezinoidų, alkaloidų ir širdies glikozidų. Seni lapai didesniais kiekiais toksiški; augale aptikta kardiaktyvių junginių.",
+      "knownHazardsLtEdited": "Augale yra rezinoidų, alkaloidų ir širdies glikozidų; seni lapai didesniais kiekiais toksiški. Augale taip pat aptikta kardiaktyvių junginių.",
+      "changesNotes": "Sujungti du trumpi sakiniai per kabliataškį dėl geresnio srauto; pridėta 'taip pat' paskutiniame sakinyje."
+    },
+    {
+      "latin": "Asclepias tuberosa",
+      "knownHazards": "Although no specific reports have been seen for this species, many, if not all, members of this genus contain toxic resinoids, alkaloids and cardiac glycosides[274]. They are usually avoided by grazing animals[274]. The plant is poisonous if eaten in large quantities[20, 62]. Very large doses can cause diarrhoea and vomiting[268].",
+      "knownHazardsLtV2": "Giminės augalai turi rezinoidų, alkaloidų ir širdies glikozidų. Dideliais kiekiais toksiškas: gali sukelti viduriavimą ir vėmimą.",
+      "knownHazardsLtEdited": "Giminės augaluose yra rezinoidų, alkaloidų ir širdies glikozidų. Dideliais kiekiais toksiškas — gali sukelti viduriavimą ir vėmimą.",
+      "changesNotes": "'augalai turi' → 'augaluose yra' — natūralesnė LT vietos konstrukcija; dvitaškis → brūkšnys dėl stiliaus vienodumo."
+    },
+    {
+      "latin": "Asimina",
+      "knownHazards": "The seed contains a toxic alkaloid and is poisonous[106, 274]. The leaves can cause dermatitis in a small number of sensitive people[222, 274]. Other reports say that handling the fruit can cause dermatitis[200, 227].",
+      "knownHazardsLtV2": "Sėklos yra toksiškos (turi alkaloidų). Jautrių žmonių lapai ir vaisiai gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Sėklos toksiškos — jose yra alkaloidų. Jautrių žmonių odai lapai ir vaisiai gali sukelti dermatitą.",
+      "changesNotes": "Pašalintas perteklinis 'yra' prie 'toksiškos'; skliaustelius pakeitė brūkšnys; pridėta 'odai' tikslumui (dermatitas — odos reakcija)."
+    },
+    {
+      "latin": "Asimina triloba",
+      "knownHazards": "The seed contains a toxic alkaloid and is poisonous[106, 274]. The leaves can cause dermatitis in a small number of sensitive people[222, 274]. Other reports say that handling the fruit can cause dermatitis[200, 227].",
+      "knownHazardsLtV2": "Sėklos yra toksiškos (turi alkaloidų). Jautrių žmonių lapai ir vaisiai gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Sėklos toksiškos — jose yra alkaloidų. Jautrių žmonių odai lapai ir vaisiai gali sukelti dermatitą.",
+      "changesNotes": "Tas pats kaip Asimina."
+    },
+    {
+      "latin": "Asphodelus albus",
+      "knownHazards": "The root is poisonous[7].",
+      "knownHazardsLtV2": "Šaknis toksiška.",
+      "knownHazardsLtEdited": "Šaknis toksiška.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Asplenium",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas jį sunaikina.",
+      "knownHazardsLtEdited": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas ją sunaikina.",
+      "changesNotes": "'jį sunaikina' → 'ją sunaikina' — tiaminazė yra moteriškosios giminės, tad įvardžio giminė pataisyta."
+    },
+    {
+      "latin": "Asplenium bulbiferum",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas jį sunaikina.",
+      "knownHazardsLtEdited": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas ją sunaikina.",
+      "changesNotes": "Įvardžio giminė pataisyta: 'jį' → 'ją' (tiaminazė — mot. g.)."
+    },
+    {
+      "latin": "Asplenium ceterach",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas jį sunaikina.",
+      "knownHazardsLtEdited": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas ją sunaikina.",
+      "changesNotes": "Įvardžio giminė pataisyta: 'jį' → 'ją'."
+    },
+    {
+      "latin": "Asplenium scolopendrium",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas jį sunaikina.",
+      "knownHazardsLtEdited": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas ją sunaikina.",
+      "changesNotes": "Įvardžio giminė pataisyta: 'jį' → 'ją'."
+    },
+    {
+      "latin": "Asplenium trichomanes",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas jį sunaikina.",
+      "knownHazardsLtEdited": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas ją sunaikina.",
+      "changesNotes": "Įvardžio giminė pataisyta: 'jį' → 'ją'."
+    },
+    {
+      "latin": "Atherosperma",
+      "knownHazards": "The bark contains a potential carcinogen[152]. Another report says that the whole plant might be poisonous[4].",
+      "knownHazardsLtV2": "Žievėje aptikta galima kancerogeninė medžiaga. Yra duomenų, kad visas augalas gali būti toksiškas.",
+      "knownHazardsLtEdited": "Žievėje aptikta galima kancerogeninė medžiaga; pasitaiko duomenų, kad visas augalas gali būti toksiškas.",
+      "changesNotes": "Du sakiniai sujungti per kabliataškį dėl glaustumo; 'Yra duomenų' → 'pasitaiko duomenų' — natūralesnė LT idioma."
+    },
+    {
+      "latin": "Atherosperma moschatum",
+      "knownHazards": "The bark contains a potential carcinogen[152]. Another report says that the whole plant might be poisonous[4].",
+      "knownHazardsLtV2": "Žievėje aptikta galima kancerogeninė medžiaga. Yra duomenų, kad visas augalas gali būti toksiškas.",
+      "knownHazardsLtEdited": "Žievėje aptikta galima kancerogeninė medžiaga; pasitaiko duomenų, kad visas augalas gali būti toksiškas.",
+      "changesNotes": "Tas pats kaip Atherosperma."
+    },
+    {
+      "latin": "Athyrium",
+      "knownHazards": "The fresh shoots contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172]. Although we have found no reports for this species, a number of ferns also contain carcinogens so some caution is advisable[200].",
+      "knownHazardsLtV2": "Šviežiuose ūgliuose yra tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas jį sunaikina. Kaip ir daugelis paparčių, gali turėti kancerogenų — rekomenduojamas atsargumas.",
+      "knownHazardsLtEdited": "Šviežiuose ūgliuose yra tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas ją sunaikina. Kaip ir daugelis paparčių, gali turėti kancerogenų — rekomenduojamas atsargumas.",
+      "changesNotes": "Įvardžio giminė pataisyta: 'jį' → 'ją' (tiaminazė — mot. g.)."
+    },
+    {
+      "latin": "Athyrium niponicum",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas jį sunaikina.",
+      "knownHazardsLtEdited": "Kai kuriuose paparčiuose yra kancerogenų, todėl rekomenduojamas atsargumas. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas arba džiovinimas ją sunaikina.",
+      "changesNotes": "Įvardžio giminė pataisyta: 'jį' → 'ją'."
+    },
+    {
+      "latin": "Atriplex",
+      "knownHazards": "No member of this genus contains any toxins, all have more or less edible leaves. However, if grown with artificial fertilizers, they may concentrate harmful amounts of nitrates in their leaves.",
+      "knownHazardsLtV2": "Saugu — giminės augalai netoksiški ir turi valgomų lapų. Tačiau auginant su mineralinėmis trąšomis lapuose gali kauptis kenksmingos nitratų koncentracijos.",
+      "knownHazardsLtEdited": "Saugu — giminės augalai netoksiški ir turi valgomų lapų. Tačiau naudojant mineralines trąšas lapuose gali kauptis kenksmingos nitratų koncentracijos.",
+      "changesNotes": "'auginant su mineralinėmis trąšomis' → 'naudojant mineralines trąšas' — sklandesnė ir tikslesnė LT konstrukcija (be perteklinio 'su')."
+    },
+    {
+      "latin": "Atriplex halimus",
+      "knownHazards": "No member of this genus contains any toxins, all have more or less edible leaves. However, if grown with artificial fertilizers, they may concentrate harmful amounts of nitrates in their leaves.",
+      "knownHazardsLtV2": "Saugu — giminės augalai netoksiški ir turi valgomų lapų. Tačiau auginant su mineralinėmis trąšomis lapuose gali kauptis kenksmingos nitratų koncentracijos.",
+      "knownHazardsLtEdited": "Saugu — giminės augalai netoksiški ir turi valgomų lapų. Tačiau naudojant mineralines trąšas lapuose gali kauptis kenksmingos nitratų koncentracijos.",
+      "changesNotes": "Tas pats kaip Atriplex."
+    },
+    {
+      "latin": "Baccharis halimifolia",
+      "knownHazards": "The plant is potentially toxic to livestock[274].",
+      "knownHazardsLtV2": "Gali būti toksiškas gyvuliams.",
+      "knownHazardsLtEdited": "Gali būti toksiškas gyvuliams.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Bacopa",
+      "knownHazards": "The most commonly reported adverse side effects of Bacopa monnieri in humans are nausea, increased intestinal motility, and gastrointestinal upset.",
+      "knownHazardsLtV2": "Dažniausiai pasitaikantys šalutiniai poveikiai: pykinimas, padidėjęs žarnyno judrumas ir virškinamojo trakto sudirgimas.",
+      "knownHazardsLtEdited": "Dažniausiai pasitaikantys šalutiniai poveikiai: pykinimas, padidėjęs žarnyno judrumas ir virškinamojo trakto sudirgimas.",
+      "changesNotes": "Taisymų nereikia — sakinys tvarkingas."
+    },
+    {
+      "latin": "Bacopa monnieri",
+      "knownHazards": "The most commonly reported adverse side effects of Bacopa monnieri in humans are nausea, increased intestinal motility, and gastrointestinal upset.",
+      "knownHazardsLtV2": "Dažniausiai pasitaikantys šalutiniai poveikiai: pykinimas, padidėjęs žarnyno judrumas ir virškinamojo trakto sudirgimas.",
+      "knownHazardsLtEdited": "Dažniausiai pasitaikantys šalutiniai poveikiai: pykinimas, padidėjęs žarnyno judrumas ir virškinamojo trakto sudirgimas.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Baptisia",
+      "knownHazards": "A report says that the plant is potentially toxic[222].",
+      "knownHazardsLtV2": "Yra duomenų, kad augalas gali būti toksiškas.",
+      "knownHazardsLtEdited": "Pasitaiko duomenų, kad augalas gali būti toksiškas.",
+      "changesNotes": "'Yra duomenų' → 'Pasitaiko duomenų' — natūralesnė LT idioma, labiau atitinkanti šaltinio nuorodą į vieną pranešimą."
+    }
+  ]
+}

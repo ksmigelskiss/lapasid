@@ -1,0 +1,306 @@
+{
+  "chunkIndex": 14,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Eupatorium",
+      "knownHazards": "The plant contains tremetol, a complex alcohol, and glycosides. These toxins cause a fatal disease known as 'staggers' in cattle. The toxin can be passed through the milk and has caused fatalities in humans who have drunk affected cow's milk[274].",
+      "knownHazardsLtV2": "Augalas turi tremetolį (sudėtingą alkoholį) ir glikozidus, kurie galvijams sukelia mirtinai pavojingą ligą. Toksinai patenka į pieną ir yra užregistruotų mirties atvejų žmonėms, išgėrusiems užkrėsto karvės pieno.",
+      "knownHazardsLtEdited": "Augale yra tremetolis (sudėtinis alkoholis) ir glikozidai, kurie galvijams sukelia mirtinai pavojingą ligą. Toksinai patenka į pieną — užregistruoti mirties atvejai žmonėms, išgėrusiems užteršto karvės pieno.",
+      "knownHazardsLtFinal": "Augale yra tremetolis (sudėtinis alkoholis) ir glikozidai, kurie galvijams sukelia mirtinai pavojingą ligą. Toksinai patenka į pieną — užregistruoti mirties atvejai žmonėms, išgėrusiems užteršto karvės pieno.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Eupatorium ageratoides",
+      "knownHazards": "The plant contains tremetol, a complex alcohol, and glycosides. These toxins cause a fatal disease known as 'staggers' in cattle. The toxin can be passed through the milk and has caused fatalities in humans who have drunk affected cow's milk[274].",
+      "knownHazardsLtV2": "Augalas turi tremetolį (sudėtingą alkoholį) ir glikozidus, kurie galvijams sukelia mirtinai pavojingą ligą. Toksinai patenka į pieną ir yra užregistruotų mirties atvejų žmonėms, išgėrusiems užkrėsto karvės pieno.",
+      "knownHazardsLtEdited": "Augale yra tremetolis (sudėtinis alkoholis) ir glikozidai, kurie galvijams sukelia mirtinai pavojingą ligą. Toksinai patenka į pieną — užregistruoti mirties atvejai žmonėms, išgėrusiems užteršto karvės pieno.",
+      "knownHazardsLtFinal": "Augale yra tremetolis (sudėtinis alkoholis) ir glikozidai, kurie galvijams sukelia mirtinai pavojingą ligą. Toksinai patenka į pieną — užregistruoti mirties atvejai žmonėms, išgėrusiems užteršto karvės pieno.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Euphorbia",
+      "knownHazards": "Euphorbia abyssinica has toxic milky sap that causes irritation and blistering if it comes into contact with the skin. The sap can also cause temporary or permanent blindness if it comes into contact with the eyes.",
+      "knownHazardsLtV2": "Pieniška sula dirgina odą ir sukelia pūsles. Patekusi į akis, gali sukelti laikiną arba nuolatinį aklumą.",
+      "knownHazardsLtEdited": "Pieniška sula dirgina odą ir sukelia pūsles. Patekusi į akis, gali sukelti laikiną arba nuolatinį aklumą.",
+      "knownHazardsLtFinal": "Pieniška sula dirgina odą ir sukelia pūsles. Patekusi į akis, gali sukelti laikiną arba nuolatinį aklumą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Euphorbia marginata",
+      "knownHazards": "The sap contains a latex which is toxic on ingestion and highly irritant externally, causing photosensitive skin reactions and severe inflammation, especially on contact with eyes or open cuts. The toxicity can remain high even in dried plant material[200]. Prolonged and regular contact with the sap is inadvisable because of its carcinogenic nature[214].",
+      "knownHazardsLtV2": "Sula turi latekso — toksiškas prarijus, išoriškai sukelia fotodermatitą ir stiprų uždegimą, ypač patekęs į akis ar žaizdas; toksiškumas išlieka ir džiovintoje medžiagoje. Ilgalaikis sąlytis nerekomenduojamas dėl kancerogeninių savybių.",
+      "knownHazardsLtEdited": "Suloje yra latekso — toksiška prarijus, išoriškai sukelia fotodermatitą ir stiprų uždegimą, ypač patekusi į akis ar žaizdas; toksiškumas išlieka ir džiovintoje augalinėje medžiagoje. Ilgalaikio sąlyčio su sula vengti dėl kancerogeninių savybių.",
+      "knownHazardsLtFinal": "Suloje yra latekso — toksiška prarijus, išoriškai sukelia fotodermatitą ir stiprų uždegimą, ypač patekusi į akis ar žaizdas; toksiškumas išlieka ir džiovintoje augalinėje medžiagoje. Ilgalaikio sąlyčio su sula vengti dėl kancerogeninių savybių.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Fagus grandifolia",
+      "knownHazards": "Large quantities of the raw seed may be toxic[159].",
+      "knownHazardsLtV2": "Dideli kiekiai žalių sėklų gali būti toksiški.",
+      "knownHazardsLtEdited": "Dideli kiekiai žalių sėklų gali būti toksiški.",
+      "knownHazardsLtFinal": "Dideli kiekiai žalių sėklų gali būti toksiški.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Fagus orientalis",
+      "knownHazards": "Although no specific mention has been seen for this species, large quantities of the seed of many species in this genus are thought to be toxic.",
+      "knownHazardsLtV2": "Dideli kiekiai sėklų gali būti toksiški, kaip ir daugeliui giminingų rūšių.",
+      "knownHazardsLtEdited": "Dideli kiekiai sėklų gali būti toksiški, kaip ir daugelio giminingų rūšių atveju.",
+      "knownHazardsLtFinal": "Dideli kiekiai sėklų gali būti toksiški, kaip ir daugelio giminingų rūšių atveju.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Fagus sylvatica",
+      "knownHazards": "Large quantities of the seed may be toxic[65, 76].",
+      "knownHazardsLtV2": "Dideli kiekiai sėklų gali būti toksiški.",
+      "knownHazardsLtEdited": "Dideli kiekiai sėklų gali būti toksiški.",
+      "knownHazardsLtFinal": "Dideli kiekiai sėklų gali būti toksiški.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Fallopia",
+      "knownHazards": "Although no specific mention has been made for this species, there have been reports that some members of this genus can cause photosensitivity in susceptible people. Many species also contain oxalic acid (the distinctive lemony flavour of sorrel) - whilst not toxic this substance can bind up other minerals making them unavailable to the body and leading to mineral deficiency. Having said that, a number of common foods such as sorrel and rhubarb contain oxalic acid and the leaves of most members of this genus are nutritious and beneficial to eat in moderate quantities. Cooking the leaves will reduce their content of oxalic acid. People with a tendency to rheumatism, arthritis, gout, kidney stones or hyperacidity should take especial caution if including this plant in their diet since it ca...",
+      "knownHazardsLtV2": "Lapai turi oksalatų, kurie gali trukdyti mineralų įsisavinimui; sergantieji reumatu, podagra, inkstų akmenligė ar hiperacidumu turėtų vengti. Kai kuriais atvejais gali sukelti fotojautrumą — lapus verdant oksalatų kiekis mažėja.",
+      "knownHazardsLtEdited": "Lapuose yra oksalatų, kurie gali trukdyti mineralų įsisavinimui; sergantieji reumatu, podagra, inkstų akmenlige ar hiperacidumu turėtų vengti. Kai kuriais atvejais gali sukelti fotojautrumą — verdant oksalatų kiekis mažėja.",
+      "knownHazardsLtFinal": "Lapuose yra oksalatų, kurie gali trukdyti mineralų įsisavinimui; sergantieji reumatu, artritu, podagra, inkstų akmenlige ar hiperacidumu turėtų vengti. Kai kuriais atvejais gali sukelti fotojautrumą — verdant oksalatų kiekis mažėja.",
+      "status": "flagged",
+      "flagReason": "Fact omission: EN explicitly lists 'arthritis' in the caution list (rheumatism, arthritis, gout, kidney stones, hyperacidity). LT omits 'artritu' from the conditions listed.",
+      "suggestedFix": "Add 'artritu' to the conditions list: 'sergantieji reumatu, artritu, podagra, inkstų akmenlige ar hiperacidumu turėtų vengti.'"
+    },
+    {
+      "latin": "Filipendula ulmaria",
+      "knownHazards": "Avoid for asthmatics. Use by children for diarhoea not recommended or for children under 12 due to salicylate content (risk of Reye's syndrome) [301].",
+      "knownHazardsLtV2": "Astmatikams vartoti nerekomenduojama. Dėl salicilatų kiekio neduoti vaikams iki 12 metų (Reye sindromo rizika).",
+      "knownHazardsLtEdited": "Astmatikams vartoti nerekomenduojama. Dėl salicilatų kiekio neduoti vaikams iki 12 metų (Reye sindromo rizika).",
+      "knownHazardsLtFinal": "Astmatikams vartoti nerekomenduojama. Dėl salicilatų kiekio neduoti vaikams iki 12 metų (Reye sindromo rizika).",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Forsyth",
+      "knownHazards": "Leaves contain the glycoside Phillyrin[179], its potency is unknown.",
+      "knownHazardsLtV2": "Lapai turi glikozidą filyriną; jo toksiškumas žmonėms nenustatytas.",
+      "knownHazardsLtEdited": "Lapuose yra glikozidas filyrinas; jo toksiškumas žmonėms nenustatytas.",
+      "knownHazardsLtFinal": "Lapuose yra glikozidas filyrinas; jo toksiškumas žmonėms nenustatytas.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Fraxinus excelsior",
+      "knownHazards": "Poisonous to ruminants[76], it has also caused dermatitis in some people[76].",
+      "knownHazardsLtV2": "Toksiškas atrajotojams. Kai kuriems žmonėms gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Toksiškas atrajotojams. Kai kuriems žmonėms gali sukelti dermatitą.",
+      "knownHazardsLtFinal": "Toksiškas atrajotojams. Kai kuriems žmonėms gali sukelti dermatitą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Fraxinus ornus",
+      "knownHazards": "Contact with the sap has caused skin or systemic allergic reactions in some people[238].",
+      "knownHazardsLtV2": "Sąlytis su sula gali sukelti odos ar sisteminę alerginę reakciją.",
+      "knownHazardsLtEdited": "Palietus sulą, kai kuriems žmonėms gali kilti odos ar sisteminė alerginė reakcija.",
+      "knownHazardsLtFinal": "Palietus sulą, kai kuriems žmonėms gali kilti odos ar sisteminė alerginė reakcija.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Fremontodendron",
+      "knownHazards": "The stem is clothed with brown hairs which rub off easily and can be a severe irritant[166]. When pruning it is best to wear a mask[166]. The eyes can be badly affected[202].",
+      "knownHazardsLtV2": "Stiebų rudieji plaukeliai lengvai nusibyra ir stipriai dirgina odą bei akis. Genint rekomenduojama dėvėti kaukę.",
+      "knownHazardsLtEdited": "Stiebų rudieji plaukeliai lengvai nusibyra ir stipriai dirgina odą bei akis. Genint rekomenduojama dėvėti kaukę.",
+      "knownHazardsLtFinal": "Stiebų rudieji plaukeliai lengvai nusibyra ir stipriai dirgina odą bei akis. Genint rekomenduojama dėvėti kaukę.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Fremontodendron californicum",
+      "knownHazards": "The stem is clothed with brown hairs which rub off easily and can be a severe irritant[166]. When pruning it is best to wear a mask[166]. The eyes can be badly affected[202].",
+      "knownHazardsLtV2": "Stiebų rudieji plaukeliai lengvai nusibyra ir stipriai dirgina odą bei akis. Genint rekomenduojama dėvėti kaukę.",
+      "knownHazardsLtEdited": "Stiebų rudieji plaukeliai lengvai nusibyra ir stipriai dirgina odą bei akis. Genint rekomenduojama dėvėti kaukę.",
+      "knownHazardsLtFinal": "Stiebų rudieji plaukeliai lengvai nusibyra ir stipriai dirgina odą bei akis. Genint rekomenduojama dėvėti kaukę.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Fritillaria imperialis",
+      "knownHazards": "The bulb is poisonous raw[4, 114], it contains low concentrations of a toxic alkaloid[163, 240].",
+      "knownHazardsLtV2": "Žalia svogūnėlė toksiškas — turi toksiško alkaloido.",
+      "knownHazardsLtEdited": "Žalia svogūnėlė toksiška — joje yra toksiško alkaloido.",
+      "knownHazardsLtFinal": "Žalia svogūnėlė toksiška — joje yra toksiško alkaloido.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Fritillaria meleagris",
+      "knownHazards": "The bulb is poisonous[100].",
+      "knownHazardsLtV2": "Svogūnėlė toksiškas.",
+      "knownHazardsLtEdited": "Svogūnėlė toksiška.",
+      "knownHazardsLtFinal": "Svogūnėlė toksiška.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Furcraea",
+      "knownHazards": "Agave cantala is a species in the genus Agave which contains approximately 257 to 341 species and belongs to the family of the Agavaceae (Century-plant Family). The type species of the genus is Agave americana.",
+      "knownHazardsLtV2": "Nėra duomenų apie žinomus pavojus.",
+      "knownHazardsLtEdited": "Nėra duomenų apie žinomus pavojus.",
+      "knownHazardsLtFinal": "Nėra duomenų apie žinomus pavojus.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Furcraea foetida",
+      "knownHazards": "The leaves are used as a fish poison[348 ]. This is probably due to a high content of saponins in the leaves[K ].",
+      "knownHazardsLtV2": "Lapai naudojami kaip žuvų nuodai dėl didelio saponinų kiekio.",
+      "knownHazardsLtEdited": "Lapai naudojami kaip žuvų nuodai dėl didelio saponinų kiekio.",
+      "knownHazardsLtFinal": "Lapai naudojami kaip žuvų nuodai dėl didelio saponinų kiekio.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Galega",
+      "knownHazards": "A few reports exist, none of them in Britain, of toxicity to mammals[76], though the plant is often fed to cows and goats in order to increase their milk yield[238].",
+      "knownHazardsLtV2": "Yra keletas pranešimų apie toksiškumą žinduoliams (ne Britanijoje), nors augalas plačiai naudojamas karvių ir ožkų primilžiui didinti.",
+      "knownHazardsLtEdited": "Yra keletas pranešimų apie toksiškumą žinduoliams (ne Britanijoje), nors augalas plačiai naudojamas karvių ir ožkų primilžiui didinti.",
+      "knownHazardsLtFinal": "Yra keletas pranešimų apie toksiškumą žinduoliams (ne Britanijoje), nors augalas plačiai naudojamas karvių ir ožkų primilžiui didinti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Gaultheria myrsinoides",
+      "knownHazards": "One report says that the fruit is poisonous[200]. This is somewhat surprising in what is normally seen as a toxin-free genus.",
+      "knownHazardsLtV2": "Vienas šaltinis nurodo, kad uogos toksiškos, tačiau ši žinia yra netikėta, nes giminė paprastai laikoma saugia.",
+      "knownHazardsLtEdited": "Vienas šaltinis nurodo, kad uogos toksiškos, tačiau tai netikėta, nes giminė paprastai laikoma saugia.",
+      "knownHazardsLtFinal": "Vienas šaltinis nurodo, kad uogos toksiškos, tačiau tai netikėta, nes giminė paprastai laikoma saugia.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Gaultheria procumbens",
+      "knownHazards": "The pure distilled essential oil is toxic in large doses[222]. If used orally may aggravate stomach ulcers. Do not use if allergic to aspirin. Avoid if under 12. Topical use can cause contact dermatitis [301].",
+      "knownHazardsLtV2": "Grynas eterinis aliejus didelėmis dozėmis toksiškas; gali paūminti skrandžio opą ir nerekomenduojamas alergiškiems aspirinui bei vaikams iki 12 metų. Išorinis naudojimas gali sukelti kontaktinį dermatitą.",
+      "knownHazardsLtEdited": "Grynas eterinis aliejus didelėmis dozėmis toksiškas; gali paūminti skrandžio opą, nerekomenduojamas alergiškiems aspirinui ir vaikams iki 12 metų. Išorinis naudojimas gali sukelti kontaktinį dermatitą.",
+      "knownHazardsLtFinal": "Grynas eterinis aliejus didelėmis dozėmis toksiškas; gali paūminti skrandžio opą, nerekomenduojamas alergiškiems aspirinui ir vaikams iki 12 metų. Išorinis naudojimas gali sukelti kontaktinį dermatitą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Gelsemium",
+      "knownHazards": "All parts of the plant usually contain toxic alkaloids[200]. Eating just one flower has reportedly been lethal to children[207, 222]. The plant can also cause skin allergies in some people and it is possible that the plant toxins can be absorbed through the skin, especially if there are cuts[238].",
+      "knownHazardsLtV2": "Visi augalo dalys turi toksiškų alkaloidų — vienas žiedas gali būti mirtinas vaikui. Toksinai gali prasiskverbti pro odą, ypač per žaizdas.",
+      "knownHazardsLtEdited": "Visos augalo dalys turi toksiškų alkaloidų — vienas žiedas gali būti mirtinas vaikui. Toksinai gali prasiskverbti pro odą, ypač per žaizdas.",
+      "knownHazardsLtFinal": "Visos augalo dalys turi toksiškų alkaloidų — vienas žiedas gali būti mirtinas vaikui. Augalas gali sukelti odos alergiją, o toksinai gali prasiskverbti pro odą, ypač per žaizdas.",
+      "status": "flagged",
+      "flagReason": "Fact omission: EN states 'The plant can also cause skin allergies in some people' — this is absent from LT. Only the absorption-through-cuts aspect is conveyed; the skin allergy mechanism is a distinct hazard that is dropped.",
+      "suggestedFix": "Add the skin allergy information: 'Augalas gali sukelti odos alergiją, o toksinai gali prasiskverbti pro odą, ypač per žaizdas.'"
+    },
+    {
+      "latin": "Gelsemium sempervirens",
+      "knownHazards": "All parts of the plant usually contain toxic alkaloids[200]. Eating just one flower has reportedly been lethal to children[207, 222]. The plant can also cause skin allergies in some people and it is possible that the plant toxins can be absorbed through the skin, especially if there are cuts[238].",
+      "knownHazardsLtV2": "Visi augalo dalys turi toksiškų alkaloidų — vienas žiedas gali būti mirtinas vaikui. Toksinai gali prasiskverbti pro odą, ypač per žaizdas.",
+      "knownHazardsLtEdited": "Visos augalo dalys turi toksiškų alkaloidų — vienas žiedas gali būti mirtinas vaikui. Toksinai gali prasiskverbti pro odą, ypač per žaizdas.",
+      "knownHazardsLtFinal": "Visos augalo dalys turi toksiškų alkaloidų — vienas žiedas gali būti mirtinas vaikui. Augalas gali sukelti odos alergiją, o toksinai gali prasiskverbti pro odą, ypač per žaizdas.",
+      "status": "flagged",
+      "flagReason": "Fact omission: EN states 'The plant can also cause skin allergies in some people' — this is absent from LT. Only the absorption-through-cuts aspect is conveyed; the skin allergy mechanism is a distinct hazard that is dropped.",
+      "suggestedFix": "Add the skin allergy information: 'Augalas gali sukelti odos alergiją, o toksinai gali prasiskverbti pro odą, ypač per žaizdas.'"
+    },
+    {
+      "latin": "Genista",
+      "knownHazards": "Can cause paralysis or death in extreme cases [1-2].",
+      "knownHazardsLtV2": "Didelės dozės gali sukelti paralyžių arba būti mirtinos.",
+      "knownHazardsLtEdited": "Didelės dozės gali sukelti paralyžių arba būti mirtinos.",
+      "knownHazardsLtFinal": "Didelės dozės gali sukelti paralyžių arba būti mirtinos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Gentiana lutea",
+      "knownHazards": "Contraindicated with gastric or duodenal ulcer patients. Possible headaches, nausea and vomiting [301].",
+      "knownHazardsLtV2": "Draudžiama sergant skrandžio ar dvylikapirštės žarnos opa. Gali sukelti galvos skausmą, pykinimą ir vėmimą.",
+      "knownHazardsLtEdited": "Draudžiama sergant skrandžio ar dvylikapirštės žarnos opa. Gali sukelti galvos skausmą, pykinimą ir vėmimą.",
+      "knownHazardsLtFinal": "Draudžiama sergant skrandžio ar dvylikapirštės žarnos opa. Gali sukelti galvos skausmą, pykinimą ir vėmimą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Glaucium",
+      "knownHazards": "Root is poisonous.",
+      "knownHazardsLtV2": "Šaknis toksiškas.",
+      "knownHazardsLtEdited": "Šaknis toksiška.",
+      "knownHazardsLtFinal": "Šaknis toksiška.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Glaucium flavum",
+      "knownHazards": "Root is poisonous.",
+      "knownHazardsLtV2": "Šaknis toksiškas.",
+      "knownHazardsLtEdited": "Šaknis toksiška.",
+      "knownHazardsLtFinal": "Šaknis toksiška.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Glechoma",
+      "knownHazards": "A report in the medicinal uses says the plant should be used with caution, no reason is given. Another report says that the plant might be toxic to horses[222]. Avoid if pregnant as abortifacient. Contraindicated in epilepsy. Avoid if kidney disease [301].",
+      "knownHazardsLtV2": "Gali būti toksiškas arkliams. Negalima vartoti nėštumo metu (abortyvinis poveikis), sergant epilepsija ar inkstų ligomis.",
+      "knownHazardsLtEdited": "Gali būti toksiškas arkliams. Negalima vartoti nėštumo metu (abortyvinis poveikis), sergant epilepsija ar inkstų ligomis.",
+      "knownHazardsLtFinal": "Gali būti toksiškas arkliams. Negalima vartoti nėštumo metu (abortyvinis poveikis), sergant epilepsija ar inkstų ligomis.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Glechoma hederacea",
+      "knownHazards": "A report in the medicinal uses says the plant should be used with caution, no reason is given. Another report says that the plant might be toxic to horses[222]. Avoid if pregnant as abortifacient. Contraindicated in epilepsy. Avoid if kidney disease [301].",
+      "knownHazardsLtV2": "Gali būti toksiškas arkliams. Negalima vartoti nėštumo metu (abortyvinis poveikis), sergant epilepsija ar inkstų ligomis.",
+      "knownHazardsLtEdited": "Gali būti toksiškas arkliams. Negalima vartoti nėštumo metu (abortyvinis poveikis), sergant epilepsija ar inkstų ligomis.",
+      "knownHazardsLtFinal": "Gali būti toksiškas arkliams. Negalima vartoti nėštumo metu (abortyvinis poveikis), sergant epilepsija ar inkstų ligomis.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Gleditsia triacanthos",
+      "knownHazards": "The plant contains potentially toxic compounds[222].",
+      "knownHazardsLtV2": "Augalas turi potencialiai toksiškų medžiagų.",
+      "knownHazardsLtEdited": "Augale yra potencialiai toksiškų medžiagų.",
+      "knownHazardsLtFinal": "Augale yra potencialiai toksiškų medžiagų.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    }
+  ]
+}

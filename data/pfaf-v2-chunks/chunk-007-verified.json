@@ -1,0 +1,306 @@
+{
+  "chunkIndex": 7,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Calycanthus",
+      "knownHazards": "Ruminants are reported to have a toxic reaction from grazing this plant[4, 222]. Calycanthus contains calycanthine, an alkaloid similar to strychnine, and it is toxic to humans and livestock[270].",
+      "knownHazardsLtV2": "Augalas toksiškas žmonėms ir gyvuliams — sudėtyje yra alkaloidų kalicantinas, panašus į strichniną. Atrajotojai, ganydamiesi šį augalą, gali patirti toksinę reakciją.",
+      "knownHazardsLtEdited": "Augalas toksiškas žmonėms ir gyvuliams: sudėtyje yra alkaloidas kalicantinas, panašus į strichniną. Atrajotojai, ganydamiesi šį augalą, gali patirti toksinę reakciją.",
+      "knownHazardsLtFinal": "Augalas toksiškas žmonėms ir gyvuliams: sudėtyje yra alkaloidas kalicantinas, panašus į strichniną. Atrajotojai, ganydamiesi šį augalą, gali patirti toksinę reakciją.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Calycanthus floridus",
+      "knownHazards": "Ruminants are reported to have a toxic reaction from grazing this plant[4, 222]. Calycanthus contains calycanthine, an alkaloid similar to strychnine, and it is toxic to humans and livestock[270].",
+      "knownHazardsLtV2": "Augalas toksiškas žmonėms ir gyvuliams — sudėtyje yra alkaloidų kalicantinas, panašus į strichniną. Atrajotojai, ganydamiesi šį augalą, gali patirti toksinę reakciją.",
+      "knownHazardsLtEdited": "Augalas toksiškas žmonėms ir gyvuliams: sudėtyje yra alkaloidas kalicantinas, panašus į strichniną. Atrajotojai, ganydamiesi šį augalą, gali patirti toksinę reakciją.",
+      "knownHazardsLtFinal": "Augalas toksiškas žmonėms ir gyvuliams: sudėtyje yra alkaloidas kalicantinas, panašus į strichniną. Atrajotojai, ganydamiesi šį augalą, gali patirti toksinę reakciją.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Calycanthus occidentalis",
+      "knownHazards": "Calycanthus contains calycanthine, an alkaloid similar to strychnine, and it is toxic to humans and livestock[270].",
+      "knownHazardsLtV2": "Augalas toksiškas žmonėms ir gyvuliams — sudėtyje yra alkaloidų kalicantinas, panašus į strichniną.",
+      "knownHazardsLtEdited": "Augalas toksiškas žmonėms ir gyvuliams: sudėtyje yra alkaloidas kalicantinas, panašus į strichniną.",
+      "knownHazardsLtFinal": "Augalas toksiškas žmonėms ir gyvuliams: sudėtyje yra alkaloidas kalicantinas, panašus į strichniną.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Campsis radicans",
+      "knownHazards": "There have been isolated cases reported of people suffering from dermatitis after handling the leaves[274].",
+      "knownHazardsLtV2": "Lapai gali sukelti dermatitą — užfiksuoti pavieniai atvejai po kontakto su jais.",
+      "knownHazardsLtEdited": "Palietus lapus, gali išsivystyti dermatitas — užfiksuoti pavieniai atvejai.",
+      "knownHazardsLtFinal": "Palietus lapus, gali išsivystyti dermatitas — užfiksuoti pavieniai atvejai.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Capri",
+      "knownHazards": "Bermuda grass is reported to be photosensitizing in animals[269]. Under certain environmental conditions the plant can produce hydrocyanic acid and so is potentially toxic to livestock[274]. The plant is also said to cause contact dermatitis and, with its high production of pollen, can be a major cause of hayfever[269, 274].",
+      "knownHazardsLtV2": "Gyvuliams gali sukelti fotosensibilizaciją; tam tikromis sąlygomis augalas gamina cianido rūgštį ir yra toksiškas gyvuliams. Žmonėms dirgina odą (kontaktinis dermatitas) ir gausiai skleidžia žiedadulkes, todėl dažnai sukelia šienligę.",
+      "knownHazardsLtEdited": "Gyvuliams gali sukelti fotosensibilizaciją; tam tikromis sąlygomis augalas gamina cianido rūgštį ir tampa toksiškas. Dirgina odą (kontaktinis dermatitas) ir, gausiai skleisdamas žiedadulkes, dažnai sukelia šienligę.",
+      "knownHazardsLtFinal": "Gyvuliams gali sukelti fotosensibilizaciją; tam tikromis sąlygomis augalas gamina cianido rūgštį ir tampa toksiškas. Dirgina odą (kontaktinis dermatitas) ir, gausiai skleisdamas žiedadulkes, dažnai sukelia šienligę.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Capsicum",
+      "knownHazards": "Pungent-fruited peppers may cause painful irritation when used in excess, or after accidental contact with the eyes[238]. Although no reports have been seen for this species, many plants in this family produce toxins in their leaves. The sap of the plant can cause the skin to blister[200]. Avoid in patients taking monoamine oxidase inhibitor antidepressants and antihypertensive drugs [301].",
+      "knownHazardsLtV2": "Vaisiai per didelėmis dozėmis ar patekę į akis dirgina gleivines; sultys gali sukelti odos pūsles. Nevartoti kartu su MAO inhibitoriais ar antihipertenziniais vaistais.",
+      "knownHazardsLtEdited": "Vaisiai per didelėmis dozėmis arba patekę į akis dirgina gleivines; sultys gali sukelti odos pūsles. Nevartoti kartu su MAO inhibitoriais ar antihipertenziniais vaistais.",
+      "knownHazardsLtFinal": "Vaisiai per didelėmis dozėmis arba patekę į akis dirgina gleivines; sultys gali sukelti odos pūsles. Nevartoti kartu su MAO inhibitoriais ar antihipertenziniais vaistais.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Capsicum annuum",
+      "knownHazards": "Pungent-fruited peppers may cause painful irritation when used in excess, or after accidental contact with the eyes[238]. Although no reports have been seen for this species, many plants in this family produce toxins in their leaves. The sap of the plant can cause the skin to blister[200]. Avoid in patients taking monoamine oxidase inhibitor antidepressants and antihypertensive drugs [301].",
+      "knownHazardsLtV2": "Vaisiai per didelėmis dozėmis ar patekę į akis dirgina gleivines; sultys gali sukelti odos pūsles. Nevartoti kartu su MAO inhibitoriais ar antihipertenziniais vaistais.",
+      "knownHazardsLtEdited": "Vaisiai per didelėmis dozėmis arba patekę į akis dirgina gleivines; sultys gali sukelti odos pūsles. Nevartoti kartu su MAO inhibitoriais ar antihipertenziniais vaistais.",
+      "knownHazardsLtFinal": "Vaisiai per didelėmis dozėmis arba patekę į akis dirgina gleivines; sultys gali sukelti odos pūsles. Nevartoti kartu su MAO inhibitoriais ar antihipertenziniais vaistais.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Capsicum frutescens",
+      "knownHazards": "Although no reports have been seen for this species, many plants in this family produce toxins in their leaves. The sap of the plant can cause the skin to blister[200]. Avoid in patients taking monoamine oxidase inhibitor antidepressants and antihypertensive drugs [301].",
+      "knownHazardsLtV2": "Augalo sultys gali sukelti odos pūsles; lapuose gali būti toksinų, būdingų šeimynos augalams. Nevartoti kartu su MAO inhibitoriais ar antihipertenziniais vaistais.",
+      "knownHazardsLtEdited": "Sultys gali sukelti odos pūsles; lapuose gali būti toksinų, būdingų šios šeimos augalams. Nevartoti kartu su MAO inhibitoriais ar antihipertenziniais vaistais.",
+      "knownHazardsLtFinal": "Sultys gali sukelti odos pūsles; lapuose gali būti toksinų, būdingų šios šeimos augalams. Nevartoti kartu su MAO inhibitoriais ar antihipertenziniais vaistais.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Caragana",
+      "knownHazards": "Reports that this plant contains toxins have not been substantiated[65]. The occurrence of cystine in the seeds is doubtful[65].",
+      "knownHazardsLtV2": "Pranešimai apie toksinų buvimą nepatvirtinti; cistino buvimas sėklose abejotinas.",
+      "knownHazardsLtEdited": "Pranešimai apie toksinų buvimą nepatvirtinti; cistino aptikimas sėklose taip pat abejotinas.",
+      "knownHazardsLtFinal": "Pranešimai apie toksinų buvimą nepatvirtinti; cistino aptikimas sėklose taip pat abejotinas.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Caragana arborescens",
+      "knownHazards": "Reports that this plant contains toxins have not been substantiated[65]. The occurrence of cystine in the seeds is doubtful[65].",
+      "knownHazardsLtV2": "Pranešimai apie toksinų buvimą nepatvirtinti; cistino buvimas sėklose abejotinas.",
+      "knownHazardsLtEdited": "Pranešimai apie toksinų buvimą nepatvirtinti; cistino aptikimas sėklose taip pat abejotinas.",
+      "knownHazardsLtFinal": "Pranešimai apie toksinų buvimą nepatvirtinti; cistino aptikimas sėklose taip pat abejotinas.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Carica",
+      "knownHazards": "Older leaves contain the alkaloid carpaine[ 298 ].",
+      "knownHazardsLtV2": "Senesniuose lapuose yra alkaloidų karpaininas.",
+      "knownHazardsLtEdited": "Senesniuose lapuose yra alkaloidas karpaininas.",
+      "knownHazardsLtFinal": "Senesniuose lapuose yra alkaloidas karpaininas.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Carica papaya",
+      "knownHazards": "Older leaves contain the alkaloid carpaine[ 298 ].",
+      "knownHazardsLtV2": "Senesniuose lapuose yra alkaloidų karpaininas.",
+      "knownHazardsLtEdited": "Senesniuose lapuose yra alkaloidas karpaininas.",
+      "knownHazardsLtFinal": "Senesniuose lapuose yra alkaloidas karpaininas.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Carnegiea",
+      "knownHazards": "From a food safety standpoint, ripe saguaro fruit pulp and seeds are considered safe and nutritious, provided they are clean and not mouldy. However, legal and ethical considerations are paramount.",
+      "knownHazardsLtV2": "Subrendę vaisiai ir sėklos laikomi saugiais ir maistingais, jei švarūs ir nepelėję. Svarbu laikytis teisinių ir etinių apribojimų, reglamentuojančių šio augalo naudojimą.",
+      "knownHazardsLtEdited": "Subrendę vaisiai ir sėklos laikomi saugiais ir maistingais, jei švarūs ir nepelėję. Būtina laikytis šio augalo naudojimą reglamentuojančių teisinių ir etinių apribojimų.",
+      "knownHazardsLtFinal": "Subrendę vaisiai ir sėklos laikomi saugiais ir maistingais, jei švarūs ir nepelėję. Būtina laikytis šio augalo naudojimą reglamentuojančių teisinių ir etinių apribojimų.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Carnegiea gigantea",
+      "knownHazards": "From a food safety standpoint, ripe saguaro fruit pulp and seeds are considered safe and nutritious, provided they are clean and not mouldy. However, legal and ethical considerations are paramount.",
+      "knownHazardsLtV2": "Subrendę vaisiai ir sėklos laikomi saugiais ir maistingais, jei švarūs ir nepelėję. Svarbu laikytis teisinių ir etinių apribojimų, reglamentuojančių šio augalo naudojimą.",
+      "knownHazardsLtEdited": "Subrendę vaisiai ir sėklos laikomi saugiais ir maistingais, jei švarūs ir nepelėję. Būtina laikytis šio augalo naudojimą reglamentuojančių teisinių ir etinių apribojimų.",
+      "knownHazardsLtFinal": "Subrendę vaisiai ir sėklos laikomi saugiais ir maistingais, jei švarūs ir nepelėję. Būtina laikytis šio augalo naudojimą reglamentuojančių teisinių ir etinių apribojimų.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Carthamus tinctorius",
+      "knownHazards": "Avoid during pregnancy. Use with caution if suppressed or decreased immunity.",
+      "knownHazardsLtV2": "Negalima vartoti nėštumo metu. Esant susilpnėjusiam imunitetui — tik atsargiai.",
+      "knownHazardsLtEdited": "Negalima vartoti nėštumo metu; susilpnėjusio imuniteto atveju — tik atsargiai.",
+      "knownHazardsLtFinal": "Negalima vartoti nėštumo metu; susilpnėjusio imuniteto atveju — tik atsargiai.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Caryota",
+      "knownHazards": "The fruit is capable of irritating the skin and causing a burning sensation[ 287 ].",
+      "knownHazardsLtV2": "Vaisiai dirgina odą ir sukelia deginimo pojūtį.",
+      "knownHazardsLtEdited": "Vaisiai dirgina odą ir sukelia deginantį pojūtį.",
+      "knownHazardsLtFinal": "Vaisiai dirgina odą ir sukelia deginantį pojūtį.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Caryota urens",
+      "knownHazards": "The fruit is capable of irritating the skin and causing a burning sensation[ 287 ].",
+      "knownHazardsLtV2": "Vaisiai dirgina odą ir sukelia deginimo pojūtį.",
+      "knownHazardsLtEdited": "Vaisiai dirgina odą ir sukelia deginantį pojūtį.",
+      "knownHazardsLtFinal": "Vaisiai dirgina odą ir sukelia deginantį pojūtį.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Cassia",
+      "knownHazards": "All parts of plant are poisonous if ingested.",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškas, jei nuryjamos.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos, jei nuryjamos.",
+      "knownHazardsLtFinal": "Visos augalo dalys toksiškos, jei nuryjamos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Cassia fistula",
+      "knownHazards": "All parts of plant are poisonous if ingested.",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškas, jei nuryjamos.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos, jei nuryjamos.",
+      "knownHazardsLtFinal": "Visos augalo dalys toksiškos, jei nuryjamos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Castanospermum",
+      "knownHazards": "The immature seed is poisonous, though mature seeds are harmless[167, 240]. Another report says that the raw seed is poisonous and needs treatment to render it edible[193].",
+      "knownHazardsLtV2": "Nesubrendusios sėklos toksiškas; subrendusios laikomos nekenksmingomis. Kiti šaltiniai nurodo, kad net subrendusios žalios sėklos yra toksiškos ir reikalauja terminio apdorojimo prieš valgant.",
+      "knownHazardsLtEdited": "Nesubrendusios sėklos toksiškos; subrendusios laikomos nekenksmingomis. Kiti šaltiniai teigia, kad net subrendusios žalios sėklos yra toksiškos ir reikalauja terminio apdorojimo.",
+      "knownHazardsLtFinal": "Nesubrendusios sėklos toksiškos; subrendusios laikomos nekenksmingomis. Kiti šaltiniai teigia, kad net subrendusios žalios sėklos yra toksiškos ir reikalauja terminio apdorojimo.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Castanospermum australe",
+      "knownHazards": "The immature seed is poisonous, though mature seeds are harmless[167, 240]. Another report says that the raw seed is poisonous and needs treatment to render it edible[193].",
+      "knownHazardsLtV2": "Nesubrendusios sėklos toksiškas; subrendusios laikomos nekenksmingomis. Kiti šaltiniai nurodo, kad net subrendusios žalios sėklos yra toksiškos ir reikalauja terminio apdorojimo prieš valgant.",
+      "knownHazardsLtEdited": "Nesubrendusios sėklos toksiškos; subrendusios laikomos nekenksmingomis. Kiti šaltiniai teigia, kad net subrendusios žalios sėklos yra toksiškos ir reikalauja terminio apdorojimo.",
+      "knownHazardsLtFinal": "Nesubrendusios sėklos toksiškos; subrendusios laikomos nekenksmingomis. Kiti šaltiniai teigia, kad net subrendusios žalios sėklos yra toksiškos ir reikalauja terminio apdorojimo.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Catalpa",
+      "knownHazards": "The roots are highly poisonous[254].",
+      "knownHazardsLtV2": "Šaknys mirtinai toksiškos.",
+      "knownHazardsLtEdited": "Šaknys stipriai toksiškos.",
+      "knownHazardsLtFinal": "Šaknys labai toksiškos.",
+      "status": "flagged",
+      "flagReason": "Severity wording: EN says 'highly poisonous' (roots). LtV2 overcorrected to 'mirtinai toksiškos' (deadly); the Edited version swung to 'stipriai toksiškos', which is non-standard Lithuanian phrasing for this degree. 'labai toksiškos' is the natural LT equivalent of 'highly poisonous' — strong but without implying lethal outcome. Neither V2 nor Edited landed on the standard form.",
+      "suggestedFix": "Šaknys labai toksiškos."
+    },
+    {
+      "latin": "Catalpa bignonioides",
+      "knownHazards": "The roots are highly poisonous[254].",
+      "knownHazardsLtV2": "Šaknys mirtinai toksiškos.",
+      "knownHazardsLtEdited": "Šaknys stipriai toksiškos.",
+      "knownHazardsLtFinal": "Šaknys labai toksiškos.",
+      "status": "flagged",
+      "flagReason": "Same as Catalpa: 'stipriai toksiškos' is non-standard phrasing for EN 'highly poisonous'. Standard LT equivalent is 'labai toksiškos'. No explicit lethal evidence in EN source, so 'mirtinai' (deadly) is not warranted either.",
+      "suggestedFix": "Šaknys labai toksiškos."
+    },
+    {
+      "latin": "Catharanthus",
+      "knownHazards": "Parts of plant are poisonous if ingested",
+      "knownHazardsLtV2": "Augalo dalys toksiškas, jei nuryjamos.",
+      "knownHazardsLtEdited": "Augalo dalys toksiškos, jei nuryjamos.",
+      "knownHazardsLtFinal": "Augalo dalys toksiškos, jei nuryjamos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Catharanthus roseus",
+      "knownHazards": "Parts of plant are poisonous if ingested",
+      "knownHazardsLtV2": "Augalo dalys toksiškas, jei nuryjamos.",
+      "knownHazardsLtEdited": "Augalo dalys toksiškos, jei nuryjamos.",
+      "knownHazardsLtFinal": "Augalo dalys toksiškos, jei nuryjamos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Ceiba pentandra",
+      "knownHazards": "The seeds, and the oil, contain cyclopropenoid fatty acids such as malvalic acid (7 - 8%) and sterculic acid (3%), which cause abnormal physiological reactions in animals. Therefore the consumption of kapok seeds or seed oil should be discouraged unless the cyclopropenoid acids have been chemically removed[ 299 ]. Kapok fibre is irritating to the eyes, nose and throat, and workers exposed to kapok dust for long periods may develop chronic bronchitis[ 299 ]. (Plant has spines or sharp edges; use extreme caution when handling )",
+      "knownHazardsLtV2": "Sėklose ir aliejuje yra ciklopropeno riebalų rūgščių (malvalio ir sterkulo rūgštys), kurios sukelia patologines reakcijas gyvūnams — nevartoti be cheminio valymo. Kapokinės skaidulos dirgina akis, nosį ir gerklę; ilgalaikis dulkių poveikis gali sukelti lėtinį bronchitą. Augalas turi spyglius — elgtis atsargiai.",
+      "knownHazardsLtEdited": "Sėklose ir aliejuje yra ciklopropeno riebalų rūgščių (malvalio rūgštis — 7–8 %, sterkulo — 3 %), sukeliančių patologines reakcijas gyvūnams; nevartoti, kol jos chemiškai nepašalintos. Kapokinės skaidulos dirgina akis, nosį ir gerklę, o ilgalaikis dulkių poveikis gali sukelti lėtinį bronchitą. Augalas dygliuotas — elgtis atsargiai.",
+      "knownHazardsLtFinal": "Sėklose ir aliejuje yra ciklopropeno riebalų rūgščių (malvalio rūgštis — 7–8 %, sterkulo — 3 %), sukeliančių patologines reakcijas gyvūnams; nevartoti, kol jos chemiškai nepašalintos. Kapokinės skaidulos dirgina akis, nosį ir gerklę, o ilgalaikis dulkių poveikis gali sukelti lėtinį bronchitą. Augalas dygliuotas — elgtis atsargiai.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Celastrus scandens",
+      "knownHazards": "The fruit is poisonous[222]. All parts of the plant are potentially toxic[222].",
+      "knownHazardsLtV2": "Vaisiai toksiški; visos augalo dalys potencialiai pavojingos.",
+      "knownHazardsLtEdited": "Vaisiai toksiški; visos augalo dalys potencialiai toksiškos.",
+      "knownHazardsLtFinal": "Vaisiai toksiški; visos augalo dalys potencialiai toksiškos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Cercis",
+      "knownHazards": "The plant is reported to contain a toxic saponin[274]. Although toxic, saponins are poorly absorbed by the body and most pass straight through without any problem. They are also broken down to a large extent in the cooking process. Saponins are found in many foods, such as some beans. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Augale yra toksiškas saponinas, tačiau žmonių organizme jis prastai absorbuojamas ir termiškai apdorojant iš esmės suyra. Žuvims saponinai kur kas pavojingesni nei žmonėms.",
+      "knownHazardsLtEdited": "Augale yra toksiškas saponinas, tačiau žmonių organizme jis prastai pasisavinamas ir termiškai apdorojant iš esmės suyra. Žuvims saponinai kur kas pavojingesni nei žmonėms.",
+      "knownHazardsLtFinal": "Augale yra toksiškas saponinas, tačiau žmonių organizme jis prastai pasisavinamas ir termiškai apdorojant iš esmės suyra. Žuvims saponinai kur kas pavojingesni nei žmonėms.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Cercis canadensis",
+      "knownHazards": "The plant is reported to contain a toxic saponin[274]. Although toxic, saponins are poorly absorbed by the body and most pass straight through without any problem. They are also broken down to a large extent in the cooking process. Saponins are found in many foods, such as some beans. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Augale yra toksiškas saponinas, tačiau žmonių organizme jis prastai absorbuojamas ir termiškai apdorojant iš esmės suyra. Žuvims saponinai kur kas pavojingesni nei žmonėms.",
+      "knownHazardsLtEdited": "Augale yra toksiškas saponinas, tačiau žmonių organizme jis prastai pasisavinamas ir termiškai apdorojant iš esmės suyra. Žuvims saponinai kur kas pavojingesni nei žmonėms.",
+      "knownHazardsLtFinal": "Augale yra toksiškas saponinas, tačiau žmonių organizme jis prastai pasisavinamas ir termiškai apdorojant iš esmės suyra. Žuvims saponinai kur kas pavojingesni nei žmonėms.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Chamaecytisus",
+      "knownHazards": "Like many other plants in the Fabaceae family, Chamaecytisus species can contain alkaloids (notably cytisine), which are toxic when ingested in significant quantities. Cytisine can cause Nausea and vomiting, Abdominal pain, and Respiratory issues in severe cases. Pets, livestock, and humans (especially children) should avoid consuming parts of the plant. Allergenic Potential: Some individuals may develop skin irritation or allergic reactions when handling the plant, particularly during flowering or seed pod development.",
+      "knownHazardsLtV2": "Augale yra alkaloidų citozinas, sukeliantis pykinimą, vėmimą, pilvo skausmus ir sunkesniais atvejais kvėpavimo sutrikimus — pavojingas vaikams, augintiniams ir gyvuliams. Kai kuriems asmenims kontaktas (ypač žydėjimo metu) dirgina odą ir gali sukelti alerginę reakciją.",
+      "knownHazardsLtEdited": "Augale yra alkaloidas citozinas, sukeliantis pykinimą, vėmimą, pilvo skausmus ir, sunkesniais atvejais, kvėpavimo sutrikimus — pavojingas vaikams, augintiniams ir gyvuliams. Palietus augalą (ypač žydėjimo metu), kai kuriems asmenims gali išsivystyti odos dirginimas ar alerginė reakcija.",
+      "knownHazardsLtFinal": "Augale yra alkaloidas citozinas, sukeliantis pykinimą, vėmimą, pilvo skausmus ir, sunkesniais atvejais, kvėpavimo sutrikimus — pavojingas vaikams, augintiniams ir gyvuliams. Palietus augalą (ypač žydėjimo metu), kai kuriems asmenims gali išsivystyti odos dirginimas ar alerginė reakcija.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    }
+  ]
+}

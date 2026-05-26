@@ -1,0 +1,306 @@
+{
+  "chunkIndex": 6,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Baptisia australis",
+      "knownHazards": "A report says that the plant is potentially toxic[222].",
+      "knownHazardsLtV2": "Augalas laikomas potencialiai toksišku.",
+      "knownHazardsLtEdited": "Augalas laikomas potencialiai toksišku.",
+      "knownHazardsLtFinal": "Augalas laikomas potencialiai toksišku.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Barbarea vulgaris",
+      "knownHazards": "There is a report that ingestion of the leaves can lead to kidney malfunction[222].",
+      "knownHazardsLtV2": "Lapų vartojimas gali sutrikdyti inkstų veiklą.",
+      "knownHazardsLtEdited": "Lapų vartojimas gali sutrikdyti inkstų veiklą.",
+      "knownHazardsLtFinal": "Lapų vartojimas gali sutrikdyti inkstų veiklą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Belamcanda",
+      "knownHazards": "The plant is slightly toxic[147].",
+      "knownHazardsLtV2": "Augalas silpnai toksiškas.",
+      "knownHazardsLtEdited": "Augalas silpnai toksiškas.",
+      "knownHazardsLtFinal": "Augalas silpnai toksiškas.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Belamcanda chinensis",
+      "knownHazards": "The plant is slightly toxic[147].",
+      "knownHazardsLtV2": "Augalas silpnai toksiškas.",
+      "knownHazardsLtEdited": "Augalas silpnai toksiškas.",
+      "knownHazardsLtFinal": "Augalas silpnai toksiškas.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Betula lenta",
+      "knownHazards": "The essential oil obtained from the bark contains 97 - 99% methyl salicylate. This is very toxic when taken orally, and it can also be absorbed through the skin, resulting in human fatalities. As little as 4, 700 mg can be fatal in children[269]. The aromatic and aliphatic hydrocarbons in birch tar are irritating to the skin. Do not use in patients with oedema or with poor kidney or heart functions [301]",
+      "knownHazardsLtV2": "Žievės eteriniame aliejuje yra 97–99 % metilsalicilato — mirtinas tiek vartojant per burną, tiek įsigerdamas per odą; vaikams mirtina jau nuo 4 700 mg. Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti esant edemai ar esant sutrikusiai inkstų ar širdies funkcijai.",
+      "knownHazardsLtEdited": "Žievės eteriniame aliejuje yra 97–99 % metilsalicilato — mirtinai pavojingo tiek vartojant per burną, tiek įsigerdant per odą; vaikams mirtina jau nuo 4 700 mg. Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti, jei yra edema arba sutrikusios inkstų ar širdies funkcijos.",
+      "knownHazardsLtFinal": "Žievės eteriniame aliejuje yra 97–99 % metilsalicilato — mirtinai pavojingo tiek vartojant per burną, tiek įsigerdant per odą; vaikams mirtina jau nuo 4 700 mg. Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti, jei yra edema arba sutrikusios inkstų ar širdies funkcijos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Betula nigra",
+      "knownHazards": "The aromatic and aliphatic hydrocarbons in birch tar are irritating to the skin. Do not use in patients with oedema or with poor kidney or heart functions [301]",
+      "knownHazardsLtV2": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti esant edemai ar esant sutrikusiai inkstų ar širdies funkcijai.",
+      "knownHazardsLtEdited": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti, jei yra edema arba sutrikusios inkstų ar širdies funkcijos.",
+      "knownHazardsLtFinal": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti, jei yra edema arba sutrikusios inkstų ar širdies funkcijos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Betula papyrifera",
+      "knownHazards": "The aromatic and aliphatic hydrocarbons in birch tar are irritating to the skin. Do not use in patients with oedema or with poor kidney or heart functions [301].",
+      "knownHazardsLtV2": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti esant edemai ar esant sutrikusiai inkstų ar širdies funkcijai.",
+      "knownHazardsLtEdited": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti, jei yra edema arba sutrikusios inkstų ar širdies funkcijos.",
+      "knownHazardsLtFinal": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti, jei yra edema arba sutrikusios inkstų ar širdies funkcijos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Betula pendula",
+      "knownHazards": "The aromatic and aliphatic hydrocarbons in birch tar are irritating to the skin. Do not use in patients with oedema or with poor kidney or heart functions [301]",
+      "knownHazardsLtV2": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti esant edemai ar esant sutrikusiai inkstų ar širdies funkcijai.",
+      "knownHazardsLtEdited": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti, jei yra edema arba sutrikusios inkstų ar širdies funkcijos.",
+      "knownHazardsLtFinal": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti, jei yra edema arba sutrikusios inkstų ar širdies funkcijos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Betula utilis",
+      "knownHazards": "The aromatic and aliphatic hydrocarbons in birch tar are irritating to the skin. Do not use in patients with oedema or with poor kidney or heart functions [301]",
+      "knownHazardsLtV2": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti esant edemai ar esant sutrikusiai inkstų ar širdies funkcijai.",
+      "knownHazardsLtEdited": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti, jei yra edema arba sutrikusios inkstų ar širdies funkcijos.",
+      "knownHazardsLtFinal": "Beržo deguto aromatiniai ir alifatiniai angliavandeniliai dirgina odą. Nenaudoti, jei yra edema arba sutrikusios inkstų ar širdies funkcijos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Bignonia",
+      "knownHazards": "There have been isolated cases reported of people suffering from dermatitis after handling the leaves[274].",
+      "knownHazardsLtV2": "Lapai gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Palietus lapus, pasitaikė dermatito atvejų.",
+      "knownHazardsLtFinal": "Palietus lapus, pasitaikė dermatito atvejų.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Bignonia radicans",
+      "knownHazards": "There have been isolated cases reported of people suffering from dermatitis after handling the leaves[274].",
+      "knownHazardsLtV2": "Lapai gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Palietus lapus, pasitaikė dermatito atvejų.",
+      "knownHazardsLtFinal": "Palietus lapus, pasitaikė dermatito atvejų.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Billardiera longiflora",
+      "knownHazards": "The leaves contain saponins. Although poisonous, saponins are poorly absorbed by the human body and so most pass through without harm. Saponins are quite bitter and can be found in many common foods such as some beans. They can be removed by carefully leaching in running water. Thorough cooking, and perhaps changing the cooking water once, will also normally remove most of them. However, it is not advisable to eat large quantities of food that contain saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Lapuose yra saponinų — žmogaus organizmas jų praktiškai neįsisavina, todėl nedideliais kiekiais jie nekenkia. Saponinai toksiškai veikia žuvis.",
+      "knownHazardsLtEdited": "Lapuose yra saponinų — žmogaus organizmas jų praktiškai neįsisavina, todėl nedideliais kiekiais jie nekenkia. Saponinai yra toksiški žuvims.",
+      "knownHazardsLtFinal": "Lapuose yra saponinų — žmogaus organizmas jų praktiškai neįsisavina, todėl nedideliais kiekiais jie nekenkia. Saponinai yra toksiški žuvims.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Blech",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Daugelyje paparčių rasta kancerogenų, todėl rekomenduojama atsargumo. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas jį sunaikina.",
+      "knownHazardsLtEdited": "Daugelyje paparčių aptikta kancerogenų, todėl patariama laikytis atsargumo. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas jį sunaikina.",
+      "knownHazardsLtFinal": "Daugelyje paparčių aptikta kancerogenų, todėl patariama laikytis atsargumo. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas jį sunaikina.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Blechnum",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Daugelyje paparčių rasta kancerogenų, todėl rekomenduojama atsargumo. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas jį sunaikina.",
+      "knownHazardsLtEdited": "Daugelyje paparčių aptikta kancerogenų, todėl patariama laikytis atsargumo. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas jį sunaikina.",
+      "knownHazardsLtFinal": "Daugelyje paparčių aptikta kancerogenų, todėl patariama laikytis atsargumo. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas jį sunaikina.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Blechnum spicant",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Daugelyje paparčių rasta kancerogenų, todėl rekomenduojama atsargumo. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas jį sunaikina.",
+      "knownHazardsLtEdited": "Daugelyje paparčių aptikta kancerogenų, todėl patariama laikytis atsargumo. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas jį sunaikina.",
+      "knownHazardsLtFinal": "Daugelyje paparčių aptikta kancerogenų, todėl patariama laikytis atsargumo. Augale gali būti tiaminazės — fermento, ardančio vitamino B kompleksą; terminis apdorojimas jį sunaikina.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Boehmeria",
+      "knownHazards": "Although members of the nettle family, plants in this genus do not have stinging hairs[235].",
+      "knownHazardsLtV2": "Nors priklauso dilginių šeimai, šios genties augalai neturi dilginančių plaukelių.",
+      "knownHazardsLtEdited": "Nors priklauso dilginių šeimai, šios genties augalai neturi dilginančių plaukelių.",
+      "knownHazardsLtFinal": "Nors priklauso dilginių šeimai, šios genties augalai neturi dilginančių plaukelių.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Boehmeria nivea",
+      "knownHazards": "Although members of the nettle family, plants in this genus do not have stinging hairs[235].",
+      "knownHazardsLtV2": "Nors priklauso dilginių šeimai, šios genties augalai neturi dilginančių plaukelių.",
+      "knownHazardsLtEdited": "Nors priklauso dilginių šeimai, šios genties augalai neturi dilginančių plaukelių.",
+      "knownHazardsLtFinal": "Nors priklauso dilginių šeimai, šios genties augalai neturi dilginančių plaukelių.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Borago",
+      "knownHazards": "The plant, but not the oil obtained from the seeds, contains small amounts of pyrrolizidine alkaloids that can cause liver damage and liver cancer[238]. These alkaloids are present in too small a quantity to be harmful unless you make borage a major part of your diet, though people with liver problems would be wise to avoid using the leaves or flowers of this plant[K].",
+      "knownHazardsLtV2": "Augalo lapuose ir žieduose (bet ne sėklų aliejuje) yra nedidelių kiekių pirolizidino alkaloidų, galinčių pažeisti kepenis ir sukelti kepenų vėžį. Mažais kiekiais nekenkia, tačiau kepenų ligomis sergantiems asmenims reikėtų vengti šio augalo.",
+      "knownHazardsLtEdited": "Augalo lapuose ir žieduose (bet ne sėklų aliejuje) yra nedidelių kiekių pirolizidino alkaloidų, galinčių pažeisti kepenis ir sukelti kepenų vėžį. Mažais kiekiais nekenkia, tačiau kepenų ligomis sergantiems asmenims reikėtų vengti lapų ir žiedų.",
+      "knownHazardsLtFinal": "Augalo lapuose ir žieduose (bet ne sėklų aliejuje) yra nedidelių kiekių pirolizidino alkaloidų, galinčių pažeisti kepenis ir sukelti kepenų vėžį. Mažais kiekiais nekenkia, tačiau kepenų ligomis sergantiems asmenims reikėtų vengti lapų ir žiedų.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Borago officinalis",
+      "knownHazards": "The plant, but not the oil obtained from the seeds, contains small amounts of pyrrolizidine alkaloids that can cause liver damage and liver cancer[238]. These alkaloids are present in too small a quantity to be harmful unless you make borage a major part of your diet, though people with liver problems would be wise to avoid using the leaves or flowers of this plant[K].",
+      "knownHazardsLtV2": "Augalo lapuose ir žieduose (bet ne sėklų aliejuje) yra nedidelių kiekių pirolizidino alkaloidų, galinčių pažeisti kepenis ir sukelti kepenų vėžį. Mažais kiekiais nekenkia, tačiau kepenų ligomis sergantiems asmenims reikėtų vengti šio augalo.",
+      "knownHazardsLtEdited": "Augalo lapuose ir žieduose (bet ne sėklų aliejuje) yra nedidelių kiekių pirolizidino alkaloidų, galinčių pažeisti kepenis ir sukelti kepenų vėžį. Mažais kiekiais nekenkia, tačiau kepenų ligomis sergantiems asmenims reikėtų vengti lapų ir žiedų.",
+      "knownHazardsLtFinal": "Augalo lapuose ir žieduose (bet ne sėklų aliejuje) yra nedidelių kiekių pirolizidino alkaloidų, galinčių pažeisti kepenis ir sukelti kepenų vėžį. Mažais kiekiais nekenkia, tačiau kepenų ligomis sergantiems asmenims reikėtų vengti lapų ir žiedų.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Bromelia",
+      "knownHazards": "The fruits have thin stinging hairs.",
+      "knownHazardsLtV2": "Vaisiai padengti plonais dilginančiais plaukeliais.",
+      "knownHazardsLtEdited": "Vaisiai padengti plonais dilginančiais plaukeliais.",
+      "knownHazardsLtFinal": "Vaisiai padengti plonais dilginančiais plaukeliais.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Bulbine bulbosa",
+      "knownHazards": "Causes severe scouring if eaten by sheep or cattle[154].",
+      "knownHazardsLtV2": "Avims ir galvijams sukelia stiprų viduriavimą.",
+      "knownHazardsLtEdited": "Avims ir galvijams sukelia stiprų viduriavimą.",
+      "knownHazardsLtFinal": "Avims ir galvijams sukelia stiprų viduriavimą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Buxus sempervirens",
+      "knownHazards": "All parts of the plant are poisonous, especially the leaves and bark[200].",
+      "knownHazardsLtV2": "Visos augalo dalys nuodingos, ypač lapai ir žievė.",
+      "knownHazardsLtEdited": "Visos augalo dalys nuodingos, ypač lapai ir žievė.",
+      "knownHazardsLtFinal": "Visos augalo dalys nuodingos, ypač lapai ir žievė.",
+      "status": "flagged",
+      "flagReason": "SEVERITY UNDER-LABEL: EN 'poisonous' for ALL parts with no nuance — Buxus sempervirens is well-documented as highly toxic (buxine alkaloids, potentially fatal in animals and humans at higher doses). The LT 'nuodingos' (poisonous) is technically correct for a literal 1:1 translation, but the EN source itself gives no severity qualifier beyond 'poisonous'. Flagging conservatively: consider whether 'nuodingos' alone is sufficient or whether 'toksiškas' phrasing would better signal the severity level for a public-facing plant database. This is a borderline case — EN does not say 'highly toxic' or 'lethal', so strict fact fidelity is preserved. Flagging for editorial review only.",
+      "suggestedFix": "If the database severity schema requires explicit labeling: 'Visos augalo dalys nuodingos (toksiškas), ypač lapai ir žievė.' Otherwise, current text is acceptable as a faithful literal translation."
+    },
+    {
+      "latin": "Caesalpinia gilliesii",
+      "knownHazards": "The green seed pods are severely irritating to the digestive tract[274].",
+      "knownHazardsLtV2": "Žaliosios sėklų ankštys stipriai dirgina virškinamąjį traktą.",
+      "knownHazardsLtEdited": "Žaliosios sėklų ankštys stipriai dirgina virškinamąjį traktą.",
+      "knownHazardsLtFinal": "Žaliosios sėklų ankštys stipriai dirgina virškinamąjį traktą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Calendula officinalis",
+      "knownHazards": "Low potential for sensitization and contact dermatitis. Possible allergies if allergic to daisy family plants. Topical use may cause rash [301].",
+      "knownHazardsLtV2": "Gali sukelti kontaktinį dermatitą ar alergiją, ypač jautriantiems astrinių (Asteraceae) šeimos augalams. Išoriniam naudojimui — nedidelė bėrimo rizika.",
+      "knownHazardsLtEdited": "Gali sukelti kontaktinį dermatitą ar alergiją, ypač jautriems astrinių (Asteraceae) šeimos augalams. Išoriškai naudojant galimas nedidelis bėrimas.",
+      "knownHazardsLtFinal": "Gali sukelti kontaktinį dermatitą ar alergiją, ypač jautriems astrinių (Asteraceae) šeimos augalams. Išoriškai naudojant galimas nedidelis bėrimas.",
+      "status": "flagged",
+      "flagReason": "SEVERITY NUANCE LOST: EN explicitly states 'Low potential for sensitization' — the LT edited version opens with 'Gali sukelti kontaktinį dermatitą ar alergiją' (Can cause contact dermatitis or allergy) without conveying the 'low potential' qualifier. This makes the hazard sound more likely than the EN source indicates. The magnitude is partially recovered in the second sentence ('nedidelis bėrimas'), but the first sentence stands alone as a stronger-than-warranted hazard claim.",
+      "suggestedFix": "Nedidelė sensitizacijos ir kontaktinio dermatito rizika. Galima alergija jautriems astrinių (Asteraceae) šeimos augalams; išoriškai naudojant galimas nedidelis bėrimas."
+    },
+    {
+      "latin": "Calla",
+      "knownHazards": "The plant contains calcium oxylate crystals[222]. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten, but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water[65].",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų deginantį pojūtį burnoje. Kruopštus džiovinimas, virimas ar mirkymas vandenyje juos neutralizuoja.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų deginantį pojūtį burnoje. Kruopštus džiovinimas, virimas arba mirkymas vandenyje juos neutralizuoja.",
+      "knownHazardsLtFinal": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų deginantį pojūtį burnoje. Kruopštus džiovinimas, virimas arba mirkymas vandenyje juos neutralizuoja.",
+      "status": "flagged",
+      "flagReason": "SENSATION DESCRIPTION IMPRECISION: EN describes the sensation as 'similar to needles being stuck into the mouth and tongue' (piercing/pricking). LT renders this as 'stiprų deginantį pojūtį' (strong burning sensation). Calcium oxalate crystal pain is clinically a combination of sharp pricking and burning, but the LT drops the needle/pricking character. This has been present since V2 and the edited version does not correct it. Flagging as a minor fact-fidelity issue — 'deginantį' (burning) alone omits the sharp piercing quality that is diagnostically relevant.",
+      "suggestedFix": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų aštrų deginantį pojūtį burnoje ir liežuvyje. Kruopštus džiovinimas, virimas arba mirkymas vandenyje juos neutralizuoja."
+    },
+    {
+      "latin": "Calla palustris",
+      "knownHazards": "The plant contains calcium oxylate crystals[222]. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten, but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water[65].",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų deginantį pojūtį burnoje. Kruopštus džiovinimas, virimas ar mirkymas vandenyje juos neutralizuoja.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų deginantį pojūtį burnoje. Kruopštus džiovinimas, virimas arba mirkymas vandenyje juos neutralizuoja.",
+      "knownHazardsLtFinal": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų deginantį pojūtį burnoje. Kruopštus džiovinimas, virimas arba mirkymas vandenyje juos neutralizuoja.",
+      "status": "flagged",
+      "flagReason": "SENSATION DESCRIPTION IMPRECISION (same as Calla): EN describes 'needles being stuck into the mouth and tongue'. LT 'deginantį pojūtį' (burning sensation) omits the sharp/piercing quality and also omits mention of the tongue (liežuvis), which is explicitly named in the EN source.",
+      "suggestedFix": "Augale yra kalcio oksalato kristalų, kurie sukelia stiprų aštrų deginantį pojūtį burnoje ir liežuvyje. Kruopštus džiovinimas, virimas arba mirkymas vandenyje juos neutralizuoja."
+    },
+    {
+      "latin": "Calochortus",
+      "knownHazards": "Edible when cooked; raw bulbs may cause mild stomach upset due to saponins. Avoid collecting in protected habitats.",
+      "knownHazardsLtV2": "Žali svogūnėliai dėl saponinų gali sukelti lengvą skrandžio dirginimą; virti — valgomi.",
+      "knownHazardsLtEdited": "Žali svogūnėliai dėl saponinų gali sukelti lengvą skrandžio dirginimą; virti — valgomi.",
+      "knownHazardsLtFinal": "Žali svogūnėliai dėl saponinų gali sukelti lengvą skrandžio dirginimą; virti — valgomi.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Caltha",
+      "knownHazards": "The whole plant, but especially the older portions, contains the toxic glycoside protoanemanin - this is destroyed by heat[172]. The sap can irritate sensitive skin[172].",
+      "knownHazardsLtV2": "Visame augale, ypač senesnėse dalyse, yra toksiško glikozido protoanemonino — terminis apdorojimas jį sunaikina. Sultys gali dirginti jautrią odą.",
+      "knownHazardsLtEdited": "Visame augale, ypač senesnėse dalyse, yra toksiško glikozido protoanemonino — terminis apdorojimas jį sunaikina. Sultys gali dirginti jautrią odą.",
+      "knownHazardsLtFinal": "Visame augale, ypač senesnėse dalyse, yra toksiško glikozido protoanemonino — terminis apdorojimas jį sunaikina. Sultys gali dirginti jautrią odą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Caltha leptosepala",
+      "knownHazards": "The whole plant, but especially the older portions, contains the toxic glycoside protoanemanin - this is destroyed by heat[172]. The sap can irritate sensitive skin[172].",
+      "knownHazardsLtV2": "Visame augale, ypač senesnėse dalyse, yra toksiško glikozido protoanemonino — terminis apdorojimas jį sunaikina. Sultys gali dirginti jautrią odą.",
+      "knownHazardsLtEdited": "Visame augale, ypač senesnėse dalyse, yra toksiško glikozido protoanemonino — terminis apdorojimas jį sunaikina. Sultys gali dirginti jautrią odą.",
+      "knownHazardsLtFinal": "Visame augale, ypač senesnėse dalyse, yra toksiško glikozido protoanemonino — terminis apdorojimas jį sunaikina. Sultys gali dirginti jautrią odą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Caltha palustris",
+      "knownHazards": "The whole plant, but especially the older portions, contains the toxic glycoside protoanemonin - this is destroyed by heat[172]. The sap can irritate sensitive skin[172].",
+      "knownHazardsLtV2": "Visame augale, ypač senesnėse dalyse, yra toksiško glikozido protoanemonino — terminis apdorojimas jį sunaikina. Sultys gali dirginti jautrią odą.",
+      "knownHazardsLtEdited": "Visame augale, ypač senesnėse dalyse, yra toksiško glikozido protoanemonino — terminis apdorojimas jį sunaikina. Sultys gali dirginti jautrią odą.",
+      "knownHazardsLtFinal": "Visame augale, ypač senesnėse dalyse, yra toksiško glikozido protoanemonino — terminis apdorojimas jį sunaikina. Sultys gali dirginti jautrią odą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    }
+  ]
+}

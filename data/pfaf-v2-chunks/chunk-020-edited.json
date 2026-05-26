@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 20,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Malus transitoria",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos ir galbūt lapai turi cianido — didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos. Vaisiai saugūs; sėklų valgyti dideliais kiekiais nereikėtų.",
+      "knownHazardsLtEdited": "Sėklose ir galbūt lapuose yra cianido — didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos. Vaisiai saugūs; sėklų dideliais kiekiais valgyti nereikėtų.",
+      "changesNotes": "„turi cianido" → „yra cianido" (calque fix: augalas turi → augale yra); „Sėklos ir lapai" → „Sėklose ir lapuose" (lokatyvo vietoj nominatyvo, nes kalbama apie buvimo vietą); „sėklų valgyti dideliais kiekiais" — žodžių tvarka natūraliau: „sėklų dideliais kiekiais valgyti"."
+    },
+    {
+      "latin": "Malus trilobata",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos ir galbūt lapai turi cianido — didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos. Vaisiai saugūs; sėklų valgyti dideliais kiekiais nereikėtų.",
+      "knownHazardsLtEdited": "Sėklose ir galbūt lapuose yra cianido — didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos. Vaisiai saugūs; sėklų dideliais kiekiais valgyti nereikėtų.",
+      "changesNotes": "Tas pats kaip Malus transitoria: lokatyvas „sėklose/lapuose", „turi" → „yra", žodžių tvarka „dideliais kiekiais valgyti"."
+    },
+    {
+      "latin": "Malus tschonoskii",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos ir galbūt lapai turi cianido — didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos. Vaisiai saugūs; sėklų valgyti dideliais kiekiais nereikėtų.",
+      "knownHazardsLtEdited": "Sėklose ir galbūt lapuose yra cianido — didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos. Vaisiai saugūs; sėklų dideliais kiekiais valgyti nereikėtų.",
+      "changesNotes": "Tas pats kaip Malus transitoria."
+    },
+    {
+      "latin": "Malva",
+      "knownHazards": "Although we have seen no reports of toxicity for this species, when grown on nitrogen rich soils (and particularly when these are cultivated inorganically), the leaves of some species tend to concentrate high levels of nitrates in their leaves[76]. The leaves are perfectly wholesome at all other times.",
+      "knownHazardsLtV2": "Auginant azoto turtingame dirvožemyje lapai gali kaupti nitratus; kitais atvejais saugūs.",
+      "knownHazardsLtEdited": "Auginant azotingame dirvožemyje lapai gali kaupti nitratus; kitais atvejais augalas saugus.",
+      "changesNotes": "„azoto turtingame" → „azotingame" (natūralus LT būdvardis, vengiant kalkės); „saugūs" pakeista į „augalas saugus" — prieš tai nebuvo aiškaus sakinio subjekto, dabar nuosekliau."
+    },
+    {
+      "latin": "Malva moschata",
+      "knownHazards": "When grown on nitrogen rich soils (and particularly when these are used inorganically), the plant tends to concentrate high levels of nitrates in its leaves[76]. The leaves are perfectly wholesome at all other times.",
+      "knownHazardsLtV2": "Auginant azoto turtingame dirvožemyje lapai gali kaupti nitratus; kitais atvejais saugūs.",
+      "knownHazardsLtEdited": "Auginant azotingame dirvožemyje lapai gali kaupti nitratus; kitais atvejais augalas saugus.",
+      "changesNotes": "Tas pats kaip Malva: „azoto turtingame" → „azotingame", pridėtas subjektas „augalas saugus"."
+    },
+    {
+      "latin": "Mandragora",
+      "knownHazards": "All parts of the plant are poisonous[19, 21]. Only slightly so according to one report[89]. Not recommended as a herbal medicine [301]. Toxicity signs include: skin reddening, dry mouth, tachycardia, arrhythmias, pupil dilation [301].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos — sukelia odos paraudimą, sausą burną, tachikardiją, aritmijas ir vyzdžių išsiplėtimą. Žolininkystėje nenaudoti.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos — sukelia odos paraudimą, sausą burną, tachikardiją, aritmijas ir vyzdžių išsiplėtimą. Kaip vaistažolė netinkama.",
+      "changesNotes": "„Žolininkystėje nenaudoti" → „Kaip vaistažolė netinkama" — natūralesnė formuluotė, aiškiau perteikia prasmę (not recommended as herbal medicine)."
+    },
+    {
+      "latin": "Mandragora officinarum",
+      "knownHazards": "All parts of the plant are poisonous[19, 21]. Only slightly so according to one report[89]. Not recommended as a herbal medicine [301]. Toxicity signs include: skin reddening, dry mouth, tachycardia, arrhythmias, pupil dilation [301].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos — sukelia odos paraudimą, sausą burną, tachikardiją, aritmijas ir vyzdžių išsiplėtimą. Žolininkystėje nenaudoti.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos — sukelia odos paraudimą, sausą burną, tachikardiją, aritmijas ir vyzdžių išsiplėtimą. Kaip vaistažolė netinkama.",
+      "changesNotes": "Tas pats kaip Mandragora."
+    },
+    {
+      "latin": "Manihot esculenta",
+      "knownHazards": "The leaves contain the harmful glucoside linamarin, which can release the toxic hydrocyanic acid in the presence of the enzyme linase[298 , 300 ]. This can be destroyed by heat[298 ] (Parts of plant are poisonous if ingested)",
+      "knownHazardsLtV2": "Lapuose yra glikozidas linamarinas, kuris fermentų veikiamas išskiria cianido rūgštį; kaitinimas sunaikina šį jungdimą ir augalą padaro saugų.",
+      "knownHazardsLtEdited": "Lapuose yra glikozidas linamarinas, kuris fermento veikiamas išskiria cianido rūgštį; kaitinimas šį junginį sunaikina ir augalą padaro saugų.",
+      "changesNotes": "„fermentų veikiamas" → „fermento veikiamas" (vienaskaita — linamarinui skaldyti atsakingas konkretus fermentas linazė); „jungdimą" → „junginį" (taisyklingas daiktavardis vietoj veiksmažodinio daiktavardžio)."
+    },
+    {
+      "latin": "Marsilea quadrifolia",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kaip ir daugelis paparčių, gali turėti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus; kaitinimas ar džiovinimas šį fermentą sunaikina.",
+      "knownHazardsLtEdited": "Kaip ir daugelyje paparčių, gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus; kaitinimas ar džiovinimas šį fermentą sunaikina.",
+      "changesNotes": "„gali turėti kancerogenų" → „gali būti kancerogenų" (beasmenis sakinys — kalbama apie medžiagų buvimą augale, ne apie augalo turėjimą); „paparčių" lokatyvas „daugelyje paparčių" nuoseklesnis po „kaip ir"."
+    },
+    {
+      "latin": "Matteuccia",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kaip ir daugelis paparčių, gali turėti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus; kaitinimas ar džiovinimas šį fermentą sunaikina.",
+      "knownHazardsLtEdited": "Kaip ir daugelyje paparčių, gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus; kaitinimas ar džiovinimas šį fermentą sunaikina.",
+      "changesNotes": "Tas pats kaip Marsilea quadrifolia."
+    },
+    {
+      "latin": "Matteuccia orientalis",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kaip ir daugelis paparčių, gali turėti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus; kaitinimas ar džiovinimas šį fermentą sunaikina.",
+      "knownHazardsLtEdited": "Kaip ir daugelyje paparčių, gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus; kaitinimas ar džiovinimas šį fermentą sunaikina.",
+      "changesNotes": "Tas pats kaip Marsilea quadrifolia."
+    },
+    {
+      "latin": "Matteuccia struthiopteris",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kaip ir daugelis paparčių, gali turėti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus; kaitinimas ar džiovinimas šį fermentą sunaikina.",
+      "knownHazardsLtEdited": "Kaip ir daugelyje paparčių, gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus; kaitinimas ar džiovinimas šį fermentą sunaikina.",
+      "changesNotes": "Tas pats kaip Marsilea quadrifolia."
+    },
+    {
+      "latin": "Meconopsis",
+      "knownHazards": "The whole plant, but especially the root, is considered to be poisonous, it contains narcotic principles[211, 240].",
+      "knownHazardsLtV2": "Visas augalas, ypač šaknis, toksiškas — turi narkotinių junginių.",
+      "knownHazardsLtEdited": "Visas augalas, ypač šaknis, toksiškas — jame yra narkotinių junginių.",
+      "changesNotes": "„turi narkotinių junginių" → „jame yra narkotinių junginių" (calque fix: augalas turi → augale/jame yra)."
+    },
+    {
+      "latin": "Melaleuca",
+      "knownHazards": "Do not take internally. Possible central nervous system depression along with ataxia and drowsiness. Possible stomatitis, vomiting, diarrhoea and gastrointestinal irritation when taken orally [301].",
+      "knownHazardsLtV2": "Gerti negalima — vartojant viduje slopina centrinę nervų sistemą (ataksija, mieguistumas) ir dirgina virškinamąjį traktą, sukelia vėmimą bei viduriavimą.",
+      "knownHazardsLtEdited": "Gerti negalima — vartojamas viduje slopina centrinę nervų sistemą (ataksija, mieguistumas), dirgina virškinamąjį traktą ir sukelia vėmimą bei viduriavimą.",
+      "changesNotes": "„vartojant viduje" → „vartojamas viduje" (pakeista beasmenis dalyvis į veiksmažodinio ryšio formos konstrukciją, natūraliau); surikiuoti veiksmažodžiai su bendra jungtimi „ir" prieš paskutinį."
+    },
+    {
+      "latin": "Melia",
+      "knownHazards": "The fruit is somewhat poisonous[2, 4, 89]. Ripe fruits are more toxic than green ones[218]. As little as six fruits have caused fatalities in children[274]. All parts of the plant contain toxins that can cause gastric tract irritation and degeneration of the liver and kidneys[274].",
+      "knownHazardsLtV2": "Vaisiai mirtinai pavojingi — vaikams mirtis fiksuota nuo vos šešių prinokusių vaisių. Visos augalo dalys dirgina virškinamąjį traktą ir pažeidžia kepenis bei inkstus.",
+      "knownHazardsLtEdited": "Vaisiai mirtinai pavojingi — vaikams mirtis fiksuota nuo vos šešių prinokusių vaisių. Visose augalo dalyse yra toksinų, kurie dirgina virškinamąjį traktą ir pažeidžia kepenis bei inkstus.",
+      "changesNotes": "„Visos augalo dalys dirgina" — impliciškai netikslus sakinys (dirginimą sukelia jose esantys toksinai, ne pačios dalys). Patikslinta: „Visose augalo dalyse yra toksinų, kurie..."; lokatyvas „Visose augalo dalyse" vietoj nominatyvo."
+    },
+    {
+      "latin": "Melia azederach",
+      "knownHazards": "The fruit is somewhat poisonous[2, 4, 89]. Ripe fruits are more toxic than green ones[218]. As little as six fruits have caused fatalities in children[274]. All parts of the plant contain toxins that can cause gastric tract irritation and degeneration of the liver and kidneys[274].",
+      "knownHazardsLtV2": "Vaisiai mirtinai pavojingi — vaikams mirtis fiksuota nuo vos šešių prinokusių vaisių. Visos augalo dalys dirgina virškinamąjį traktą ir pažeidžia kepenis bei inkstus.",
+      "knownHazardsLtEdited": "Vaisiai mirtinai pavojingi — vaikams mirtis fiksuota nuo vos šešių prinokusių vaisių. Visose augalo dalyse yra toksinų, kurie dirgina virškinamąjį traktą ir pažeidžia kepenis bei inkstus.",
+      "changesNotes": "Tas pats kaip Melia."
+    },
+    {
+      "latin": "Melianthus",
+      "knownHazards": "The root is poisonous[73].",
+      "knownHazardsLtV2": "Šaknis toksiška.",
+      "knownHazardsLtEdited": "Šaknis toksiška.",
+      "changesNotes": "Jokių pakeitimų — sakinys taisyklingas ir lakoniškas."
+    },
+    {
+      "latin": "Melianthus major",
+      "knownHazards": "The root is poisonous[73].",
+      "knownHazardsLtV2": "Šaknis toksiška.",
+      "knownHazardsLtEdited": "Šaknis toksiška.",
+      "changesNotes": "Jokių pakeitimų."
+    },
+    {
+      "latin": "Menispermum",
+      "knownHazards": "All parts of the plant are poisonous[21, 95, 159, 222]. The fruit has been known to cause death in children[207].",
+      "knownHazardsLtV2": "Visos augalo dalys mirtinos — vaikų mirties atvejai po vaisių suvalgymo užfiksuoti.",
+      "knownHazardsLtEdited": "Visos augalo dalys mirtinos — užfiksuoti vaikų mirties atvejai suvalgius vaisių.",
+      "changesNotes": "Žodžių tvarka: „užfiksuoti" pakeltas į priekį (natūralesnė inversija LT); „po vaisių suvalgymo" → „suvalgius vaisių" (padalyvinis junginys sklandžiau)."
+    },
+    {
+      "latin": "Menispermum canadense",
+      "knownHazards": "All parts of the plant are poisonous[21, 95, 159, 222]. The fruit has been known to cause death in children[207].",
+      "knownHazardsLtV2": "Visos augalo dalys mirtinos — vaikų mirties atvejai po vaisių suvalgymo užfiksuoti.",
+      "knownHazardsLtEdited": "Visos augalo dalys mirtinos — užfiksuoti vaikų mirties atvejai suvalgius vaisių.",
+      "changesNotes": "Tas pats kaip Menispermum."
+    },
+    {
+      "latin": "Mentha",
+      "knownHazards": "Although no records of toxicity have been seen for this species, large quantities of some members of this genus, especially when taken in the form of the extracted essential oil, can cause abortions so some caution is advised.",
+      "knownHazardsLtV2": "Didelės eterinio aliejaus dozės gali sukelti aborto riziką; nėščioms moterims reikėtų vengti koncentruoto aliejaus.",
+      "knownHazardsLtEdited": "Didelės eterinio aliejaus dozės gali sukelti persileidimą; nėščioms moterims reikėtų vengti koncentruoto aliejaus.",
+      "changesNotes": "„aborto riziką" → „persileidimą" — originale kalbama apie abortions (spontaninį persileidimą), ne dirbtinį abortą; „persileidimas" tiksliau ir natūraliau medicininiu požiūriu. Pašalinta redundantiška „riziką" (jau „gali sukelti" yra netikrumas)."
+    },
+    {
+      "latin": "Mentha requienii",
+      "knownHazards": "Although no records of toxicity have been seen for this species, large quantities of some members of this genus, especially when taken in the form of the extracted essential oil, can cause abortions so some caution is advised.",
+      "knownHazardsLtV2": "Didelės eterinio aliejaus dozės gali sukelti aborto riziką; nėščioms moterims reikėtų vengti koncentruoto aliejaus.",
+      "knownHazardsLtEdited": "Didelės eterinio aliejaus dozės gali sukelti persileidimą; nėščioms moterims reikėtų vengti koncentruoto aliejaus.",
+      "changesNotes": "Tas pats kaip Mentha."
+    },
+    {
+      "latin": "Mentha suaveolens",
+      "knownHazards": "Although no records of toxicity have been seen for this species, large quantities of some members of this genus, especially when taken in the form of the extracted essential oil, can cause abortions so some caution is advised.",
+      "knownHazardsLtV2": "Didelės eterinio aliejaus dozės gali sukelti aborto riziką; nėščioms moterims reikėtų vengti koncentruoto aliejaus.",
+      "knownHazardsLtEdited": "Didelės eterinio aliejaus dozės gali sukelti persileidimą; nėščioms moterims reikėtų vengti koncentruoto aliejaus.",
+      "changesNotes": "Tas pats kaip Mentha."
+    },
+    {
+      "latin": "Menyanthes",
+      "knownHazards": "Large doses may cause abdominal pains, nausea, diarrhoea and vomiting. Reports of red cell damage (haemolysis). Effects may be due to the salicylic acid constituent [301].",
+      "knownHazardsLtV2": "Didelės dozės sukelia pilvo skausmus, pykinimą, viduriavimą ir vėmimą; fiksuota raudonųjų kraujo kūnelių hemolizė, greičiausiai dėl salicilo rūgšties.",
+      "knownHazardsLtEdited": "Didelės dozės sukelia pilvo skausmus, pykinimą, viduriavimą ir vėmimą; fiksuota raudonųjų kraujo kūnelių hemolizė, greičiausiai dėl jame esančios salicilo rūgšties.",
+      "changesNotes": "Pridėta „jame esančios" — patikslinta, kad salicilo rūgštis yra augale (atitinka originalą: the salicylic acid constituent), taip išvengiama neaiškumo."
+    },
+    {
+      "latin": "Menyanthes trifoliata",
+      "knownHazards": "Large doses may cause abdominal pains, nausea, diarrhoea and vomiting. Reports of red cell damage (haemolysis). Effects may be due to the salicylic acid constituent [301].",
+      "knownHazardsLtV2": "Didelės dozės sukelia pilvo skausmus, pykinimą, viduriavimą ir vėmimą; fiksuota raudonųjų kraujo kūnelių hemolizė, greičiausiai dėl salicilo rūgšties.",
+      "knownHazardsLtEdited": "Didelės dozės sukelia pilvo skausmus, pykinimą, viduriavimą ir vėmimą; fiksuota raudonųjų kraujo kūnelių hemolizė, greičiausiai dėl jame esančios salicilo rūgšties.",
+      "changesNotes": "Tas pats kaip Menyanthes."
+    },
+    {
+      "latin": "Mespilus germanica",
+      "knownHazards": "The seeds contain the toxic hydrocyanic acid (the substance that gives almonds their flavour) and should not be eaten in quantity[7].",
+      "knownHazardsLtV2": "Sėklos turi cianido rūgšties — dideliais kiekiais valgyti nereikėtų.",
+      "knownHazardsLtEdited": "Sėklose yra cianido rūgšties — dideliais kiekiais jų valgyti nereikėtų.",
+      "changesNotes": "„Sėklos turi" → „Sėklose yra" (calque fix + lokatyvas); pridėtas „jų" — aiškiai nurodo, ko valgyti nereikėtų (sėklų)."
+    },
+    {
+      "latin": "Mimosa pudica",
+      "knownHazards": "When the prickles on the stem and the fruits become too hard, they can cause intestinal inflammation in grazing animals[418 ]. The roots are toxic in large doses[348 ].",
+      "knownHazardsLtV2": "Kietoję stiebo ir vaisiaus dygliai gali sukelti žarnyno uždegimą ganytiems gyvūnams. Šaknys toksiškos didelėmis dozėmis.",
+      "knownHazardsLtEdited": "Sukietėję stiebo ir vaisiaus dygliai gali sukelti žarnyno uždegimą ganomiems gyvūnams. Šaknys didelėmis dozėmis toksiškos.",
+      "changesNotes": "„Kietoję" → „Sukietėję" (taisyklingas dalyvio veidas); „ganytiems gyvūnams" → „ganomiems gyvūnams" (taisyklinga esamojo laiko pasyvioji forma); „toksiškos didelėmis dozėmis" — žodžių tvarka natūralesnė LT sakiniui."
+    },
+    {
+      "latin": "Mirabilis jalapa",
+      "knownHazards": "The seeds and the roots are reported to cause digestive disturbances[274].",
+      "knownHazardsLtV2": "Sėklos ir šaknys gali sukelti virškinimo sutrikimų.",
+      "knownHazardsLtEdited": "Sėklos ir šaknys gali sukelti virškinimo sutrikimų.",
+      "changesNotes": "Jokių pakeitimų — sakinys taisyklingas."
+    },
+    {
+      "latin": "Monstera",
+      "knownHazards": "All parts of the plant contain calcium oxalate crystals. This substance is toxic fresh and, if eaten, makes the mouth, tongue and throat feel as if hundreds of small needles are digging in to them. However, calcium oxalate is easily broken down either by thoroughly cooking the plant or by fully drying it and, in either of these states, it is safe to eat the plant. People with a tendency to rheumatism, arthritis, gout, kidney stones and hyperacidity should take especial caution if including this plant in their diet[238 ].(All parts of plant are poisonous if ingested Handling plant may cause skin irritation or allergic reaction)",
+      "knownHazardsLtV2": "Visos dalys turi kalcio oksalatų kristalų, kurie žalių valgant dirgina burną, liežuvį ir gerklę; kaitinimas arba džiovinimas juos sunaikina. Sergantiems podagra, inkstų akmenlige ar artritu reikėtų vengti šio augalo; liesti gali dirginti odą.",
+      "knownHazardsLtEdited": "Visose dalyse yra kalcio oksalatų kristalų, kurie valgant žalią augalą dirgina burną, liežuvį ir gerklę; kaitinimas arba džiovinimas juos sunaikina. Sergantiems podagra, inkstų akmenlige ar artritu reikėtų vengti šio augalo; palietus gali dirginti odą.",
+      "changesNotes": "„Visos dalys turi" → „Visose dalyse yra" (calque fix + lokatyvas); „žalių valgant" → „valgant žalią augalą" (aiškiau, kas valgoma); „liesti gali dirginti" → „palietus gali dirginti" (natūralesnė padalyvio forma, atitinka „kontaktas su oda" → „palietus odą" taisyklę)."
+    },
+    {
+      "latin": "Monstera deliciosa",
+      "knownHazards": "All parts of the plant contain calcium oxalate crystals. This substance is toxic fresh and, if eaten, makes the mouth, tongue and throat feel as if hundreds of small needles are digging in to them. However, calcium oxalate is easily broken down either by thoroughly cooking the plant or by fully drying it and, in either of these states, it is safe to eat the plant. People with a tendency to rheumatism, arthritis, gout, kidney stones and hyperacidity should take especial caution if including this plant in their diet[238 ].(All parts of plant are poisonous if ingested Handling plant may cause skin irritation or allergic reaction)",
+      "knownHazardsLtV2": "Visos dalys turi kalcio oksalatų kristalų, kurie žalių valgant dirgina burną, liežuvį ir gerklę; kaitinimas arba džiovinimas juos sunaikina. Sergantiems podagra, inkstų akmenlige ar artritu reikėtų vengti šio augalo; liesti gali dirginti odą.",
+      "knownHazardsLtEdited": "Visose dalyse yra kalcio oksalatų kristalų, kurie valgant žalią augalą dirgina burną, liežuvį ir gerklę; kaitinimas arba džiovinimas juos sunaikina. Sergantiems podagra, inkstų akmenlige ar artritu reikėtų vengti šio augalo; palietus gali dirginti odą.",
+      "changesNotes": "Tas pats kaip Monstera."
+    }
+  ]
+}

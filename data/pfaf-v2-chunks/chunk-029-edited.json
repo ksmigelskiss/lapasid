@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 29,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Serenoa repens",
+      "knownHazards": "Avoid with other hormonal drugs. Avoid during pregnancy and lactation. Take with food. Rare adverse effects include: mild headache and gastrointestinal symptoms. May decrease libido in males. Possible back pain and blood pressure increase [301].",
+      "knownHazardsLtV2": "Nevartoti kartu su hormoniniais vaistais, nėštumo ir žindymo metu; vartoti su maistu. Retai pasireiškia lengvas galvos skausmas, virškinimo sutrikimai, sumažėjęs libido, nugaros skausmas ar padidėjęs kraujospūdis.",
+      "knownHazardsLtEdited": "Nevartoti kartu su hormoniniais vaistais, nėštumo ar žindymo metu; vartoti su maistu. Retai pasireiškia lengvas galvos skausmas, virškinimo sutrikimai, sumažėjęs libido, nugaros skausmas ar padidėjęs kraujospūdis.",
+      "changesNotes": "„ir" → „ar" prieš žindymo metu (alternatyvios sąlygos, ne vienu metu); likusi dalis taisyklinga."
+    },
+    {
+      "latin": "Shepherdia",
+      "knownHazards": "The fruit contains low concentrations of saponins[101]. Although toxic, these substances are very poorly absorbed by the body and so tend to pass through without causing harm. They are also broken down by thorough cooking. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Vaisiuose yra nedidelė saponinų koncentracija; šios medžiagos menkai absorbuojamos ir paprastai nekenkia, termiškai apdorojant jos sunaikinamos. Saponinai žymiai toksiškesni žuvims nei žmonėms.",
+      "knownHazardsLtEdited": "Vaisiuose yra nedidelis kiekis saponinų; organizmas jas prastai absorbuoja, todėl paprastai nekenkia, o kaitinant sunaikinamos. Saponinai yra žymiai toksiškesni žuvims nei žmonėms.",
+      "changesNotes": "„nedidelė koncentracija" → „nedidelis kiekis" (natūraliau); „termiškai apdorojant" → „kaitinant" (pašalintas kalkinis kalkinis posakis); „menkai absorbuojamos" → „organizmas jas prastai absorbuoja" (aiškesnis veiksnys); pridėtas „yra" prie predikato, nes lyginamosios konstrukcijos tiesioginė norma LT reikalauja jungtuko."
+    },
+    {
+      "latin": "Shepherdia argentea",
+      "knownHazards": "The fruit contains low concentrations of saponins[101]. Although toxic, these substances are very poorly absorbed by the body and so tend to pass through without causing harm. They are also broken down by thorough cooking. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Vaisiuose yra nedidelė saponinų koncentracija; šios medžiagos menkai absorbuojamos ir paprastai nekenkia, termiškai apdorojant jos sunaikinamos. Saponinai žymiai toksiškesni žuvims nei žmonėms.",
+      "knownHazardsLtEdited": "Vaisiuose yra nedidelis kiekis saponinų; organizmas jas prastai absorbuoja, todėl paprastai nekenkia, o kaitinant sunaikinamos. Saponinai yra žymiai toksiškesni žuvims nei žmonėms.",
+      "changesNotes": "Tos pačios korekcijos kaip Shepherdia: „nedidelė koncentracija" → „nedidelis kiekis"; „termiškai apdorojant" → „kaitinant"; aiškesnis veiksnys prie absorpcijos."
+    },
+    {
+      "latin": "Silene",
+      "knownHazards": "Although no mention of toxicity has been seen for this species, it does contain saponins. Although toxic, these substances are very poorly absorbed by the body and so tend to pass through without causing harm. They are also broken down by thorough cooking. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Augalas turi saponinų; šios medžiagos menkai absorbuojamos ir paprastai nekenkia, termiškai apdorojant jos sunaikinamos. Saponinai žymiai toksiškesni žuvims nei žmonėms.",
+      "knownHazardsLtEdited": "Augale yra saponinų; organizmas jas prastai absorbuoja, todėl paprastai nekenkia, o kaitinant sunaikinamos. Saponinai yra žymiai toksiškesni žuvims nei žmonėms.",
+      "changesNotes": "„Augalas turi" → „Augale yra" (pagal stilių: augalas turi → augale yra); „menkai absorbuojamos" → „organizmas jas prastai absorbuoja"; „termiškai apdorojant" → „kaitinant"."
+    },
+    {
+      "latin": "Silene acaulis",
+      "knownHazards": "Although no mention of toxicity has been seen for this species, it does contain saponins. Although toxic, these substances are very poorly absorbed by the body and so tend to pass through without causing harm. They are also broken down by thorough cooking. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Augalas turi saponinų; šios medžiagos menkai absorbuojamos ir paprastai nekenkia, termiškai apdorojant jos sunaikinamos. Saponinai žymiai toksiškesni žuvims nei žmonėms.",
+      "knownHazardsLtEdited": "Augale yra saponinų; organizmas jas prastai absorbuoja, todėl paprastai nekenkia, o kaitinant sunaikinamos. Saponinai yra žymiai toksiškesni žuvims nei žmonėms.",
+      "changesNotes": "Tos pačios korekcijos kaip Silene: „Augalas turi" → „Augale yra"; „termiškai apdorojant" → „kaitinant"; aiškesnis veiksnys."
+    },
+    {
+      "latin": "Silphium laciniatum",
+      "knownHazards": "There is a report that the plant might be toxic[222].",
+      "knownHazardsLtV2": "Yra duomenų, kad augalas gali būti toksiškas.",
+      "knownHazardsLtEdited": "Yra duomenų, kad augalas gali būti toksiškas.",
+      "changesNotes": "Tekstas taisyklingas, pakeitimų nereikia."
+    },
+    {
+      "latin": "Silybum",
+      "knownHazards": "When grown on nitrogen rich soils, especially those that have been fed with chemical fertilizers, this plant can concentrate nitrates in the leaves. Nitrates are implicated in stomach cancers. Diabetics should monitor blood glucose when using. Avoid if decompensated liver cirrhosis. Possible headaches, nausea, irritability and minor gastrointestinal upset [301].",
+      "knownHazardsLtV2": "Augalas, augintas azotu turtingoje dirvoje, kaupia nitratus lapuose, kurie siejami su skrandžio vėžiu. Diabetikams rekomenduojama stebėti gliukozės kiekį kraujyje; nevartoti esant dekompensatai kepenų cirozei; galimi galvos skausmai, pykinimas ir virškinimo sutrikimai.",
+      "knownHazardsLtEdited": "Augalas, augintas azotu turtingoje dirvoje, kaupia nitratus lapuose; nitratai siejami su skrandžio vėžiu. Diabetikams rekomenduojama stebėti gliukozės kiekį kraujyje; nevartoti esant dekompensacinei kepenų cirozei; galimi galvos skausmai, pykinimas ir virškinimo sutrikimai.",
+      "changesNotes": "„kurie siejami" pakeista į „nitratai siejami" (aiškesnis nuoroda — „kurie" dviprasmiška: gali reikšti ir lapus, ir nitratus); „dekompensatai" → „dekompensacinei" (taisyklinga būdvardžio forma kepenų cirozei apibūdinti)."
+    },
+    {
+      "latin": "Silybum marianum",
+      "knownHazards": "When grown on nitrogen rich soils, especially those that have been fed with chemical fertilizers, this plant can concentrate nitrates in the leaves. Nitrates are implicated in stomach cancers. Diabetics should monitor blood glucose when using. Avoid if decompensated liver cirrhosis. Possible headaches, nausea, irritability and minor gastrointestinal upset [301].",
+      "knownHazardsLtV2": "Augalas, augintas azotu turtingoje dirvoje, kaupia nitratus lapuose, kurie siejami su skrandžio vėžiu. Diabetikams rekomenduojama stebėti gliukozės kiekį kraujyje; nevartoti esant dekompensatai kepenų cirozei; galimi galvos skausmai, pykinimas ir virškinimo sutrikimai.",
+      "knownHazardsLtEdited": "Augalas, augintas azotu turtingoje dirvoje, kaupia nitratus lapuose; nitratai siejami su skrandžio vėžiu. Diabetikams rekomenduojama stebėti gliukozės kiekį kraujyje; nevartoti esant dekompensacinei kepenų cirozei; galimi galvos skausmai, pykinimas ir virškinimo sutrikimai.",
+      "changesNotes": "Tos pačios korekcijos kaip Silybum: „kurie" → „nitratai"; „dekompensatai" → „dekompensacinei"."
+    },
+    {
+      "latin": "Skimmia",
+      "knownHazards": "A poisonous alkaloid called 'skimmianin' is found in all parts of the plant[211].",
+      "knownHazardsLtV2": "Visuose augalo dalyse yra toksiškas alkaloidamas skimianinas.",
+      "knownHazardsLtEdited": "Visuose augalo dalyse yra toksiškas alkaloidas skimianinas.",
+      "changesNotes": "Korektūros klaida: „alkaloidamas" → „alkaloidas"."
+    },
+    {
+      "latin": "Skimmia japonica",
+      "knownHazards": "A poisonous alkaloid called 'skimmianin' is found in all parts of the plant[211].",
+      "knownHazardsLtV2": "Visuose augalo dalyse yra toksiškas alkaloidamas skimianinas.",
+      "knownHazardsLtEdited": "Visuose augalo dalyse yra toksiškas alkaloidas skimianinas.",
+      "changesNotes": "Korektūros klaida: „alkaloidamas" → „alkaloidas"."
+    },
+    {
+      "latin": "Solanum",
+      "knownHazards": "Because greenleaf five-eyes belongs to the nightshade family and contains solanine-like compounds, all berries should be considered potentially toxic. Consumption may cause digestive upset or more serious symptoms in sensitive individuals. The berries' unpleasant flavour provides a natural deterrent, but foragers should avoid experimenting with them. No traditional processing techniques are known that render the berries safe or palatable, and no part of the plant should be considered reliable food.",
+      "knownHazardsLtV2": "Augalas priklauso bulvinių šeimai ir turi solanino tipo junginių — visos uogos laikytinos toksiškos. Vartojimas gali sukelti virškinimo sutrikimus ar sunkesnius simptomus jautriems asmenims.",
+      "knownHazardsLtEdited": "Augalas priklauso bulvinių šeimai ir jame yra solanino tipo junginių — visos uogos laikytinos toksiškos. Vartojimas gali sukelti virškinimo sutrikimus ar sunkesnius simptomus jautriems asmenims.",
+      "changesNotes": "„turi solanino tipo junginių" → „jame yra solanino tipo junginių" (pagal taisyklę: augalas turi → augale yra / jame yra)."
+    },
+    {
+      "latin": "Solanum aviculare",
+      "knownHazards": "All green parts of the plant are poisonous[154] and so is the unripe fruit[173].",
+      "knownHazardsLtV2": "Visos žalios augalo dalys ir nesubrendę vaisiai yra toksiški.",
+      "knownHazardsLtEdited": "Visos žalios augalo dalys ir nesubrendę vaisiai yra toksiški.",
+      "changesNotes": "Tekstas taisyklingas, pakeitimų nereikia."
+    },
+    {
+      "latin": "Solidago",
+      "knownHazards": "Weak potential for sensitization. Irrigation therapy is contraindicated in cases of oedema due to renal or heart disease. Care needed with chronic kidney disease [301].",
+      "knownHazardsLtV2": "Silpnas jautrinimo potencialas; drėkinamoji terapija draudžiama esant tūžiui dėl inkstų ar širdies ligos. Atsargiai vartoti sergant lėtine inkstų liga.",
+      "knownHazardsLtEdited": "Silpnas jautrinimo potencialas; drenuojamoji terapija draudžiama esant tūžiui dėl inkstų ar širdies ligos. Atsargiai vartoti sergant lėtine inkstų liga.",
+      "changesNotes": "„drėkinamoji terapija" pakeista į „drenuojamoji terapija" — anglų originale „irrigation therapy" medicininiame kontekste reiškia diurezinę / drenuojamąją terapiją (audinių skysčių šalinimą), o ne drėkinimą. Likusi dalis taisyklinga."
+    },
+    {
+      "latin": "Sophora",
+      "knownHazards": "The plant contains cytisine, which resembles nicotine and is similarly toxic[238].",
+      "knownHazardsLtV2": "Augalas turi citiziną — nikotinui panašų toksiška alkaloidą.",
+      "knownHazardsLtEdited": "Augale yra citizinas — nikotinui panašus toksiškas alkaloidas.",
+      "changesNotes": "„Augalas turi citiziną" → „Augale yra citizinas" (taisyklė: augalas turi → augale yra); „toksiška alkaloidą" → „toksiškas alkaloidas" (vard. linksnis, nes tai būdvardis prie daiktavardžio vardininke)."
+    },
+    {
+      "latin": "Sophora davidii",
+      "knownHazards": "The plant contains cytisine, which resembles nicotine and is similarly toxic[238].",
+      "knownHazardsLtV2": "Augalas turi citiziną — nikotinui panašų toksiška alkaloidą.",
+      "knownHazardsLtEdited": "Augale yra citizinas — nikotinui panašus toksiškas alkaloidas.",
+      "changesNotes": "Tos pačios korekcijos kaip Sophora: „Augalas turi" → „Augale yra"; linksnis suderintas — vard."
+    },
+    {
+      "latin": "Sophora japonica",
+      "knownHazards": "The plant contains cytisine, which resembles nicotine and is similarly toxic[238].",
+      "knownHazardsLtV2": "Augalas turi citiziną — nikotinui panašų toksiška alkaloidą.",
+      "knownHazardsLtEdited": "Augale yra citizinas — nikotinui panašus toksiškas alkaloidas.",
+      "changesNotes": "Tos pačios korekcijos kaip Sophora: „Augalas turi" → „Augale yra"; linksnis suderintas — vard."
+    },
+    {
+      "latin": "Sophora tetraptera",
+      "knownHazards": "The plant contains cytisine, which resembles nicotine and is similarly toxic[238].",
+      "knownHazardsLtV2": "Augalas turi citiziną — nikotinui panašų toksiška alkaloidą.",
+      "knownHazardsLtEdited": "Augale yra citizinas — nikotinui panašus toksiškas alkaloidas.",
+      "changesNotes": "Tos pačios korekcijos kaip Sophora: „Augalas turi" → „Augale yra"; linksnis suderintas — vard."
+    },
+    {
+      "latin": "Sorbaria",
+      "knownHazards": "The leaves and the flowers contain the toxin hydrogen cyanide[240]. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Lapuose ir žieduose yra vandenilio cianido. Didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos.",
+      "knownHazardsLtEdited": "Lapuose ir žieduose yra vandenilio cianido. Didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos.",
+      "changesNotes": "Tekstas taisyklingas, pakeitimų nereikia."
+    },
+    {
+      "latin": "Sorbaria sorbifolia",
+      "knownHazards": "The leaves and the flowers contain the toxin hydrogen cyanide[240]. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Lapuose ir žieduose yra vandenilio cianido. Didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos.",
+      "knownHazardsLtEdited": "Lapuose ir žieduose yra vandenilio cianido. Didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos.",
+      "changesNotes": "Tekstas taisyklingas, pakeitimų nereikia."
+    },
+    {
+      "latin": "Sorbus",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos tikriausiai turi vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "knownHazardsLtEdited": "Sėklose tikriausiai yra vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "changesNotes": "„Sėklos tikriausiai turi" → „Sėklose tikriausiai yra" (pagal taisyklę: turi → yra; vietininkas vietoj kilmininko)."
+    },
+    {
+      "latin": "Sorbus alnifolia",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos tikriausiai turi vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "knownHazardsLtEdited": "Sėklose tikriausiai yra vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "changesNotes": "„Sėklos tikriausiai turi" → „Sėklose tikriausiai yra"."
+    },
+    {
+      "latin": "Sorbus americana",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos tikriausiai turi vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "knownHazardsLtEdited": "Sėklose tikriausiai yra vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "changesNotes": "„Sėklos tikriausiai turi" → „Sėklose tikriausiai yra"."
+    },
+    {
+      "latin": "Sorbus aria",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos tikriausiai turi vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "knownHazardsLtEdited": "Sėklose tikriausiai yra vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "changesNotes": "„Sėklos tikriausiai turi" → „Sėklose tikriausiai yra"."
+    },
+    {
+      "latin": "Sorbus aucuparia",
+      "knownHazards": "Large quantities of the raw fruit can cause vomiting, especially if people are not used to the fruit. Seeds probably contain hydrogen cyanide. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Dideli kiekiai žalių vaisių sukelia vėmimą. Sėklos tikriausiai turi vandenilio cianido — perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "knownHazardsLtEdited": "Dideli kiekiai žalių vaisių sukelia vėmimą. Sėklose tikriausiai yra vandenilio cianido — perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "changesNotes": "„Sėklos tikriausiai turi" → „Sėklose tikriausiai yra"."
+    },
+    {
+      "latin": "Sorbus commixta",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos tikriausiai turi vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "knownHazardsLtEdited": "Sėklose tikriausiai yra vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "changesNotes": "„Sėklos tikriausiai turi" → „Sėklose tikriausiai yra"."
+    },
+    {
+      "latin": "Sorbus decora",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos tikriausiai turi vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "knownHazardsLtEdited": "Sėklose tikriausiai yra vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "changesNotes": "„Sėklos tikriausiai turi" → „Sėklose tikriausiai yra"."
+    },
+    {
+      "latin": "Sorbus hybrida",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos tikriausiai turi vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "knownHazardsLtEdited": "Sėklose tikriausiai yra vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "changesNotes": "„Sėklos tikriausiai turi" → „Sėklose tikriausiai yra"."
+    },
+    {
+      "latin": "Sorbus intermedia",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos tikriausiai turi vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "knownHazardsLtEdited": "Sėklose tikriausiai yra vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "changesNotes": "„Sėklos tikriausiai turi" → „Sėklose tikriausiai yra"."
+    },
+    {
+      "latin": "Sorbus latifolia",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos tikriausiai turi vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "knownHazardsLtEdited": "Sėklose tikriausiai yra vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "changesNotes": "„Sėklos tikriausiai turi" → „Sėklose tikriausiai yra"."
+    },
+    {
+      "latin": "Sorbus pohuashanensis",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos tikriausiai turi vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "knownHazardsLtEdited": "Sėklose tikriausiai yra vandenilio cianido; jei nesmarkiai kartaus skonio, nedideli kiekiai yra saugūs. Perteklius sukelia kvėpavimo nepakankamumą ir gali būti mirtinas.",
+      "changesNotes": "„Sėklos tikriausiai turi" → „Sėklose tikriausiai yra"."
+    }
+  ]
+}

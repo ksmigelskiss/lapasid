@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 30,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Sorbus scopulina",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. This is the ingredient that gives almonds their characteristic flavour. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos greičiausiai turi cianido — nedideliais kiekiais saugu, tačiau perteklius gali sukelti kvėpavimo nepakankamumą ar net mirtį.",
+      "knownHazardsLtEdited": "Sėklose greičiausiai yra cianido — nedideliais kiekiais jis saugus, tačiau per didelė dozė gali sukelti kvėpavimo nepakankamumą ar net mirtį.",
+      "changesNotes": "„turi cianido" → „yra cianido" (natural LT, avoid calque); „sėklos" → „sėklose" (locative, natural LT idiom); „nedideliais kiekiais saugu" → „nedideliais kiekiais jis saugus" (explicit subject for clarity and flow)."
+    },
+    {
+      "latin": "Sorbus thibetica",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. This is the ingredient that gives almonds their characteristic flavour. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos greičiausiai turi cianido — nedideliais kiekiais saugu, tačiau perteklius gali sukelti kvėpavimo nepakankamumą ar net mirtį.",
+      "knownHazardsLtEdited": "Sėklose greičiausiai yra cianido — nedideliais kiekiais jis saugus, tačiau per didelė dozė gali sukelti kvėpavimo nepakankamumą ar net mirtį.",
+      "changesNotes": "Tas pats kaip Sorbus scopulina: „turi cianido" → „yra cianido"; „sėklos" → „sėklose"; „nedideliais kiekiais saugu" → „nedideliais kiekiais jis saugus"."
+    },
+    {
+      "latin": "Sorbus vestita",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. This is the ingredient that gives almonds their characteristic flavour. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos greičiausiai turi cianido — nedideliais kiekiais saugu, tačiau perteklius gali sukelti kvėpavimo nepakankamumą ar net mirtį.",
+      "knownHazardsLtEdited": "Sėklose greičiausiai yra cianido — nedideliais kiekiais jis saugus, tačiau per didelė dozė gali sukelti kvėpavimo nepakankamumą ar net mirtį.",
+      "changesNotes": "Tas pats kaip Sorbus scopulina."
+    },
+    {
+      "latin": "Sphaeralcea",
+      "knownHazards": "All parts of globemallows are covered in fine hairs that can be irritating, especially to eyes and lungs. Only carefully prepared flowers should be considered for casual use.[1152 ].",
+      "knownHazardsLtV2": "Visas augalas padengtas smulkiais plaukeliais, kurie dirgina akis ir plaučius.",
+      "knownHazardsLtEdited": "Visas augalas padengtas smulkiais plaukeliais, kurie dirgina akis ir plaučius.",
+      "changesNotes": "Taisymų nereikia — sakinys taisyklingas ir sklandus."
+    },
+    {
+      "latin": "Sphaeralcea ambigua",
+      "knownHazards": "All parts of globemallows are covered in fine hairs that can be irritating, especially to eyes and lungs. Only carefully prepared flowers should be considered for casual use.[1152 ].",
+      "knownHazardsLtV2": "Visas augalas padengtas smulkiais plaukeliais, kurie dirgina akis ir plaučius.",
+      "knownHazardsLtEdited": "Visas augalas padengtas smulkiais plaukeliais, kurie dirgina akis ir plaučius.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Spiraea",
+      "knownHazards": "Avoid for asthmatics. Use by children for diarhoea not recommended or for children under 12 due to salicylate content (risk of Reye's syndrome) [301].",
+      "knownHazardsLtV2": "Augalas turi salicilatų: astmatikams ir vaikams iki 12 metų nenaudoti dėl Reye sindromo rizikos.",
+      "knownHazardsLtEdited": "Augale yra salicilatų: astmatikams ir vaikams iki 12 metų nenaudoti dėl Reye sindromo rizikos.",
+      "changesNotes": "„Augalas turi salicilatų" → „Augale yra salicilatų" (natural LT: lokalizuojamas turinys)."
+    },
+    {
+      "latin": "Spiraea sorbifolia",
+      "knownHazards": "The leaves and the flowers contain the toxin hydrogen cyanide[240]. Some foods, notably almonds, contain small amounts of hydrogen cyanide. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Lapai ir žiedai turi cianido — nedideliais kiekiais saugu, tačiau perteklius gali sukelti kvėpavimo nepakankamumą ar net mirtį.",
+      "knownHazardsLtEdited": "Lapuose ir žieduose yra cianido — nedideliais kiekiais jis saugus, tačiau per didelė dozė gali sukelti kvėpavimo nepakankamumą ar net mirtį.",
+      "changesNotes": "„Lapai ir žiedai turi" → „Lapuose ir žieduose yra" (natural LT); „nedideliais kiekiais saugu" → „nedideliais kiekiais jis saugus"; „perteklius gali sukelti" → „per didelė dozė gali sukelti" (flow)."
+    },
+    {
+      "latin": "Spiraea ul",
+      "knownHazards": "Avoid for asthmatics. Use by children for diarhoea not recommended or for children under 12 due to salicylate content (risk of Reye's syndrome) [301].",
+      "knownHazardsLtV2": "Augalas turi salicilatų: astmatikams ir vaikams iki 12 metų nenaudoti dėl Reye sindromo rizikos.",
+      "knownHazardsLtEdited": "Augale yra salicilatų: astmatikams ir vaikams iki 12 metų nenaudoti dėl Reye sindromo rizikos.",
+      "changesNotes": "„Augalas turi salicilatų" → „Augale yra salicilatų" (natural LT)."
+    },
+    {
+      "latin": "Symphytum",
+      "knownHazards": "No reports of toxicity have been seen for this species, but the following reports have been seen for S. officinale. This plant contains small quantities of a toxic alkaloid which can have a cumulative effect upon the liver. Largest concentrations are found in the roots, leaves contain higher quantities of the alkaloid as they grow older and young leaves contain almost none. Most people would have to consume very large quantities of the plant in order to do any harm, though anyone with liver problems should obviously be more cautious. In general, the health-promoting properties of the plant probably far outweigh any possible disbenefits, especially if only the younger leaves are used.",
+      "knownHazardsLtV2": "Augalas turi toksišką alkaloidą, kuris gali kauptis kepenyse — didžiausios koncentracijos šaknyse, senose lapuose. Esant kepenų ligoms, reikia atsargumo; jauni lapai yra saugiausi.",
+      "knownHazardsLtEdited": "Augale yra toksiškas alkaloidas, galintis kauptis kepenyse — didžiausios jo koncentracijos šaknyse ir senuose lapuose. Esant kepenų ligoms, reikia atsargumo; jauniausi lapai saugiausi.",
+      "changesNotes": "„Augalas turi toksišką alkaloidą" → „Augale yra toksiškas alkaloidas" (natural LT); pridėtas „jo" aiškumui; „senose lapuose" → „senuose lapuose" (gram. suderinimas: lapuose — vyr. g. daugiskaita); „jauni lapai yra saugiausi" → „jauniausi lapai saugiausi" (pašalintas tautologinis „yra" predikate)."
+    },
+    {
+      "latin": "Symphytum grandiflorum",
+      "knownHazards": "No reports of toxicity have been seen for this species, but the following reports have been seen for S. officinale. This plant contains small quantities of a toxic alkaloid which can have a cumulative effect upon the liver. Largest concentrations are found in the roots, leaves contain higher quantities of the alkaloid as they grow older and young leaves contain almost none. Most people would have to consume very large quantities of the plant in order to do any harm, though anyone with liver problems should obviously be more cautious. In general, the health-promoting properties of the plant probably far outweigh any possible disbenefits, especially if only the younger leaves are used.",
+      "knownHazardsLtV2": "Augalas turi toksišką alkaloidą, kuris gali kauptis kepenyse — didžiausios koncentracijos šaknyse, senose lapuose. Esant kepenų ligoms, reikia atsargumo; jauni lapai yra saugiausi.",
+      "knownHazardsLtEdited": "Augale yra toksiškas alkaloidas, galintis kauptis kepenyse — didžiausios jo koncentracijos šaknyse ir senuose lapuose. Esant kepenų ligoms, reikia atsargumo; jauniausi lapai saugiausi.",
+      "changesNotes": "Tas pats kaip Symphytum."
+    },
+    {
+      "latin": "Syringa",
+      "knownHazards": "Leaves contain the glycoside Phillyrin[179], its potency is unknown.",
+      "knownHazardsLtV2": "Lapuose yra glikozidas filorinas, tačiau jo toksiškumas nenustatytas.",
+      "knownHazardsLtEdited": "Lapuose yra glikozidas filorinas, tačiau jo toksiškumas nenustatytas.",
+      "changesNotes": "Taisymų nereikia — sakinys taisyklingas."
+    },
+    {
+      "latin": "Tabebuia",
+      "knownHazards": "The sawdust may cause dermatitis, disturbance of vision and shortness of breath in some workers[341 ].",
+      "knownHazardsLtV2": "Pjuvenos gali sukelti dermatitą, regos sutrikimus ir dusulį.",
+      "knownHazardsLtEdited": "Pjuvenos gali sukelti dermatitą, regos sutrikimus ir dusulį.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Tacca",
+      "knownHazards": "The untreated root is considered to be toxic in some areas[398 , 451 ].",
+      "knownHazardsLtV2": "Neapdorota šaknis laikoma toksiška.",
+      "knownHazardsLtEdited": "Neapdorota šaknis laikoma toksiška.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Tacca leontopetaloides",
+      "knownHazards": "The untreated root is considered to be toxic in some areas[398 , 451 ].",
+      "knownHazardsLtV2": "Neapdorota šaknis laikoma toksiška.",
+      "knownHazardsLtEdited": "Neapdorota šaknis laikoma toksiška.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Tanacetum parthenium",
+      "knownHazards": "Do not use during pregnancy or with coagulation problems. Oral ulcers (aphothous ulcers in 5-15%) and/or gastrointestinal disturbances. Discontinuation may lead to rebound headaches, anxiety and insomnia [301].",
+      "knownHazardsLtV2": "Nenaudoti nėštumo metu ir esant kraujo krešėjimo sutrikimams; 5–15 % vartotojų atsiranda burnos opos ir virškinimo sutrikimai. Nutraukus vartojimą galimi atgaliniai galvos skausmai, nerimas ir nemiga.",
+      "knownHazardsLtEdited": "Nenaudoti nėštumo metu ir esant kraujo krešėjimo sutrikimams; 5–15 % vartotojų atsiranda burnos opos ir virškinimo sutrikimai. Nutraukus vartojimą galimi atsinaujinantys galvos skausmai, nerimas ir nemiga.",
+      "changesNotes": "„Atgaliniai galvos skausmai" → „atsinaujinantys galvos skausmai" (tikslesnis, natūralesnis LT atitikmuo rebound headaches)."
+    },
+    {
+      "latin": "Terminalia catappa",
+      "knownHazards": "Various species of biting and stinging ants have been found inhabiting hollow twigs on this tree[407 ].",
+      "knownHazardsLtV2": "Tuščiaviduriuose šakų kanaluose gali gyventi kandančios ir geliančios skruzdėlės.",
+      "knownHazardsLtEdited": "Tuščiaviduriuose šakose gali įsikurti kandančios ir geliančios skruzdėlės.",
+      "changesNotes": "„Šakų kanaluose" → „šakose" (pašalintas techninis kalkas; „kanalai" netikslus žodis tuščiavidurėms šakoms); „gyventi" → „įsikurti" (natūralesnis veiksmažodis gyvūnų apsigyvenimui)."
+    },
+    {
+      "latin": "Thalictrum",
+      "knownHazards": "Although no records of toxicity have been found for this plant, it belongs to a family that includes many poisonous plants so some caution is advised.",
+      "knownHazardsLtV2": "Tiesioginio toksiškumo duomenų nėra, tačiau šeimoje gausu nuodingų augalų — rekomenduojamas atsargumas.",
+      "knownHazardsLtEdited": "Tiesioginio toksiškumo duomenų nėra, tačiau šeimoje gausu nuodingų augalų — rekomenduojamas atsargumas.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Thalictrum aquilegiifolium",
+      "knownHazards": "The whole plant is poisonous, particularly the root[13].",
+      "knownHazardsLtV2": "Visas augalas toksiškas, ypač šaknis.",
+      "knownHazardsLtEdited": "Visas augalas toksiškas, ypač šaknis.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Thelypteris palustris",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kaip daugelis paparčių, gali turėti kancerogenų ir tiaminazės fermento, ardančio vitamino B kompleksą — terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Kaip daugelis paparčių, gali turėti kancerogenų ir tiaminazės — fermento, ardančio vitamino B kompleksą; kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "„Terminis apdorojimas" → „kaitinimas" (natural LT taisyklė); brūkšnelio pozicija patikslinta, pridėtas kabliataškis tarp sakinių dalių sklandumui."
+    },
+    {
+      "latin": "Thermopsis villosa",
+      "knownHazards": "Foliage is toxic [1-2].",
+      "knownHazardsLtV2": "Lapija toksiška.",
+      "knownHazardsLtEdited": "Lapija toksiška.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Thespesia",
+      "knownHazards": "The root is toxic[299 ]. The heartwood contains several sesquiterpenoid quinones, including mansonone D and H, thespone and thespesone, which are known to induce contact dermatitis[299 ].",
+      "knownHazardsLtV2": "Šaknis toksiška. Branduolinė mediena turi seskviterpenoidinių chinonų (mansononas D ir H, tesponas, tespespozonas), kurie sukelia kontaktinį dermatitą.",
+      "knownHazardsLtEdited": "Šaknis toksiška. Branduolinėje medienoje yra seskviterpenoidinių chinonų (mansononas D ir H, tesponas, tespespozonas), galinčių sukelti kontaktinį dermatitą.",
+      "changesNotes": "„Branduolinė mediena turi" → „Branduolinėje medienoje yra" (natural LT: lokalizuojamas turinys; linksnis pakoreguotas); „kurie sukelia" → „galinčių sukelti" (nuosaikesnis teiginys, atitinkantis originalą „known to induce")."
+    },
+    {
+      "latin": "Thespesia populnea",
+      "knownHazards": "The root is toxic[299 ]. The heartwood contains several sesquiterpenoid quinones, including mansonone D and H, thespone and thespesone, which are known to induce contact dermatitis[299 ].",
+      "knownHazardsLtV2": "Šaknis toksiška. Branduolinė mediena turi seskviterpenoidinių chinonų (mansononas D ir H, tesponas, tespespozonas), kurie sukelia kontaktinį dermatitą.",
+      "knownHazardsLtEdited": "Šaknis toksiška. Branduolinėje medienoje yra seskviterpenoidinių chinonų (mansononas D ir H, tesponas, tespespozonas), galinčių sukelti kontaktinį dermatitą.",
+      "changesNotes": "Tas pats kaip Thespesia."
+    },
+    {
+      "latin": "Thymus",
+      "knownHazards": "Volatile oil can cause convulsions. Avoid with epilepsy of fits. Diarrhoea and indigestion rare [301].",
+      "knownHazardsLtV2": "Eterinis aliejus gali sukelti traukulius — vengti esant epilepsijai. Reti viduriavimo ar virškinimo sutrikimai.",
+      "knownHazardsLtEdited": "Eterinis aliejus gali sukelti traukulius — vengti esant epilepsijai; reti viduriavimo ar virškinimo sutrikimai.",
+      "changesNotes": "Taškas po „epilepsijai" pakeistas kabliataškiu — abu paminėjimai susiję su ta pačia tema, todėl sklandžiau vienas sakinys."
+    },
+    {
+      "latin": "Tilia",
+      "knownHazards": "Frequent consumption of the tea made from the flowers may cause heart damage[222].",
+      "knownHazardsLtV2": "Dažnas žiedų arbatos vartojimas gali pažeisti širdį.",
+      "knownHazardsLtEdited": "Dažnas žiedų arbatos vartojimas gali pažeisti širdį.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Tilia americana",
+      "knownHazards": "Frequent consumption of the tea made from the flowers may cause heart damage[222].",
+      "knownHazardsLtV2": "Dažnas žiedų arbatos vartojimas gali pažeisti širdį.",
+      "knownHazardsLtEdited": "Dažnas žiedų arbatos vartojimas gali pažeisti širdį.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Tilia cordata",
+      "knownHazards": "If the flowers used for making tea are too old, they may produce symptoms of narcotic intoxication[4].",
+      "knownHazardsLtV2": "Perdžiovinti ar per seni žiedai arbatoje gali sukelti narkotinio apsvaigimo simptomus.",
+      "knownHazardsLtEdited": "Perdžiovinti ar per seni žiedai arbatoje gali sukelti narkotinio apsvaigimo simptomus.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Tilia platyphyllos",
+      "knownHazards": "If the flowers used for making tea are too old, they may produce symptoms of narcotic intoxication[4].",
+      "knownHazardsLtV2": "Perdžiovinti ar per seni žiedai arbatoje gali sukelti narkotinio apsvaigimo simptomus.",
+      "knownHazardsLtEdited": "Perdžiovinti ar per seni žiedai arbatoje gali sukelti narkotinio apsvaigimo simptomus.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Tilia tomentosa",
+      "knownHazards": "The flowers are toxic to bumble bees[11].",
+      "knownHazardsLtV2": "Žiedai toksiški kamanėms.",
+      "knownHazardsLtEdited": "Žiedai toksiški kamanėms.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Toona",
+      "knownHazards": "Sawdust from machining operations has been reported to cause dermatitis in some individuals[303 ].",
+      "knownHazardsLtV2": "Pjovimo metu susidarančios pjuvenos gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Pjovimo metu susidarančios pjuvenos gali sukelti dermatitą.",
+      "changesNotes": "Taisymų nereikia."
+    },
+    {
+      "latin": "Trapa",
+      "knownHazards": "The raw seed contains toxins but that these are destroyed in the cooking process[200, 206].",
+      "knownHazardsLtV2": "Žalia sėkla turi toksinų, kurie sunaikinami termiškai apdorojant.",
+      "knownHazardsLtEdited": "Žalioje sėkloje yra toksinų, kurie sunaikinami kaitinant.",
+      "changesNotes": "„Žalia sėkla turi toksinų" → „Žalioje sėkloje yra toksinų" (natural LT: lokalizuojamas turinys); „termiškai apdorojant" → „kaitinant" (natural LT taisyklė)."
+    }
+  ]
+}

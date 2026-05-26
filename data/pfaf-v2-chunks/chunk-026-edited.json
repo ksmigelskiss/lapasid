@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 26,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Ranunculus aquatilis",
+      "knownHazards": "All parts of the plant are poisonous when fresh, the toxins are destroyed by heat or by drying[4, 10, 19, 21, 65]. The plant also has a strongly acrid juice that can cause blistering to the skin[65, 183].",
+      "knownHazardsLtV2": "Visos šviežios augalo dalys toksiškos; toksinai sunaikinami kaitinant arba džiovinant. Sultys stipriai dirgina odą ir gali sukelti pūsles.",
+      "knownHazardsLtEdited": "Visos šviežios augalo dalys toksiškos; toksinai sunaikinami kaitinant arba džiovinant. Sultys stipriai dirgina odą ir gali sukelti pūsles.",
+      "changesNotes": "Tekstas taisyklingas – pakeitimų nereikia."
+    },
+    {
+      "latin": "Ranunculus bulbosus",
+      "knownHazards": "All parts of the plant are poisonous, the toxins can be destroyed by heat or by drying[4, 10, 13, 19, 62, 65]. The plant has a strongly acrid juice that can cause blistering to the skin[65, 183].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos; toksinai sunaikinami kaitinant arba džiovinant. Sultys stipriai dirgina odą ir gali sukelti pūsles.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos; toksinai sunaikinami kaitinant arba džiovinant. Sultys stipriai dirgina odą ir gali sukelti pūsles.",
+      "changesNotes": "Tekstas taisyklingas – pakeitimų nereikia."
+    },
+    {
+      "latin": "Ranunculus ficaria",
+      "knownHazards": "All parts of the plant are poisonous. The toxins are unstable and of low toxicity, they are easily destroyed by heat or by drying[19]. The sap can cause irritation to the skin[65]. Do not use internally. Stop using the herb if breathing problems or chest & throat tightness [301].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos, tačiau toksinai nestabilūs ir lengvai sunaikinami kaitinant ar džiovinant. Sultys dirgina odą; atsiradus kvėpavimo sunkumams ar spaudimui krūtinėje ir gerklėje, nustoti vartoti.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos, tačiau toksinai nestabilūs ir mažai toksiški – lengvai sunaikinami kaitinant ar džiovinant. Sultys dirgina odą; atsiradus kvėpavimo sunkumams ar spaudimui krūtinėje ir gerklėje, reikia nutraukti vartojimą.",
+      "changesNotes": "Papildyta praleista informacija apie mažą toksiškumą (\"mažai toksiški\"); \"nustoti vartoti\" pakeista į natūralesnę formą \"reikia nutraukti vartojimą\"."
+    },
+    {
+      "latin": "Rehmannia",
+      "knownHazards": "Considered relatively safe. Mild effects possible when taken for the first time including: loose stools, abdominal pain, dizziness and palpitations [301]. Use only as part of a herbal formula.",
+      "knownHazardsLtV2": "Laikoma gana saugia. Pirmą kartą vartojant galimas laisvas išmatų išsiskyrimas, pilvo skausmas, galvos svaigimas ir širdies plakimas.",
+      "knownHazardsLtEdited": "Laikoma gana saugia. Pirmą kartą vartojant gali pasireikšti laisvas išmatų išsiskyrimas, pilvo skausmas, galvos svaigimas ir širdies plakimas.",
+      "changesNotes": "\"galimas\" pakeista į \"gali pasireikšti\" – natūralesnė veiksmažodinė konstrukcija."
+    },
+    {
+      "latin": "Rehmannia glutinosa",
+      "knownHazards": "Considered relatively safe. Mild effects possible when taken for the first time including: loose stools, abdominal pain, dizziness and palpitations [301]. Use only as part of a herbal formula.",
+      "knownHazardsLtV2": "Laikoma gana saugia. Pirmą kartą vartojant galimas laisvas išmatų išsiskyrimas, pilvo skausmas, galvos svaigimas ir širdies plakimas.",
+      "knownHazardsLtEdited": "Laikoma gana saugia. Pirmą kartą vartojant gali pasireikšti laisvas išmatų išsiskyrimas, pilvo skausmas, galvos svaigimas ir širdies plakimas.",
+      "changesNotes": "\"galimas\" pakeista į \"gali pasireikšti\" – natūralesnė veiksmažodinė konstrukcija."
+    },
+    {
+      "latin": "Reyn",
+      "knownHazards": "Although no specific mention has been made for this species, there have been reports that some members of this genus can cause photosensitivity in susceptible people. Many species also contain oxalic acid (the distinctive lemony flavour of sorrel) - whilst not toxic this substance can bind up other minerals making them unavailable to the body and leading to mineral deficiency. Having said that, a number of common foods such as sorrel and rhubarb contain oxalic acid and the leaves of most members of this genus are nutritious and beneficial to eat in moderate quantities. Cooking the leaves will reduce their content of oxalic acid. People with a tendency to rheumatism, arthritis, gout, kidney stones or hyperacidity should take especial caution if including this plant in their diet since it ca...",
+      "knownHazardsLtV2": "Kai kurios gentis rūšys jautriems žmonėms gali sukelti fotosensibilizaciją. Lapai gali turėti oksalatų, kurie suriša kalcį ir kitus mineralus – virimas sumažina jų kiekį; podagra, artritu, inkstų akmenimis ar padidėjusio rūgštingumo linkusiems žmonėms reikia atsargumo.",
+      "knownHazardsLtEdited": "Kai kurių genties rūšių jautrūs žmonės gali patirti fotosensibilizaciją. Lapuose gali būti oksalatų, kurie suriša kalcį ir kitus mineralus – virimas sumažina jų kiekį; sergantiems podagra, artritu, inkstų akmenimis ar linkusiems į padidėjusį rūgštingumą reikia atsargumo.",
+      "changesNotes": "Ištaisyta „gentis rūšys" → „genties rūšių" (kilmininko linksnio klaida); „Lapai gali turėti" → „Lapuose gali būti" (natūralesnė LT konstrukcija); pataisyta prielinksnio konstrukcija prie ligų sąrašo."
+    },
+    {
+      "latin": "Rhamnus alaternus",
+      "knownHazards": "Although no specific mention of toxicity has been found for this species, there is the suggestion that some members of this genus could be mildly poisonous[65].",
+      "knownHazardsLtV2": "Konkrečių duomenų apie šios rūšies toksiškumą nėra, tačiau kai kurie genties atstovai gali būti silpnai toksiški.",
+      "knownHazardsLtEdited": "Konkrečių duomenų apie šios rūšies toksiškumą nėra, tačiau kai kurie genties atstovai gali būti silpnai toksiški.",
+      "changesNotes": "Tekstas taisyklingas – pakeitimų nereikia."
+    },
+    {
+      "latin": "Rheum",
+      "knownHazards": "The leaves contain oxalic acid, which gives them their sharp flavour. Perfectly all right in small quantities, the leaves should not be eaten in large amounts since oxalic acid can bind up the body's supply of calcium leading to nutritional deficiency. The quantity of oxalic acid will be reduced if the leaves are cooked. People with a tendency to rheumatism, arthritis, gout, kidney stones or hyperacidity should take especial caution if including this plant in their diet since it can aggravate their condition[238].",
+      "knownHazardsLtV2": "Lapai turi oksalatų – mažais kiekiais nekenksmingi, tačiau dideli kiekiai suriša kalcį ir sukelia mineralų trūkumą; virimas sumažina oksalatų koncentraciją. Podagra, artritu, inkstų akmenimis ar padidėjusio rūgštingumo linkusiems žmonėms reikia atsargumo.",
+      "knownHazardsLtEdited": "Lapuose yra oksalatų – mažais kiekiais nekenksmingi, tačiau dideli kiekiai suriša kalcį ir sukelia mineralų trūkumą; virimas sumažina jų koncentraciją. Sergantiems podagra, artritu, inkstų akmenimis ar linkusiems į padidėjusį rūgštingumą reikia atsargumo.",
+      "changesNotes": "„Lapai turi" → „Lapuose yra" (natūralesnė LT konstrukcija); „oksalatų koncentraciją" → „jų koncentraciją" (vengiant kartojimo); pataisyta prielinksnio konstrukcija prie ligų sąrašo."
+    },
+    {
+      "latin": "Rheum nobile",
+      "knownHazards": "Although no specific mention has been seen for this species, the leaves of some if not all members of this genus contain significant quantities of oxalic acid and should not be eaten in any quantity. Oxalic acid can lock up certain minerals in the body, especially calcium, leading to nutritional deficiency. The content of oxalic acid will be reduced if the plant is cooked. People with a tendency to rheumatism, arthritis, gout, kidney stones or hyperacidity should take especial caution if including this plant in their diet since it can aggravate their condition[238].",
+      "knownHazardsLtV2": "Lapai tikriausiai turi didelį kiekį oksalatų, kurie suriša kalcį ir sukelia mineralų trūkumą – valgyti nerekomenduojama; virimas sumažina oksalatų kiekį. Podagra, artritu, inkstų akmenimis ar padidėjusio rūgštingumo linkusiems žmonėms reikia atsargumo.",
+      "knownHazardsLtEdited": "Lapuose tikriausiai yra didelis kiekis oksalatų, kurie suriša kalcį ir sukelia mineralų trūkumą – valgyti nerekomenduojama; virimas sumažina jų kiekį. Sergantiems podagra, artritu, inkstų akmenimis ar linkusiems į padidėjusį rūgštingumą reikia atsargumo.",
+      "changesNotes": "„Lapai tikriausiai turi" → „Lapuose tikriausiai yra" (natūralesnė LT konstrukcija); „oksalatų kiekį" → „jų kiekį" (vengiant kartojimo); pataisyta prielinksnio konstrukcija prie ligų sąrašo."
+    },
+    {
+      "latin": "Rheum palmatum",
+      "knownHazards": "The leaves are poisonous[21]. This report probably refers to high levels of oxalic acid found in the leaves. Perfectly safe in moderate quantities, oxalic acid can lock up certain minerals (especially calcium) in the body, leading to nutritional deficiency. Cooking the plant will reduce its content of oxalic acid. People with a tendency to rheumatism, arthritis, gout, kidney stones or hyperacidity should take especial caution if including this plant in their diet since it can aggravate their condition[238]. Laxative action side-effect with long term use may lead to electrolyte imbalances. Increase in aldosterone secretion, passage of albumin and blood in urine and intestinal movement loss [301].",
+      "knownHazardsLtV2": "Lapai turi oksalatų, kurie suriša kalcį ir sukelia mineralų trūkumą; virimas sumažina jų kiekį. Ilgalaikis vartojimas gali sukelti elektrolitų disbalansą, aldosterono sekrecijos padidėjimą, albumino ir kraujo atsiradimą šlapime bei žarnyno motorikos sutrikimus.",
+      "knownHazardsLtEdited": "Lapuose yra oksalatų, kurie suriša kalcį ir sukelia mineralų trūkumą; virimas sumažina jų kiekį. Ilgalaikis vartojimas gali sukelti elektrolitų disbalansą, padidėjusią aldosterono sekreciją, albumino ir kraujo atsiradimą šlapime bei žarnyno motorikos sutrikimų.",
+      "changesNotes": "„Lapai turi" → „Lapuose yra"; „aldosterono sekrecijos padidėjimą" → „padidėjusią aldosterono sekreciją" (sklandesnė frazė); „žarnyno motorikos sutrikimus" → „žarnyno motorikos sutrikimų" (suderintas kilmininkas po sąrašo su „bei")."
+    },
+    {
+      "latin": "Rhododendron",
+      "knownHazards": "Although no specific mention of toxicity has been seen for this species, it belongs to a genus where many members have poisonous leaves. The pollen of many if not all species of rhododendrons is also probably toxic, being said to cause intoxication when eaten in large quantities[183].",
+      "knownHazardsLtV2": "Daugelio rododendro genties rūšių lapai yra toksiški. Žiedadulkės, suvartotos dideliais kiekiais, gali sukelti apsinuodijimą.",
+      "knownHazardsLtEdited": "Daugelio rododendro genties rūšių lapai toksiški. Žiedadulkės dideliais kiekiais vartojamos gali sukelti apsinuodijimą.",
+      "changesNotes": "Pašalintas perteklinis „yra" predikato pozicijoje; „suvartotos dideliais kiekiais" → „dideliais kiekiais vartojamos" (natūralesnė tvarka)."
+    },
+    {
+      "latin": "Rhododendron arboreum",
+      "knownHazards": "The leaves are poisonous[51, 240]. The flowers can cause intoxication in large quantities[183].",
+      "knownHazardsLtV2": "Lapai toksiški. Žiedai dideliais kiekiais gali sukelti apsinuodijimą.",
+      "knownHazardsLtEdited": "Lapai toksiški. Žiedai, suvartoti dideliais kiekiais, gali sukelti apsinuodijimą.",
+      "changesNotes": "Patikslinta konstrukcija: „dideliais kiekiais" atskirta įterpiniu, kad ryšys su veiksmažodžiu būtų aiškesnis."
+    },
+    {
+      "latin": "Rhododendron kaempferi",
+      "knownHazards": "Although no specific mention of toxicity has been seen for this species, it belongs to a genus where many members have poisonous leaves. The pollen of many if not all species of rhododendrons is also probably toxic, being said to cause intoxication when eaten in large quantities[183].",
+      "knownHazardsLtV2": "Daugelio rododendro genties rūšių lapai yra toksiški. Žiedadulkės, suvartotos dideliais kiekiais, gali sukelti apsinuodijimą.",
+      "knownHazardsLtEdited": "Daugelio rododendro genties rūšių lapai toksiški. Žiedadulkės dideliais kiekiais vartojamos gali sukelti apsinuodijimą.",
+      "changesNotes": "Pašalintas perteklinis „yra" predikato pozicijoje; „suvartotos dideliais kiekiais" → „dideliais kiekiais vartojamos" (natūralesnė tvarka)."
+    },
+    {
+      "latin": "Rhododendron lutescens",
+      "knownHazards": "Although no specific mention of toxicity has been seen for this species, it belongs to a genus where many members have poisonous leaves. The pollen of many if not all species of rhododendrons is also probably toxic, being said to cause intoxication when eaten in large quantities[183].",
+      "knownHazardsLtV2": "Daugelio rododendro genties rūšių lapai yra toksiški. Žiedadulkės, suvartotos dideliais kiekiais, gali sukelti apsinuodijimą.",
+      "knownHazardsLtEdited": "Daugelio rododendro genties rūšių lapai toksiški. Žiedadulkės dideliais kiekiais vartojamos gali sukelti apsinuodijimą.",
+      "changesNotes": "Pašalintas perteklinis „yra" predikato pozicijoje; „suvartotos dideliais kiekiais" → „dideliais kiekiais vartojamos" (natūralesnė tvarka)."
+    },
+    {
+      "latin": "Rhododendron luteum",
+      "knownHazards": "Although no specific mention of toxicity has been seen for this species, it belongs to a genus where many members have poisonous leaves. The pollen of many if not all species of rhododendrons is also probably toxic, being said to cause intoxication when eaten in large quantities[183].",
+      "knownHazardsLtV2": "Daugelio rododendro genties rūšių lapai yra toksiški. Žiedadulkės, suvartotos dideliais kiekiais, gali sukelti apsinuodijimą.",
+      "knownHazardsLtEdited": "Daugelio rododendro genties rūšių lapai toksiški. Žiedadulkės dideliais kiekiais vartojamos gali sukelti apsinuodijimą.",
+      "changesNotes": "Pašalintas perteklinis „yra" predikato pozicijoje; „suvartotos dideliais kiekiais" → „dideliais kiekiais vartojamos" (natūralesnė tvarka)."
+    },
+    {
+      "latin": "Rhus",
+      "knownHazards": "Skin contact with this plant can cause dermatitis in sensitive people[200]. Though related to several poisonous species, this species is definitely not poisonous[65].",
+      "knownHazardsLtV2": "Jautriems žmonėms kontaktas su augalu gali sukelti dermatitą. Pati rūšis netoksiška.",
+      "knownHazardsLtEdited": "Jautriems žmonėms palietus augalą gali išsivystyti dermatitas. Pati rūšis netoksiška.",
+      "changesNotes": "„kontaktas su augalu" → „palietus augalą" (pašalintas kalkinis daiktavardžio variantas, vartojama veiksmažodinė konstrukcija); „gali sukelti dermatitą" → „gali išsivystyti dermatitas" (sklandesnė formuluotė)."
+    },
+    {
+      "latin": "Rhus aromatica",
+      "knownHazards": "There are some suggestions that the sap of this species can cause a skin rash in susceptible people, but this has not been substantiated. See also notes in 'Cultivation Details'.",
+      "knownHazardsLtV2": "Yra nepatvirtintų duomenų, kad sultys jautriems žmonėms gali sukelti odos bėrimą.",
+      "knownHazardsLtEdited": "Yra nepatvirtintų duomenų, kad sultys jautriems žmonėms gali sukelti odos bėrimą.",
+      "changesNotes": "Tekstas taisyklingas – pakeitimų nereikia."
+    },
+    {
+      "latin": "Rhus copallina",
+      "knownHazards": "There are some suggestions that the sap of this species can cause a skin rash in susceptible people, but this has not been substantiated. See also notes in 'Cultivation Details'.",
+      "knownHazardsLtV2": "Yra nepatvirtintų duomenų, kad sultys jautriems žmonėms gali sukelti odos bėrimą.",
+      "knownHazardsLtEdited": "Yra nepatvirtintų duomenų, kad sultys jautriems žmonėms gali sukelti odos bėrimą.",
+      "changesNotes": "Tekstas taisyklingas – pakeitimų nereikia."
+    },
+    {
+      "latin": "Rhus glabra",
+      "knownHazards": "There are some suggestions that the sap of this species can cause a skin rash in susceptible people, but this has not been substantiated. See also notes in 'Cultivation Details'.",
+      "knownHazardsLtV2": "Yra nepatvirtintų duomenų, kad sultys jautriems žmonėms gali sukelti odos bėrimą.",
+      "knownHazardsLtEdited": "Yra nepatvirtintų duomenų, kad sultys jautriems žmonėms gali sukelti odos bėrimą.",
+      "changesNotes": "Tekstas taisyklingas – pakeitimų nereikia."
+    },
+    {
+      "latin": "Rhus potaninii",
+      "knownHazards": "There are some suggestions that the sap of this species can cause a skin rash in susceptible people, but this has not been substantiated. See also notes in 'Cultivation Details'.",
+      "knownHazardsLtV2": "Yra nepatvirtintų duomenų, kad sultys jautriems žmonėms gali sukelti odos bėrimą.",
+      "knownHazardsLtEdited": "Yra nepatvirtintų duomenų, kad sultys jautriems žmonėms gali sukelti odos bėrimą.",
+      "changesNotes": "Tekstas taisyklingas – pakeitimų nereikia."
+    },
+    {
+      "latin": "Rhus succedanea",
+      "knownHazards": "This plant contains toxic substances which can cause severe irritation to some people. The fresh sap causes skin blisters[145]. The leaves contain the ubiquitous carcinogen shikimic acid[218].",
+      "knownHazardsLtV2": "Augalas turi toksinų, kurie kai kuriems žmonėms sukelia stiprų dirginimą; šviežios sultys sukelia odos pūsles. Lapuose yra kancerogeninės šikimo rūgšties.",
+      "knownHazardsLtEdited": "Augale yra toksinų, kurie kai kuriems žmonėms sukelia stiprų dirginimą; šviežios sultys sukelia odos pūsles. Lapuose yra kancerogeninės šikimo rūgšties.",
+      "changesNotes": "„Augalas turi toksinų" → „Augale yra toksinų" (natūralesnė LT konstrukcija – „turi" tinka gyvoms būtybėms, „yra" – sudėčiai)."
+    },
+    {
+      "latin": "Rhus trichocarpa",
+      "knownHazards": "This plant contains toxic substances that can cause severe irritation to some people[11].",
+      "knownHazardsLtV2": "Augalas turi toksinų, kurie kai kuriems žmonėms gali sukelti stiprų dirginimą.",
+      "knownHazardsLtEdited": "Augale yra toksinių medžiagų, kurios kai kuriems žmonėms gali sukelti stiprų dirginimą.",
+      "changesNotes": "„Augalas turi toksinų" → „Augale yra toksinių medžiagų" (natūralesnė LT konstrukcija sudėčiai nurodyti); linksniuotė suderinta."
+    },
+    {
+      "latin": "Rhus typhina",
+      "knownHazards": "There are some suggestions that the sap of this species can cause a skin rash in susceptible people, but this has not been substantiated. See also notes in 'Cultivation Details'.",
+      "knownHazardsLtV2": "Yra nepatvirtintų duomenų, kad sultys jautriems žmonėms gali sukelti odos bėrimą.",
+      "knownHazardsLtEdited": "Yra nepatvirtintų duomenų, kad sultys jautriems žmonėms gali sukelti odos bėrimą.",
+      "changesNotes": "Tekstas taisyklingas – pakeitimų nereikia."
+    },
+    {
+      "latin": "Rhus verniciflua",
+      "knownHazards": "The plant contains toxic substances that can cause severe irritation to some people[8, 19]. The sap can be particularly caustic[11]. All parts of the plant contain resinous phenolic compounds known as urushiols. Direct contacr with the plant, exposure to smoke or fumes from a burning plant or even contact with pets or animals that have touched the plant can cause severe allergic dermatitis in some individuals. There is usually a latent period of about 12 - 24 hours from the moment of contact, this is followed by a reddening and severe blistering of the skin. Even plant specimens 100 or more years old can cause problems[274].",
+      "knownHazardsLtV2": "Visos augalo dalys turi urusiolių – fenolinių junginių, kurie tiesiogiai liečiant augalą, įkvėpus jo deginimo dūmų ar per gyvūnus sukelia sunkų alerginį dermatitą. Simptomai pasireiškia po 12–24 val. – paraudimas ir stiprios odos pūslės; net senų džiovintų egzempliorių kontaktas gali sukelti reakciją.",
+      "knownHazardsLtEdited": "Visose augalo dalyse yra urusiolių – fenolinių junginių, sukeliančių sunkų alerginį dermatitą palietus augalą, įkvėpus jo deginimo dūmų ar per gyvūnus. Simptomai pasireiškia po 12–24 val.: paraudimas ir stiprios odos pūslės; reakciją gali sukelti net senų džiovintų egzempliorių prisilietimas.",
+      "changesNotes": "„Visos augalo dalys turi" → „Visose augalo dalyse yra" (natūralesnė LT sudėties konstrukcija); „tiesiogiai liečiant augalą" → „palietus augalą" (vengimas kalkinio įnagininko; tikslesnė veiksmažodinė forma); brūkšnelis prieš sąrašą pakeistas dvitaškiu; „kontaktas gali sukelti" → „reakciją gali sukelti prisilietimas" (pašalintas angliškas kalkinys „kontaktas")."
+    },
+    {
+      "latin": "Ricinus",
+      "knownHazards": "The whole plant is very poisonous[10, 19, 20], even one seed has been known to be lethal to children[65, 76, 200]. The seedcoat contains an extremely lethal poison that was once used by the KGB to dispose of their enemies[260]. The leaves are only mildly poisonous[76]. The toxic principle is water-soluble so is not found in the oil[76]. Abdominal discomfort, cramping, nausea, loss of fluid and electrolytes. Possible allergens present. Do not use during pregnancy as may induce premature labour and miscarriage [301].",
+      "knownHazardsLtV2": "Augalas mirtinas – sėklų lukštas turi ypač toksišką ricino toksiną, o viena sėkla gali nužudyti vaiką; lapai silpnai toksiški, aliejuje toksino nėra. Nėštumo metu draudžiama vartoti – gali sukelti priešlaikinį gimdymą ar persileidimą.",
+      "knownHazardsLtEdited": "Augalas mirtinai toksiškas – sėklų lukšte yra ypač pavojingas ricino toksinas, o viena sėkla gali nužudyti vaiką; lapai silpnai toksiški, aliejuje toksino nėra. Nėštumo metu vartoti draudžiama – gali sukelti priešlaikinį gimdymą ar persileidimą.",
+      "changesNotes": "„Augalas mirtinas" patikslinta į „Augalas mirtinai toksiškas" (aiškesnė charakteristika išlaikant sunkumą); „sėklų lukštas turi" → „sėklų lukšte yra" (natūralesnė sudėties konstrukcija); žodžių tvarka „draudžiama vartoti" pataisyta į „vartoti draudžiama" (stilistiškai taisyklingiau LT)."
+    },
+    {
+      "latin": "Ricinus communis",
+      "knownHazards": "The whole plant is very poisonous[10, 19, 20], even one seed has been known to be lethal to children[65, 76, 200]. The seedcoat contains an extremely lethal poison that was once used by the KGB to dispose of their enemies[260]. The leaves are only mildly poisonous[76]. The toxic principle is water-soluble so is not found in the oil[76]. Abdominal discomfort, cramping, nausea, loss of fluid and electrolytes. Possible allergens present. Do not use during pregnancy as may induce premature labour and miscarriage [301].",
+      "knownHazardsLtV2": "Augalas mirtinas – sėklų lukštas turi ypač toksišką ricino toksiną, o viena sėkla gali nužudyti vaiką; lapai silpnai toksiški, aliejuje toksino nėra. Nėštumo metu draudžiama vartoti – gali sukelti priešlaikinį gimdymą ar persileidimą.",
+      "knownHazardsLtEdited": "Augalas mirtinai toksiškas – sėklų lukšte yra ypač pavojingas ricino toksinas, o viena sėkla gali nužudyti vaiką; lapai silpnai toksiški, aliejuje toksino nėra. Nėštumo metu vartoti draudžiama – gali sukelti priešlaikinį gimdymą ar persileidimą.",
+      "changesNotes": "„Augalas mirtinas" patikslinta į „Augalas mirtinai toksiškas"; „sėklų lukštas turi" → „sėklų lukšte yra"; „draudžiama vartoti" → „vartoti draudžiama" (tie patys pakeitimai kaip Ricinus)."
+    },
+    {
+      "latin": "Robinia hispida",
+      "knownHazards": "All parts of this plant are poisonous.",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos.",
+      "changesNotes": "Tekstas taisyklingas – pakeitimų nereikia."
+    },
+    {
+      "latin": "Robinia pseudoacacia",
+      "knownHazards": "All parts of the plant (except the flowers) and especially the bark, should be considered to be toxic[4, 65, 76]. The toxins are destroyed by heat[65].",
+      "knownHazardsLtV2": "Visos augalo dalys (išskyrus žiedus), ypač žievė, toksiškos; toksinai sunaikinami kaitinant.",
+      "knownHazardsLtEdited": "Visos augalo dalys (išskyrus žiedus), ypač žievė, toksiškos; toksinai sunaikinami kaitinant.",
+      "changesNotes": "Tekstas taisyklingas – pakeitimų nereikia."
+    },
+    {
+      "latin": "Rosa",
+      "knownHazards": "There is a layer of hairs around the seeds just beneath the flesh of the fruit. These hairs can cause irritation to the mouth and digestive tract if ingested.",
+      "knownHazardsLtV2": "Po vaisių minkštimu aplink sėklas yra plaukelių sluoksnis, kuris surytas dirgina burną ir virškinamąjį traktą.",
+      "knownHazardsLtEdited": "Po vaisių minkštimu aplink sėklas yra plaukelių sluoksnis, kuris prarijus dirgina burną ir virškinamąjį traktą.",
+      "changesNotes": "„surytas" → „prarijus" (tikslesnė, natūralesnė LT forma šiam kontekstui – „prarijus" labiau tinka virškinamajam traktui)."
+    },
+    {
+      "latin": "Rosa banksiae",
+      "knownHazards": "There is a layer of hairs around the seeds just beneath the flesh of the fruit. These hairs can cause irritation to the mouth and digestive tract if ingested.",
+      "knownHazardsLtV2": "Po vaisių minkštimu aplink sėklas yra plaukelių sluoksnis, kuris surytas dirgina burną ir virškinamąjį traktą.",
+      "knownHazardsLtEdited": "Po vaisių minkštimu aplink sėklas yra plaukelių sluoksnis, kuris prarijus dirgina burną ir virškinamąjį traktą.",
+      "changesNotes": "„surytas" → „prarijus" (tas pats pakeitimas kaip Rosa)."
+    }
+  ]
+}

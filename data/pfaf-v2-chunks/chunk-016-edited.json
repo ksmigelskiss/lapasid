@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 16,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Hibiscus",
+      "knownHazards": "The hairs on the seed pods can be an irritant to some people and gloves should be worn when harvesting. These hairs can be easily removed by washing[200].",
+      "knownHazardsLtV2": "Sėklų ankštis dengiantys plaukeliai kai kuriems žmonėms dirgina odą — renkant rekomenduojama mūvėti pirštines. Plaukeliai lengvai pašalinami nuplaunant.",
+      "knownHazardsLtEdited": "Sėklų ankštis dengiantys plaukeliai kai kuriems žmonėms dirgina odą — renkant rekomenduojama mūvėti pirštines. Plaukeliai lengvai pašalinami nuplaunant.",
+      "changesNotes": "Tekstas taisyklingas ir natūralus — pakeitimų nereikia."
+    },
+    {
+      "latin": "Hibiscus rosa-sinensis",
+      "knownHazards": "Do not use during pregnancy or if planning children.",
+      "knownHazardsLtV2": "Nenaudoti nėštumo metu arba planuojant pastoti.",
+      "knownHazardsLtEdited": "Nenaudoti nėštumo metu arba planuojant pastoti.",
+      "changesNotes": "Trumpas, tikslus — pakeitimų nereikia."
+    },
+    {
+      "latin": "Hippophae rhamnoides",
+      "knownHazards": "Some reports suggest that the fruit is poisonous[13, 100], whilst it may be very acid it is most definitely not poisonous[65]. Avoid during pregnancy.",
+      "knownHazardsLtV2": "Vaisiai gali būti labai rūgštūs, tačiau nėra nuodingi. Vengti nėštumo metu.",
+      "knownHazardsLtEdited": "Vaisiai gali būti labai rūgštūs, tačiau nenuodingi. Vengti nėštumo metu.",
+      "changesNotes": "Pašalinta redundantiška „nėra" — pakako „nenuodingi" (cop. removal; economy)."
+    },
+    {
+      "latin": "Humulus lupulus",
+      "knownHazards": "Skin contact with the plant causes dermatitis in sensitive people[222]. Hops dermatitis has long been recognized. Not only hands and face, but legs have suffered purpuric eruptions due to hop picking. Although only 1 in 3,000 workers is estimated to be treated, one in 30 are believed to suffer dermatitis[269]. Dislodged hairs from the plant can irritate the eyes[222]. Sedative effect may worsen depression. Avoid during pregnancy (due to antispasmodic action on uterus). Avoid with breast, uterine and cervical cancers [301].",
+      "knownHazardsLtV2": "Augalo sąlytis dirgina odą ir gali sukelti dermatitą jautriems žmonėms; nuplėšti plaukeliai dirgina akis. Sedacinis poveikis gali pagilinti depresiją; vengti nėštumo metu (spazmolitinis poveikis gimdai) ir esant krūties, gimdos ar gimdos kaklelio vėžiui.",
+      "knownHazardsLtEdited": "Palietus augalą jautriems žmonėms gali išsivystyti dermatitas; atitrūkę plaukeliai dirgina akis. Sedacinis poveikis gali pagilinti depresiją; vengti nėštumo metu (spazmolitinis poveikis gimdai) ir esant krūties, gimdos ar gimdos kaklelio vėžiui.",
+      "changesNotes": "„Augalo sąlytis" → „palietus augalą" (calque taisymas); „gali sukelti dermatitą" → „gali išsivystyti dermatitas" (natūralesnė raiška)."
+    },
+    {
+      "latin": "Hyaci",
+      "knownHazards": "The bulb (and the whole plant?) is poisonous[4].",
+      "knownHazardsLtV2": "Svogūnėlis (ir galbūt visas augalas) yra toksiškas.",
+      "knownHazardsLtEdited": "Svogūnėlis (ir galbūt visas augalas) yra toksiškas.",
+      "changesNotes": "Čia „yra" atliekami įvardijamosios tariamosios sakinio funkciją — pagrįstas; pakeitimų nereikia."
+    },
+    {
+      "latin": "Hyacinthoides",
+      "knownHazards": "The bulb (and the whole plant?) is poisonous[4].",
+      "knownHazardsLtV2": "Svogūnėlis (ir galbūt visas augalas) yra toksiškas.",
+      "knownHazardsLtEdited": "Svogūnėlis (ir galbūt visas augalas) yra toksiškas.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Hyacinthoides nonscripta",
+      "knownHazards": "The bulb (and the whole plant?) is poisonous[4].",
+      "knownHazardsLtV2": "Svogūnėlis (ir galbūt visas augalas) yra toksiškas.",
+      "knownHazardsLtEdited": "Svogūnėlis (ir galbūt visas augalas) yra toksiškas.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Hyacinthus",
+      "knownHazards": "Poisonous, the sap can cause dermatitis[76]. The toxins are concentrated in the bulb[200].",
+      "knownHazardsLtV2": "Toksiškas augalas — sultys dirgina odą ir gali sukelti dermatitą. Toksinai koncentruojasi svogūnėlyje.",
+      "knownHazardsLtEdited": "Toksiškas augalas: sultys dirgina odą ir gali sukelti dermatitą. Toksinai kaupiasi svogūnėlyje.",
+      "changesNotes": "Brūkšnys → dvitaškis (logiška priežastinė seka); „koncentruojasi" → „kaupiasi" (natūralesnė LT leksika)."
+    },
+    {
+      "latin": "Hyacinthus orientalis",
+      "knownHazards": "Poisonous, the sap can cause dermatitis[76]. The toxins are concentrated in the bulb[200].",
+      "knownHazardsLtV2": "Toksiškas augalas — sultys dirgina odą ir gali sukelti dermatitą. Toksinai koncentruojasi svogūnėlyje.",
+      "knownHazardsLtEdited": "Toksiškas augalas: sultys dirgina odą ir gali sukelti dermatitą. Toksinai kaupiasi svogūnėlyje.",
+      "changesNotes": "Brūkšnys → dvitaškis; „koncentruojasi" → „kaupiasi"."
+    },
+    {
+      "latin": "Hydrangea arborescens",
+      "knownHazards": "Dizziness, chest pain, gastrointestinal distress. Weak potential for sensitization [301].",
+      "knownHazardsLtV2": "Gali sukelti galvos svaigimą, krūtinės skausmą ir virškinimo trakto sutrikimus. Nedidelis jautrinimo potencialas.",
+      "knownHazardsLtEdited": "Gali sukelti galvos svaigimą, krūtinės skausmą ir virškinimo trakto sutrikimus; jautrinimo potencialas nedidelis.",
+      "changesNotes": "Du atskiri sakiniai sujungti kabliataškiu; „nedidelis jautrinimo potencialas" pertvarkytas į natūralesne tvarka."
+    },
+    {
+      "latin": "Hydrangea aspera",
+      "knownHazards": "There is a report that the fresh plant contains the toxin hydrogen cyanide[243]. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Šviežias augalas gali turėti vandenilio cianido. Didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos.",
+      "knownHazardsLtEdited": "Šviežiame augale gali būti vandenilio cianido. Didelės dozės sukelia kvėpavimo nepakankamumą ir gali būti mirtinos.",
+      "changesNotes": "„Augalas gali turėti" → „augale gali būti" (calque taisymas pagal taisyklę)."
+    },
+    {
+      "latin": "Hylocereus undatus",
+      "knownHazards": "Plant has spines or sharp edges; use extreme caution when handling",
+      "knownHazardsLtV2": "Augalas turi spyglius ir aštrių kraštų — elgtis atsargiai.",
+      "knownHazardsLtEdited": "Augalas spygliuotas, su aštriais kraštais — elgtis atsargiai.",
+      "changesNotes": "„Augalas turi spyglius" → „augalas spygliuotas" (calque taisymas; natūralesnė LT raiška); „ir aštrių kraštų" → „su aštriais kraštais" (gramatiškai suderinta)."
+    },
+    {
+      "latin": "Hypoxis",
+      "knownHazards": "Plant contains calcium oxalate crystals and can cause mild irritation to the throat if eaten[144]. Thorough cooking destroys the toxin. People with a tendency to rheumatism, arthritis, gout, kidney stones and hyperacidity should take especial caution if including this plant in their diet[238].",
+      "knownHazardsLtV2": "Augale yra kalcio oksalatų kristalų, kurie valgomus žalius dirgina gerklę; kruopštus terminis apdorojimas toksiną sunaikina. Sergantys reumatu, artritu, podagra, turintys inkstų akmenų ar padidėjusį rūgštingumą turėtų būti atsargūs.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalatų kristalų, kurie suvalgyti žali dirgina gerklę; kruopštus kaitinimas toksiną sunaikina. Sergantys reumatu, artritu, podagra, turintys inkstų akmenų ar padidėjusį rūgštingumą turėtų būti atsargūs.",
+      "changesNotes": "„Valgomus žalius" → „suvalgyti žali" (tikslesnė dalyvio forma, aiškesnė); „terminis apdorojimas" → „kaitinimas" (calque taisymas)."
+    },
+    {
+      "latin": "Ilex",
+      "knownHazards": "Although no specific reports of toxicity have been seen for this species, the fruits of at least some members of this genus contain saponins and are slightly toxic. They can cause vomiting, diarrhoea and stupor if eaten in quantity[274].",
+      "knownHazardsLtV2": "Vaisiai gali turėti saponinų ir yra silpnai toksiški — suvalgius didelį kiekį sukelia vėmimą, viduriavimą ir mieguistumą.",
+      "knownHazardsLtEdited": "Vaisiuose gali būti saponinų — jie silpnai toksiški ir suvalgius didelį kiekį sukelia vėmimą, viduriavimą bei mieguistumą.",
+      "changesNotes": "„Vaisiai gali turėti" → „vaisiuose gali būti" (calque taisymas); sujungta į vieną sakinį; „ir" → „bei" prieš paskutinį sąrašo narį (stilius)."
+    },
+    {
+      "latin": "Ilex aquifolium",
+      "knownHazards": "The fruit and probaby other parts of the plant contain saponins and are toxic, causing diarrhoea, vomiting and stupor[10, 274]. However, toxicity levels are low and it is only in very large doses that problems are likely to arise[65, 76]. Do not exceed recommended doses. Fruits particularly poisonous to children [301].",
+      "knownHazardsLtV2": "Vaisiai ir kitos augalo dalys turi saponinų ir yra toksiški — sukelia viduriavimą, vėmimą ir mieguistumą. Vaisiai ypač pavojingi vaikams.",
+      "knownHazardsLtEdited": "Vaisiuose ir kitose augalo dalyse yra saponinų — jie toksiški ir sukelia viduriavimą, vėmimą bei mieguistumą. Vaisiai ypač pavojingi vaikams.",
+      "changesNotes": "„Vaisiai turi saponinų" → „vaisiuose yra saponinų" (calque); sujungta; „ir" → „bei" prieš paskutinį sąrašo narį."
+    },
+    {
+      "latin": "Ilex cornuta",
+      "knownHazards": "Although no specific reports of toxicity have been seen for this species, the fruits of at least some members of this genus contain saponins and are slightly toxic. They can cause vomiting, diarrhoea and stupor if eaten in quantity[274].",
+      "knownHazardsLtV2": "Vaisiai gali turėti saponinų ir yra silpnai toksiški — suvalgius didelį kiekį sukelia vėmimą, viduriavimą ir mieguistumą.",
+      "knownHazardsLtEdited": "Vaisiuose gali būti saponinų — jie silpnai toksiški ir suvalgius didelį kiekį sukelia vėmimą, viduriavimą bei mieguistumą.",
+      "changesNotes": "Tas pats calque taisymas kaip Ilex."
+    },
+    {
+      "latin": "Ilex crenata",
+      "knownHazards": "Although no specific reports of toxicity have been seen for this species, the fruits of at least some members of this genus contain saponins and are slightly toxic. They can cause vomiting, diarrhoea and stupor if eaten in quantity[274].",
+      "knownHazardsLtV2": "Vaisiai gali turėti saponinų ir yra silpnai toksiški — suvalgius didelį kiekį sukelia vėmimą, viduriavimą ir mieguistumą.",
+      "knownHazardsLtEdited": "Vaisiuose gali būti saponinų — jie silpnai toksiški ir suvalgius didelį kiekį sukelia vėmimą, viduriavimą bei mieguistumą.",
+      "changesNotes": "Tas pats calque taisymas kaip Ilex."
+    },
+    {
+      "latin": "Ilex glabra",
+      "knownHazards": "Although no specific reports of toxicity have been seen for this species, the fruits of at least some members of this genus contain saponins and are slightly toxic. They can cause vomiting, diarrhoea and stupor if eaten in quantity[274].",
+      "knownHazardsLtV2": "Vaisiai gali turėti saponinų ir yra silpnai toksiški — suvalgius didelį kiekį sukelia vėmimą, viduriavimą ir mieguistumą.",
+      "knownHazardsLtEdited": "Vaisiuose gali būti saponinų — jie silpnai toksiški ir suvalgius didelį kiekį sukelia vėmimą, viduriavimą bei mieguistumą.",
+      "changesNotes": "Tas pats calque taisymas kaip Ilex."
+    },
+    {
+      "latin": "Ilex integra",
+      "knownHazards": "Although no specific reports of toxicity have been seen for this species, the fruits of at least some members of this genus contain saponins and are slightly toxic. They can cause vomiting, diarrhoea and stupor if eaten in quantity[274].",
+      "knownHazardsLtV2": "Vaisiai gali turėti saponinų ir yra silpnai toksiški — suvalgius didelį kiekį sukelia vėmimą, viduriavimą ir mieguistumą.",
+      "knownHazardsLtEdited": "Vaisiuose gali būti saponinų — jie silpnai toksiški ir suvalgius didelį kiekį sukelia vėmimą, viduriavimą bei mieguistumą.",
+      "changesNotes": "Tas pats calque taisymas kaip Ilex."
+    },
+    {
+      "latin": "Ilex latifolia",
+      "knownHazards": "Although no specific reports of toxicity have been seen for this species, the fruits of at least some members of this genus contain saponins and are slightly toxic. They can cause vomiting, diarrhoea and stupor if eaten in quantity[274].",
+      "knownHazardsLtV2": "Vaisiai gali turėti saponinų ir yra silpnai toksiški — suvalgius didelį kiekį sukelia vėmimą, viduriavimą ir mieguistumą.",
+      "knownHazardsLtEdited": "Vaisiuose gali būti saponinų — jie silpnai toksiški ir suvalgius didelį kiekį sukelia vėmimą, viduriavimą bei mieguistumą.",
+      "changesNotes": "Tas pats calque taisymas kaip Ilex."
+    },
+    {
+      "latin": "Ilex opaca",
+      "knownHazards": "Although no specific reports of toxicity have been seen for this species, the fruits of at least some members of this genus contain saponins and are slightly toxic. They can cause vomiting, diarrhoea and stupor if eaten in quantity[274]. The fruits can cause violent vomiting[222].",
+      "knownHazardsLtV2": "Vaisiai turi saponinų ir yra toksiški — sukelia stiprų vėmimą, viduriavimą ir mieguistumą.",
+      "knownHazardsLtEdited": "Vaisiuose yra saponinų — jie toksiški ir sukelia stiprų vėmimą, viduriavimą bei mieguistumą.",
+      "changesNotes": "„Vaisiai turi saponinų" → „vaisiuose yra saponinų" (calque); „ir" → „bei" prieš paskutinį sąrašo narį."
+    },
+    {
+      "latin": "Ilex pedunculosa",
+      "knownHazards": "Although no specific reports of toxicity have been seen for this species, the fruits of at least some members of this genus contain saponins and are slightly toxic. They can cause vomiting, diarrhoea and stupor if eaten in quantity[274].",
+      "knownHazardsLtV2": "Vaisiai gali turėti saponinų ir yra silpnai toksiški — suvalgius didelį kiekį sukelia vėmimą, viduriavimą ir mieguistumą.",
+      "knownHazardsLtEdited": "Vaisiuose gali būti saponinų — jie silpnai toksiški ir suvalgius didelį kiekį sukelia vėmimą, viduriavimą bei mieguistumą.",
+      "changesNotes": "Tas pats calque taisymas kaip Ilex."
+    },
+    {
+      "latin": "Ilex purpurea",
+      "knownHazards": "Although no specific reports of toxicity have been seen for this species, the fruits of at least some members of this genus contain saponins and are slightly toxic. They can cause vomiting, diarrhoea and stupor if eaten in quantity[274].",
+      "knownHazardsLtV2": "Vaisiai gali turėti saponinų ir yra silpnai toksiški — suvalgius didelį kiekį sukelia vėmimą, viduriavimą ir mieguistumą.",
+      "knownHazardsLtEdited": "Vaisiuose gali būti saponinų — jie silpnai toksiški ir suvalgius didelį kiekį sukelia vėmimą, viduriavimą bei mieguistumą.",
+      "changesNotes": "Tas pats calque taisymas kaip Ilex."
+    },
+    {
+      "latin": "Ilex verticillata",
+      "knownHazards": "Although no specific reports of toxicity have been seen for this species, the fruits of at least some members of this genus contain saponins and are slightly toxic. They can cause vomiting, diarrhoea and stupor if eaten in quantity[274]. The fruit is poisonous[177].",
+      "knownHazardsLtV2": "Vaisiai turi saponinų ir yra toksiški — sukelia vėmimą, viduriavimą ir mieguistumą.",
+      "knownHazardsLtEdited": "Vaisiuose yra saponinų — jie toksiški ir sukelia vėmimą, viduriavimą bei mieguistumą.",
+      "changesNotes": "„Vaisiai turi saponinų" → „vaisiuose yra saponinų" (calque); „ir" → „bei"."
+    },
+    {
+      "latin": "Ilex yunnanensis",
+      "knownHazards": "Although no specific reports of toxicity have been seen for this species, the fruits of at least some members of this genus contain saponins and are slightly toxic. They can cause vomiting, diarrhoea and stupor if eaten in quantity[274]. The fruit is poisonous[177].",
+      "knownHazardsLtV2": "Vaisiai turi saponinų ir yra toksiški — sukelia vėmimą, viduriavimą ir mieguistumą.",
+      "knownHazardsLtEdited": "Vaisiuose yra saponinų — jie toksiški ir sukelia vėmimą, viduriavimą bei mieguistumą.",
+      "changesNotes": "Tas pats calque taisymas kaip Ilex verticillata."
+    },
+    {
+      "latin": "Illicium",
+      "knownHazards": "The essential oil obtained from this plant is poisonous[270]. The fruit is poisonous in quantity[19, 177].",
+      "knownHazardsLtV2": "Iš augalo gautas eterinis aliejus yra toksiškas. Dideliais kiekiais vartojami vaisiai taip pat toksiški.",
+      "knownHazardsLtEdited": "Iš augalo gautas eterinis aliejus toksiškas. Dideliais kiekiais vartojami vaisiai taip pat toksiški.",
+      "changesNotes": "Pašalinta perteklinė jungties kopula „yra" predikaciniame ryšyje (economy)."
+    },
+    {
+      "latin": "Illicium anisatum",
+      "knownHazards": "The essential oil obtained from this plant is poisonous[270]. The fruit is poisonous in quantity[19, 177].",
+      "knownHazardsLtV2": "Iš augalo gautas eterinis aliejus yra toksiškas. Dideliais kiekiais vartojami vaisiai taip pat toksiški.",
+      "knownHazardsLtEdited": "Iš augalo gautas eterinis aliejus toksiškas. Dideliais kiekiais vartojami vaisiai taip pat toksiški.",
+      "changesNotes": "Pašalinta perteklinė kopula „yra" (economy)."
+    },
+    {
+      "latin": "Impatiens",
+      "knownHazards": "Regular ingestion of large quantities of these plants can be dangerous due to their high mineral content[172]. This report, which seems nonsensical, might refer to calcium oxalate. This mineral is found in I. capensis and so is probably also in other members of the genus. It can be harmful raw but is destroyed by thoroughly cooking or drying the plant[K]. People with a tendency to rheumatism, arthritis, gout, kidney stones and hyperacidity should take especial caution if including this plant in their diet[238].",
+      "knownHazardsLtV2": "Augale yra kalcio oksalatų, kurie žalią augalą vartojant nuolat dideliais kiekiais gali kenkti; kruopštus terminis apdorojimas arba džiovinimas toksiną sunaikina. Sergantys reumatu, artritu, podagra, turintys inkstų akmenų ar padidėjusį rūgštingumą turėtų būti atsargūs.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalatų, kurie žalio augalo nuolatinis vartojimas dideliais kiekiais gali kenkti; kruopštus kaitinimas arba džiovinimas toksiną sunaikina. Sergantys reumatu, artritu, podagra, turintys inkstų akmenų ar padidėjusį rūgštingumą turėtų būti atsargūs.",
+      "changesNotes": "„Žalią augalą vartojant" → „žalio augalo nuolatinis vartojimas" (aiškesnė, natūralesnė sintaksė); „terminis apdorojimas" → „kaitinimas" (calque taisymas)."
+    },
+    {
+      "latin": "Impatiens balsamina",
+      "knownHazards": "Regular ingestion of large quantities of these plants can be dangerous due to their high mineral content[172]. This report, which seems nonsensical, might refer to calcium oxalate. This mineral is found in I. capensis and so is probably also in other members of the genus. It can be harmful raw but is destroyed by thoroughly cooking or drying the plant[K]. People with a tendency to rheumatism, arthritis, gout, kidney stones and hyperacidity should take especial caution if including this plant in their diet[238].",
+      "knownHazardsLtV2": "Augale yra kalcio oksalatų, kurie žalią augalą vartojant nuolat dideliais kiekiais gali kenkti; kruopštus terminis apdorojimas arba džiovinimas toksiną sunaikina. Sergantys reumatu, artritu, podagra, turintys inkstų akmenų ar padidėjusį rūgštingumą turėtų būti atsargūs.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalatų, kurie žalio augalo nuolatinis vartojimas dideliais kiekiais gali kenkti; kruopštus kaitinimas arba džiovinimas toksiną sunaikina. Sergantys reumatu, artritu, podagra, turintys inkstų akmenų ar padidėjusį rūgštingumą turėtų būti atsargūs.",
+      "changesNotes": "Tas pats kaip Impatiens: „terminis apdorojimas" → „kaitinimas"; sintaksės patikslinimas."
+    },
+    {
+      "latin": "Incarvillea",
+      "knownHazards": "One report suggests that the plant might be slightly toxic[179].",
+      "knownHazardsLtV2": "Vienas šaltinis nurodo, kad augalas gali būti silpnai toksiškas.",
+      "knownHazardsLtEdited": "Vienas šaltinis nurodo, kad augalas gali būti silpnai toksiškas.",
+      "changesNotes": "Trumpas, tikslus — pakeitimų nereikia."
+    }
+  ]
+}

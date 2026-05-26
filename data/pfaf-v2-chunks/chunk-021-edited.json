@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 21,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Morus",
+      "knownHazards": "One report suggests that the raw fruit contains hallucinogens[62]. This fruit is frequently eaten in various parts of the world, there are even some named varieties, and no such effects have been mentioned elsewhere, nor observed by the writer when he has eaten the fruit. Possibly the unripe fruit was being referred to in the report, though even this would be surprising[K].",
+      "knownHazardsLtV2": "Vienas šaltinis mini, kad žali vaisiai gali turėti haliucinogeninių savybių, tačiau tai plačiai naudojamas maisto augalas ir tokių poveikių kitur nefiksuota. Tikėtina, kad kalbėta apie nesubrendusius vaisius.",
+      "knownHazardsLtEdited": "Vienas šaltinis mini, kad žali vaisiai gali turėti haliucinogeninių savybių, tačiau šis maisto augalas plačiai naudojamas pasaulyje ir tokio poveikio kitur nefiksuota. Tikėtina, kad kalbėta apie nesubrendusius vaisius.",
+      "changesNotes": "„plačiai naudojamas maisto augalas" pertvarkyta į sklandesnę žodžių tvarką; „tokių poveikių" → „tokio poveikio" (sing. su kilmininku natūraliau)."
+    },
+    {
+      "latin": "Morus alba",
+      "knownHazards": "One report suggests that the raw fruit contains hallucinogens[62]. This fruit is frequently eaten in various parts of the world, there are even some named varieties, and no such effects have been mentioned elsewhere, nor observed by the writer when he has eaten the fruit. Possibly the unripe fruit was being referred to in the report, though even this would be surprising[K].",
+      "knownHazardsLtV2": "Vienas šaltinis mini, kad žali vaisiai gali turėti haliucinogeninių savybių, tačiau tai plačiai naudojamas maisto augalas ir tokių poveikių kitur nefiksuota. Tikėtina, kad kalbėta apie nesubrendusius vaisius.",
+      "knownHazardsLtEdited": "Vienas šaltinis mini, kad žali vaisiai gali turėti haliucinogeninių savybių, tačiau šis maisto augalas plačiai naudojamas pasaulyje ir tokio poveikio kitur nefiksuota. Tikėtina, kad kalbėta apie nesubrendusius vaisius.",
+      "changesNotes": "Tas pats kaip Morus: „tai plačiai naudojamas" → „šis … plačiai naudojamas"; „tokių poveikių" → „tokio poveikio"."
+    },
+    {
+      "latin": "Muscari neglectum",
+      "knownHazards": "The bulb is poisonous[4]. It contains a substance called comisic acid, which is said to act like saponin[4]. Although poisonous, saponins are poorly absorbed by the human body and so most pass through without harm. Saponins are quite bitter and can be found in many common foods such as some beans. They can be removed by carefully leaching the seed or flour in running water. Thorough cooking, and perhaps changing the cooking water once, will also normally remove most of them. However, it is not advisable to eat large quantities of food that contain saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Svogūnėlis toksiškas — jame yra komisinė rūgštis, veikianti kaip saponinas. Saponinai žmogaus organizme pasisavinami prastai ir termiškai apdorojant dažniausiai suyra, tačiau didelių kiekių vartoti nerekomenduojama.",
+      "knownHazardsLtEdited": "Svogūnėlis toksiškas — jame yra komisinės rūgšties, veikiančios kaip saponinas. Saponinai žmogaus organizme pasisavinami prastai ir kaitinant dažniausiai suyra, tačiau didelių kiekių vartoti nerekomenduojama.",
+      "changesNotes": "„komisinė rūgštis" → „komisinės rūgšties" (kilmininkas po „yra"); „veikianti" atitinka kilmininką; „termiškai apdorojant" → „kaitinant" (natūralus LT, calque pašalintas)."
+    },
+    {
+      "latin": "Myrica",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, there is a report for some members of this genus that some of the constituents of the wax might be carcinogenic[222].",
+      "knownHazardsLtV2": "Tiesioginio toksiškumo duomenų nėra, tačiau kai kurių giminės rūšių vaško sudėtyje gali būti kancerogeninių medžiagų.",
+      "knownHazardsLtEdited": "Tiesioginio toksiškumo duomenų nėra, tačiau kai kurių giminės rūšių vaškas gali turėti kancerogeninių medžiagų.",
+      "changesNotes": "„vaško sudėtyje gali būti" → „vaškas gali turėti" — glausčiau, nereikia „sudėtyje" kaip tarpininko."
+    },
+    {
+      "latin": "Myrica gale",
+      "knownHazards": "This plant is an abortifacient and so should not be eaten by pregnant women[4, 172].",
+      "knownHazardsLtV2": "Augalas abortyvinis — nėščiosioms vartoti draudžiama.",
+      "knownHazardsLtEdited": "Augalas abortyvinis — nėščiosioms vartoti draudžiama.",
+      "changesNotes": "Nėra ką taisyti — tekstas tvarkingas."
+    },
+    {
+      "latin": "Narcissus",
+      "knownHazards": "Although we have no records for this species, many if not all members of this genus are poisonous[K].",
+      "knownHazardsLtV2": "Daugelis, o galbūt ir visos narcizų genties rūšys yra toksiškos.",
+      "knownHazardsLtEdited": "Daugelis, o galbūt ir visos narcizų genties rūšys yra toksiškos.",
+      "changesNotes": "Nėra ką taisyti."
+    },
+    {
+      "latin": "Narcissus jonquilla",
+      "knownHazards": "Although we have no records for this species, many if not all members of this genus are poisonous[K].",
+      "knownHazardsLtV2": "Daugelis, o galbūt ir visos narcizų genties rūšys yra toksiškos.",
+      "knownHazardsLtEdited": "Daugelis, o galbūt ir visos narcizų genties rūšys yra toksiškos.",
+      "changesNotes": "Nėra ką taisyti."
+    },
+    {
+      "latin": "Narcissus poeticus",
+      "knownHazards": "All parts of the plant, and especially the bulb, are poisonous[4]. The aroma of the flowers can cause some people to get a headache when they are in a closed room[4].",
+      "knownHazardsLtV2": "Visos augalo dalys, ypač svogūnas, yra toksiškos. Uždaroje patalpoje gėlių aromatas kai kuriems žmonėms sukelia galvos skausmą.",
+      "knownHazardsLtEdited": "Visos augalo dalys, ypač svogūnas, toksiškos. Uždaroje patalpoje gėlių aromatas kai kuriems žmonėms sukelia galvos skausmą.",
+      "changesNotes": "Pašalintas redundantinis kopulatyvinis „yra" predikato pozicijoje (taisyklė Nr. 4)."
+    },
+    {
+      "latin": "Nepeta",
+      "knownHazards": "A report in the medicinal uses says the plant should be used with caution, no reason is given. Another report says that the plant might be toxic to horses[222]. Avoid if pregnant as abortifacient. Contraindicated in epilepsy. Avoid if kidney disease [301].",
+      "knownHazardsLtV2": "Augalas abortyvinis — nėščiosioms vartoti draudžiama; kontraindikuotas esant epilepsijai ir inkstų ligoms. Gali būti toksiškas arkliams.",
+      "knownHazardsLtEdited": "Augalas abortyvinis — nėščiosioms vartoti draudžiama; kontraindikuotas esant epilepsijai ir inkstų ligoms. Arkliams gali būti toksiškas.",
+      "changesNotes": "Žodžių tvarka „Arkliams gali būti toksiškas" natūralesnė LT sakinyje (tema pirmiau)."
+    },
+    {
+      "latin": "Nerium",
+      "knownHazards": "The whole plant is very poisonous[1, 19, 65]. Skin contact with the plant can cause irritation whilst ingestion of only one leaf has led to death in children[200, 274]. Death has been known to follow the use of the wood of this plant as a meat skewer[200].",
+      "knownHazardsLtV2": "Visas augalas mirtinas — vaikams užtenka suvalgyti vieną lapą. Oda liečiant dirgina; net mėsos kepimas ant oleandro šakelių sukėlė mirčių.",
+      "knownHazardsLtEdited": "Visas augalas mirtinas — vaikams užtenka suvalgyti vieną lapą. Palietus odą, dirgina; net mėsos kepimas ant oleandro šakelių sukėlė mirčių.",
+      "changesNotes": "„Oda liečiant" → „Palietus odą" — pašalintas calque, natūralus dalyvinės konstrukcijos variantas LT."
+    },
+    {
+      "latin": "Nerium oleander",
+      "knownHazards": "The whole plant is very poisonous[1, 19, 65]. Skin contact with the plant can cause irritation whilst ingestion of only one leaf has led to death in children[200, 274]. Death has been known to follow the use of the wood of this plant as a meat skewer[200].",
+      "knownHazardsLtV2": "Visas augalas mirtinas — vaikams užtenka suvalgyti vieną lapą. Oda liečiant dirgina; net mėsos kepimas ant oleandro šakelių sukėlė mirčių.",
+      "knownHazardsLtEdited": "Visas augalas mirtinas — vaikams užtenka suvalgyti vieną lapą. Palietus odą, dirgina; net mėsos kepimas ant oleandro šakelių sukėlė mirčių.",
+      "changesNotes": "Tas pats kaip Nerium: „Oda liečiant" → „Palietus odą"."
+    },
+    {
+      "latin": "Nicandra",
+      "knownHazards": "Although no mention of toxicity has been seen for this species, it belongs to a family that contains many species of poisonous plants so some caution is advised. It is normally the leaves and the unripe fruits that are most likely to be suspect, this family also includes many food plants such as potatoes, tomatoes, peppers etc.",
+      "knownHazardsLtV2": "Tiesioginio toksiškumo duomenų nėra, tačiau augalas priklauso šeimynai su daugeliu toksiškų rūšių — ypač įtartini lapai ir nesubrendę vaisiai.",
+      "knownHazardsLtEdited": "Tiesioginio toksiškumo duomenų nėra, tačiau augalas priklauso šeimai su daugeliu toksiškų rūšių — ypač įtartini lapai ir nesubrendę vaisiai.",
+      "changesNotes": "„šeimynai" → „šeimai" (botaninis terminas; „šeimyna" — žmonių bendruomenė)."
+    },
+    {
+      "latin": "Nicotian",
+      "knownHazards": "All parts of the plant are poisonous[1, 65, 76].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos.",
+      "changesNotes": "Nėra ką taisyti."
+    },
+    {
+      "latin": "Nuphar lutea",
+      "knownHazards": "There are a number of reports that the plant is edible but one report suggests that the plant is poisonous without giving further details[19].",
+      "knownHazardsLtV2": "Augalas dažniausiai laikomas valgomu, tačiau vienas šaltinis nurodo galimą toksiškumą be papildomų detalių.",
+      "knownHazardsLtEdited": "Augalas dažniausiai laikomas valgomu, tačiau vienas šaltinis nurodo galimą toksiškumą nepateikdamas detalių.",
+      "changesNotes": "„be papildomų detalių" → „nepateikdamas detalių" — sklandesnė LT konstrukcija, pašalintas perteklinis „papildomų"."
+    },
+    {
+      "latin": "Nymphaea",
+      "knownHazards": "There are a number of reports that the plant is edible but one report suggests that the plant is poisonous without giving further details[19].",
+      "knownHazardsLtV2": "Augalas dažniausiai laikomas valgomu, tačiau vienas šaltinis nurodo galimą toksiškumą be papildomų detalių.",
+      "knownHazardsLtEdited": "Augalas dažniausiai laikomas valgomu, tačiau vienas šaltinis nurodo galimą toksiškumą nepateikdamas detalių.",
+      "changesNotes": "Tas pats kaip Nuphar lutea."
+    },
+    {
+      "latin": "Oemleria",
+      "knownHazards": "Although no specific mention has been found for this plant. it belongs to a family where the leaves, seed (and sometimes also the fruit) often contain significant amounts of hydrogen cyanide. This is the toxin that gives almonds their characteristic flavour and it should only be eaten in very small quantities. Since the fruit of this species is said to have almond-scented fruit it would be unwise to eat a large quantity of it. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Lapai, sėklos ir galbūt vaisiai gali turėti vandenilio cianido. Dideli kiekiai sukelia kvėpavimo nepakankamumą ir gali būti mirtini — vaisiai kvepia migdolais, todėl didelio kiekio valgyti nerekomenduojama.",
+      "knownHazardsLtEdited": "Lapuose, sėklose ir galbūt vaisiuose gali būti vandenilio cianido. Dideli kiekiai sukelia kvėpavimo nepakankamumą ir gali būti mirtini — vaisiai kvepia migdolais, todėl didelio kiekio valgyti nerekomenduojama.",
+      "changesNotes": "„Lapai, sėklos … gali turėti" → „Lapuose, sėklose … gali būti" (vietininko konstrukcija natūralesnė su neapibrėžta medžiaga; atitinka „augale yra" taisyklę)."
+    },
+    {
+      "latin": "Oemleria cerasiformis",
+      "knownHazards": "Although no specific mention has been found for this plant. it belongs to a family where the leaves, seed (and sometimes also the fruit) often contain significant amounts of hydrogen cyanide. This is the toxin that gives almonds their characteristic flavour and it should only be eaten in very small quantities. Since the fruit of this species is said to have almond-scented fruit it would be unwise to eat a large quantity of it. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Lapai, sėklos ir galbūt vaisiai gali turėti vandenilio cianido. Dideli kiekiai sukelia kvėpavimo nepakankamumą ir gali būti mirtini — vaisiai kvepia migdolais, todėl didelio kiekio valgyti nerekomenduojama.",
+      "knownHazardsLtEdited": "Lapuose, sėklose ir galbūt vaisiuose gali būti vandenilio cianido. Dideli kiekiai sukelia kvėpavimo nepakankamumą ir gali būti mirtini — vaisiai kvepia migdolais, todėl didelio kiekio valgyti nerekomenduojama.",
+      "changesNotes": "Tas pats kaip Oemleria."
+    },
+    {
+      "latin": "Onoclea",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kaip ir daugelis paparčių, gali turėti kancerogenų ir tiaminazės — fermento, ardančio vitamino B kompleksą. Tiaminazė sunaikinama termiškai apdorojant arba gerai džiovinant.",
+      "knownHazardsLtEdited": "Kaip ir daugelis paparčių, gali turėti kancerogenų ir tiaminazės — fermento, ardančio vitamino B kompleksą. Tiaminazė sunaikinama kaitinant arba gerai džiovinant.",
+      "changesNotes": "„termiškai apdorojant" → „kaitinant" (calque pašalintas)."
+    },
+    {
+      "latin": "Onoclea sensibilis",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Kaip ir daugelis paparčių, gali turėti kancerogenų ir tiaminazės — fermento, ardančio vitamino B kompleksą. Tiaminazė sunaikinama termiškai apdorojant arba gerai džiovinant.",
+      "knownHazardsLtEdited": "Kaip ir daugelis paparčių, gali turėti kancerogenų ir tiaminazės — fermento, ardančio vitamino B kompleksą. Tiaminazė sunaikinama kaitinant arba gerai džiovinant.",
+      "changesNotes": "Tas pats kaip Onoclea."
+    },
+    {
+      "latin": "Oplopanax",
+      "knownHazards": "The plant is densely armed with spikes and these spikes are irritant[200].",
+      "knownHazardsLtV2": "Augalas tankiai padengtas spygliais, kurie dirgina odą.",
+      "knownHazardsLtEdited": "Augalas tankiai padengtas spygliais, kurie dirgina odą.",
+      "changesNotes": "Nėra ką taisyti."
+    },
+    {
+      "latin": "Oplopanax horridus",
+      "knownHazards": "The plant is densely armed with spikes and these spikes are irritant[200].",
+      "knownHazardsLtV2": "Augalas tankiai padengtas spygliais, kurie dirgina odą.",
+      "knownHazardsLtEdited": "Augalas tankiai padengtas spygliais, kurie dirgina odą.",
+      "changesNotes": "Nėra ką taisyti."
+    },
+    {
+      "latin": "Opuntia",
+      "knownHazards": "The plant has numerous minutely barbed glochids (hairs) that are easily dislodged when the plant is touched and they then become stuck to the skin where they are difficult to see and remove. They can cause considerable discomfort[200].",
+      "knownHazardsLtV2": "Augalas turi smulkių kabliukų formos glochidinių spyglių, kurie lengvai įsminga į odą ir sunkiai pastebimi bei pašalinami — sukelia stiprų diskomfortą.",
+      "knownHazardsLtEdited": "Augale gausu smulkių glochidinių spyglių su kabliais; palietus augalą, jie lengvai įsminga į odą, sunkiai pastebimi ir pašalinami — sukelia stiprų diskomfortą.",
+      "changesNotes": "„Augalas turi … spyglių" → „Augale gausu … spyglių" (natūraliau LT); „kabliukų formos" → „su kabliais" (glaustesnė, natūralesnė sangrąža); pridėta trumpa aplinkybė „palietus augalą" siejanti su nukritimu."
+    },
+    {
+      "latin": "Opuntia erinacea",
+      "knownHazards": "The plant has numerous minutely barbed glochids (hairs) that are easily dislodged when the plant is touched and they then become stuck to the skin where they are difficult to see and remove. They can cause considerable discomfort[200].",
+      "knownHazardsLtV2": "Augalas turi smulkių kabliukų formos glochidinių spyglių, kurie lengvai įsminga į odą ir sunkiai pastebimi bei pašalinami — sukelia stiprų diskomfortą.",
+      "knownHazardsLtEdited": "Augale gausu smulkių glochidinių spyglių su kabliais; palietus augalą, jie lengvai įsminga į odą, sunkiai pastebimi ir pašalinami — sukelia stiprų diskomfortą.",
+      "changesNotes": "Tas pats kaip Opuntia."
+    },
+    {
+      "latin": "Opuntia ficus-indica",
+      "knownHazards": "The plant has numerous minutely barbed glochids (hairs) that are easily dislodged when the plant is touched and they then become stuck to the skin where they are difficult to see and remove. They can cause considerable discomfort[200].",
+      "knownHazardsLtV2": "Augalas turi smulkių kabliukų formos glochidinių spyglių, kurie lengvai įsminga į odą ir sunkiai pastebimi bei pašalinami — sukelia stiprų diskomfortą.",
+      "knownHazardsLtEdited": "Augale gausu smulkių glochidinių spyglių su kabliais; palietus augalą, jie lengvai įsminga į odą, sunkiai pastebimi ir pašalinami — sukelia stiprų diskomfortą.",
+      "changesNotes": "Tas pats kaip Opuntia."
+    },
+    {
+      "latin": "Opuntia humifusa",
+      "knownHazards": "The plant has numerous minutely barbed glochids - barbed spines that are usually small to minute and very sharp and brittle. The glochids are very easily dislodged when the plant is touched and can penetrate the skin where, because of their barbs, they become stuck and are very difficult to see and remove. They can cause considerable irritation and discomfort[200, 1999 ]. Opuntia species can contain quite high levels of oxalic acid, especially in older parts of the plant. Perfectly alright in small quantities, foods containing oxalic acid should not be eaten in large amounts since it can lock up other nutrients in the food, especially calcium, thus causing mineral deficiencies. The oxalic acid content will be reduced if the plant is cooked. People with a tendency to rheumatism, arthritis, ...",
+      "knownHazardsLtV2": "Smulkūs glochidiniai spygliai lengvai įsminga į odą ir sunkiai pašalinami — dirgina. Augalas taip pat gali turėti oksalatų; dideliame kiekyje jie blokuoja kalcio įsisavinimą, todėl linkusiems į podagrą, artritą ar inkstų akmenis reikėtų vengti.",
+      "knownHazardsLtEdited": "Smulkūs glochidiniai spygliai palietus lengvai įsminga į odą ir sunkiai pašalinami — dirgina. Augale taip pat gali būti oksalatų; dideliame kiekyje jie blokuoja kalcio įsisavinimą, todėl linkusiems į podagrą, artritą ar inkstų akmenis reikėtų vengti.",
+      "changesNotes": "„Augalas taip pat gali turėti oksalatų" → „Augale … gali būti oksalatų" (vietininkas su neapibrėžta medžiaga); „lengvai įsminga" papildyta „palietus" dėl ryšio su priežastimi."
+    },
+    {
+      "latin": "Opuntia microdasys",
+      "knownHazards": "The plant has numerous minutely barbed glochids (hairs) that are easily dislodged when the plant is touched and they then become stuck to the skin where they are difficult to see and remove. They can cause considerable discomfort[200].",
+      "knownHazardsLtV2": "Augalas turi smulkių kabliukų formos glochidinių spyglių, kurie lengvai įsminga į odą ir sunkiai pastebimi bei pašalinami — sukelia stiprų diskomfortą.",
+      "knownHazardsLtEdited": "Augale gausu smulkių glochidinių spyglių su kabliais; palietus augalą, jie lengvai įsminga į odą, sunkiai pastebimi ir pašalinami — sukelia stiprų diskomfortą.",
+      "changesNotes": "Tas pats kaip Opuntia."
+    },
+    {
+      "latin": "Opuntia phaeacantha",
+      "knownHazards": "The plant has numerous minutely barbed glochids (hairs) that are easily dislodged when the plant is touched and they then become stuck to the skin where they are difficult to see and remove. They can cause considerable discomfort[200].",
+      "knownHazardsLtV2": "Augalas turi smulkių kabliukų formos glochidinių spyglių, kurie lengvai įsminga į odą ir sunkiai pastebimi bei pašalinami — sukelia stiprų diskomfortą.",
+      "knownHazardsLtEdited": "Augale gausu smulkių glochidinių spyglių su kabliais; palietus augalą, jie lengvai įsminga į odą, sunkiai pastebimi ir pašalinami — sukelia stiprų diskomfortą.",
+      "changesNotes": "Tas pats kaip Opuntia."
+    },
+    {
+      "latin": "Opuntia polyacantha",
+      "knownHazards": "The plant has numerous minutely barbed glochids (hairs) that are easily dislodged when the plant is touched and they then become stuck to the skin where they are difficult to see and remove. They can cause considerable discomfort[200].",
+      "knownHazardsLtV2": "Augalas turi smulkių kabliukų formos glochidinių spyglių, kurie lengvai įsminga į odą ir sunkiai pastebimi bei pašalinami — sukelia stiprų diskomfortą.",
+      "knownHazardsLtEdited": "Augale gausu smulkių glochidinių spyglių su kabliais; palietus augalą, jie lengvai įsminga į odą, sunkiai pastebimi ir pašalinami — sukelia stiprų diskomfortą.",
+      "changesNotes": "Tas pats kaip Opuntia."
+    },
+    {
+      "latin": "Opuntia robusta",
+      "knownHazards": "The plant has numerous minutely barbed glochids - barbed spines that are usually small to minute and very sharp and brittle. The glochids are very easily dislodged when the plant is touched and can penetrate the skin where, because of their barbs, they become stuck and are very difficult to see and remove. They can cause considerable irritation and discomfort[200, 1999 ]. Opuntia species can contain quite high levels of oxalic acid, especially in older parts of the plant. Perfectly alright in small quantities, foods containing oxalic acid should not be eaten in large amounts since it can lock up other nutrients in the food, especially calcium, thus causing mineral deficiencies. The oxalic acid content will be reduced if the plant is cooked. People with a tendency to rheumatism, arthritis, ...",
+      "knownHazardsLtV2": "Smulkūs glochidiniai spygliai lengvai įsminga į odą ir sunkiai pašalinami — dirgina. Augalas taip pat gali turėti oksalatų; dideliame kiekyje jie blokuoja kalcio įsisavinimą, todėl linkusiems į podagrą, artritą ar inkstų akmenis reikėtų vengti.",
+      "knownHazardsLtEdited": "Smulkūs glochidiniai spygliai palietus lengvai įsminga į odą ir sunkiai pašalinami — dirgina. Augale taip pat gali būti oksalatų; dideliame kiekyje jie blokuoja kalcio įsisavinimą, todėl linkusiems į podagrą, artritą ar inkstų akmenis reikėtų vengti.",
+      "changesNotes": "Tas pats kaip Opuntia humifusa."
+    },
+    {
+      "latin": "Ornithogalum",
+      "knownHazards": "Although no specific mention of this plant as being toxic has been seen, it belongs to a family where there are some species that are said to be toxic. Caution should be observed. Any toxins are likely to be concentrated in the bulb[200].",
+      "knownHazardsLtV2": "Tiesioginio toksiškumo duomenų nėra, tačiau šeimynoje yra toksiškų rūšių — atsargumo reikia, ypač su svogūnu.",
+      "knownHazardsLtEdited": "Tiesioginio toksiškumo duomenų nėra, tačiau šeimoje yra toksiškų rūšių — atsargumo reikia, ypač su svogūnu.",
+      "changesNotes": "„šeimynoje" → „šeimoje" (botaninis terminas; žr. Nicandra pastabą)."
+    }
+  ]
+}

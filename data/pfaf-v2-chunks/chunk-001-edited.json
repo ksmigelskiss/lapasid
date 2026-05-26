@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 1,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Achillea millefolium",
+      "knownHazards": "Extended use of this plant, either medicinally or in the diet, can cause allergic skin rashes or lead to photosensitivity in some people[21, 238]. Theoretically yarrow can enhance the sedative effects of other herbs (e.g. valerian, kava, German chamomile, hops) & sedative drugs. Possible sedative & diuretic effects from ingesting large amounts [301].",
+      "knownHazardsLtV2": "Ilgalaikis vartojimas gali sukelti alerginį dermatitą arba padidintą jautrumą saulei. Gali sustiprinti raminamųjų žolelių (valerijono, ramunėlių, apynių) ir vaistų poveikį; dideliais kiekiais veikia raminamai ir diuretiškai.",
+      "knownHazardsLtEdited": "Ilgalaikis vartojimas gali sukelti alerginį dermatitą arba padidintą jautrumą saulei. Gali sustiprinti raminamųjų žolelių (valerijono, ramunėlių, apynių) ir vaistų poveikį; dideliais kiekiais turi raminamąjį ir diuretinį poveikį.",
+      "changesNotes": "\"veikia raminamai ir diuretiškai\" → \"turi raminamąjį ir diuretinį poveikį\" (atsisakyta prieveiksminio kalko)"
+    },
+    {
+      "latin": "Aconitum",
+      "knownHazards": "The whole plant is highly toxic - simple skin contact has caused numbness in some people[1].",
+      "knownHazardsLtV2": "Mirtinas. Net odos kontaktas kai kuriems žmonėms sukelia nejautrą.",
+      "knownHazardsLtEdited": "Mirtinas. Net odos palytėjimas kai kuriems žmonėms sukelia nejautrą.",
+      "changesNotes": "\"odos kontaktas\" → \"odos palytėjimas\" (natūralesnis LT junginys)"
+    },
+    {
+      "latin": "Aconitum carmichaelii",
+      "knownHazards": "The whole plant is highly toxic - simple skin contact has caused numbness in some people[1, 238].",
+      "knownHazardsLtV2": "Mirtinas. Net odos kontaktas kai kuriems žmonėms sukelia nejautrą.",
+      "knownHazardsLtEdited": "Mirtinas. Net odos palytėjimas kai kuriems žmonėms sukelia nejautrą.",
+      "changesNotes": "\"odos kontaktas\" → \"odos palytėjimas\""
+    },
+    {
+      "latin": "Aconitum hemsleyanum",
+      "knownHazards": "The whole plant is highly toxic - simple skin contact has caused numbness in some people[1].",
+      "knownHazardsLtV2": "Mirtinas. Net odos kontaktas kai kuriems žmonėms sukelia nejautrą.",
+      "knownHazardsLtEdited": "Mirtinas. Net odos palytėjimas kai kuriems žmonėms sukelia nejautrą.",
+      "changesNotes": "\"odos kontaktas\" → \"odos palytėjimas\""
+    },
+    {
+      "latin": "Aconitum lycoctonum vulparia",
+      "knownHazards": "The whole plant is highly toxic - simple skin contact has caused numbness in some people[1, 13, 65].",
+      "knownHazardsLtV2": "Mirtinas. Net odos kontaktas kai kuriems žmonėms sukelia nejautrą.",
+      "knownHazardsLtEdited": "Mirtinas. Net odos palytėjimas kai kuriems žmonėms sukelia nejautrą.",
+      "changesNotes": "\"odos kontaktas\" → \"odos palytėjimas\""
+    },
+    {
+      "latin": "Aconitum napellus",
+      "knownHazards": "The whole plant is highly toxic, acting especially on the nerve centres. At first it stimulates the central and peripheral nervous system and then paralyzes it. Other symptoms of poisoning include a burning sensation on the tongue, vomiting, stomach pain and diarrhoea. Simple skin contact with the plant has caused numbness in some people[4, 7, 9, 10, 14, 19, 65, 76, 244]. The root contains 90% more poison than the leaves[232].",
+      "knownHazardsLtV2": "Mirtinas — veikia nervų centrą: pirmiausia stimuliuoja, paskui paralyžiuoja centrinę ir periferinę nervų sistemą. Apsinuodijimo simptomai: deginimas liežuvyje, vėmimas, pilvo skausmas, viduriavimas; net odos kontaktas sukelia nejautrą. Šaknis 90% toksiškesnė nei lapai.",
+      "knownHazardsLtEdited": "Mirtinas — veikia nervų centrus: pirmiausia stimuliuoja, paskui paralyžiuoja centrinę ir periferinę nervų sistemą. Apsinuodijimo požymiai: deginimas liežuvyje, vėmimas, pilvo skausmas, viduriavimas; net odos palytėjimas sukelia nejautrą. Šaknis 90% toksiškesnė nei lapai.",
+      "changesNotes": "\"nervų centrą\" → \"nervų centrus\" (daugiskaita, kaip šaltinyje); \"simptomai\" → \"požymiai\" (natūraliau); \"odos kontaktas\" → \"odos palytėjimas\""
+    },
+    {
+      "latin": "Aconitum orientale",
+      "knownHazards": "The whole plant is highly toxic - simple skin contact has caused numbness in some people[1, 200].",
+      "knownHazardsLtV2": "Mirtinas. Net odos kontaktas kai kuriems žmonėms sukelia nejautrą.",
+      "knownHazardsLtEdited": "Mirtinas. Net odos palytėjimas kai kuriems žmonėms sukelia nejautrą.",
+      "changesNotes": "\"odos kontaktas\" → \"odos palytėjimas\""
+    },
+    {
+      "latin": "Aconitum volubile",
+      "knownHazards": "The whole plant is highly toxic - simple skin contact has caused numbness in some people[1, 200].",
+      "knownHazardsLtV2": "Mirtinas. Net odos kontaktas kai kuriems žmonėms sukelia nejautrą.",
+      "knownHazardsLtEdited": "Mirtinas. Net odos palytėjimas kai kuriems žmonėms sukelia nejautrą.",
+      "changesNotes": "\"odos kontaktas\" → \"odos palytėjimas\""
+    },
+    {
+      "latin": "Acorus",
+      "knownHazards": "The fresh root can be poisonous[7]. When using the plant medicinally, the isolated essential oil should not be used[165]. The essential oil in the roots of some populations of this plant contains the compound asarone. This has tranquillising and antibiotic activity, but is also potentially toxic and carcinogenic[218, 238]. It seems that these compounds are found in the triploid form of the species (found in Asia) whilst the diploid form (found in N. America and Siberia) is free of the compounds[218, 238]. However, the root (but not the isolated essential oil) has been used in India for thousands of years without reports of cancer which suggests that using the whole herb is completely safe, though more research is needed[254]. Only roots free from or with a low content of beta asarone shoul...",
+      "knownHazardsLtV2": "Šviežia šaknis gali būti toksiška; mediciniškai nerekomenduojama naudoti išgrynintas eterinis aliejus. Azijinėse populiacijose šaknys gali turėti asaroną — potencialiai toksinį ir kancerogeninį junginį; Šiaurės Amerikos ir Sibiro populiacijos šio junginio neturi. Naudokite tik šaknis, kuriose beta-asarono kiekis yra mažas arba jo visai nėra.",
+      "knownHazardsLtEdited": "Šviežia šaknis gali būti toksiška; mediciniškai nerekomenduojama naudoti išgrynintą eterinį aliejų. Azijinėse populiacijose šaknys gali turėti asaroną — potencialiai toksinį ir kancerogeninį junginį; Šiaurės Amerikos ir Sibiro populiacijos jo neturi. Naudokite tik šaknis, kuriose beta-asarono kiekis mažas arba jo visai nėra.",
+      "changesNotes": "\"išgrynintas eterinis aliejus\" → \"išgrynintą eterinį aliejų\" (galininkas po \"naudoti\"); pašalintas perteklinis \"yra\" frazėje \"kiekis yra mažas\"; \"šio junginio neturi\" sutrumpinta"
+    },
+    {
+      "latin": "Acorus calamus",
+      "knownHazards": "The fresh root can be poisonous[7]. When using the plant medicinally, the isolated essential oil should not be used[165]. The essential oil in the roots of some populations of this plant contains the compound asarone. This has tranquillising and antibiotic activity, but is also potentially toxic and carcinogenic[218, 238]. It seems that these compounds are found in the triploid form of the species (found in Asia) whilst the diploid form (found in N. America and Siberia) is free of the compounds[218, 238]. However, the root (but not the isolated essential oil) has been used in India for thousands of years without reports of cancer which suggests that using the whole herb is completely safe, though more research is needed[254]. Only roots free from or with a low content of beta asarone shoul...",
+      "knownHazardsLtV2": "Šviežia šaknis gali būti toksiška; mediciniškai nerekomenduojama naudoti išgrynintas eterinis aliejus. Azijinėse populiacijose šaknys gali turėti asaroną — potencialiai toksinį ir kancerogeninį junginį; Šiaurės Amerikos ir Sibiro populiacijos šio junginio neturi. Naudokite tik šaknis, kuriose beta-asarono kiekis yra mažas arba jo visai nėra.",
+      "knownHazardsLtEdited": "Šviežia šaknis gali būti toksiška; mediciniškai nerekomenduojama naudoti išgrynintą eterinį aliejų. Azijinėse populiacijose šaknys gali turėti asaroną — potencialiai toksinį ir kancerogeninį junginį; Šiaurės Amerikos ir Sibiro populiacijos jo neturi. Naudokite tik šaknis, kuriose beta-asarono kiekis mažas arba jo visai nėra.",
+      "changesNotes": "Tos pačios korekcijos kaip Acorus: galininkas po \"naudoti\", perteklinis \"yra\" pašalintas"
+    },
+    {
+      "latin": "Acorus gramineus",
+      "knownHazards": "Although no records of toxicity have been seen, this species belongs to a family where most of the species are poisonous, at least in the fresh state. The following notes are from the related A. calamus - the fresh root can be poisonous[7]. When using the plant medicinally, the isolated essential oil should not be used[165].",
+      "knownHazardsLtV2": "Tiesioginio toksiškumo duomenų nėra, tačiau gimininga rūšis A. calamus turi toksiškų šviežių šaknų. Mediciniškai nerekomenduojama naudoti išgrynintas eterinis aliejus.",
+      "knownHazardsLtEdited": "Tiesioginio toksiškumo duomenų nėra, tačiau gimininga rūšis A. calamus — šviežios šaknys toksiškos. Mediciniškai nerekomenduojama naudoti išgrynintą eterinį aliejų.",
+      "changesNotes": "\"turi toksiškų šviežių šaknų\" pakeista į natūralesnę konstrukciją; galininkas po \"naudoti\""
+    },
+    {
+      "latin": "Actaea",
+      "knownHazards": "All parts of the plant are toxic, causing severe gastrointestinal inflammation and skin blisters[222].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškas — sukelia stiprų virškinamojo trakto uždegimą ir odos pūsles.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos — sukelia stiprų virškinamojo trakto uždegimą ir odos pūsles.",
+      "changesNotes": "\"toksiškas\" → \"toksiškos\" (f.pl., sutinka su \"dalys\")"
+    },
+    {
+      "latin": "Actaea pachypoda",
+      "knownHazards": "All parts of the plant are toxic, causing severe gastrointestinal inflammation and skin blisters[222].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškas — sukelia stiprų virškinamojo trakto uždegimą ir odos pūsles.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos — sukelia stiprų virškinamojo trakto uždegimą ir odos pūsles.",
+      "changesNotes": "\"toksiškas\" → \"toksiškos\" (f.pl.)"
+    },
+    {
+      "latin": "Actaea racemosa",
+      "knownHazards": "The plant is poisonous in large doses[7]. Large doses irritate nerve centres and may cause abortion[268]. Gastrointestinal disturbances, hypotension, nausea, headaches. Not recommended during pregnancy or while breastfeeding. Do not take concomitantly with iron [301].",
+      "knownHazardsLtV2": "Didelėmis dozėmis toksiškas: dirgina nervų centrus, gali sukelti persileidimą, hipotoniją, pykinimą, galvos skausmą. Draudžiama nėštumo ir žindymo metu; nevartoti kartu su geležimi.",
+      "knownHazardsLtEdited": "Didelėmis dozėmis toksiškas: dirgina nervų centrus, gali sukelti persileidimą, hipotoniją, pykinimą ir galvos skausmą. Draudžiama nėštumo ir žindymo metu; nevartoti kartu su geležimi.",
+      "changesNotes": "Pridėtas jungtinis \"ir\" prieš paskutinį sąrašo elementą dėl sklandesnio skaitymo"
+    },
+    {
+      "latin": "Actaea rubra",
+      "knownHazards": "All parts of the plant are toxic[172], apparently acting upon the heart[212].",
+      "knownHazardsLtV2": "Visos dalys toksiškas, veikia širdį.",
+      "knownHazardsLtEdited": "Visos dalys toksiškos, veikia širdį.",
+      "changesNotes": "\"toksiškas\" → \"toksiškos\" (f.pl.)"
+    },
+    {
+      "latin": "Adansonia",
+      "knownHazards": "The bark is boiled for days to extract a substance poisonous to ants[303 ].",
+      "knownHazardsLtV2": "Žievė naudojama skruzdėlių nuodams gaminti — žmonėms pavojaus nekelia.",
+      "knownHazardsLtEdited": "Žievė verdama ilgai, kad iš jos būtų išgaunama skruzdėlėms nuodinga medžiaga.",
+      "changesNotes": "Pašalinta redaktoriaus pridėta fraza \"žmonėms pavojaus nekelia\" — šaltinyje jos nėra (fakto išsaugojimo taisyklė); atkurtas virimo proceso aprašymas"
+    },
+    {
+      "latin": "Adansonia digitata",
+      "knownHazards": "The bark is boiled for days to extract a substance poisonous to ants[303 ].",
+      "knownHazardsLtV2": "Žievė naudojama skruzdėlių nuodams gaminti — žmonėms pavojaus nekelia.",
+      "knownHazardsLtEdited": "Žievė verdama ilgai, kad iš jos būtų išgaunama skruzdėlėms nuodinga medžiaga.",
+      "changesNotes": "Pašalinta nepagrįsta papiloma \"žmonėms pavojaus nekelia\"; atkurtas virimo proceso aprašymas"
+    },
+    {
+      "latin": "Adiantum",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Tiesioginio toksiškumo duomenų nėra, tačiau paparčiuose gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Tiesioginio toksiškumo duomenų nėra, tačiau paparčiuose gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "\"Terminis apdorojimas\" → \"Kaitinimas\" (natūraliau)"
+    },
+    {
+      "latin": "Adiantum capillus-veneris",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Tiesioginio toksiškumo duomenų nėra, tačiau paparčiuose gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Tiesioginio toksiškumo duomenų nėra, tačiau paparčiuose gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "\"Terminis apdorojimas\" → \"Kaitinimas\""
+    },
+    {
+      "latin": "Adiantum pedatum",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Tiesioginio toksiškumo duomenų nėra, tačiau paparčiuose gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Tiesioginio toksiškumo duomenų nėra, tačiau paparčiuose gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "\"Terminis apdorojimas\" → \"Kaitinimas\""
+    },
+    {
+      "latin": "Adiantum venustum",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Tiesioginio toksiškumo duomenų nėra, tačiau paparčiuose gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Tiesioginio toksiškumo duomenų nėra, tačiau paparčiuose gali būti kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "\"Terminis apdorojimas\" → \"Kaitinimas\""
+    },
+    {
+      "latin": "Adonis",
+      "knownHazards": "A toxic principle is present in very small quantities in the plant[13, 19, 65]. It is poorly absorbed so poisoning is unlikely[65]. The plant is poisonous to horses[240].",
+      "knownHazardsLtV2": "Augale yra toksinių junginių labai mažais kiekiais, tačiau jie prastai įsisavinami — apsinuodijimas mažai tikėtinas. Toksiškas arkliams.",
+      "knownHazardsLtEdited": "Augale yra toksinių junginių nedideliais kiekiais, tačiau jie prastai įsisavinami — apsinuodijimas mažai tikėtinas. Toksiškas arkliams.",
+      "changesNotes": "\"labai mažais\" → \"nedideliais\" (mažiau kalkinė, sklandesnė)"
+    },
+    {
+      "latin": "Adonis amurensis",
+      "knownHazards": "Although no specific mention of toxicity has been seen for this plant, it belongs to a genus that contains a number of poisonous plants so the following remarks are likely to apply to this species - a toxic principle is present in very small quantities in the plant. It is poorly absorbed so poisoning is unlikely.",
+      "knownHazardsLtV2": "Tiesioginio toksiškumo duomenų nėra, tačiau gimininga gentis turi nuodingų rūšių. Tikėtina, kad augale yra toksinių junginių mažais kiekiais, tačiau jie prastai įsisavinami.",
+      "knownHazardsLtEdited": "Tiesioginio toksiškumo duomenų nėra, tačiau gentis turi nuodingų rūšių — tikėtina, kad augale yra toksinių junginių nedideliais kiekiais, bet jie prastai įsisavinami.",
+      "changesNotes": "Du sakiniai sujungti per em brūkšnį dėl sklandesnio skaitymo; \"gimininga\" praleista (perteklinis žodis šiame kontekste); \"mažais\" → \"nedideliais\"; \"tačiau\" → \"bet\" dėl įvairumo"
+    },
+    {
+      "latin": "Adonis vernalis",
+      "knownHazards": "A toxic principle is present in very small quantities in the plant[7, 9, 13, 19, 65]. It is poorly absorbed so poisoning is unlikely[65].",
+      "knownHazardsLtV2": "Augale yra toksinių junginių labai mažais kiekiais, tačiau jie prastai įsisavinami — apsinuodijimas mažai tikėtinas.",
+      "knownHazardsLtEdited": "Augale yra toksinių junginių nedideliais kiekiais, tačiau jie prastai įsisavinami — apsinuodijimas mažai tikėtinas.",
+      "changesNotes": "\"labai mažais\" → \"nedideliais\""
+    },
+    {
+      "latin": "Agave",
+      "knownHazards": "Contact with the fresh sap can cause dermatitis in sensitive people[218, 238]. The plants have a very sharp and tough spine at the tip of each leaf. They need to be carefully sited in the garden.",
+      "knownHazardsLtV2": "Šviežios sultys jautriems asmenims gali sukelti dermatitą. Lapų galai baigiasi aštriu dygliu — sodinti atsargiai.",
+      "knownHazardsLtEdited": "Šviežios sultys jautriems asmenims gali sukelti dermatitą. Lapų galiukai baigiasi aštriu ir tvirtu dygliu — sodinti atsargiai.",
+      "changesNotes": "\"galai\" → \"galiukai\" (švelnesnis diminutyvas, natūralesnis kalbant apie lapų antgalius); pridėta \"ir tvirtu\" (šaltinyje \"sharp and tough\")"
+    },
+    {
+      "latin": "Agave americana",
+      "knownHazards": "Contact with the fresh sap can cause dermatitis in sensitive people[218, 238]. The plants have a very sharp and tough spine at the tip of each leaf. They need to be carefully sited in the garden.",
+      "knownHazardsLtV2": "Šviežios sultys jautriems asmenims gali sukelti dermatitą. Lapų galai baigiasi aštriu dygliu — sodinti atsargiai.",
+      "knownHazardsLtEdited": "Šviežios sultys jautriems asmenims gali sukelti dermatitą. Lapų galiukai baigiasi aštriu ir tvirtu dygliu — sodinti atsargiai.",
+      "changesNotes": "\"galai\" → \"galiukai\"; pridėta \"ir tvirtu\""
+    },
+    {
+      "latin": "Agave angustifolia",
+      "knownHazards": "Many Agave species have strong, sharp spines on the leaves and leaf tips. In theory, at least, the flowers, nectar, immature flowering stem and the centre of the rosette of all Agave species are edible and, with proper preparation, can provide a sweet, tasty foodstuff. Some species, however, contain relatively high levels of saponins (which makes them taste bitter) and some other compounds which can cause bellyache, and so these would only be eaten in times of desperation. In addition, many people may find these foods to be strongly laxative the first few times they eat them[1846 ].",
+      "knownHazardsLtV2": "Lapai ir lapų galai turi aštrių dyglių. Kai kuriose rūšyse saponinų kiekis pakankamai didelis — gali sukelti pilvo skausmą ir stiprų viduriavimą, ypač vartojant pirmą kartą.",
+      "knownHazardsLtEdited": "Lapai ir lapų galiukai turi aštrių dyglių. Kai kuriose rūšyse saponinų kiekis gana didelis — gali sukelti pilvo skausmą ir stiprų viduriavimą, ypač vartojant pirmą kartą.",
+      "changesNotes": "\"lapų galai\" → \"lapų galiukai\"; \"pakankamai didelis\" → \"gana didelis\" (natūralesnė kolokacija)"
+    },
+    {
+      "latin": "Agave deserti",
+      "knownHazards": "Many Agave species have strong, sharp spines on the leaves and leaf tips. In theory at least, the flowers, nectar, immature flowering stem and the centre of the rosette of all Agave species is edible and, with proper preparation, can provide a sweet, tasty foodstuff. Some species, however, contain relatively high levels of saponins (which makes them taste bitter) and some other compounds which can cause bellyache, and so these would only be eaten in times of desperation. In addition, many people may find these foods to be strongly laxative the first few times they eat them[1846 ].",
+      "knownHazardsLtV2": "Lapai ir lapų galai turi aštrių dyglių. Kai kuriose rūšyse saponinų kiekis pakankamai didelis — gali sukelti pilvo skausmą ir stiprų viduriavimą, ypač vartojant pirmą kartą.",
+      "knownHazardsLtEdited": "Lapai ir lapų galiukai turi aštrių dyglių. Kai kuriose rūšyse saponinų kiekis gana didelis — gali sukelti pilvo skausmą ir stiprų viduriavimą, ypač vartojant pirmą kartą.",
+      "changesNotes": "\"lapų galai\" → \"lapų galiukai\"; \"pakankamai didelis\" → \"gana didelis\""
+    },
+    {
+      "latin": "Agave palmeri",
+      "knownHazards": "Many Agave species have strong, sharp spines on the leaves and leaf tips. In theory at least, the flowers, nectar, immature flowering stem and the centre of the rosette of all Agave species is edible and, with proper preparation, can provide a sweet, tasty foodstuff. Some species, however, contain relatively high levels of saponins (which makes them taste bitter) and some other compounds which can cause bellyache, and so these would only be eaten in times of desperation. In addition, many people may find these foods to be strongly laxative the first few times they eat them[1846 ].",
+      "knownHazardsLtV2": "Lapai ir lapų galai turi aštrių dyglių. Kai kuriose rūšyse saponinų kiekis pakankamai didelis — gali sukelti pilvo skausmą ir stiprų viduriavimą, ypač vartojant pirmą kartą.",
+      "knownHazardsLtEdited": "Lapai ir lapų galiukai turi aštrių dyglių. Kai kuriose rūšyse saponinų kiekis gana didelis — gali sukelti pilvo skausmą ir stiprų viduriavimą, ypač vartojant pirmą kartą.",
+      "changesNotes": "\"lapų galai\" → \"lapų galiukai\"; \"pakankamai didelis\" → \"gana didelis\""
+    },
+    {
+      "latin": "Agave parryi",
+      "knownHazards": "The plants have a very sharp and tough spine at the tip of each leaf. They need to be carefully sited in the garden.",
+      "knownHazardsLtV2": "Kiekvieno lapo galas baigiasi aštriu dygliu — sodinti atsargiai.",
+      "knownHazardsLtEdited": "Kiekvieno lapo galiukas baigiasi aštriu ir tvirtu dygliu — sodinti atsargiai.",
+      "changesNotes": "\"galas\" → \"galiukas\"; pridėta \"ir tvirtu\" (šaltinyje \"sharp and tough\")"
+    }
+  ]
+}

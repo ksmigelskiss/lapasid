@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 31,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Trapa natans",
+      "knownHazards": "The raw seed contains toxins but that these are destroyed in the cooking process[200, 206].",
+      "knownHazardsLtV2": "Žali sėklos yra toksiški, tačiau terminis apdorojimas juos sunaikina.",
+      "knownHazardsLtEdited": "Žalios sėklos yra toksiškos, tačiau kaitinimas juos sunaikina.",
+      "changesNotes": "Giminės sutarimas: 'žali sėklos' → 'žalios sėklos' (f.pl.); 'toksiški' → 'toksiškos' (f.pl.). Calque pašalintas: 'terminis apdorojimas' → 'kaitinimas'."
+    },
+    {
+      "latin": "Trifolium repens",
+      "knownHazards": "This plant has been known to cause problems for grazing animals, though this has never happened in Britain[76]. The problem may be associated with the climate in which the plant is growing[76]. The species is polymorphic for cyanogenic glycosides[218]. The leaves and flowers of certain cyanogenic phenotypes contain a glycoside which releases cyanide on contact with the enzyme linamarase[218].",
+      "knownHazardsLtV2": "Kai kurių fenotipų lapai ir žiedai turi cianogeninį glikozidą, kuris liečiantis su fermento linamarazė išskiria cianidą. Gali sukelti problemų besiganančiam gyvuliai, ypač tam tikromis klimato sąlygomis.",
+      "knownHazardsLtEdited": "Kai kurių fenotipų lapai ir žiedai turi cianogeninį glikozidą, kuris susidūręs su fermentu linamaraze išskiria cianidą. Gali sukelti problemų besigantiems gyvuliams, ypač tam tikromis klimato sąlygomis.",
+      "changesNotes": "Calque pašalintas: 'liečiantis su fermento linamarazė' → 'susidūręs su fermentu linamaraze' (tinkamas linksnis). Linksnis pataisytas: 'besiganančiam gyvuliai' → 'besigantiems gyvuliams' (dat.pl.)."
+    },
+    {
+      "latin": "Trillium erectum",
+      "knownHazards": "Can cause nausea in high doses and promote labour and menstruation. Local application can cause irritation. Should not be used during pregnancy [301].",
+      "knownHazardsLtV2": "Didelės dozės sukelia pykinimą ir skatina gimdymą bei menstruacijas; nenaudoti nėštumo metu. Vietinis tepimas dirgina odą.",
+      "knownHazardsLtEdited": "Didelės dozės sukelia pykinimą ir skatina gimdymą bei menstruacijas; nenaudoti nėštumo metu. Tepant vietiškai dirgina odą.",
+      "changesNotes": "Calque pašalintas: 'vietinis tepimas' → 'tepant vietiškai' (veiksmažodinis pasakymas natūraliau LT)."
+    },
+    {
+      "latin": "Trollius",
+      "knownHazards": "The plant is mildly poisonous unless it is dried[7, 13, 19].",
+      "knownHazardsLtV2": "Šviežias augalas yra silpnai toksiškas; džiovintas – saugus.",
+      "knownHazardsLtEdited": "Šviežias augalas silpnai toksiškas; džiovintas – saugus.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje."
+    },
+    {
+      "latin": "Trollius europaeus",
+      "knownHazards": "The plant is mildly poisonous unless it is dried[7, 13, 19].",
+      "knownHazardsLtV2": "Šviežias augalas yra silpnai toksiškas; džiovintas – saugus.",
+      "knownHazardsLtEdited": "Šviežias augalas silpnai toksiškas; džiovintas – saugus.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje."
+    },
+    {
+      "latin": "Tropaeolum majus",
+      "knownHazards": "Avoid for infants or small children and patients with gastrointestinal ulcers or kidney disease. Irritation of the mucous membrane of the gastrointestinal tract [301].",
+      "knownHazardsLtV2": "Dirgina virškinamojo trakto gleivinę; netinka kūdikiams, mažiems vaikams, sergantiems skrandžio opomis ar inkstų ligomis.",
+      "knownHazardsLtEdited": "Dirgina virškinamojo trakto gleivinę; netinka kūdikiams, mažiems vaikams bei sergantiems skrandžio opomis ar inkstų ligomis.",
+      "changesNotes": "Sklandumas: 'sergantiems' prijungtas jungtuku 'bei' dėl geresnio srauto (vietoj kablelio prieš paskutinę grupę)."
+    },
+    {
+      "latin": "Tulipa",
+      "knownHazards": "Although no records of toxicity have been seen for this species, the bulbs and the flowers of at least one member of this genus have been known to cause dermatitis in sensitive people, though up to 5 bulbs a day of that species can be eaten without ill-effect[65].",
+      "knownHazardsLtV2": "Kai kurių šios genties rūšių svogūnėliai ir žiedai jautriems žmonėms gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Kai kurių šios genties rūšių svogūnėliai ir žiedai jautriems žmonėms gali sukelti dermatitą.",
+      "changesNotes": "Tekstas tinkamas; pakeitimų nereikia."
+    },
+    {
+      "latin": "Tulipa clusiana",
+      "knownHazards": "Although no records of toxicity have been seen for this species, the bulbs and the flowers of at least one member of this genus have been known to cause dermatitis in sensitive people, though up to 5 bulbs a day of that species can be eaten without ill-effect[65].",
+      "knownHazardsLtV2": "Kai kurių šios genties rūšių svogūnėliai ir žiedai jautriems žmonėms gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Kai kurių šios genties rūšių svogūnėliai ir žiedai jautriems žmonėms gali sukelti dermatitą.",
+      "changesNotes": "Tekstas tinkamas; pakeitimų nereikia."
+    },
+    {
+      "latin": "Tulipa sylvestris",
+      "knownHazards": "The bulb and the flowers have been known to cause dermatitis in sensitive people, though up to 5 bulbs a day can be eaten without ill-effect[65].",
+      "knownHazardsLtV2": "Svogūnėliai ir žiedai jautriems žmonėms gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Svogūnėliai ir žiedai jautriems žmonėms gali sukelti dermatitą.",
+      "changesNotes": "Tekstas tinkamas; pakeitimų nereikia."
+    },
+    {
+      "latin": "Turraea",
+      "knownHazards": "The bark is used as a fish poison; the leaves are occasionally also used for the same purpose[299 ]. The sawdust is very irritant and may even cause internal bleeding in wood workers; good ventilation is required[299 , 848 ].",
+      "knownHazardsLtV2": "Žievė ir lapai naudojami kaip žuvų nuodai. Pjuvenos stipriai dirgina kvėpavimo takus ir gali sukelti vidinį kraujavimą dirbančiems su šia mediena; būtina gera ventiliacija.",
+      "knownHazardsLtEdited": "Žievė ir lapai naudojami kaip žuvų nuodai. Pjuvenos stipriai dirgina kvėpavimo takus ir gali sukelti vidinį kraujavimą dirbantiems su šia mediena; būtina gera ventiliacija.",
+      "changesNotes": "Linksnis pataisytas: 'dirbančiems' → 'dirbantiems' (dat.pl. nuo 'dirbantis')."
+    },
+    {
+      "latin": "Vaccinium myrtillus",
+      "knownHazards": "High tannin content may cause digestive disorders - avoid prolonged use or high doses. Avoid in pregnancy. Avoid if on anticoagulant therapy (e.g. warfarin) [301].",
+      "knownHazardsLtV2": "Didelis taninų kiekis gali sutrikdyti virškinimą – vengti ilgalaikio vartojimo ar didelių dozių. Nenaudoti nėštumo metu ir kartu su antikoaguliantais (pvz., varfarinu).",
+      "knownHazardsLtEdited": "Didelis taninų kiekis gali sutrikdyti virškinimą – vengti ilgalaikio vartojimo ar didelių dozių. Nenaudoti nėštumo metu ir kartu su antikoaguliantais (pvz., varfarinu).",
+      "changesNotes": "Tekstas tinkamas; pakeitimų nereikia."
+    },
+    {
+      "latin": "Vaccinium vitis-idaea",
+      "knownHazards": "Tea should not be drunk on a regular basis because it contains the toxin 'arbutin'",
+      "knownHazardsLtV2": "Arbatos negalima gerti reguliariai, nes augalas turi toksišką glikozidą arbutiną.",
+      "knownHazardsLtEdited": "Arbatos negalima gerti reguliariai, nes augale yra toksinis glikozidas arbutinas.",
+      "changesNotes": "Calque pašalintas: 'augalas turi' → 'augale yra'. Sutarimas: 'toksišką glikozidą arbutiną' (acc.) → 'toksinis glikozidas arbutinas' (nom.) po 'yra'."
+    },
+    {
+      "latin": "Valeriana",
+      "knownHazards": "Some caution is advised with the use of this plant. At least one member of the genus is considered to be poisonous raw[161] and V. officinalis is a powerful nervine and sedative that can become habit-forming.",
+      "knownHazardsLtV2": "Kai kurios genties rūšys šviežios yra toksiškos. V. officinalis yra stiprus nervinė ir raminamoji priemonė, galinti sukelti priklausomybę.",
+      "knownHazardsLtEdited": "Kai kurios genties rūšys šviežios toksiškos. V. officinalis – stipri nervinė ir raminamoji priemonė, galinti sukelti priklausomybę.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje (du atvejai). Giminės sutarimas: 'stiprus' (m.) → 'stipri' (f.), nes 'priemonė' yra moteriškosios giminės."
+    },
+    {
+      "latin": "Valeriana officinalis",
+      "knownHazards": "It is said that prolonged medicinal use of this plant can lead to addiction[9]. A course of treatment should not exceed 3 months. Adverse effects can include: headaches (rare), giddiness, nausea, excitability & agitation, heart palpitations (rare), insomnia (rare). Do not take with other sedatives (e.g. alcohol) or before driving (or alertness required) [301].",
+      "knownHazardsLtV2": "Ilgalaikis vartojimas gali sukelti priklausomybę; gydymo kursas neturi viršyti 3 mėnesių. Galimi šalutiniai poveikiai: galvos svaigimas, pykinimas, padidėjęs jaudrumas, širdies plakimas; nevartoti kartu su kitais sedatyvais ar prieš vairavimą.",
+      "knownHazardsLtEdited": "Ilgalaikis vartojimas gali sukelti priklausomybę; gydymo kursas neturi viršyti 3 mėnesių. Galimi šalutiniai poveikiai: galvos svaigimas, pykinimas, padidėjęs jaudrumas, širdies plakimas; nevartoti kartu su kitais sedatyvais ar prieš vairavimą.",
+      "changesNotes": "Tekstas tinkamas; pakeitimų nereikia."
+    },
+    {
+      "latin": "Valeriana phu",
+      "knownHazards": "Some caution is advised with the use of this plant. At least one member of the genus is considered to be poisonous raw[161] and V. officinalis is a powerful nervine and sedative that can become habit-forming.",
+      "knownHazardsLtV2": "Kai kurios genties rūšys šviežios yra toksiškos. V. officinalis yra stiprus nervinė ir raminamoji priemonė, galinti sukelti priklausomybę.",
+      "knownHazardsLtEdited": "Kai kurios genties rūšys šviežios toksiškos. V. officinalis – stipri nervinė ir raminamoji priemonė, galinti sukelti priklausomybę.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje (du atvejai). Giminės sutarimas: 'stiprus' (m.) → 'stipri' (f.), nes 'priemonė' yra moteriškosios giminės."
+    },
+    {
+      "latin": "Vanilla",
+      "knownHazards": "Calcium oxalate crystals are present in the plant, which may cause dermatitis in vanilla workers[310 ].(Handling plant may cause skin irritation or allergic reaction )",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie dirgina odą ir gali sukelti dermatitą ar alerginę reakciją kontakto metu.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie palietus augalą dirgina odą ir gali sukelti dermatitą ar alerginę reakciją.",
+      "changesNotes": "Calque pašalintas: 'kontakto metu' → 'palietus augalą' (natūraliau LT)."
+    },
+    {
+      "latin": "Vanilla planifolia",
+      "knownHazards": "Calcium oxalate crystals are present in the plant, which may cause dermatitis in vanilla workers[310 ].(Handling plant may cause skin irritation or allergic reaction )",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie dirgina odą ir gali sukelti dermatitą ar alerginę reakciją kontakto metu.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie palietus augalą dirgina odą ir gali sukelti dermatitą ar alerginę reakciją.",
+      "changesNotes": "Calque pašalintas: 'kontakto metu' → 'palietus augalą' (natūraliau LT)."
+    },
+    {
+      "latin": "Veratrum",
+      "knownHazards": "All parts of the plant are highly poisonous[7, 10, 19, 65].",
+      "knownHazardsLtV2": "Visos augalo dalys yra mirtinos.",
+      "knownHazardsLtEdited": "Visos augalo dalys mirtinos.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje."
+    },
+    {
+      "latin": "Veratrum album",
+      "knownHazards": "All parts of the plant are highly poisonous[7, 10, 19, 65].",
+      "knownHazardsLtV2": "Visos augalo dalys yra mirtinos.",
+      "knownHazardsLtEdited": "Visos augalo dalys mirtinos.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje."
+    },
+    {
+      "latin": "Veratrum nigrum",
+      "knownHazards": "All parts of the plant are highly poisonous[178, 200].",
+      "knownHazardsLtV2": "Visos augalo dalys yra mirtinos.",
+      "knownHazardsLtEdited": "Visos augalo dalys mirtinos.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje."
+    },
+    {
+      "latin": "Viburnum lantana",
+      "knownHazards": "Large quantities of the fruit can cause vomiting and diarrhoea[10, 65]. The fruit is of very low or zero toxicity, it only causes mild upsets when eaten unripe or in large quantities[76].",
+      "knownHazardsLtV2": "Didelis kiekis ar nesubrendę vaisiai gali sukelti vėmimą ir viduriavimą; toksiškumas labai mažas.",
+      "knownHazardsLtEdited": "Didelis kiekis ar nesubrendę vaisiai gali sukelti vėmimą ir viduriavimą; toksiškumas labai mažas.",
+      "changesNotes": "Tekstas tinkamas; pakeitimų nereikia."
+    },
+    {
+      "latin": "Viburnum opulus",
+      "knownHazards": "Large quantities of the fruit can cause vomiting and diarrhoea[10, 65]. The fruit is of very low or zero toxicity, it only causes mild upsets when eaten unripe or in large quantities[65, 76].",
+      "knownHazardsLtV2": "Didelis kiekis ar nesubrendę vaisiai gali sukelti vėmimą ir viduriavimą; toksiškumas labai mažas.",
+      "knownHazardsLtEdited": "Didelis kiekis ar nesubrendę vaisiai gali sukelti vėmimą ir viduriavimą; toksiškumas labai mažas.",
+      "changesNotes": "Tekstas tinkamas; pakeitimų nereikia."
+    },
+    {
+      "latin": "Vinca",
+      "knownHazards": "Large quantities of the plant are poisonous[19, 65].",
+      "knownHazardsLtV2": "Didelis kiekis augalo yra toksiškas.",
+      "knownHazardsLtEdited": "Dideliais kiekiais augalas toksiškas.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje. Pertvarkyta natūraliau: 'didelis kiekis augalo' → 'dideliais kiekiais augalas'."
+    },
+    {
+      "latin": "Vinca major",
+      "knownHazards": "Large quantities of the plant are poisonous[19, 65].",
+      "knownHazardsLtV2": "Didelis kiekis augalo yra toksiškas.",
+      "knownHazardsLtEdited": "Dideliais kiekiais augalas toksiškas.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje. Pertvarkyta natūraliau: 'didelis kiekis augalo' → 'dideliais kiekiais augalas'."
+    },
+    {
+      "latin": "Vinca minor",
+      "knownHazards": "Large quantities of the plant are poisonous[19, 65].",
+      "knownHazardsLtV2": "Didelis kiekis augalo yra toksiškas.",
+      "knownHazardsLtEdited": "Dideliais kiekiais augalas toksiškas.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje. Pertvarkyta natūraliau: 'didelis kiekis augalo' → 'dideliais kiekiais augalas'."
+    },
+    {
+      "latin": "Viola odorata",
+      "knownHazards": "May cause vomiting. Possible additive effect with laxatives [301].",
+      "knownHazardsLtV2": "Gali sukelti vėmimą; kartu su vidurius laisvinančiomis priemonėmis poveikis sustiprėja.",
+      "knownHazardsLtEdited": "Gali sukelti vėmimą; kartu su vidurius laisvinančiomis priemonėmis poveikis sustiprėja.",
+      "changesNotes": "Tekstas tinkamas; pakeitimų nereikia."
+    },
+    {
+      "latin": "Vitex",
+      "knownHazards": "Headache, abdominal cramps and diarrhoea, increased menstrual flow, rashes, pruritus[301].",
+      "knownHazardsLtV2": "Galimi galvos skausmas, pilvo mėšlungis, viduriavimas, padidėjęs menstruacijų intensyvumas, bėrimai ir niežulys.",
+      "knownHazardsLtEdited": "Galimi galvos skausmas, pilvo mėšlungis, viduriavimas, padidėjęs menstruacijų srautas, bėrimai ir niežulys.",
+      "changesNotes": "Tiksliau: 'padidėjęs menstruacijų intensyvumas' → 'padidėjęs menstruacijų srautas' (atitinka originalą 'increased menstrual flow')."
+    },
+    {
+      "latin": "Vitex agnus-castus",
+      "knownHazards": "Headache, abdominal cramps and diarrhoea, increased menstrual flow, rashes, pruritus[301].",
+      "knownHazardsLtV2": "Galimi galvos skausmas, pilvo mėšlungis, viduriavimas, padidėjęs menstruacijų intensyvumas, bėrimai ir niežulys.",
+      "knownHazardsLtEdited": "Galimi galvos skausmas, pilvo mėšlungis, viduriavimas, padidėjęs menstruacijų srautas, bėrimai ir niežulys.",
+      "changesNotes": "Tiksliau: 'padidėjęs menstruacijų intensyvumas' → 'padidėjęs menstruacijų srautas' (atitinka originalą 'increased menstrual flow')."
+    },
+    {
+      "latin": "Wisteria",
+      "knownHazards": "The seed of all members of this genus is poisonous[200].",
+      "knownHazardsLtV2": "Visų šios genties rūšių sėklos yra toksiškos.",
+      "knownHazardsLtEdited": "Visų šios genties rūšių sėklos toksiškos.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje."
+    },
+    {
+      "latin": "Wisteria floribunda",
+      "knownHazards": "The seed of all members of this genus is poisonous[200].",
+      "knownHazardsLtV2": "Visų šios genties rūšių sėklos yra toksiškos.",
+      "knownHazardsLtEdited": "Visų šios genties rūšių sėklos toksiškos.",
+      "changesNotes": "Pašalintas perteklinis 'yra' predikato pozicijoje."
+    }
+  ]
+}

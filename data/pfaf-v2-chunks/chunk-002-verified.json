@@ -1,0 +1,306 @@
+{
+  "chunkIndex": 2,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Agave utahensis",
+      "knownHazards": "The plants have a very sharp and tough spine at the tip of each leaf. They need to be carefully sited in the garden. In theory at least, the flowers, nectar, immature flowering stem and the centre of the rosette of all Agave species is edible and, with proper preparation, can provide a sweet, tasty foodstuff. Some species, however, contain relatively high levels of saponins (which makes them taste bitter) and some other compounds which can cause bellyache, and so these would only be eaten in times of desperation. In addition, many people may find these foods to be strongly laxative the first few times they eat them[1846 ].",
+      "knownHazardsLtV2": "Kiekvieno lapo galiuke auga labai aštus ir tvirtas spyglys — sodinti atsargiai, ypač šalia vaikų. Kai kurios agavų rūšys turi daug saponinų ir gali sukelti pilvo skausmą; pirmosiomis valgymo dienomis veikia stipriai vidurius laisvinančiai.",
+      "knownHazardsLtEdited": "Kiekvieno lapo galiuke auga aštus, tvirtas spyglys — sodinti atsargiai, ypač šalia vaikų. Kai kurios agavų rūšys turi daug saponinų, gali sukelti pilvo skausmą ir pirmosiomis valgymo dienomis stipriai laisvinti vidurius.",
+      "knownHazardsLtFinal": "Kiekvieno lapo galiuke auga aštus, tvirtas spyglys — sodinti atsargiai. Kai kurios agavų rūšys turi daug saponinų, gali sukelti pilvo skausmą ir pirmosiomis valgymo dienomis stipriai laisvinti vidurius.",
+      "status": "flagged",
+      "flagReason": "EN source does not mention children ('vaikų') specifically — the warning is general garden placement ('carefully sited in the garden'). LT adds a target group (children) not present in source.",
+      "suggestedFix": "Remove 'ypač šalia vaikų' — rewrite as: 'Kiekvieno lapo galiuke auga aštus, tvirtas spyglys — sodinti atsargiai. Kai kurios agavų rūšys turi daug saponinų, gali sukelti pilvo skausmą ir pirmosiomis valgymo dienomis stipriai laisvinti vidurius.'"
+    },
+    {
+      "latin": "Agrostemma",
+      "knownHazards": "The seed and leaves are poisonous, containing saponin-like substances[4, 19, 76]. Although poisonous, saponins are poorly absorbed by the human body and so most pass through without harm. Saponins are quite bitter and can be found in many common foods such as some beans. They can be removed by carefully leaching the seed or flour in running water. Thorough cooking, and perhaps changing the cooking water once, will also normally remove most of them. However, it is not advisable to eat large quantities of food that contain saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Sėklos ir lapai toksiškai — turi saponinų, tačiau žmogaus žarna jų beveik neįsisavina ir dauguma praeina nekenkdami. Saponinai gerai šalinami ilgai mirkinant arba virinant; žuvims jie mirtinai toksiški net mažomis dozėmis.",
+      "knownHazardsLtEdited": "Sėklos ir lapai toksiški — turi saponinų, tačiau žmogaus organizmas jų beveik neįsisavina, todėl dauguma praeina nekenkdami. Saponinai gerai šalinami ilgai mirkinant arba virinant; žuvims jie mirtinai toksiški net mažomis dozėmis.",
+      "knownHazardsLtFinal": "Sėklos ir lapai toksiški — turi saponinų, tačiau žmogaus organizmas jų beveik neįsisavina, todėl dauguma praeina nekenkdami. Saponinai gerai šalinami ilgai mirkinant arba virinant; žuvims yra daug toksiškesni nei žmonėms.",
+      "status": "flagged",
+      "flagReason": "EN says tribes used LARGE quantities to stupefy or kill fish — implying high concentrations are needed. LT says 'mirtinai toksiški net mažomis dozėmis' (lethal even in small doses), which is a severity overstatement not supported by the source text.",
+      "suggestedFix": "Replace 'žuvims jie mirtinai toksiški net mažomis dozėmis' with 'žuvims jie yra daug toksiškesni nei žmonėms' (much more toxic to fish than to humans), which faithfully reflects 'much more toxic to some creatures, such as fish'."
+    },
+    {
+      "latin": "Agrostemma githago",
+      "knownHazards": "The seed and leaves are poisonous, containing saponin-like substances[4, 19, 76]. Although poisonous, saponins are poorly absorbed by the human body and so most pass through without harm. Saponins are quite bitter and can be found in many common foods such as some beans. They can be removed by carefully leaching the seed or flour in running water. Thorough cooking, and perhaps changing the cooking water once, will also normally remove most of them. However, it is not advisable to eat large quantities of food that contain saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Sėklos ir lapai toksiškai — turi saponinų, tačiau žmogaus žarna jų beveik neįsisavina ir dauguma praeina nekenkdami. Saponinai gerai šalinami ilgai mirkinant arba virinant; žuvims jie mirtinai toksiški net mažomis dozėmis.",
+      "knownHazardsLtEdited": "Sėklos ir lapai toksiški — turi saponinų, tačiau žmogaus organizmas jų beveik neįsisavina, todėl dauguma praeina nekenkdami. Saponinai gerai šalinami ilgai mirkinant arba virinant; žuvims jie mirtinai toksiški net mažomis dozėmis.",
+      "knownHazardsLtFinal": "Sėklos ir lapai toksiški — turi saponinų, tačiau žmogaus organizmas jų beveik neįsisavina, todėl dauguma praeina nekenkdami. Saponinai gerai šalinami ilgai mirkinant arba virinant; žuvims yra daug toksiškesni nei žmonėms.",
+      "status": "flagged",
+      "flagReason": "Same issue as Agrostemma: 'mirtinai toksiški net mažomis dozėmis' overstates severity — EN supports 'much more toxic to fish', not 'lethal even in small doses'.",
+      "suggestedFix": "Replace 'žuvims jie mirtinai toksiški net mažomis dozėmis' with 'žuvims yra daug toksiškesni nei žmonėms'."
+    },
+    {
+      "latin": "Ailanthus",
+      "knownHazards": "The plant is possibly poisonous[7, 20]. Male flowers have potentially allergenic pollen[200]. The leaves are toxic to domestic animals[269]. Gardeners who fell the tree may suffer rashes[269]. The odour of the foliage is intensely disagreeable and can cause headache and nausea, rhinitis and conjunctivitis[269].The pollen can cause hay fever[269].",
+      "knownHazardsLtV2": "Lapai toksiški naminiams gyvūnams; kontaktas su medžiu pjaustant gali sukelti odos bėrimą. Stiprus lajos kvapas gali sukelti galvos skausmą, pykinimą, rinitą ir konjunktyvitą; žiedadulkės sukelia šienligę.",
+      "knownHazardsLtEdited": "Lapai toksiški naminiams gyvūnams; pjaunant medį gali atsirasti odos bėrimas. Stiprus lajos kvapas sukelia galvos skausmą, pykinimą, rinitą ir konjunktyvitą; žiedadulkės — šienligę.",
+      "knownHazardsLtFinal": "Augalas galimai toksiškas; lapai toksiški naminiams gyvūnams; pjaunant medį gali atsirasti odos bėrimas. Stiprus lajos kvapas sukelia galvos skausmą, pykinimą, rinitą ir konjunktyvitą; žiedadulkės — šienligę.",
+      "status": "flagged",
+      "flagReason": "EN opens with 'The plant is possibly poisonous' — a general plant-level toxicity qualifier that is entirely absent from LT. This is a meaningful omission, especially as the EN source uses hedged language ('possibly') that should be preserved.",
+      "suggestedFix": "Add opening qualifier: 'Augalas galimai toksiškas; lapai toksiški naminiams gyvūnams; pjaunant medį gali atsirasti odos bėrimas.'"
+    },
+    {
+      "latin": "Ailanthus altissima",
+      "knownHazards": "The plant is possibly poisonous[7, 20]. Male flowers have potentially allergenic pollen[200]. The leaves are toxic to domestic animals[269]. Gardeners who fell the tree may suffer rashes[269]. The odour of the foliage is intensely disagreeable and can cause headache and nausea, rhinitis and conjunctivitis[269].The pollen can cause hay fever[269].",
+      "knownHazardsLtV2": "Lapai toksiški naminiams gyvūnams; kontaktas su medžiu pjaustant gali sukelti odos bėrimą. Stiprus lajos kvapas gali sukelti galvos skausmą, pykinimą, rinitą ir konjunktyvitą; žiedadulkės sukelia šienligę.",
+      "knownHazardsLtEdited": "Lapai toksiški naminiams gyvūnams; pjaunant medį gali atsirasti odos bėrimas. Stiprus lajos kvapas sukelia galvos skausmą, pykinimą, rinitą ir konjunktyvitą; žiedadulkės — šienligę.",
+      "knownHazardsLtFinal": "Augalas galimai toksiškas; lapai toksiški naminiams gyvūnams; pjaunant medį gali atsirasti odos bėrimas. Stiprus lajos kvapas sukelia galvos skausmą, pykinimą, rinitą ir konjunktyvitą; žiedadulkės — šienligę.",
+      "status": "flagged",
+      "flagReason": "Identical EN to Ailanthus — same omission: 'The plant is possibly poisonous' not reflected in LT.",
+      "suggestedFix": "Same as Ailanthus: 'Augalas galimai toksiškas; lapai toksiški naminiams gyvūnams; pjaunant medį gali atsirasti odos bėrimas.'"
+    },
+    {
+      "latin": "Alisma",
+      "knownHazards": "Although no mention of toxicity has been seen for this plant, the fresh leaves and roots of the closely related A. plantago-aquatica are poisonous, though the toxins are destroyed by thoroughly cooking or drying the plant[[13, 46].",
+      "knownHazardsLtV2": "Šiai rūšiai toksiškumo nepastebėta, tačiau artimojo giminaičio A. plantago-aquatica švieži lapai ir šaknys yra toksiški — toksinai sunaikinami gerai išvirus arba išdžiovinus.",
+      "knownHazardsLtEdited": "Šiai rūšiai toksiškumo nenustatyta, tačiau artimo giminaičio A. plantago-aquatica švieži lapai ir šaknys toksiški — toksinai sunaikinami gerai išvirus arba išdžiovinus.",
+      "knownHazardsLtFinal": "Šiai rūšiai toksiškumo nenustatyta, tačiau artimo giminaičio A. plantago-aquatica švieži lapai ir šaknys toksiški — toksinai sunaikinami gerai išvirus arba išdžiovinus.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Alisma plantago-aquatica",
+      "knownHazards": "The fresh leaves and roots are toxic but the toxic principal is destroyed by heat or by drying[13, 46]. The seed is said to promote sterility. By contrast it is also said to promote conception [301].",
+      "knownHazardsLtV2": "Švieži lapai ir šaknys toksiški, tačiau toksinai sunaikinami kaitinant arba džiovinant. Sėklos liaudies medicinoje minimos kaip poveikį vaisingumui darančios (prieštaringi šaltiniai).",
+      "knownHazardsLtEdited": "Švieži lapai ir šaknys toksiški, tačiau toksinai sunaikinami kaitinant arba džiovinant. Sėklos liaudies medicinoje naudotos kaip darantys poveikį vaisingumui — šaltiniai prieštarauja vienas kitam.",
+      "knownHazardsLtFinal": "Švieži lapai ir šaknys toksiški, tačiau toksinai sunaikinami kaitinant arba džiovinant. Sėklos liaudies medicinoje naudotos kaip darantys poveikį vaisingumui — šaltiniai prieštarauja vienas kitam.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium acuminatum",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium aflatunense",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium akaka",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium atropurpureum",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium cernuum",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium flavum",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium giganteum",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium moly",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium neapolitanum",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium schoenoprasum",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in very large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — labai dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir labai dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir labai dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium sphaerocephalon",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in very large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — labai dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir labai dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir labai dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium stipitatum",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Allium unifolium",
+      "knownHazards": "Although no individual reports regarding this species have been seen, there have been cases of poisoning caused by the consumption, in very large quantities and by some mammals, of certain members of this genus. Dogs seem to be particularly susceptible[76].",
+      "knownHazardsLtV2": "Šunys ypač jautrūs — labai dideliais kiekiais vartojant šios genties augalus gali apsinuodyti. Žmonėms pavojus mažas, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtEdited": "Šunys ypač jautrūs šios genties augalams ir labai dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "knownHazardsLtFinal": "Šunys ypač jautrūs šios genties augalams ir labai dideliais kiekiais gali apsinuodyti. Žmonėms pavojus nedidelis, tačiau didelių kiekių geriau vengti.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Alocasia",
+      "knownHazards": "All parts of the plant contain calcium oxalate crystals. This substance is toxic fresh and, if eaten, makes the mouth, tongue and throat feel as if hundreds of small needles are digging in to them. However, calcium oxalate is easily broken down either by thoroughly cooking the plant or by fully drying it and, in either of these states, it is safe to eat the plant. People with a tendency to rheumatism, arthritis, gout, kidney stones and hyperacidity should take especial caution if including this plant in their diet[238 ].",
+      "knownHazardsLtV2": "Visos augalo dalys turi kalcio oksalato kristalų: žali valgant sukelia stiprų burnos, liežuvio ir gerklės deginimą. Gerai išvirus arba išdžiovinus oksalatai suyra ir augalas tampa saugus; sergantys podagra, inkstų akmenimis ar artritu turėtų būti atsargūs.",
+      "knownHazardsLtEdited": "Visos augalo dalys turi kalcio oksalato kristalų — žali valgant sukelia stiprų burnos, liežuvio ir gerklės deginimą. Gerai išvirus arba išdžiovinus oksalatai suyra ir augalas tampa saugus; sergantieji podagra, inkstų akmenimis ar artritu turėtų būti atsargūs.",
+      "knownHazardsLtFinal": "Visos augalo dalys turi kalcio oksalato kristalų — žali valgant sukelia stiprų burnos, liežuvio ir gerklės deginimą. Gerai išvirus arba išdžiovinus oksalatai suyra ir augalas tampa saugus; sergantieji reumatizmu, podagra, inkstų akmenimis, artritu ar padidėjusiu skrandžio rūgštingumu turėtų būti atsargūs.",
+      "status": "flagged",
+      "flagReason": "EN lists five risk groups: rheumatism, arthritis, gout, kidney stones, hyperacidity. LT only includes three (podagra/gout, inkstų akmenimis/kidney stones, artritu/arthritis). Missing: reumatizmas (rheumatism) and padidėjęs rūgštingumas (hyperacidity).",
+      "suggestedFix": "Expand the at-risk list: 'sergantieji reumatizmu, podagra, inkstų akmenimis, artritu ar padidėjusiu skrandžio rūgštingumu turėtų būti atsargūs'."
+    },
+    {
+      "latin": "Aloe",
+      "knownHazards": "The sap of Aloe species contains anthraquinones. These compounds have several beneficial medicinal actions, particularly as a laxative, and many species of Aloe are thus employed in traditional medicine. Whilst safe in small doses and for short periods of time, anthraquinones do have potential problems if used in excess. These include congestion and irritation of the pelvic organs[ 299 ]. Long term use of anthraquinone laxatives may also play a role in development of colorectal cancer as they have genotoxic potential, and tumorigenic potential[ 299 ].",
+      "knownHazardsLtV2": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai naudojami yra saugūs vidurius laisvinantys vaistai. Ilgalaikis vartojimas gali dirginti dubens organus ir, dėl genotoksinio potencialo, padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtEdited": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio potencialo padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtFinal": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio bei tumorigeminio potencialo padidinti storosios žarnos vėžio riziką.",
+      "status": "flagged",
+      "flagReason": "EN cites both 'genotoxic potential' AND 'tumorigenic potential' as reasons for colorectal cancer risk. LT only mentions 'genotoksinio potencialo' — tumorigenic potential is omitted.",
+      "suggestedFix": "Add 'tumorigeninio' alongside 'genotoksinio': 'dėl genotoksinio bei tumorigeninio potencialo padidinti storosios žarnos vėžio riziką'."
+    },
+    {
+      "latin": "Aloe arborescens",
+      "knownHazards": "The sap of Aloe species contains anthraquinones. These compounds have several beneficial medicinal actions, particularly as a laxative, and many species of Aloe are thus employed in traditional medicine. Whilst safe in small doses and for short periods of time, anthraquinones do have potential problems if used in excess. These include congestion and irritation of the pelvic organs[ 299 ]. Long term use of anthraquinone laxatives may also play a role in development of colorectal cancer as they have genotoxic potential, and tumorigenic potential[ 299 ].",
+      "knownHazardsLtV2": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai naudojami yra saugūs vidurius laisvinantys vaistai. Ilgalaikis vartojimas gali dirginti dubens organus ir, dėl genotoksinio potencialo, padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtEdited": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio potencialo padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtFinal": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio bei tumorigeninio potencialo padidinti storosios žarnos vėžio riziką.",
+      "status": "flagged",
+      "flagReason": "Same as Aloe: tumorigenic potential omitted from LT.",
+      "suggestedFix": "Add 'tumorigeninio': 'dėl genotoksinio bei tumorigeninio potencialo padidinti storosios žarnos vėžio riziką'."
+    },
+    {
+      "latin": "Aloe barbadensis",
+      "knownHazards": "Taken by mouth may cause cramping pain in the gastrointestinal tract and diarrhoea (reduce dose). Skin rashes with long term use of gel. Rare adverse effects are on heart rhythm, kidney damage and oedema. Long term use can cause electrolytes loss esp. potassium and may therefore enhance the effect of drugs that act on the heart (e.g. digoxin) [301].",
+      "knownHazardsLtV2": "Vartojant per burną gali sukelti virškinamojo trakto mėšlungį ir viduriavimą — sumažinti dozę. Ilgalaikis gelio tepimas dirgina odą; ilgalaikis vidinis vartojimas mažina kalio kiekį ir sustiprina širdies vaistų (pvz. digoksino) poveikį.",
+      "knownHazardsLtEdited": "Vartojant per burną gali sukelti virškinamojo trakto mėšlungį ir viduriavimą — tada dozę sumažinti. Ilgalaikis gelio tepimas dirgina odą; ilgalaikis vidinis vartojimas mažina kalio kiekį ir sustiprina širdies vaistų (pvz. digoksino) poveikį.",
+      "knownHazardsLtFinal": "Vartojant per burną gali sukelti virškinamojo trakto mėšlungį ir viduriavimą — dozę sumažinti. Reti nepageidaujami poveikiai: širdies ritmo sutrikimai, inkstų pažeidimas ir edema. Ilgalaikis gelio tepimas dirgina odą; ilgalaikis vartojimas mažina kalio kiekį ir sustiprina širdies vaistų (pvz. digoksino) poveikį.",
+      "status": "flagged",
+      "flagReason": "EN explicitly states 'Rare adverse effects are on heart rhythm, kidney damage and oedema' — these three adverse effects are entirely absent from LT. This is a meaningful omission of medically relevant safety information.",
+      "suggestedFix": "Insert sentence: 'Reti nepageidaujami poveikiai: širdies ritmo sutrikimai, inkstų pažeidimas ir edema.' Also note: 'tada dozę sumažinti' is grammatically awkward; prefer 'dozę sumažinti' (as a standalone recommendation following the dash)."
+    },
+    {
+      "latin": "Aloe camperi",
+      "knownHazards": "The sap of Aloe species contains anthraquinones. These compounds have several beneficial medicinal actions, particularly as a laxative, and many species of Aloe are thus employed in traditional medicine. Whilst safe in small doses and for short periods of time, anthraquinones do have potential problems if used in excess. These include congestion and irritation of the pelvic organs[ 299 ]. Long term use of anthraquinone laxatives may also play a role in development of colorectal cancer as they have genotoxic potential, and tumorigenic potential[ 299 ].",
+      "knownHazardsLtV2": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai naudojami yra saugūs vidurius laisvinantys vaistai. Ilgalaikis vartojimas gali dirginti dubens organus ir, dėl genotoksinio potencialo, padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtEdited": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio potencialo padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtFinal": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio bei tumorigeninio potencialo padidinti storosios žarnos vėžio riziką.",
+      "status": "flagged",
+      "flagReason": "Same as Aloe: tumorigenic potential omitted.",
+      "suggestedFix": "Add 'tumorigeninio': 'dėl genotoksinio bei tumorigeninio potencialo padidinti storosios žarnos vėžio riziką'."
+    },
+    {
+      "latin": "Aloe candelabrum",
+      "knownHazards": "The sap of Aloe species contains anthraquinones. These compounds have several beneficial medicinal actions, particularly as a laxative, and many species of Aloe are thus employed in traditional medicine. Whilst safe in small doses and for short periods of time, anthraquinones do have potential problems if used in excess. These include congestion and irritation of the pelvic organs[ 299 ]. Long term use of anthraquinone laxatives may also play a role in development of colorectal cancer as they have genotoxic potential, and tumorigenic potential[ 299 ].",
+      "knownHazardsLtV2": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai naudojami yra saugūs vidurius laisvinantys vaistai. Ilgalaikis vartojimas gali dirginti dubens organus ir, dėl genotoksinio potencialo, padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtEdited": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio potencialo padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtFinal": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio bei tumorigeninio potencialo padidinti storosios žarnos vėžio riziką.",
+      "status": "flagged",
+      "flagReason": "Same as Aloe: tumorigenic potential omitted.",
+      "suggestedFix": "Add 'tumorigeninio': 'dėl genotoksinio bei tumorigeninio potencialo padidinti storosios žarnos vėžio riziką'."
+    },
+    {
+      "latin": "Aloe ferox",
+      "knownHazards": "The sap of Aloe species contains anthraquinones. These compounds have several beneficial medicinal actions, particularly as a laxative, and many species of Aloe are thus employed in traditional medicine. Whilst safe in small doses and for short periods of time, anthraquinones do have potential problems if used in excess. These include congestion and irritation of the pelvic organs[ 299 ]. Long term use of anthraquinone laxatives may also play a role in development of colorectal cancer as they have genotoxic potential, and tumorigenic potential[ 299 ].",
+      "knownHazardsLtV2": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai naudojami yra saugūs vidurius laisvinantys vaistai. Ilgalaikis vartojimas gali dirginti dubens organus ir, dėl genotoksinio potencialo, padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtEdited": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio potencialo padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtFinal": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio bei tumorigeninio potencialo padidinti storosios žarnos vėžio riziką.",
+      "status": "flagged",
+      "flagReason": "Same as Aloe: tumorigenic potential omitted.",
+      "suggestedFix": "Add 'tumorigeninio': 'dėl genotoksinio bei tumorigeninio potencialo padidinti storosios žarnos vėžio riziką'."
+    },
+    {
+      "latin": "Aloe marlothii",
+      "knownHazards": "The sap of Aloe species contains anthraquinones. These compounds have several beneficial medicinal actions, particularly as a laxative, and many species of Aloe are thus employed in traditional medicine. Whilst safe in small doses and for short periods, anthraquinones have potential problems if used in excess. These include congestion and irritation of the pelvic organs[299]. Long-term use of anthraquinone laxatives may also play a role in the development of colorectal cancer as they have genotoxic potential and tumorigenic potential[299].",
+      "knownHazardsLtV2": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai naudojami yra saugūs vidurius laisvinantys vaistai. Ilgalaikis vartojimas gali dirginti dubens organus ir, dėl genotoksinio potencialo, padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtEdited": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio potencialo padidinti storosios žarnos vėžio riziką.",
+      "knownHazardsLtFinal": "Aloės sula turi antrachinono junginių, kurie mažomis dozėmis ir trumpai vartojami yra saugūs kaip vidurius laisvinantis vaistas. Ilgalaikis vartojimas gali dirginti dubens organus ir dėl genotoksinio bei tumorigeninio potencialo padidinti storosios žarnos vėžio riziką.",
+      "status": "flagged",
+      "flagReason": "Same as Aloe: tumorigenic potential omitted.",
+      "suggestedFix": "Add 'tumorigeninio': 'dėl genotoksinio bei tumorigeninio potencialo padidinti storosios žarnos vėžio riziką'."
+    },
+    {
+      "latin": "Aloe vera",
+      "knownHazards": "Taken by mouth may cause cramping pain in the gastrointestinal tract and diarrhoea (reduce dose). Skin rashes with long term use of gel. Rare adverse effects are on heart rhythm, kidney damage and oedema. Long term use can cause electrolytes loss esp. potassium and may therefore enhance the effect of drugs that act on the heart (e.g. digoxin) [301].",
+      "knownHazardsLtV2": "Vartojant per burną gali sukelti virškinamojo trakto mėšlungį ir viduriavimą — sumažinti dozę. Ilgalaikis gelio tepimas dirgina odą; ilgalaikis vidinis vartojimas mažina kalio kiekį ir sustiprina širdies vaistų (pvz. digoksino) poveikį.",
+      "knownHazardsLtEdited": "Vartojant per burną gali sukelti virškinamojo trakto mėšlungį ir viduriavimą — tada dozę sumažinti. Ilgalaikis gelio tepimas dirgina odą; ilgalaikis vidinis vartojimas mažina kalio kiekį ir sustiprina širdies vaistų (pvz. digoksino) poveikį.",
+      "knownHazardsLtFinal": "Vartojant per burną gali sukelti virškinamojo trakto mėšlungį ir viduriavimą — dozę sumažinti. Reti nepageidaujami poveikiai: širdies ritmo sutrikimai, inkstų pažeidimas ir edema. Ilgalaikis gelio tepimas dirgina odą; ilgalaikis vartojimas mažina kalio kiekį ir sustiprina širdies vaistų (pvz. digoksino) poveikį.",
+      "status": "flagged",
+      "flagReason": "Identical EN to Aloe barbadensis — same omission: 'Rare adverse effects are on heart rhythm, kidney damage and oedema' entirely absent from LT.",
+      "suggestedFix": "Same as Aloe barbadensis: insert 'Reti nepageidaujami poveikiai: širdies ritmo sutrikimai, inkstų pažeidimas ir edema.' Also fix 'tada dozę sumažinti' → 'dozę sumažinti'."
+    }
+  ]
+}

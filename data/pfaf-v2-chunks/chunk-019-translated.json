@@ -1,0 +1,156 @@
+{
+  "chunkIndex": 19,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Lotus",
+      "knownHazards": "All parts of the plant are poisonous, containing cyanogenic glycosides(hydrogen cyanide)[65, 76]. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death. This species is polymorphic for cyanogenic glycosides[218]. The flowers of some forms of the plant contain traces of prussic acid and so the plants can become mildly toxic when flowering[218]. They are completely innocuous when dried[218].",
+      "knownHazardsLtV2": "Visos augalo dalys yra toksiškos – turi cianogeninius glikozidus (vandenilio cianidą), kurio perteklius slopina kvėpavimą ir gali būti mirtinas. Kai kurių formų žiedai žydėjimo metu turi prūso rūgšties pėdsakų; džiovinti augalai visiškai nekenksmingi."
+    },
+    {
+      "latin": "Lupinus",
+      "knownHazards": "The seed of many lupin species contain bitter-tasting toxic alkaloids, though there are often sweet varieties within that species that are completely wholesome[65, 76]. Taste is a very clear indicator. These toxic alkaloids can be leeched out of the seed by soaking it overnight and discarding the soak water. It may also be necessary to change the water once during cooking. Fungal toxins also readily invade the crushed seed and can cause chronic illness[65].",
+      "knownHazardsLtV2": "Daugelio lubinų rūšių sėklos turi kartaus skonio toksiškus alkaloidus (saldžiadarigių veislių sėklos – nekenksningos); alkaloidai pašalinami mirkant per naktį ir išpilant vandenį. Susmulkintos sėklos gali būti užkrėstos grybeliniais toksinais, galinčiais sukelti lėtinę ligą."
+    },
+    {
+      "latin": "Lupinus arboreus",
+      "knownHazards": "The seed of many lupin species contain bitter-tasting toxic alkaloids, though there are often sweet varieties within that species that are completely wholesome[65, 76]. Taste is a very clear indicator. These toxic alkaloids can be leeched out of the seed by soaking it overnight and discarding the soak water. It may also be necessary to change the water once during cooking. Fungal toxins also readily invade the crushed seed and can cause chronic illness[65].",
+      "knownHazardsLtV2": "Daugelio lubinų rūšių sėklos turi kartaus skonio toksiškus alkaloidus (saldžiadarigių veislių sėklos – nekenksningos); alkaloidai pašalinami mirkant per naktį ir išpilant vandenį. Susmulkintos sėklos gali būti užkrėstos grybeliniais toksinais, galinčiais sukelti lėtinę ligą."
+    },
+    {
+      "latin": "Lychnis",
+      "knownHazards": "This plant contains saponins[20]. Although fairly toxic, these substances are poorly absorbed by the body, most passing straight through without any harm. Saponins can be found in a number of common foods such as some beans. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Augalas turi saponinų, kurie žmogaus žarnyne prastai įsisavinami ir žmonėms didelio pavojaus nekelia. Žuvims saponinai yra toksiški."
+    },
+    {
+      "latin": "Lycium",
+      "knownHazards": "Although no records of toxicity have been seen for this species, it does belong to a family that contains many poisonous plants. Some caution should be applied, especially towards leaves or unripe fruits, though ripe fruits are almost certainly edible.",
+      "knownHazardsLtV2": "Toksinio poveikio duomenų nėra, tačiau lapai ir nesubrendę vaisiai gali būti kenksmingi; subrendę vaisiai – valgomi."
+    },
+    {
+      "latin": "Lycium barbarum",
+      "knownHazards": "Although no records of toxicity have been seen, some caution should be exercised with this species, particularly with regard to its edible leaves, since it belongs to a family that often contains toxins. However, use of the leaves is well documented and fairly widespread in some areas. The unripe fruit might also be suspect though the ripe fruit is wholesome.",
+      "knownHazardsLtV2": "Toksinio poveikio duomenų nėra; lapai plačiai vartojami maistui ir laikomi saugiais. Nesubrendę vaisiai gali būti kenksmingi, subrendę – valgomi."
+    },
+    {
+      "latin": "Lycopersicon",
+      "knownHazards": "All green parts of the plant are poisonous[19, 76].",
+      "knownHazardsLtV2": "Visos žaliosios augalo dalys yra toksiškos."
+    },
+    {
+      "latin": "Lycopersicon pimpinellifolium",
+      "knownHazards": "All green parts of the plant are poisonous[19, 76].",
+      "knownHazardsLtV2": "Visos žaliosios augalo dalys yra toksiškos."
+    },
+    {
+      "latin": "Lycoris radiata",
+      "knownHazards": "The bulb contains toxins and must be leached before it is used for food[105, 218]. Bulbs contain 2 inactive alkaloids[179].",
+      "knownHazardsLtV2": "Svogūnėlis yra toksiškas ir prieš vartojimą maistui turi būti išmirkytas; svogūnėliuose yra du neaktyvūs alkaloidai."
+    },
+    {
+      "latin": "Lycoris squamigera",
+      "knownHazards": "The bulb contains toxins and must be leached before it is used for food[105].",
+      "knownHazardsLtV2": "Svogūnėlis yra toksiškas ir prieš vartojimą maistui turi būti išmirkytas."
+    },
+    {
+      "latin": "Lysichiton",
+      "knownHazards": "The plant is rich in calcium oxylate, this is toxic and if consumed makes the mouth and digestive tract feel as though hundreds of needles are being stuck into it. However, calcium oxylate is easily destroyed by thoroughly cooking or drying the plant[172].",
+      "knownHazardsLtV2": "Augalas turi daug kalcio oksalatų, kurie dirgina burną ir virškinamąjį traktą. Kruopščiai išvirus ar išdžiovinus oksalatai suyra."
+    },
+    {
+      "latin": "Lysichiton americanus",
+      "knownHazards": "The plant is rich in calcium oxylate, this is toxic and if consumed makes the mouth and digestive tract feel as though hundreds of needles are being stuck into it. However, calcium oxylate is easily destroyed by thoroughly cooking or drying the plant[172].",
+      "knownHazardsLtV2": "Augalas turi daug kalcio oksalatų, kurie dirgina burną ir virškinamąjį traktą. Kruopščiai išvirus ar išdžiovinus oksalatai suyra."
+    },
+    {
+      "latin": "Macleaya",
+      "knownHazards": "The sap is very poisonous[178].",
+      "knownHazardsLtV2": "Sultys yra toksiškos."
+    },
+    {
+      "latin": "Macleaya cordata",
+      "knownHazards": "The sap is very poisonous[178].",
+      "knownHazardsLtV2": "Sultys yra toksiškos."
+    },
+    {
+      "latin": "Maclura pomifera",
+      "knownHazards": "The milky sap can cause dermatitis in some people[200]. An extract and the juice of the fruit is toxic, though a 10% aqueous infusion and extract diluted 1:1 are not toxic[240].",
+      "knownHazardsLtV2": "Pieniškos sultys gali sukelti dermatitą. Vaisiaus sultys ir ekstraktas yra toksiški; praskiestas 10 % vandeninis nuoviras – netoksiškas."
+    },
+    {
+      "latin": "Macrozamia",
+      "knownHazards": "The raw seed is toxic and requires treatment prior to eating it[46].",
+      "knownHazardsLtV2": "Žalia sėkla yra toksiška ir prieš vartojimą turi būti specialiai paruošta."
+    },
+    {
+      "latin": "Mahonia",
+      "knownHazards": "Barberry, goldenseal, oregon grape and other plants containing Berberine should be avoided during pregnancy and breastfeeding. Avoid if over active thyroid gland. High doses cause vomiting, lowered blood pressure, reduced heart rate, lethargy, nose bleed, skin & eye irritation and kidney infection. Liquorice as Glycyrrhiza species nullify berberine effects [301].",
+      "knownHazardsLtV2": "Augale esantis berberinas draudžiamas nėštumo ir žindymo metu bei esant hipertirozei. Didelės dozės sukelia vėmimą, kraujo spaudimo ir širdies ritmo sumažėjimą, letargiją, kraujavimą iš nosies, dirgina odą ir akis, gali pažeisti inkstus."
+    },
+    {
+      "latin": "Mahonia repens",
+      "knownHazards": "The berries are safe to eat in moderation. Roots, bark, and stems contain berberine, which should not be ingested except in regulated herbal preparations. Overconsumption of berries may cause mild stomach upset due to acidity.",
+      "knownHazardsLtV2": "Uogos valgomos saikingai; perteklius gali sukelti lengvą skrandžio dirginimą dėl rūgštingumo. Šaknyse, žievėje ir stiebuose esantis berberinas vartotinas tik kaip reguliuojamas žolių preparatas."
+    },
+    {
+      "latin": "Maianthemum",
+      "knownHazards": "There is a warning that the fruit should only be used with caution, but no more details are given[105].",
+      "knownHazardsLtV2": "Vaisiai vartotini atsargiai; išsamesnių duomenų nėra."
+    },
+    {
+      "latin": "Maianthemum canadense",
+      "knownHazards": "There is a warning that the fruit should only be used with caution, but no more details are given[105].",
+      "knownHazardsLtV2": "Vaisiai vartotini atsargiai; išsamesnių duomenų nėra."
+    },
+    {
+      "latin": "Malus",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklose (ir galbūt lapuose) yra vandenilio cianido; vaisiai – saugūs. Didelės sėklų dozės gali slopinti kvėpavimą ir būti mirtinos, todėl jų nerekomenduojama valgyti dideliais kiekiais."
+    },
+    {
+      "latin": "Malus baccata",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklose (ir galbūt lapuose) yra vandenilio cianido; vaisiai – saugūs. Didelės sėklų dozės gali slopinti kvėpavimą ir būti mirtinos, todėl jų nerekomenduojama valgyti dideliais kiekiais."
+    },
+    {
+      "latin": "Malus coronaria",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklose (ir galbūt lapuose) yra vandenilio cianido; vaisiai – saugūs. Didelės sėklų dozės gali slopinti kvėpavimą ir būti mirtinos, todėl jų nerekomenduojama valgyti dideliais kiekiais."
+    },
+    {
+      "latin": "Malus floribunda",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklose (ir galbūt lapuose) yra vandenilio cianido; vaisiai – saugūs. Didelės sėklų dozės gali slopinti kvėpavimą ir būti mirtinos, todėl jų nerekomenduojama valgyti dideliais kiekiais."
+    },
+    {
+      "latin": "Malus hupehensis",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklose (ir galbūt lapuose) yra vandenilio cianido; vaisiai – saugūs. Didelės sėklų dozės gali slopinti kvėpavimą ir būti mirtinos, todėl jų nerekomenduojama valgyti dideliais kiekiais."
+    },
+    {
+      "latin": "Malus prattii",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklose (ir galbūt lapuose) yra vandenilio cianido; vaisiai – saugūs. Didelės sėklų dozės gali slopinti kvėpavimą ir būti mirtinos, todėl jų nerekomenduojama valgyti dideliais kiekiais."
+    },
+    {
+      "latin": "Malus prunifolia",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklose (ir galbūt lapuose) yra vandenilio cianido; vaisiai – saugūs. Didelės sėklų dozės gali slopinti kvėpavimą ir būti mirtinos, todėl jų nerekomenduojama valgyti dideliais kiekiais."
+    },
+    {
+      "latin": "Malus sargentii",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklose (ir galbūt lapuose) yra vandenilio cianido; vaisiai – saugūs. Didelės sėklų dozės gali slopinti kvėpavimą ir būti mirtinos, todėl jų nerekomenduojama valgyti dideliais kiekiais."
+    },
+    {
+      "latin": "Malus spectabilis",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklose (ir galbūt lapuose) yra vandenilio cianido; vaisiai – saugūs. Didelės sėklų dozės gali slopinti kvėpavimą ir būti mirtinos, todėl jų nerekomenduojama valgyti dideliais kiekiais."
+    },
+    {
+      "latin": "Malus toringoides",
+      "knownHazards": "All members of this genus contain the toxin hydrogen cyanide in their seeds and possibly also in their leaves, but not in their fruits. Hydrogen cyanide is the substance that gives almonds their characteristic taste but it should only be consumed in very small quantities. Apple seeds do not normally contain very high quantities of hydrogen cyanide but, even so, should not be consumed in very large quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklose (ir galbūt lapuose) yra vandenilio cianido; vaisiai – saugūs. Didelės sėklų dozės gali slopinti kvėpavimą ir būti mirtinos, todėl jų nerekomenduojama valgyti dideliais kiekiais."
+    }
+  ]
+}

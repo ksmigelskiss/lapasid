@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 18,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Lantana",
+      "knownHazards": "The leaves and seeds are toxic[310 ]. The unripe, green berries cause vomiting, diarrhoea, dilated pupils and laboured respiration if ingested[293 ]. The leaves may cause dermatitis[293 ]. (All parts of plant are poisonous if ingested )",
+      "knownHazardsLtV2": "Lapai ir sėklos yra toksiški; nesubrendusios žalios uogos sukelia vėmimą, viduriavimą, išsiplėtusias vyzdžius ir pasunkėjusį kvėpavimą. Lapai gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Lapai ir sėklos toksiški; nesubrendusios žalios uogos sukelia vėmimą, viduriavimą, išsiplėtusius vyzdžius ir pasunkėjusį kvėpavimą. Lapai gali sukelti dermatitą.",
+      "changesNotes": "Pašalintas nereikalingas 'yra' predikato pozicijoje ('yra toksiški' → 'toksiški'). Ištaisyta giminė: 'išsiplėtusias vyzdžius' → 'išsiplėtusius vyzdžius' (vyzdys – vyr. g.)."
+    },
+    {
+      "latin": "Lantana camara",
+      "knownHazards": "The leaves and seeds are toxic[310 ]. The unripe, green berries cause vomiting, diarrhoea, dilated pupils and laboured respiration if ingested[293 ]. The leaves may cause dermatitis[293 ]. (All parts of plant are poisonous if ingested )",
+      "knownHazardsLtV2": "Lapai ir sėklos yra toksiški; nesubrendusios žalios uogos sukelia vėmimą, viduriavimą, išsiplėtusias vyzdžius ir pasunkėjusį kvėpavimą. Lapai gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Lapai ir sėklos toksiški; nesubrendusios žalios uogos sukelia vėmimą, viduriavimą, išsiplėtusius vyzdžius ir pasunkėjusį kvėpavimą. Lapai gali sukelti dermatitą.",
+      "changesNotes": "Tas pat kaip Lantana: pašalintas redundantinis 'yra', ištaisyta giminė 'išsiplėtusias → išsiplėtusius vyzdžius'."
+    },
+    {
+      "latin": "Lathyrus",
+      "knownHazards": "Although no records of toxicity have been found for this plant, the seed of some species in this genus contain a toxic amino acid that can cause a severe disease of the nervous system known as 'lathyrism' if they are eaten in large amounts (although small quantities are said to be nutritious)[65, 76]. Great caution is advised.",
+      "knownHazardsLtV2": "Kai kurių šios genties rūšių sėklos turi toksinę aminorūgštį, kuri dideliais kiekiais sukelia sunkią nervų sistemos ligą – latirizmą. Mažais kiekiais sėklos laikomos maistingomis.",
+      "knownHazardsLtEdited": "Kai kurių šios genties rūšių sėklose yra toksinė aminorūgštis, kuri dideliais kiekiais sukelia sunkią nervų sistemos ligą – latirizmą. Mažais kiekiais sėklos laikomos maistingomis.",
+      "changesNotes": "'sėklos turi toksinę aminorūgštį' → 'sėklose yra toksinė aminorūgštis' (natūralesnė LT konstrukcija su vieta, vietoj kalkės 'turi')."
+    },
+    {
+      "latin": "Lathyrus latifolius",
+      "knownHazards": "Although no records of toxicity have been found for this plant, the seed of some species in this genus contain a toxic amino acid that can cause a severe disease of the nervous system known as 'lathyrism' if they are eaten in large amounts (although small quantities are said to be nutritious)[65, 76].",
+      "knownHazardsLtV2": "Kai kurių šios genties rūšių sėklos turi toksinę aminorūgštį, kuri dideliais kiekiais sukelia latirizmą – sunkią nervų sistemos ligą. Mažais kiekiais sėklos laikomos maistingomis.",
+      "knownHazardsLtEdited": "Kai kurių šios genties rūšių sėklose yra toksinė aminorūgštis, kuri dideliais kiekiais sukelia latirizmą – sunkią nervų sistemos ligą. Mažais kiekiais sėklos laikomos maistingomis.",
+      "changesNotes": "'sėklos turi toksinę aminorūgštį' → 'sėklose yra toksinė aminorūgštis' (kaip ir Lathyrus)."
+    },
+    {
+      "latin": "Lathyrus nervosus",
+      "knownHazards": "Although no records of toxicity have been found for this plant, the seed of some species in this genus contain a toxic amino acid that can cause a severe disease of the nervous system known as 'lathyrism' if they are eaten in large amounts (although small quantities are said to be nutritious)[65, 76]. Great caution is advised.",
+      "knownHazardsLtV2": "Kai kurių šios genties rūšių sėklos turi toksinę aminorūgštį, kuri dideliais kiekiais sukelia latirizmą – sunkią nervų sistemos ligą. Mažais kiekiais sėklos laikomos maistingomis.",
+      "knownHazardsLtEdited": "Kai kurių šios genties rūšių sėklose yra toksinė aminorūgštis, kuri dideliais kiekiais sukelia latirizmą – sunkią nervų sistemos ligą. Mažais kiekiais sėklos laikomos maistingomis.",
+      "changesNotes": "'sėklos turi toksinę aminorūgštį' → 'sėklose yra toksinė aminorūgštis'."
+    },
+    {
+      "latin": "Lathyrus odoratus",
+      "knownHazards": "The seed contains a toxin that is easily extractable in cold water or alcohol[114]. This toxin causes symptoms different to lathyrism (a disease of the nervous system caused by eating the seeds of certain members of this genus)[240]. Symptoms include reproduction failure and degenerative arthritis[240].",
+      "knownHazardsLtV2": "Sėklos turi toksiną, lengvai išplaunamą šaltu vandeniu ar alkoholiu. Sukelia reprodukcijos sutrikimus ir degeneracinį artritą – simptomus, skirtingus nuo latirizmo.",
+      "knownHazardsLtEdited": "Sėklose yra toksinas, lengvai išplaunamas šaltu vandeniu ar alkoholiu; sukelia reprodukcijos sutrikimus ir degeneracinį artritą – simptomus, skirtingus nuo latirizmo.",
+      "changesNotes": "'Sėklos turi toksiną' → 'Sėklose yra toksinas'. Sujungti du sakiniai kabliataškiu, nes antrasis neturi aiškaus veiksnio. Dalyvio forma suderinta: 'išplaunamą' (liečia toksiną, vyr. g. vienaskaita)."
+    },
+    {
+      "latin": "Lathyrus sylvestris",
+      "knownHazards": "All parts of the plant, but especially the seed, contain a toxic amino-acid. It is produced in the plant at about the same time that the seed starts to develop. In small quantities the amino acid is innocuous, and the seeds of several Lathyrus species are eaten as a nutritious part of the diet. However, in larger quantities (the seed should form less than 30% of a balanced diet), it can cause a very serious disease of the nervous system known as 'lathyrism'. Symptoms appear as a paralysis of the muscles below the knees, pains in the back, followed by weakness and stiffness of the legs and progressive locomotive incoordination[65 , 76 , 1309 ].",
+      "knownHazardsLtV2": "Visos augalo dalys, ypač sėklos, turi toksinę aminorūgštį; dideliais kiekiais (virš 30 % mitybos) ji sukelia latirizmą – kojų raumenų paralyžių, nugaros skausmus ir progresuojančią judėjimo koordinacijos sutrikimą. Mažais kiekiais sėklos yra maistingos.",
+      "knownHazardsLtEdited": "Visose augalo dalyse, ypač sėklose, yra toksinė aminorūgštis; dideliais kiekiais (virš 30 % mitybos) ji sukelia latirizmą – kojų raumenų paralyžių, nugaros skausmus ir progresuojančią judėjimo koordinacijos sutrikimą. Mažais kiekiais sėklos maistingos.",
+      "changesNotes": "'Visos augalo dalys turi toksinę aminorūgštį' → 'Visose augalo dalyse yra toksinė aminorūgštis'. Pašalintas redundantinis 'yra' paskutiniame sakinyje ('yra maistingos' → 'maistingos')."
+    },
+    {
+      "latin": "Lavandula",
+      "knownHazards": "The volatile oil may rarely cause sensitization [301].",
+      "knownHazardsLtV2": "Eterinis aliejus retais atvejais gali sukelti odos jautrinimą.",
+      "knownHazardsLtEdited": "Eterinis aliejus retais atvejais gali sukelti odos jautrinimą.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Lavandula angustifolia",
+      "knownHazards": "The volatile oil may rarely cause sensitization [301].",
+      "knownHazardsLtV2": "Eterinis aliejus retais atvejais gali sukelti odos jautrinimą.",
+      "knownHazardsLtEdited": "Eterinis aliejus retais atvejais gali sukelti odos jautrinimą.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Ledum",
+      "knownHazards": "Plants contain a narcotic toxin called Ledel. This toxin only causes problems if the leaves are cooked for a long period in a closed container[172].",
+      "knownHazardsLtV2": "Augalas turi narkotinį toksiną ledelį, kuris kelia pavojų tik lapus ilgai verdant uždarytu indu.",
+      "knownHazardsLtEdited": "Augale yra narkotinis toksinas ledelis, kuris kelia pavojų tik tada, kai lapai ilgai verdami uždarame inde.",
+      "changesNotes": "'Augalas turi toksiną' → 'Augale yra toksinas' (pagal redakcines taisykles). Patikslintas dalyvinis konstruktas į beasmenį sakinį ('lapus ilgai verdant uždarytu indu' → 'kai lapai ilgai verdami uždarame inde') dėl aiškumo."
+    },
+    {
+      "latin": "Ledum groenlandicum",
+      "knownHazards": "Plants contain a narcotic toxin called Ledel. This toxin only causes problems if the leaves are cooked for a long period in a closed container[172].",
+      "knownHazardsLtV2": "Augalas turi narkotinį toksiną ledelį, kuris kelia pavojų tik lapus ilgai verdant uždarytu indu.",
+      "knownHazardsLtEdited": "Augale yra narkotinis toksinas ledelis, kuris kelia pavojų tik tada, kai lapai ilgai verdami uždarame inde.",
+      "changesNotes": "Tas pat kaip Ledum."
+    },
+    {
+      "latin": "Leucothoe",
+      "knownHazards": "Although no records of toxicity have been seen for this species, at least one other member of this genus is said to have poisonous fruits[178].",
+      "knownHazardsLtV2": "Šiai rūšiai toksiškumo duomenų nėra, tačiau bent vienos kitos genties rūšies vaisiai laikomi nuodingais.",
+      "knownHazardsLtEdited": "Šiai rūšiai toksiškumo duomenų nėra, tačiau bent vienos kitos tos pačios genties rūšies vaisiai laikomi nuodingais.",
+      "changesNotes": "'kitos genties rūšies' galėtų būti dviprasmiška (lyg kitos genties); patikslinta 'kitos tos pačios genties rūšies' atitikdama originalą 'another member of this genus'."
+    },
+    {
+      "latin": "Liatris spicata",
+      "knownHazards": "Although we have no records of toxicity for this plant, one record says that the leaves contain coumarins. These have an anti-clotting effect on the blood and can prevent natural clotting of the blood when there is a cut[K].",
+      "knownHazardsLtV2": "Lapai gali turėti kumarinų, kurie slopina kraujo krešėjimą ir gali apsunkinti kraujavimo stabdymą.",
+      "knownHazardsLtEdited": "Lapuose gali būti kumarinų, kurie slopina kraujo krešėjimą ir gali apsunkinti kraujavimo stabdymą.",
+      "changesNotes": "'Lapai gali turėti kumarinų' → 'Lapuose gali būti kumarinų' (natūralesnė LT vietos konstrukcija)."
+    },
+    {
+      "latin": "Ligustrum",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, at least one member of this genus is recorded as being mildly toxic and it is quite possible that other members of the genus also contain toxins[65].",
+      "knownHazardsLtV2": "Toksiškumo duomenų šiai rūšiai nėra, tačiau kitos genties rūšys yra silpnai toksiškos.",
+      "knownHazardsLtEdited": "Toksiškumo duomenų šiai rūšiai nėra, tačiau kitos tos pačios genties rūšys silpnai toksiškos.",
+      "changesNotes": "Patikslinta 'kitos tos pačios genties rūšys' (kaip ir Leucothoe). Pašalintas redundantinis 'yra' predikato pozicijoje."
+    },
+    {
+      "latin": "Ligustrum japonicum",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, at least one member of this genus is recorded as being mildly toxic and it is quite possible that other members of the genus also contain toxins[65].",
+      "knownHazardsLtV2": "Toksiškumo duomenų šiai rūšiai nėra, tačiau kitos genties rūšys yra silpnai toksiškos.",
+      "knownHazardsLtEdited": "Toksiškumo duomenų šiai rūšiai nėra, tačiau kitos tos pačios genties rūšys silpnai toksiškos.",
+      "changesNotes": "Tas pat kaip Ligustrum."
+    },
+    {
+      "latin": "Ligustrum lucidum",
+      "knownHazards": "The fruit is mildly toxic[238]. Although no other reports of toxicity have been seen for this species, it is quite probable that other parts of the plant also contain toxins[65].",
+      "knownHazardsLtV2": "Vaisiai silpnai toksiški; tikėtina, kad ir kitos augalo dalys turi toksinų.",
+      "knownHazardsLtEdited": "Vaisiai silpnai toksiški; tikėtina, kad toksinų yra ir kitose augalo dalyse.",
+      "changesNotes": "'kitos augalo dalys turi toksinų' → 'toksinų yra ir kitose augalo dalyse' (natūralesnė LT konstrukcija su buvimu, o ne turiniu)."
+    },
+    {
+      "latin": "Ligustrum ovalifolium",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, at least one member of this genus is recorded as being mildly toxic and it is quite possible that other members of the genus also contain toxins[65].",
+      "knownHazardsLtV2": "Toksiškumo duomenų šiai rūšiai nėra, tačiau kitos genties rūšys yra silpnai toksiškos.",
+      "knownHazardsLtEdited": "Toksiškumo duomenų šiai rūšiai nėra, tačiau kitos tos pačios genties rūšys silpnai toksiškos.",
+      "changesNotes": "Tas pat kaip Ligustrum."
+    },
+    {
+      "latin": "Ligustrum sinense",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, at least one member of this genus is recorded as being mildly toxic and it is quite possible that other members of the genus also contain toxins[65].",
+      "knownHazardsLtV2": "Toksiškumo duomenų šiai rūšiai nėra, tačiau kitos genties rūšys yra silpnai toksiškos.",
+      "knownHazardsLtEdited": "Toksiškumo duomenų šiai rūšiai nėra, tačiau kitos tos pačios genties rūšys silpnai toksiškos.",
+      "changesNotes": "Tas pat kaip Ligustrum."
+    },
+    {
+      "latin": "Ligustrum vulgare",
+      "knownHazards": "Poisonous[10], though the toxicity is of a very low order and normally the consumption of the fruit leads to vomiting or no symptoms at all[65].",
+      "knownHazardsLtV2": "Nuodinga, tačiau toksiškumas labai žemas – vaisiai paprastai sukelia vėmimą arba jokių simptomų.",
+      "knownHazardsLtEdited": "Nuodinga, tačiau toksiškumas labai žemas – vaisiai paprastai sukelia vėmimą arba neduoda jokių simptomų.",
+      "changesNotes": "'arba jokių simptomų' – elipsis sukelia nelogiškumą ('sukelia... jokių simptomų'). Pataisyta į 'arba neduoda jokių simptomų'."
+    },
+    {
+      "latin": "Lilium lancifolium",
+      "knownHazards": "The pollen is said to be poisonous, producing vomiting, drowsiness and purging[4].",
+      "knownHazardsLtV2": "Žiedadulkės laikomos nuodingomis – gali sukelti vėmimą, mieguistumą ir viduriavimą.",
+      "knownHazardsLtEdited": "Žiedadulkės laikomos nuodingomis – gali sukelti vėmimą, mieguistumą ir viduriavimą.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Linaria",
+      "knownHazards": "The plant might be slightly toxic[76]",
+      "knownHazardsLtV2": "Augalas gali būti silpnai toksiškas.",
+      "knownHazardsLtEdited": "Augalas gali būti silpnai toksiškas.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Linaria cymbalaria",
+      "knownHazards": "The plant might be slightly toxic[76]",
+      "knownHazardsLtV2": "Augalas gali būti silpnai toksiškas.",
+      "knownHazardsLtEdited": "Augalas gali būti silpnai toksiškas.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Linum perenne",
+      "knownHazards": "The raw seed contains cyanide and should not be eaten raw[183]. The cooked seed is perfectly safe[183].",
+      "knownHazardsLtV2": "Žalios sėklos turi cianidą ir negali būti valgomos nevirtos. Termiškai apdorotos sėklos yra saugios.",
+      "knownHazardsLtEdited": "Žaliose sėklose yra cianido ir jų negalima valgyti neapdorotų. Kaitintos sėklos saugios.",
+      "changesNotes": "'Žalios sėklos turi cianidą' → 'Žaliose sėklose yra cianido'. 'negali būti valgomos nevirtos' → 'negalima valgyti neapdorotų' (aktyvesnė, natūralesnė forma). 'Termiškai apdorotos' → 'Kaitintos' (pagal taisyklę: terminis apdorojimas → kaitinimas). Pašalintas redundantinis 'yra' predikato pozicijoje."
+    },
+    {
+      "latin": "Lobelia",
+      "knownHazards": "The plant is potentially toxic, but the degree of toxicity is unknown[222]. It contains the alkaloid lobeline which has a similar effect upon the nervous system as nicotine[274]. he sap of the plant has been known to cause skin irritation[274].",
+      "knownHazardsLtV2": "Augalas toksiškas – turi alkaloidą lobeliją, kuris veikia nervų sistemą panašiai kaip nikotinas. Sultys dirgina odą.",
+      "knownHazardsLtEdited": "Augalas toksiškas – jame yra alkaloidas lobelinas, kuris veikia nervų sistemą panašiai kaip nikotinas. Sultys dirgina odą.",
+      "changesNotes": "'turi alkaloidą lobeliją' → 'jame yra alkaloidas lobelinas'. LT alkaloid name yra 'lobelinas' (ne 'lobelija' – tai augalo vardas). Konstrukcija 'jame yra' natūralesnė už 'turi' kalbant apie cheminį komponentą."
+    },
+    {
+      "latin": "Lobelia cardinalis",
+      "knownHazards": "The plant is potentially toxic, but the degree of toxicity is unknown[222]. It contains the alkaloid lobeline which has a similar effect upon the nervous system as nicotine[274]. he sap of the plant has been known to cause skin irritation[274].",
+      "knownHazardsLtV2": "Augalas toksiškas – turi alkaloidą lobeliją, kuris veikia nervų sistemą panašiai kaip nikotinas. Sultys dirgina odą.",
+      "knownHazardsLtEdited": "Augalas toksiškas – jame yra alkaloidas lobelinas, kuris veikia nervų sistemą panašiai kaip nikotinas. Sultys dirgina odą.",
+      "changesNotes": "Tas pat kaip Lobelia."
+    },
+    {
+      "latin": "Lobelia siphilitica",
+      "knownHazards": "The plant is potentially poisonous[222]. It contains the alkaloid lobeline which has a similar effect upon the nervous system as nicotine[274].",
+      "knownHazardsLtV2": "Augalas toksiškas – turi alkaloidą lobeliją, kuris veikia nervų sistemą panašiai kaip nikotinas.",
+      "knownHazardsLtEdited": "Augalas toksiškas – jame yra alkaloidas lobelinas, kuris veikia nervų sistemą panašiai kaip nikotinas.",
+      "changesNotes": "Tas pat kaip Lobelia."
+    },
+    {
+      "latin": "Lobelia tupa",
+      "knownHazards": "The whole plant is poisonous[200]. It contains the alkaloid lobeline which has a similar effect upon the nervous system as nicotine[274]. Even smelling this plant has been known to cause sickness[274].",
+      "knownHazardsLtV2": "Visas augalas toksiškas – turi alkaloidą lobeliją, veikiantį nervų sistemą kaip nikotinas. Net augalo kvapas gali sukelti pykinimą.",
+      "knownHazardsLtEdited": "Visas augalas toksiškas – jame yra alkaloidas lobelinas, veikiantis nervų sistemą kaip nikotinas. Net augalo kvapas gali sukelti pykinimą.",
+      "changesNotes": "'turi alkaloidą lobeliją' → 'jame yra alkaloidas lobelinas'. Dalyvis 'veikiantį' → 'veikiantis' (suderinta su nauju veiksniu 'lobelinas', vyr. g.)."
+    },
+    {
+      "latin": "Lonicera japonica",
+      "knownHazards": "The leaves contain saponins[179]. Saponins are quite toxic but are poorly absorbed by the human body and so most pass through without harm. They can be found in many common foods such as some beans. Thorough cooking, and perhaps changing the cooking water once, will normally remove most of the saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Lapai turi saponinų, kurie žmogaus organizme prastai absorbuojami ir dažniausiai praeina nepakenkę; kruopštus virimas pašalina didžiąją dalį saponinų. Žuvims saponinai yra labai toksiški.",
+      "knownHazardsLtEdited": "Lapuose yra saponinų, kurie žmogaus organizme prastai pasisavinami ir dažniausiai praeina nepakenkę; kruopštus virimas pašalina didžiąją jų dalį. Žuvims saponinai labai toksiški.",
+      "changesNotes": "'Lapai turi saponinų' → 'Lapuose yra saponinų'. 'absorbuojami' → 'pasisavinami' (natūralesnė LT medicininė sąvoka). 'saponinų' antrą kartą → 'jų' (siekiant ekonomijos). Pašalintas redundantinis 'yra' predikato pozicijoje paskutiniame sakinyje."
+    },
+    {
+      "latin": "Lonicera morrowii",
+      "knownHazards": "The fruit is poisonous[275].",
+      "knownHazardsLtV2": "Vaisiai nuodingi.",
+      "knownHazardsLtEdited": "Vaisiai nuodingi.",
+      "changesNotes": "Pakeitimų nereikia."
+    },
+    {
+      "latin": "Lonicera periclymenum",
+      "knownHazards": "Poisonous in large doses[10]. It only has a very mild action[65].",
+      "knownHazardsLtV2": "Didelėmis dozėmis nuodinga, tačiau toksiškumas labai silpnas.",
+      "knownHazardsLtEdited": "Didelėmis dozėmis nuodinga, tačiau toksiškumas labai silpnas.",
+      "changesNotes": "Pakeitimų nereikia."
+    }
+  ]
+}

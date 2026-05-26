@@ -1,0 +1,156 @@
+{
+  "chunkIndex": 28,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Sanguinaria canadensis",
+      "knownHazards": "This species contains many alkaloids and is poisonous in large doses[4, 21, 46, 165]. This herb should not be used by women when they are pregnant or lactating[165]. The sap, fresh or dried, can cause intense irritation to the mucous membranes[169].",
+      "knownHazardsLtV2": "Augalas toksiškas didelėmis dozėmis dėl gausos alkaloidų; nerekomenduojamas nėščioms ar žindančioms moterims. Šviežias ar džiovintas sakas stipriai dirgina gleivinę."
+    },
+    {
+      "latin": "Sanguisorba officinalis",
+      "knownHazards": "Best avoided during pregnancy in view of the lack of information about toxicity. Suggested that the herb may interact with the group of allopathic medications known as fluoroquinolones [301].",
+      "knownHazardsLtV2": "Nėštumo metu vengti – toksiškumas nepakankamai ištirtas. Gali sąveikauti su fluorochinolonų grupės vaistais."
+    },
+    {
+      "latin": "Sansevieria trifasciata",
+      "knownHazards": "The plant contains glycosides and saponins and is very toxic[311 ]. Although poisonous, saponins are poorly absorbed by the human body and so most pass through without harm. Saponins are quite bitter and can be found in many common foods such as some beans. They can be removed by carefully leaching in running water. Thorough cooking, and perhaps changing the cooking water once, will also normally remove most of them. However, it is not advisable to eat large quantities of food that contain saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K ].",
+      "knownHazardsLtV2": "Augalas toksiškas – sudėtyje yra glikozidų ir saponinų. Saponinai žmogaus organizme prastai pasisavinami, tačiau žuvims yra mirtinai toksiški."
+    },
+    {
+      "latin": "Santolina",
+      "knownHazards": "The bruised leaves have been known to cause a severe rash on sensitive skins[182].",
+      "knownHazardsLtV2": "Sutrinti lapai gali sukelti stiprų bėrimą jautriai odai."
+    },
+    {
+      "latin": "Santolina chamaecyparissus",
+      "knownHazards": "The bruised leaves have been known to cause a severe rash on sensitive skins[182].",
+      "knownHazardsLtV2": "Sutrinti lapai gali sukelti stiprų bėrimą jautriai odai."
+    },
+    {
+      "latin": "Santolina pinnata",
+      "knownHazards": "The bruised leaves have been known to cause a severe rash on sensitive skins[182].",
+      "knownHazardsLtV2": "Sutrinti lapai gali sukelti stiprų bėrimą jautriai odai."
+    },
+    {
+      "latin": "Santolina rosmarinifolia",
+      "knownHazards": "The bruised leaves have been known to cause a severe rash on sensitive skins[182].",
+      "knownHazardsLtV2": "Sutrinti lapai gali sukelti stiprų bėrimą jautriai odai."
+    },
+    {
+      "latin": "Sap",
+      "knownHazards": "The seed is poisonous[1]. The fruit is poisonous[149].",
+      "knownHazardsLtV2": "Sėklos ir vaisiai toksiški."
+    },
+    {
+      "latin": "Sapi",
+      "knownHazards": "The seed is poisonous[1]. The fruit is poisonous[149].",
+      "knownHazardsLtV2": "Sėklos ir vaisiai toksiški."
+    },
+    {
+      "latin": "Sapium",
+      "knownHazards": "The sap is poisonous[200].",
+      "knownHazardsLtV2": "Sakas toksiškas."
+    },
+    {
+      "latin": "Sapium sebiferum",
+      "knownHazards": "The sap is poisonous[200].",
+      "knownHazardsLtV2": "Sakas toksiškas."
+    },
+    {
+      "latin": "Saponaria",
+      "knownHazards": "The plant contains saponins[13]. Although toxic, these substances are very poorly absorbed by the body and so tend to pass through without causing harm. They are also broken down by thorough cooking. Saponins are found in many plants, including several that are often used for food, such as certain beans. It is advisable not to eat large quantities of food that contain saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Augalas turi saponinų, tačiau jie žmogaus organizme prastai pasisavinami ir termiškai apdorojant skyla. Žuvims saponinai yra mirtinai toksiški."
+    },
+    {
+      "latin": "Saponaria ocymoides",
+      "knownHazards": "The plant contains saponins[13]. Although toxic, these substances are very poorly absorbed by the body and so tend to pass through without causing harm. They are also broken down by thorough cooking. Saponins are found in many plants, including several that are often used for food, such as certain beans. It is advisable not to eat large quantities of food that contain saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Augalas turi saponinų, tačiau jie žmogaus organizme prastai pasisavinami ir termiškai apdorojant skyla. Žuvims saponinai yra mirtinai toksiški."
+    },
+    {
+      "latin": "Saponaria officinalis",
+      "knownHazards": "The plant contains saponins[13]. Although toxic, these substances are very poorly absorbed by the body and so tend to pass through without causing harm. They are also broken down by thorough cooking. Saponins are found in many plants, including several that are often used for food, such as certain beans. It is advisable not to eat large quantities of food that contain saponins. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K]. Do not use for more than 2 weeks. Avoid during pregnancy.",
+      "knownHazardsLtV2": "Augalas turi saponinų, kurie žmogaus organizme prastai pasisavinami ir termiškai apdorojant skyla; žuvims mirtinai toksiški. Nenaudoti ilgiau nei 2 savaites; nėštumo metu vengti."
+    },
+    {
+      "latin": "Sassafras",
+      "knownHazards": "The extracted essential oil is poisonous in large quantities[4, 165]. The essential il contains safrole which is known to be carcinogenic and potentially harmful to the liver[274]. The essential oil has been banned as a food flavouring in America, even though the potential toxicity is lower than that of alcohol[222].",
+      "knownHazardsLtV2": "Eterinis aliejus didelėmis dozėmis toksiškas; jame esantis saffrolas yra kancerogeniškas ir kenkia kepenims. JAV draudžiamas kaip maisto priedas."
+    },
+    {
+      "latin": "Sassafras albidum",
+      "knownHazards": "The extracted essential oil is poisonous in large quantities[4, 165]. The essential il contains safrole which is known to be carcinogenic and potentially harmful to the liver[274]. The essential oil has been banned as a food flavouring in America, even though the potential toxicity is lower than that of alcohol[222].",
+      "knownHazardsLtV2": "Eterinis aliejus didelėmis dozėmis toksiškas; jame esantis saffrolas yra kancerogeniškas ir kenkia kepenims. JAV draudžiamas kaip maisto priedas."
+    },
+    {
+      "latin": "Schinus",
+      "knownHazards": "The seed contains an allergenic substance that can irritate the mucus membrane[200].",
+      "knownHazardsLtV2": "Sėkloje yra alergeninės medžiagos, dirgina gleivinę."
+    },
+    {
+      "latin": "Schinus molle",
+      "knownHazards": "The seed contains an allergenic substance that can irritate the mucus membrane[200].",
+      "knownHazardsLtV2": "Sėkloje yra alergeninės medžiagos, dirgina gleivinę."
+    },
+    {
+      "latin": "Scopolia",
+      "knownHazards": "This plant is probably fairly poisonous. The rhizomes contain potentially poisonous alkaloids that are similar to Atropa belladonna[200]. Adverse effects include visual disturbances, heat build up due to lack of sweating. Micturition disorders may occur with overdose. Contraindicated in close angle glaucoma, prostatic adenoma with residual urine, tachycardia, and gastrointestinal obstructions and any state where increased anticholinergic activity is harmful [301].",
+      "knownHazardsLtV2": "Šakniagumbiai toksiškas – turi alkaloidų, panašių į Atropa belladonna; perdozavus atsiranda regėjimo sutrikimai, perkaitimas, šlapinimosi sutrikimai. Draudžiama sergant uždaro kampo glaukoma, prostatos adenoma, tachikardija ar virškinamojo trakto obstrukcijomis."
+    },
+    {
+      "latin": "Scopolia carniolica",
+      "knownHazards": "This plant is probably fairly poisonous. The rhizomes contain potentially poisonous alkaloids that are similar to Atropa belladonna[200]. Adverse effects include visual disturbances, heat build up due to lack of sweating. Micturition disorders may occur with overdose. Contraindicated in close angle glaucoma, prostatic adenoma with residual urine, tachycardia, and gastrointestinal obstructions and any state where increased anticholinergic activity is harmful [301].",
+      "knownHazardsLtV2": "Šakniagumbiai toksiškas – turi alkaloidų, panašių į Atropa belladonna; perdozavus atsiranda regėjimo sutrikimai, perkaitimas, šlapinimosi sutrikimai. Draudžiama sergant uždaro kampo glaukoma, prostatos adenoma, tachikardija ar virškinamojo trakto obstrukcijomis."
+    },
+    {
+      "latin": "Scutellaria",
+      "knownHazards": "Liver toxicity (hepatotoxicity). Unknown effects during pregnancy [301].",
+      "knownHazardsLtV2": "Gali sukelti hepatotoksišką poveikį. Nėštumo metu vengti – poveikis nežinomas."
+    },
+    {
+      "latin": "Sedum acre",
+      "knownHazards": "Poisonous[19]? The sap can irritate the skin of some people[76]. Other reports suggest that no members of this genus are poisonous[62, 85]. The flowers are yellow which suggests that in quantity the leaves can cause stomach upsets.",
+      "knownHazardsLtV2": "Duomenys prieštaringi – sakas gali dirginti odą, o dideli lapų kiekiai sukelia skrandžio sutrikimą."
+    },
+    {
+      "latin": "Sedum aizoon",
+      "knownHazards": "Although not poisonous, if large quantities of this plant are eaten it can cause a stomach upset[62, 85].",
+      "knownHazardsLtV2": "Nepavojinga, tačiau dideli kiekiai gali sukelti skrandžio sutrikimą."
+    },
+    {
+      "latin": "Sedum kamtschaticum",
+      "knownHazards": "Although not poisonous, if large quantities of this plant are eaten it can cause a stomach upset[62, 85].",
+      "knownHazardsLtV2": "Nepavojinga, tačiau dideli kiekiai gali sukelti skrandžio sutrikimą."
+    },
+    {
+      "latin": "Sedum rupestre",
+      "knownHazards": "Although not poisonous, if large quantities of this plant are eaten it can cause a stomach upset[62, 85].",
+      "knownHazardsLtV2": "Nepavojinga, tačiau dideli kiekiai gali sukelti skrandžio sutrikimą."
+    },
+    {
+      "latin": "Sedum spathulifolium",
+      "knownHazards": "Although not poisonous, if large quantities of this plant are eaten it can cause a stomach upset[62, 85].",
+      "knownHazardsLtV2": "Nepavojinga, tačiau dideli kiekiai gali sukelti skrandžio sutrikimą."
+    },
+    {
+      "latin": "Senecio cineraria",
+      "knownHazards": "The plant contains pyrrolizidine alkaloids which are highly toxic to the liver, so the plant should not be used internally[254].",
+      "knownHazardsLtV2": "Augale yra pirolizidinų alkaloidų, kurie yra mirtinai toksiški kepenims. Vartoti viduje draudžiama."
+    },
+    {
+      "latin": "Senna",
+      "knownHazards": "The plant can become a weed in pastures; it is not eaten by livestock and is reported to be poisonous, especially for goats[299 ]. The bark is used as fish poison[299 ].(Parts of plant are poisonous if ingested All parts of plant are poisonous if ingested )",
+      "knownHazardsLtV2": "Visi augalo dalys toksiškos vartojant viduje; ypač pavojinga ožkoms. Žievė naudojama kaip žuvų nuodas."
+    },
+    {
+      "latin": "Senna siamea",
+      "knownHazards": "The sawdust may cause some irritation to the nose, throat and eyes[303 ]. The wood sometimes produces a yellow powder that may cause irritation to the skin[310 ].(Parts of plant are poisonous if ingested)",
+      "knownHazardsLtV2": "Pjuvenos dirgina nosį, gerklę ir akis; mediena kartais išskiria geltoną miltelį, dirginantį odą. Augalo dalys toksiškos vartojant viduje."
+    },
+    {
+      "latin": "Serenoa",
+      "knownHazards": "Avoid with other hormonal drugs. Avoid during pregnancy and lactation. Take with food. Rare adverse effects include: mild headache and gastrointestinal symptoms. May decrease libido in males. Possible back pain and blood pressure increase [301].",
+      "knownHazardsLtV2": "Vengti kartu su hormoniniais vaistais, nėštumo ir žindymo metu; vartoti su maistu. Retai pasireiškia lengvas galvos skausmas, virškinimo sutrikimai, sumažėjęs libidas ar padidėjęs kraujo spaudimas."
+    }
+  ]
+}

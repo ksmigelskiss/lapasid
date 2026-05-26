@@ -1,0 +1,126 @@
+{
+  "chunkIndex": 32,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Wisteria frutescens",
+      "knownHazards": "The seed of all members of this genus is poisonous[200].",
+      "knownHazardsLtV2": "Šios genties augalų sėklos yra toksiškos.",
+      "knownHazardsLtEdited": "Šios genties augalų sėklos toksiškos.",
+      "knownHazardsLtFinal": "Šios genties augalų sėklos toksiškos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Wisteria sinensis",
+      "knownHazards": "The seed of all members of this genus is poisonous[200]. The bark contains a glycoside and a resin that are both poisonous[218]. The seed and seedpod contains a resin and a glycoside called wisterin. They have caused poisoning in children of many countries, producing mild to severe gastro-enteritis[249].",
+      "knownHazardsLtV2": "Sėklos ir ankštys toksiškas — jose yra glikozidas visterinas ir derva, sukeliantys gastroenteritą. Žievė taip pat toksiškas: joje yra glikozidas ir derva.",
+      "knownHazardsLtEdited": "Sėklos ir ankštys toksiškos — jose yra glikozidas visterinas ir derva, sukeliantys gastroenteritą. Žievė taip pat toksiška: joje yra glikozidas ir derva.",
+      "knownHazardsLtFinal": "Sėklos ir ankštys toksiškos — jose yra glikozidas visterinas ir derva, sukeliantys gastroenteritą vaikams. Žievė taip pat toksiška: joje yra glikozidas ir derva.",
+      "status": "flagged",
+      "flagReason": "EN explicitly identifies children as the affected target group ('poisoning in children of many countries'). LT omits this target completely. Also, EN specifies 'mild to severe gastro-enteritis' — LT drops the severity range.",
+      "suggestedFix": "Įterpti 'vaikams' nurodant paveiktą grupę: '...sukeliantys gastroenteritą vaikams.' Arba pilniau: '...sukeliantys gastroenteritą — nuo lengvo iki sunkaus.'  Siūloma: \"Sėklos ir ankštys toksiškos — jose yra glikozidas visterinas ir derva, sukeliantys gastroenteritą vaikams. Žievė taip pat toksiška: joje yra glikozidas ir derva.\""
+    },
+    {
+      "latin": "Wisteria venusta",
+      "knownHazards": "The seed of all members of this genus is poisonous[200].",
+      "knownHazardsLtV2": "Šios genties augalų sėklos yra toksiškos.",
+      "knownHazardsLtEdited": "Šios genties augalų sėklos toksiškos.",
+      "knownHazardsLtFinal": "Šios genties augalų sėklos toksiškos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Woodwardia radicans",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Augale gali būti tiaminazė — fermentas, ardantis vitamino B kompleksą; dideliais kiekiais vartojamas gali sukelti sveikatos sutrikimų. Terminis apdorojimas arba kruopštus džiovinimas fermentą sunaikina.",
+      "knownHazardsLtEdited": "Augale gali būti tiaminazė — fermentas, ardantis vitamino B kompleksą; dideliais kiekiais jis gali sukelti sveikatos sutrikimų. Kaitinimas arba kruopštus džiovinimas fermentą sunaikina.",
+      "knownHazardsLtFinal": "Kai kurios paparčių rūšys turi kancerogenų — rekomenduojama atsargumas. Augale gali būti tiaminazė — fermentas, ardantis vitamino B kompleksą; dideliais kiekiais jis gali sukelti rimtų sveikatos sutrikimų. Kaitinimas arba kruopštus džiovinimas fermentą sunaikina.",
+      "status": "flagged",
+      "flagReason": "EN source contains two distinct hazard categories: (1) carcinogens in ferns (caution advised) and (2) thiaminase. LT omits the carcinogen hazard entirely — this is a material omission. Additionally, EN specifies 'severe health problems' but LT says only 'sveikatos sutrikimų' (health disturbances), dropping the severity qualifier.",
+      "suggestedFix": "Pridėti kancerogenų perspėjimą ir patikslinti sunkumą: \"Kai kurios paparčių rūšys turi kancerogenų — rekomenduojama atsargumas. Augale gali būti tiaminazė — fermentas, ardantis vitamino B kompleksą; dideliais kiekiais jis gali sukelti rimtų sveikatos sutrikimų. Kaitinimas arba kruopštus džiovinimas fermentą sunaikina.\" (3 sakiniai — leistina pagal taisyklę)."
+    },
+    {
+      "latin": "Xanthorhiza",
+      "knownHazards": "The root, when taken in high doses, is potentially toxic[222].",
+      "knownHazardsLtV2": "Didelėmis dozėmis vartojama šaknis yra toksiškas.",
+      "knownHazardsLtEdited": "Didelėmis dozėmis vartojama šaknis toksiška.",
+      "knownHazardsLtFinal": "Didelėmis dozėmis vartojama šaknis potencialiai toksiška.",
+      "status": "flagged",
+      "flagReason": "EN qualifies toxicity with 'potentially toxic' — LT states it as a confirmed fact ('toksiška') without the uncertainty qualifier. This is a factual nuance shift that overstates established toxicity.",
+      "suggestedFix": "Įterpti 'potencialiai': \"Didelėmis dozėmis vartojama šaknis potencialiai toksiška.\""
+    },
+    {
+      "latin": "Xanthorhiza simplicissima",
+      "knownHazards": "The root, when taken in high doses, is potentially toxic[222].",
+      "knownHazardsLtV2": "Didelėmis dozėmis vartojama šaknis yra toksiškas.",
+      "knownHazardsLtEdited": "Didelėmis dozėmis vartojama šaknis toksiška.",
+      "knownHazardsLtFinal": "Didelėmis dozėmis vartojama šaknis potencialiai toksiška.",
+      "status": "flagged",
+      "flagReason": "Same issue as Xanthorhiza: EN 'potentially toxic' rendered as confirmed 'toksiška' without uncertainty qualifier.",
+      "suggestedFix": "Įterpti 'potencialiai': \"Didelėmis dozėmis vartojama šaknis potencialiai toksiška.\""
+    },
+    {
+      "latin": "Yucca",
+      "knownHazards": "The roots contain saponins[222]. Whilst saponins are quite toxic to people, they are poorly absorbed by the body and so tend to pass straight through. They are also destroyed by prolonged heat, such as slow baking in an oven. Saponins are found in many common foods such as beans[K]. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Šaknyse yra saponinų, kurie žmonėms blogai absorbuojami ir ilgai kepant sunaikinami. Žuvims saponinai yra labai toksiški.",
+      "knownHazardsLtEdited": "Šaknyse yra saponinų, kurie žmogaus organizme prastai įsisavinami ir ilgai kaitinant sunaikinami. Žuvims saponinai ypač toksiški.",
+      "knownHazardsLtFinal": "Šaknyse yra saponinų — žmonėms jie toksiški, tačiau prastai įsisavinami organizme ir ilgai kaitinant sunaikinami. Žuvims saponinai ypač toksiški.",
+      "status": "flagged",
+      "flagReason": "EN states saponins are 'quite toxic to people' — this is the primary hazard statement. LT focuses only on poor absorption without first establishing that they are toxic to humans. The current wording implies they are effectively harmless to people, which reverses the EN meaning.",
+      "suggestedFix": "Pirmiausia nurodyti toksiškumą žmonėms, tada pateikti absorpcijos kontekstą: \"Šaknyse yra saponinų — žmonėms jie toksiški, tačiau prastai įsisavinami organizme ir ilgai kaitinant sunaikinami. Žuvims saponinai ypač toksiški.\""
+    },
+    {
+      "latin": "Yucca filifera",
+      "knownHazards": "The roots contain saponins[222]. Whilst saponins are quite toxic to people, they are poorly absorbed by the body and so tend to pass straight through. They are also destroyed by prolonged heat, such as slow baking in an oven. Saponins are found in many common foods such as beans[K]. Saponins are much more toxic to some creatures, such as fish, and hunting tribes have traditionally put large quantities of them in streams, lakes etc in order to stupefy or kill the fish[K].",
+      "knownHazardsLtV2": "Šaknyse yra saponinų, kurie žmonėms blogai absorbuojami ir ilgai kepant sunaikinami. Žuvims saponinai yra labai toksiški.",
+      "knownHazardsLtEdited": "Šaknyse yra saponinų, kurie žmogaus organizme prastai įsisavinami ir ilgai kaitinant sunaikinami. Žuvims saponinai ypač toksiški.",
+      "knownHazardsLtFinal": "Šaknyse yra saponinų — žmonėms jie toksiški, tačiau prastai įsisavinami organizme ir ilgai kaitinant sunaikinami. Žuvims saponinai ypač toksiški.",
+      "status": "flagged",
+      "flagReason": "Same as Yucca: EN 'quite toxic to people' not reflected — LT only mentions poor absorption, implying effective harmlessness to humans.",
+      "suggestedFix": "Same fix as Yucca: \"Šaknyse yra saponinų — žmonėms jie toksiški, tačiau prastai įsisavinami organizme ir ilgai kaitinant sunaikinami. Žuvims saponinai ypač toksiški.\""
+    },
+    {
+      "latin": "Zamia",
+      "knownHazards": "Roots are poisonous.",
+      "knownHazardsLtV2": "Šaknys toksiškos.",
+      "knownHazardsLtEdited": "Šaknys toksiškos.",
+      "knownHazardsLtFinal": "Šaknys toksiškos.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Zantedeschia",
+      "knownHazards": "Many plants in this family are poisonous raw, due to the presence of calcium oxylate crystals. If eaten raw, this toxin gives you a sensation as if hundreds of tiny needles are sticking into the mouth, tongue etc. However, it is easily destroyed by thoroughly cooking or drying the plant. Although no specific mention has been seen for this plant it is wise to assume that it is poisonous in its raw state.",
+      "knownHazardsLtV2": "Žali augalai toksiškas dėl kalcio oksalatų kristalų, kurie dirgina burną ir liežuvį. Kruopštus virimas arba džiovinimas toksiną sunaikina.",
+      "knownHazardsLtEdited": "Žali augalai toksiški dėl kalcio oksalatų kristalų, kurie dirgina burną ir liežuvį. Kruopštus virimas arba džiovinimas toksiną sunaikina.",
+      "knownHazardsLtFinal": "Žali augalai toksiški dėl kalcio oksalatų kristalų, kurie dirgina burną ir liežuvį. Kruopštus virimas arba džiovinimas toksiną sunaikina.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Zantedeschia aethiopica",
+      "knownHazards": "Many plants in this family are poisonous raw, due to the presence of calcium oxylate crystals. If eaten raw, this toxin gives you a sensation as if hundreds of tiny needles are sticking into the mouth, tongue etc. However, it is easily destroyed by thoroughly cooking or drying the plant. Although no specific mention has been seen for this plant it is wise to assume that it is poisonous in its raw state.",
+      "knownHazardsLtV2": "Žali augalai toksiškas dėl kalcio oksalatų kristalų, kurie dirgina burną ir liežuvį. Kruopštus virimas arba džiovinimas toksiną sunaikina.",
+      "knownHazardsLtEdited": "Žali augalai toksiški dėl kalcio oksalatų kristalų, kurie dirgina burną ir liežuvį. Kruopštus virimas arba džiovinimas toksiną sunaikina.",
+      "knownHazardsLtFinal": "Žali augalai toksiški dėl kalcio oksalatų kristalų, kurie dirgina burną ir liežuvį. Kruopštus virimas arba džiovinimas toksiną sunaikina.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Zephyranthes",
+      "knownHazards": "The bulb contains toxic compounds[62]. Horses are said to get the staggers (a cerebrospinal disease) from eating the leaves and bulbs[207].",
+      "knownHazardsLtV2": "Svogūnėlyje yra toksiškų junginių. Arkliams lapų ir svogūnėlių valgymas sukelia smegenų-nugaros smegenų ligą (staggers).",
+      "knownHazardsLtEdited": "Svogūnėlyje yra toksiškų junginių. Arkliai, ėdę lapus ir svogūnėlius, suserga smegenų-nugaros smegenų liga (staggers).",
+      "knownHazardsLtFinal": "Svogūnėlyje yra toksiškų junginių. Arkliai, ėdę lapus ir svogūnėlius, suserga smegenų-nugaros smegenų liga (staggers).",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    }
+  ]
+}

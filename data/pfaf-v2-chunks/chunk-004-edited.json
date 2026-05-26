@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 4,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Aquilegia jonesii",
+      "knownHazards": "Although no records of toxicity have been seen for this species, it belongs to a family that contains a number of mildly toxic species. It is therefore wise to exercise some caution. The flowers are probably perfectly safe to eat.",
+      "knownHazardsLtV2": "Šiai rūšiai toksiškumo atvejų neužfiksuota, tačiau šeima turi silpnai toksiškų atstovų — rekomenduojama nedidelė atsargumas. Žiedai greičiausiai visiškai saugūs.",
+      "knownHazardsLtEdited": "Šiai rūšiai toksiškumo atvejų neužfiksuota, tačiau šeimoje pasitaiko silpnai toksiškų atstovų — rekomenduojama nedidelė atsarga. Žiedai greičiausiai visiškai saugūs.",
+      "changesNotes": "„šeima turi" → „šeimoje pasitaiko" (natūraliau LT); „atsargumas" (vyriška giminė, nesklandus žodžio pasirinkimas) → „atsarga" (moteriška giminė, tinkama su „nedidelė")."
+    },
+    {
+      "latin": "Aquilegia karelinii",
+      "knownHazards": "Although no records of toxicity have been seen for this species, it belongs to a family that contains a number of mildly toxic species. It is therefore wise to exercise some caution. The flowers are probably perfectly safe to eat.",
+      "knownHazardsLtV2": "Šiai rūšiai toksiškumo atvejų neužfiksuota, tačiau šeima turi silpnai toksiškų atstovų — rekomenduojama nedidelė atsargumas. Žiedai greičiausiai visiškai saugūs.",
+      "knownHazardsLtEdited": "Šiai rūšiai toksiškumo atvejų neužfiksuota, tačiau šeimoje pasitaiko silpnai toksiškų atstovų — rekomenduojama nedidelė atsarga. Žiedai greičiausiai visiškai saugūs.",
+      "changesNotes": "Ta pati korekcija kaip Aquilegia jonesii: „šeima turi" → „šeimoje pasitaiko"; „atsargumas" → „atsarga"."
+    },
+    {
+      "latin": "Aquilegia vulgaris",
+      "knownHazards": "The plant is poisonous though the toxins are destroyed by heat or by drying[7, 19]. Although this plant contains alkaloids, no cases of poisoning to humans or other mammals have been recorded[76].",
+      "knownHazardsLtV2": "Augalas toksiškas, tačiau kaitinant ar džiovinant alkaloidai sunaikinami. Žmonių ar žinduolių apsinuodijimo atvejų neužfiksuota.",
+      "knownHazardsLtEdited": "Augalas toksiškas, tačiau kaitinant ar džiovinant alkaloidai sunaikinami. Žmonių ar žinduolių apsinuodijimo atvejų neužfiksuota.",
+      "changesNotes": "Tekstas taisyklingas ir sklandus — pakeitimų nereikia."
+    },
+    {
+      "latin": "Arachis hypogaea",
+      "knownHazards": "Of greatest concern is possible contamination of damaged or spoiled seeds with the teratogenic, carcinogenic aflatoxins. Two principal toxins, aflatoxins B, and G, and their less toxic dihydro derivatives, aflatoxins B2 and G2 are formed by the aflatoxin producing moulds (Aspergillus flavus et al). Prevention of mould growth is the mainstay, there being no satisfactory way to remove the toxins from feed and foods (however, peanut oils are free of aflatoxins because of alkaline processing)[269]. Avoid if any suggestion of allergy.",
+      "knownHazardsLtV2": "Didžiausia rizika — pažeistų ar sugedusių sėklų užterštumas aflatoksinais B ir G (teratogeniniai, kancerogeniniai), kuriuos gamina pelėsiai (Aspergillus flavus ir kt.). Veiksmingų būdų toksinams pašalinti iš maisto nėra — svarbiausia užkirsti kelią pelėsiui; žemės riešutų aliejai aflatoksinų neturi. Alergijai jautriems — vengti.",
+      "knownHazardsLtEdited": "Didžiausia rizika — pažeistų ar sugedusių sėklų užterštumas aflatoksinais B ir G (teratogeniniai, kancerogeniniai), kuriuos gamina pelėsiai (Aspergillus flavus ir kt.). Veiksmingų būdų toksinams pašalinti iš maisto nėra — svarbiausia užkirsti kelią pelėsiui; žemės riešutų aliejuose aflatoksinų nėra. Esant alergijai — vengti.",
+      "changesNotes": "„aliejai aflatoksinų neturi" → „aliejuose aflatoksinų nėra" (sklandesnė LT konstrukcija su lokatyvu); „Alergijai jautriems — vengti" → „Esant alergijai — vengti" (natūralesnė, neutralesnė formuluotė)."
+    },
+    {
+      "latin": "Aralia",
+      "knownHazards": "The bark is considered to be slightly poisonous[218].",
+      "knownHazardsLtV2": "Žievė laikoma silpnai toksiška.",
+      "knownHazardsLtEdited": "Žievė laikoma silpnai toksiška.",
+      "changesNotes": "Tekstas taisyklingas — pakeitimų nereikia."
+    },
+    {
+      "latin": "Arctostaphylos uva-ursi",
+      "knownHazards": "This plant is best not used by pregnant women since it can reduce the supply of blood to the foetus[172]. Large doses may lead to nausea and vomiting due to tannin content. Overdoes may result in tinnitus, nausea, vomiting, shortness of breath, convulsions and collapse [301].",
+      "knownHazardsLtV2": "Nėščiosioms nevartoti — mažina kraujo tiekimą vaisiui. Didelės dozės dėl taninų sukelia pykinimą ir vėmimą; perdozavus — spengimas ausyse, dusulys, traukuliai, kolapsas.",
+      "knownHazardsLtEdited": "Nėščiosioms nevartoti — mažina kraujo tiekimą vaisiui. Didelės dozės dėl taninų sukelia pykinimą ir vėmimą; perdozavus pasireiškia spengimas ausyse, dusulys, traukuliai, kolapsas.",
+      "changesNotes": "Po „perdozavus" įterptas veiksmažodis „pasireiškia" — be jo sakinys buvo bevardinis vardininkas, nesudarantis pilno sakinio."
+    },
+    {
+      "latin": "Argemone",
+      "knownHazards": "All parts of the plant, including the seed, contain toxic alkaloids[222].",
+      "knownHazardsLtV2": "Visi augalo dalys, įskaitant sėklas, turi toksiškų alkaloidų.",
+      "knownHazardsLtEdited": "Visos augalo dalys, įskaitant sėklas, turi toksiškų alkaloidų.",
+      "changesNotes": "„Visi" (vyriška g.) → „Visos" (moteriška g.), nes „dalys" yra moteriškos giminės."
+    },
+    {
+      "latin": "Argemone mexicana",
+      "knownHazards": "All parts of the plant, including the seed, contain toxic alkaloids[175].",
+      "knownHazardsLtV2": "Visi augalo dalys, įskaitant sėklas, turi toksiškų alkaloidų.",
+      "knownHazardsLtEdited": "Visos augalo dalys, įskaitant sėklas, turi toksiškų alkaloidų.",
+      "changesNotes": "Ta pati giminės korekcija kaip Argemone: „Visi" → „Visos"."
+    },
+    {
+      "latin": "Aria",
+      "knownHazards": "The seeds probably contain hydrogen cyanide. This is the ingredient that gives almonds their characteristic flavour. Unless the seed is very bitter it should be perfectly safe in reasonable quantities. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos greičiausiai turi vandenilio cianido — jei sėklos nėra labai karčios, nedideliais kiekiais jos saugios. Didelė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina.",
+      "knownHazardsLtEdited": "Sėklos greičiausiai turi vandenilio cianido — jei nėra labai karčios, nedideliais kiekiais jos saugios. Didelė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina.",
+      "changesNotes": "Pašalintas pasikartojantis „sėklos" antrame dėmenyje (implicit subject — pakanka pirmoje sakinio dalyje)."
+    },
+    {
+      "latin": "Arisaema",
+      "knownHazards": "The plant contains calcium oxylate crystals. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water.",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje. Kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje; kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "changesNotes": "Du trumpi sakiniai sujungti į vieną per kabliakomenį — geresnė sakinio eiga, nereikalinga taškas tarp glaudžiai susijusių dalių."
+    },
+    {
+      "latin": "Arisaema consanguineum",
+      "knownHazards": "The plant contains calcium oxylate crystals. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water.",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje. Kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje; kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "changesNotes": "Ta pati korekcija kaip Arisaema: sujungta per kabliakomenį."
+    },
+    {
+      "latin": "Arisaema jacquemontii",
+      "knownHazards": "The plant contains calcium oxylate crystals. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water.",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje. Kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje; kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "changesNotes": "Ta pati korekcija kaip Arisaema: sujungta per kabliakomenį."
+    },
+    {
+      "latin": "Arisaema ringens",
+      "knownHazards": "The plant contains calcium oxylate crystals. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water.",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje. Kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje; kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "changesNotes": "Ta pati korekcija kaip Arisaema: sujungta per kabliakomenį."
+    },
+    {
+      "latin": "Arisaema tortuosum",
+      "knownHazards": "The plant contains calcium oxylate crystals. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water.",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje. Kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje; kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "changesNotes": "Ta pati korekcija kaip Arisaema: sujungta per kabliakomenį."
+    },
+    {
+      "latin": "Arisaema triphyllum",
+      "knownHazards": "The plant contains calcium oxylate crystals. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water.",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje. Kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje; kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "changesNotes": "Ta pati korekcija kaip Arisaema: sujungta per kabliakomenį."
+    },
+    {
+      "latin": "Arisarum",
+      "knownHazards": "The plant contains calcium oxylate crystals. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water[65].",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje. Kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje; kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "changesNotes": "Ta pati korekcija kaip Arisaema: sujungta per kabliakomenį."
+    },
+    {
+      "latin": "Aristolochia",
+      "knownHazards": "The root and stem are poisonous[19]. The plant contains aristolochic acid, this has received rather mixed reports on its toxicity. According to one report aristolochic acid stimulates white blood cell activity and speeds the healing of wounds, but is also carcinogenic and damaging to the kidneys[254]. Another report says that it is an active antitumour agent but is too toxic for clinical use[218]. Another report says that aristolochic acid has anti-cancer properties and can be used in conjunction with chemotherapy and radiotherapy and that it also increases the cellular immunity and phagocytosis function of the phagocytic cells[176].",
+      "knownHazardsLtV2": "Šaknis ir stiebas yra toksiški. Augalas turi aristolochino rūgšties, kuri yra kancerogeninė ir žalinga inkstams; dėl toksiškumo klinikiniam naudojimui netinka.",
+      "knownHazardsLtEdited": "Šaknis ir stiebas toksiški. Augale yra aristolochino rūgšties — kancerogeninės ir inkstus žalojančios medžiagos; klinikiniam naudojimui ji per toksiška.",
+      "changesNotes": "Pašalintas perteklinis „yra" po „stiebas"; „turi aristolochino rūgšties" → „yra aristolochino rūgšties" (lokatyvinė konstrukcija natūralesnė LT); „kuri yra kancerogeninė ir žalinga inkstams" → „kancerogeninės ir inkstus žalojančios medžiagos" (dalyvio konstrukcija, kompaktiškiau); „dėl toksiškumo klinikiniam naudojimui netinka" → „klinikiniam naudojimui ji per toksiška" (aiškiau, kas per toksiška)."
+    },
+    {
+      "latin": "Aristolochia macrophylla",
+      "knownHazards": "We have no specific details for this species but most members of this genus have poisonous roots and stems[179]. The plant contains aristolochic acid, this has received rather mixed reports on its toxicity. According to one report aristolochic acid stimulates white blood cell activity and speeds the healing of wounds, but is also carcinogenic and damaging to the kidneys[254]. Another report says that it is an active antitumour agent but is too toxic for clinical use[218]. Another report says that aristolochic acid has anti-cancer properties and can be used in conjunction with chemotherapy and radiotherapy and that it also increases the cellular immunity and phagocytosis function of the phagocytic cells[176].",
+      "knownHazardsLtV2": "Kaip ir daugumos šios genties atstovų, šaknys ir stiebai tikėtinai toksiški. Augalas turi aristolochino rūgšties — kancerogeninės ir inkstus pažeidžiančios medžiagos; dėl toksiškumo klinikiniam naudojimui netinka.",
+      "knownHazardsLtEdited": "Kaip ir daugumos šios genties atstovų, šaknys ir stiebai tikėtinai toksiški. Augale yra aristolochino rūgšties — kancerogeninės ir inkstus žalojančios medžiagos; klinikiniam naudojimui ji per toksiška.",
+      "changesNotes": "„Augalas turi" → „Augale yra" (lokatyvinė konstrukcija natūralesnė LT); „dėl toksiškumo klinikiniam naudojimui netinka" → „klinikiniam naudojimui ji per toksiška" (aiškesnė konstrukcija, suderintas su Aristolochia)."
+    },
+    {
+      "latin": "Arnica",
+      "knownHazards": "The whole plant is toxic and should only be used for external applications to unbroken skin[172].",
+      "knownHazardsLtV2": "Visas augalas toksiškas — naudoti tik išoriškai ant nepažeistos odos.",
+      "knownHazardsLtEdited": "Visas augalas toksiškas — naudoti tik išoriškai ant nepažeistos odos.",
+      "changesNotes": "Tekstas taisyklingas ir sklandus — pakeitimų nereikia."
+    },
+    {
+      "latin": "Arnica montana",
+      "knownHazards": "Deadly in large quantities. The whole plant is toxic and should only be used for external applications to unbroken skin[9, 14, 65, 172]. Alcoholic extracts of arnica can cause toxic effects on the heart and raise blood pressure [301].",
+      "knownHazardsLtV2": "Dideliais kiekiais mirtinas. Naudoti tik išoriškai ant nepažeistos odos — alkoholiniai ekstraktai gali pažeisti širdį ir pakelti kraujospūdį.",
+      "knownHazardsLtEdited": "Dideliais kiekiais mirtinas. Naudoti tik išoriškai ant nepažeistos odos — alkoholiniai ekstraktai gali pažeisti širdį ir pakelti kraujospūdį.",
+      "changesNotes": "Tekstas taisyklingas ir sklandus — pakeitimų nereikia."
+    },
+    {
+      "latin": "Artemisia",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, skin contact with some members of this genus can cause dermatitis or other allergic reactions in some people[222]. Safety during pregnancy is not known.",
+      "knownHazardsLtV2": "Kontaktas su oda kai kuriems žmonėms gali sukelti dermatitą ar alerginę reakciją. Saugumas nėštumo metu nežinomas.",
+      "knownHazardsLtEdited": "Palietus odą, kai kuriems žmonėms gali išsivystyti dermatitas ar alerginė reakcija. Saugumas nėštumo metu nežinomas.",
+      "changesNotes": "„Kontaktas su oda" (kalkė) → „Palietus odą" (natūralus LT dalyvis); „sukelti" → „išsivystyti" (mediciniškai tiksliau kalbant apie odos reakcijas)."
+    },
+    {
+      "latin": "Artemisia abrotanum",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, skin contact with some members of this genus can cause dermatitis or other allergic reactions in some people[222]. Safety during pregnancy is not known.",
+      "knownHazardsLtV2": "Kontaktas su oda kai kuriems žmonėms gali sukelti dermatitą ar alerginę reakciją. Saugumas nėštumo metu nežinomas.",
+      "knownHazardsLtEdited": "Palietus odą, kai kuriems žmonėms gali išsivystyti dermatitas ar alerginė reakcija. Saugumas nėštumo metu nežinomas.",
+      "changesNotes": "Ta pati korekcija kaip Artemisia: „Kontaktas su oda" → „Palietus odą"."
+    },
+    {
+      "latin": "Artemisia absinthium",
+      "knownHazards": "The plant is poisonous if used in large quantities[20, 61]. Even small quantities have been known to cause nervous disorders, convulsions, insomnia etc[222]. Just the scent of the plant has been known to cause headaches and nervousness in some people[169]. The plant contains thujone. In small quantities this acts as a brain stimulant but is toxic in excess[254]. Avoid if prone to seizures. Avoid during pregnancy & breast feeding. Absinthism adverse effects include hallucinations, insomnia, loss of intellect, psychosis, tremor & seizures [301].",
+      "knownHazardsLtV2": "Augalas turi tujono — net nedideli kiekiai gali sukelti nervų sistemos sutrikimus, traukulius ir nemigą; perteklius sukelia haliucinacijas, psichozę ir tremoną. Vengti epilepsija sergantiems, nėščiosioms ir žindančioms motinoms.",
+      "knownHazardsLtEdited": "Augale yra tujono — net nedideli kiekiai gali sukelti nervų sistemos sutrikimus, traukulius ir nemigą; perteklius sukelia haliucinacijas, psichozę ir tremorą. Vengti sergantiems epilepsija, nėščiosioms ir žindančioms motinoms.",
+      "changesNotes": "„Augalas turi tujono" → „Augale yra tujono" (lokatyvinė konstrukcija natūralesnė LT); „tremoną" → „tremorą" (taisyklingas tarptautinis žodis); „epilepsija sergantiems" — pakeistas žodžių tvarkos dėmuo „Vengti epilepsija sergantiems" (natūralesnė seka)."
+    },
+    {
+      "latin": "Artemisia arborescens",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, skin contact with some members of this genus can cause dermatitis or other allergic reactions in some people[222].",
+      "knownHazardsLtV2": "Kontaktas su oda kai kuriems žmonėms gali sukelti dermatitą ar alerginę reakciją.",
+      "knownHazardsLtEdited": "Palietus odą, kai kuriems žmonėms gali išsivystyti dermatitas ar alerginė reakcija.",
+      "changesNotes": "Ta pati korekcija kaip Artemisia: „Kontaktas su oda" → „Palietus odą"."
+    },
+    {
+      "latin": "Artemisia frigida",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, skin contact with some members of this genus can cause dermatitis or other allergic reactions in some people[222].",
+      "knownHazardsLtV2": "Kontaktas su oda kai kuriems žmonėms gali sukelti dermatitą ar alerginę reakciją.",
+      "knownHazardsLtEdited": "Palietus odą, kai kuriems žmonėms gali išsivystyti dermatitas ar alerginė reakcija.",
+      "changesNotes": "Ta pati korekcija kaip Artemisia: „Kontaktas su oda" → „Palietus odą"."
+    },
+    {
+      "latin": "Artemisia lactiflora",
+      "knownHazards": "The plant might be poisonous in large doses[21]. Skin contact can cause dermatitis in some people[222].",
+      "knownHazardsLtV2": "Didelėmis dozėmis gali būti toksiškas. Kontaktas su oda kai kuriems gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Didelėmis dozėmis gali būti toksiškas. Palietus odą, kai kuriems žmonėms gali išsivystyti dermatitas.",
+      "changesNotes": "„Kontaktas su oda" → „Palietus odą"; „kai kuriems" papildyta „žmonėms" (nebaigtas pažyminys); „sukelti dermatitą" → „išsivystyti dermatitas" (mediciniškai tiksliau)."
+    },
+    {
+      "latin": "Artemisia ludoviciana",
+      "knownHazards": "There is a report that the plant can cause allergies in some people[222].",
+      "knownHazardsLtV2": "Kai kuriems žmonėms gali sukelti alerginę reakciją.",
+      "knownHazardsLtEdited": "Kai kuriems žmonėms gali sukelti alerginę reakciją.",
+      "changesNotes": "Tekstas taisyklingas — pakeitimų nereikia."
+    },
+    {
+      "latin": "Artemisia schmidtiana",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, skin contact with some members of this genus can cause dermatitis or other allergic reactions in some people[222].",
+      "knownHazardsLtV2": "Kontaktas su oda kai kuriems žmonėms gali sukelti dermatitą ar alerginę reakciją.",
+      "knownHazardsLtEdited": "Palietus odą, kai kuriems žmonėms gali išsivystyti dermatitas ar alerginė reakcija.",
+      "changesNotes": "Ta pati korekcija kaip Artemisia: „Kontaktas su oda" → „Palietus odą"."
+    },
+    {
+      "latin": "Artemisia stelleriana",
+      "knownHazards": "Although no reports of toxicity have been seen for this species, skin contact with some members of this genus can cause dermatitis or other allergic reactions in some people[222].",
+      "knownHazardsLtV2": "Kontaktas su oda kai kuriems žmonėms gali sukelti dermatitą ar alerginę reakciją.",
+      "knownHazardsLtEdited": "Palietus odą, kai kuriems žmonėms gali išsivystyti dermatitas ar alerginė reakcija.",
+      "changesNotes": "Ta pati korekcija kaip Artemisia: „Kontaktas su oda" → „Palietus odą"."
+    },
+    {
+      "latin": "Arum",
+      "knownHazards": "The plant contains calcium oxylate crystals. These cause an extremely unpleasant sensation similar to needles being stuck into the mouth and tongue if they are eaten, but they are easily neutralized by thoroughly drying or cooking the plant or by steeping it in water[65].",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje. Kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, kurie valgant sukelia aštrų deginimo pojūtį burnoje ir liežuvyje; kruopščiai džiovinant, verdant ar mirkant vandenyje jie neutralizuojami.",
+      "changesNotes": "Ta pati korekcija kaip Arisaema grupei: du sakiniai sujungti kabliakomenį — geresnė sakinio eiga."
+    }
+  ]
+}

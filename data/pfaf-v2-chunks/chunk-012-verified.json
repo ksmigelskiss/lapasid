@@ -1,0 +1,306 @@
+{
+  "chunkIndex": 12,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Ecballium elaterium",
+      "knownHazards": "Poisonous in large quantities[7] (this probably refers to the fruit). The juice of the fruit is irritative to some skins[148].",
+      "knownHazardsLtV2": "Dideliais kiekiais vaisiai toksiškai. Vaisiaus sultys kai kuriems žmonėms dirgina odą.",
+      "knownHazardsLtEdited": "Dideliais kiekiais vaisiai toksiški. Vaisiaus sultys kai kuriems žmonėms dirgina odą.",
+      "knownHazardsLtFinal": "Dideliais kiekiais vaisiai toksiški. Vaisiaus sultys kai kuriems žmonėms dirgina odą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echinacea",
+      "knownHazards": "possible suppression of immunity with habitual use. High doses over 1000 mg may cause dizziness. Use of herb for 10-14 days recommended followed by a short break.",
+      "knownHazardsLtV2": "Nuolatinis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg gali sukelti galvos svaigimą; rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką.",
+      "knownHazardsLtEdited": "Nuolatinis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg gali sukelti galvos svaigimą; rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką.",
+      "knownHazardsLtFinal": "Nuolatinis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg gali sukelti galvos svaigimą; rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echinacea angustifolia",
+      "knownHazards": "possible suppression of immunity with habitual use. High doses over 1000 mg may cause dizziness. Use of herb for 10-14 days recommended followed by a short break.",
+      "knownHazardsLtV2": "Nuolatinis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg gali sukelti galvos svaigimą; rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką.",
+      "knownHazardsLtEdited": "Nuolatinis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg gali sukelti galvos svaigimą; rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką.",
+      "knownHazardsLtFinal": "Nuolatinis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg gali sukelti galvos svaigimą; rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echinacea purpurea",
+      "knownHazards": "Possible suppression of immunity with habitual use. High doses over 1000 mg may cause dizziness. Use of herb for 10-14 days recommended followed by a short break.",
+      "knownHazardsLtV2": "Nuolatinis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg gali sukelti galvos svaigimą; rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką.",
+      "knownHazardsLtEdited": "Nuolatinis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg gali sukelti galvos svaigimą; rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką.",
+      "knownHazardsLtFinal": "Nuolatinis vartojimas gali slopinti imunitetą. Dozės virš 1000 mg gali sukelti galvos svaigimą; rekomenduojama vartoti 10–14 dienų, tada daryti pertrauką.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echinocactus",
+      "knownHazards": "Harvesting stems kills the plant and may violate legal protections. Given its slow growth, removal should be considered only in genuine survival situations. Spines are formidable and require careful handling.",
+      "knownHazardsLtV2": "Stiebų pjovimas žudo augalą ir gali pažeisti teisinę apsaugą — rinkti tik išskirtinėmis išgyvenimo situacijomis. Dygliai yra aštrūs ir reikalauja atsargaus elgesio.",
+      "knownHazardsLtEdited": "Stiebų pjovimas žudo augalą ir gali pažeisti teisinę apsaugą — rinkti tik išskirtinėmis išgyvenimo situacijomis. Dygliai aštrūs, elgtis reikia atsargiai.",
+      "knownHazardsLtFinal": "Stiebų pjovimas žudo augalą ir gali pažeisti teisinę apsaugą — rinkti tik išskirtinėmis išgyvenimo situacijomis. Dygliai aštrūs, elgtis reikia atsargiai.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echinocactus horizonthalonius",
+      "knownHazards": "Harvesting stems kills the plant and may violate legal protections. Given its slow growth, removal should be considered only in genuine survival situations. Spines are formidable and require careful handling.",
+      "knownHazardsLtV2": "Stiebų pjovimas žudo augalą ir gali pažeisti teisinę apsaugą — rinkti tik išskirtinėmis išgyvenimo situacijomis. Dygliai yra aštrūs ir reikalauja atsargaus elgesio.",
+      "knownHazardsLtEdited": "Stiebų pjovimas žudo augalą ir gali pažeisti teisinę apsaugą — rinkti tik išskirtinėmis išgyvenimo situacijomis. Dygliai aštrūs, elgtis reikia atsargiai.",
+      "knownHazardsLtFinal": "Stiebų pjovimas žudo augalą ir gali pažeisti teisinę apsaugą — rinkti tik išskirtinėmis išgyvenimo situacijomis. Dygliai aštrūs, elgtis reikia atsargiai.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echinocactus texensis",
+      "knownHazards": "Spines remain hazardous despite the spineless fruits. Confirm identification and legality before harvesting.",
+      "knownHazardsLtV2": "Augalo dygliai kelia mechaninę riziką, nors vaisiai ir bedygliai. Prieš rinkdami patikrinkite augalo tapatybę ir rinkimo teisėtumą.",
+      "knownHazardsLtEdited": "Augalo dygliai kelia mechaninę riziką, nors vaisiai bedygliai. Prieš rinkdami patikrinkite augalo tapatybę ir rinkimo teisėtumą.",
+      "knownHazardsLtFinal": "Augalo dygliai kelia mechaninę riziką, nors vaisiai bedygliai. Prieš rinkdami patikrinkite augalo tapatybę ir rinkimo teisėtumą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echinocereus",
+      "knownHazards": "The core safety issue is mechanical rather than chemical: spines on the fruit and plant can cause injury, and spines may persist even after brushing. A second \"safety\" issue is conservation—some Echinocereus populations/varieties are protected in parts of their range, so harvest should be avoided where collection is restricted.",
+      "knownHazardsLtV2": "Pagrindinė rizika — mechaninė: vaisių ir augalo dygliai gali sužeisti, todėl būtina atsargiai elgtis. Kai kurios rūšys saugomos, todėl prieš renkant būtina patikrinti vietines taisykles.",
+      "knownHazardsLtEdited": "Pagrindinė rizika — mechaninė: vaisių ir augalo dygliai gali sužeisti, todėl būtina elgtis atsargiai. Kai kurios rūšys saugomos, todėl prieš renkant būtina patikrinti vietines taisykles.",
+      "knownHazardsLtFinal": "Pagrindinė rizika — mechaninė: vaisių ir augalo dygliai gali sužeisti, todėl būtina elgtis atsargiai. Kai kurios rūšys saugomos, todėl prieš renkant būtina patikrinti vietines taisykles.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echinocereus enneacanthus",
+      "knownHazards": "Mechanical spine risk; avoid collecting from protected populations; avoid fruits with heavy fungal rot or insect damage.",
+      "knownHazardsLtV2": "Dygliai kelia mechaninę riziką; nerinkti iš saugomų populiacijų. Venkite vaisių su grybelio ar vabzdžių pažeidimais.",
+      "knownHazardsLtEdited": "Dygliai kelia mechaninę riziką; nerinkti iš saugomų populiacijų. Venkite vaisių su grybelių ar vabzdžių pažeidimais.",
+      "knownHazardsLtFinal": "Dygliai kelia mechaninę riziką; nerinkti iš saugomų populiacijų. Venkite vaisių su grybelių ar vabzdžių pažeidimais.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echinocereus triglochidiatus",
+      "knownHazards": "Mechanical spine hazard; local protections may apply. In some areas claretcup forms are conservation-sensitive, so treat harvest as inappropriate unless you are certain collection is legal and sustainable.",
+      "knownHazardsLtV2": "Dygliai kelia mechaninę riziką; kai kuriose vietovėse augalas saugomas. Rinkti tik įsitikinę, kad tai teisėta ir tvaru.",
+      "knownHazardsLtEdited": "Dygliai kelia mechaninę riziką; kai kuriose vietovėse augalas saugomas. Rinkti tik įsitikinę, kad tai teisėta ir tvaru.",
+      "knownHazardsLtFinal": "Dygliai kelia mechaninę riziką; kai kuriose vietovėse augalas saugomas. Rinkti tik įsitikinę, kad tai teisėta ir tvaru.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echium",
+      "knownHazards": "Introduced to Australia, South Africa, and the United States, where it is an invasive weed. Due to a high concentration of pyrrolizidine alkaloids, it is poisonous to grazing livestock, especially those with simple digestive systems, such as horses. Skin irritant. Wear gloves and other protective equipment when handling.",
+      "knownHazardsLtV2": "Didelė pirolizidinų alkaloidų koncentracija daro augalą toksiškam gyvuliams, ypač arkliams. Augalas dirgina odą — dirbant mūvėti pirštines.",
+      "knownHazardsLtEdited": "Augale gausu pirolizidinų alkaloidų, todėl jis toksiškas gyvuliams, ypač arkliams. Augalas dirgina odą — dirbant mūvėti pirštines.",
+      "knownHazardsLtFinal": "Augale gausu pirolizidinų alkaloidų, todėl jis toksiškas gyvuliams, ypač arkliams. Augalas dirgina odą — dirbant mūvėti pirštines.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echium plantagineum",
+      "knownHazards": "Introduced to Australia, South Africa, and the United States, where it is an invasive weed. Due to a high concentration of pyrrolizidine alkaloids, it is poisonous to grazing livestock, especially those with simple digestive systems, such as horses. Skin irritant. Wear gloves and other protective equipment when handling.",
+      "knownHazardsLtV2": "Didelė pirolizidinų alkaloidų koncentracija daro augalą toksiškam gyvuliams, ypač arkliams. Augalas dirgina odą — dirbant mūvėti pirštines.",
+      "knownHazardsLtEdited": "Augale gausu pirolizidinų alkaloidų, todėl jis toksiškas gyvuliams, ypač arkliams. Augalas dirgina odą — dirbant mūvėti pirštines.",
+      "knownHazardsLtFinal": "Augale gausu pirolizidinų alkaloidų, todėl jis toksiškas gyvuliams, ypač arkliams. Augalas dirgina odą — dirbant mūvėti pirštines.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Echium vulgare",
+      "knownHazards": "The leaves are poisonous[20]. No cases of poisoning have ever been recorded for this plant[76]. The bristly hairs on the leaves and stems can cause severe dermatitis[207].",
+      "knownHazardsLtV2": "Lapai laikomi toksiškais, tačiau realių apsinuodijimo atvejų neužfiksuota. Lapų ir stiebų šiurkštūs plaukeliai gali sukelti stiprų dermatitą.",
+      "knownHazardsLtEdited": "Lapai laikomi toksiškais, tačiau realių apsinuodijimo atvejų neužfiksuota. Lapų ir stiebų šiurkštūs plaukeliai gali sukelti stiprų dermatitą.",
+      "knownHazardsLtFinal": "Lapai laikomi toksiškais, tačiau realių apsinuodijimo atvejų neužfiksuota. Lapų ir stiebų šiurkštūs plaukeliai gali sukelti stiprų dermatitą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Eichhornia",
+      "knownHazards": "Eating the plant, which is reported to contain HCN, alkaloid, and triterpenoid, may induce itching[269]. Fresh plants contain prickly crystals[269]. Plants sprayed with 2,4-D may accumulate lethal doses of nitrates[269].",
+      "knownHazardsLtV2": "Augale esantys HCN, alkaloidai ir triterpenoidai gali sukelti niežulį; švieži augalai turi dūriančių kristalų. Augalai, apdoroti herbicidu 2,4-D, gali kaupti mirtinas nitratų dozes.",
+      "knownHazardsLtEdited": "Augale esantys HCN, alkaloidai ir triterpenoidai gali sukelti niežulį; šviežiuose augaluose yra dūriančių kristalų. Augalai, apdoroti herbicidu 2,4-D, gali kaupti mirtinas nitratų dozes.",
+      "knownHazardsLtFinal": "Augale esantys HCN, alkaloidai ir triterpenoidai gali sukelti niežulį; šviežiuose augaluose yra dūriančių kristalų. Augalai, apdoroti herbicidu 2,4-D, gali kaupti mirtinas nitratų dozes.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Eichhornia crassipes",
+      "knownHazards": "Eating the plant, which is reported to contain HCN, alkaloid, and triterpenoid, may induce itching[269]. Fresh plants contain prickly crystals[269]. Plants sprayed with 2,4-D may accumulate lethal doses of nitrates[269].",
+      "knownHazardsLtV2": "Augale esantys HCN, alkaloidai ir triterpenoidai gali sukelti niežulį; švieži augalai turi dūriančių kristalų. Augalai, apdoroti herbicidu 2,4-D, gali kaupti mirtinas nitratų dozes.",
+      "knownHazardsLtEdited": "Augale esantys HCN, alkaloidai ir triterpenoidai gali sukelti niežulį; šviežiuose augaluose yra dūriančių kristalų. Augalai, apdoroti herbicidu 2,4-D, gali kaupti mirtinas nitratų dozes.",
+      "knownHazardsLtFinal": "Augale esantys HCN, alkaloidai ir triterpenoidai gali sukelti niežulį; šviežiuose augaluose yra dūriančių kristalų. Augalai, apdoroti herbicidu 2,4-D, gali kaupti mirtinas nitratų dozes.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Elaeagnus umbellata",
+      "knownHazards": "E. umbellata has the potential of becoming one of the most troublesome adventive shrubs in the central and eastern United States.",
+      "knownHazardsLtV2": "Invazinis krūmas JAV centrinėje ir rytinėje dalyje — sodinant vertėtų atsižvelgti į ekologinę riziką.",
+      "knownHazardsLtEdited": "Invazinis krūmas JAV centrinėje ir rytinėje dalyje — sodinant vertėtų atsižvelgti į ekologinę riziką.",
+      "knownHazardsLtFinal": "Invazinis krūmas JAV centrinėje ir rytinėje dalyje — sodinant vertėtų atsižvelgti į ekologinę riziką.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Encephalartos",
+      "knownHazards": "Seed is poisonous if ingested. Consumption of the seeds can lead to liver cancer[398]. All parts of plant are poisonous if ingested. Plant has spines or sharp edges; use extreme caution when handling.",
+      "knownHazardsLtV2": "Visi augalo dalys, ypač sėklos, yra toksiškos — sėklų vartojimas siejamas su kepenų vėžio rizika. Lapai turi aštrius kraštus; elgtis labai atsargiai.",
+      "knownHazardsLtEdited": "Visos augalo dalys, ypač sėklos, toksiškos — sėklų vartojimas siejamas su kepenų vėžio rizika. Lapai turi aštrius kraštus; elgtis labai atsargiai.",
+      "knownHazardsLtFinal": "Visos augalo dalys, ypač sėklos, toksiškos — sėklų vartojimas siejamas su kepenų vėžio rizika. Lapai turi aštrius kraštus; elgtis labai atsargiai.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Epidendrum",
+      "knownHazards": "Calcium oxalate crystals are present in the plant, which may cause dermatitis in vanilla workers[310 ].(Handling plant may cause skin irritation or allergic reaction )",
+      "knownHazardsLtV2": "Augale yra kalcio oksalato kristalų, galinčių dirginti odą ir sukelti dermatitą ar alerginę reakciją.",
+      "knownHazardsLtEdited": "Augale yra kalcio oksalato kristalų, galinčių dirginti odą ir sukelti dermatitą ar alerginę reakciją.",
+      "knownHazardsLtFinal": "Augale yra kalcio oksalato kristalų, galinčių dirginti odą ir sukelti dermatitą ar alerginę reakciją.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Epilobium",
+      "knownHazards": "Fireweed is generally considered safe to eat in moderate quantities, but several parts—particularly roots, mature stems, and older leaves—contain irritating compounds that cause acrid or peppery sensations. Oxalates in leaves may cause mouth or throat irritation, especially when eaten raw. Cooking reduces but does not eliminate harsh flavours. As with many wild greens, overconsumption may cause digestive discomfort. Individuals with sensitivity to oxalates should exercise caution. An infusion of the leaves is said to stupefy a person[4].",
+      "knownHazardsLtV2": "Saikingas vartojimas laikomas saugiu, tačiau lapuose esantys oksalatai gali dirginti burną ir gerklę, ypač valgant žalius — virimas sumažina šį poveikį. Jautriems oksalatams asmenims rekomenduojamas atsargumas.",
+      "knownHazardsLtEdited": "Saikingas vartojimas laikomas saugiu, tačiau lapuose esantys oksalatai gali dirginti burną ir gerklę, ypač valgant žalius — virimas sumažina šį poveikį. Jautriems oksalatams asmenims rekomenduojama atsargiai.",
+      "knownHazardsLtFinal": "Saikingas vartojimas laikomas saugiu, tačiau lapuose esantys oksalatai gali dirginti burną ir gerklę, ypač valgant žalius — virimas sumažina šį poveikį. Per didelis kiekis gali sukelti virškinimo sutrikimų; lapų nuoviras gali apsvaiginantis poveikis — jautriems oksalatams asmenims rekomenduojama atsargiai.",
+      "status": "flagged",
+      "flagReason": "EN source contains two hazards omitted from LT: (1) 'overconsumption may cause digestive discomfort'; (2) 'An infusion of the leaves is said to stupefy a person[4]' — a narcotic/stupefying effect. Both are meaningful safety warnings absent from knownHazardsLtEdited. Additionally, the suggested fix below adds these back but results in 3 sentences; style is still within 1–3 sentence limit.",
+      "suggestedFix": "Saikingas vartojimas laikomas saugiu, tačiau lapuose esantys oksalatai gali dirginti burną ir gerklę, ypač valgant žalius — virimas sumažina šį poveikį. Per didelis kiekis gali sukelti virškinimo sutrikimų; lapų nuoviras gali turėti apsvaiginantį poveikį. Jautriems oksalatams asmenims rekomenduojama atsargiai."
+    },
+    {
+      "latin": "Erigeron",
+      "knownHazards": "Skin contact with the plant can cause dermatitis in some people[222]. No acute toxicity reported. However, strong resins and plant secondary compounds may cause gastrointestinal irritation. Not suitable for frequent or regular consumption.",
+      "knownHazardsLtV2": "Augalas gali dirginti odą ir sukelti dermatitą. Dervos ir antriniai junginiai gali dirginti virškinamąjį traktą — netinka dažnam vartojimui.",
+      "knownHazardsLtEdited": "Augalas gali dirginti odą ir sukelti dermatitą. Dervos ir antriniai junginiai gali dirginti virškinamąjį traktą — netinka dažnam vartojimui.",
+      "knownHazardsLtFinal": "Augalas gali dirginti odą ir sukelti dermatitą. Dervos ir antriniai junginiai gali dirginti virškinamąjį traktą — netinka dažnam vartojimui.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Eriobotrya",
+      "knownHazards": "The seed is slightly poisonous. This report probably refers to the hydrogen cyanide that is found in many plants of this family, the seed should only be used in small amounts if it is bitter[K]. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos turi vandenilio cianido — karčios sėklos valgyti nevartoti arba naudoti tik labai mažais kiekiais. Didelė cianido dozė gali sukelti kvėpavimo nepakankamumą ir mirtį.",
+      "knownHazardsLtEdited": "Sėklose yra vandenilio cianido — karčių sėklų nevalgyti arba naudoti tik labai mažais kiekiais. Didelė cianido dozė gali sukelti kvėpavimo nepakankamumą ir mirtį.",
+      "knownHazardsLtFinal": "Sėklose yra vandenilio cianido — karčių sėklų nevalgyti arba naudoti tik labai mažais kiekiais. Didelė cianido dozė gali sukelti kvėpavimo nepakankamumą ir mirtį.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Eriobotrya japonica",
+      "knownHazards": "The seed is slightly poisonous. This report probably refers to the hydrogen cyanide that is found in many plants of this family, the seed should only be used in small amounts if it is bitter[K]. In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos turi vandenilio cianido — karčios sėklos valgyti nevartoti arba naudoti tik labai mažais kiekiais. Didelė cianido dozė gali sukelti kvėpavimo nepakankamumą ir mirtį.",
+      "knownHazardsLtEdited": "Sėklose yra vandenilio cianido — karčių sėklų nevalgyti arba naudoti tik labai mažais kiekiais. Didelė cianido dozė gali sukelti kvėpavimo nepakankamumą ir mirtį.",
+      "knownHazardsLtFinal": "Sėklose yra vandenilio cianido — karčių sėklų nevalgyti arba naudoti tik labai mažais kiekiais. Didelė cianido dozė gali sukelti kvėpavimo nepakankamumą ir mirtį.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Eriogonum",
+      "knownHazards": "Use caution with roots because harvesting kills or damages perennial plants. Seeds should be properly cleaned and cooked or toasted. Avoid plants growing on contaminated roadsides or mining-influenced soils.",
+      "knownHazardsLtV2": "Šaknų rinkimas žudo daugiamečius augalus — naudoti tik kraštutiniais atvejais. Sėklas prieš vartojant tinkamai išvalyti ir apdoroti termiškai.",
+      "knownHazardsLtEdited": "Šaknų rinkimas žudo daugiamečius augalus — naudoti tik kraštutiniais atvejais. Sėklas prieš vartojant tinkamai išvalyti ir išvirti arba skrudinti.",
+      "knownHazardsLtFinal": "Šaknų rinkimas žudo daugiamečius augalus — naudoti tik kraštutiniais atvejais. Sėklas prieš vartojant tinkamai išvalyti ir išvirti arba skrudinti. Nerinkti augalų, augančių prie užterštų kelių ar kasyklų.",
+      "status": "flagged",
+      "flagReason": "EN source explicitly warns 'Avoid plants growing on contaminated roadsides or mining-influenced soils' — this heavy-metal/contamination safety warning is entirely absent from knownHazardsLtEdited. It is a distinct, actionable hazard (soil contamination accumulation) that must be included.",
+      "suggestedFix": "Šaknų rinkimas žudo daugiamečius augalus — naudoti tik kraštutiniais atvejais. Sėklas prieš vartojant tinkamai išvalyti ir išvirti arba skrudinti. Nerinkti augalų, augančių prie užterštų kelių ar kasybos paveiktų dirvų."
+    },
+    {
+      "latin": "Erysimum cheiri",
+      "knownHazards": "The plant is said to be poisonous if used in large quantities[7].",
+      "knownHazardsLtV2": "Dideliais kiekiais augalas laikomas toksiška.",
+      "knownHazardsLtEdited": "Dideliais kiekiais augalas laikomas toksišku.",
+      "knownHazardsLtFinal": "Dideliais kiekiais augalas laikomas toksišku.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Erythrina",
+      "knownHazards": "The plant contains alkaloids that have powerful narcotic and purgative effects[200]. The seeds of all members of this genus are said to be poisonous[274].",
+      "knownHazardsLtV2": "Augalo alkaloidai turi stiprų narkotinį ir vidurius laisvinantį poveikį. Šios genties sėklos laikomos toksiška.",
+      "knownHazardsLtEdited": "Augale esantys alkaloidai turi stiprų narkotinį ir vidurius laisvinantį poveikį. Šios genties sėklos laikomos toksiškamis.",
+      "knownHazardsLtFinal": "Augale esantys alkaloidai turi stiprų narkotinį ir vidurius laisvinantį poveikį. Šios genties sėklos laikomos toksiškamis.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Erythrina crista-galli",
+      "knownHazards": "The plant contains alkaloids that have powerful narcotic and purgative effects[200]. The seeds of all members of this genus are said to be poisonous[274].",
+      "knownHazardsLtV2": "Augalo alkaloidai turi stiprų narkotinį ir vidurius laisvinantį poveikį. Sėklos laikomos toksiška.",
+      "knownHazardsLtEdited": "Augale esantys alkaloidai turi stiprų narkotinį ir vidurius laisvinantį poveikį. Sėklos laikomos toksiškamis.",
+      "knownHazardsLtFinal": "Augale esantys alkaloidai turi stiprų narkotinį ir vidurius laisvinantį poveikį. Sėklos laikomos toksiškamis.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Erythronium",
+      "knownHazards": "Although no records of toxicity have been seen for this species, the following notes have been seen for another member of this genus and so some caution is advised. Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLtV2": "Šiai rūšiai apsinuodijimų neužfiksuota, tačiau svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "knownHazardsLtEdited": "Šiai rūšiai apsinuodijimų neužfiksuota, tačiau svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "knownHazardsLtFinal": "Šiai rūšiai apsinuodijimų neužfiksuota, tačiau svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Erythronium americanum",
+      "knownHazards": "Although no records of toxicity have been seen for this species, the following notes have been seen for another member of this genus and so some caution is advised. Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLtV2": "Šiai rūšiai apsinuodijimų neužfiksuota, tačiau svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "knownHazardsLtEdited": "Šiai rūšiai apsinuodijimų neužfiksuota, tačiau svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "knownHazardsLtFinal": "Šiai rūšiai apsinuodijimų neužfiksuota, tačiau svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Erythronium californicum",
+      "knownHazards": "Although no records of toxicity have been seen for this species, the following notes have been seen for another member of this genus and so some caution is advised. Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLtV2": "Šiai rūšiai apsinuodijimų neužfiksuota, tačiau svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "knownHazardsLtEdited": "Šiai rūšiai apsinuodijimų neužfiksuota, tačiau svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "knownHazardsLtFinal": "Šiai rūšiai apsinuodijimų neužfiksuota, tačiau svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    },
+    {
+      "latin": "Erythronium dens-canis",
+      "knownHazards": "Skin contact with the bulbs has been known to cause dermatitis in sensitive people[65].",
+      "knownHazardsLtV2": "Svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "knownHazardsLtEdited": "Svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "knownHazardsLtFinal": "Svogūnėliai jautriems asmenims gali dirginti odą ir sukelti dermatitą.",
+      "status": "ok",
+      "flagReason": "",
+      "suggestedFix": ""
+    }
+  ]
+}

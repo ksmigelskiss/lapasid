@@ -1,0 +1,216 @@
+{
+  "chunkIndex": 10,
+  "totalChunks": 32,
+  "entries": [
+    {
+      "latin": "Crocus nudiflorus",
+      "knownHazards": "The following reports are for C. sativus. They quite possibly also apply to this species. The plant is poisonous[21]. The plant is perfectly safe in normal usage but 5 - 10 grams of saffron has been known to cause death[65].",
+      "knownHazardsLtV2": "Įprastu naudojimu saugi, tačiau 5–10 gramų šafrano dozė yra mirtina.",
+      "knownHazardsLtEdited": "Įprastu naudojimu saugi, tačiau 5–10 gramų šafrano dozė – mirtina.",
+      "changesNotes": "Pašalintas pleonastinis 'yra'; brūkšnys vietoje veiksmažodžio jungtuko — natūraliau LT."
+    },
+    {
+      "latin": "Crocus sativus",
+      "knownHazards": "The plant is poisonous[21]. The plant is perfectly safe in normal usage but 5 - 10 grams of saffron has been known to cause death[65].",
+      "knownHazardsLtV2": "Įprastu naudojimu saugi, tačiau 5–10 gramų šafrano dozė yra mirtina.",
+      "knownHazardsLtEdited": "Įprastu naudojimu saugi, tačiau 5–10 gramų šafrano dozė – mirtina.",
+      "changesNotes": "Pašalintas pleonastinis 'yra'; brūkšnys vietoje veiksmažodžio jungtuko."
+    },
+    {
+      "latin": "Crotalaria",
+      "knownHazards": "The seeds of many Crotalaria species contain toxic pyrrolizidine alkaloids. Trichodesmine is the principal toxic alkaloid in Crotalaria juncea[ 303 ]. The seeds are reported to contain trypsin inhibitors; they are said to be poisonous to cattle, and they can poison both horses and pigs[ 303 ].",
+      "knownHazardsLtV2": "Sėklos turi toksiškų pirolizidino alkaloidų, kurie yra toksiški galvijams, arkliams ir kiaulėms. Taip pat aptikta tripsino inhibitorių.",
+      "knownHazardsLtEdited": "Sėklose yra toksiškų pirolizidino alkaloidų, pavojingų galvijams, arkliams ir kiaulėms; aptikta ir tripsino inhibitorių.",
+      "changesNotes": "Pašalintas kalkas 'turi' → 'yra'; 'kurie yra toksiški' sutraukta į dalyvį 'pavojingų'; antrasis sakinys sujungtas su pirmuoju per kabliataškį, šalinant pakartojimą."
+    },
+    {
+      "latin": "Crotalaria juncea",
+      "knownHazards": "The seeds of many Crotalaria species contain toxic pyrrolizidine alkaloids. Trichodesmine is the principal toxic alkaloid in Crotalaria juncea[ 303 ]. The seeds are reported to contain trypsin inhibitors; they are said to be poisonous to cattle, and they can poison both horses and pigs[ 303 ].",
+      "knownHazardsLtV2": "Sėklos turi pirolizidino alkaloidų, kurių pagrindinis — trichodesminas; toksiškas galvijams, arkliams ir kiaulėms. Sėklose taip pat rasta tripsino inhibitorių.",
+      "knownHazardsLtEdited": "Sėklose yra pirolizidino alkaloidų, kurių pagrindinis – trichodesminas; jie toksiški galvijams, arkliams ir kiaulėms. Aptikta ir tripsino inhibitorių.",
+      "changesNotes": "'Sėklos turi' → 'Sėklose yra'; įterptas įvardis 'jie' aiškumui; antrasis sakinys sutrumpintas, šalinant 'Sėklose taip pat rasta' → 'Aptikta ir'."
+    },
+    {
+      "latin": "Cyathea",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Daugelis paparčių turi kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Daugelis paparčių turi kancerogenų ir tiaminazės – fermento, ardančio B grupės vitaminus. Kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "Dvigubas brūkšnys → pusilkis; 'terminis apdorojimas' → 'kaitinimas' (natūraliau LT)."
+    },
+    {
+      "latin": "Cyathea dealbata",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Daugelis paparčių turi kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Daugelis paparčių turi kancerogenų ir tiaminazės – fermento, ardančio B grupės vitaminus. Kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "Dvigubas brūkšnys → pusilkis; 'terminis apdorojimas' → 'kaitinimas'."
+    },
+    {
+      "latin": "Cyathea medullaris",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Daugelis paparčių turi kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Daugelis paparčių turi kancerogenų ir tiaminazės – fermento, ardančio B grupės vitaminus. Kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "Dvigubas brūkšnys → pusilkis; 'terminis apdorojimas' → 'kaitinimas'."
+    },
+    {
+      "latin": "Cycas",
+      "knownHazards": "The plants contain alkaloids of carcinogens and also an amino-acid that causes chronic nervous disorders[200]. Regular consumption of the plant leads to severe health problems and death. This toxic principle can be removed if the food is properly prepared but consumption of the plant still cannot be recommended because its use often means the death of the plant and it is becoming rare in the wild.",
+      "knownHazardsLtV2": "Augalas turi kancerogeninių alkaloidų ir aminorūgštį, sukeliančią lėtinius nervų sistemos sutrikimus; reguliarus vartojimas mirtinas. Toksines medžiagas galima pašalinti tinkamai paruošus, tačiau vartoti nerekomenduojama.",
+      "knownHazardsLtEdited": "Augale yra kancerogeninių alkaloidų ir aminorūgšties, sukeliančios lėtinius nervų sistemos sutrikimus; reguliarus vartojimas mirtinas. Toksinės medžiagos šalinamos tinkamu paruošimu, tačiau vartoti nerekomenduojama.",
+      "changesNotes": "'Augalas turi' → 'Augale yra'; 'aminorūgštį, sukeliančią' → 'aminorūgšties, sukeliančios' (kilmininkas po 'yra'); antroje pastraipoje pasyvus pakeitimas aktyvesniu konstruktu."
+    },
+    {
+      "latin": "Cycas revoluta",
+      "knownHazards": "The plants contain alkaloids of carcinogens and also an amino-acid that causes chronic nervous disorders[200]. Regular consumption of the plant leads to severe health problems and death. This toxic principle can be removed if the food is properly prepared but consumption of the plant still cannot be recommended because its use often means the death of the plant and it is becoming rare in the wild.",
+      "knownHazardsLtV2": "Augalas turi kancerogeninių alkaloidų ir aminorūgštį, sukeliančią lėtinius nervų sistemos sutrikimus; reguliarus vartojimas mirtinas. Toksines medžiagas galima pašalinti tinkamai paruošus, tačiau vartoti nerekomenduojama.",
+      "knownHazardsLtEdited": "Augale yra kancerogeninių alkaloidų ir aminorūgšties, sukeliančios lėtinius nervų sistemos sutrikimus; reguliarus vartojimas mirtinas. Toksinės medžiagos šalinamos tinkamu paruošimu, tačiau vartoti nerekomenduojama.",
+      "changesNotes": "Tas pats kaip Cycas: 'Augalas turi' → 'Augale yra', linksnis suderintas."
+    },
+    {
+      "latin": "Cydonia",
+      "knownHazards": "The seed is poisonous[200]. Like many of the species in the family Rosaceae it contains hydrogen cyanide (this is the substance that gives almonds their characteristic flavour). In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos toksiškas — turi vandenilio cianido, kaip ir kitos Rosaceae šeimos rūšys. Didelė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina.",
+      "knownHazardsLtEdited": "Sėkla toksiška – turi vandenilio cianido, kaip ir kitos Rosaceae šeimos rūšys. Didelė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina.",
+      "changesNotes": "Giminės klaida: 'Sėklos toksiškas' → 'Sėkla toksiška' (mot. g.); dvigubas brūkšnys → pusilkis."
+    },
+    {
+      "latin": "Cydonia oblonga",
+      "knownHazards": "The seed is poisonous[200]. Like many of the species in the family Rosaceae it contains hydrogen cyanide (this is the substance that gives almonds their characteristic flavour). In small quantities, hydrogen cyanide has been shown to stimulate respiration and improve digestion, it is also claimed to be of benefit in the treatment of cancer. In excess, however, it can cause respiratory failure and even death.",
+      "knownHazardsLtV2": "Sėklos toksiškas — turi vandenilio cianido, kaip ir kitos Rosaceae šeimos rūšys. Didelė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina.",
+      "knownHazardsLtEdited": "Sėkla toksiška – turi vandenilio cianido, kaip ir kitos Rosaceae šeimos rūšys. Didelė dozė sukelia kvėpavimo nepakankamumą ir gali būti mirtina.",
+      "changesNotes": "Tas pats kaip Cydonia: giminės klaida ištaisyta."
+    },
+    {
+      "latin": "Cyperus",
+      "knownHazards": "Because nutsedges often grow in wet or aquatic habitats, they may harbor parasites. Cooking is essential to ensure safety. Textures can be fibrous and somewhat irritating in some species, but tubers and seeds are the most worthwhile parts [2-3].",
+      "knownHazardsLtV2": "Drėgnose buveinėse augantys augalai gali turėti parazitų — terminis apdorojimas privalomas. Kai kurių rūšių tekstūra dirgina, tačiau gumbai ir sėklos yra saugiausi valgomieji.",
+      "knownHazardsLtEdited": "Drėgnose buveinėse augę augalai gali turėti parazitų – kaitinimas privalomas. Kai kurių rūšių audinys šiek tiek dirgina, tačiau gumbai ir sėklos yra saugiausi valgomieji.",
+      "changesNotes": "'terminis apdorojimas' → 'kaitinimas'; 'tekstūra' → 'audinys' (natūraliau LT); dvigubas brūkšnys → pusilkis; dalyvio forma patikslinta."
+    },
+    {
+      "latin": "Cyrtomium fortunei",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Daugelis paparčių turi kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Daugelis paparčių turi kancerogenų ir tiaminazės – fermento, ardančio B grupės vitaminus. Kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "Dvigubas brūkšnys → pusilkis; 'terminis apdorojimas' → 'kaitinimas'."
+    },
+    {
+      "latin": "Cystopteris",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Daugelis paparčių turi kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Daugelis paparčių turi kancerogenų ir tiaminazės – fermento, ardančio B grupės vitaminus. Kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "Dvigubas brūkšnys → pusilkis; 'terminis apdorojimas' → 'kaitinimas'."
+    },
+    {
+      "latin": "Cystopteris bulbifera",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Daugelis paparčių turi kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Daugelis paparčių turi kancerogenų ir tiaminazės – fermento, ardančio B grupės vitaminus. Kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "Dvigubas brūkšnys → pusilkis; 'terminis apdorojimas' → 'kaitinimas'."
+    },
+    {
+      "latin": "Cystopteris fragilis",
+      "knownHazards": "Although we have found no reports of toxicity for this species, a number of ferns contain carcinogens so some caution is advisable[200]. Many ferns also contain thiaminase, an enzyme that robs the body of its vitamin B complex. In small quantities this enzyme will do no harm to people eating an adequate diet that is rich in vitamin B, though large quantities can cause severe health problems. The enzyme is destroyed by heat or thorough drying, so cooking the plant will remove the thiaminase[172].",
+      "knownHazardsLtV2": "Daugelis paparčių turi kancerogenų ir tiaminazės — fermento, ardančio B grupės vitaminus. Terminis apdorojimas tiaminazę sunaikina.",
+      "knownHazardsLtEdited": "Daugelis paparčių turi kancerogenų ir tiaminazės – fermento, ardančio B grupės vitaminus. Kaitinimas tiaminazę sunaikina.",
+      "changesNotes": "Dvigubas brūkšnys → pusilkis; 'terminis apdorojimas' → 'kaitinimas'."
+    },
+    {
+      "latin": "Cytisus",
+      "knownHazards": "Can cause paralysis or death in extreme cases [1-2].",
+      "knownHazardsLtV2": "Didelėmis dozėmis gali sukelti paralyžių arba mirtį.",
+      "knownHazardsLtEdited": "Didelėmis dozėmis gali sukelti paralyžių arba mirtį.",
+      "changesNotes": "Pakeitimų nereikia — gramatiškai taisyklinga ir sklandžiai skamba."
+    },
+    {
+      "latin": "Cytisus scoparius",
+      "knownHazards": "Poisonous[10, 19, 65]. The plant is of extremely low or zero toxicity[76].",
+      "knownHazardsLtV2": "Laikomas nuodingu, tačiau praktinė toksiškumo rizika itin maža arba jos nėra.",
+      "knownHazardsLtEdited": "Laikomas nuodingu, tačiau praktinė toksiškumo rizika itin maža arba visai nereikšminga.",
+      "changesNotes": "'jos nėra' → 'visai nereikšminga' — sklandžiau, nes 'rizikos nėra' prieštarautų 'rizika itin maža' tame pačiame sakinyje."
+    },
+    {
+      "latin": "Daphne",
+      "knownHazards": "All parts of the plant are poisonous[76]. Skin contact with the sap can cause dermatitis in some people[200].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos. Sultys liečiant odą gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos. Palietus odą sultys gali sukelti dermatitą.",
+      "changesNotes": "'Sultys liečiant odą' — dalyvio konstrukcija nenatūrali; pertvarkytas sakinys: 'Palietus odą sultys...' — aiškiau ir sklandžiau."
+    },
+    {
+      "latin": "Daphne bholua",
+      "knownHazards": "All parts of the plant are poisonous[76]. Skin contact with the sap can cause dermatitis in some people[200].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos. Sultys liečiant odą gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos. Palietus odą sultys gali sukelti dermatitą.",
+      "changesNotes": "Tas pats kaip Daphne: dalyvio konstrukcija pataisyta."
+    },
+    {
+      "latin": "Daphne genkwa",
+      "knownHazards": "All parts of the plant are poisonous[76]. Skin contact with the sap can cause dermatitis in some people[200].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos. Sultys liečiant odą gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos. Palietus odą sultys gali sukelti dermatitą.",
+      "changesNotes": "Tas pats kaip Daphne: dalyvio konstrukcija pataisyta."
+    },
+    {
+      "latin": "Daphne laureola",
+      "knownHazards": "All parts of the plant are poisonous[200]. Skin contact with the sap can cause dermatitis in some people[65, 200].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos. Sultys liečiant odą gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos. Palietus odą sultys gali sukelti dermatitą.",
+      "changesNotes": "Tas pats kaip Daphne: dalyvio konstrukcija pataisyta."
+    },
+    {
+      "latin": "Daphne mezereum",
+      "knownHazards": "All parts of the plant are highly toxic[7, 10, 19, 65]. Skin contact with the sap can cause dermatitis in some people[65, 200].",
+      "knownHazardsLtV2": "Visos augalo dalys mirtinai toksiškos. Sultys liečiant odą sukelia dermatitą.",
+      "knownHazardsLtEdited": "Visos augalo dalys mirtinai toksiškos. Palietus odą sultys sukelia dermatitą.",
+      "changesNotes": "Dalyvio konstrukcija pataisyta kaip kituose Daphne įrašuose; sunkumas (mirtinai) nepakeistas."
+    },
+    {
+      "latin": "Daphne odora",
+      "knownHazards": "All parts of the plant are poisonous[200]. Skin contact with the sap can cause dermatitis in some people[65, 200].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos. Sultys liečiant odą gali sukelti dermatitą.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos. Palietus odą sultys gali sukelti dermatitą.",
+      "changesNotes": "Tas pats kaip Daphne: dalyvio konstrukcija pataisyta."
+    },
+    {
+      "latin": "Darwin",
+      "knownHazards": "The seeds may be poisonous[274].",
+      "knownHazardsLtV2": "Sėklos gali būti toksiškos.",
+      "knownHazardsLtEdited": "Sėklos gali būti toksiškos.",
+      "changesNotes": "Pakeitimų nereikia — trumpas, taisyklingas sakinys."
+    },
+    {
+      "latin": "Dasylirion",
+      "knownHazards": "The leaves are heavily armed with stout marginal teeth and a hard terminal spine, making harvest physically hazardous without gloves, eye protection, and careful positioning. Crowns are large and often embedded in rocky soils, so extraction requires heavy effort. Harvesting the crown kills the plant and should therefore be reserved for genuine necessity or deliberate, legal management. Flower stalks are the most sustainable edible part because cutting them does not kill the plant. Flowers often contain many insects and should be inspected and preferably cooked. As with many desert plants, collection should be avoided from contaminated roadsides, industrial sites, or protected populations.",
+      "knownHazardsLtV2": "Lapai su aštriomis dantytomis briaunomis ir galinio dygliu — rinkti būtinos pirštinės ir akių apsauga. Vainikų rinkimas žudo augalą, tad rekomenduojama rinkti tik žiedkočius.",
+      "knownHazardsLtEdited": "Lapai turi aštrias dantytąsias briaunas ir galinį dyglį – rinkti būtinos pirštinės ir akių apsauga. Vainiko nuskynimas žudo augalą, todėl rekomenduojama rinkti tik žiedkočius.",
+      "changesNotes": "'Lapai su aštriomis...' — konstrukcija su 'su' pakeista tiesiogine; 'dantytomis' → 'dantytąsias' (įvardžiuotinis būdvardis); 'tad' → 'todėl' (formaliau); 'vainikų rinkimas' → 'vainiko nuskynimas' (tiksliau)."
+    },
+    {
+      "latin": "Dasylirion texanum",
+      "knownHazards": "Texas sotol carries the same physical hazards as other sotols: sharp marginal teeth and terminal leaf spines. Gloves and careful handling are essential. Crown harvest is destructive. Insect contamination of flowers is likely and cooking is recommended. Local legality and sustainability should always be considered before harvest.",
+      "knownHazardsLtV2": "Lapai su aštriomis dantytomis briaunomis ir galinio dygliu — rinkti būtinos pirštinės. Vainikų rinkimas žudo augalą; žiedus rekomenduojama termiškai apdoroti dėl vabzdžių.",
+      "knownHazardsLtEdited": "Lapai turi aštrias dantytąsias briaunas ir galinį dyglį – rinkti būtinos pirštinės. Vainiko nuskynimas žudo augalą; žiedus rekomenduojama virti dėl galimo vabzdžių užterštumo.",
+      "changesNotes": "Kaip Dasylirion: 'su' konstrukcija pakeista; 'termiškai apdoroti' → 'virti' (natūraliau); 'dėl vabzdžių' patikslinta."
+    },
+    {
+      "latin": "Delphinium",
+      "knownHazards": "All parts of the plant are poisonous in large doses[4, 21, 65]. The seed is especially toxic[4].",
+      "knownHazardsLtV2": "Visos augalo dalys didelėmis dozėmis toksiškos; sėklos ypač pavojingos.",
+      "knownHazardsLtEdited": "Visos augalo dalys didelėmis dozėmis toksiškos; sėklos – ypač pavojingos.",
+      "changesNotes": "Įterptas brūkšnys prieš 'ypač' ryšiui su pirmąja dalimi pabrėžti."
+    },
+    {
+      "latin": "Delphinium brunonianum",
+      "knownHazards": "All parts of the plant are toxic[65, 172]. The plant is most toxic when it is young[200].",
+      "knownHazardsLtV2": "Visos augalo dalys toksiškos, ypač jaunas augalas.",
+      "knownHazardsLtEdited": "Visos augalo dalys toksiškos; jaunas augalas – ypač.",
+      "changesNotes": "Kablelis prieš 'ypač' pakeistas kabliataškiu su brūkšniu — sklandžiau atskiria bendrą ir išskirtinę informaciją."
+    },
+    {
+      "latin": "Delphinium consolida",
+      "knownHazards": "All parts of the plant are poisonous in large doses[4, 21, 65]. The seed is especially toxic[4].",
+      "knownHazardsLtV2": "Visos augalo dalys didelėmis dozėmis toksiškos; sėklos ypač pavojingos.",
+      "knownHazardsLtEdited": "Visos augalo dalys didelėmis dozėmis toksiškos; sėklos – ypač pavojingos.",
+      "changesNotes": "Tas pats kaip Delphinium: brūkšnys įterptas ryšiui pabrėžti."
+    }
+  ]
+}
