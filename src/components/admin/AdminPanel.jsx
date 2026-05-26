@@ -5,7 +5,9 @@ import { db } from '../../utils/firebase'
 import { bustCatalogCache } from '../../utils/catalog'
 import { bustSearchResponseCache } from '../../utils/searchResponseCache'
 import T4Icon from '../brand/T4Icon'
-import LibraryTab from './LibraryTab'
+import LibraryEditorV2 from './LibraryEditorV2'
+// v1 (LibraryTab.jsx) lieka repo'je kaip backup — revert su `git revert HEAD`
+// jei v2 sukels problemų. Naudoti per: `import LibraryTab from './LibraryTab'`
 
 /**
  * AdminPanel — primityvi admin dashboard kolekcijoms ir vartotojams.
@@ -450,54 +452,71 @@ export default function AdminPanel({ currentUid, onClose }) {
         </nav>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6 min-h-0">
-        {error && (
-          <div className="bg-terracotta-50 border border-terracotta-200/60 rounded-2xl p-4 text-sm text-terracotta-700 mb-4">
-            <p className="font-semibold">Klaida</p>
-            <p className="text-xs mt-1">{error}</p>
-            <p className="text-xs mt-2 text-terracotta-600">Žiūrėk README — Firebase Console → Firestore Rules turi leisti admin'ui skaityti /users + /collections globally.</p>
-          </div>
-        )}
+      {/* Content — library tab'as gauna full-bleed (be padding/overflow wrapper'io),
+          kad 3-pane editor'iui būtų prieinamas visas viewport plotis ir kiekvienas
+          pane'as galėtų valdyti savo scroll'ą atskirai. Kiti tab'ai naudoja
+          standartinį padded scrollable container'į. */}
+      {tab === 'library' ? (
+        <div className="flex-1 min-h-0 overflow-hidden">
+          {error && (
+            <div className="m-3 bg-terracotta-50 border border-terracotta-200/60 rounded-2xl p-4 text-sm text-terracotta-700">
+              <p className="font-semibold">Klaida</p>
+              <p className="text-xs mt-1">{error}</p>
+            </div>
+          )}
+          {loading && !catalog.length && !taxonGroups.length ? (
+            <div className="flex justify-center py-16"><Loader2 size={24} className="animate-spin text-forest-400" /></div>
+          ) : (
+            <LibraryEditorV2
+              catalog={catalog}
+              taxonGroups={taxonGroups}
+              onSaveCatalog={saveCatalogEntry}
+              onDeleteCatalog={deleteCatalogEntry}
+              onSaveTaxonGroup={saveTaxonGroupEntry}
+              onDeleteTaxonGroup={deleteTaxonGroupEntry}
+            />
+          )}
+        </div>
+      ) : (
+        <div className="flex-1 overflow-y-auto p-6 min-h-0">
+          {error && (
+            <div className="bg-terracotta-50 border border-terracotta-200/60 rounded-2xl p-4 text-sm text-terracotta-700 mb-4">
+              <p className="font-semibold">Klaida</p>
+              <p className="text-xs mt-1">{error}</p>
+              <p className="text-xs mt-2 text-terracotta-600">Žiūrėk README — Firebase Console → Firestore Rules turi leisti admin'ui skaityti /users + /collections globally.</p>
+            </div>
+          )}
 
-        {loading && !users.length && !collections.length ? (
-          <div className="flex justify-center py-16"><Loader2 size={24} className="animate-spin text-forest-400" /></div>
-        ) : tab === 'users' ? (
-          <UsersTable
-            users={users}
-            currentUid={currentUid}
-            collections={collections}
-            onToggleAdmin={toggleAdmin}
-            onToggleBeta={toggleBeta}
-            onSetPlan={setPlan}
-            onApprove={approveUser}
-            onSelect={u => setDetail({ type: 'user', data: u })}
-          />
-        ) : tab === 'collections' ? (
-          <CollectionsTable
-            collections={collections}
-            userByUid={userByUid}
-            onSelect={c => setDetail({ type: 'collection', data: c })}
-          />
-        ) : tab === 'library' ? (
-          <LibraryTab
-            catalog={catalog}
-            taxonGroups={taxonGroups}
-            onSaveCatalog={saveCatalogEntry}
-            onDeleteCatalog={deleteCatalogEntry}
-            onSaveTaxonGroup={saveTaxonGroupEntry}
-            onDeleteTaxonGroup={deleteTaxonGroupEntry}
-          />
-        ) : (
-          <InvitesTable
-            invites={invites}
-            colByCid={colByCid}
-            userByUid={userByUid}
-            onDelete={deleteInvite}
-            onBulkExpired={bulkDeleteExpiredInvites}
-          />
-        )}
-      </div>
+          {loading && !users.length && !collections.length ? (
+            <div className="flex justify-center py-16"><Loader2 size={24} className="animate-spin text-forest-400" /></div>
+          ) : tab === 'users' ? (
+            <UsersTable
+              users={users}
+              currentUid={currentUid}
+              collections={collections}
+              onToggleAdmin={toggleAdmin}
+              onToggleBeta={toggleBeta}
+              onSetPlan={setPlan}
+              onApprove={approveUser}
+              onSelect={u => setDetail({ type: 'user', data: u })}
+            />
+          ) : tab === 'collections' ? (
+            <CollectionsTable
+              collections={collections}
+              userByUid={userByUid}
+              onSelect={c => setDetail({ type: 'collection', data: c })}
+            />
+          ) : (
+            <InvitesTable
+              invites={invites}
+              colByCid={colByCid}
+              userByUid={userByUid}
+              onDelete={deleteInvite}
+              onBulkExpired={bulkDeleteExpiredInvites}
+            />
+          )}
+        </div>
+      )}
 
       {/* Detail drawer */}
       {detail && (
