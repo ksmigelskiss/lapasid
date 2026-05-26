@@ -81,7 +81,7 @@ function derivePfafSeverity(hazardsText) {
   if (!hazardsText || typeof hazardsText !== 'string') return null
   const text = hazardsText.toLowerCase()
 
-  // STIPRUS — life-threatening evidence
+  // STIPRUS — life-threatening evidence (NE de-escalate)
   if (/\b(death|fatal|lethal|deadly|kills|fatality)\b/.test(text)) {
     return 'stiprus'
   }
@@ -99,18 +99,52 @@ function derivePfafSeverity(hazardsText) {
   }
 
   // VIDUTINIS — significant symptoms
+  let baseSeverity = null
   if (/\b(paraly[sz]|vomit|nause|burning|diarrho?e|severe|cardiac|nerve|seizur|convuls)\b/.test(text)) {
-    return 'vidutinis'
+    baseSeverity = 'vidutinis'
   }
   // SILPNAS — mild reactions
-  if (/\b(irritat|rash|skin contact|mild|topical)\b/.test(text)) {
-    return 'silpnas'
+  else if (/\b(irritat|rash|skin contact|mild|topical)\b/.test(text)) {
+    baseSeverity = 'silpnas'
   }
   // Generic toxic/poison without specific severity → vidutinis (safer default)
-  if (/\b(toxic|poison|hazard|harmful)\b/.test(text)) {
-    return 'vidutinis'
+  else if (/\b(toxic|poison|hazard|harmful)\b/.test(text)) {
+    baseSeverity = 'vidutinis'
+  } else {
+    return null
   }
-  return null
+
+  // ── DE-ESCALATION (2026-05-25, per user feedback) ─────────────
+  // Kai EN/LT text aiškiai sako, kad junginys NESISTEMINIS žmogui
+  // („poorly absorbed", „pass through without harm" tipo nuance),
+  // drop'iname severity nuo vidutinis į silpnas. Sansevieria atvejis:
+  // „saponins ... poorly absorbed by the human body" = mild risk
+  // realiai, NE vidutinis-toksiška.
+  //
+  // STIPRUS lygis NIEKADA ne de-escalate'inamas (life-threatening
+  // claims preserved net jei kažkur sako „rarely fatal").
+  if (baseSeverity === 'vidutinis') {
+    const deEscalationCues = [
+      // EN cues
+      /poorly absorbed/i,
+      /pass through without harm/i,
+      /not in fatal amounts/i,
+      /rarely (cause|fatal|toxic)/i,
+      /small (amounts|quantities).*safe/i,
+      /usually harmless/i,
+      // LT equivalents (jei naudojama knownHazardsLt)
+      /prastai (pasisavin|įsisavin|absorbuojam)/i,
+      /pereina be žalos/i,
+      /mažais kiekiais (saugu|nepavojinga)/i,
+      /retai sukelia/i,
+    ]
+    for (const cue of deEscalationCues) {
+      if (cue.test(text)) {
+        return 'silpnas'  // de-escalated
+      }
+    }
+  }
+  return baseSeverity
 }
 
 // ── PFAF tipas heuristic (Step 6d) — MIRROR src/utils/deriveToxicity.js ─
@@ -184,7 +218,10 @@ export async function deriveToxicityFromSourcesServer(latinName) {
     result.pavojingumas = {
       yra: true,
       lygis: severity,
-      detales: `ASPCA: toksiškas ${targetsLt}. Konsultuokitės su veterinaru. Šaltinis: ${aspcaEntry.matchedEntries?.[0]?.detailUrl ?? 'https://www.aspca.org/pet-care/animal-poison-control'}`,
+      // 2026-05-25 layout cleanup — drop "ASPCA:" prefix (badges jau rodo
+      // source) + drop "Konsultuokitės su veterinaru" boilerplate (Phase 2
+      // voice narrative pateikia tiksliau, severity-aware).
+      detales: `Toksiška ${targetsLt}. ${aspcaEntry.matchedEntries?.[0]?.detailUrl ?? 'https://www.aspca.org/pet-care/animal-poison-control'}`,
     }
   }
 
@@ -193,7 +230,11 @@ export async function deriveToxicityFromSourcesServer(latinName) {
   const pfafEntry = pfaf.results?.[latinName] ?? pfaf.results?.[genus]
 
   if (pfafEntry?.knownHazards) {
-    const severity = derivePfafSeverity(pfafEntry.knownHazards)
+    // 2026-05-25 — paduodam ABU (EN base + LT supplemental) kad
+    // de-escalation cues veiktų tiek angliškame, tiek lietuviškame text'e.
+    const combinedText = [pfafEntry.knownHazards, pfafEntry.knownHazardsLt]
+      .filter(Boolean).join(' ')
+    const severity = derivePfafSeverity(combinedText)
     if (severity) {
       result.hasToxicity = true
       if (!result.sources.includes('pfaf')) result.sources.push('pfaf')
@@ -220,15 +261,15 @@ export async function deriveToxicityFromSourcesServer(latinName) {
       : severity === 'vidutinis' ? 'Toksiškas augalas — venkite nurijimo ir kontakto su sultimis. Kreipkitės į veterinarą jei įvyko apsinuodijimas.'
       : 'Augalas gali sukelti dirginimą — venkite kontakto su sultimis.'
 
-      // 2026-05-25 — prefer LT pre-translated knownHazardsLt if available,
-      // kitaip strip EN markers + truncate. Smart truncation cuts at sentence
-      // boundary (no „...kruo..." mid-word cuts — user feedback).
+      // 2026-05-25 layout cleanup — drop "Šaltinis (PFAF, anglų k.):"
+      // verbose prefix. Just quote + PFAF URL on new line (renderWithLinks
+      // converts URL into "PFAF ↗" hyperlink).
       const hazardText = pfafEntry.knownHazardsLt
         ? pfafEntry.knownHazardsLt
         : stripPfafMarkers(pfafEntry.knownHazards)
       const hazardTruncated = smartTruncate(hazardText, 600)
-      const lang = pfafEntry.knownHazardsLt ? '' : ', anglų k.'
-      const pfafCitation = `\n\nŠaltinis (PFAF${lang}): "${hazardTruncated}"`
+      const pfafUrl = `https://pfaf.org/user/Plant.aspx?LatinName=${encodeURIComponent(latinName)}`
+      const pfafCitation = `\n\n"${hazardTruncated}" ${pfafUrl}`
 
       if (!result.pavojingumas.yra) {
         result.pavojingumas = {
