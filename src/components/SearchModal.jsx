@@ -19,7 +19,7 @@ if (typeof window !== 'undefined') {
   console.log('[Variant B flag] VITE_USE_SERVERSIDE_SAVE =',
     JSON.stringify(import.meta.env.VITE_USE_SERVERSIDE_SAVE))
 }
-import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId } from '../utils/catalog'
+import { getCatalogEntry, saveToCatalog, searchCatalog, catalogEntryToAIResult, catalogDocId, bustCatalogCache } from '../utils/catalog'
 import { getCachedSearchResponse, setCachedSearchResponse } from '../utils/searchResponseCache'
 import { searchStage1 } from '../utils/searchStage1'
 import { previewParallelFetch } from '../utils/previewParallelFetch'
@@ -1314,6 +1314,15 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
     host.open()
     return () => host.close()
   }, [useDesktopPanel]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 2026-05-27 — SearchModal mount'inant invalidina catalog cache'ą.
+  // Forces fresh fetch ant kito searchCatalog() call'o → user'is mato
+  // naujausias image/care duomenis po server-side batch run'ų (Admin SDK
+  // batch'as nepasiekia client'o `bustCatalogCache`). Cost'as: 1 Firestore
+  // catalog reload (~80 docs) per SearchModal sesiją — acceptable trade'as.
+  useEffect(() => {
+    bustCatalogCache()
+  }, [])
 
   // ESC keyboard shortcut — uždaryti modal'ą iš paneles desktop'e
   useEffect(() => {

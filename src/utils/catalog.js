@@ -121,7 +121,14 @@ export async function getCatalogEntry(lotyniskas) {
 // Server-side searchTerms index'as reikalingas tik kai > 10K entries.
 let _catalogMem = null
 let _catalogMemAt = 0
-const CATALOG_TTL    = 24 * 60 * 60 * 1000 // 24h
+// CATALOG_TTL — 2026-05-27 sutrumpinta nuo 24h iki 1h.
+// Anksciau 24h cache'as kelis kartus parodė stale data po server-side batch
+// run'ų (admin Biblioteka edit'as iš karto invalidina cache'ą per
+// bustCatalogCache(), bet batch'as rašo server-side per Admin SDK — client'as
+// apie tai nesužino). User'is matydavo entries be image'ų, nors Firestore'e
+// jau buvo. 1h kompromisas: enough to amortize Firestore read'us, bet
+// nepakankamai ilgai sukurti aliasing'ą po batch run'o.
+const CATALOG_TTL    = 60 * 60 * 1000     // 1h
 const CATALOG_LIMIT  = 2000                 // hard limit per fetch
 
 async function loadAllCatalog() {
