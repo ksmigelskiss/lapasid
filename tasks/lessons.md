@@ -76,3 +76,36 @@ Tai **diminishing returns spiralė**. Kiekvienas pataisas turi neigiamą impact�
 - 4-tas (`d1743b9` token+temp+websearch+restructure) — over-tuning vienai problemai. **Revert'inta.**
 
 **NIUANSAS:** general improvements (hero hide, cache guard) kuriuos sukėlė viena problema — OK, jei jie naudingi platesniam kontekstui. Bet kai jie tampa „bet kokia kaina priversti AI sutikti dėl Rosa Knock Out" — stop'a.
+
+---
+
+## 2026-05-27 — „Long-term TODO" framework'as = užmaskuotas bandaid'as
+
+**Trigger:** Kai admin'as norėjo keisti Brave/Google rastą nuotrauką, susidūriau su problema — `isPublicPhoto` whitelist'as priima TIK Wiki/iNat/Firebase Storage URL'us. Mano pirmas atsakymas buvo:
+
+> „**Trumpalaikė**: opcija B — relax whitelist'as, leisti bet kokį HTTPS URL. **Long-term TODO**: opcija C — re-host į Firebase Storage."
+
+Tada radau, kad `/api/rehost-image` jau egzistuoja (užkoduotas Variant B save flow'ui), ir pakeičiau planą į rehost.
+
+**User'is paaiškino klaidą:**
+> „ne long term o current. Kaip sakiau, geriau planuojam ir atmetam nei darom bandaid sprendimus kuriuos reikės perdarinėti"
+
+**Patternas:** Kai sutikau nepatogų constraint'ą (whitelist), iškart pasiūliau du sprendimus — vieną teisingą („long-term"), vieną greitą („trumpalaikį"). Tai užmaskuotas bandaid: pakviečiau user'į pasirinkti GREITĄ, nes „long-term" skamba kaip lėtas.
+
+Tačiau jei žinau, kad sprendimas yra teisingas, jis ne „long-term" — jis **CURRENT**. „Long-term" framework'as duoda leidimą atidėti teisingą darbą ir įkišti bandaid'ą „šiandien".
+
+**Rule sau:**
+> Kai siūlau planą su „trumpalaikiu" ir „long-term" variantu — STOP. Klausti:
+> 1. Ar „long-term" sprendimas yra realiai teisingas? Tada jis CURRENT.
+> 2. Ar užtenka laiko jį padaryti dabar? Beveik visada — taip (jis pats sako „long-term", bet tai dažnai 1-2h darbo).
+> 3. Ar „trumpalaikis" turi nors VIENĄ unique benefit'ą, ko teisingas sprendimas neturi? Ne → nedaryti jokio bandaid'o.
+>
+> Patikrinti CODEBASE ar jau yra reikiama infrastruktūra prieš siūlydamas naują sprendimą. Šiuo atveju — `/api/rehost-image` jau egzistavo, bet aš to neradau pirmu metu.
+
+**Konkretus naudis šitam projektui:**
+- Bandaid (whitelist relax) = 5min code change, bet reiškia Brave URL'ai sulūžta per kelias savaites (hotlinking, dingusios nuorodos)
+- Teisingas (rehost) = ~30min code change (naudoja egzistuojantį endpoint'ą), Brave nuotraukos saugomos Firebase Storage permanent
+- „Trumpalaikis" sprendimas reikalautų: (a) whitelist relax dabar, (b) data migration vėliau (rehost visus broken'us), (c) UI rework
+- Teisingas iškart = vienas commit'as, jokios skolos
+
+**Plačiau:** „Trumpalaikis" sprendimas reiškia, kad mes priimam architektūrinę skolą. Skola visada brangesnė vėliau (admin'as turi perdaryti, user'iai mato broken images, debugging time). Code'as, kuris žinai reikės perdarinėti, NĖRA acceptable kaip „šiandien".
