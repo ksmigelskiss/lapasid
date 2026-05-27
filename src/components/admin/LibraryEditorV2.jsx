@@ -559,10 +559,47 @@ function LeftPaneList({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
+  // Render items — singleton synthetic groups flattened.
+  //
+  // Jei genus grupė turi NULL entry (catalog'e nėra genus įrašo) IR turi tik
+  // 1 member'į (species ar series), promote'inam tą member'į į top-level
+  // (be synthetic group header'io). Praleidžiama vizualinė depth + „no entry"
+  // gray indicator'ius kai grouping'as neduoda realios vertės.
+  //
+  // 2+ members case'e — synthetic header LIEKA (rodome „no entry · N"),
+  // nes ten grupavimas vis tiek naudingas (rodo, kad species priklauso vienam
+  // genus'ui).
+  const renderItems = useMemo(() => {
+    return filteredItems.map(group => {
+      const isSingletonSynthetic = !group.entry && group.members.length === 1
+      if (!isSingletonSynthetic) return group
+      const m = group.members[0]
+      if (m.kind === 'species') {
+        // Promote species į entry slot — UI mato kaip standalone genus row
+        return { ...group, entry: m.entry, members: [], _promotedFrom: 'species' }
+      }
+      if (m.kind === 'series') {
+        // Series singleton — render kaip top-level series (be genus header'io
+        // virš). Naudojam `_singletonSeries` flag'ą GenusGroupRow'ui.
+        return { ...group, _singletonSeries: m }
+      }
+      return group
+    })
+  }, [filteredItems])
+
   // Flat list keyboard nav'ui — TIK matomi (expanded'inti) items
   const flatNavItems = useMemo(() => {
     const flat = []
-    for (const group of filteredItems) {
+    for (const group of renderItems) {
+      // Singleton series flattening — series row at top level
+      if (group._singletonSeries) {
+        const m = group._singletonSeries
+        flat.push({ id: m.id, type: 'series' })
+        if (expanded.has(`series:${m.id}`)) {
+          for (const c of m.cultivars) flat.push({ id: c.id, type: 'cultivar' })
+        }
+        continue
+      }
       if (group.entry) {
         flat.push({ id: group.entry.id, type: 'cultivar' })
       }
@@ -582,7 +619,7 @@ function LeftPaneList({
       }
     }
     return flat
-  }, [filteredItems, expanded])
+  }, [renderItems, expanded])
 
   useEffect(() => {
     const handler = (e) => {
@@ -647,7 +684,7 @@ function LeftPaneList({
           </p>
         ) : (
           <ul className="space-y-0.5">
-            {filteredItems.map(group => (
+            {renderItems.map(group => (
               <GenusGroupRow
                 key={group.id}
                 group={group}
@@ -666,7 +703,7 @@ function LeftPaneList({
 
       <div className="flex-shrink-0 border-t border-bone-400/40 px-3 py-1.5 bg-bone-100/60">
         <p className="font-mono text-[10px] text-forest-500 tabular-nums">
-          {filteredItems.length} / {items.length} groups
+          {renderItems.length} / {items.length} rows
           {dirty && <span className="ml-2 text-terracotta-600">⚡ unsaved</span>}
         </p>
       </div>
@@ -825,8 +862,27 @@ function buildHierarchy(catalog, taxonGroups) {
 //
 // Renders genus group header (catalog entry if exists, otherwise synthetic
 // header). Below: expandable members list (species + series).
+//
+// SINGLETON SERIES: jei grupė turi `_singletonSeries` flag'ą (synthetic
+// genus su 1 series member'iu), rodom seriją tiesiai top-level — be genus
+// header'io virš. Vienodumas su standalone genus entries.
 function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSeries, selectedId, onSelect, dirty }) {
   const { genus, entry, members } = group
+
+  // Singleton series — render kaip top-level series (be genus wrapper)
+  if (group._singletonSeries) {
+    return (
+      <SeriesTopLevelRow
+        series={group._singletonSeries}
+        expanded={expandedSet.has(`series:${group._singletonSeries.id}`)}
+        onToggle={() => onToggleSeries(group._singletonSeries.id)}
+        selectedId={selectedId}
+        onSelect={onSelect}
+        dirty={dirty}
+      />
+    )
+  }
+
   const hasMembers = members.length > 0
   const genusSelected = entry && selectedId === entry.id
 
@@ -898,31 +954,102 @@ function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSe
         )}
       </div>
 
-      {/* Expanded members — species + series po genus */}
+      {/* Expanded members — su vertical tree connector'iu kairėje, kad būtų
+          aišku jog children priklauso parent grupei. */}
       {expanded && hasMembers && (
-        <ul className="ml-7 mt-0.5 space-y-0.5">
-          {members.map(m =>
-            m.kind === 'species' ? (
-              <SpeciesChildRow
-                key={m.id}
-                entry={m.entry}
-                selected={selectedId === m.id}
-                onSelect={() => onSelect(m.id, 'cultivar')}
-                dirty={dirty}
-              />
+        <div className="relative ml-3.5 mt-0.5 pl-3.5 border-l-2 border-forest-200/70">
+          <ul className="space-y-0.5">
+            {members.map(m =>
+              m.kind === 'species' ? (
+                <SpeciesChildRow
+                  key={m.id}
+                  entry={m.entry}
+                  selected={selectedId === m.id}
+                  onSelect={() => onSelect(m.id, 'cultivar')}
+                  dirty={dirty}
+                />
+              ) : (
+                <SeriesChildRow
+                  key={m.id}
+                  series={m}
+                  expanded={expandedSet.has(`series:${m.id}`)}
+                  onToggle={() => onToggleSeries(m.id)}
+                  selectedId={selectedId}
+                  onSelect={onSelect}
+                  dirty={dirty}
+                />
+              ),
+            )}
+          </ul>
+        </div>
+      )}
+    </li>
+  )
+}
+
+// ── Series top-level row (used for singleton-series flattening) ────
+//
+// Same UX kaip GenusGroupRow su entry, bet content'as iš series'os: rodo
+// genus + name italic, taxon type, cultivar count. Expand'as atskleidžia
+// cultivar'us su tree connector'iu.
+function SeriesTopLevelRow({ series, expanded, onToggle, selectedId, onSelect, dirty }) {
+  const { group, cultivars } = series
+  const heroImage = cultivars[0]?.image
+  const seriesSelected = selectedId === series.id
+  const hasCultivars = cultivars.length > 0
+  return (
+    <li>
+      <div className={`flex items-center gap-1.5 rounded-btn-sm pl-1 pr-2 py-1 transition-colors ${
+        seriesSelected ? 'bg-forest-100' : 'hover:bg-bone-200/60'
+      }`}>
+        {hasCultivars ? (
+          <button
+            onClick={onToggle}
+            className="w-5 h-5 flex-shrink-0 inline-flex items-center justify-center text-forest-500 hover:text-forest-700 rounded-sm hover:bg-bone-300/40"
+          >
+            {expanded ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+          </button>
+        ) : (
+          <div className="w-5 h-5 flex-shrink-0" />
+        )}
+        <button
+          onClick={() => onSelect(series.id, 'series')}
+          className="flex-1 flex items-center gap-2 text-left min-w-0"
+        >
+          <div className="w-7 h-7 flex-shrink-0 rounded-md overflow-hidden bg-bone-200 flex items-center justify-center">
+            {heroImage ? (
+              <img src={heroImage} alt="" className="w-full h-full object-cover" loading="lazy" />
             ) : (
-              <SeriesChildRow
-                key={m.id}
-                series={m}
-                expanded={expandedSet.has(`series:${m.id}`)}
-                onToggle={() => onToggleSeries(m.id)}
-                selectedId={selectedId}
-                onSelect={onSelect}
+              <Layers size={11} className="text-forest-300" />
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className={`text-xs font-semibold truncate leading-tight italic ${
+              seriesSelected ? 'text-forest-800' : 'text-forest-700'
+            }`}>
+              {group.genus} {group.name}
+              {seriesSelected && dirty && <span className="ml-1 text-terracotta-600">*</span>}
+            </p>
+            <p className="text-[10px] text-forest-500 font-mono leading-tight">
+              {group.type ?? '—'} · {cultivars.length}
+            </p>
+          </div>
+        </button>
+      </div>
+      {expanded && hasCultivars && (
+        <div className="relative ml-3.5 mt-0.5 pl-3.5 border-l-2 border-forest-200/70">
+          <ul className="space-y-0.5">
+            {cultivars.map(c => (
+              <CultivarLeafRow
+                key={c.id}
+                entry={c}
+                selected={selectedId === c.id}
+                onSelect={() => onSelect(c.id, 'cultivar')}
                 dirty={dirty}
               />
-            ),
-          )}
-        </ul>
+            ))}
+          </ul>
+        </div>
       )}
     </li>
   )
@@ -1002,17 +1129,19 @@ function SeriesChildRow({ series, expanded, onToggle, selectedId, onSelect, dirt
         </button>
       </div>
       {expanded && cultivars.length > 0 && (
-        <ul className="ml-6 mt-0.5 space-y-0.5">
-          {cultivars.map(c => (
-            <CultivarLeafRow
-              key={c.id}
-              entry={c}
-              selected={selectedId === c.id}
-              onSelect={() => onSelect(c.id, 'cultivar')}
-              dirty={dirty}
-            />
-          ))}
-        </ul>
+        <div className="relative ml-3 mt-0.5 pl-3 border-l-2 border-forest-200/50">
+          <ul className="space-y-0.5">
+            {cultivars.map(c => (
+              <CultivarLeafRow
+                key={c.id}
+                entry={c}
+                selected={selectedId === c.id}
+                onSelect={() => onSelect(c.id, 'cultivar')}
+                dirty={dirty}
+              />
+            ))}
+          </ul>
+        </div>
       )}
     </li>
   )
