@@ -202,6 +202,12 @@ export default function LibraryEditorV2({
     return null
   }, [selectedId, selectedType, catalog, taxonGroups])
 
+  // ── Genus parent (Phase 2 inheritance) — only for species entries
+  const genusParent = useMemo(() => {
+    if (!selectedEntry || selectedType !== 'cultivar') return null
+    return getGenusParent(selectedEntry, catalog)
+  }, [selectedEntry, selectedType, catalog])
+
   // ── Reload draft kai selectedEntry pakeičiamas
   //
   // CRITICAL: useEffect priklauso nuo selectedId+Type (NE selectedEntry), kad
@@ -415,8 +421,9 @@ export default function LibraryEditorV2({
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         taxonGroups={taxonGroups}
+        genusParent={genusParent}
       />
-      <RightPanePreview entry={selectedEntry} draft={draft} entryType={selectedType} />
+      <RightPanePreview entry={selectedEntry} draft={draft} entryType={selectedType} genusParent={genusParent} />
 
       {pendingNav && (
         <UnsavedChangesModal
@@ -683,6 +690,77 @@ function LeftPaneList({
 //   • Species entry yra, bet genus entry nėra — synthetic header („Aloe (no entry)")
 //   • Catalog entry su unparseable Latin — skip (filtered out)
 //   • Series Latin name nesutampa su jokio genus — skip (defensive)
+// ── Genus parent lookup + care inheritance (Phase 2) ──────────────
+//
+// PRINCIPAS: jei species entry'is (Aloe vera) neturi tam tikrų laukų, jie
+// gali būti paveldimi iš genus entry'io (Aloe). Admin'as mato kuris laukas
+// paveldimas + iš kur (badge'as „Iš Aloe genus"). Save'as nepakeičia
+// paveldimo elgesio — admin'as gali įvesti specifinį species value
+// (override) arba palikti tuščią (paveldima).
+//
+// PASTABA: paveldima TIK species → genus. Cultivar → series inheritance
+// jau egzistuoja (mergeWithSeries Variant B flow). Genus → cultivar
+// inheritance neimplemented'inta (per ilga grandinė).
+
+const INHERITABLE_FIELDS = [
+  // Care info (bendrai taikoma per visą genus)
+  'sviesa', 'vanduo', 'substratas', 'persodinimas', 'ziemojimas', 'tresimas', 'prieziura',
+  // Klasifikacija
+  'tipas', 'sunkumas', 'augimo_greitis', 'cultivationContext', 'lifecycle', 'hardiness',
+  'auginimas',
+  // Kilmė (genus origin = species origin paprastai)
+  'kilme',
+  // Toxicity — savybes object'as (Aloe toxic to pets → visos Aloe rūšys taip pat)
+  'savybes',
+]
+
+/** Genus parent lookup pagal Latin name (only species → genus). */
+function getGenusParent(entry, catalog) {
+  if (!entry?.lotyniskas) return null
+  const parsed = parseLatinName(entry.lotyniskas)
+  if (parsed.rank !== 'species') return null  // tik species turi genus parent'ą
+  if (!parsed.genus) return null
+  return catalog.find(c =>
+    c.lotyniskas?.toLowerCase() === parsed.genus.toLowerCase(),
+  ) ?? null
+}
+
+/** Ar value laikomas „neužpildytu" (empty string, null, undef, empty array/object). */
+function isEmptyValue(v) {
+  if (v == null || v === '') return true
+  if (Array.isArray(v) && v.length === 0) return true
+  if (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0) return true
+  // savybes nested check — jei pavojai tuščias array + pavojingumas.yra=false → laikom tuščia
+  if (typeof v === 'object' && !Array.isArray(v) && 'pavojai' in v) {
+    const noPavojai = !Array.isArray(v.pavojai) || v.pavojai.length === 0
+    const noYra = !v.pavojingumas?.yra
+    if (noPavojai && noYra) return true
+  }
+  return false
+}
+
+/** Grąžina inherited value (su badge'u UI'e), arba null jei nepaveldima/užpildyta. */
+function getInheritedValue(field, draftValue, genusParent) {
+  if (!genusParent) return null
+  if (!INHERITABLE_FIELDS.includes(field)) return null
+  if (!isEmptyValue(draftValue)) return null  // entry turi own value
+  const parentValue = genusParent[field]
+  if (isEmptyValue(parentValue)) return null
+  return parentValue
+}
+
+/** Merge genus parent fields į species entry'į (preview pane'ui). */
+function mergeWithGenusParent(entry, genusParent) {
+  if (!genusParent || !entry) return entry
+  const merged = { ...entry }
+  for (const field of INHERITABLE_FIELDS) {
+    if (isEmptyValue(entry[field]) && !isEmptyValue(genusParent[field])) {
+      merged[field] = genusParent[field]
+    }
+  }
+  return merged
+}
+
 function buildHierarchy(catalog, taxonGroups) {
   const byGenus = new Map()
   const getGroup = (genus) => {
@@ -981,6 +1059,7 @@ function CenterPaneEditor({
   onSave, onDiscard, onDelete, onSaveImageOnly,
   activeTab, setActiveTab,
   taxonGroups,
+  genusParent,
 }) {
   if (!entry || !draft) {
     return (
@@ -1082,6 +1161,18 @@ function CenterPaneEditor({
         </div>
       </div>
 
+      {/* Genus inheritance hint (jei species ir turi genus parent'ą) */}
+      {genusParent && entryType === 'cultivar' && (
+        <div className="mx-5 mt-3 px-3 py-2 bg-forest-50 border border-forest-200/50 rounded-md text-[11px] text-forest-700 flex items-center gap-2">
+          <Layers size={11} className="text-forest-500 flex-shrink-0" />
+          <span>
+            Paveldi iš genus <span className="font-semibold italic">{genusParent.lotyniskas}</span>
+            {genusParent.lietuviškas && <span> · „{genusParent.lietuviškas}"</span>}
+            <span className="text-forest-500"> — tušti laukai bus rodomi paveldėtu value</span>
+          </span>
+        </div>
+      )}
+
       {/* Tab content body */}
       <div className="flex-1 overflow-y-auto p-5">
         <TabContent
@@ -1093,6 +1184,7 @@ function CenterPaneEditor({
           updateField={updateField}
           taxonGroups={taxonGroups}
           onSaveImageOnly={onSaveImageOnly}
+          genusParent={genusParent}
         />
       </div>
 
@@ -1132,8 +1224,8 @@ function TabButton({ tab, active, dirty, onClick }) {
 
 // ── Tab content dispatcher ───────────────────────────────────────────
 
-function TabContent({ tabId, entry, entryType, draft, originalDraft, updateField, taxonGroups, onSaveImageOnly }) {
-  const props = { entry, entryType, draft, originalDraft, updateField, taxonGroups, onSaveImageOnly }
+function TabContent({ tabId, entry, entryType, draft, originalDraft, updateField, taxonGroups, onSaveImageOnly, genusParent }) {
+  const props = { entry, entryType, draft, originalDraft, updateField, taxonGroups, onSaveImageOnly, genusParent }
   if (entryType === 'series') {
     switch (tabId) {
       case 'identification': return <TabIdentificationSeries {...props} />
@@ -1157,7 +1249,8 @@ function TabContent({ tabId, entry, entryType, draft, originalDraft, updateField
 
 // ── Tab: Identifikacija (cultivar) ───────────────────────────────────
 
-function TabIdentificationCultivar({ entry, draft, originalDraft, updateField, taxonGroups }) {
+function TabIdentificationCultivar({ entry, draft, originalDraft, updateField, taxonGroups, genusParent }) {
+  const inh = (f) => makeInherited(f, draft, genusParent)
   return (
     <div className="space-y-4 max-w-2xl">
       <FormRow label="Lotyniškas" dirty={fieldDirty(draft.lotyniskas, originalDraft?.lotyniskas)} helper={`Genus + species (pvz. „Kalanchoe blossfeldiana"). Cultivar: „Sansevieria trifasciata 'Laurentii'".`}>
@@ -1181,7 +1274,7 @@ function TabIdentificationCultivar({ entry, draft, originalDraft, updateField, t
           ))}
         </select>
       </FormRow>
-      <FormRow label="Auginimo kontekstas" dirty={fieldDirty(draft.auginimas, originalDraft?.auginimas)} helper="Kur šis augalas dažniausiai auga Lietuvoje.">
+      <FormRow label="Auginimo kontekstas" dirty={fieldDirty(draft.auginimas, originalDraft?.auginimas)} helper="Kur šis augalas dažniausiai auga Lietuvoje." inherited={inh('auginimas')}>
         <ChipSelect value={draft.auginimas} onChange={v => updateField('auginimas', v)} options={AUGINIMAS_OPTS} allowEmpty />
       </FormRow>
       <FormRow label="Info confidence" dirty={fieldDirty(draft.infoConfidence, originalDraft?.infoConfidence)} helper="Kiek šios kortelės info'ai patikima — kalibracija PFAF/ASPCA atveju.">
@@ -1558,13 +1651,14 @@ function isWhitelistedHostingUrl(url) {
 
 // ── Tab: Aprašymai (cultivar) ────────────────────────────────────────
 
-function TabDescriptionsCultivar({ entry, draft, originalDraft, updateField }) {
+function TabDescriptionsCultivar({ entry, draft, originalDraft, updateField, genusParent }) {
+  const inh = (f) => makeInherited(f, draft, genusParent)
   return (
     <div className="space-y-4 max-w-3xl">
       <FormRow label="Aprašymas" dirty={fieldDirty(draft.aprasymas, originalDraft?.aprasymas)} helper={`„Sodininkas friend" stilius — LT vartotojui draugiškas tekstas.`}>
         <TextArea value={draft.aprasymas} onChange={v => updateField('aprasymas', v)} rows={5} />
       </FormRow>
-      <FormRow label="Kilmė" dirty={fieldDirty(draft.kilme, originalDraft?.kilme)} helper="Iš kur augalas — geografinė kilmė + buveinė.">
+      <FormRow label="Kilmė" dirty={fieldDirty(draft.kilme, originalDraft?.kilme)} helper="Iš kur augalas — geografinė kilmė + buveinė." inherited={inh('kilme')}>
         <TextInput value={draft.kilme ?? ''} onChange={v => updateField('kilme', v)} placeholder="Madagaskaras (atogrąžų pievos)" />
       </FormRow>
       <FormRow label="Įdomybės" dirty={fieldDirty(draft.idomybes, originalDraft?.idomybes)} helper="3-7 įdomių faktų — kiekvienas atskira eilutė. Naudojami plant detail screen'e.">
@@ -1590,28 +1684,29 @@ function TabDescriptionsSeries({ draft, originalDraft, updateField }) {
 
 // ── Tab: Priežiūra (cultivar — flat fields) ─────────────────────────
 
-function TabCareCultivar({ draft, originalDraft, updateField }) {
+function TabCareCultivar({ draft, originalDraft, updateField, genusParent }) {
+  const inh = (f) => makeInherited(f, draft, genusParent)
   return (
     <div className="space-y-4 max-w-3xl">
-      <FormRow label="Šviesa" dirty={fieldDirty(draft.sviesa, originalDraft?.sviesa)}>
+      <FormRow label="Šviesa" dirty={fieldDirty(draft.sviesa, originalDraft?.sviesa)} inherited={inh('sviesa')}>
         <TextArea value={draft.sviesa} onChange={v => updateField('sviesa', v)} rows={2} placeholder="Ryški netiesioginė, 2-4h tiesioginės ryto saulės" />
       </FormRow>
-      <FormRow label="Vanduo" dirty={fieldDirty(draft.vanduo, originalDraft?.vanduo)}>
+      <FormRow label="Vanduo" dirty={fieldDirty(draft.vanduo, originalDraft?.vanduo)} inherited={inh('vanduo')}>
         <TextArea value={draft.vanduo} onChange={v => updateField('vanduo', v)} rows={2} placeholder="Vidutiniai poreikiai — kas 7d vasarą, kas 14d žiemą" />
       </FormRow>
-      <FormRow label="Substratas" dirty={fieldDirty(draft.substratas, originalDraft?.substratas)}>
+      <FormRow label="Substratas" dirty={fieldDirty(draft.substratas, originalDraft?.substratas)} inherited={inh('substratas')}>
         <TextArea value={draft.substratas} onChange={v => updateField('substratas', v)} rows={2} />
       </FormRow>
-      <FormRow label="Persodinimas" dirty={fieldDirty(draft.persodinimas, originalDraft?.persodinimas)}>
+      <FormRow label="Persodinimas" dirty={fieldDirty(draft.persodinimas, originalDraft?.persodinimas)} inherited={inh('persodinimas')}>
         <TextArea value={draft.persodinimas} onChange={v => updateField('persodinimas', v)} rows={2} />
       </FormRow>
-      <FormRow label="Žiemojimas" dirty={fieldDirty(draft.ziemojimas, originalDraft?.ziemojimas)}>
+      <FormRow label="Žiemojimas" dirty={fieldDirty(draft.ziemojimas, originalDraft?.ziemojimas)} inherited={inh('ziemojimas')}>
         <TextArea value={draft.ziemojimas} onChange={v => updateField('ziemojimas', v)} rows={2} />
       </FormRow>
-      <FormRow label="Tręšimas" dirty={fieldDirty(draft.tresimas, originalDraft?.tresimas)}>
+      <FormRow label="Tręšimas" dirty={fieldDirty(draft.tresimas, originalDraft?.tresimas)} inherited={inh('tresimas')}>
         <TextArea value={draft.tresimas} onChange={v => updateField('tresimas', v)} rows={2} />
       </FormRow>
-      <FormRow label="Priežiūra (kita)" dirty={fieldDirty(draft.prieziura, originalDraft?.prieziura)}>
+      <FormRow label="Priežiūra (kita)" dirty={fieldDirty(draft.prieziura, originalDraft?.prieziura)} inherited={inh('prieziura')}>
         <TextArea value={draft.prieziura} onChange={v => updateField('prieziura', v)} rows={2} />
       </FormRow>
     </div>
@@ -1656,11 +1751,14 @@ function TabCareSeries({ draft, originalDraft, updateField }) {
 
 // ── Tab: Toksiškumas ────────────────────────────────────────────────
 
-function TabToxicity({ entry, draft, originalDraft, updateField }) {
+function TabToxicity({ entry, draft, originalDraft, updateField, genusParent }) {
   const savybes = draft.savybes ?? {}
   const orig = originalDraft?.savybes ?? {}
   const pavojai = Array.isArray(savybes.pavojai) ? savybes.pavojai : []
   const pavojingumas = savybes.pavojingumas ?? { yra: false, lygis: null, detales: '' }
+
+  // Inheritance check — jei species toksiškumas tuščias bet genus turi
+  const inheritedSavybes = getInheritedValue('savybes', draft.savybes, genusParent)
 
   // Update'as helper'is — savybes nested update'ams, kad mažiau verbose.
   const setSav = (subKey, value) => {
@@ -1674,6 +1772,26 @@ function TabToxicity({ entry, draft, originalDraft, updateField }) {
 
   return (
     <div className="space-y-5 max-w-3xl">
+      {/* Inheritance banner — jei species toksiškumas tuščias bet genus turi */}
+      {inheritedSavybes && (
+        <div className="px-3 py-2.5 bg-forest-50 border border-forest-200/60 rounded-md text-xs text-forest-700 flex items-start gap-2">
+          <Layers size={12} className="text-forest-500 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="font-medium">
+              Toksiškumas paveldimas iš <span className="italic">{genusParent.lotyniskas}</span> (genus)
+            </p>
+            <p className="text-[11px] text-forest-600 mt-0.5">
+              {inheritedSavybes.pavojingumas?.yra
+                ? `Lygis: ${inheritedSavybes.pavojingumas.lygis ?? '—'} · ${inheritedSavybes.pavojai?.length ?? 0} struktūrizuotų pavojų`
+                : 'Genus pažymėtas kaip saugus.'}
+            </p>
+            <p className="text-[10px] text-forest-500 mt-1 italic">
+              Įvesk specifinę informaciją apačioje, jei šios rūšies toksiškumas skiriasi.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Pavojingumas summary card */}
       <div className="bg-bone-100 border border-bone-400/40 rounded-lg p-4 space-y-3">
         <div className="flex items-center justify-between">
@@ -1805,25 +1923,26 @@ function PavojaiRow({ pavojus, onChange, onDelete }) {
 
 // ── Tab: Klasifikacija ──────────────────────────────────────────────
 
-function TabClassification({ draft, originalDraft, updateField }) {
+function TabClassification({ draft, originalDraft, updateField, genusParent }) {
+  const inh = (f) => makeInherited(f, draft, genusParent)
   return (
     <div className="space-y-4 max-w-2xl">
-      <FormRow label="Tipas (laisva forma)" dirty={fieldDirty(draft.tipas, originalDraft?.tipas)} helper={`LT-friendly tipas — pvz. „Sultingas", „Tropinis daugiametis".`}>
+      <FormRow label="Tipas (laisva forma)" dirty={fieldDirty(draft.tipas, originalDraft?.tipas)} helper={`LT-friendly tipas — pvz. „Sultingas", „Tropinis daugiametis".`} inherited={inh('tipas')}>
         <TextInput value={draft.tipas ?? ''} onChange={v => updateField('tipas', v)} />
       </FormRow>
-      <FormRow label="Sunkumas" dirty={fieldDirty(draft.sunkumas, originalDraft?.sunkumas)} helper="Schema: integer 1-5. UI rodo 1=labai lengvas → 5=tik patyrusiems.">
+      <FormRow label="Sunkumas" dirty={fieldDirty(draft.sunkumas, originalDraft?.sunkumas)} helper="Schema: integer 1-5. UI rodo 1=labai lengvas → 5=tik patyrusiems." inherited={inh('sunkumas')}>
         <ChipSelect value={draft.sunkumas} onChange={v => updateField('sunkumas', v)} options={SUNKUMAS_OPTS} allowEmpty />
       </FormRow>
-      <FormRow label="Augimo greitis" dirty={fieldDirty(draft.augimo_greitis, originalDraft?.augimo_greitis)}>
+      <FormRow label="Augimo greitis" dirty={fieldDirty(draft.augimo_greitis, originalDraft?.augimo_greitis)} inherited={inh('augimo_greitis')}>
         <ChipSelect value={draft.augimo_greitis} onChange={v => updateField('augimo_greitis', v)} options={AUGIMO_GREITIS_OPTS} allowEmpty />
       </FormRow>
-      <FormRow label="Kontekstas (cultivation)" dirty={fieldDirty(draft.cultivationContext, originalDraft?.cultivationContext)}>
+      <FormRow label="Kontekstas (cultivation)" dirty={fieldDirty(draft.cultivationContext, originalDraft?.cultivationContext)} inherited={inh('cultivationContext')}>
         <Select value={draft.cultivationContext ?? ''} onChange={v => updateField('cultivationContext', v)} options={['', ...CULTIVATION_CONTEXTS]} />
       </FormRow>
-      <FormRow label="Lifecycle" dirty={fieldDirty(draft.lifecycle, originalDraft?.lifecycle)}>
+      <FormRow label="Lifecycle" dirty={fieldDirty(draft.lifecycle, originalDraft?.lifecycle)} inherited={inh('lifecycle')}>
         <Select value={draft.lifecycle ?? ''} onChange={v => updateField('lifecycle', v)} options={['', ...LIFECYCLES]} />
       </FormRow>
-      <FormRow label="Hardiness" dirty={fieldDirty(draft.hardiness, originalDraft?.hardiness)} helper={`USDA zona arba °C ribos. Pvz. „USDA 9-11, -1°C".`}>
+      <FormRow label="Hardiness" dirty={fieldDirty(draft.hardiness, originalDraft?.hardiness)} helper={`USDA zona arba °C ribos. Pvz. „USDA 9-11, -1°C".`} inherited={inh('hardiness')}>
         <TextInput value={draft.hardiness ?? ''} onChange={v => updateField('hardiness', v)} placeholder="USDA 9-11, -1°C" />
       </FormRow>
     </div>
@@ -1878,7 +1997,7 @@ function shortDate(iso) {
 
 // ── Right pane: live ProfileContent preview ───────────────────────
 
-function RightPanePreview({ entry, draft, entryType }) {
+function RightPanePreview({ entry, draft, entryType, genusParent }) {
   // ── Debounced draft (300ms) — prevents preview re-render on every keystroke
   const [debouncedDraft, setDebouncedDraft] = useState(draft)
   useEffect(() => {
@@ -1936,13 +2055,21 @@ function RightPanePreview({ entry, draft, entryType }) {
     )
   }
 
-  // Cultivar — merge entry + draft, render ProfileContent
-  // ProfileContent expects a plant doc-like object. Catalog entries trūksta
-  // kai kurių user-plant field'ų (id, kategorija, status, etc) — pridedam
-  // safe defaults, kad ProfileContent neclashintų.
+  // Cultivar — merge: entry → draft overrides → genus parent fallbacks.
+  // 1. entry — saved catalog doc
+  // 2. debouncedDraft — admin's in-flight edits (override saved)
+  // 3. genusParent — fill empty inheritable fields (Phase 2 inheritance)
+  // 4. Safe defaults for ProfileContent (id, kategorija, status, etc.)
+  //
+  // Inheritance taikomas TIK INHERITABLE_FIELDS sąraše (care + classification
+  // + toxicity + kilme). Identity fields (lotyniskas, lietuviškas, image, ...)
+  // visada iš draft/entry, niekada iš genus.
+  const draftMerged = { ...entry, ...(debouncedDraft ?? {}) }
+  const withGenusInheritance = genusParent
+    ? mergeWithGenusParent(draftMerged, genusParent)
+    : draftMerged
   const mergedPlant = {
-    ...entry,
-    ...(debouncedDraft ?? {}),
+    ...withGenusInheritance,
     id: `preview-${entry.id}`,         // synthetic id (preview-mode)
     kategorija: entry.kategorija ?? 'auginama',
     status: entry.status ?? 'auginama',
@@ -2056,14 +2183,36 @@ function UnsavedChangesModal({ onCancel, onDiscard, onSaveAndContinue, saving })
 
 // ── Form atoms ────────────────────────────────────────────────────
 
-function FormRow({ label, children, dirty, helper }) {
+function FormRow({ label, children, dirty, helper, inherited }) {
+  // `inherited` = { value, fromLabel } | null
+  //   value: inherited string/object/array from parent
+  //   fromLabel: pvz. „Iš Aloe (genus)"
+  // Rodom badge + value preview po input'u, kai laukas tuščias bet parent
+  // turi value. Admin'as gali matyti, kas bus rodoma user'iui, IR įvesti
+  // override'inančią reikšmę.
   return (
     <div className="space-y-1">
       <label className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-forest-500 block flex items-center gap-1.5">
         {label}
         {dirty && <span className="text-terracotta-600" title="Pakeista">●</span>}
+        {inherited && (
+          <span
+            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-forest-100 text-forest-600 text-[9px] font-normal normal-case tracking-normal"
+            title="Šis laukas paveldi reikšmę iš genus parent'o, kol nenuves admin specifinė reikšmė"
+          >
+            <Layers size={9} /> {inherited.fromLabel}
+          </span>
+        )}
       </label>
       {children}
+      {inherited && (
+        <div className="text-[10px] text-forest-500 italic border-l-2 border-forest-200 pl-2 py-0.5">
+          <span className="font-mono text-[9px] text-forest-400 uppercase tracking-wider mr-1.5">paveldima:</span>
+          {typeof inherited.value === 'string'
+            ? inherited.value
+            : <span className="font-mono text-[9px]">{JSON.stringify(inherited.value)}</span>}
+        </div>
+      )}
       {helper && (
         <p className="text-[10px] text-forest-400">{helper}</p>
       )}
@@ -2378,6 +2527,16 @@ function buildTabDirtyMap(draft, originalDraft, entryType) {
 }
 
 // ── Helpers ──────────────────────────────────────────────────────
+
+/** Inheritance helper formavimui FormRow `inherited` prop'ui. */
+function makeInherited(field, draft, genusParent) {
+  const v = getInheritedValue(field, draft?.[field], genusParent)
+  if (v == null) return null
+  return {
+    value: v,
+    fromLabel: `Iš ${genusParent.lotyniskas}`,
+  }
+}
 
 function fieldDirty(current, original) {
   // Treat null/undefined/empty-string as equivalent (admin'as nemato skirtumo
