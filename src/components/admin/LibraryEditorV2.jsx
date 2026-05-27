@@ -42,7 +42,7 @@ import PlantImage from '../brand/PlantImage'
 import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS, LIFECYCLES } from '../../utils/taxonGroups'
 import { parseLatinName } from '../../utils/latinName'
 import { auth } from '../../utils/firebase'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, Sun, Droplets, Thermometer, Wind, Sparkles, Calendar } from 'lucide-react'
 
 const WIDGET = 'bg-bone-50 rounded-2xl border border-bone-400/40 shadow-[0_1px_3px_rgba(28,58,42,0.06),0_4px_14px_rgba(28,58,42,0.05)]'
 const MIN_WIDTH_PX = 1280
@@ -1829,49 +1829,26 @@ function TabDescriptionsSeries({ draft, originalDraft, updateField }) {
 
 function TabCareCultivar({ draft, originalDraft, updateField, genusParent }) {
   const inh = (f) => makeInherited(f, draft, genusParent)
-  // SAUGUMAS (2026-05-27): sviesa/vanduo/tresimas/prieziura/laistymasIntervalas
-  // yra OBJEKTAI schema'oj (žr. plantPromptConfig.js). Anksciau jie buvo render'inami
-  // kaip TextArea (str ↔ JSON) — admin'as ten edit'indavo JSON tekstinę formą,
-  // bet užtekdavo netyčia ištrinti } simbolį, kad catalog.sviesa taptų broken
-  // string'u → PlantDetail.jsx:656 `plant.sviesa?.taskai` undefined → section
-  // dingsta user'iui (SILENT DATA LOSS).
-  //
-  // Iki kol bus structured mini-card editor'iai (Audit fix #4), šie 4 laukai
-  // rodomi READ-ONLY (admin mato JSON, bet negali edit'inti). String laukai
-  // (substratas, persodinimas, ziemojimas) lieka editable — jie LEGIT strings.
   return (
     <div className="space-y-4 max-w-3xl">
-      <div className="px-3 py-2.5 bg-amber-50 border border-amber-200/60 rounded-md text-[11px] text-amber-800 flex items-start gap-2">
-        <AlertTriangle size={11} className="flex-shrink-0 mt-0.5" />
-        <div>
-          <p className="font-semibold">Struktūriniai laukai (read-only)</p>
-          <p className="text-[10px] mt-0.5">
-            Šviesa, Vanduo, Tręšimas, Priežiūra, Laistymas — schema turi nested object'us
-            (lygis/taskai/ppfd, etc.). Structured editor'ius pridėsime kitame iteracijoje.
-            Iki to laiko keisk per Firestore Console (ar laukti UI fix'o, kuris
-            ateis greitai).
-          </p>
-        </div>
-      </div>
-
-      <FormRow label="Šviesa (structured)" dirty={fieldDirty(draft.sviesa, originalDraft?.sviesa)} inherited={inh('sviesa')}>
-        <ReadOnlyJsonField value={draft.sviesa} />
+      <FormRow label="Šviesa" dirty={fieldDirty(draft.sviesa, originalDraft?.sviesa)} inherited={inh('sviesa')}>
+        <StructuredSviesaEditor value={draft.sviesa} onChange={v => updateField('sviesa', v)} />
       </FormRow>
-      <FormRow label="Vanduo (structured)" dirty={fieldDirty(draft.vanduo, originalDraft?.vanduo)} inherited={inh('vanduo')}>
-        <ReadOnlyJsonField value={draft.vanduo} />
+      <FormRow label="Vanduo" dirty={fieldDirty(draft.vanduo, originalDraft?.vanduo)} inherited={inh('vanduo')}>
+        <StructuredVanduoEditor value={draft.vanduo} onChange={v => updateField('vanduo', v)} />
       </FormRow>
-      <FormRow label="Laistymo intervalas (structured)" dirty={fieldDirty(draft.laistymasIntervalas, originalDraft?.laistymasIntervalas)}>
-        <ReadOnlyJsonField value={draft.laistymasIntervalas} />
+      <FormRow label="Laistymo intervalas" dirty={fieldDirty(draft.laistymasIntervalas, originalDraft?.laistymasIntervalas)}>
+        <StructuredLaistymasEditor value={draft.laistymasIntervalas} onChange={v => updateField('laistymasIntervalas', v)} />
       </FormRow>
-      <FormRow label="Tręšimas (structured)" dirty={fieldDirty(draft.tresimas, originalDraft?.tresimas)} inherited={inh('tresimas')}>
-        <ReadOnlyJsonField value={draft.tresimas} />
+      <FormRow label="Tręšimas" dirty={fieldDirty(draft.tresimas, originalDraft?.tresimas)} inherited={inh('tresimas')}>
+        <StructuredTresimasEditor value={draft.tresimas} onChange={v => updateField('tresimas', v)} />
       </FormRow>
-      <FormRow label="Priežiūra — temp/dregme/etc (structured)" dirty={fieldDirty(draft.prieziura, originalDraft?.prieziura)} inherited={inh('prieziura')}>
-        <ReadOnlyJsonField value={draft.prieziura} />
+      <FormRow label="Priežiūra (temperatūra, drėgmė, narrative)" dirty={fieldDirty(draft.prieziura, originalDraft?.prieziura)} inherited={inh('prieziura')}>
+        <StructuredPrieziuraEditor value={draft.prieziura} onChange={v => updateField('prieziura', v)} />
       </FormRow>
 
-      <div className="pt-2 border-t border-bone-400/30">
-        <p className="font-mono text-[10px] uppercase tracking-wider text-forest-500 mb-2">Tekstinis turinys (editable)</p>
+      <div className="pt-3 border-t border-bone-400/30">
+        <p className="font-mono text-[10px] uppercase tracking-wider text-forest-500 mb-2">Naratyvinis turinys</p>
       </div>
       <FormRow label="Substratas" dirty={fieldDirty(draft.substratas, originalDraft?.substratas)} inherited={inh('substratas')}>
         <TextArea value={draft.substratas} onChange={v => updateField('substratas', v)} rows={3} placeholder="Substrato sudėtis, drenažas, pH..." />
@@ -1886,21 +1863,179 @@ function TabCareCultivar({ draft, originalDraft, updateField, genusParent }) {
   )
 }
 
-// Read-only structured field display (iki kol bus structured editor'iai).
-// Rodo pretty-printed JSON gray'inkoj fono kortelej — admin'as mato structure,
-// negali ją laužyti.
-function ReadOnlyJsonField({ value }) {
-  if (value == null) {
-    return (
-      <div className="bg-bone-100 border border-dashed border-bone-400/40 rounded-md px-3 py-2 text-[11px] text-forest-400 italic">
-        (tuščias)
-      </div>
-    )
-  }
+// ── Structured care field editors (Audit fix #4) ───────────────────
+//
+// Vietoj raw JSON edit'avimo, atskiri mini-card'ai kiekvienam care object'ui.
+// Schema (žr. plantPromptConfig.js):
+//   sviesa:              { taskai 1-3, lygis: žema|vidutinė|ryški, ppfd: {min, max} }
+//   vanduo:              { taskai 1-3, lygis: mažai|vidutiniškai|daug }
+//   laistymasIntervalas: { intervalVasara: int, intervalZiema: int, tipas: string }
+//   tresimas:            { reikia: bool, tipas: full|partial|null }
+//   prieziura:           { sviesa: str, laistymas: str, temperatura: str, dregme: str }
+//
+// Visi editor'iai naudoja onChange(newObject) pattern'ą — parent updateField
+// stačiai persaugo visą object'ą. Tas pats kontraktas, kaip su TextInput'u
+// (vienas value in, vienas onChange out).
+
+const SVIESA_LYGIS_OPTS = [
+  { value: 'žema',     label: 'Žema'     },
+  { value: 'vidutinė', label: 'Vidutinė' },
+  { value: 'ryški',    label: 'Ryški'    },
+]
+const VANDUO_LYGIS_OPTS = [
+  { value: 'mažai',         label: 'Mažai'         },
+  { value: 'vidutiniškai',  label: 'Vidutiniškai'  },
+  { value: 'daug',          label: 'Daug'          },
+]
+const TASKAI_OPTS = [
+  { value: 1, label: '1' },
+  { value: 2, label: '2' },
+  { value: 3, label: '3' },
+]
+const TRESIMAS_TIPAS_OPTS = [
+  { value: 'full',    label: 'Pilnas (NPK)' },
+  { value: 'partial', label: 'Dalinis'      },
+]
+const DREGME_OPTS = [
+  { value: 'sausa',    label: 'Sausa (<40%)'    },
+  { value: 'vidutinė', label: 'Vidutinė (40-60%)' },
+  { value: 'drėgna',   label: 'Drėgna (>60%)'   },
+]
+
+function StructuredSviesaEditor({ value, onChange }) {
+  const v = value ?? {}
+  const update = (k, val) => onChange({ ...v, [k]: val })
+  const updatePpfd = (k, val) => onChange({ ...v, ppfd: { ...(v.ppfd ?? {}), [k]: val } })
   return (
-    <pre className="bg-bone-100 border border-bone-400/40 rounded-md px-3 py-2 font-mono text-[10px] text-forest-700 leading-relaxed overflow-x-auto whitespace-pre-wrap">
-      {JSON.stringify(value, null, 2)}
-    </pre>
+    <div className="bg-bone-50 border border-bone-400/40 rounded-lg p-3 space-y-3">
+      <SubFieldRow icon={Sun} iconColor="text-terracotta-400" label="Lygis">
+        <ChipSelect value={v.lygis} onChange={x => update('lygis', x)} options={SVIESA_LYGIS_OPTS} allowEmpty />
+      </SubFieldRow>
+      <SubFieldRow label="Taškai (1-3)">
+        <ChipSelect value={v.taskai} onChange={x => update('taskai', x)} options={TASKAI_OPTS} allowEmpty />
+      </SubFieldRow>
+      <SubFieldRow label="PPFD (μmol/m²/s)">
+        <div className="flex items-center gap-1.5">
+          <NumberInput value={v.ppfd?.min} onChange={x => updatePpfd('min', x)} placeholder="min" />
+          <span className="text-forest-400 text-xs">–</span>
+          <NumberInput value={v.ppfd?.max} onChange={x => updatePpfd('max', x)} placeholder="max" />
+        </div>
+      </SubFieldRow>
+    </div>
+  )
+}
+
+function StructuredVanduoEditor({ value, onChange }) {
+  const v = value ?? {}
+  const update = (k, val) => onChange({ ...v, [k]: val })
+  return (
+    <div className="bg-bone-50 border border-bone-400/40 rounded-lg p-3 space-y-3">
+      <SubFieldRow icon={Droplets} iconColor="text-forest-400" label="Lygis">
+        <ChipSelect value={v.lygis} onChange={x => update('lygis', x)} options={VANDUO_LYGIS_OPTS} allowEmpty />
+      </SubFieldRow>
+      <SubFieldRow label="Taškai (1-3)">
+        <ChipSelect value={v.taskai} onChange={x => update('taskai', x)} options={TASKAI_OPTS} allowEmpty />
+      </SubFieldRow>
+    </div>
+  )
+}
+
+function StructuredLaistymasEditor({ value, onChange }) {
+  const v = value ?? {}
+  const update = (k, val) => onChange({ ...v, [k]: val })
+  return (
+    <div className="bg-bone-50 border border-bone-400/40 rounded-lg p-3 space-y-3">
+      <SubFieldRow icon={Calendar} iconColor="text-forest-400" label="Intervalas vasarą (dienos)">
+        <NumberInput value={v.intervalVasara} onChange={x => update('intervalVasara', x)} placeholder="pvz. 7" />
+      </SubFieldRow>
+      <SubFieldRow label="Intervalas žiemą (dienos)">
+        <NumberInput value={v.intervalZiema} onChange={x => update('intervalZiema', x)} placeholder="pvz. 14" />
+      </SubFieldRow>
+      <SubFieldRow label="Tipas / pastabos">
+        <TextInput value={v.tipas} onChange={x => update('tipas', x)} placeholder="pvz. iš apačios, soak-dry, drėkinti lapus" />
+      </SubFieldRow>
+    </div>
+  )
+}
+
+function StructuredTresimasEditor({ value, onChange }) {
+  const v = value ?? {}
+  const update = (k, val) => onChange({ ...v, [k]: val })
+  return (
+    <div className="bg-bone-50 border border-bone-400/40 rounded-lg p-3 space-y-3">
+      <SubFieldRow icon={Sparkles} iconColor="text-amber-500" label="Reikia tręšti?">
+        <ToggleSwitch checked={!!v.reikia} onChange={x => update('reikia', x)} label={v.reikia ? 'Taip' : 'Ne'} />
+      </SubFieldRow>
+      {v.reikia && (
+        <SubFieldRow label="Tipas">
+          <ChipSelect value={v.tipas} onChange={x => update('tipas', x)} options={TRESIMAS_TIPAS_OPTS} allowEmpty />
+        </SubFieldRow>
+      )}
+    </div>
+  )
+}
+
+function StructuredPrieziuraEditor({ value, onChange }) {
+  // prieziura nested object'as: { sviesa, laistymas, temperatura, dregme }
+  // Schema all STRINGS (narrative). Mes UI šitą daom labiau visualus —
+  // temperatura/dregme atskiri input'ai, sviesa/laistymas textarea.
+  const v = value ?? {}
+  const update = (k, val) => onChange({ ...v, [k]: val })
+  return (
+    <div className="bg-bone-50 border border-bone-400/40 rounded-lg p-3 space-y-3">
+      <SubFieldRow icon={Thermometer} iconColor="text-terracotta-500" label="Temperatūra">
+        <TextInput value={v.temperatura} onChange={x => update('temperatura', x)} placeholder="pvz. 18-25°C, žiemą min. 10°C" />
+      </SubFieldRow>
+      <SubFieldRow icon={Wind} iconColor="text-forest-400" label="Drėgmė">
+        <div className="space-y-1.5">
+          <ChipSelect
+            value={DREGME_OPTS.find(o => v.dregme?.includes(o.value))?.value ?? null}
+            onChange={x => update('dregme', x ?? '')}
+            options={DREGME_OPTS}
+            allowEmpty
+          />
+          <TextInput value={v.dregme} onChange={x => update('dregme', x)} placeholder="laisva forma jei nori detalesnio aprašymo" />
+        </div>
+      </SubFieldRow>
+      <SubFieldRow icon={Sun} iconColor="text-terracotta-400" label="Šviesa (narrative — papildomas)">
+        <TextArea value={v.sviesa} onChange={x => update('sviesa', x)} rows={2} placeholder="Detalesnė šviesos info, jei reikia papildomai..." />
+      </SubFieldRow>
+      <SubFieldRow icon={Droplets} iconColor="text-forest-400" label="Laistymas (narrative — papildomas)">
+        <TextArea value={v.laistymas} onChange={x => update('laistymas', x)} rows={2} placeholder="Detalesnė laistymo info..." />
+      </SubFieldRow>
+    </div>
+  )
+}
+
+// Sub-field row helper for structured editors — label + icon + control.
+function SubFieldRow({ icon: Icon, iconColor, label, children }) {
+  return (
+    <div>
+      <label className="font-mono text-[10px] uppercase tracking-[0.12em] text-forest-500 block mb-1 flex items-center gap-1.5">
+        {Icon && <Icon size={10} className={iconColor} />}
+        {label}
+      </label>
+      {children}
+    </div>
+  )
+}
+
+// Number input atom — siunčia integer'į arba null jei tuščias.
+function NumberInput({ value, onChange, placeholder }) {
+  const display = value == null ? '' : String(value)
+  return (
+    <input
+      type="number"
+      value={display}
+      onChange={e => {
+        const raw = e.target.value
+        if (raw === '') { onChange(null); return }
+        const n = parseInt(raw, 10)
+        onChange(Number.isFinite(n) ? n : null)
+      }}
+      placeholder={placeholder}
+      className="w-20 bg-bone-50 border border-bone-400/40 rounded-md px-2 py-1 text-xs text-forest-800 placeholder:text-forest-300 focus:outline-none focus:border-forest-500"
+    />
   )
 }
 
