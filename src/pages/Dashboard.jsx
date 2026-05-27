@@ -150,8 +150,12 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
   // sick plants stay in their zone (mainPlants includes them)
   const mainPlants       = plants.filter(p => p.status !== 'quarantine')
   const missingCount     = plants.filter(p => !p.image).length
-  const overdueList      = mainPlants.filter(p => getFertilizingForecast(p).isOverdue)
-  const wateringList     = mainPlants.filter(p => shouldShowWateringAlert(p))
+  // Notification counts (overdueList/wateringList) — TURI įtraukti quarantine,
+  // nes karantine augalai vis tiek prašo laistymo/tręšimo (badge'as kortelėje
+  // rodo „2d" — user'is pastebėjo, kad notifikacija viršuje nepriskaičiavo).
+  // Bug fix 2026-05-27.
+  const overdueList      = plants.filter(p => getFertilizingForecast(p).isOverdue)
+  const wateringList     = plants.filter(p => shouldShowWateringAlert(p))
   const [sortKey, setSortKey]         = useState('added')
   const [showFilters, setShowFilters] = useState(false)
   const [showChat, setShowChat]       = useState(false)
@@ -235,9 +239,13 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
   }), [])
 
   // CareWateringSheet: derived state ir navigacijos handler'iai
+  // careInfoPlant resolution naudoja PILNĄ `plants` sąrašą (ne mainPlants),
+  // kad long-press care window'as veiktų ir karantine augalams. Anksciau
+  // mainPlants.find() grąžindavo null karantine plant.id'ams → CareInfo sheet
+  // nepasirodydavo. Bug fix 2026-05-27.
   const careInfoPlant = useMemo(
-    () => careInfoPlantId ? mainPlants.find(p => p.id === careInfoPlantId) ?? null : null,
-    [careInfoPlantId, mainPlants]
+    () => careInfoPlantId ? plants.find(p => p.id === careInfoPlantId) ?? null : null,
+    [careInfoPlantId, plants]
   )
   const careInfoIdx = (careInfoList && careInfoPlantId) ? careInfoList.indexOf(careInfoPlantId) : -1
 
@@ -405,12 +413,18 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
     return () => clearInterval(confirmTimerRef.current)
   }, [confirmType])
 
+  // Care action handlers — naudoja PILNĄ `plants` (ne mainPlants), kad
+  // karantine augalai būtų įtraukti į batch laistymo/tręšimo veiksmus jei
+  // admin'as juos pažymėjo care mode'e. Anksčiau ourPlants.filter rinkdavo
+  // tik iš mainPlants → quarantine plant.id būdavo careChecked'e bet
+  // onAddTimelineEvent nepasileistų jam (filter'as išmesdavo). Bug fix
+  // 2026-05-27.
   const handleCareAction = useCallback((type) => {
     const t = today()
     const comment = type === 'watering' ? 'Laistyta masiniu laistymu' : 'Trešta masiniu laistymu'
     const ids = new Set(careChecked)
     // Snapshot pre-action plant data — buckets'ams reikia daysUntil prieš įrašant
-    const ourPlants = mainPlants.filter(p => ids.has(p.id))
+    const ourPlants = plants.filter(p => ids.has(p.id))
     ids.forEach(plantId => {
       onAddTimelineEvent(plantId, { id: makeId(), type, date: t, komentaras: comment })
     })
@@ -423,27 +437,27 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
     }
     // Watering — toast iškart
     showCareToast(ourPlants, ['watering'], 'watering')
-  }, [careChecked, mainPlants, onAddTimelineEvent, resetConfirm, showCareToast])
+  }, [careChecked, plants, onAddTimelineEvent, resetConfirm, showCareToast])
 
   const confirmPostFertWater = useCallback(() => {
     if (!postFertilizeFor) return
     const t = today()
-    const ourPlants = mainPlants.filter(p => postFertilizeFor.has(p.id))
+    const ourPlants = plants.filter(p => postFertilizeFor.has(p.id))
     postFertilizeFor.forEach(plantId => {
       onAddTimelineEvent(plantId, { id: makeId(), type: 'watering', date: t, komentaras: 'Laistyta po tręšimo' })
     })
     setPostFertilizeFor(null)
     // Pridėtas ir fert (anksčiau handleCareAction etape), ir water — abu simuliuojami circuit detectionui
     showCareToast(ourPlants, ['fertilizing', 'watering'], 'watering')
-  }, [postFertilizeFor, mainPlants, onAddTimelineEvent, showCareToast])
+  }, [postFertilizeFor, plants, onAddTimelineEvent, showCareToast])
 
   const dismissPostFert = useCallback(() => {
     if (!postFertilizeFor) return
-    const ourPlants = mainPlants.filter(p => postFertilizeFor.has(p.id))
+    const ourPlants = plants.filter(p => postFertilizeFor.has(p.id))
     setPostFertilizeFor(null)
     // Tik tręšimas įrašytas — circuit detection simuliuoja tik fert
     showCareToast(ourPlants, ['fertilizing'], 'fertilizing')
-  }, [postFertilizeFor, mainPlants, showCareToast])
+  }, [postFertilizeFor, plants, showCareToast])
 
   useEffect(() => { if (searching) inputRef.current?.focus() }, [searching])
   const closeSearch = useCallback(() => { setSearching(false); setQuery('') }, [])
