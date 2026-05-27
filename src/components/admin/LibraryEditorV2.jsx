@@ -311,6 +311,12 @@ export default function LibraryEditorV2({
           patch[k] = draft[k] === '' ? null : draft[k]
         }
       }
+      // Audit fix #6 — infoConfidence default 'vidutinis' jei admin'as ji
+      // nustatė į null (explicit clear). Užtikrinam, kad catalog.infoConfidence
+      // niekada nebūtų null Firestore'e — UI badge'as visada turi value.
+      if ('infoConfidence' in patch && (patch.infoConfidence == null || patch.infoConfidence === '')) {
+        patch.infoConfidence = 'vidutinis'
+      }
       if (Object.keys(patch).length === 0) {
         // Nothing changed — odd path, just exit gracefully
         setSaving(false)
@@ -1229,6 +1235,24 @@ function CenterPaneEditor({
   const activeTabExists = tabs.some(t => t.id === activeTab)
   const effectiveActiveTab = activeTabExists ? activeTab : tabs[0].id
 
+  // Cmd/Ctrl+1..N tab switcher (Audit fix #6).
+  // Skip jei admin'as type'ina input'e/textarea'oj — apsauga nuo accidental
+  // tab switch'o keystrokes'uose. Skip jei modifier'as PLUS shift'as
+  // (browser shortcuts kaip Cmd+Shift+1 = back).
+  useEffect(() => {
+    if (!entry) return
+    const handler = (e) => {
+      if (!(e.metaKey || e.ctrlKey) || e.shiftKey || e.altKey) return
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return
+      const n = parseInt(e.key, 10)
+      if (Number.isNaN(n) || n < 1 || n > tabs.length) return
+      e.preventDefault()
+      setActiveTab(tabs[n - 1].id)
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [entry, tabs, setActiveTab])
+
   return (
     <div className={`${WIDGET} flex flex-col h-full overflow-hidden relative`}>
       {/* Sticky header */}
@@ -1283,13 +1307,14 @@ function CenterPaneEditor({
 
         {/* Tab navigation */}
         <div className="px-3 pb-0 flex items-center gap-0.5 overflow-x-auto">
-          {tabs.map(t => (
+          {tabs.map((t, i) => (
             <TabButton
               key={t.id}
               tab={t}
               active={effectiveActiveTab === t.id}
               dirty={tabDirtyMap[t.id]}
               onClick={() => setActiveTab(t.id)}
+              shortcutIdx={i + 1}
             />
           ))}
         </div>
@@ -1336,11 +1361,14 @@ function CenterPaneEditor({
   )
 }
 
-function TabButton({ tab, active, dirty, onClick }) {
+function TabButton({ tab, active, dirty, onClick, shortcutIdx }) {
   const { Icon } = tab
+  // Cmd+N shortcut hint title (rodomas tooltip'e, NE visible badge'as)
+  const shortcutHint = shortcutIdx != null ? ` (⌘${shortcutIdx})` : ''
   return (
     <button
       onClick={onClick}
+      title={`${tab.label}${shortcutHint}`}
       className={`relative flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.12em] font-mono transition-colors border-b-2 ${
         active
           ? 'text-forest-800 border-forest-700'
@@ -2844,12 +2872,11 @@ function ProvenanceBadge({ entry }) {
 // vienoje vietoje — keičiant tab'ų struktūrą, atnaujini čia.
 const TAB_FIELDS = {
   identification: {
-    cultivar: ['lotyniskas', 'lietuviškas', 'sinonimai', 'englishNames', 'taxonGroupId', 'auginimas', 'infoConfidence'],
+    cultivar: ['lotyniskas', 'lietuviškas', 'sinonimai', 'englishNames', 'taxonGroupId'],
     series:   ['genus', 'name', 'type', 'tipas'],
   },
-  photo:          { cultivar: ['image'], series: [] },
   descriptions:   {
-    cultivar: ['aprasymas', 'kilme', 'idomybes'],
+    cultivar: ['image', 'aprasymas', 'kilme', 'idomybes'],  // image moved here (Foto merge)
     series:   ['aprasymas', 'idomybes'],
   },
   care: {
@@ -2857,8 +2884,10 @@ const TAB_FIELDS = {
     series:   ['careInfo'],
   },
   toxicity:       { cultivar: ['savybes'], series: [] },
-  classification: { cultivar: ['tipas', 'sunkumas', 'augimo_greitis', 'lifecycle', 'hardiness'], series: [] },
-  meta:           { cultivar: [], series: [] },
+  classification: {
+    cultivar: ['tipas', 'sunkumas', 'augimo_greitis', 'lifecycle', 'hardiness', 'auginimas', 'infoConfidence'],
+    series:   [],
+  },
 }
 
 function buildTabDirtyMap(draft, originalDraft, entryType) {
