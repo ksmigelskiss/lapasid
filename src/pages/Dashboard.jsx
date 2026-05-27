@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect, useCallback, forwardRef, useImperativeHandle } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera, Check, Pencil, RefreshCw } from 'lucide-react'
+import { Search, SlidersHorizontal, AlertTriangle, Droplets, Loader2, Image as ImageIcon, ChevronUp, ChevronDown, Leaf, ShieldAlert, Thermometer, MapPin, Sprout, FlaskConical, X, Camera, Check, Pencil, RefreshCw, Eye } from 'lucide-react'
 import PlantCard from '../components/PlantCard'
 import CollectionChat from '../components/CollectionChat'
 import CareOverview from '../components/CareOverview'
@@ -439,6 +439,25 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
     showCareToast(ourPlants, ['watering'], 'watering')
   }, [careChecked, plants, onAddTimelineEvent, resetConfirm, showCareToast])
 
+  // Batch inspection (snooze) — atitinka individual CareWateringSheet
+  // onInspect: žymi „Patikrinau, viskas tvarkoj" → inspection event'as
+  // pasleidžia sekantį laistymą pagal snooze logiką. 2026-05-27 user fix:
+  // care mode'e to anksčiau nebuvo, admin turėdavo eit per individual sheet.
+  const handleCareInspection = useCallback(() => {
+    const t = today()
+    const ids = new Set(careChecked)
+    if (ids.size === 0) return
+    ids.forEach(plantId => {
+      onAddTimelineEvent(plantId, { id: makeId(), type: 'inspection', date: t, komentaras: 'Patikrinta masiniu apžvalgu' })
+    })
+    resetConfirm()
+    setCareChecked(new Set())
+    // Toast'as — same kaip watering, bet ['inspection'] tipui (skirtingas
+    // formatas, kad user'is matytų ką tiksliai padarė)
+    const ourPlants = plants.filter(p => ids.has(p.id))
+    showCareToast(ourPlants, ['inspection'], 'inspection')
+  }, [careChecked, plants, onAddTimelineEvent, resetConfirm, showCareToast])
+
   const confirmPostFertWater = useCallback(() => {
     if (!postFertilizeFor) return
     const t = today()
@@ -830,6 +849,22 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                 aria-label="Išeiti iš priežiūros"
               >
                 <X size={18} className="text-forest-600" />
+              </button>
+              {/* Patikrinau (inspection snooze) — kompaktinis icon-only button'as.
+                  Mirror'as individual CareWateringSheet onInspect: pažymi „viskas
+                  tvarkoj" → snooze logika nustums kitą laistymą. 2026-05-27 fix. */}
+              <button
+                onClick={role === 'viewer' ? undefined : handleCareInspection}
+                disabled={role === 'viewer' || careChecked.size === 0}
+                title={`Patikrinau — viskas tvarkoj${careChecked.size > 0 ? ` (${careChecked.size})` : ''}`}
+                aria-label="Patikrinau — viskas tvarkoj"
+                className={`w-10 h-10 flex items-center justify-center rounded-btn-sm flex-shrink-0 transition-colors ${
+                  role === 'viewer'
+                    ? 'bg-bone-300 opacity-25 cursor-not-allowed'
+                    : 'bg-bone-300 active:bg-bone-400 disabled:opacity-40 disabled:cursor-not-allowed'
+                }`}
+              >
+                <Eye size={18} className="text-forest-600" />
               </button>
               <button
                 onClick={() => {

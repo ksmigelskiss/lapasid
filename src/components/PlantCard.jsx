@@ -177,6 +177,18 @@ function CareCircle({ checked, waterOverdue, fertOverdue }) {
   return <div className={`${single} border-bone-50/80 bg-black/30`} />
 }
 
+// Days-until badge formatter — explicit sign'as overdue atveju.
+//   • d > 0  → „3d"     (liko 3 dienos iki kito laistymo)
+//   • d === 0 → „0d"     (šiandien)
+//   • d < 0  → „−3d"    (vėluoja 3 dienomis; minus sign = overdue)
+// Unicode minus „−" (U+2212), ne ASCII hyphen — vertikaliai centruoja
+// geriau ir vizualiai aiškiau atskirtas.
+function formatDaysBadge(days) {
+  if (days == null) return ''
+  if (days < 0) return `−${-days}d`
+  return `${days}d`
+}
+
 const PlantCard = memo(function PlantCard({
   plant, section, onTap, cardBg = 'bg-bone-50',
   showDashboardBadge = false, zoneName,
@@ -226,10 +238,14 @@ const PlantCard = memo(function PlantCard({
   const fertLastDate = fertFC ? (plant.timeline ?? []).filter(e => e.type === 'fertilizing').sort((a,b) => new Date(b.date)-new Date(a.date))[0]?.date : null
   const fertDays    = fertLastDate ? daysSinceDate(fertLastDate) : null
 
-  // Designer'io glass-pill rodo „dienos iki kito veiksmo" countdown (abs reikšmė).
-  // null jei intervalas neskaičiuojamas.
-  const waterDaysUntil = waterFC?.daysUntil != null ? Math.abs(waterFC.daysUntil) : null
-  const fertDaysUntil  = fertFC?.daysUntil  != null ? Math.abs(fertFC.daysUntil)  : null
+  // Designer'io glass-pill rodo „dienos iki kito veiksmo" countdown.
+  // SIGNED reikšmė (2026-05-27 user fix): pozityvi = liko N dienų iki kito,
+  // negatyvi = vėluoja N dienų. Anksciau Math.abs() išmesdavo ženklą — user'is
+  // privalėdavo žinoti per spalvą (raudona = overdue), klaidino.
+  // Display'inant prefix'as „−" (minus) overdue atveju aiškiai signalizuoja
+  // delay'ą.
+  const waterDaysUntil = waterFC?.daysUntil ?? null
+  const fertDaysUntil  = fertFC?.daysUntil  ?? null
 
   const bgClass = section === 'history' ? 'bg-surface-2'
     : section === 'nori'    ? 'bg-blush-50'
@@ -241,20 +257,30 @@ const PlantCard = memo(function PlantCard({
     fertLastDate === todayStr
   )
 
-  // Care mode trijų-tier'ų hierarchija per opacity:
-  //   • Reikia priežiūros (overdue) → 100% — pop'ina (plius photo badges
-  //                                   ir CareCircle jau spalvotai signalizuoja)
-  //   • Nereikia priežiūros           → 65% — secondary, vis tiek matomas
-  //                                          jei nori bonus action
-  //   • Atlikta šiandien              → 40% — clearly „done" feel'as
+  // Care mode opacity hierarchija + tint distinction (2026-05-27 user fix):
+  //   • Reikia ABU (water + fert overdue)    → 100% opacity, no tint
+  //   • Reikia TIK water  → 100% + forest ring     (water signature)
+  //   • Reikia TIK fert   → 100% + terracotta ring (fert signature)
+  //   • Nereikia (ar atlikta) → 65% (neutral) / 40% (doneToday)
   //
-  // Anksčiau buvęs colored ring drop'intas — photo badges + CareCircle
-  // dengia signal'ą be ring-as-frame ambiguity'os.
-  const needsAction = careMode && !doneToday && (waterOverdue || fertOverdue)
+  // Tint ring'as svarbus, kai admin'as palaisto plantą bet fert dar pending.
+  // Anksciau po laistymo augalas atrodydavo „neliestas" (full opacity bg-bone),
+  // nors realiai liko tik fert. Tint'as paryškina kuris veiksmas dar laukia.
+  const needsWater = careMode && !doneToday && waterOverdue
+  const needsFert  = careMode && !doneToday && fertOverdue
+  const needsAction = needsWater || needsFert
   const careOpacity = !careMode               ? ''
                     : doneToday               ? 'opacity-40'
                     : needsAction             ? ''          // full opacity
                     : 'opacity-65'                          // neutral, dimmed
+  // Tint ring — atskiras visual signal kai pending TIK vienas tipas
+  const careTintRing = (!careMode || doneToday || !needsAction)
+    ? ''
+    : (needsWater && needsFert)
+      ? ''  // both overdue — no tint, generic „needs care"
+      : needsWater
+        ? 'ring-2 ring-forest-400/60'      // water-only signal
+        : 'ring-2 ring-terracotta-400/60'  // fert-only signal
 
   // Variant B Step 6g — enrichment state'as iš derived signal'ų
   const enrichmentState = getPlantEnrichmentState(plant)
@@ -272,7 +298,7 @@ const PlantCard = memo(function PlantCard({
   return (
     <>
     <div
-      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card transition-all duration-200 ${isEnriching ? 'cursor-wait' : 'cursor-pointer active:scale-[0.97] lg:hover:-translate-y-0.5 lg:hover:shadow-ios-lg'} ${careOpacity}`}
+      className={`${cardBg} rounded-2xl overflow-hidden shadow-ios-card transition-all duration-200 ${isEnriching ? 'cursor-wait' : 'cursor-pointer active:scale-[0.97] lg:hover:-translate-y-0.5 lg:hover:shadow-ios-lg'} ${careOpacity} ${careTintRing}`}
       /* Vienas style prop'as su conditional merge'u — anksčiau buvo du
          atskiri style props'ai (contentVisibility ir careMode style),
          React laikė tik paskutinį, todėl contentVisibility off-screen
@@ -362,10 +388,10 @@ const PlantCard = memo(function PlantCard({
             }`}>
               <Droplets size={13} className={waterOverdue ? 'text-bone fill-bone' : 'text-white/60'} />
               {waterDaysUntil != null && (
-                <span className={`text-[10px] leading-none ${
+                <span className={`text-[10px] leading-none tabular-nums ${
                   waterOverdue ? 'text-bone font-bold' : 'text-white/70 font-semibold'
                 }`}>
-                  {waterDaysUntil}d
+                  {formatDaysBadge(waterDaysUntil)}
                 </span>
               )}
             </div>
@@ -375,10 +401,10 @@ const PlantCard = memo(function PlantCard({
               }`}>
                 <FlaskConical size={13} className={fertOverdue ? 'text-bone fill-bone' : 'text-white/60'} />
                 {fertDaysUntil != null && (
-                  <span className={`text-[10px] leading-none ${
+                  <span className={`text-[10px] leading-none tabular-nums ${
                     fertOverdue ? 'text-bone font-bold' : 'text-white/70 font-semibold'
                   }`}>
-                    {fertDaysUntil}d
+                    {formatDaysBadge(fertDaysUntil)}
                   </span>
                 )}
               </div>
