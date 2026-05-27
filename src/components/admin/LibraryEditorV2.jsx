@@ -1956,6 +1956,9 @@ function TabCareCultivar({ draft, originalDraft, updateField, genusParent }) {
       <FormRow label="Tręšimas" dirty={fieldDirty(draft.tresimas, originalDraft?.tresimas)} inherited={inh('tresimas')}>
         <StructuredTresimasEditor value={draft.tresimas} onChange={v => updateField('tresimas', v)} />
       </FormRow>
+      <FormRow label="Ramybės periodas (dormancy)" dirty={fieldDirty(draft.dormancyInfo, originalDraft?.dormancyInfo)} helper="Ar augalas turi atskirą ramybės periodą žiemą. Sukulentai/kaktusai = full, ficusai/dalies tropikų = partial.">
+        <StructuredDormancyEditor value={draft.dormancyInfo} onChange={v => updateField('dormancyInfo', v)} />
+      </FormRow>
       <FormRow label="Priežiūra (temperatūra, drėgmė, narrative)" dirty={fieldDirty(draft.prieziura, originalDraft?.prieziura)} inherited={inh('prieziura')}>
         <StructuredPrieziuraEditor value={draft.prieziura} onChange={v => updateField('prieziura', v)} />
       </FormRow>
@@ -2005,9 +2008,12 @@ const TASKAI_OPTS = [
   { value: 2, label: '2' },
   { value: 3, label: '3' },
 ]
-const TRESIMAS_TIPAS_OPTS = [
-  { value: 'full',    label: 'Pilnas (NPK)' },
-  { value: 'partial', label: 'Dalinis'      },
+// DORMANCY_TIPAS_OPTS — dormancyInfo.tipas reikšmės (NE tresimas).
+// 'full'    = pilnas ramybės periodas (sukulentai žiemą, kaktusai)
+// 'partial' = dalinis (ficus sumažina augimą, bet nesustoja)
+const DORMANCY_TIPAS_OPTS = [
+  { value: 'full',    label: 'Pilnas (sustabdo augimą)' },
+  { value: 'partial', label: 'Dalinis (sulėtina)'        },
 ]
 const DREGME_OPTS = [
   { value: 'sausa',    label: 'Sausa (<40%)'    },
@@ -2054,34 +2060,69 @@ function StructuredVanduoEditor({ value, onChange }) {
 }
 
 function StructuredLaistymasEditor({ value, onChange }) {
+  // SCHEMA: laistymasIntervalas = { vasara, ziema, metodas }
+  // wateringForecast.js skaito .vasara/.ziema/.metodas. 2026-05-28 fix —
+  // anksciau editor'ius rašė intervalVasara/intervalZiema/tipas (wrong field
+  // names), forecast'as ne matydavo per-plant data → fallback'as į category
+  // default. Audit'as parodė 0 corrupted entries — fix preventive.
   const v = value ?? {}
   const update = (k, val) => onChange({ ...v, [k]: val })
   return (
     <div className="bg-bone-50 border border-bone-400/40 rounded-lg p-3 space-y-3">
       <SubFieldRow icon={Calendar} iconColor="text-forest-400" label="Intervalas vasarą (dienos)">
-        <NumberInput value={v.intervalVasara} onChange={x => update('intervalVasara', x)} placeholder="pvz. 7" />
+        <NumberInput value={v.vasara} onChange={x => update('vasara', x)} placeholder="pvz. 7" />
       </SubFieldRow>
       <SubFieldRow label="Intervalas žiemą (dienos)">
-        <NumberInput value={v.intervalZiema} onChange={x => update('intervalZiema', x)} placeholder="pvz. 14" />
+        <NumberInput value={v.ziema} onChange={x => update('ziema', x)} placeholder="pvz. 14" />
       </SubFieldRow>
-      <SubFieldRow label="Tipas / pastabos">
-        <TextInput value={v.tipas} onChange={x => update('tipas', x)} placeholder="pvz. iš apačios, soak-dry, drėkinti lapus" />
+      <SubFieldRow label="Metodas / pastabos">
+        <TextInput value={v.metodas} onChange={x => update('metodas', x)} placeholder="pvz. iš apačios, soak-dry, drėkinti lapus" />
       </SubFieldRow>
     </div>
   )
 }
 
 function StructuredTresimasEditor({ value, onChange }) {
+  // SCHEMA: tresimas = { intervalVasara, intervalZiema, tipas }
+  // fertilizingForecast.js skaito .intervalVasara / .intervalZiema. tipas =
+  // narratyvas „Universalios skystos trąšos, ¼ dozės" tipo, NE enum'as.
+  //
+  // 2026-05-28 fix — anksciau editor'ius rašė `{ reikia, tipas }` (kaip
+  // dormancyInfo schema — visai kitas konceptas). Audit'as: 0 plants taip
+  // corrupted, fix preventive. „Reikia tręšti?" interface'as iškeltas į
+  // atskirą StructuredDormancyEditor (jis IR YRA „reikia tipo")
   const v = value ?? {}
   const update = (k, val) => onChange({ ...v, [k]: val })
   return (
     <div className="bg-bone-50 border border-bone-400/40 rounded-lg p-3 space-y-3">
-      <SubFieldRow icon={Sparkles} iconColor="text-amber-500" label="Reikia tręšti?">
+      <SubFieldRow icon={Sparkles} iconColor="text-amber-500" label="Intervalas vasarą (dienos)">
+        <NumberInput value={v.intervalVasara} onChange={x => update('intervalVasara', x)} placeholder="pvz. 14, 21, 30" />
+      </SubFieldRow>
+      <SubFieldRow label="Intervalas žiemą (dienos arba tuščias = skip)">
+        <NumberInput value={v.intervalZiema} onChange={x => update('intervalZiema', x)} placeholder="paliek tuščią žiemą" />
+      </SubFieldRow>
+      <SubFieldRow label="Trąšų rūšis / pastabos">
+        <TextArea value={v.tipas} onChange={x => update('tipas', x)} rows={2} placeholder="pvz. Universalios skystos NPK 20-20-20, ½ dozės kas savaitę" />
+      </SubFieldRow>
+    </div>
+  )
+}
+
+// StructuredDormancyEditor — atskiras nuo tresimas (skirtingi konceptai).
+// SCHEMA: dormancyInfo = { reikia: bool, tipas: 'full'|'partial'|null }
+// Vartojama kai augalas turi specifinį ramybės periodą — sukulentai
+// (full žiemos sleep) vs ficus (partial slowdown).
+function StructuredDormancyEditor({ value, onChange }) {
+  const v = value ?? {}
+  const update = (k, val) => onChange({ ...v, [k]: val })
+  return (
+    <div className="bg-bone-50 border border-bone-400/40 rounded-lg p-3 space-y-3">
+      <SubFieldRow label="Ar augalas turi ramybės periodą (dormancy)?">
         <ToggleSwitch checked={!!v.reikia} onChange={x => update('reikia', x)} label={v.reikia ? 'Taip' : 'Ne'} />
       </SubFieldRow>
       {v.reikia && (
         <SubFieldRow label="Tipas">
-          <ChipSelect value={v.tipas} onChange={x => update('tipas', x)} options={TRESIMAS_TIPAS_OPTS} allowEmpty />
+          <ChipSelect value={v.tipas} onChange={x => update('tipas', x)} options={DORMANCY_TIPAS_OPTS} allowEmpty />
         </SubFieldRow>
       )}
     </div>
@@ -2891,7 +2932,7 @@ const TAB_FIELDS = {
     series:   ['aprasymas', 'idomybes'],
   },
   care: {
-    cultivar: ['sviesa', 'vanduo', 'laistymasIntervalas', 'tresimas', 'prieziura', 'substratas', 'persodinimas', 'ziemojimas'],
+    cultivar: ['sviesa', 'vanduo', 'laistymasIntervalas', 'tresimas', 'dormancyInfo', 'prieziura', 'substratas', 'persodinimas', 'ziemojimas'],
     series:   ['careInfo'],
   },
   toxicity:       { cultivar: ['savybes'], series: [] },
@@ -2959,6 +3000,7 @@ function normalizeCultivar(c) {
     vanduo:             c.vanduo             ?? null,
     laistymasIntervalas: c.laistymasIntervalas ?? null,
     tresimas:           c.tresimas           ?? null,
+    dormancyInfo:       c.dormancyInfo       ?? null,
     prieziura:          c.prieziura          ?? null,
     substratas:         c.substratas         ?? '',
     persodinimas:       c.persodinimas       ?? '',
