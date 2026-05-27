@@ -406,51 +406,58 @@ export default function AdminPanel({ currentUid, onClose }) {
   const colByCid  = new Map(collections.map(c => [c.id, c]))
   const pendingCount = users.filter(u => u.approved === false).length
 
+  // Suminis augalų skaičius — vienintelis statas, kuris NĖRA tab'ų count'uose
+  // (tab'ai turi own counts: users/collections/library/invites). Likę stats
+  // (vartotojų, kolekcijų, etc.) dubliuoja tab'ų count'us → drop'inta, kad
+  // toolbar'as būtų kompaktiškas ir work area maksimali. Augalų count'as lieka
+  // kaip mažas inline badge'as toolbar'o pabaigoje.
+  const plantsTotal = collections.reduce((s, c) => s + (c.plantCount ?? 0), 0)
+
   return (
     <div className="fixed inset-0 z-50 bg-app flex flex-col">
-      {/* Header */}
-      <header className="flex items-center gap-3 px-6 py-4 border-b border-bone-400/40 flex-shrink-0">
-        <T4Icon size={28} ink="#f1ebdd" paper="#1c3a2a" />
-        <div className="flex-1 min-w-0">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500">Admin</p>
-          <h1 className="font-display text-lg font-semibold tracking-tight text-forest-800 leading-tight">Dashboard</h1>
-        </div>
-        <button
-          onClick={loadAll}
-          disabled={loading}
-          className="w-10 h-10 inline-flex items-center justify-center rounded-btn bg-bone-300/60 hover:bg-bone-400/60 text-forest-700 transition-colors disabled:opacity-50"
-          title="Atnaujinti"
-        >
-          {loading ? <Loader2 size={16} className="animate-spin" /> : <RefreshCw size={16} />}
-        </button>
-        <button
-          onClick={onClose}
-          className="w-10 h-10 inline-flex items-center justify-center rounded-btn bg-bone-300/60 hover:bg-bone-400/60 text-forest-700 transition-colors"
-          title="Uždaryti"
-        >
-          <X size={16} />
-        </button>
-      </header>
-
-      {/* Stats strip */}
-      <div className="px-6 py-3 flex gap-3 flex-shrink-0 overflow-x-auto">
-        <StatPill label="Vartotojai" value={users.length} Icon={Users} />
-        {pendingCount > 0 && <StatPill label="Pending" value={pendingCount} Icon={UserCheck} tone="terracotta" />}
-        <StatPill label="Kolekcijos" value={collections.length} Icon={Database} />
-        <StatPill label="Augalų viso" value={collections.reduce((s, c) => s + (c.plantCount ?? 0), 0)} Icon={Sparkles} />
-        <StatPill label="Biblioteka" value={catalog.length} Icon={BookOpen} />
-        <StatPill label="Invitai" value={invites.length} Icon={Mail} />
-      </div>
-
-      {/* Tab switcher */}
-      <div className="px-6 flex-shrink-0 overflow-x-auto">
+      {/* Unified compact toolbar — logo + tabs + augalų stat + actions vienoje
+          eilutėje (~52px). Anksciau buvo trys atskiros eilutės (~210px):
+          header su Dashboard title + stats strip su 5 StatPill'ais + tab
+          switcher. 4 iš 5 stats dubliavo tab count'us, „Dashboard" title
+          buvo dekoratyvinis. +158px work area visiems tab'ams. */}
+      <header className="flex items-center gap-3 px-4 py-2 border-b border-bone-400/40 flex-shrink-0">
+        <T4Icon size={24} ink="#f1ebdd" paper="#1c3a2a" />
         <nav className="inline-flex bg-bone-100 rounded-btn p-1 gap-0.5">
-          <TabBtn active={tab === 'users'} onClick={() => setTab('users')} Icon={Users} label="Vartotojai" count={users.length} />
+          <TabBtn active={tab === 'users'} onClick={() => setTab('users')} Icon={Users} label="Vartotojai" count={users.length} alert={pendingCount > 0} />
           <TabBtn active={tab === 'collections'} onClick={() => setTab('collections')} Icon={Database} label="Kolekcijos" count={collections.length} />
           <TabBtn active={tab === 'library'} onClick={() => setTab('library')} Icon={BookOpen} label="Biblioteka" count={catalog.length + taxonGroups.length} />
           <TabBtn active={tab === 'invites'} onClick={() => setTab('invites')} Icon={Mail} label="Invitai" count={invites.length} />
         </nav>
-      </div>
+        {/* Suminis augalų count — unikalus statas, ne tab'ų count'uose */}
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-bone-100 text-[11px] text-forest-600" title="Visų vartotojų augalų suma">
+          <Sparkles size={11} className="text-forest-500" />
+          <span className="tabular-nums font-medium">{plantsTotal}</span>
+          <span className="text-forest-400">augalų</span>
+        </span>
+        {pendingCount > 0 && (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-terracotta-50 border border-terracotta-200/60 text-[11px] text-terracotta-700" title={`${pendingCount} laukia patvirtinimo`}>
+            <UserCheck size={11} />
+            <span className="tabular-nums font-medium">{pendingCount}</span>
+            <span>pending</span>
+          </span>
+        )}
+        <div className="flex-1" />
+        <button
+          onClick={loadAll}
+          disabled={loading}
+          className="w-8 h-8 inline-flex items-center justify-center rounded-btn-sm bg-bone-300/60 hover:bg-bone-400/60 text-forest-700 transition-colors disabled:opacity-50"
+          title="Atnaujinti"
+        >
+          {loading ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+        </button>
+        <button
+          onClick={onClose}
+          className="w-8 h-8 inline-flex items-center justify-center rounded-btn-sm bg-bone-300/60 hover:bg-bone-400/60 text-forest-700 transition-colors"
+          title="Uždaryti"
+        >
+          <X size={14} />
+        </button>
+      </header>
 
       {/* Content — library tab'as gauna full-bleed (be padding/overflow wrapper'io),
           kad 3-pane editor'iui būtų prieinamas visas viewport plotis ir kiekvienas
@@ -550,11 +557,11 @@ function StatPill({ label, value, Icon, tone = 'forest' }) {
   )
 }
 
-function TabBtn({ active, onClick, Icon, label, count }) {
+function TabBtn({ active, onClick, Icon, label, count, alert }) {
   return (
     <button
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-btn-sm text-[13.5px] font-medium transition-colors ${
+      className={`relative inline-flex items-center gap-1.5 px-4 py-2 rounded-btn-sm text-[13.5px] font-medium transition-colors ${
         active
           ? 'bg-bone-50 text-forest-700 shadow-[0_1px_2px_rgba(28,58,42,0.06)]'
           : 'text-forest-500 hover:text-forest-700'
@@ -565,6 +572,9 @@ function TabBtn({ active, onClick, Icon, label, count }) {
       <span className={`font-mono text-[10px] font-medium px-1.5 py-px rounded-full ${
         active ? 'bg-forest-100 text-forest-700' : 'bg-bone-300 text-forest-600'
       }`}>{count}</span>
+      {alert && (
+        <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-terracotta-500" aria-label="Reikia dėmesio" />
+      )}
     </button>
   )
 }
