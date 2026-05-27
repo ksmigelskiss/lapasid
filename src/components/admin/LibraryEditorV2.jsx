@@ -38,6 +38,8 @@ import {
   Image as ImageIcon, Type, BookOpen, Droplet, Skull, Tag, Info,
 } from 'lucide-react'
 import { ProfileContent } from '../PlantDetail'
+import PlantImage from '../brand/PlantImage'
+import { fetchWikiPhoto } from '../../utils/wikiApi'
 import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS, LIFECYCLES } from '../../utils/taxonGroups'
 
 const WIDGET = 'bg-bone-50 rounded-2xl border border-bone-400/40 shadow-[0_1px_3px_rgba(28,58,42,0.06),0_4px_14px_rgba(28,58,42,0.05)]'
@@ -334,6 +336,29 @@ export default function LibraryEditorV2({
     setSaveError(null)
   }, [originalDraft])
 
+  // ── Image-only save (single-field auto-save, bypass'as dirty kitiems)
+  //
+  // Naudojama Foto tab'e: nuotraukos picker'is arba „Saugoti tik nuotrauką"
+  // mini-button. Patch'as turi TIK image lauką → kiti draft pakeitimai
+  // nepaliečiami. originalDraft.image atnaujinamas, kad image nebebūtų dirty.
+  const handleSaveImageOnly = useCallback(async (newUrl) => {
+    if (!selectedEntry || selectedType !== 'cultivar') return
+    setSaving(true)
+    setSaveError(null)
+    try {
+      await onSaveCatalog(selectedEntry.id, { image: newUrl })
+      // Atnaujinam abu — image tampa nauju baseline'u, kiti laukai nepaliečiami
+      setDraft(d => d ? { ...d, image: newUrl } : d)
+      setOriginalDraft(o => o ? { ...o, image: newUrl } : o)
+      setSavedToast(true)
+      setTimeout(() => setSavedToast(false), 2000)
+    } catch (e) {
+      setSaveError(e?.message ?? 'Nepavyko išsaugoti nuotraukos')
+    } finally {
+      setSaving(false)
+    }
+  }, [selectedEntry, selectedType, onSaveCatalog])
+
   // ── Delete handler
   const handleDelete = useCallback(async () => {
     if (!selectedEntry) return
@@ -384,6 +409,7 @@ export default function LibraryEditorV2({
         onSave={() => handleSave()}
         onDiscard={handleDiscard}
         onDelete={handleDelete}
+        onSaveImageOnly={handleSaveImageOnly}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         taxonGroups={taxonGroups}
@@ -743,7 +769,7 @@ function CultivarChildItem({ entry, selected, onSelect, dirty }) {
 function CenterPaneEditor({
   entry, entryType, draft, originalDraft, updateField,
   dirty, saving, saveError, savedToast,
-  onSave, onDiscard, onDelete,
+  onSave, onDiscard, onDelete, onSaveImageOnly,
   activeTab, setActiveTab,
   taxonGroups,
 }) {
@@ -857,6 +883,7 @@ function CenterPaneEditor({
           originalDraft={originalDraft}
           updateField={updateField}
           taxonGroups={taxonGroups}
+          onSaveImageOnly={onSaveImageOnly}
         />
       </div>
 
@@ -896,8 +923,8 @@ function TabButton({ tab, active, dirty, onClick }) {
 
 // ── Tab content dispatcher ───────────────────────────────────────────
 
-function TabContent({ tabId, entry, entryType, draft, originalDraft, updateField, taxonGroups }) {
-  const props = { entry, entryType, draft, originalDraft, updateField, taxonGroups }
+function TabContent({ tabId, entry, entryType, draft, originalDraft, updateField, taxonGroups, onSaveImageOnly }) {
+  const props = { entry, entryType, draft, originalDraft, updateField, taxonGroups, onSaveImageOnly }
   if (entryType === 'series') {
     switch (tabId) {
       case 'identification': return <TabIdentificationSeries {...props} />
@@ -982,18 +1009,137 @@ function TabIdentificationSeries({ entry, draft, originalDraft, updateField }) {
   )
 }
 
-// ── Tab: Foto ────────────────────────────────────────────────────────
+// ── Tab: Foto — image picker + URL paste ────────────────────────────
+//
+// 2 būdai keisti nuotrauką:
+//   1. „🔍 Ieškoti nuotraukos" — fetch'ina Wiki EN/LT + iNat candidates,
+//      rodo grid'ą su thumbnail'ais. Click → URL set + AUTO-SAVE.
+//   2. Rankinis URL paste — keičia draft.image, „💾 Saugoti nuotrauką"
+//      mini-button save'ina TIK image field'ą (be kitų dirty laukų).
+//
+// AUTO-SAVE: image picker'is bypass'ina standard'inį save flow'ą — vienas
+// klick → image įrašytas Firestore'e. Greita, intuityvu, draftas neturi
+// likti dirty.
 
-function TabPhoto({ draft, originalDraft, updateField }) {
+function TabPhoto({ draft, originalDraft, updateField, onSaveImageOnly }) {
   const dirtyImg = fieldDirty(draft.image, originalDraft?.image)
+  const latin = draft.lotyniskas ?? ''
+
+  const [searching, setSearching] = useState(false)
+  const [candidates, setCandidates] = useState(null)  // null = nepradėjom, []=nieko
+  const [searchError, setSearchError] = useState(null)
+
+  const handleSearch = useCallback(async () => {
+    if (!latin.trim()) {
+      setSearchError('Pirmiausia nustatyk lotynišką pavadinimą.')
+      return
+    }
+    setSearching(true)
+    setSearchError(null)
+    setCandidates(null)
+    try {
+      const results = await fetchImageCandidates(latin)
+      setCandidates(results)
+      if (results.length === 0) {
+        setSearchError(`Nieko nerasta „${latin}" pavadinimui (Wiki + iNat). Pabandyk genus tik (pvz. ${latin.split(' ')[0]}).`)
+      }
+    } catch (e) {
+      setSearchError(`Paieška nepavyko: ${e.message}`)
+    } finally {
+      setSearching(false)
+    }
+  }, [latin])
+
+  const handlePickCandidate = useCallback(async (url) => {
+    // Auto-save: keičiam draft + tuoj pat Firestore'e
+    updateField('image', url)
+    if (onSaveImageOnly) await onSaveImageOnly(url)
+    setCandidates(null)  // collapse picker po pasirinkimo
+  }, [updateField, onSaveImageOnly])
+
+  const handleManualSave = useCallback(async () => {
+    if (!onSaveImageOnly) return
+    await onSaveImageOnly(draft.image ?? null)
+  }, [onSaveImageOnly, draft.image])
+
   return (
-    <div className="space-y-4 max-w-2xl">
-      <FormRow label="Image URL" dirty={dirtyImg} helper="Wiki Commons (upload.wikimedia.org) ar iNaturalist (static.inaturalist.org / inaturalist-open-data.s3.amazonaws.com). Catalog freeze: pirmas save'as nustato, vėlesni išlieka.">
-        <TextInput value={draft.image ?? ''} onChange={v => updateField('image', v)} placeholder="https://upload.wikimedia.org/..." />
+    <div className="space-y-4 max-w-3xl">
+      {/* URL input + search button */}
+      <FormRow
+        label="Image URL"
+        dirty={dirtyImg}
+        helper="Wiki Commons (upload.wikimedia.org) ar iNaturalist (static.inaturalist.org / inaturalist-open-data.s3.amazonaws.com). Catalog freeze: pirmas save'as nustato, vėlesni išlieka."
+      >
+        <div className="flex gap-1.5">
+          <div className="flex-1">
+            <TextInput
+              value={draft.image ?? ''}
+              onChange={v => updateField('image', v)}
+              placeholder="https://upload.wikimedia.org/..."
+            />
+          </div>
+          {dirtyImg && (
+            <button
+              onClick={handleManualSave}
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-semibold bg-forest-700 hover:bg-forest-800 text-bone transition-colors flex-shrink-0"
+              title="Išsaugoti TIK šio lauko pakeitimą (kiti dirty laukai nepaliečiami)"
+            >
+              <Save size={11} /> Saugoti
+            </button>
+          )}
+        </div>
       </FormRow>
+
+      {/* Search button */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={handleSearch}
+          disabled={searching || !latin.trim()}
+          className="inline-flex items-center gap-2 px-3 py-2 rounded-btn-sm text-xs font-semibold bg-forest-100 hover:bg-forest-200 text-forest-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+        >
+          <Search size={12} />
+          {searching ? 'Ieškau…' : `🔍 Ieškoti nuotraukos${latin ? ` „${latin}"` : ''}`}
+        </button>
+        {candidates !== null && !searching && (
+          <button
+            onClick={() => setCandidates(null)}
+            className="text-[11px] text-forest-500 hover:text-forest-700"
+          >
+            Uždaryti rezultatus
+          </button>
+        )}
+      </div>
+
+      {searchError && (
+        <div className="px-3 py-2 bg-amber-50 border border-amber-200/60 rounded-md text-[11px] text-amber-800 flex items-start gap-2">
+          <AlertTriangle size={11} className="flex-shrink-0 mt-0.5" />
+          <span>{searchError}</span>
+        </div>
+      )}
+
+      {/* Candidates grid */}
+      {candidates !== null && candidates.length > 0 && (
+        <div>
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-forest-500 mb-2">
+            {candidates.length} kandidatų — paspaudus įrašysiu iškart
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {candidates.map((c, idx) => (
+              <CandidateCard
+                key={idx}
+                candidate={c}
+                selected={c.url === draft.image}
+                onPick={() => handlePickCandidate(c.url)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Current image large preview */}
       {draft.image ? (
         <div className="space-y-1.5">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-forest-500">Peržiūra</p>
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-forest-500">Dabar pasirinktas</p>
           <div className="bg-bone-200 rounded-lg overflow-hidden border border-bone-400/40 max-w-md">
             <img src={draft.image} alt="" className="w-full max-h-80 object-contain" />
           </div>
@@ -1004,13 +1150,100 @@ function TabPhoto({ draft, originalDraft, updateField }) {
           <ImageOff size={24} className="text-forest-300 mx-auto mb-2" />
           <p className="text-xs text-forest-500">Nuotraukos URL'as nenurodytas.</p>
           <p className="text-[10px] text-forest-400 mt-1">
-            Batch script'as auto-fetch'ina Wiki/iNat nuotraukas. Manualiai
-            galima įvesti viršuje.
+            Paspausk „Ieškoti nuotraukos" — automatiškai pasiūlysiu iš Wiki/iNat.
           </p>
         </div>
       )}
     </div>
   )
+}
+
+function CandidateCard({ candidate, selected, onPick }) {
+  const [error, setError] = useState(false)
+  return (
+    <button
+      onClick={onPick}
+      className={`relative group rounded-lg overflow-hidden border-2 transition-all ${
+        selected
+          ? 'border-forest-600 ring-2 ring-forest-200'
+          : 'border-bone-400/40 hover:border-forest-400'
+      }`}
+    >
+      <div className="aspect-square bg-bone-200 overflow-hidden">
+        {error ? (
+          <div className="w-full h-full flex items-center justify-center text-3xl">🌿</div>
+        ) : (
+          <img
+            src={candidate.url}
+            alt=""
+            loading="lazy"
+            onError={() => setError(true)}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+          />
+        )}
+      </div>
+      <div className="px-2 py-1 bg-bone-50/95 border-t border-bone-400/40">
+        <p className="font-mono text-[9px] font-medium uppercase tracking-[0.1em] text-forest-700 truncate">
+          {candidate.source}
+        </p>
+        <p className="text-[9px] text-forest-500 italic truncate leading-tight">
+          {candidate.label}
+        </p>
+      </div>
+      {selected && (
+        <div className="absolute top-1 right-1 w-5 h-5 rounded-full bg-forest-600 flex items-center justify-center">
+          <CheckCircle2 size={11} className="text-bone" />
+        </div>
+      )}
+    </button>
+  )
+}
+
+// ── Image candidates fetcher (Wiki EN/LT + iNat parallel) ───────────
+//
+// Naudoja egzistuojantį fetchWikiPhoto (browser-safe per origin=*) ir
+// iNat taxa API (CORS-safe). Visi parallel — total ~500-1500ms.
+// Dedupe by URL.
+async function fetchImageCandidates(latinName) {
+  if (!latinName) return []
+  const genus = latinName.split(/\s+/)[0]
+  const wantsGenus = genus && genus !== latinName
+
+  const [wikiEnSpec, wikiLt, wikiEnGenus, inatRes] = await Promise.all([
+    fetchWikiPhoto(latinName, 'en', { thumbSize: 600 }).catch(() => null),
+    fetchWikiPhoto(latinName, 'lt', { thumbSize: 600 }).catch(() => null),
+    wantsGenus
+      ? fetchWikiPhoto(genus, 'en', { thumbSize: 600 }).catch(() => null)
+      : Promise.resolve(null),
+    fetch(`https://api.inaturalist.org/v1/taxa?q=${encodeURIComponent(latinName)}&rank=species,genus&limit=6`, {
+      headers: { Accept: 'application/json' },
+    })
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null),
+  ])
+
+  const results = []
+  const seen = new Set()
+  const tryAdd = (url, source, label) => {
+    if (!url || seen.has(url)) return
+    seen.add(url)
+    results.push({ url, source, label })
+  }
+
+  if (wikiEnSpec?.found) tryAdd(wikiEnSpec.url, 'Wiki EN', latinName)
+  if (wikiLt?.found) tryAdd(wikiLt.url, 'Wiki LT', latinName)
+  if (wikiEnGenus?.found) tryAdd(wikiEnGenus.url, 'Wiki EN (genus)', genus)
+
+  if (inatRes?.results) {
+    const plants = inatRes.results.filter(t => t.iconic_taxon_name === 'Plantae')
+    for (const t of plants.slice(0, 4)) {
+      if (t.default_photo?.medium_url) {
+        tryAdd(t.default_photo.medium_url, 'iNat', `${t.name} (${t.rank})`)
+      }
+    }
+  }
+
+  return results
 }
 
 // ── Tab: Aprašymai (cultivar) ────────────────────────────────────────
@@ -1407,13 +1640,32 @@ function RightPanePreview({ entry, draft, entryType }) {
     timeline: entry.timeline ?? [],
   }
 
+  // Identiškas user view — hero photo (aspect-3/2 kaip PlantDetail'yje) +
+  // ProfileContent. Skip'inam top bar (status/zone — admin'ui nereikalingi)
+  // ir TabBar (admin mato tik Profile content'ą).
+  const heroPhoto = debouncedDraft?.image ?? entry.image
   return (
     <div className={`${WIDGET} flex flex-col h-full overflow-hidden`}>
       <PreviewBadge />
       <div className="flex-1 overflow-y-auto relative">
-        {/* pointer-events-none overlay'as — view-only. ProfileContent'o
-            action button'ai vizualiai matomi, bet click'ai blokuojami. */}
         <div className="pointer-events-none">
+          {/* Hero photo — aspect-3/2 kaip PlantDetail.jsx (line 1781) */}
+          <div className="w-full bg-bone-300" style={{ aspectRatio: '3 / 2' }}>
+            {heroPhoto ? (
+              <PlantImage
+                url={heroPhoto}
+                alt={mergedPlant.lietuviškas || mergedPlant.lotyniskas}
+                size="detail"
+                eager
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-7xl">
+                🌿
+              </div>
+            )}
+          </div>
+          {/* ProfileContent body */}
           <ProfileContent
             plant={mergedPlant}
             section={null}
@@ -1423,7 +1675,7 @@ function RightPanePreview({ entry, draft, entryType }) {
             onTogglePassport={null}
             onUpdateNames={null}
             onRefreshFromAI={null}
-            className="px-4 pt-3 pb-8 space-y-5"
+            className="px-4 pt-4 pb-8 space-y-5"
           />
         </div>
       </div>
