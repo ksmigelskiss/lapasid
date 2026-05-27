@@ -40,6 +40,7 @@ import {
 import { ProfileContent } from '../PlantDetail'
 import PlantImage from '../brand/PlantImage'
 import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS, LIFECYCLES } from '../../utils/taxonGroups'
+import { parseLatinName } from '../../utils/latinName'
 import { auth } from '../../utils/firebase'
 import { ExternalLink } from 'lucide-react'
 
@@ -464,83 +465,113 @@ function LeftPaneList({
   expanded, toggleExpand,
   selectedId, onSelect, dirty,
 }) {
-  const items = useMemo(() => {
-    const seriesItems = taxonGroups.map(g => ({
-      kind: 'series',
-      id: g.id,
-      group: g,
-      cultivars: catalog.filter(c => c.taxonGroupId === g.id),
-    }))
-    const standaloneItems = catalog
-      .filter(c => !c.taxonGroupId)
-      .map(c => ({ kind: 'standalone', id: c.id, entry: c }))
-
-    return [
-      ...seriesItems.sort((a, b) => b.cultivars.length - a.cultivars.length),
-      ...standaloneItems.sort((a, b) =>
-        (a.entry.lotyniskas ?? '').localeCompare(b.entry.lotyniskas ?? ''),
-      ),
-    ]
-  }, [catalog, taxonGroups])
+  // 3-level hierarchy: Genus → Species → (Series → Cultivars)
+  //
+  // genus-group (level 1) — kontaineris pagal Latin genus name.
+  //   - entry: catalog/{genus_slug} catalog doc'as (jei egzistuoja, pvz.
+  //     catalog/aloe). Jei nėra — synthetic header, ne clickable.
+  //   - members[]: arrays of:
+  //     • species (level 2) — catalog entries with rank='species' (e.g.
+  //       Aloe vera). Click → edit form.
+  //     • series (level 2) — taxonGroup entries (e.g. Sansevieria
+  //       trifasciata). Expandable to cultivars (level 3).
+  //
+  // Kodėl read-time derivation: nereikia DB migracijos, jokio schema
+  // pakeitimo. Catalog + taxonGroups už šitos hierarchijos yra
+  // atvaizduojama klientiniam UI lygyje.
+  const items = useMemo(() => buildHierarchy(catalog, taxonGroups), [catalog, taxonGroups])
 
   const filteredItems = useMemo(() => {
     let result = items
 
+    // Filter chips (adapted to 3-level hierarchy):
+    //  • 'standalone' = genus groups su ≤1 member'iu (single entry, no children)
+    //  • 'series' = genus groups, kuriose yra bent viena taxonGroup series
+    //  • 'modified' = grupės, kur bent vienas entry batch-enriched per 7d
     if (activeFilter === 'standalone') {
-      result = result.filter(it => it.kind === 'standalone')
+      result = result.filter(g => (g.entry ? 1 : 0) + g.members.length <= 1)
     } else if (activeFilter === 'series') {
-      result = result.filter(it => it.kind === 'series')
+      result = result.filter(g => g.members.some(m => m.kind === 'series'))
     } else if (activeFilter === 'modified') {
       const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000
-      result = result.filter(it => {
-        if (it.kind === 'series') return false
-        const ts = it.entry._batchEnrichedAt
-        if (!ts) return false
-        return new Date(ts).getTime() > cutoff
+      const isModified = e => e?._batchEnrichedAt && new Date(e._batchEnrichedAt).getTime() > cutoff
+      result = result.filter(g => {
+        if (isModified(g.entry)) return true
+        return g.members.some(m => {
+          if (m.kind === 'species' && isModified(m.entry)) return true
+          if (m.kind === 'series') return m.cultivars.some(isModified)
+          return false
+        })
       })
     }
 
+    // Paieška — match'inam genus name, entry LT/Latin, ar bet kurio member'io
     if (!search.trim()) return result
     const q = search.toLowerCase()
     return result
-      .map(item => {
-        if (item.kind === 'series') {
-          const seriesMatches = `${item.group.genus ?? ''} ${item.group.name ?? ''}`.toLowerCase().includes(q)
-          const matchingCults = item.cultivars.filter(c =>
-            `${c.lotyniskas ?? ''} ${c.lietuviškas ?? ''}`.toLowerCase().includes(q),
-          )
-          if (seriesMatches) return item
-          if (matchingCults.length > 0) return { ...item, cultivars: matchingCults }
-          return null
-        }
-        const hay = `${item.entry.lotyniskas ?? ''} ${item.entry.lietuviškas ?? ''}`.toLowerCase()
-        return hay.includes(q) ? item : null
+      .map(group => {
+        const groupMatches = group.genus.toLowerCase().includes(q) ||
+          (group.entry && (`${group.entry.lotyniskas ?? ''} ${group.entry.lietuviškas ?? ''}`.toLowerCase().includes(q)))
+        if (groupMatches) return group
+        // Filter members by match
+        const matchingMembers = group.members
+          .map(m => {
+            if (m.kind === 'species') {
+              const hay = `${m.entry.lotyniskas ?? ''} ${m.entry.lietuviškas ?? ''}`.toLowerCase()
+              return hay.includes(q) ? m : null
+            }
+            // series — match group name OR any cultivar
+            const seriesHay = `${m.group.genus ?? ''} ${m.group.name ?? ''}`.toLowerCase()
+            if (seriesHay.includes(q)) return m
+            const matchingCults = m.cultivars.filter(c =>
+              `${c.lotyniskas ?? ''} ${c.lietuviškas ?? ''}`.toLowerCase().includes(q),
+            )
+            if (matchingCults.length > 0) return { ...m, cultivars: matchingCults }
+            return null
+          })
+          .filter(Boolean)
+        if (matchingMembers.length > 0) return { ...group, members: matchingMembers }
+        return null
       })
       .filter(Boolean)
   }, [items, search, activeFilter])
 
+  // Auto-expand genus groups + series kai paieška grąžina nested match'us
   useEffect(() => {
     if (!search.trim()) return
-    filteredItems.forEach(item => {
-      if (item.kind === 'series' && !expanded.has(item.group.id)) {
-        toggleExpand(item.group.id)
+    filteredItems.forEach(group => {
+      const genusKey = `genus:${group.id}`
+      if (!expanded.has(genusKey)) toggleExpand(genusKey)
+      for (const m of group.members) {
+        if (m.kind === 'series') {
+          const seriesKey = `series:${m.id}`
+          if (!expanded.has(seriesKey)) toggleExpand(seriesKey)
+        }
       }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
+  // Flat list keyboard nav'ui — TIK matomi (expanded'inti) items
   const flatNavItems = useMemo(() => {
     const flat = []
-    for (const item of filteredItems) {
-      if (item.kind === 'series') {
-        flat.push({ id: item.group.id, type: 'series' })
-        if (expanded.has(item.group.id)) {
-          for (const c of item.cultivars) {
-            flat.push({ id: c.id, type: 'cultivar' })
+    for (const group of filteredItems) {
+      if (group.entry) {
+        flat.push({ id: group.entry.id, type: 'cultivar' })
+      }
+      if (expanded.has(`genus:${group.id}`)) {
+        for (const m of group.members) {
+          if (m.kind === 'species') {
+            flat.push({ id: m.id, type: 'cultivar' })
+          } else if (m.kind === 'series') {
+            flat.push({ id: m.id, type: 'series' })
+            if (expanded.has(`series:${m.id}`)) {
+              for (const c of m.cultivars) {
+                flat.push({ id: c.id, type: 'cultivar' })
+              }
+            }
           }
         }
-      } else {
-        flat.push({ id: item.entry.id, type: 'cultivar' })
       }
     }
     return flat
@@ -609,35 +640,26 @@ function LeftPaneList({
           </p>
         ) : (
           <ul className="space-y-0.5">
-            {filteredItems.map(item =>
-              item.kind === 'series' ? (
-                <SeriesListItem
-                  key={item.id}
-                  group={item.group}
-                  cultivars={item.cultivars}
-                  expanded={expanded.has(item.group.id)}
-                  onToggle={() => toggleExpand(item.group.id)}
-                  selectedId={selectedId}
-                  onSelect={onSelect}
-                  dirty={dirty}
-                />
-              ) : (
-                <StandaloneListItem
-                  key={item.id}
-                  entry={item.entry}
-                  selected={selectedId === item.entry.id}
-                  onSelect={() => onSelect(item.entry.id, 'cultivar')}
-                  dirty={dirty}
-                />
-              ),
-            )}
+            {filteredItems.map(group => (
+              <GenusGroupRow
+                key={group.id}
+                group={group}
+                expanded={expanded.has(`genus:${group.id}`)}
+                onToggleGenus={() => toggleExpand(`genus:${group.id}`)}
+                expandedSet={expanded}
+                onToggleSeries={(seriesId) => toggleExpand(`series:${seriesId}`)}
+                selectedId={selectedId}
+                onSelect={onSelect}
+                dirty={dirty}
+              />
+            ))}
           </ul>
         )}
       </div>
 
       <div className="flex-shrink-0 border-t border-bone-400/40 px-3 py-1.5 bg-bone-100/60">
         <p className="font-mono text-[10px] text-forest-500 tabular-nums">
-          {filteredItems.length} / {items.length} items
+          {filteredItems.length} / {items.length} groups
           {dirty && <span className="ml-2 text-terracotta-600">⚡ unsaved</span>}
         </p>
       </div>
@@ -645,49 +667,266 @@ function LeftPaneList({
   )
 }
 
-function SeriesListItem({ group, cultivars, expanded, onToggle, selectedId, onSelect, dirty }) {
-  const heroImage = cultivars[0]?.image
-  const seriesSelected = selectedId === group.id
+// ── Hierarchy builder ─────────────────────────────────────────────
+//
+// buildHierarchy(catalog, taxonGroups) → genus groups array.
+//
+// Šaknis: kiekvienas Latin genus name turi grupę. Grupėje:
+//   • entry: catalog doc, kurio lotyniskas == genus (pvz. catalog/aloe). Gali būti null.
+//   • members[]: species (catalog entries rank='species') + series (taxonGroups).
+//
+// Cultivar'ai (catalog entries su taxonGroupId) NĖRA atskiri members —
+// jie hang'inasi po series member'iu kaip series.cultivars[]. 3-čias nesting'as.
+//
+// Edge case'ai:
+//   • Genus entry yra, bet jokio species/series — group su members=[] (no expand)
+//   • Species entry yra, bet genus entry nėra — synthetic header („Aloe (no entry)")
+//   • Catalog entry su unparseable Latin — skip (filtered out)
+//   • Series Latin name nesutampa su jokio genus — skip (defensive)
+function buildHierarchy(catalog, taxonGroups) {
+  const byGenus = new Map()
+  const getGroup = (genus) => {
+    const key = genus.toLowerCase()
+    let g = byGenus.get(key)
+    if (!g) {
+      g = { id: key, genus, entry: null, members: [] }
+      byGenus.set(key, g)
+    }
+    return g
+  }
+
+  // Step 1: series su cultivars — placement pagal series'os Latin genus
+  const cultivarIds = new Set()
+  for (const tg of taxonGroups) {
+    const seriesLatin = (tg.scientificName || `${tg.genus ?? ''} ${tg.name ?? ''}`).trim()
+    if (!seriesLatin) continue
+    const cultivars = catalog.filter(c => c.taxonGroupId === tg.id)
+    for (const c of cultivars) cultivarIds.add(c.id)
+    const parsed = parseLatinName(seriesLatin)
+    if (!parsed.genus) continue
+    const group = getGroup(parsed.genus)
+    group.members.push({
+      kind: 'series',
+      id: tg.id,
+      group: tg,
+      latin: seriesLatin,
+      cultivars,
+    })
+  }
+
+  // Step 2: catalog entries (not cultivars in series)
+  for (const c of catalog) {
+    if (cultivarIds.has(c.id)) continue
+    if (!c.lotyniskas) continue
+    const parsed = parseLatinName(c.lotyniskas)
+    if (!parsed.genus) continue
+    const group = getGroup(parsed.genus)
+    if (parsed.rank === 'genus') {
+      group.entry = c  // catalog doc IS the genus
+    } else {
+      group.members.push({
+        kind: 'species',
+        id: c.id,
+        entry: c,
+        latin: c.lotyniskas,
+        rank: parsed.rank,
+      })
+    }
+  }
+
+  // Step 3: sort members within each group by Latin name (alphabetical)
+  for (const g of byGenus.values()) {
+    g.members.sort((a, b) => (a.latin ?? '').localeCompare(b.latin ?? ''))
+  }
+
+  // Step 4: sort groups alphabetically by genus
+  return [...byGenus.values()].sort((a, b) => a.genus.localeCompare(b.genus))
+}
+
+// ── Genus group row (Level 1) ──────────────────────────────────────
+//
+// Renders genus group header (catalog entry if exists, otherwise synthetic
+// header). Below: expandable members list (species + series).
+function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSeries, selectedId, onSelect, dirty }) {
+  const { genus, entry, members } = group
+  const hasMembers = members.length > 0
+  const genusSelected = entry && selectedId === entry.id
+
+  // Hero image: genus entry's own image, else first species image, else first cultivar image
+  const heroImage = entry?.image ??
+    members.find(m => m.kind === 'species')?.entry?.image ??
+    members.find(m => m.kind === 'series')?.cultivars[0]?.image
+
   return (
     <li>
       <div className={`flex items-center gap-1.5 rounded-btn-sm pl-1 pr-2 py-1 transition-colors ${
-        seriesSelected ? 'bg-forest-100' : 'hover:bg-bone-200/60'
+        genusSelected ? 'bg-forest-100' : 'hover:bg-bone-200/60'
+      }`}>
+        {/* Expand chevron — tik jei yra members. Vienodam alignment'ui — spacer
+            jei nėra members. */}
+        {hasMembers ? (
+          <button
+            onClick={onToggleGenus}
+            className="w-5 h-5 flex-shrink-0 inline-flex items-center justify-center text-forest-500 hover:text-forest-700 rounded-sm hover:bg-bone-300/40"
+            title={expanded ? 'Suskleisti' : 'Išskleisti'}
+          >
+            {expanded ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+          </button>
+        ) : (
+          <div className="w-5 h-5 flex-shrink-0" />
+        )}
+
+        {entry ? (
+          // Genus catalog entry'is egzistuoja — clickable
+          <button
+            onClick={() => onSelect(entry.id, 'cultivar')}
+            className="flex-1 flex items-center gap-2 text-left min-w-0"
+          >
+            <div className="w-7 h-7 flex-shrink-0 rounded-md overflow-hidden bg-bone-200 flex items-center justify-center">
+              {heroImage ? (
+                <img src={heroImage} alt="" className="w-full h-full object-cover" loading="lazy" />
+              ) : (
+                <Layers size={11} className="text-forest-300" />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className={`text-xs font-semibold truncate leading-tight ${
+                genusSelected ? 'text-forest-800' : 'text-forest-700'
+              }`}>
+                {entry.lietuviškas || genus}
+                {genusSelected && dirty && <span className="ml-1 text-terracotta-600">*</span>}
+              </p>
+              <p className="text-[10px] text-forest-500 italic truncate leading-tight">
+                {entry.lotyniskas}
+                {hasMembers && <span className="font-mono ml-1 not-italic">· {members.length}</span>}
+              </p>
+            </div>
+          </button>
+        ) : (
+          // Genus entry nėra catalog'e — synthetic header, NEclickable
+          <div className="flex-1 flex items-center gap-2 min-w-0 opacity-70" title="Genus catalog entry'is neegzistuoja — grupuojama vizualiai pagal Latin name">
+            <div className="w-7 h-7 flex-shrink-0 rounded-md bg-bone-200/60 flex items-center justify-center">
+              <Layers size={11} className="text-forest-300" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold truncate leading-tight italic text-forest-500">
+                {genus}
+              </p>
+              <p className="text-[10px] text-forest-400 font-mono leading-tight">
+                no entry · {members.length}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Expanded members — species + series po genus */}
+      {expanded && hasMembers && (
+        <ul className="ml-7 mt-0.5 space-y-0.5">
+          {members.map(m =>
+            m.kind === 'species' ? (
+              <SpeciesChildRow
+                key={m.id}
+                entry={m.entry}
+                selected={selectedId === m.id}
+                onSelect={() => onSelect(m.id, 'cultivar')}
+                dirty={dirty}
+              />
+            ) : (
+              <SeriesChildRow
+                key={m.id}
+                series={m}
+                expanded={expandedSet.has(`series:${m.id}`)}
+                onToggle={() => onToggleSeries(m.id)}
+                selectedId={selectedId}
+                onSelect={onSelect}
+                dirty={dirty}
+              />
+            ),
+          )}
+        </ul>
+      )}
+    </li>
+  )
+}
+
+// ── Species child row (Level 2) ────────────────────────────────────
+function SpeciesChildRow({ entry, selected, onSelect, dirty }) {
+  return (
+    <li>
+      <button
+        onClick={onSelect}
+        className={`w-full flex items-center gap-2 rounded-btn-sm px-2 py-1 text-left transition-colors ${
+          selected ? 'bg-forest-100' : 'hover:bg-bone-200/40'
+        }`}
+      >
+        <div className="w-6 h-6 flex-shrink-0 rounded-sm overflow-hidden bg-bone-200 flex items-center justify-center">
+          {entry.image ? (
+            <img src={entry.image} alt="" className="w-full h-full object-cover" loading="lazy" />
+          ) : (
+            <ImageOff size={10} className="text-forest-300" />
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className={`text-[11px] font-medium truncate leading-tight ${
+            selected ? 'text-forest-800' : 'text-forest-700'
+          }`}>
+            {entry.lietuviškas || '—'}
+            {selected && dirty && <span className="ml-1 text-terracotta-600">*</span>}
+          </p>
+          <p className="text-[9px] text-forest-500 italic truncate leading-tight">
+            {entry.lotyniskas}
+          </p>
+        </div>
+      </button>
+    </li>
+  )
+}
+
+// ── Series child row (Level 2) — expandable to cultivars (Level 3) ─
+function SeriesChildRow({ series, expanded, onToggle, selectedId, onSelect, dirty }) {
+  const { group, cultivars } = series
+  const heroImage = cultivars[0]?.image
+  const seriesSelected = selectedId === series.id
+  return (
+    <li>
+      <div className={`flex items-center gap-1.5 rounded-btn-sm pl-1 pr-2 py-1 transition-colors ${
+        seriesSelected ? 'bg-forest-100' : 'hover:bg-bone-200/40'
       }`}>
         <button
           onClick={onToggle}
-          className="w-5 h-5 flex-shrink-0 inline-flex items-center justify-center text-forest-500 hover:text-forest-700 rounded-sm hover:bg-bone-300/40"
-          title={expanded ? 'Suskleisti' : 'Išskleisti'}
+          className="w-4 h-4 flex-shrink-0 inline-flex items-center justify-center text-forest-500 hover:text-forest-700 rounded-sm hover:bg-bone-300/40"
         >
-          {expanded ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+          {expanded ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
         </button>
         <button
-          onClick={() => onSelect(group.id, 'series')}
+          onClick={() => onSelect(series.id, 'series')}
           className="flex-1 flex items-center gap-2 text-left min-w-0"
         >
-          <div className="w-7 h-7 flex-shrink-0 rounded-md overflow-hidden bg-bone-200 flex items-center justify-center">
+          <div className="w-6 h-6 flex-shrink-0 rounded-sm overflow-hidden bg-bone-200 flex items-center justify-center">
             {heroImage ? (
               <img src={heroImage} alt="" className="w-full h-full object-cover" loading="lazy" />
             ) : (
-              <Layers size={11} className="text-forest-300" />
+              <Layers size={10} className="text-forest-300" />
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className={`text-xs font-semibold truncate leading-tight italic ${
+            <p className={`text-[11px] font-semibold truncate leading-tight italic ${
               seriesSelected ? 'text-forest-800' : 'text-forest-700'
             }`}>
               {group.genus} {group.name}
               {seriesSelected && dirty && <span className="ml-1 text-terracotta-600">*</span>}
             </p>
-            <p className="text-[10px] text-forest-500 font-mono leading-tight">
+            <p className="text-[9px] text-forest-500 font-mono leading-tight">
               {group.type ?? '—'} · {cultivars.length}
             </p>
           </div>
         </button>
       </div>
       {expanded && cultivars.length > 0 && (
-        <ul className="ml-7 mt-0.5 space-y-0.5">
+        <ul className="ml-6 mt-0.5 space-y-0.5">
           {cultivars.map(c => (
-            <CultivarChildItem
+            <CultivarLeafRow
               key={c.id}
               entry={c}
               selected={selectedId === c.id}
@@ -701,45 +940,14 @@ function SeriesListItem({ group, cultivars, expanded, onToggle, selectedId, onSe
   )
 }
 
-function StandaloneListItem({ entry, selected, onSelect, dirty }) {
-  return (
-    <li>
-      <button
-        onClick={onSelect}
-        className={`w-full flex items-center gap-2 rounded-btn-sm px-2 py-1 text-left transition-colors ${
-          selected ? 'bg-forest-100' : 'hover:bg-bone-200/60'
-        }`}
-      >
-        <div className="w-7 h-7 flex-shrink-0 rounded-md overflow-hidden bg-bone-200 flex items-center justify-center">
-          {entry.image ? (
-            <img src={entry.image} alt="" className="w-full h-full object-cover" loading="lazy" />
-          ) : (
-            <ImageOff size={11} className="text-forest-300" />
-          )}
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className={`text-xs font-semibold truncate leading-tight ${
-            selected ? 'text-forest-800' : 'text-forest-700'
-          }`}>
-            {entry.lietuviškas || '—'}
-            {selected && dirty && <span className="ml-1 text-terracotta-600">*</span>}
-          </p>
-          <p className="text-[10px] text-forest-500 italic truncate leading-tight">
-            {entry.lotyniskas}
-          </p>
-        </div>
-      </button>
-    </li>
-  )
-}
-
-function CultivarChildItem({ entry, selected, onSelect, dirty }) {
+// ── Cultivar leaf row (Level 3) ────────────────────────────────────
+function CultivarLeafRow({ entry, selected, onSelect, dirty }) {
   return (
     <li>
       <button
         onClick={onSelect}
         className={`w-full flex items-center gap-1.5 rounded-btn-sm px-1.5 py-1 text-left transition-colors ${
-          selected ? 'bg-forest-100' : 'hover:bg-bone-200/40'
+          selected ? 'bg-forest-100' : 'hover:bg-bone-200/30'
         }`}
       >
         <div className="w-5 h-5 flex-shrink-0 rounded-sm overflow-hidden bg-bone-200 flex items-center justify-center">
@@ -750,7 +958,7 @@ function CultivarChildItem({ entry, selected, onSelect, dirty }) {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <p className={`text-[11px] font-medium truncate leading-tight ${
+          <p className={`text-[10px] font-medium truncate leading-tight ${
             selected ? 'text-forest-800' : 'text-forest-600'
           }`}>
             {entry.lietuviškas || '—'}
