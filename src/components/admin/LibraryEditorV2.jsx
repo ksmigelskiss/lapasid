@@ -98,24 +98,29 @@ const AUGIMO_GREITIS_OPTS = [
   { value: 'greitas',   label: 'Greitas'   },
 ]
 
-// ── Tab definitions ──────────────────────────────────────────────────
+// ── Tab definitions (Audit fix #5 — 7→5 reorg) ──────────────────────
 //
-// Tab'ai matomi center pane'o viršuje. Cultivar'as turi pilną 7-tab'ų rinkinį,
-// Series — sutrumpintą (be Foto/Toksiškumas/Klasifikacija — netaikoma).
+// Susitraukino į 5 tab'us iš 7:
+//   • Foto + Aprašymai merge'inti į „Aprašymas" (visi pasakojantys laukai
+//     kartu — image story + text story)
+//   • Meta drop'intas → provenance footer pridėtas Atributai tab'o apačioje
+//     + collapsible raw JSON debug
+//   • Klasifikacija rename'inta į „Atributai" (LT vartotojui aiškesnis terminas)
+//   • auginimas + infoConfidence perkelti į Atributai (jie yra atribut'ai,
+//     ne identifikacija)
+//
+// Series turi 3 tab'us (be Toksiškumas/Atributai — netaikoma taxonGroup'ams).
 const CULTIVAR_TABS = [
-  { id: 'identification', label: 'Identifikacija', Icon: Type        },
-  { id: 'photo',          label: 'Foto',            Icon: ImageIcon   },
-  { id: 'descriptions',   label: 'Aprašymai',       Icon: BookOpen    },
-  { id: 'care',           label: 'Priežiūra',       Icon: Droplet     },
-  { id: 'toxicity',       label: 'Toksiškumas',     Icon: Skull       },
-  { id: 'classification', label: 'Klasifikacija',   Icon: Tag         },
-  { id: 'meta',           label: 'Meta',            Icon: Info        },
+  { id: 'identification', label: 'Identifikacija', Icon: Type     },
+  { id: 'descriptions',   label: 'Aprašymas',      Icon: BookOpen },
+  { id: 'care',           label: 'Priežiūra',      Icon: Droplet  },
+  { id: 'toxicity',       label: 'Toksiškumas',    Icon: Skull    },
+  { id: 'classification', label: 'Atributai',      Icon: Tag      },
 ]
 const SERIES_TABS = [
   { id: 'identification', label: 'Identifikacija', Icon: Type     },
-  { id: 'descriptions',   label: 'Aprašymai',       Icon: BookOpen },
-  { id: 'care',           label: 'Care šablonas',   Icon: Droplet  },
-  { id: 'meta',           label: 'Meta',            Icon: Info     },
+  { id: 'descriptions',   label: 'Aprašymas',      Icon: BookOpen },
+  { id: 'care',           label: 'Care šablonas',  Icon: Droplet  },
 ]
 
 // ── Main export ─────────────────────────────────────────────────────
@@ -1360,30 +1365,24 @@ function TabContent({ tabId, entry, entryType, draft, originalDraft, updateField
       case 'identification': return <TabIdentificationSeries {...props} />
       case 'descriptions':   return <TabDescriptionsSeries {...props} />
       case 'care':           return <TabCareSeries {...props} />
-      case 'meta':           return <TabMeta {...props} />
       default:               return null
     }
   }
   switch (tabId) {
     case 'identification': return <TabIdentificationCultivar {...props} />
-    case 'photo':          return <TabPhoto {...props} />
-    case 'descriptions':   return <TabDescriptionsCultivar {...props} />
+    case 'descriptions':   return <TabAprasymasCultivar {...props} />  // merged Foto+Aprašymas
     case 'care':           return <TabCareCultivar {...props} />
     case 'toxicity':       return <TabToxicity {...props} />
-    case 'classification': return <TabClassification {...props} />
-    case 'meta':           return <TabMeta {...props} />
+    case 'classification': return <TabAtributai {...props} />  // renamed + augmented
     default:               return null
   }
 }
 
 // ── Tab: Identifikacija (cultivar) ───────────────────────────────────
 
-function TabIdentificationCultivar({ entry, draft, originalDraft, updateField, taxonGroups, genusParent }) {
-  const inh = (f) => makeInherited(f, draft, genusParent)
-  // taxonGroupId rodomas TIK cultivar'ams (parsed.rank === 'cultivar') — kitiems
-  // (genus, species) tai negalimas relationship ir vis tiek rodė „standalone",
-  // user'iui buvo confusing. Genus catalog įrašai (Aloe) ir species (Aloe vera)
-  // niekada netūri taxonGroupId pagal dabartinę architektūrą.
+function TabIdentificationCultivar({ entry, draft, originalDraft, updateField, taxonGroups }) {
+  // taxonGroupId rodomas TIK cultivar'ams. Audit fix #5: auginimas + infoConfidence
+  // perkelti į Atributai tab'ą (jie yra atribut'ai, ne identity).
   const parsed = entry.lotyniskas ? parseLatinName(entry.lotyniskas) : null
   const isCultivar = parsed?.rank === 'cultivar'
   return (
@@ -1414,18 +1413,107 @@ function TabIdentificationCultivar({ entry, draft, originalDraft, updateField, t
           </select>
         </FormRow>
       )}
+      <div className="text-[10px] text-forest-400 font-mono pt-2 border-t border-bone-400/30 flex items-center gap-3">
+        <span>ID: <span className="text-forest-500">{entry.id}</span></span>
+        {parsed && (
+          <span>rank: <span className="text-forest-500">{parsed.rank}</span></span>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Merged Foto + Aprašymas tab (Audit fix #5). Photo picker top-section
+// + aprasymas/kilme/idomybes apačioje. Visi „pasakojantys" laukai vienoj
+// vietoj.
+function TabAprasymasCultivar({ entry, draft, originalDraft, updateField, onSaveImageOnly, genusParent }) {
+  const inh = (f) => makeInherited(f, draft, genusParent)
+  return (
+    <div className="space-y-6 max-w-3xl">
+      {/* Foto picker — buvo TabPhoto, perkeltas čia */}
+      <div>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-forest-500 mb-3">Nuotrauka</p>
+        <PhotoPickerSection
+          draft={draft}
+          originalDraft={originalDraft}
+          updateField={updateField}
+          onSaveImageOnly={onSaveImageOnly}
+        />
+      </div>
+
+      <div className="pt-3 border-t border-bone-400/30">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-forest-500 mb-3">Tekstinis pasakojimas</p>
+      </div>
+
+      <FormRow label="Aprašymas" dirty={fieldDirty(draft.aprasymas, originalDraft?.aprasymas)} helper={`„Sodininkas friend" stilius — LT vartotojui draugiškas tekstas.`}>
+        <TextArea value={draft.aprasymas} onChange={v => updateField('aprasymas', v)} rows={5} />
+      </FormRow>
+      <FormRow label="Kilmė" dirty={fieldDirty(draft.kilme, originalDraft?.kilme)} helper="Iš kur augalas — geografinė kilmė + buveinė." inherited={inh('kilme')}>
+        <TextInput value={draft.kilme ?? ''} onChange={v => updateField('kilme', v)} placeholder="Madagaskaras (atogrąžų pievos)" />
+      </FormRow>
+      <FormRow label="Įdomybės" dirty={fieldDirty(draft.idomybes, originalDraft?.idomybes)} helper="3-7 įdomių faktų — kiekvienas atskira eilutė. Naudojami plant detail screen'e.">
+        <TextArea value={draft.idomybes} onChange={v => updateField('idomybes', v)} rows={5} placeholder={'Faktas 1\nFaktas 2\nFaktas 3'} />
+      </FormRow>
+      <ProvenanceBadge entry={entry} />
+    </div>
+  )
+}
+
+// Atributai tab (renamed from Klasifikacija, augmented per Audit fix #5).
+//   • Klasifikacija fields (tipas, sunkumas, augimo_greitis, lifecycle, hardiness)
+//   • Auginimas (moved from Identifikacija — rūšinė kategorija)
+//   • Info confidence (moved from Identifikacija — meta data quality)
+//   • Provenance footer (was Meta tab — ID, updatedAt, batchSource)
+//   • Raw JSON debug toggle (was Meta tab — for debugging)
+function TabAtributai({ entry, draft, originalDraft, updateField, genusParent }) {
+  const inh = (f) => makeInherited(f, draft, genusParent)
+  return (
+    <div className="space-y-4 max-w-3xl">
+      <FormRow label="Tipas (laisva forma)" dirty={fieldDirty(draft.tipas, originalDraft?.tipas)} helper={`LT-friendly tipas — pvz. „Sultingas", „Tropinis daugiametis".`} inherited={inh('tipas')}>
+        <TextInput value={draft.tipas ?? ''} onChange={v => updateField('tipas', v)} />
+      </FormRow>
       <FormRow label="Auginimo kategorija" dirty={fieldDirty(draft.auginimas, originalDraft?.auginimas)} helper="Rūšinė augalo kategorija (NE kur konkretus augalas augintas). Sansevieria visada kambarinis, beržas visada laukinis." inherited={inh('auginimas')}>
         <ChipSelect value={draft.auginimas} onChange={v => updateField('auginimas', v)} options={AUGINIMAS_OPTS} allowEmpty />
+      </FormRow>
+      <FormRow label="Sunkumas" dirty={fieldDirty(draft.sunkumas, originalDraft?.sunkumas)} helper="Schema: integer 1-5. UI rodo 1=labai lengvas → 5=tik patyrusiems." inherited={inh('sunkumas')}>
+        <ChipSelect value={draft.sunkumas} onChange={v => updateField('sunkumas', v)} options={SUNKUMAS_OPTS} allowEmpty />
+      </FormRow>
+      <FormRow label="Augimo greitis" dirty={fieldDirty(draft.augimo_greitis, originalDraft?.augimo_greitis)} inherited={inh('augimo_greitis')}>
+        <ChipSelect value={draft.augimo_greitis} onChange={v => updateField('augimo_greitis', v)} options={AUGIMO_GREITIS_OPTS} allowEmpty />
+      </FormRow>
+      <FormRow label="Lifecycle" dirty={fieldDirty(draft.lifecycle, originalDraft?.lifecycle)} inherited={inh('lifecycle')}>
+        <Select value={draft.lifecycle ?? ''} onChange={v => updateField('lifecycle', v)} options={['', ...LIFECYCLES]} />
+      </FormRow>
+      <FormRow label="Hardiness" dirty={fieldDirty(draft.hardiness, originalDraft?.hardiness)} helper={`USDA zona arba °C ribos. Pvz. „USDA 9-11, -1°C".`} inherited={inh('hardiness')}>
+        <TextInput value={draft.hardiness ?? ''} onChange={v => updateField('hardiness', v)} placeholder="USDA 9-11, -1°C" />
       </FormRow>
       <FormRow label="Info confidence" dirty={fieldDirty(draft.infoConfidence, originalDraft?.infoConfidence)} helper="Kiek šios kortelės info'ai patikima — kalibracija PFAF/ASPCA atveju.">
         <ChipSelect value={draft.infoConfidence} onChange={v => updateField('infoConfidence', v)} options={INFO_CONFIDENCE_OPTS} allowEmpty />
       </FormRow>
-      <div className="text-[10px] text-forest-400 font-mono pt-2 border-t border-bone-400/30">
-        ID: <span className="text-forest-500">{entry.id}</span>
-        {!isCultivar && parsed && (
-          <span className="ml-3 text-forest-400">rank: <span className="text-forest-500">{parsed.rank}</span></span>
+
+      {/* Provenance footer + raw JSON debug (formeriai Meta tab) */}
+      <div className="pt-4 border-t border-bone-400/30 space-y-2">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-forest-500">Provenance</p>
+        <MetaRow k="ID" v={entry.id} mono />
+        <MetaRow k="Atnaujinta" v={shortDate(entry.updatedAt)} />
+        {entry._batchSource && (
+          <>
+            <MetaRow k="Batch source" v={entry._batchSource} mono />
+            <MetaRow k="Batch enriched" v={shortDate(entry._batchEnrichedAt)} />
+          </>
+        )}
+        {entry.taxonGroupId && (
+          <MetaRow k="Serija (taxonGroupId)" v={entry.taxonGroupId} mono />
         )}
       </div>
+      <details>
+        <summary className="cursor-pointer font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500">
+          Raw JSON (debug)
+        </summary>
+        <pre className="mt-2 text-[10px] text-forest-500 font-mono bg-bone-100 p-3 rounded overflow-auto max-h-[40vh]">
+          {JSON.stringify(draft, null, 2)}
+        </pre>
+      </details>
     </div>
   )
 }
@@ -1475,7 +1563,10 @@ function TabIdentificationSeries({ entry, draft, originalDraft, updateField }) {
 // Plius — ↗ „Atidaryti Brave Images" external link, jei admin'as nori
 // peržiūrėti rezultatus pilname Brave puslapyje ir įklijuoti URL ranka.
 
-function TabPhoto({ draft, originalDraft, updateField, onSaveImageOnly }) {
+// Foto picker section — anksciau buvo TabPhoto (atskiras tab'as), dabar
+// embedded'inta į TabAprasymasCultivar viršuje (Audit fix #5 — tab merge).
+// Pavadinimas „Section" (ne „Tab") aiškiai parodo, kad tai dalis kito tab'o.
+function PhotoPickerSection({ draft, originalDraft, updateField, onSaveImageOnly }) {
   const dirtyImg = fieldDirty(draft.image, originalDraft?.image)
   const latin = draft.lotyniskas ?? ''
   const lt    = draft.lietuviškas ?? ''
@@ -1792,25 +1883,8 @@ function isWhitelistedHostingUrl(url) {
          url.startsWith('https://photos.inaturalist')
 }
 
-// ── Tab: Aprašymai (cultivar) ────────────────────────────────────────
-
-function TabDescriptionsCultivar({ entry, draft, originalDraft, updateField, genusParent }) {
-  const inh = (f) => makeInherited(f, draft, genusParent)
-  return (
-    <div className="space-y-4 max-w-3xl">
-      <FormRow label="Aprašymas" dirty={fieldDirty(draft.aprasymas, originalDraft?.aprasymas)} helper={`„Sodininkas friend" stilius — LT vartotojui draugiškas tekstas.`}>
-        <TextArea value={draft.aprasymas} onChange={v => updateField('aprasymas', v)} rows={5} />
-      </FormRow>
-      <FormRow label="Kilmė" dirty={fieldDirty(draft.kilme, originalDraft?.kilme)} helper="Iš kur augalas — geografinė kilmė + buveinė." inherited={inh('kilme')}>
-        <TextInput value={draft.kilme ?? ''} onChange={v => updateField('kilme', v)} placeholder="Madagaskaras (atogrąžų pievos)" />
-      </FormRow>
-      <FormRow label="Įdomybės" dirty={fieldDirty(draft.idomybes, originalDraft?.idomybes)} helper="3-7 įdomių faktų — kiekvienas atskira eilutė. Naudojami plant detail screen'e.">
-        <TextArea value={draft.idomybes} onChange={v => updateField('idomybes', v)} rows={5} placeholder={'Faktas 1\nFaktas 2\nFaktas 3'} />
-      </FormRow>
-      <ProvenanceBadge entry={entry} />
-    </div>
-  )
-}
+// ── Tab: Aprašymai (cultivar) — moved to TabAprasymasCultivar (Audit fix #5)
+//     Old TabDescriptionsCultivar removed; merged with PhotoPickerSection.
 
 function TabDescriptionsSeries({ draft, originalDraft, updateField }) {
   return (
@@ -2247,64 +2321,10 @@ function PavojaiRow({ pavojus, onChange, onDelete }) {
   )
 }
 
-// ── Tab: Klasifikacija ──────────────────────────────────────────────
-
-function TabClassification({ draft, originalDraft, updateField, genusParent }) {
-  const inh = (f) => makeInherited(f, draft, genusParent)
-  // cultivationContext IŠTRINTAS iš cultivar formos (2026-05-27 audit) —
-  // dubliavo `auginimas` Identifikacija tab'e. cultivationContext lieka tik
-  // taxonGroup (series) formoje, kur jis semantiškai tinka (per-series default).
-  return (
-    <div className="space-y-4 max-w-3xl">
-      <FormRow label="Tipas (laisva forma)" dirty={fieldDirty(draft.tipas, originalDraft?.tipas)} helper={`LT-friendly tipas — pvz. „Sultingas", „Tropinis daugiametis".`} inherited={inh('tipas')}>
-        <TextInput value={draft.tipas ?? ''} onChange={v => updateField('tipas', v)} />
-      </FormRow>
-      <FormRow label="Sunkumas" dirty={fieldDirty(draft.sunkumas, originalDraft?.sunkumas)} helper="Schema: integer 1-5. UI rodo 1=labai lengvas → 5=tik patyrusiems." inherited={inh('sunkumas')}>
-        <ChipSelect value={draft.sunkumas} onChange={v => updateField('sunkumas', v)} options={SUNKUMAS_OPTS} allowEmpty />
-      </FormRow>
-      <FormRow label="Augimo greitis" dirty={fieldDirty(draft.augimo_greitis, originalDraft?.augimo_greitis)} inherited={inh('augimo_greitis')}>
-        <ChipSelect value={draft.augimo_greitis} onChange={v => updateField('augimo_greitis', v)} options={AUGIMO_GREITIS_OPTS} allowEmpty />
-      </FormRow>
-      <FormRow label="Lifecycle" dirty={fieldDirty(draft.lifecycle, originalDraft?.lifecycle)} inherited={inh('lifecycle')}>
-        <Select value={draft.lifecycle ?? ''} onChange={v => updateField('lifecycle', v)} options={['', ...LIFECYCLES]} />
-      </FormRow>
-      <FormRow label="Hardiness" dirty={fieldDirty(draft.hardiness, originalDraft?.hardiness)} helper={`USDA zona arba °C ribos. Pvz. „USDA 9-11, -1°C".`} inherited={inh('hardiness')}>
-        <TextInput value={draft.hardiness ?? ''} onChange={v => updateField('hardiness', v)} placeholder="USDA 9-11, -1°C" />
-      </FormRow>
-    </div>
-  )
-}
-
-// ── Tab: Meta (read-only) ───────────────────────────────────────────
-
-function TabMeta({ entry, entryType, draft }) {
-  // Meta tab'as rodo Firestore metadata + batch provenance — read-only,
-  // skirta admin'ui suprasti, iš kur atėjo duomenys.
-  return (
-    <div className="space-y-3 max-w-xl">
-      <MetaRow k="ID" v={entry.id} mono />
-      <MetaRow k="Tipas" v={entryType} />
-      <MetaRow k="Atnaujinta" v={shortDate(entry.updatedAt)} />
-      {entry._batchSource && (
-        <>
-          <MetaRow k="Batch source" v={entry._batchSource} mono />
-          <MetaRow k="Batch enriched" v={shortDate(entry._batchEnrichedAt)} />
-        </>
-      )}
-      {entry.taxonGroupId && (
-        <MetaRow k="Serija (taxonGroupId)" v={entry.taxonGroupId} mono />
-      )}
-      <details className="pt-3 border-t border-bone-400/30">
-        <summary className="cursor-pointer font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 mb-2">
-          Pilnas draft JSON (debug)
-        </summary>
-        <pre className="text-[10px] text-forest-500 font-mono bg-bone-100 p-3 rounded overflow-auto max-h-[50vh]">
-          {JSON.stringify(draft, null, 2)}
-        </pre>
-      </details>
-    </div>
-  )
-}
+// TabClassification + TabMeta — removed (Audit fix #5). Klasifikacija content
+// migrated to TabAtributai (above) which combines classification fields +
+// auginimas/infoConfidence (moved from Identifikacija) + provenance footer
+// + raw JSON debug (was Meta tab).
 
 function MetaRow({ k, v, mono }) {
   return (
