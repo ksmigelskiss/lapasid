@@ -44,6 +44,12 @@ const DATA_URLS = {
   'pre-db.json':            new URL('../../data/pre-db.json',            import.meta.url),
   'aspca-genus-map.json':   new URL('../../data/aspca-genus-map.json',   import.meta.url),
   'aspca-toxicity.json':    new URL('../../data/aspca-toxicity.json',    import.meta.url),
+  // 2026-05-27 — aspca-animals-lt.json BUVO neregistruotas, silent ENOENT
+  // → loadJson grąžino {} → translateAnimalTargets veikė kaip no-op →
+  // batch'as saugojo „Toksiška cats, dogs, horses" EN strings catalog'e.
+  // Migration script (`scripts/migrate-toxicity-animals-lt.mjs`) fix'ina
+  // egzistuojančias entries; šis registracijos eilutė užkerta kelią ateičiai.
+  'aspca-animals-lt.json':  new URL('../../data/aspca-animals-lt.json',  import.meta.url),
   'pfaf.json':              new URL('../../data/pfaf.json',              import.meta.url),
   'lt-names.json':          new URL('../../data/lt-names.json',          import.meta.url),
   'latin-synonyms-reverse.json': new URL('../../data/latin-synonyms-reverse.json', import.meta.url),
