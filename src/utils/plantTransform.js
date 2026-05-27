@@ -103,6 +103,25 @@ export function normalizeAIResponse(rawDetails) {
     }
   }
 
+  // Defensive — AI kartais grąžina `savybes` kaip JSON-formatuotą string'ą
+  // (schema confusion; Dracaena 2026-05-27 incident'as). Be šito downstream
+  // spread'as `{ ...details.savybes }` (api/save-plant.js, taxonGroups merge'as)
+  // sukurtų korumpuotą doc'ą su numeric-key chars (`{0:'{', 1:'"', ...}`).
+  // Array atveju — tas pats spread'as sukurtų numeric-key map'ą iš element'ų.
+  // Abu atvejus normalizuojam į saugų plain object'ą PRIES bet kokį mutate'ą.
+  if ('savybes' in rawDetails) {
+    if (typeof out.savybes === 'string') {
+      try {
+        out.savybes = JSON.parse(out.savybes)
+      } catch {
+        out.savybes = {}
+      }
+    }
+    if (!out.savybes || typeof out.savybes !== 'object' || Array.isArray(out.savybes)) {
+      out.savybes = {}
+    }
+  }
+
   // Nested pavojai struktūroje — tik jei savybes egzistuoja
   if (out.savybes && typeof out.savybes === 'object' && 'pavojai' in out.savybes) {
     out.savybes = {
