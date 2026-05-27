@@ -1380,30 +1380,41 @@ function TabContent({ tabId, entry, entryType, draft, originalDraft, updateField
 
 function TabIdentificationCultivar({ entry, draft, originalDraft, updateField, taxonGroups, genusParent }) {
   const inh = (f) => makeInherited(f, draft, genusParent)
+  // taxonGroupId rodomas TIK cultivar'ams (parsed.rank === 'cultivar') — kitiems
+  // (genus, species) tai negalimas relationship ir vis tiek rodė „standalone",
+  // user'iui buvo confusing. Genus catalog įrašai (Aloe) ir species (Aloe vera)
+  // niekada netūri taxonGroupId pagal dabartinę architektūrą.
+  const parsed = entry.lotyniskas ? parseLatinName(entry.lotyniskas) : null
+  const isCultivar = parsed?.rank === 'cultivar'
   return (
-    <div className="space-y-4 max-w-2xl">
+    <div className="space-y-4 max-w-3xl">
       <FormRow label="Lotyniškas" dirty={fieldDirty(draft.lotyniskas, originalDraft?.lotyniskas)} helper={`Genus + species (pvz. „Kalanchoe blossfeldiana"). Cultivar: „Sansevieria trifasciata 'Laurentii'".`}>
         <TextInput value={draft.lotyniskas ?? ''} onChange={v => updateField('lotyniskas', v)} placeholder="Kalanchoe blossfeldiana" />
       </FormRow>
       <FormRow label="Lietuviškas" dirty={fieldDirty(draft.lietuviškas, originalDraft?.lietuviškas)}>
         <TextInput value={draft.lietuviškas ?? ''} onChange={v => updateField('lietuviškas', v)} placeholder="Kalankė" />
       </FormRow>
-      <FormRow label="Lietuviški sinonimai" dirty={fieldDirty(draft.sinonimai, originalDraft?.sinonimai)} helper="Vienas po kito — Enter pridėti. Naudojami paieškoje (alternative names).">
+      <FormRow label="Lietuviški sinonimai" dirty={fieldDirty(draft.sinonimai, originalDraft?.sinonimai)} helper="Alternatyvūs LT pavadinimai paieškai. Enter pridėti.">
         <StringArrayChips value={draft.sinonimai ?? []} onChange={v => updateField('sinonimai', v)} placeholder="pvz. Madagaskaro kalankė" />
       </FormRow>
-      <FormRow label="Serija (taxonGroup)" dirty={fieldDirty(draft.taxonGroupId, originalDraft?.taxonGroupId)} helper="Jei priklauso serijai — paveldės jos care šabloną.">
-        <select
-          value={draft.taxonGroupId ?? ''}
-          onChange={e => updateField('taxonGroupId', e.target.value || null)}
-          className="w-full bg-bone-50 border border-bone-400/40 rounded-md px-2 py-1.5 text-xs text-forest-700 focus:outline-none focus:border-forest-500"
-        >
-          <option value="">— standalone (be serijos) —</option>
-          {taxonGroups.map(g => (
-            <option key={g.id} value={g.id}>{g.genus} {g.name} ({g.type})</option>
-          ))}
-        </select>
+      <FormRow label="Angliški sinonimai" dirty={fieldDirty(draft.englishNames, originalDraft?.englishNames)} helper={`Common names anglų k. (e.g. „Aloe vera", „Mother-in-Law's Tongue"). Užpildomi iš iNat per Phase 1. Naudojami fuzzy search'e.`}>
+        <StringArrayChips value={draft.englishNames ?? []} onChange={v => updateField('englishNames', v)} placeholder="pvz. Snake Plant" />
       </FormRow>
-      <FormRow label="Auginimo kontekstas" dirty={fieldDirty(draft.auginimas, originalDraft?.auginimas)} helper="Kur šis augalas dažniausiai auga Lietuvoje." inherited={inh('auginimas')}>
+      {isCultivar && (
+        <FormRow label="Serija (taxonGroup)" dirty={fieldDirty(draft.taxonGroupId, originalDraft?.taxonGroupId)} helper="Cultivar'as priklauso parent serijai — paveldės jos care šabloną.">
+          <select
+            value={draft.taxonGroupId ?? ''}
+            onChange={e => updateField('taxonGroupId', e.target.value || null)}
+            className="w-full bg-bone-50 border border-bone-400/40 rounded-md px-2 py-1.5 text-xs text-forest-700 focus:outline-none focus:border-forest-500"
+          >
+            <option value="">— standalone (be serijos) —</option>
+            {taxonGroups.map(g => (
+              <option key={g.id} value={g.id}>{g.genus} {g.name} ({g.type})</option>
+            ))}
+          </select>
+        </FormRow>
+      )}
+      <FormRow label="Auginimo kategorija" dirty={fieldDirty(draft.auginimas, originalDraft?.auginimas)} helper="Rūšinė augalo kategorija (NE kur konkretus augalas augintas). Sansevieria visada kambarinis, beržas visada laukinis." inherited={inh('auginimas')}>
         <ChipSelect value={draft.auginimas} onChange={v => updateField('auginimas', v)} options={AUGINIMAS_OPTS} allowEmpty />
       </FormRow>
       <FormRow label="Info confidence" dirty={fieldDirty(draft.infoConfidence, originalDraft?.infoConfidence)} helper="Kiek šios kortelės info'ai patikima — kalibracija PFAF/ASPCA atveju.">
@@ -1411,6 +1422,9 @@ function TabIdentificationCultivar({ entry, draft, originalDraft, updateField, t
       </FormRow>
       <div className="text-[10px] text-forest-400 font-mono pt-2 border-t border-bone-400/30">
         ID: <span className="text-forest-500">{entry.id}</span>
+        {!isCultivar && parsed && (
+          <span className="ml-3 text-forest-400">rank: <span className="text-forest-500">{parsed.rank}</span></span>
+        )}
       </div>
     </div>
   )
@@ -1815,30 +1829,78 @@ function TabDescriptionsSeries({ draft, originalDraft, updateField }) {
 
 function TabCareCultivar({ draft, originalDraft, updateField, genusParent }) {
   const inh = (f) => makeInherited(f, draft, genusParent)
+  // SAUGUMAS (2026-05-27): sviesa/vanduo/tresimas/prieziura/laistymasIntervalas
+  // yra OBJEKTAI schema'oj (žr. plantPromptConfig.js). Anksciau jie buvo render'inami
+  // kaip TextArea (str ↔ JSON) — admin'as ten edit'indavo JSON tekstinę formą,
+  // bet užtekdavo netyčia ištrinti } simbolį, kad catalog.sviesa taptų broken
+  // string'u → PlantDetail.jsx:656 `plant.sviesa?.taskai` undefined → section
+  // dingsta user'iui (SILENT DATA LOSS).
+  //
+  // Iki kol bus structured mini-card editor'iai (Audit fix #4), šie 4 laukai
+  // rodomi READ-ONLY (admin mato JSON, bet negali edit'inti). String laukai
+  // (substratas, persodinimas, ziemojimas) lieka editable — jie LEGIT strings.
   return (
     <div className="space-y-4 max-w-3xl">
-      <FormRow label="Šviesa" dirty={fieldDirty(draft.sviesa, originalDraft?.sviesa)} inherited={inh('sviesa')}>
-        <TextArea value={draft.sviesa} onChange={v => updateField('sviesa', v)} rows={2} placeholder="Ryški netiesioginė, 2-4h tiesioginės ryto saulės" />
+      <div className="px-3 py-2.5 bg-amber-50 border border-amber-200/60 rounded-md text-[11px] text-amber-800 flex items-start gap-2">
+        <AlertTriangle size={11} className="flex-shrink-0 mt-0.5" />
+        <div>
+          <p className="font-semibold">Struktūriniai laukai (read-only)</p>
+          <p className="text-[10px] mt-0.5">
+            Šviesa, Vanduo, Tręšimas, Priežiūra, Laistymas — schema turi nested object'us
+            (lygis/taskai/ppfd, etc.). Structured editor'ius pridėsime kitame iteracijoje.
+            Iki to laiko keisk per Firestore Console (ar laukti UI fix'o, kuris
+            ateis greitai).
+          </p>
+        </div>
+      </div>
+
+      <FormRow label="Šviesa (structured)" dirty={fieldDirty(draft.sviesa, originalDraft?.sviesa)} inherited={inh('sviesa')}>
+        <ReadOnlyJsonField value={draft.sviesa} />
       </FormRow>
-      <FormRow label="Vanduo" dirty={fieldDirty(draft.vanduo, originalDraft?.vanduo)} inherited={inh('vanduo')}>
-        <TextArea value={draft.vanduo} onChange={v => updateField('vanduo', v)} rows={2} placeholder="Vidutiniai poreikiai — kas 7d vasarą, kas 14d žiemą" />
+      <FormRow label="Vanduo (structured)" dirty={fieldDirty(draft.vanduo, originalDraft?.vanduo)} inherited={inh('vanduo')}>
+        <ReadOnlyJsonField value={draft.vanduo} />
       </FormRow>
+      <FormRow label="Laistymo intervalas (structured)" dirty={fieldDirty(draft.laistymasIntervalas, originalDraft?.laistymasIntervalas)}>
+        <ReadOnlyJsonField value={draft.laistymasIntervalas} />
+      </FormRow>
+      <FormRow label="Tręšimas (structured)" dirty={fieldDirty(draft.tresimas, originalDraft?.tresimas)} inherited={inh('tresimas')}>
+        <ReadOnlyJsonField value={draft.tresimas} />
+      </FormRow>
+      <FormRow label="Priežiūra — temp/dregme/etc (structured)" dirty={fieldDirty(draft.prieziura, originalDraft?.prieziura)} inherited={inh('prieziura')}>
+        <ReadOnlyJsonField value={draft.prieziura} />
+      </FormRow>
+
+      <div className="pt-2 border-t border-bone-400/30">
+        <p className="font-mono text-[10px] uppercase tracking-wider text-forest-500 mb-2">Tekstinis turinys (editable)</p>
+      </div>
       <FormRow label="Substratas" dirty={fieldDirty(draft.substratas, originalDraft?.substratas)} inherited={inh('substratas')}>
-        <TextArea value={draft.substratas} onChange={v => updateField('substratas', v)} rows={2} />
+        <TextArea value={draft.substratas} onChange={v => updateField('substratas', v)} rows={3} placeholder="Substrato sudėtis, drenažas, pH..." />
       </FormRow>
       <FormRow label="Persodinimas" dirty={fieldDirty(draft.persodinimas, originalDraft?.persodinimas)} inherited={inh('persodinimas')}>
-        <TextArea value={draft.persodinimas} onChange={v => updateField('persodinimas', v)} rows={2} />
+        <TextArea value={draft.persodinimas} onChange={v => updateField('persodinimas', v)} rows={3} placeholder="Kada persodinti, vazono dydis, technique..." />
       </FormRow>
       <FormRow label="Žiemojimas" dirty={fieldDirty(draft.ziemojimas, originalDraft?.ziemojimas)} inherited={inh('ziemojimas')}>
-        <TextArea value={draft.ziemojimas} onChange={v => updateField('ziemojimas', v)} rows={2} />
-      </FormRow>
-      <FormRow label="Tręšimas" dirty={fieldDirty(draft.tresimas, originalDraft?.tresimas)} inherited={inh('tresimas')}>
-        <TextArea value={draft.tresimas} onChange={v => updateField('tresimas', v)} rows={2} />
-      </FormRow>
-      <FormRow label="Priežiūra (kita)" dirty={fieldDirty(draft.prieziura, originalDraft?.prieziura)} inherited={inh('prieziura')}>
-        <TextArea value={draft.prieziura} onChange={v => updateField('prieziura', v)} rows={2} />
+        <TextArea value={draft.ziemojimas} onChange={v => updateField('ziemojimas', v)} rows={3} placeholder="Žiemos periodas, temperatūra, laistymo režimas..." />
       </FormRow>
     </div>
+  )
+}
+
+// Read-only structured field display (iki kol bus structured editor'iai).
+// Rodo pretty-printed JSON gray'inkoj fono kortelej — admin'as mato structure,
+// negali ją laužyti.
+function ReadOnlyJsonField({ value }) {
+  if (value == null) {
+    return (
+      <div className="bg-bone-100 border border-dashed border-bone-400/40 rounded-md px-3 py-2 text-[11px] text-forest-400 italic">
+        (tuščias)
+      </div>
+    )
+  }
+  return (
+    <pre className="bg-bone-100 border border-bone-400/40 rounded-md px-3 py-2 font-mono text-[10px] text-forest-700 leading-relaxed overflow-x-auto whitespace-pre-wrap">
+      {JSON.stringify(value, null, 2)}
+    </pre>
   )
 }
 
@@ -2054,8 +2116,11 @@ function PavojaiRow({ pavojus, onChange, onDelete }) {
 
 function TabClassification({ draft, originalDraft, updateField, genusParent }) {
   const inh = (f) => makeInherited(f, draft, genusParent)
+  // cultivationContext IŠTRINTAS iš cultivar formos (2026-05-27 audit) —
+  // dubliavo `auginimas` Identifikacija tab'e. cultivationContext lieka tik
+  // taxonGroup (series) formoje, kur jis semantiškai tinka (per-series default).
   return (
-    <div className="space-y-4 max-w-2xl">
+    <div className="space-y-4 max-w-3xl">
       <FormRow label="Tipas (laisva forma)" dirty={fieldDirty(draft.tipas, originalDraft?.tipas)} helper={`LT-friendly tipas — pvz. „Sultingas", „Tropinis daugiametis".`} inherited={inh('tipas')}>
         <TextInput value={draft.tipas ?? ''} onChange={v => updateField('tipas', v)} />
       </FormRow>
@@ -2064,9 +2129,6 @@ function TabClassification({ draft, originalDraft, updateField, genusParent }) {
       </FormRow>
       <FormRow label="Augimo greitis" dirty={fieldDirty(draft.augimo_greitis, originalDraft?.augimo_greitis)} inherited={inh('augimo_greitis')}>
         <ChipSelect value={draft.augimo_greitis} onChange={v => updateField('augimo_greitis', v)} options={AUGIMO_GREITIS_OPTS} allowEmpty />
-      </FormRow>
-      <FormRow label="Kontekstas (cultivation)" dirty={fieldDirty(draft.cultivationContext, originalDraft?.cultivationContext)} inherited={inh('cultivationContext')}>
-        <Select value={draft.cultivationContext ?? ''} onChange={v => updateField('cultivationContext', v)} options={['', ...CULTIVATION_CONTEXTS]} />
       </FormRow>
       <FormRow label="Lifecycle" dirty={fieldDirty(draft.lifecycle, originalDraft?.lifecycle)} inherited={inh('lifecycle')}>
         <Select value={draft.lifecycle ?? ''} onChange={v => updateField('lifecycle', v)} options={['', ...LIFECYCLES]} />
@@ -2627,7 +2689,7 @@ function ProvenanceBadge({ entry }) {
 // vienoje vietoje — keičiant tab'ų struktūrą, atnaujini čia.
 const TAB_FIELDS = {
   identification: {
-    cultivar: ['lotyniskas', 'lietuviškas', 'sinonimai', 'taxonGroupId', 'auginimas', 'infoConfidence'],
+    cultivar: ['lotyniskas', 'lietuviškas', 'sinonimai', 'englishNames', 'taxonGroupId', 'auginimas', 'infoConfidence'],
     series:   ['genus', 'name', 'type', 'tipas'],
   },
   photo:          { cultivar: ['image'], series: [] },
@@ -2636,11 +2698,11 @@ const TAB_FIELDS = {
     series:   ['aprasymas', 'idomybes'],
   },
   care: {
-    cultivar: ['sviesa', 'vanduo', 'substratas', 'persodinimas', 'ziemojimas', 'tresimas', 'prieziura'],
+    cultivar: ['sviesa', 'vanduo', 'laistymasIntervalas', 'tresimas', 'prieziura', 'substratas', 'persodinimas', 'ziemojimas'],
     series:   ['careInfo'],
   },
   toxicity:       { cultivar: ['savybes'], series: [] },
-  classification: { cultivar: ['tipas', 'sunkumas', 'augimo_greitis', 'cultivationContext', 'lifecycle', 'hardiness'], series: [] },
+  classification: { cultivar: ['tipas', 'sunkumas', 'augimo_greitis', 'lifecycle', 'hardiness'], series: [] },
   meta:           { cultivar: [], series: [] },
 }
 
@@ -2694,23 +2756,31 @@ function normalizeCultivar(c) {
     aprasymas:          c.aprasymas          ?? '',
     kilme:              c.kilme              ?? '',
     idomybes:           c.idomybes           ?? '',
-    sviesa:             c.sviesa             ?? '',
-    vanduo:             c.vanduo             ?? '',
+    // Care fields — sviesa/vanduo/tresimas/prieziura/laistymasIntervalas yra
+    // OBJEKTAI per schema (žr. plantPromptConfig.js). Substratas/persodinimas/
+    // ziemojimas yra string'ai. Default'inam null object'ams, '' string'ams,
+    // kad structured editor'ius (Audit fix #4) galėtų atskirti.
+    sviesa:             c.sviesa             ?? null,
+    vanduo:             c.vanduo             ?? null,
+    laistymasIntervalas: c.laistymasIntervalas ?? null,
+    tresimas:           c.tresimas           ?? null,
+    prieziura:          c.prieziura          ?? null,
     substratas:         c.substratas         ?? '',
     persodinimas:       c.persodinimas       ?? '',
     ziemojimas:         c.ziemojimas         ?? '',
-    tresimas:           c.tresimas           ?? '',
-    prieziura:          c.prieziura          ?? '',
     tipas:              c.tipas              ?? '',
     sunkumas:           c.sunkumas           ?? '',
     augimo_greitis:     c.augimo_greitis     ?? '',
-    cultivationContext: c.cultivationContext ?? '',
     lifecycle:          c.lifecycle          ?? '',
     hardiness:          c.hardiness          ?? '',
     savybes:            c.savybes            ?? null,
     sinonimai:          c.sinonimai          ?? [],
+    englishNames:       c.englishNames       ?? [],
     auginimas:          c.auginimas          ?? '',
     infoConfidence:     c.infoConfidence     ?? '',
+    // cultivationContext IŠTRINTA — duplikavo auginimas (subagent §1, user
+    // patvirtino 2026-05-27). taxonGroup serijoms paliekamas (serijos
+    // metadata, kitokia semantika).
   }
 }
 
