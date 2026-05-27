@@ -1294,6 +1294,20 @@ async function fetchBraveCandidates(latinName) {
 //
 // Naudoja egzistuojantį /api/rehost-image endpoint'ą (auth-protected,
 // Sharp resize'as iki 1200px, JPEG q85, Firebase Storage upload).
+//
+// CACHE-BUST (2026-05-27 fix): rehost storage path'as yra deterministic
+// (`catalog/{slug}/hero.jpg`) + Storage set'ina cacheControl=immutable
+// 1 metams. Tai reiškia, kad antras nuotraukos pakeitimas:
+//   • Overwrite'ina failą Storage'e (Sharp upload tuo pačiu path'u)
+//   • BET URL'as išlieka identiškas → browser rodo cached old image,
+//     React <img> su tuo pačiu src nere-mount'ina, Firestore listener
+//     nemato pakeitimo (image laukas tas pats string'as).
+// User bug report'as: „antra kart keisciant jau nebeissaugo, palieka pirma".
+// Realybėje save'asi, bet browser'is rodo cache.
+//
+// Fix: appendinam ?v=timestamp query param'ą. Storage failo location'as
+// nesikeičia (param ignoruojamas), bet URL string'as kitas → cache miss,
+// React re-mount, Firestore notice'ina value change.
 async function rehostImage(externalUrl, latinName) {
   const idToken = await auth.currentUser?.getIdToken().catch(() => null)
   if (!idToken) throw new Error('Auth required (Firebase token missing)')
@@ -1313,7 +1327,9 @@ async function rehostImage(externalUrl, latinName) {
   }
   const data = await res.json()
   if (!data.url) throw new Error('rehost grąžino tuščią URL')
-  return data.url
+  // Strip esamą ?v=... jei yra (nesikompoundinti), tada append naują timestamp.
+  const baseUrl = data.url.split('?')[0]
+  return `${baseUrl}?v=${Date.now()}`
 }
 
 // Image URL helpers — atskirti mūsų Storage'ą nuo external'iu
