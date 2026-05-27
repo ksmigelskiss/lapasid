@@ -39,7 +39,7 @@ import {
 } from 'lucide-react'
 import { ProfileContent } from '../PlantDetail'
 import PlantImage from '../brand/PlantImage'
-import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS, LIFECYCLES } from '../../utils/taxonGroups'
+import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS } from '../../utils/taxonGroups'
 import { parseLatinName } from '../../utils/latinName'
 import { auth } from '../../utils/firebase'
 import { ExternalLink, Sun, Droplets, Thermometer, Wind, Sparkles, Calendar } from 'lucide-react'
@@ -96,6 +96,17 @@ const AUGIMO_GREITIS_OPTS = [
   { value: 'lėtas',     label: 'Lėtas'     },
   { value: 'vidutinis', label: 'Vidutinis' },
   { value: 'greitas',   label: 'Greitas'   },
+]
+
+// Lifecycle — schema'os EN reikšmės (annual/biennial/perennial/woody/bulbous)
+// → LT vartotojui draugiškos etiketės. Schema value (EN) išlieka — tas pats
+// pattern'as kaip SEVERITY_OPTS.
+const LIFECYCLE_OPTS = [
+  { value: 'annual',    label: 'Vienametis',  help: 'Gyvena 1 sezoną (pvz. nasturtės, saulutės).' },
+  { value: 'biennial',  label: 'Dvimetis',    help: 'Du metai gyvavimo (pvz. naktižiedė).' },
+  { value: 'perennial', label: 'Daugiametis', help: 'Žolinis daugiametis (pvz. astrai, peonijos, daugelis kambarinių).' },
+  { value: 'woody',     label: 'Sumedėjęs',   help: 'Medis ar krūmas (pvz. rožės, alyvos, fikusas).' },
+  { value: 'bulbous',   label: 'Svogūninis',  help: 'Turi svogūnėlį (pvz. tulpės, narcizai, hipeastrai).' },
 ]
 
 // ── Tab definitions (Audit fix #5 — 7→5 reorg) ──────────────────────
@@ -1509,8 +1520,8 @@ function TabAtributai({ entry, draft, originalDraft, updateField, genusParent })
       <FormRow label="Augimo greitis" dirty={fieldDirty(draft.augimo_greitis, originalDraft?.augimo_greitis)} inherited={inh('augimo_greitis')}>
         <ChipSelect value={draft.augimo_greitis} onChange={v => updateField('augimo_greitis', v)} options={AUGIMO_GREITIS_OPTS} allowEmpty />
       </FormRow>
-      <FormRow label="Lifecycle" dirty={fieldDirty(draft.lifecycle, originalDraft?.lifecycle)} inherited={inh('lifecycle')}>
-        <Select value={draft.lifecycle ?? ''} onChange={v => updateField('lifecycle', v)} options={['', ...LIFECYCLES]} />
+      <FormRow label="Augimo trukmė" dirty={fieldDirty(draft.lifecycle, originalDraft?.lifecycle)} helper="Augalo gyvybės ciklas — kiek laiko gyvena ir kaip auga." inherited={inh('lifecycle')}>
+        <ChipSelect value={draft.lifecycle} onChange={v => updateField('lifecycle', v)} options={LIFECYCLE_OPTS} allowEmpty />
       </FormRow>
       <FormRow label="Hardiness" dirty={fieldDirty(draft.hardiness, originalDraft?.hardiness)} helper={`USDA zona arba °C ribos. Pvz. „USDA 9-11, -1°C".`} inherited={inh('hardiness')}>
         <TextInput value={draft.hardiness ?? ''} onChange={v => updateField('hardiness', v)} placeholder="USDA 9-11, -1°C" />
