@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-23T22:37:26.276Z",
-  "totalGenera": 357,
+  "generatedAt": "2026-05-27T07:18:05.862Z",
+  "totalGenera": 275,
   "methodology": "Multi-criteria filtering: Beckett OR Cheng indoor source + LT name confidence + gaspadorius market signal + outdoor blacklist exclusion + specialty expert additions. Designed to replace Beckett 1993 raw indoor list which has ~30% outdoor/seasonal noise for LT context.",
   "tiers": {
     "tier1_high": [
@@ -15,7 +15,6 @@
       "Alocasia",
       "Aloe",
       "Alpinia",
-      "Amaranthus",
       "Ananas",
       "Anigozanthos",
       "Anthurium",
@@ -33,19 +32,14 @@
       "Brassia",
       "Browallia",
       "Brunfelsia",
-      "Caesalpinia",
       "Caladium",
       "Calanthe",
       "Calathea",
       "Calceolaria",
-      "Carex",
       "Caryota",
-      "Cassia",
       "Catharanthus",
       "Cattleya",
-      "Celosia",
       "Cephalocereus",
-      "Ceratonia",
       "Cereus",
       "Ceropegia",
       "Chamaedorea",
@@ -71,22 +65,17 @@
       "Cyperus",
       "Cyrtomium",
       "Davallia",
-      "Delosperma",
       "Dieffenbachia",
       "Dionaea",
       "Disocactus",
       "Dracaena",
-      "Dryopteris",
       "Echeveria",
       "Echinocactus",
       "Echinocereus",
-      "Echium",
       "Epiphyllum",
       "Epipremnum",
       "Eranthemum",
-      "Eschscholzia",
       "Espostoa",
-      "Eucomis",
       "Euphorbia",
       "Fatsia",
       "Ficus",
@@ -95,7 +84,6 @@
       "Gardenia",
       "Gasteria",
       "Gerbera",
-      "Glechoma",
       "Gloriosa",
       "Gloxinia",
       "Grevillea",
@@ -107,7 +95,6 @@
       "Hibiscus",
       "Hippeastrum",
       "Hoya",
-      "Humulus",
       "Impatiens",
       "Ipomoea",
       "Iresine",
@@ -117,7 +104,6 @@
       "Lantana",
       "Laurus",
       "Leptospermum",
-      "Linaria",
       "Lithops",
       "Livistona",
       "Lotus",
@@ -129,12 +115,10 @@
       "Monstera",
       "Myrtus",
       "Nematanthus",
-      "Nemesia",
       "Neoregelia",
       "Nepenthes",
       "Nidularium",
       "Odontoglossum",
-      "Ophiopogon",
       "Opuntia",
       "Oxalis",
       "Pachira",
@@ -161,7 +145,6 @@
       "Rhipsalis",
       "Rhoeo",
       "Rhoicissus",
-      "Ricinus",
       "Sabal",
       "Saintpaulia",
       "Sansevieria",
@@ -187,8 +170,6 @@
       "Tillandsia",
       "Tolmiea",
       "Tradescantia",
-      "Tropaeolum",
-      "Valeriana",
       "Vanda",
       "Vriesea",
       "Washingtonia",
@@ -201,48 +182,31 @@
       "Zingiber"
     ],
     "tier2_medium": [
-      "Acacia",
       "Acalypha",
       "Aichryson",
       "Allamanda",
-      "Alonsoa",
       "Amaryllis",
       "Amorphophallus",
       "Anastatica",
-      "Annona",
       "Ansellia",
       "Aphelandra",
-      "Arachis",
       "Archontophoenix",
       "Ariocarpus",
       "Arisaema",
-      "Arundo",
       "Astrophytum",
-      "Aucuba",
-      "Azolla",
       "Beaucarnea",
       "Beschorneria",
       "Bletilla",
-      "Boehmeria",
       "Borzicactus",
       "Brassavola",
       "Bulbophyllum",
-      "Callistemon",
-      "Carica",
-      "Carnegiea",
-      "Carpobrotus",
-      "Ceratopteris",
       "Chamaecereus",
       "Chamaerops",
-      "Cheiranthus",
-      "Choisya",
-      "Clarkia",
       "Cleistocactus",
       "Cochlioda",
       "Coffea",
       "Coleus",
       "Copiapoa",
-      "Corypha",
       "Cotyledon",
       "Crinum",
       "Ctenanthe",
@@ -254,104 +218,59 @@
       "Dioscorea",
       "Dischidia",
       "Dizygotheca",
-      "Dorotheanthus",
       "Drosera",
       "Dyckia",
-      "Ecballium",
       "Encephalartos",
       "Epidendrum",
       "Episcia",
       "Epithelantha",
-      "Erythrina",
       "Eucharis",
-      "Eugenia",
-      "Eustoma",
       "Exacum",
       "Fatshedera",
-      "Felicia",
       "Ferocactus",
       "Fortunella",
       "Frailea",
-      "Galtonia",
       "Globba",
-      "Gossypium",
       "Gymnocalycium",
       "Gynura",
       "Haageocereus",
-      "Heliotropium",
       "Howeia",
-      "Ixia",
-      "Ixiolirion",
       "Jacaranda",
       "Jatropha",
       "Juanulloa",
       "Kaempferia",
-      "Lagenaria",
-      "Lampranthus",
       "Latania",
       "Leuchtenbergia",
-      "Luffa",
       "Lycaste",
       "Lygodium",
       "Macropiper",
       "Macrozamia",
-      "Manihot",
-      "Marsilea",
-      "Matthiola",
       "Medinilla",
-      "Melia",
       "Microcoelum",
       "Microsorum",
       "Miltoniopsis",
-      "Mimulus",
-      "Momordica",
-      "Muehlenbeckia",
-      "Nelumbo",
-      "Nemophila",
       "Nephrolepis",
-      "Nerine",
       "Nerium",
-      "Nierembergia",
       "Oncidium",
-      "Osteospermum",
       "Pachystachys",
       "Parodia",
       "Pelecyphora",
       "Pellaea",
       "Pentas",
-      "Perilla",
       "Persea",
-      "Phaius",
       "Phlebodium",
-      "Pleione",
-      "Plumbago",
-      "Plumeria",
       "Pogonatherum",
-      "Polianthes",
-      "Polypodium",
       "Polystichum",
       "Pteris",
-      "Pyrostegia",
-      "Ravenala",
       "Rhapis",
-      "Ruscus",
-      "Schinus",
-      "Schizanthus",
       "Scindapsus",
       "Selaginella",
       "Selenicereus",
       "Sophronitis",
-      "Sprekelia",
       "Stanhopea",
-      "Strophanthus",
-      "Syagrus",
-      "Tabernaemontana",
       "Tacitus",
-      "Tagetes",
-      "Tecoma",
       "Thelocactus",
       "Thunbergia",
-      "Trachycarpus",
       "Vanilla",
       "Zamia",
       "Zygopetalum"
@@ -363,76 +282,65 @@
       "Haworthiopsis",
       "Pachypodium",
       "Radermachera",
-      "Rhoipsaphis",
-      "Sempervivum"
+      "Rhoipsaphis"
     ]
   },
   "excluded": {
-    "count": 229,
+    "count": 315,
     "sample": [
+      "ACACIA",
       "ACER",
       "ACHILLEA",
       "AGAPANTHUS",
       "ALCHEMILLA",
       "ALLIUM",
+      "ALONSOA",
       "ALSTROEMERIA",
+      "AMARANTHUS",
       "ANCHUSA",
       "ANEMONE",
+      "ANNONA",
       "ANTIRRHINUM",
       "AQUILEGIA",
       "ARABIS",
+      "ARACHIS",
       "ARNICA",
       "ARTEMISIA",
+      "ARUNDO",
       "ASCLEPIAS",
       "ASTILBE",
       "AUBRIETA",
+      "AUCUBA",
       "AURINIA",
+      "AZOLLA",
       "BERBERIS",
       "BERGENIA",
+      "BOEHMERIA",
       "BORAGO",
       "BRASSICA",
       "BUDDLEJA",
       "BUXUS",
       "CABOMBA",
+      "CAESALPINIA",
       "CALENDULA",
+      "CALLISTEMON",
       "CAMELLIA",
       "CAMPANULA",
       "CANNA",
       "CAPSICUM",
       "CARAGANA",
+      "CAREX",
+      "CARICA",
+      "CARNEGIEA",
       "CARPINUS",
+      "CARPOBROTUS",
+      "CASSIA",
       "CATALPA",
       "CELASTRUS",
-      "CENTAUREA",
-      "CERCIDIPHYLLUM",
-      "CERCIS",
-      "CHAENOMELES",
-      "CHIONODOXA",
-      "CHRYSANTHEMUM",
-      "CICHORIUM",
-      "CITRUS",
-      "CLEMATIS",
-      "COLCHICUM",
-      "CONVALLARIA",
-      "CORNUS",
-      "CORYDALIS",
-      "CORYLOPSIS",
-      "CORYLUS",
-      "COTONEASTER",
-      "CRATAEGUS"
+      "CELOSIA"
     ]
   },
   "byGenus": {
-    "Acacia": {
-      "tier": 2,
-      "ltName": "Akacija",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Acalypha": {
       "tier": 2,
       "ltName": "Akolifa",
@@ -573,29 +481,9 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Alonsoa": {
-      "tier": 2,
-      "ltName": "Alonsoa",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Alpinia": {
       "tier": 1,
       "ltName": "Alpinija",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Amaranthus": {
-      "tier": 1,
-      "ltName": "Burnotis",
       "ltConfidence": "high",
       "beckett": true,
       "cheng": false,
@@ -653,16 +541,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Annona": {
-      "tier": 2,
-      "ltName": "Anona",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Ansellia": {
       "tier": 2,
       "ltName": "Afrikinė anzelija",
@@ -690,16 +568,6 @@
       "beckett": false,
       "cheng": false,
       "gaspadorius": true,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Arachis": {
-      "tier": 2,
-      "ltName": "Valgomasis arachis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
       "indoor_confidence": "likely",
       "notes": ""
     },
@@ -763,16 +631,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Arundo": {
-      "tier": 2,
-      "ltName": "nendrės vardas",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Asparagus": {
       "tier": 1,
       "ltName": "Smidras",
@@ -806,26 +664,6 @@
     "Astrophytum": {
       "tier": 2,
       "ltName": "Žvaigždinas",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Aucuba": {
-      "tier": 2,
-      "ltName": "japoninė aukuba",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Azolla": {
-      "tier": 2,
-      "ltName": "azolė",
       "ltConfidence": "mid",
       "beckett": true,
       "cheng": false,
@@ -903,16 +741,6 @@
       "indoor_confidence": "likely",
       "notes": ""
     },
-    "Boehmeria": {
-      "tier": 2,
-      "ltName": "hemirija",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Borzicactus": {
       "tier": 2,
       "ltName": "slėpulis",
@@ -983,16 +811,6 @@
       "indoor_confidence": "likely",
       "notes": ""
     },
-    "Caesalpinia": {
-      "tier": 1,
-      "ltName": "Cezalpinija",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
     "Caladium": {
       "tier": 1,
       "ltName": "Kaladis",
@@ -1033,56 +851,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Callistemon": {
-      "tier": 2,
-      "ltName": "Kalistemonai",
-      "ltConfidence": "mid",
-      "beckett": false,
-      "cheng": false,
-      "gaspadorius": true,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Carex": {
-      "tier": 1,
-      "ltName": "Viksva",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Carica": {
-      "tier": 2,
-      "ltName": "Melionmedis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Carnegiea": {
-      "tier": 2,
-      "ltName": "Didžioji karnegija",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Carpobrotus": {
-      "tier": 2,
-      "ltName": "Svaidulis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Caryota": {
       "tier": 1,
       "ltName": "kariota",
@@ -1090,16 +858,6 @@
       "beckett": true,
       "cheng": false,
       "gaspadorius": true,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Cassia": {
-      "tier": 1,
-      "ltName": "kasija",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
       "indoor_confidence": "verified",
       "notes": ""
     },
@@ -1123,16 +881,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Celosia": {
-      "tier": 1,
-      "ltName": "Celiozija",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
     "Cephalocereus": {
       "tier": 1,
       "ltName": "žvakidis",
@@ -1151,26 +899,6 @@
       "cheng": false,
       "gaspadorius": false,
       "indoor_confidence": "specialty",
-      "notes": ""
-    },
-    "Ceratonia": {
-      "tier": 1,
-      "ltName": "Ceratonija",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Ceratopteris": {
-      "tier": 2,
-      "ltName": "Homfarn",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Cereus": {
@@ -1195,7 +923,7 @@
     },
     "Chamaecereus": {
       "tier": 2,
-      "ltName": "Echinopsis",
+      "ltName": null,
       "ltConfidence": "mid",
       "beckett": true,
       "cheng": false,
@@ -1223,16 +951,6 @@
       "indoor_confidence": "likely",
       "notes": ""
     },
-    "Cheiranthus": {
-      "tier": 2,
-      "ltName": "Tvertikas",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Chlorophytum": {
       "tier": 1,
       "ltName": "Chlorofitas",
@@ -1243,16 +961,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Choisya": {
-      "tier": 2,
-      "ltName": "čiozenė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Cissus": {
       "tier": 1,
       "ltName": "lapfistas",
@@ -1261,16 +969,6 @@
       "cheng": false,
       "gaspadorius": true,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Clarkia": {
-      "tier": 2,
-      "ltName": "klarkija",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Cleistocactus": {
@@ -1411,16 +1109,6 @@
       "cheng": false,
       "gaspadorius": true,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Corypha": {
-      "tier": 2,
-      "ltName": "kuodas",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Coryphantha": {
@@ -1593,16 +1281,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Delosperma": {
-      "tier": 1,
-      "ltName": "mudrę",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
     "Dendrobium": {
       "tier": 2,
       "ltName": null,
@@ -1693,16 +1371,6 @@
       "indoor_confidence": "likely",
       "notes": ""
     },
-    "Dorotheanthus": {
-      "tier": 2,
-      "ltName": "chvatka",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Dracaena": {
       "tier": 1,
       "ltName": "Dracena",
@@ -1723,29 +1391,9 @@
       "indoor_confidence": "likely",
       "notes": ""
     },
-    "Dryopteris": {
-      "tier": 1,
-      "ltName": "Papartis",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
     "Dyckia": {
       "tier": 2,
       "ltName": "Skruobenė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Ecballium": {
-      "tier": 2,
-      "ltName": "tryškėnis",
       "ltConfidence": "mid",
       "beckett": true,
       "cheng": false,
@@ -1776,16 +1424,6 @@
     "Echinocereus": {
       "tier": 1,
       "ltName": "ežiažvakis",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Echium": {
-      "tier": 1,
-      "ltName": "Ežeinis",
       "ltConfidence": "high",
       "beckett": true,
       "cheng": false,
@@ -1863,26 +1501,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Erythrina": {
-      "tier": 2,
-      "ltName": "Raudūnė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Eschscholzia": {
-      "tier": 1,
-      "ltName": "EŠOLCIJA",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
     "Espostoa": {
       "tier": 1,
       "ltName": "stulpis",
@@ -1903,26 +1521,6 @@
       "indoor_confidence": "likely",
       "notes": ""
     },
-    "Eucomis": {
-      "tier": 1,
-      "ltName": "Eukomiai",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Eugenia": {
-      "tier": 2,
-      "ltName": "eugenija",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Euphorbia": {
       "tier": 1,
       "ltName": "Karpažolė",
@@ -1932,16 +1530,6 @@
       "gaspadorius": true,
       "indoor_confidence": "verified",
       "notes": "Indoor: E. milii (crown of thorns), E. tirucalli, E. trigona"
-    },
-    "Eustoma": {
-      "tier": 2,
-      "ltName": "Ešolcija Eustoma",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
     },
     "Exacum": {
       "tier": 2,
@@ -1971,16 +1559,6 @@
       "cheng": false,
       "gaspadorius": true,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Felicia": {
-      "tier": 2,
-      "ltName": "felicijė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Ferocactus": {
@@ -2043,16 +1621,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Galtonia": {
-      "tier": 2,
-      "ltName": "Galtonija",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Gardenia": {
       "tier": 1,
       "ltName": "Gardenija",
@@ -2076,16 +1644,6 @@
     "Gerbera": {
       "tier": 1,
       "ltName": "Gerbera",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Glechoma": {
-      "tier": 1,
-      "ltName": "Tramažolė",
       "ltConfidence": "high",
       "beckett": true,
       "cheng": false,
@@ -2121,16 +1679,6 @@
       "cheng": false,
       "gaspadorius": true,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Gossypium": {
-      "tier": 2,
-      "ltName": "Vilnamedis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Grevillea": {
@@ -2233,16 +1781,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Heliotropium": {
-      "tier": 2,
-      "ltName": "Heliotropas",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Hibiscus": {
       "tier": 1,
       "ltName": "Kinrožė",
@@ -2283,16 +1821,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Humulus": {
-      "tier": 1,
-      "ltName": "Apynys",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
     "Impatiens": {
       "tier": 1,
       "ltName": "Sprigė",
@@ -2321,26 +1849,6 @@
       "cheng": false,
       "gaspadorius": true,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Ixia": {
-      "tier": 2,
-      "ltName": "iksija",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Ixiolirion": {
-      "tier": 2,
-      "ltName": "Mėlynutiniai",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Jacaranda": {
@@ -2413,26 +1921,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Lagenaria": {
-      "tier": 2,
-      "ltName": "butelis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Lampranthus": {
-      "tier": 2,
-      "ltName": "lamprantas",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Lantana": {
       "tier": 1,
       "ltName": "lantana",
@@ -2483,16 +1971,6 @@
       "indoor_confidence": "likely",
       "notes": ""
     },
-    "Linaria": {
-      "tier": 1,
-      "ltName": "Linažolė",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
     "Lithops": {
       "tier": 1,
       "ltName": "litopsis",
@@ -2521,16 +1999,6 @@
       "cheng": false,
       "gaspadorius": true,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Luffa": {
-      "tier": 2,
-      "ltName": "plaušenė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Lycaste": {
@@ -2583,16 +2051,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Manihot": {
-      "tier": 2,
-      "ltName": "Maniokas",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Maranta": {
       "tier": 1,
       "ltName": "Maranta",
@@ -2603,39 +2061,9 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Marsilea": {
-      "tier": 2,
-      "ltName": "marsilija",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Matthiola": {
-      "tier": 2,
-      "ltName": "Leukonija",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Medinilla": {
       "tier": 2,
       "ltName": "Medinilė puikioji",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Melia": {
-      "tier": 2,
-      "ltName": "medilija",
       "ltConfidence": "mid",
       "beckett": true,
       "cheng": false,
@@ -2703,26 +2131,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Mimulus": {
-      "tier": 2,
-      "ltName": "Puikūnas",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Momordica": {
-      "tier": 2,
-      "ltName": "kandantis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Monstera": {
       "tier": 1,
       "ltName": "Monstera",
@@ -2731,16 +2139,6 @@
       "cheng": true,
       "gaspadorius": true,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Muehlenbeckia": {
-      "tier": 2,
-      "ltName": "Draikūnė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Myrtus": {
@@ -2753,16 +2151,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Nelumbo": {
-      "tier": 2,
-      "ltName": "Lotosas",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Nematanthus": {
       "tier": 1,
       "ltName": "Nematantas",
@@ -2771,26 +2159,6 @@
       "cheng": false,
       "gaspadorius": true,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Nemesia": {
-      "tier": 1,
-      "ltName": "nemėzija",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Nemophila": {
-      "tier": 2,
-      "ltName": "miškelis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Neoregelia": {
@@ -2823,16 +2191,6 @@
       "indoor_confidence": "likely",
       "notes": ""
     },
-    "Nerine": {
-      "tier": 2,
-      "ltName": "nerinė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Nerium": {
       "tier": 2,
       "ltName": "oleandras",
@@ -2851,16 +2209,6 @@
       "cheng": false,
       "gaspadorius": true,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Nierembergia": {
-      "tier": 2,
-      "ltName": "nyrembergija",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Odontoglossum": {
@@ -2883,16 +2231,6 @@
       "indoor_confidence": "likely",
       "notes": ""
     },
-    "Ophiopogon": {
-      "tier": 1,
-      "ltName": "altys",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": true,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
     "Opuntia": {
       "tier": 1,
       "ltName": "opuncija",
@@ -2901,16 +2239,6 @@
       "cheng": false,
       "gaspadorius": false,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Osteospermum": {
-      "tier": 2,
-      "ltName": "Kaulasėklis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Oxalis": {
@@ -3063,29 +2391,9 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Perilla": {
-      "tier": 2,
-      "ltName": "perila",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Persea": {
       "tier": 2,
       "ltName": "persja",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Phaius": {
-      "tier": 2,
-      "ltName": "Skėtris",
       "ltConfidence": "mid",
       "beckett": true,
       "cheng": false,
@@ -3193,36 +2501,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Pleione": {
-      "tier": 2,
-      "ltName": "Plejonė (augalas)",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Plumbago": {
-      "tier": 2,
-      "ltName": "švinas",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Plumeria": {
-      "tier": 2,
-      "ltName": "Jostras",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Pogonatherum": {
       "tier": 2,
       "ltName": null,
@@ -3230,16 +2508,6 @@
       "beckett": false,
       "cheng": false,
       "gaspadorius": true,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Polianthes": {
-      "tier": 2,
-      "ltName": "tuberozė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
       "indoor_confidence": "likely",
       "notes": ""
     },
@@ -3251,16 +2519,6 @@
       "cheng": false,
       "gaspadorius": false,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Polypodium": {
-      "tier": 2,
-      "ltName": "Paprastoji šertvė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Polystichum": {
@@ -3283,16 +2541,6 @@
       "indoor_confidence": "likely",
       "notes": ""
     },
-    "Pyrostegia": {
-      "tier": 2,
-      "ltName": "Ugniaginė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Radermachera": {
       "tier": 3,
       "ltName": null,
@@ -3302,16 +2550,6 @@
       "gaspadorius": false,
       "indoor_confidence": "specialty",
       "notes": "China doll plant — indoor"
-    },
-    "Ravenala": {
-      "tier": 2,
-      "ltName": "ravenala",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
     },
     "Rebutia": {
       "tier": 1,
@@ -3393,26 +2631,6 @@
       "indoor_confidence": "specialty",
       "notes": ""
     },
-    "Ricinus": {
-      "tier": 1,
-      "ltName": "Ricinmedis",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Ruscus": {
-      "tier": 2,
-      "ltName": "Pelžiedė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Sabal": {
       "tier": 1,
       "ltName": "sabalpalmė",
@@ -3461,26 +2679,6 @@
       "cheng": false,
       "gaspadorius": true,
       "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Schinus": {
-      "tier": 2,
-      "ltName": "Pirulis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Schizanthus": {
-      "tier": 2,
-      "ltName": "Skeltažiedis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
       "notes": ""
     },
     "Schlumbergera": {
@@ -3552,16 +2750,6 @@
       "gaspadorius": false,
       "indoor_confidence": "likely",
       "notes": ""
-    },
-    "Sempervivum": {
-      "tier": 3,
-      "ltName": "Šilropė",
-      "ltConfidence": "high",
-      "beckett": false,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "specialty",
-      "notes": "Mostly outdoor; some terrarium use"
     },
     "Senecio": {
       "tier": 1,
@@ -3643,16 +2831,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Sprekelia": {
-      "tier": 2,
-      "ltName": "sprekelija",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Stanhopea": {
       "tier": 2,
       "ltName": "Lūpragė",
@@ -3703,26 +2881,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Strophanthus": {
-      "tier": 2,
-      "ltName": "strofantas",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Syagrus": {
-      "tier": 2,
-      "ltName": "Kiaulpalmės",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Syngonium": {
       "tier": 1,
       "ltName": "Singonis",
@@ -3733,39 +2891,9 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Tabernaemontana": {
-      "tier": 2,
-      "ltName": "Dvazgis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Tacitus": {
       "tier": 2,
-      "ltName": "Serentis",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Tagetes": {
-      "tier": 2,
-      "ltName": "serenitė",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
-    "Tecoma": {
-      "tier": 2,
-      "ltName": "Tekoma",
+      "ltName": null,
       "ltConfidence": "mid",
       "beckett": true,
       "cheng": false,
@@ -3823,16 +2951,6 @@
       "indoor_confidence": "verified",
       "notes": ""
     },
-    "Trachycarpus": {
-      "tier": 2,
-      "ltName": "šiurkštus",
-      "ltConfidence": "mid",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "likely",
-      "notes": ""
-    },
     "Tradescantia": {
       "tier": 1,
       "ltName": "Tradeskantė",
@@ -3842,26 +2960,6 @@
       "gaspadorius": true,
       "indoor_confidence": "verified",
       "notes": "Indoor: T. zebrina/pallida; outdoor: T. virginiana"
-    },
-    "Tropaeolum": {
-      "tier": 1,
-      "ltName": "Nasturtė",
-      "ltConfidence": "high",
-      "beckett": true,
-      "cheng": false,
-      "gaspadorius": false,
-      "indoor_confidence": "verified",
-      "notes": ""
-    },
-    "Valeriana": {
-      "tier": 1,
-      "ltName": "Valerijonas",
-      "ltConfidence": "high",
-      "beckett": false,
-      "cheng": false,
-      "gaspadorius": true,
-      "indoor_confidence": "verified",
-      "notes": ""
     },
     "Vanda": {
       "tier": 1,

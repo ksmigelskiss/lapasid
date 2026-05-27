@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-23T22:45:28.109Z",
-  "totalCandidates": 300,
+  "generatedAt": "2026-05-27T07:18:06.093Z",
+  "totalCandidates": 274,
   "schemaVersion": 1,
   "tiers": {
     "tier1": [
@@ -64,7 +64,6 @@
       "Fatsia",
       "Nematanthus",
       "Aphelandra",
-      "Callistemon citrinus",
       "Ctenanthe",
       "Exacum affine",
       "Globba winitii",
@@ -75,50 +74,33 @@
       "Microsorum",
       "Allamanda",
       "Chamaecereus",
-      "Cheiranthus",
       "Macropiper",
       "Persea",
       "Polystichum",
       "Selaginella",
       "Tacitus",
-      "Tagetes",
       "Thunbergia",
-      "Acacia",
       "Acalypha",
       "Aichryson",
-      "Alonsoa",
       "Amaryllis",
       "Amorphophallus",
       "Anastatica",
-      "Annona",
       "Ansellia",
-      "Arachis",
       "Archontophoenix",
       "Ariocarpus",
       "Arisaema",
-      "Arundo",
       "Astrophytum",
-      "Aucuba",
-      "Azolla",
       "Beschorneria",
       "Bletilla",
-      "Boehmeria",
       "Borzicactus",
       "Brassavola",
       "Bulbophyllum",
-      "Carica",
-      "Carnegiea",
-      "Carpobrotus",
-      "Ceratopteris",
       "Chamaerops",
-      "Choisya",
-      "Clarkia",
       "Cleistocactus",
       "Cochlioda",
       "Coffea",
       "Coleus",
       "Copiapoa",
-      "Corypha",
       "Cotyledon",
       "Crinum",
       "Curculigo",
@@ -128,39 +110,54 @@
       "Dioscorea",
       "Dischidia",
       "Dizygotheca",
-      "Dorotheanthus",
       "Dyckia",
-      "Ecballium",
       "Encephalartos",
       "Epidendrum",
       "Episcia",
       "Epithelantha",
-      "Erythrina",
       "Eucharis",
-      "Eugenia",
-      "Eustoma",
-      "Felicia",
       "Ferocactus",
       "Fortunella",
       "Frailea",
-      "Galtonia",
-      "Gossypium",
       "Gymnocalycium",
       "Haageocereus",
-      "Heliotropium",
-      "Ixia",
-      "Ixiolirion",
       "Jacaranda",
       "Juanulloa",
       "Kaempferia",
-      "Lagenaria",
-      "Lampranthus",
-      "Latania"
+      "Latania",
+      "Leuchtenbergia",
+      "Lycaste",
+      "Lygodium",
+      "Macrozamia",
+      "Medinilla",
+      "Nephrolepis",
+      "Nerium",
+      "Pachystachys",
+      "Parodia",
+      "Pelecyphora",
+      "Pentas",
+      "Pteris",
+      "Scindapsus",
+      "Selenicereus",
+      "Sophronitis",
+      "Stanhopea",
+      "Thelocactus",
+      "Vanilla",
+      "Zamia",
+      "Zygopetalum",
+      "Dendrobium densiflorum",
+      "Fatshedera lizei",
+      "Howeia",
+      "Jatropha podagrica",
+      "Microcoelum weddeliamun",
+      "Oncidium",
+      "Pellaea",
+      "Pogonatherum paniceum",
+      "Miltoniopsis",
+      "Aeonium",
+      "Cephalotus"
     ],
     "tier3": [
-      "Sempervivum",
-      "Aeonium",
-      "Cephalotus",
       "Curio",
       "Haworthiopsis",
       "Pachypodium",
@@ -202,20 +199,12 @@
       "Platycerium",
       "Rhoeo spathacea",
       "Schefflera",
-      "Carex",
-      "Celosia",
-      "Delosperma",
       "Hippeastrum",
       "Asplenium",
       "Cereus",
       "Chlorophytum",
-      "Dryopteris",
       "Echinocactus",
-      "Eschscholzia",
-      "Glechoma",
       "Hibiscus",
-      "Humulus",
-      "Linaria",
       "Mimosa",
       "Pereskia",
       "Polygala",
@@ -242,7 +231,6 @@
       "Microlepia speluncae",
       "Myrtus communis",
       "Odontoglossum",
-      "Ophiopogon",
       "Pavonia multiflora",
       "Phoenix",
       "Pisonia umbellifera",
@@ -259,17 +247,12 @@
       "Zebrina",
       "Achimenes",
       "Gerbera",
-      "Amaranthus",
       "Aristolochia",
-      "Cassia",
-      "Echium",
       "Helichrysum",
       "Ipomoea",
       "Lantana",
       "Laurus",
       "Plectranthus",
-      "Ricinus",
-      "Tropaeolum",
       "Agave",
       "Colocasia",
       "Freesia",
@@ -278,23 +261,19 @@
       "Alpinia",
       "Billbergia",
       "Brassia",
-      "Caesalpinia",
       "Calanthe",
       "Cephalocereus",
-      "Ceratonia",
       "Coelogyne",
       "Coryphantha",
       "Curcuma",
       "Disocactus",
       "Echinocereus",
       "Espostoa",
-      "Eucomis",
       "Gasteria",
       "Guzmania",
       "Hedychium",
       "Lithops",
       "Livistona",
-      "Nemesia",
       "Opuntia",
       "Phragmipedium",
       "Rebutia",
@@ -302,12 +281,7 @@
       "Stapelia",
       "Vanda",
       "Zephyranthes",
-      "Zingiber",
-      "Valeriana",
-      "Leuchtenbergia",
-      "Luffa",
-      "Lycaste",
-      "Lygodium"
+      "Zingiber"
     ]
   },
   "entries": {
@@ -1977,31 +1951,6 @@
       },
       "notes": ""
     },
-    "Callistemon citrinus": {
-      "latinName": "Callistemon citrinus",
-      "genus": "Callistemon",
-      "speciesEpithet": "citrinus",
-      "family": "MYRTACEAE",
-      "ltName": "Kalisfemonas gelsvasis",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": false,
-        "cheng": false,
-        "gaspadorius": true,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "sodospalvos"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
     "Ctenanthe": {
       "latinName": "Ctenanthe",
       "genus": "Ctenanthe",
@@ -2259,31 +2208,6 @@
       },
       "notes": ""
     },
-    "Cheiranthus": {
-      "latinName": "Cheiranthus",
-      "genus": "Cheiranthus",
-      "speciesEpithet": null,
-      "family": "Cruciferae",
-      "ltName": "Tvertikas",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Tvertikas"
-      },
-      "notes": ""
-    },
     "Macropiper": {
       "latinName": "Macropiper",
       "genus": "Macropiper",
@@ -2415,35 +2339,6 @@
       },
       "notes": ""
     },
-    "Tagetes": {
-      "latinName": "Tagetes",
-      "genus": "Tagetes",
-      "speciesEpithet": null,
-      "family": "COMPOSITAE/ASTERACEAE",
-      "ltName": "serenitė",
-      "ltSynonyms": [
-        "ko pasirinkti Serenčiai",
-        "Serenčiai",
-        "Serentis"
-      ],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Serentis"
-      },
-      "notes": ""
-    },
     "Thunbergia": {
       "latinName": "Thunbergia",
       "genus": "Thunbergia",
@@ -2468,33 +2363,6 @@
         "aspcaToxic": [],
         "pfafFound": true,
         "inatPreferredLt": "Turnbergija"
-      },
-      "notes": ""
-    },
-    "Acacia": {
-      "latinName": "Acacia",
-      "genus": "Acacia",
-      "speciesEpithet": null,
-      "family": "Leguminosae",
-      "ltName": "Akacija",
-      "ltSynonyms": [
-        "dygliuoto medžio vardas"
-      ],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
       },
       "notes": ""
     },
@@ -2541,31 +2409,6 @@
         "ltConfidence": "medium",
         "ltSources": [
           "derlingas"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Alonsoa": {
-      "latinName": "Alonsoa",
-      "genus": "Alonsoa",
-      "speciesEpithet": null,
-      "family": "SCROPHULARIACEAE",
-      "ltName": "Alonsoa",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
         ],
         "aspcaToxic": [],
         "pfafFound": true,
@@ -2654,31 +2497,6 @@
       },
       "notes": ""
     },
-    "Annona": {
-      "latinName": "Annona",
-      "genus": "Annona",
-      "speciesEpithet": null,
-      "family": "ANNONACEAE",
-      "ltName": "Anona",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
     "Ansellia": {
       "latinName": "Ansellia",
       "genus": "Ansellia",
@@ -2686,33 +2504,6 @@
       "family": "Orchidaceae",
       "ltName": "Afrikinė anzelija",
       "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Arachis": {
-      "latinName": "Arachis",
-      "genus": "Arachis",
-      "speciesEpithet": null,
-      "family": "Leguminosae",
-      "ltName": "Valgomasis arachis",
-      "ltSynonyms": [
-        "anikštinio augalo vardas"
-      ],
       "tier": 2,
       "sourceEvidence": {
         "whitelist": true,
@@ -2806,31 +2597,6 @@
       },
       "notes": ""
     },
-    "Arundo": {
-      "latinName": "Arundo",
-      "genus": "Arundo",
-      "speciesEpithet": null,
-      "family": "Poaceae",
-      "ltName": "nendrės vardas",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
     "Astrophytum": {
       "latinName": "Astrophytum",
       "genus": "Astrophytum",
@@ -2851,56 +2617,6 @@
         "ltConfidence": "medium",
         "ltSources": [
           "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Aucuba": {
-      "latinName": "Aucuba",
-      "genus": "Aucuba",
-      "speciesEpithet": null,
-      "family": "CORNACEAE/GARRYACEAE",
-      "ltName": "japoninė aukuba",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Azolla": {
-      "latinName": "Azolla",
-      "genus": "Azolla",
-      "speciesEpithet": null,
-      "family": "AZOLLACEAE",
-      "ltName": "azolė",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
         ],
         "aspcaToxic": [],
         "pfafFound": true,
@@ -2951,31 +2667,6 @@
         "ltConfidence": "medium",
         "ltSources": [
           "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Boehmeria": {
-      "latinName": "Boehmeria",
-      "genus": "Boehmeria",
-      "speciesEpithet": null,
-      "family": "Urticaceae",
-      "ltName": "hemirija",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
         ],
         "aspcaToxic": [],
         "pfafFound": true,
@@ -3058,164 +2749,12 @@
       },
       "notes": ""
     },
-    "Carica": {
-      "latinName": "Carica",
-      "genus": "Carica",
-      "speciesEpithet": null,
-      "family": "Caricaceae",
-      "ltName": "Melionmedis",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Carnegiea": {
-      "latinName": "Carnegiea",
-      "genus": "Carnegiea",
-      "speciesEpithet": null,
-      "family": "CACTACEAE",
-      "ltName": "Didžioji karnegija",
-      "ltSynonyms": [
-        "karnegija"
-      ],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Carpobrotus": {
-      "latinName": "Carpobrotus",
-      "genus": "Carpobrotus",
-      "speciesEpithet": null,
-      "family": "ZOACEAE",
-      "ltName": "Svaidulis",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Ceratopteris": {
-      "latinName": "Ceratopteris",
-      "genus": "Ceratopteris",
-      "speciesEpithet": null,
-      "family": "PARKERIACEAE",
-      "ltName": "Homfarn",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
     "Chamaerops": {
       "latinName": "Chamaerops",
       "genus": "Chamaerops",
       "speciesEpithet": null,
       "family": "PALMAE",
       "ltName": "chamerops",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Choisya": {
-      "latinName": "Choisya",
-      "genus": "Choisya",
-      "speciesEpithet": null,
-      "family": "RUTACEAE",
-      "ltName": "čiozenė",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Clarkia": {
-      "latinName": "Clarkia",
-      "genus": "Clarkia",
-      "speciesEpithet": null,
-      "family": "ONAGRACEAE",
-      "ltName": "klarkija",
       "ltSynonyms": [],
       "tier": 2,
       "sourceEvidence": {
@@ -3359,33 +2898,6 @@
         "ltConfidence": "medium",
         "ltSources": [
           "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Corypha": {
-      "latinName": "Corypha",
-      "genus": "Corypha",
-      "speciesEpithet": null,
-      "family": "Palmae",
-      "ltName": "kuodas",
-      "ltSynonyms": [
-        "Korifos"
-      ],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
         ],
         "aspcaToxic": [],
         "pfafFound": true,
@@ -3622,31 +3134,6 @@
       },
       "notes": ""
     },
-    "Dorotheanthus": {
-      "latinName": "Dorotheanthus",
-      "genus": "Dorotheanthus",
-      "speciesEpithet": null,
-      "family": "ZOACEAE",
-      "ltName": "chvatka",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
     "Dyckia": {
       "latinName": "Dyckia",
       "genus": "Dyckia",
@@ -3665,31 +3152,6 @@
         "ltConfidence": "medium",
         "ltSources": [
           "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Ecballium": {
-      "latinName": "Ecballium",
-      "genus": "Ecballium",
-      "speciesEpithet": null,
-      "family": "Cucurbitaceae",
-      "ltName": "tryškėnis",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
         ],
         "aspcaToxic": [],
         "pfafFound": true,
@@ -3801,31 +3263,6 @@
       },
       "notes": ""
     },
-    "Erythrina": {
-      "latinName": "Erythrina",
-      "genus": "Erythrina",
-      "speciesEpithet": null,
-      "family": "LEGUMINOSAE/PAPILIONACEAE",
-      "ltName": "Raudūnė",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
     "Eucharis": {
       "latinName": "Eucharis",
       "genus": "Eucharis",
@@ -3835,81 +3272,6 @@
       "ltSynonyms": [
         "Grakštuoliai"
       ],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Eugenia": {
-      "latinName": "Eugenia",
-      "genus": "Eugenia",
-      "speciesEpithet": null,
-      "family": "Myrtaceae",
-      "ltName": "eugenija",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Eustoma": {
-      "latinName": "Eustoma",
-      "genus": "Eustoma",
-      "speciesEpithet": null,
-      "family": "GENTIANACEAE",
-      "ltName": "Ešolcija Eustoma",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "derlingas"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Felicia": {
-      "latinName": "Felicia",
-      "genus": "Felicia",
-      "speciesEpithet": null,
-      "family": "POSITAE/ASTERACEAE",
-      "ltName": "felicijė",
-      "ltSynonyms": [],
       "tier": 2,
       "sourceEvidence": {
         "whitelist": true,
@@ -4005,56 +3367,6 @@
       },
       "notes": ""
     },
-    "Galtonia": {
-      "latinName": "Galtonia",
-      "genus": "Galtonia",
-      "speciesEpithet": null,
-      "family": "LILIACEAE/ASPARAGACEAE",
-      "ltName": "Galtonija",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Gossypium": {
-      "latinName": "Gossypium",
-      "genus": "Gossypium",
-      "speciesEpithet": null,
-      "family": "Malvaceae",
-      "ltName": "Vilnamedis",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
     "Gymnocalycium": {
       "latinName": "Gymnocalycium",
       "genus": "Gymnocalycium",
@@ -4100,83 +3412,6 @@
         "ltConfidence": "medium",
         "ltSources": [
           "derlingas"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Heliotropium": {
-      "latinName": "Heliotropium",
-      "genus": "Heliotropium",
-      "speciesEpithet": null,
-      "family": "BORAGINACEAE",
-      "ltName": "Heliotropas",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Ixia": {
-      "latinName": "Ixia",
-      "genus": "Ixia",
-      "speciesEpithet": null,
-      "family": "DACEAE",
-      "ltName": "iksija",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Ixiolirion": {
-      "latinName": "Ixiolirion",
-      "genus": "Ixiolirion",
-      "speciesEpithet": null,
-      "family": "Amaryllidaceae",
-      "ltName": "Mėlynutiniai",
-      "ltSynonyms": [
-        "iksiolirijonas"
-      ],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
         ],
         "aspcaToxic": [],
         "pfafFound": true,
@@ -4261,56 +3496,6 @@
       },
       "notes": ""
     },
-    "Lagenaria": {
-      "latinName": "Lagenaria",
-      "genus": "Lagenaria",
-      "speciesEpithet": null,
-      "family": "Cucurbitaceae",
-      "ltName": "butelis",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Lampranthus": {
-      "latinName": "Lampranthus",
-      "genus": "Lampranthus",
-      "speciesEpithet": null,
-      "family": "AIZOACEAE",
-      "ltName": "lamprantas",
-      "ltSynonyms": [],
-      "tier": 2,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "derlingas"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
     "Latania": {
       "latinName": "Latania",
       "genus": "Latania",
@@ -4336,35 +3521,728 @@
       },
       "notes": ""
     },
-    "Sempervivum": {
-      "latinName": "Sempervivum",
-      "genus": "Sempervivum",
+    "Leuchtenbergia": {
+      "latinName": "Leuchtenbergia",
+      "genus": "Leuchtenbergia",
       "speciesEpithet": null,
-      "family": "CRASSULACEAE",
-      "ltName": "Šilropė",
-      "ltSynonyms": [
-        "garsesnei šilropių genčiai"
-      ],
-      "tier": 3,
+      "family": "CACTACEAE",
+      "ltName": "Švelnioji kresnuolė",
+      "ltSynonyms": [],
+      "tier": 2,
       "sourceEvidence": {
         "whitelist": true,
-        "whitelistTier": 3,
-        "indoorConfidence": "specialty",
-        "beckett": false,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
         "cheng": false,
         "gaspadorius": false,
-        "ltConfidence": "high",
+        "ltConfidence": "medium",
         "ltSources": [
-          "wiki",
-          "plants",
-          "sodospalvos",
-          "inat"
+          "wiki"
         ],
         "aspcaToxic": [],
         "pfafFound": true,
-        "inatPreferredLt": "Šilropė"
+        "inatPreferredLt": null
       },
-      "notes": "whitelist: Mostly outdoor; some terrarium use"
+      "notes": ""
+    },
+    "Lycaste": {
+      "latinName": "Lycaste",
+      "genus": "Lycaste",
+      "speciesEpithet": null,
+      "family": "Orchidaceae",
+      "ltName": "Likastė",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Lygodium": {
+      "latinName": "Lygodium",
+      "genus": "Lygodium",
+      "speciesEpithet": null,
+      "family": "ZAEACEAE/LYGODIACEAE",
+      "ltName": "ligodis",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "plants"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Macrozamia": {
+      "latinName": "Macrozamia",
+      "genus": "Macrozamia",
+      "speciesEpithet": null,
+      "family": "ZAMIACEAE",
+      "ltName": "Makrozamija",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Medinilla": {
+      "latinName": "Medinilla",
+      "genus": "Medinilla",
+      "speciesEpithet": null,
+      "family": "MELASTOMATACEAE",
+      "ltName": "Medinilė puikioji",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "sodospalvos"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Nephrolepis": {
+      "latinName": "Nephrolepis",
+      "genus": "Nephrolepis",
+      "speciesEpithet": null,
+      "family": "LOMARIOPSIDACEAE",
+      "ltName": "inkstapaprėtis",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "plants"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Nerium": {
+      "latinName": "Nerium",
+      "genus": "Nerium",
+      "speciesEpithet": null,
+      "family": "APOCYNACEAE",
+      "ltName": "oleandras",
+      "ltSynonyms": [
+        "Oleandrai"
+      ],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "plants"
+        ],
+        "aspcaToxic": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Pachystachys": {
+      "latinName": "Pachystachys",
+      "genus": "Pachystachys",
+      "speciesEpithet": null,
+      "family": "ACANTHACEAE",
+      "ltName": "Žvakūnė geltonoji",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "sodospalvos"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Parodia": {
+      "latinName": "Parodia",
+      "genus": "Parodia",
+      "speciesEpithet": null,
+      "family": "CACTACEAE",
+      "ltName": "Parodija",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Pelecyphora": {
+      "latinName": "Pelecyphora",
+      "genus": "Pelecyphora",
+      "speciesEpithet": null,
+      "family": "Cactaceae",
+      "ltName": "Ropenis",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Pentas": {
+      "latinName": "Pentas",
+      "genus": "Pentas",
+      "speciesEpithet": null,
+      "family": "RUBIACEAE",
+      "ltName": "Pentas",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Pteris": {
+      "latinName": "Pteris",
+      "genus": "Pteris",
+      "speciesEpithet": null,
+      "family": "PTERIDACEAE/ADIANTACEAE",
+      "ltName": "papartis",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "plants"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Scindapsus": {
+      "latinName": "Scindapsus",
+      "genus": "Scindapsus",
+      "speciesEpithet": null,
+      "family": "ARACEAE",
+      "ltName": "sindapsas",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "plants"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Selenicereus": {
+      "latinName": "Selenicereus",
+      "genus": "Selenicereus",
+      "speciesEpithet": null,
+      "family": "CACTACEAE",
+      "ltName": "Naktenis",
+      "ltSynonyms": [
+        "naktinis cereus"
+      ],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Sophronitis": {
+      "latinName": "Sophronitis",
+      "genus": "Sophronitis",
+      "speciesEpithet": null,
+      "family": "Orchidaceae",
+      "ltName": "Sofronitis",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Stanhopea": {
+      "latinName": "Stanhopea",
+      "genus": "Stanhopea",
+      "speciesEpithet": null,
+      "family": "Orchidaceae",
+      "ltName": "Lūpragė",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Thelocactus": {
+      "latinName": "Thelocactus",
+      "genus": "Thelocactus",
+      "speciesEpithet": null,
+      "family": "CACTACEAE",
+      "ltName": "Ežinėlis",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Vanilla": {
+      "latinName": "Vanilla",
+      "genus": "Vanilla",
+      "speciesEpithet": null,
+      "family": "Orchidaceae",
+      "ltName": "Vanilė (gentis)",
+      "ltSynonyms": [
+        "vanilė"
+      ],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Zamia": {
+      "latinName": "Zamia",
+      "genus": "Zamia",
+      "speciesEpithet": null,
+      "family": "Zamiaceae",
+      "ltName": "Zamija",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [
+          "cats",
+          "dogs",
+          "horses"
+        ],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Zygopetalum": {
+      "latinName": "Zygopetalum",
+      "genus": "Zygopetalum",
+      "speciesEpithet": null,
+      "family": "Orchidaceae",
+      "ltName": "Zigopetalas",
+      "ltSynonyms": [
+        "Zigopetalai"
+      ],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": true,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": "medium",
+        "ltSources": [
+          "wiki"
+        ],
+        "aspcaToxic": [],
+        "pfafFound": true,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Dendrobium densiflorum": {
+      "latinName": "Dendrobium densiflorum",
+      "genus": "Dendrobium",
+      "speciesEpithet": "densiflorum",
+      "family": null,
+      "ltName": "Dendrobis",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": false,
+        "cheng": false,
+        "gaspadorius": true,
+        "ltConfidence": null,
+        "ltSources": [],
+        "aspcaToxic": [],
+        "pfafFound": false,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Fatshedera lizei": {
+      "latinName": "Fatshedera lizei",
+      "genus": "Fatshedera",
+      "speciesEpithet": "lizei",
+      "family": null,
+      "ltName": "Gebenkrūmis",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": false,
+        "cheng": false,
+        "gaspadorius": true,
+        "ltConfidence": null,
+        "ltSources": [],
+        "aspcaToxic": [],
+        "pfafFound": false,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Howeia": {
+      "latinName": "Howeia",
+      "genus": "Howeia",
+      "speciesEpithet": null,
+      "family": null,
+      "ltName": "Palmė chrysalidocarpus",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": false,
+        "cheng": false,
+        "gaspadorius": true,
+        "ltConfidence": null,
+        "ltSources": [],
+        "aspcaToxic": [],
+        "pfafFound": false,
+        "inatPreferredLt": null
+      },
+      "notes": "whitelist: Kentia palm — premium indoor"
+    },
+    "Jatropha podagrica": {
+      "latinName": "Jatropha podagrica",
+      "genus": "Jatropha",
+      "speciesEpithet": "podagrica",
+      "family": null,
+      "ltName": "Jatrofa",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": false,
+        "cheng": false,
+        "gaspadorius": true,
+        "ltConfidence": null,
+        "ltSources": [],
+        "aspcaToxic": [],
+        "pfafFound": false,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Microcoelum weddeliamun": {
+      "latinName": "Microcoelum weddeliamun",
+      "genus": "Microcoelum",
+      "speciesEpithet": "weddeliamun",
+      "family": null,
+      "ltName": "Orchidėja masdevallia militaris",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": false,
+        "cheng": false,
+        "gaspadorius": true,
+        "ltConfidence": null,
+        "ltSources": [],
+        "aspcaToxic": [],
+        "pfafFound": false,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Oncidium": {
+      "latinName": "Oncidium",
+      "genus": "Oncidium",
+      "speciesEpithet": null,
+      "family": null,
+      "ltName": "Orchidėja oncidium",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": false,
+        "cheng": false,
+        "gaspadorius": true,
+        "ltConfidence": null,
+        "ltSources": [],
+        "aspcaToxic": [],
+        "pfafFound": false,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Pellaea": {
+      "latinName": "Pellaea",
+      "genus": "Pellaea",
+      "speciesEpithet": null,
+      "family": null,
+      "ltName": "Papartis pelėja",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": false,
+        "cheng": false,
+        "gaspadorius": true,
+        "ltConfidence": null,
+        "ltSources": [],
+        "aspcaToxic": [],
+        "pfafFound": false,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Pogonatherum paniceum": {
+      "latinName": "Pogonatherum paniceum",
+      "genus": "Pogonatherum",
+      "speciesEpithet": "paniceum",
+      "family": null,
+      "ltName": "Pogonateras",
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": false,
+        "cheng": false,
+        "gaspadorius": true,
+        "ltConfidence": null,
+        "ltSources": [],
+        "aspcaToxic": [],
+        "pfafFound": false,
+        "inatPreferredLt": null
+      },
+      "notes": ""
+    },
+    "Miltoniopsis": {
+      "latinName": "Miltoniopsis",
+      "genus": "Miltoniopsis",
+      "speciesEpithet": null,
+      "family": null,
+      "ltName": null,
+      "ltSynonyms": [],
+      "tier": 2,
+      "sourceEvidence": {
+        "whitelist": true,
+        "whitelistTier": 2,
+        "indoorConfidence": "likely",
+        "beckett": false,
+        "cheng": false,
+        "gaspadorius": false,
+        "ltConfidence": null,
+        "ltSources": [],
+        "aspcaToxic": [],
+        "pfafFound": false,
+        "inatPreferredLt": null
+      },
+      "notes": ""
     },
     "Aeonium": {
       "latinName": "Aeonium",
@@ -4375,7 +4253,7 @@
       "ltSynonyms": [
         "Aeonium"
       ],
-      "tier": 3,
+      "tier": 2,
       "sourceEvidence": {
         "whitelist": true,
         "whitelistTier": 3,
@@ -4400,7 +4278,7 @@
       "family": null,
       "ltName": null,
       "ltSynonyms": [],
-      "tier": 3,
+      "tier": 2,
       "sourceEvidence": {
         "whitelist": true,
         "whitelistTier": 3,
@@ -5000,7 +4878,7 @@
       "latinName": "Haworthia",
       "genus": "Haworthia",
       "speciesEpithet": null,
-      "family": "Liliaceae",
+      "family": "LILIACEAE/ASPHODELACEAE",
       "ltName": "Avortija",
       "ltSynonyms": [],
       "tier": 3,
@@ -5497,90 +5375,6 @@
       },
       "notes": ""
     },
-    "Carex": {
-      "latinName": "Carex",
-      "genus": "Carex",
-      "speciesEpithet": null,
-      "family": "Cyperaceae",
-      "ltName": "Viksva",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "plants",
-          "sodospalvos",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Viksva"
-      },
-      "notes": ""
-    },
-    "Celosia": {
-      "latinName": "Celosia",
-      "genus": "Celosia",
-      "speciesEpithet": null,
-      "family": "AMARANTHACEAE",
-      "ltName": "Celiozija",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "plants",
-          "sodospalvos",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Celiozija"
-      },
-      "notes": ""
-    },
-    "Delosperma": {
-      "latinName": "Delosperma",
-      "genus": "Delosperma",
-      "speciesEpithet": null,
-      "family": "AIZOACEAE",
-      "ltName": "mudrę",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "derlingas",
-          "sodospalvos",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Mudrė"
-      },
-      "notes": ""
-    },
     "Hippeastrum": {
       "latinName": "Hippeastrum",
       "genus": "Hippeastrum",
@@ -5694,35 +5488,6 @@
       },
       "notes": ""
     },
-    "Dryopteris": {
-      "latinName": "Dryopteris",
-      "genus": "Dryopteris",
-      "speciesEpithet": null,
-      "family": "DRYOPTERIDACEAE/ASPIDIACEAE",
-      "ltName": "Papartis",
-      "ltSynonyms": [
-        "Papartūnai"
-      ],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "plants",
-          "derlingas",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Papartis"
-      },
-      "notes": ""
-    },
     "Echinocactus": {
       "latinName": "Echinocactus",
       "genus": "Echinocactus",
@@ -5747,60 +5512,6 @@
         "aspcaToxic": [],
         "pfafFound": true,
         "inatPreferredLt": "Ežiakaktusis"
-      },
-      "notes": ""
-    },
-    "Eschscholzia": {
-      "latinName": "Eschscholzia",
-      "genus": "Eschscholzia",
-      "speciesEpithet": null,
-      "family": "PAPAVERACEAE",
-      "ltName": "EŠOLCIJA",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "sodospalvos",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Ešolcija"
-      },
-      "notes": ""
-    },
-    "Glechoma": {
-      "latinName": "Glechoma",
-      "genus": "Glechoma",
-      "speciesEpithet": null,
-      "family": "LABIATAE/LAMIACEAE",
-      "ltName": "Tramažolė",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "derlingas",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Tramažolė"
       },
       "notes": ""
     },
@@ -5832,60 +5543,6 @@
         "inatPreferredLt": "Kinrožė"
       },
       "notes": "whitelist: Indoor: H. rosa-sinensis; outdoor: H. syriacus"
-    },
-    "Humulus": {
-      "latinName": "Humulus",
-      "genus": "Humulus",
-      "speciesEpithet": null,
-      "family": "CANNABACEAE",
-      "ltName": "Apynys",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "sodospalvos",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Apynys"
-      },
-      "notes": ""
-    },
-    "Linaria": {
-      "latinName": "Linaria",
-      "genus": "Linaria",
-      "speciesEpithet": null,
-      "family": "Scrophulariaceae",
-      "ltName": "Linažolė",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "plants",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Linažolė"
-      },
-      "notes": ""
     },
     "Mimosa": {
       "latinName": "Mimosa",
@@ -6549,31 +6206,6 @@
       },
       "notes": ""
     },
-    "Ophiopogon": {
-      "latinName": "Ophiopogon",
-      "genus": "Ophiopogon",
-      "speciesEpithet": null,
-      "family": "LIACEAE/ASPARAGACEAE",
-      "ltName": "Gyvatbarzdė ilgalapė",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": true,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
     "Pavonia multiflora": {
       "latinName": "Pavonia multiflora",
       "genus": "Pavonia",
@@ -6980,35 +6612,6 @@
       },
       "notes": ""
     },
-    "Amaranthus": {
-      "latinName": "Amaranthus",
-      "genus": "Amaranthus",
-      "speciesEpithet": null,
-      "family": "Amaranthaceae",
-      "ltName": "Burnotis",
-      "ltSynonyms": [
-        "ščirpa",
-        "Burnočiai"
-      ],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Burnotis"
-      },
-      "notes": ""
-    },
     "Aristolochia": {
       "latinName": "Aristolochia",
       "genus": "Aristolochia",
@@ -7034,62 +6637,6 @@
         "aspcaToxic": [],
         "pfafFound": true,
         "inatPreferredLt": "Kartuolė"
-      },
-      "notes": ""
-    },
-    "Cassia": {
-      "latinName": "Cassia",
-      "genus": "Cassia",
-      "speciesEpithet": null,
-      "family": "LEGUMINOSAE/CAESALPINIACEAE",
-      "ltName": "kasija",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "plants",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Kasijos"
-      },
-      "notes": ""
-    },
-    "Echium": {
-      "latinName": "Echium",
-      "genus": "Echium",
-      "speciesEpithet": null,
-      "family": "BORAGINACEAE",
-      "ltName": "Ežeinis",
-      "ltSynonyms": [
-        "ežiežinis"
-      ],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "inat"
-        ],
-        "aspcaToxic": [
-          "horses"
-        ],
-        "pfafFound": true,
-        "inatPreferredLt": "Ežeinis"
       },
       "notes": ""
     },
@@ -7232,61 +6779,6 @@
         "aspcaToxic": [],
         "pfafFound": true,
         "inatPreferredLt": "Cimbžieda"
-      },
-      "notes": ""
-    },
-    "Ricinus": {
-      "latinName": "Ricinus",
-      "genus": "Ricinus",
-      "speciesEpithet": null,
-      "family": "EUPHORBIACEAE",
-      "ltName": "Ricinmedis",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "plants",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Ricinmedis"
-      },
-      "notes": ""
-    },
-    "Tropaeolum": {
-      "latinName": "Tropaeolum",
-      "genus": "Tropaeolum",
-      "speciesEpithet": null,
-      "family": "TROPAEOLACEAE",
-      "ltName": "Nasturtė",
-      "ltSynonyms": [
-        "trofėjus",
-        "Nasturtos Nasturtė"
-      ],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "inat"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": "Nasturtė"
       },
       "notes": ""
     },
@@ -7511,32 +7003,6 @@
       },
       "notes": ""
     },
-    "Caesalpinia": {
-      "latinName": "Caesalpinia",
-      "genus": "Caesalpinia",
-      "speciesEpithet": null,
-      "family": "LEGUMINOSAE/CAESALPINIACEAE",
-      "ltName": "Cezalpinija",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
     "Calanthe": {
       "latinName": "Calanthe",
       "genus": "Calanthe",
@@ -7582,32 +7048,6 @@
         "ltSources": [
           "wiki",
           "derlingas"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Ceratonia": {
-      "latinName": "Ceratonia",
-      "genus": "Ceratonia",
-      "speciesEpithet": null,
-      "family": "Leguminosae",
-      "ltName": "Ceratonija",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "plants"
         ],
         "aspcaToxic": [],
         "pfafFound": true,
@@ -7771,34 +7211,6 @@
       },
       "notes": ""
     },
-    "Eucomis": {
-      "latinName": "Eucomis",
-      "genus": "Eucomis",
-      "speciesEpithet": null,
-      "family": "LIACEAE/ASPARAGACEAE",
-      "ltName": "Eukomiai",
-      "ltSynonyms": [
-        "Eucomis"
-      ],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "derlingas",
-          "sodospalvos"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
     "Gasteria": {
       "latinName": "Gasteria",
       "genus": "Gasteria",
@@ -7909,32 +7321,6 @@
       "speciesEpithet": null,
       "family": "ARECACEAE",
       "ltName": "livistona",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "plants",
-          "sodospalvos"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Nemesia": {
-      "latinName": "Nemesia",
-      "genus": "Nemesia",
-      "speciesEpithet": null,
-      "family": "Scrophulariaceae",
-      "ltName": "nemėzija",
       "ltSynonyms": [],
       "tier": 3,
       "sourceEvidence": {
@@ -8157,135 +7543,6 @@
         "ltConfidence": "high",
         "ltSources": [
           "wiki",
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Valeriana": {
-      "latinName": "Valeriana",
-      "genus": "Valeriana",
-      "speciesEpithet": null,
-      "family": "VALERIANACEAE",
-      "ltName": "Valerijonas",
-      "ltSynonyms": [
-        "Valerijonas vaistinis"
-      ],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 1,
-        "indoorConfidence": "verified",
-        "beckett": false,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "high",
-        "ltSources": [
-          "wiki",
-          "plants",
-          "sodospalvos"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Leuchtenbergia": {
-      "latinName": "Leuchtenbergia",
-      "genus": "Leuchtenbergia",
-      "speciesEpithet": null,
-      "family": "CACTACEAE",
-      "ltName": "Švelnioji kresnuolė",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Luffa": {
-      "latinName": "Luffa",
-      "genus": "Luffa",
-      "speciesEpithet": null,
-      "family": "Cucurbitaceae",
-      "ltName": "plaušenė",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "plants"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Lycaste": {
-      "latinName": "Lycaste",
-      "genus": "Lycaste",
-      "speciesEpithet": null,
-      "family": "Orchidaceae",
-      "ltName": "Likastė",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
-          "wiki"
-        ],
-        "aspcaToxic": [],
-        "pfafFound": true,
-        "inatPreferredLt": null
-      },
-      "notes": ""
-    },
-    "Lygodium": {
-      "latinName": "Lygodium",
-      "genus": "Lygodium",
-      "speciesEpithet": null,
-      "family": "ZAEACEAE/LYGODIACEAE",
-      "ltName": "ligodis",
-      "ltSynonyms": [],
-      "tier": 3,
-      "sourceEvidence": {
-        "whitelist": true,
-        "whitelistTier": 2,
-        "indoorConfidence": "likely",
-        "beckett": true,
-        "cheng": false,
-        "gaspadorius": false,
-        "ltConfidence": "medium",
-        "ltSources": [
           "plants"
         ],
         "aspcaToxic": [],

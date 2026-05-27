@@ -222,6 +222,134 @@ const MAINSTREAM_CONTROL = [
   'BEGONIA', 'CRASSULA', 'PILEA', 'KALANCHOE',
 ];
 
+// ── LT-SPECIFIC STRICT EXCLUSION (post-OUTDOOR_BLACKLIST refinement) ────────
+//
+// Genera that PASSED OUTDOOR_BLACKLIST + Beckett/gasp signals BUT LT-context
+// are clearly NOT houseplants. Beckett 1993 is UK-published (warmer climate,
+// many UK conservatory plants are LT garden plants). gaspadorius signal
+// includes seasonal "indoor for winter" plants that LT users wouldn't
+// classify as kambariniai.
+//
+// Reviewed 2026-05-27 per user feedback after tier 1 batch revealed
+// ~16% noise (Hedera, Sedum, Solanum, Impatiens nolitangere etc.). Tier 1
+// already in catalog — admin will manually clean via LibraryEditorV2. This
+// list prevents the SAME noise from leaking into tier 2/3 batches.
+//
+// Conservative criteria — only categories with NO realistic LT indoor use:
+//   • Food crops (peanut, cotton, gourds, hops, castor)
+//   • Tropical fruit trees impractical indoor (papaya, annona, cassia)
+//   • Outdoor garden trees/shrubs (acacia, choisya, aucuba, callistemon)
+//   • Garden annuals (marigold, cosmos, amaranthus, eschscholzia)
+//   • Outdoor bulbs (galtonia, ixia, eucomis)
+//   • Outdoor succulents (sempervivum, delosperma, lampranthus, carpobrotus)
+//   • Aquatic / wild (azolla, ceratopteris, valerian, glechoma, dryopteris)
+//   • Impractically large (carnegiea saguaro, corypha palm)
+//
+// BORDERLINE genera kept (admin decides): Bletilla, Catharanthus, Curcuma,
+// Darlingtonia, Fatsia, Gerbera, Jacaranda, Lantana, Laurus, Polygala,
+// Sarracenia, Yucca, Zephyranthes. Reason: each has SOME realistic indoor
+// niche (specialty, conservatory, smaller cultivar) — admin can curate.
+const LT_STRICT_OUTDOOR_OVERRIDE = new Set([
+  // Food crops
+  'ARACHIS',     // peanut
+  'GOSSYPIUM',   // cotton
+  'LAGENARIA',   // bottle gourd
+  'LUFFA',       // loofah
+  'HUMULUS',     // hops vine
+  'RICINUS',     // castor bean (toxic, outdoor LT)
+  'BOEHMERIA',   // ramie fiber crop
+
+  // Tropical trees impractical indoor LT
+  'CARICA',      // papaya tree
+  'ANNONA',      // soursop/cherimoya tree
+  'CASSIA',      // tropical legume tree
+  'CAESALPINIA', // pride of Barbados tree
+  'CERATONIA',   // carob tree
+  'EUGENIA',     // tropical fruit tree
+  'ACACIA',      // outdoor warm-zone tree
+  'ERYTHRINA',   // coral tree
+  'CORYPHA',     // talipot palm (huge)
+  'CARNEGIEA',   // saguaro cactus (impractical home size)
+
+  // Outdoor garden trees/shrubs LT
+  'CALLISTEMON', // bottlebrush (outdoor warm)
+  'CHOISYA',     // Mexican orange shrub
+  'AUCUBA',      // Japanese aucuba (LT outdoor)
+
+  // Garden annuals (one-season outdoor flowers)
+  'TAGETES',     // marigold
+  'AMARANTHUS',  // amaranth/love-lies-bleeding
+  'CELOSIA',     // cockscomb
+  'ESCHSCHOLZIA', // California poppy
+  'NEMESIA',
+  'LINARIA',     // toadflax
+  'TROPAEOLUM',  // nasturtium
+  'HELIOTROPIUM', // garden annual
+  'EUSTOMA',     // lisianthus cut flower
+  'FELICIA',     // blue daisy
+  'CLARKIA',
+  'ALONSOA',     // mask flower annual
+  'DOROTHEANTHUS', // Livingstone daisy
+  'CHEIRANTHUS', // wallflower
+  'ECHIUM',      // viper's bugloss biennial
+
+  // Outdoor bulbs
+  'GALTONIA',
+  'IXIA',
+  'IXIOLIRION',
+  'EUCOMIS',     // pineapple lily
+
+  // Outdoor succulents LT
+  'CARPOBROTUS', // ice plant
+  'LAMPRANTHUS',
+  'DELOSPERMA',
+  'SEMPERVIVUM', // hen-and-chicks garden classic
+
+  // Aquatic / wild
+  'AZOLLA',      // aquatic fern
+  'CERATOPTERIS', // floating fern
+  'ECBALLIUM',   // squirting cucumber (wild)
+  'ARUNDO',      // giant reed
+  'VALERIANA',   // valerian (herb/wild)
+  'GLECHOMA',    // ground ivy (wild)
+  'DRYOPTERIS',  // wood fern (LT garden)
+  'CAREX',       // sedge (garden grass)
+  'OPHIOPOGON',  // mondo grass (outdoor)
+
+  // Round 2 additions (2026-05-27) — bubbled up to tier 2/3 from prior pool
+  // after Round 1 dropped 52. Same conservative criteria:
+  'MARSILEA',    // aquatic four-leaf clover fern
+  'NELUMBO',     // lotus (aquatic pond)
+  'MATTHIOLA',   // stock garden annual
+  'NEMOPHILA',   // baby blue eyes annual
+  'NIEREMBERGIA', // cup flower annual
+  'OSTEOSPERMUM', // African daisy outdoor
+  'SCHIZANTHUS', // poor man's orchid annual
+  'MIMULUS',     // monkey flower annual
+  'MUEHLENBECKIA', // wire vine outdoor
+  'NERINE',      // outdoor bulb
+  'POLIANTHES',  // tuberose outdoor bulb
+  'SPREKELIA',   // Aztec lily outdoor bulb
+  'POLYPODIUM',  // common polypody (LT garden fern)
+  'PLUMBAGO',    // leadwort (outdoor shrub)
+  'PYROSTEGIA',  // orange trumpet vine (outdoor)
+  'RUSCUS',      // butcher's broom (outdoor evergreen)
+  'MELIA',       // chinaberry tree
+  'PLUMERIA',    // frangipani tree
+  'SCHINUS',     // Peruvian pepper tree
+  'RAVENALA',    // traveler's palm (huge)
+  'SYAGRUS',     // queen palm (outdoor)
+  'TRACHYCARPUS', // windmill palm (hardy outdoor)
+  'TABERNAEMONTANA', // crepe jasmine tropical outdoor
+  'TECOMA',      // yellow trumpetbush outdoor
+  'STROPHANTHUS', // climbing oleander outdoor toxic
+  'PERILLA',     // shiso/perilla herb
+  'MOMORDICA',   // bitter melon vine (crop)
+  'MANIHOT',     // cassava (food crop)
+  'PHAIUS',      // nun's orchid (ground orchid mostly outdoor)
+  'PLEIONE',     // hardy outdoor orchid
+]);
+
 // ── TIER CLASSIFICATION ────────────────────────────────────────────────────
 function classify(genusUpper, rec, ltRec) {
   const inB = rec.inSources?.includes('beckett') || false;
@@ -230,6 +358,9 @@ function classify(genusUpper, rec, ltRec) {
 
   if (OUTDOOR_BLACKLIST.has(genusUpper)) {
     return { tier: 0, reason: 'outdoor_blacklist' };
+  }
+  if (LT_STRICT_OUTDOOR_OVERRIDE.has(genusUpper)) {
+    return { tier: 0, reason: 'lt_strict_outdoor (2026-05-27 review)' };
   }
 
   const ltName = ltRec?.ltName || null;
