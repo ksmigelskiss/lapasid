@@ -39,8 +39,9 @@ import {
 } from 'lucide-react'
 import { ProfileContent } from '../PlantDetail'
 import PlantImage from '../brand/PlantImage'
-import { fetchWikiPhoto } from '../../utils/wikiApi'
 import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS, LIFECYCLES } from '../../utils/taxonGroups'
+import { auth } from '../../utils/firebase'
+import { ExternalLink } from 'lucide-react'
 
 const WIDGET = 'bg-bone-50 rounded-2xl border border-bone-400/40 shadow-[0_1px_3px_rgba(28,58,42,0.06),0_4px_14px_rgba(28,58,42,0.05)]'
 const MIN_WIDTH_PX = 1280
@@ -1009,25 +1010,36 @@ function TabIdentificationSeries({ entry, draft, originalDraft, updateField }) {
   )
 }
 
-// ── Tab: Foto — image picker + URL paste ────────────────────────────
+// ── Tab: Foto — Brave search picker + URL paste + rehost ─────────────
 //
-// 2 būdai keisti nuotrauką:
-//   1. „🔍 Ieškoti nuotraukos" — fetch'ina Wiki EN/LT + iNat candidates,
-//      rodo grid'ą su thumbnail'ais. Click → URL set + AUTO-SAVE.
-//   2. Rankinis URL paste — keičia draft.image, „💾 Saugoti nuotrauką"
-//      mini-button save'ina TIK image field'ą (be kitų dirty laukų).
+// PROBLEMA: jei admin'as nori KEISTI nuotrauką, didelė tikimybė kad batch
+// auto-fetch'inti Wiki/iNat kandidatai netiko. Reikia diversesnių rezultatų
+// — Brave Images API (gardener-style nuotraukos, ne tik scientific).
 //
-// AUTO-SAVE: image picker'is bypass'ina standard'inį save flow'ą — vienas
-// klick → image įrašytas Firestore'e. Greita, intuityvu, draftas neturi
-// likti dirty.
+// FLOW'AS:
+//   1. „🌐 Ieškoti Brave" → fetch /api/plant-image (Brave server proxy)
+//   2. Candidates grid'as su thumbnail'ais
+//   3. Click → /api/rehost-image (download + resize 1200px + Firebase Storage
+//      upload) → permanent URL (storage.googleapis.com/geliu-db/...)
+//   4. Permanent URL įrašomas catalog.image lauke
+//
+// SVARBU: rehost'as reikalingas, nes:
+//   • isPublicPhoto whitelist'as priima TIK Wiki/iNat/Firebase Storage URL'us
+//   • Brave URL'ai dažnai sulūžta (commercial nursery sites, hotlink block)
+//   • Firebase Storage = brand consistency + long-term safety
+//
+// Plius — ↗ „Atidaryti Brave Images" external link, jei admin'as nori
+// peržiūrėti rezultatus pilname Brave puslapyje ir įklijuoti URL ranka.
 
 function TabPhoto({ draft, originalDraft, updateField, onSaveImageOnly }) {
   const dirtyImg = fieldDirty(draft.image, originalDraft?.image)
   const latin = draft.lotyniskas ?? ''
+  const lt    = draft.lietuviškas ?? ''
 
   const [searching, setSearching] = useState(false)
-  const [candidates, setCandidates] = useState(null)  // null = nepradėjom, []=nieko
+  const [candidates, setCandidates] = useState(null)  // null=nepradėjom, []=nieko
   const [searchError, setSearchError] = useState(null)
+  const [pickingIdx, setPickingIdx] = useState(null)  // idx of candidate being rehosted
 
   const handleSearch = useCallback(async () => {
     if (!latin.trim()) {
@@ -1038,72 +1050,118 @@ function TabPhoto({ draft, originalDraft, updateField, onSaveImageOnly }) {
     setSearchError(null)
     setCandidates(null)
     try {
-      const results = await fetchImageCandidates(latin)
+      const results = await fetchBraveCandidates(latin)
       setCandidates(results)
       if (results.length === 0) {
-        setSearchError(`Nieko nerasta „${latin}" pavadinimui (Wiki + iNat). Pabandyk genus tik (pvz. ${latin.split(' ')[0]}).`)
+        setSearchError(`Brave nieko nerado „${latin}". Pabandyk pakeisti paieškos užklausą arba įklijuok URL ranka.`)
       }
     } catch (e) {
-      setSearchError(`Paieška nepavyko: ${e.message}`)
+      setSearchError(`Paieška nepavyko: ${e.message}. Patikrink ar BRAVE_API_KEY nustatytas Vercel'yje.`)
     } finally {
       setSearching(false)
     }
   }, [latin])
 
-  const handlePickCandidate = useCallback(async (url) => {
-    // Auto-save: keičiam draft + tuoj pat Firestore'e
-    updateField('image', url)
-    if (onSaveImageOnly) await onSaveImageOnly(url)
-    setCandidates(null)  // collapse picker po pasirinkimo
-  }, [updateField, onSaveImageOnly])
+  const handlePickCandidate = useCallback(async (candidate, idx) => {
+    setPickingIdx(idx)
+    setSearchError(null)
+    try {
+      // 1. Rehost — download external → resize → Firebase Storage → permanent URL
+      const permanentUrl = await rehostImage(candidate.url, latin)
+      // 2. Update draft + auto-save (image-only patch)
+      updateField('image', permanentUrl)
+      if (onSaveImageOnly) await onSaveImageOnly(permanentUrl)
+      // 3. Close candidates panel po sėkmingo save'o
+      setCandidates(null)
+    } catch (e) {
+      setSearchError(`Nepavyko įkelti į Storage: ${e.message}`)
+    } finally {
+      setPickingIdx(null)
+    }
+  }, [latin, updateField, onSaveImageOnly])
 
   const handleManualSave = useCallback(async () => {
     if (!onSaveImageOnly) return
-    await onSaveImageOnly(draft.image ?? null)
-  }, [onSaveImageOnly, draft.image])
+    const url = draft.image ?? null
+    // Jei admin'as įklijavo external URL (ne Storage) — rehost'inam pirma
+    if (url && /^https?:\/\//.test(url) && !isStorageUrl(url) && !isWhitelistedHostingUrl(url)) {
+      setSearchError(null)
+      setPickingIdx('manual')
+      try {
+        const permanentUrl = await rehostImage(url, latin)
+        updateField('image', permanentUrl)
+        await onSaveImageOnly(permanentUrl)
+      } catch (e) {
+        setSearchError(`Rehost nepavyko: ${e.message}. Galima trinti URL, įklijuok kitą.`)
+      } finally {
+        setPickingIdx(null)
+      }
+      return
+    }
+    // URL jau saugus (Wiki/iNat/Storage) → tiesiog save
+    await onSaveImageOnly(url)
+  }, [onSaveImageOnly, draft.image, latin, updateField])
+
+  // Brave Images external URL — admin'as gali ranka peržiūrėti pilname puslapyje
+  const braveSearchUrl = latin
+    ? `https://search.brave.com/images?q=${encodeURIComponent(latin + (lt ? ' ' + lt : ''))}&source=web`
+    : null
 
   return (
     <div className="space-y-4 max-w-3xl">
-      {/* URL input + search button */}
+      {/* URL input + save mini-button */}
       <FormRow
         label="Image URL"
         dirty={dirtyImg}
-        helper="Wiki Commons (upload.wikimedia.org) ar iNaturalist (static.inaturalist.org / inaturalist-open-data.s3.amazonaws.com). Catalog freeze: pirmas save'as nustato, vėlesni išlieka."
+        helper="Įklijuok bet kokį HTTPS URL (Brave, Google, nursery site) — bus auto-rehost'inta į Firebase Storage. Wiki/iNat/Storage URL'ai saugojami tiesiogiai (whitelist'as)."
       >
         <div className="flex gap-1.5">
           <div className="flex-1">
             <TextInput
               value={draft.image ?? ''}
               onChange={v => updateField('image', v)}
-              placeholder="https://upload.wikimedia.org/..."
+              placeholder="https://..."
             />
           </div>
           {dirtyImg && (
             <button
               onClick={handleManualSave}
-              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-semibold bg-forest-700 hover:bg-forest-800 text-bone transition-colors flex-shrink-0"
-              title="Išsaugoti TIK šio lauko pakeitimą (kiti dirty laukai nepaliečiami)"
+              disabled={pickingIdx === 'manual'}
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-semibold bg-forest-700 hover:bg-forest-800 text-bone disabled:opacity-50 transition-colors flex-shrink-0"
+              title="Išsaugoti TIK šio lauko pakeitimą (external URL'ai auto-rehost'inami į Storage)"
             >
-              <Save size={11} /> Saugoti
+              <Save size={11} />
+              {pickingIdx === 'manual' ? 'Rehost…' : 'Saugoti'}
             </button>
           )}
         </div>
       </FormRow>
 
-      {/* Search button */}
-      <div className="flex items-center gap-2">
+      {/* Search buttons row */}
+      <div className="flex items-center gap-2 flex-wrap">
         <button
           onClick={handleSearch}
           disabled={searching || !latin.trim()}
           className="inline-flex items-center gap-2 px-3 py-2 rounded-btn-sm text-xs font-semibold bg-forest-100 hover:bg-forest-200 text-forest-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <Search size={12} />
-          {searching ? 'Ieškau…' : `🔍 Ieškoti nuotraukos${latin ? ` „${latin}"` : ''}`}
+          {searching ? 'Ieškau Brave…' : `🌐 Ieškoti Brave${latin ? ` „${latin}"` : ''}`}
         </button>
+        {braveSearchUrl && (
+          <a
+            href={braveSearchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-btn-sm text-[11px] font-medium text-forest-600 hover:bg-bone-200 transition-colors"
+            title="Atidaryti Brave Images pilname puslapyje — radus norimą, copy image URL ir įklijuok aukščiau"
+          >
+            <ExternalLink size={11} /> Atidaryti pilname puslapyje
+          </a>
+        )}
         {candidates !== null && !searching && (
           <button
             onClick={() => setCandidates(null)}
-            className="text-[11px] text-forest-500 hover:text-forest-700"
+            className="text-[11px] text-forest-500 hover:text-forest-700 ml-auto"
           >
             Uždaryti rezultatus
           </button>
@@ -1121,7 +1179,7 @@ function TabPhoto({ draft, originalDraft, updateField, onSaveImageOnly }) {
       {candidates !== null && candidates.length > 0 && (
         <div>
           <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-forest-500 mb-2">
-            {candidates.length} kandidatų — paspaudus įrašysiu iškart
+            {candidates.length} Brave kandidatų — paspausk → įkelsiu į Storage + įrašysiu
           </p>
           <div className="grid grid-cols-3 gap-2">
             {candidates.map((c, idx) => (
@@ -1129,7 +1187,9 @@ function TabPhoto({ draft, originalDraft, updateField, onSaveImageOnly }) {
                 key={idx}
                 candidate={c}
                 selected={c.url === draft.image}
-                onPick={() => handlePickCandidate(c.url)}
+                loading={pickingIdx === idx}
+                disabled={pickingIdx !== null}
+                onPick={() => handlePickCandidate(c, idx)}
               />
             ))}
           </div>
@@ -1144,13 +1204,18 @@ function TabPhoto({ draft, originalDraft, updateField, onSaveImageOnly }) {
             <img src={draft.image} alt="" className="w-full max-h-80 object-contain" />
           </div>
           <p className="text-[10px] text-forest-400 font-mono break-all">{draft.image}</p>
+          {isStorageUrl(draft.image) && (
+            <p className="text-[10px] text-forest-500 italic">
+              ✓ Firebase Storage — permanent, brand-consistent
+            </p>
+          )}
         </div>
       ) : (
         <div className="text-center py-12 px-6 bg-bone-100 rounded-lg border border-dashed border-bone-400/60">
           <ImageOff size={24} className="text-forest-300 mx-auto mb-2" />
           <p className="text-xs text-forest-500">Nuotraukos URL'as nenurodytas.</p>
           <p className="text-[10px] text-forest-400 mt-1">
-            Paspausk „Ieškoti nuotraukos" — automatiškai pasiūlysiu iš Wiki/iNat.
+            Paspausk „Ieškoti Brave" — pasiūlysiu kandidatus iš Brave Images.
           </p>
         </div>
       )}
@@ -1158,28 +1223,35 @@ function TabPhoto({ draft, originalDraft, updateField, onSaveImageOnly }) {
   )
 }
 
-function CandidateCard({ candidate, selected, onPick }) {
+function CandidateCard({ candidate, selected, loading, disabled, onPick }) {
   const [error, setError] = useState(false)
   return (
     <button
       onClick={onPick}
+      disabled={disabled}
       className={`relative group rounded-lg overflow-hidden border-2 transition-all ${
         selected
           ? 'border-forest-600 ring-2 ring-forest-200'
           : 'border-bone-400/40 hover:border-forest-400'
-      }`}
+      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
-      <div className="aspect-square bg-bone-200 overflow-hidden">
+      <div className="aspect-square bg-bone-200 overflow-hidden relative">
         {error ? (
           <div className="w-full h-full flex items-center justify-center text-3xl">🌿</div>
         ) : (
           <img
-            src={candidate.url}
+            src={candidate.thumbnail || candidate.url}
             alt=""
             loading="lazy"
             onError={() => setError(true)}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
           />
+        )}
+        {loading && (
+          <div className="absolute inset-0 bg-forest-900/70 flex flex-col items-center justify-center text-bone gap-1">
+            <RotateCcw size={18} className="animate-spin" />
+            <span className="text-[10px] font-mono uppercase tracking-wider">Įkeliam į Storage…</span>
+          </div>
         )}
       </div>
       <div className="px-2 py-1 bg-bone-50/95 border-t border-bone-400/40">
@@ -1190,7 +1262,7 @@ function CandidateCard({ candidate, selected, onPick }) {
           {candidate.label}
         </p>
       </div>
-      {selected && (
+      {selected && !loading && (
         <div className="absolute top-1 right-1 w-5 h-5 rounded-full bg-forest-600 flex items-center justify-center">
           <CheckCircle2 size={11} className="text-bone" />
         </div>
@@ -1199,51 +1271,65 @@ function CandidateCard({ candidate, selected, onPick }) {
   )
 }
 
-// ── Image candidates fetcher (Wiki EN/LT + iNat parallel) ───────────
+// ── Brave Images fetcher (per existing /api/plant-image proxy) ──────
 //
-// Naudoja egzistuojantį fetchWikiPhoto (browser-safe per origin=*) ir
-// iNat taxa API (CORS-safe). Visi parallel — total ~500-1500ms.
-// Dedupe by URL.
-async function fetchImageCandidates(latinName) {
+// Server proxy handles BRAVE_API_KEY (env), Vercel edge-cache 30d.
+async function fetchBraveCandidates(latinName) {
   if (!latinName) return []
-  const genus = latinName.split(/\s+/)[0]
-  const wantsGenus = genus && genus !== latinName
-
-  const [wikiEnSpec, wikiLt, wikiEnGenus, inatRes] = await Promise.all([
-    fetchWikiPhoto(latinName, 'en', { thumbSize: 600 }).catch(() => null),
-    fetchWikiPhoto(latinName, 'lt', { thumbSize: 600 }).catch(() => null),
-    wantsGenus
-      ? fetchWikiPhoto(genus, 'en', { thumbSize: 600 }).catch(() => null)
-      : Promise.resolve(null),
-    fetch(`https://api.inaturalist.org/v1/taxa?q=${encodeURIComponent(latinName)}&rank=species,genus&limit=6`, {
-      headers: { Accept: 'application/json' },
-    })
-      .then(r => r.ok ? r.json() : null)
-      .catch(() => null),
-  ])
-
-  const results = []
-  const seen = new Set()
-  const tryAdd = (url, source, label) => {
-    if (!url || seen.has(url)) return
-    seen.add(url)
-    results.push({ url, source, label })
+  const res = await fetch(`/api/plant-image?q=${encodeURIComponent(latinName)}`)
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '')
+    throw new Error(`HTTP ${res.status} ${detail.slice(0, 100)}`)
   }
+  const data = await res.json()
+  return (data.images ?? []).map((img, idx) => ({
+    url:       img.url,
+    thumbnail: img.thumbnail || img.url,
+    source:    img.source || `Brave #${idx + 1}`,
+    label:     img.title || latinName,
+  }))
+}
 
-  if (wikiEnSpec?.found) tryAdd(wikiEnSpec.url, 'Wiki EN', latinName)
-  if (wikiLt?.found) tryAdd(wikiLt.url, 'Wiki LT', latinName)
-  if (wikiEnGenus?.found) tryAdd(wikiEnGenus.url, 'Wiki EN (genus)', genus)
+// ── Image rehost (download → resize → Storage → permanent URL) ──────
+//
+// Naudoja egzistuojantį /api/rehost-image endpoint'ą (auth-protected,
+// Sharp resize'as iki 1200px, JPEG q85, Firebase Storage upload).
+async function rehostImage(externalUrl, latinName) {
+  const idToken = await auth.currentUser?.getIdToken().catch(() => null)
+  if (!idToken) throw new Error('Auth required (Firebase token missing)')
+  if (!latinName) throw new Error('latinName required (catalog slug derivation)')
 
-  if (inatRes?.results) {
-    const plants = inatRes.results.filter(t => t.iconic_taxon_name === 'Plantae')
-    for (const t of plants.slice(0, 4)) {
-      if (t.default_photo?.medium_url) {
-        tryAdd(t.default_photo.medium_url, 'iNat', `${t.name} (${t.rank})`)
-      }
-    }
+  const res = await fetch('/api/rehost-image', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${idToken}`,
+    },
+    body: JSON.stringify({ url: externalUrl, latinName, maxSize: 1200 }),
+  })
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || `HTTP ${res.status}`)
   }
+  const data = await res.json()
+  if (!data.url) throw new Error('rehost grąžino tuščią URL')
+  return data.url
+}
 
-  return results
+// Image URL helpers — atskirti mūsų Storage'ą nuo external'iu
+function isStorageUrl(url) {
+  if (!url || typeof url !== 'string') return false
+  return url.startsWith('https://storage.googleapis.com/geliu-db') ||
+         url.startsWith('https://firebasestorage.googleapis.com/v0/b/geliu-db')
+}
+
+// URL'ai, kuriuos isPublicPhoto whitelist'as priima tiesiogiai (be rehost'o)
+function isWhitelistedHostingUrl(url) {
+  if (!url || typeof url !== 'string') return false
+  return url.startsWith('https://static.inaturalist') ||
+         url.startsWith('https://inaturalist-open-data') ||
+         url.startsWith('https://upload.wikimedia') ||
+         url.startsWith('https://photos.inaturalist')
 }
 
 // ── Tab: Aprašymai (cultivar) ────────────────────────────────────────
