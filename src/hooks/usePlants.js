@@ -168,9 +168,17 @@ export function usePlants(collectionId, viewerToken = null) {
     const next   = { plants, zinynas: safeMeta.zinynas ?? [], zones: safeMeta.zones ?? [], settings: safeMeta.settings ?? {} }
     // Step 6r diagnostic — sekam ar snapshot fire'inasi su naujais plant'ais
     // (post-save) ar overwriting'a optimistic local state'ą stale data
+    // 2026-05-27 — pridėtos zones diagnostikos po user'io bug report'o
+    // („cache clear → augalai be zones"). Padeda atskirti Firestore data
+    // issue vs UI rendering bug'ą.
+    const plantsWithZoneId = plants.filter(p => p.zonaId).length
     console.log('[usePlants] applySnapshot', {
       subPlantCount: subPlants.length,
       mergedPlantCount: plants.length,
+      zonesCount: next.zones.length,
+      zonesSample: next.zones.slice(0, 3).map(z => ({ id: z.id, name: z.name })),
+      plantsWithZoneId,
+      plantsWithoutZoneId: plants.length - plantsWithZoneId,
       ids: plants.map(p => p.id).slice(0, 5),
     })
     setData(next)
