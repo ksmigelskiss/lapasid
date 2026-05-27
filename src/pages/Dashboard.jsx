@@ -441,8 +441,16 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
 
   // Batch inspection (snooze) — atitinka individual CareWateringSheet
   // onInspect: žymi „Patikrinau, viskas tvarkoj" → inspection event'as
-  // pasleidžia sekantį laistymą pagal snooze logiką. 2026-05-27 user fix:
-  // care mode'e to anksčiau nebuvo, admin turėdavo eit per individual sheet.
+  // pasleidžia sekantį laistymą pagal snooze logiką.
+  //
+  // SVARBU — inspection NĖRA care action, todėl:
+  //   • NEpridedam į sessionRef bucket counts (early/late/perfect statistic'us)
+  //   • NEskaičiuojam confidence delta (computeWateringDelta skip'ina inspection)
+  //   • NEnaudojam showCareToast (jis nuoroda į watering/fert bucket'us
+  //     ir sessionRef.current.inspection neegzistuoja → CRASH)
+  //
+  // 2026-05-28 fix — anksciau kvečiau showCareToast(['inspection']) ir lūždavo.
+  // Dabar tiesiogiai set'inu paprastą circuit-style toast'ą su patvirtinimu.
   const handleCareInspection = useCallback(() => {
     const t = today()
     const ids = new Set(careChecked)
@@ -452,11 +460,15 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
     })
     resetConfirm()
     setCareChecked(new Set())
-    // Toast'as — same kaip watering, bet ['inspection'] tipui (skirtingas
-    // formatas, kad user'is matytų ką tiksliai padarė)
-    const ourPlants = plants.filter(p => ids.has(p.id))
-    showCareToast(ourPlants, ['inspection'], 'inspection')
-  }, [careChecked, plants, onAddTimelineEvent, resetConfirm, showCareToast])
+    // Paprastas confirmation toast'as — be reward/bucket logikos
+    const count = ids.size
+    const message = count === 1
+      ? '✓ Patikrinta — ramybėje keletą dienų'
+      : `✓ ${count} augalai patikrinti — ramybėje keletą dienų`
+    setCareToast({ kind: 'circuit', message })
+    if (careToastTimerRef.current) clearTimeout(careToastTimerRef.current)
+    careToastTimerRef.current = setTimeout(() => setCareToast(null), 3000)
+  }, [careChecked, plants, onAddTimelineEvent, resetConfirm])
 
   const confirmPostFertWater = useCallback(() => {
     if (!postFertilizeFor) return
