@@ -21,6 +21,7 @@
 //   node --env-file=.env.local scripts/generate-hero-illustrations.mjs --all --force
 
 import admin from 'firebase-admin'
+import sharp from 'sharp'
 
 const args = process.argv.slice(2)
 const TIER  = args.find(a => a.startsWith('--tier='))?.split('=')[1] ?? null
@@ -174,6 +175,36 @@ async function geminiTextToImage(entry, brief) {
   return geminiImage([{ type: 'text', text: instr }])
 }
 
+// Bg → transparent (flood-fill iš kraštų, sharp). Gemini bg tonas/tekstūra
+// varijuoja → seam'as ant kortelės. Pašalinam foną → app render'ina ant
+// vienodo #fefdfa → jokio seam'o, jokio crop'o, jokių app pakeitimų. Flood
+// iš kraštų išsaugo augalo vidaus šviesias vietas (bone highlights).
+async function transparentizeBg(buf, T = 44) {
+  const { data, info } = await sharp(buf).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  const { width: w, height: h, channels: ch } = info
+  const cs = [[0, 0], [w - 1, 0], [0, h - 1], [w - 1, h - 1]]
+  let br = 0, bg = 0, bb = 0
+  for (const [x, y] of cs) { const i = (y * w + x) * ch; br += data[i]; bg += data[i + 1]; bb += data[i + 2] }
+  br /= 4; bg /= 4; bb /= 4
+  const T2 = T * T
+  const close = (i) => { const dr = data[i] - br, dg = data[i + 1] - bg, db = data[i + 2] - bb; return dr * dr + dg * dg + db * db <= T2 }
+  const visited = new Uint8Array(w * h)
+  const stack = []
+  for (let x = 0; x < w; x++) stack.push(x, 0, x, h - 1)
+  for (let y = 0; y < h; y++) stack.push(0, y, w - 1, y)
+  while (stack.length) {
+    const y = stack.pop(), x = stack.pop()
+    if (x < 0 || y < 0 || x >= w || y >= h) continue
+    const p = y * w + x
+    if (visited[p]) continue
+    const i = p * ch
+    if (!close(i)) continue
+    visited[p] = 1; data[i + 3] = 0
+    stack.push(x + 1, y, x - 1, y, x, y + 1, x, y - 1)
+  }
+  return sharp(data, { raw: { width: w, height: h, channels: ch } }).png().toBuffer()
+}
+
 async function uploadToStorage(slug, buf) {
   const filename = `catalog/${slug}/hero-illus.png`
   const file = bucket.file(filename)
@@ -221,7 +252,8 @@ for (let i = 0; i < todo.length; i++) {
     // GATE (do-no-harm): gera foto → restyle iš jos (tiksliausia); bloga/nėra →
     // tekstas iš brief'o (žinios+notes), kad fragmentinė foto nepakenktų.
     const usePhoto = !!entry.image && (photo === 'full-habit' || photo === 'partial')
-    const buf = usePhoto ? await geminiRestyle(entry.image) : await geminiTextToImage(entry, brief)
+    let buf = usePhoto ? await geminiRestyle(entry.image) : await geminiTextToImage(entry, brief)
+    buf = await transparentizeBg(buf)   // bg → transparent (vienodumas ant kortelės)
     const method = usePhoto ? 'gemini-restyle' : 'gemini-text'
     const url = await uploadToStorage(slug, buf)
     await db.collection('catalog').doc(slug).update({
