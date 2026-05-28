@@ -50,7 +50,7 @@ Tikslas: nauji augalai (Phase-2 → global-save) automatiškai gauna drawing
 - [x] Deployment Protection (SSO) įjungtas *.vercel.app; prod domenas = lapasid.lt (public)
 - [x] **USER pridėjo `AI_GATEWAY_API_KEY`** → trigger+route AUTO-suveikė (Alocasia regal shield gavo drawing be rankinio). **Phase A ✅ BAIGTA.**
 - [x] Manual gens: Alocasia, ficus_ginseng, Calathea warscewiczii, Yucca elephantipes ✓
-- [ ] (polish) widget cache: po auto-gen `preloadHeroMap` įkrautas anksčiau → drawing nematomas iki refresh. Apsvarstyti re-preload po hero gen / catalog bust.
+- [x] (polish) widget cache fix: `refreshHeroMap()` (cache-bust + re-preload) → App po add'o delayed (45s/90s) + grįžus į tab'ą auto-refresh'ina → widget pasiima drawing be hard-refresh. heroMapV counter → re-render.
 
 ---
 

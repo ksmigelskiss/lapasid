@@ -47,6 +47,9 @@ export async function triggerHeroGen(latinName, { force = false } = {}) {
       body: JSON.stringify({ latinName, force }),
       keepalive: true,
     }).catch(() => {})
+    // Signalas App'ui — drawing gen prasidėjo. App po delay'aus refreshHeroMap'ina
+    // (cache-bust), kad widget pasiimtų naują drawing be hard-refresh.
+    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('lapas:hero-gen-started'))
   } catch { /* ignore — drawing nėra kritinis save flow'ui */ }
 }
 

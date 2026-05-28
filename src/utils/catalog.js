@@ -217,6 +217,20 @@ export async function preloadHeroMap() {
   }
 }
 
+/**
+ * refreshHeroMap — cache-bust + re-preload. Naudojama kai drawing sugeneruotas
+ * fone (Phase A async po pridėjimo) — catalog IndexedDB cache (1h) slepia naują
+ * heroIllustration. Resetinam in-mem + AWAIT'inam IndexedDB delete (ne fire-
+ * and-forget kaip bustCatalogCache — kitaip race: loadAllCatalog pasiimtų seną
+ * IDB įrašą) → fresh Firestore fetch → rebuild _heroMap.
+ */
+export async function refreshHeroMap() {
+  _catalogMem = null
+  _catalogMemAt = 0
+  if (_idbStore) { try { await idbDel(CACHE_KEY, _idbStore) } catch {} }
+  return preloadHeroMap()
+}
+
 /** Sync lookup — grąžina watercolor hero URL augalui (arba null). */
 export function heroIllustrationFor(lotyniskas) {
   if (!lotyniskas) return null
