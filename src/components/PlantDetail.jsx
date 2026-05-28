@@ -1817,6 +1817,7 @@ export default function PlantDetail({
                 <div className={`block w-full h-full overflow-hidden relative ${isIllustration ? '' : 'bg-bone-300'}`}
                      style={isIllustration ? { background: '#fefdfa' } : undefined}>
                   <PlantImage
+                    key={currentPhoto}
                     url={currentPhoto} alt={plant.lietuviškas} size="detail" eager
                     className={`w-full h-full ${isIllustration ? 'object-contain' : 'object-cover'}`}
                     onError={() => setHeroError(true)}

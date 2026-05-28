@@ -2543,6 +2543,7 @@ function RightPanePreview({ entry, draft, entryType, genusParent }) {
                style={{ aspectRatio: '3 / 2', ...(isIllustration ? { background: '#fefdfa' } : {}) }}>
             {currentPhoto ? (
               <PlantImage
+                key={currentPhoto}
                 url={currentPhoto}
                 alt={mergedPlant.lietuviškas || mergedPlant.lotyniskas}
                 size="detail"

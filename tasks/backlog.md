@@ -122,6 +122,17 @@ no public API.
 
 ---
 
+## [PERF] Hero drawing failo dydis — 1-2MB per PNG
+
+**Data:** 2026-05-28. transparentizeBg grąžina transparent 1024 PNG ~1-2MB
+(Alocasia 2MB). 79+ bibliotekai sunkoka load'ui; ir didelis necache'intas
+hero → matomas „stale image flash" perjungiant (pataisyta `key`, bet load
+greitis vis tiek). Optimizacija: transparentizeBg/upload → resize ~800px +
+**WebP su alpha** (1-2MB → ~200-400KB) arba PNG palette/compressionLevel 9.
+Storage path .png → .webp (naršyklės palaiko). Phase polish.
+
+---
+
 ## [BUG] Toksiškumo bar — žmonėms vs gyvūnams severity sukeista/default
 
 **Data:** 2026-05-28. Pastebėta Alocasia portodora kortelėje: toksiškumo bar
