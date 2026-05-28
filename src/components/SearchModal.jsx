@@ -3070,6 +3070,7 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange,
       // Fast path BENDRAS abiem flag stat'om — jokios Phase 2 nereikia.
       if (resultWithStorageImage.laistymasIntervalas) {
         onSave(resultWithStorageImage)
+        triggerHeroGen(resultWithStorageImage.latinName)  // Phase A3: drawing gen (fast/pre-DB kelias)
         onClose()
         return
       }
@@ -3099,6 +3100,7 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange,
           enrichmentStartedAt: new Date().toISOString(),
         }
         onSave(resultWithId)
+        triggerHeroGen(resultWithStorageImage.latinName)  // Phase A3: drawing gen (server-side kelias)
         try {
           const idToken = await auth.currentUser?.getIdToken().catch(() => null)
           if (idToken && collectionId) {

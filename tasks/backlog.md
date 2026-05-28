@@ -122,6 +122,19 @@ no public API.
 
 ---
 
+## [BUG] Toksiškumo bar — žmonėms vs gyvūnams severity sukeista/default
+
+**Data:** 2026-05-28. Pastebėta Alocasia portodora kortelėje: toksiškumo bar
+GYVŪNAMS mažesnis nei ŽMONĖMS, nors turėtų būti atvirkščiai (Alocasia =
+kalcio oksalatai, toksiška abiems, gyvūnams dažnai pabrėžiama labiau).
+Įtarimas: žmonėms duotas DEFAULT severity (gal 2 segmentai), o gyvūnams reali
+reikšmė atvaizduota mažiau — arba severity mapping sukeistas vietomis, arba
+default logika neteisinga. Šalutinis bug, nekritinis. Patikrinti severity →
+bar segmentų mapping'ą (PlantCard/ProfileContent toxicity render + deriveToxicity
+pavojai[].severity). Phase C/E.
+
+---
+
 ## [DONE] Priežiūros santrauka — apjungimas + snooze refaktoras
 
 **Užbaigta** (buvo `todo.md`, perkelta čia 2026-05-28). Snooze gyvena kaip

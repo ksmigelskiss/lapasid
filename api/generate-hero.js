@@ -43,8 +43,10 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'latinName required' })
   }
 
-  const token = process.env.VERCEL_OIDC_TOKEN
-  if (!token) return res.status(503).json({ error: 'oidc_token_unavailable' })
+  // AI Gateway credential — Vercel auto-injected OIDC token, ARBA AI_GATEWAY_API_KEY
+  // env (fallback jei OIDC neįjungtas project settings'uose).
+  const token = process.env.VERCEL_OIDC_TOKEN || process.env.AI_GATEWAY_API_KEY
+  if (!token) return res.status(503).json({ error: 'no_gateway_credential' })
 
   try {
     initAdmin()
