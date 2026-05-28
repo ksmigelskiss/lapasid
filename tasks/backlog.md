@@ -119,3 +119,13 @@ no public API.
 
 **Sprendimas dabar:** Layer 2.5 įdiegti su Wikipedia kaip primary. Perenual'as
 — tik kai realiai matom limit'us.
+
+---
+
+## [DONE] Priežiūros santrauka — apjungimas + snooze refaktoras
+
+**Užbaigta** (buvo `todo.md`, perkelta čia 2026-05-28). Snooze gyvena kaip
+`inspection` event'as timeline'e (single source of truth, Firestore sync,
+auto-expiry). CareOverview apjungtas, mažas ✓ mygtukas pašalintas, „Patikrinau"
+mygtukas PlantCareCard'e. Build + dev verifikuota. Pilnas įrašas + pamokos —
+git istorijoje (todo.md prieš 2026-05-28 master plan rewrite).
