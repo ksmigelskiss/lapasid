@@ -11,6 +11,11 @@ kitos.** Šokinėjimas nuo temos prie temos sustabdytas.
 Atmesta (žr. AI optimizacijos analizę): prompt caching (low value dėl global-lib
 dedup), Haiku narrative (safety-critical auditor), Phase1+2 merge (UX).
 
+> **▶ NEXT SESSION (B2):** žr. Phase B → „🎯 SUTARTAS NORMAL-APPROACH". Du darbai:
+> (A) hero display → LIVE Firestore subscription (išmesti refresh timer bandaid'us),
+> (B) hero gen → konsoliduoti į catalog-write (išmesti 3 SearchModal trigger'ius) +
+> client/server Save konsolidacija. Esamas kodas veikia (su bandaid'ais) — B2 = švarinimas.
+
 ---
 
 ## PHASE A — Hero/foto subsistemos produkcinė integracija  [AKTYVU]
@@ -59,6 +64,28 @@ Tikslas: nauji augalai (Phase-2 → global-save) automatiškai gauna drawing
 - [x] **Prod flag = server-side:** console atskleidė `VITE_USE_SERVERSIDE_SAVE="1"` PRODUKCIJOJE (A0 skaitė lokalų .env.local OFF — klaidinga). Aktyvus kelias = branch 2 (server). Client triggerHeroGen fire'indavo route IŠKART, bet catalog rašomas async processPlant'e → **route 404 (catalog_entry_not_found)** → jokio drawing.
 - [x] **Server hero hook:** `processPlant` step 7 (PO catalog write) → `generateHeroForEntry` + upload + catalog.heroIllustration. Branch-2 client trigger pašalintas. (Fast-path/flag-off client trigger lieka.) **Tai ir yra teisingoji A3 server-integracija.**
 - [ ] **B2 likę:** Client/server Save dublikato konsolidacija + server narrative parallelize (drift prevencija) — fresh sesija
+
+### 🎯 SUTARTAS NORMAL-APPROACH (vietoj bandaid'ų) — daryti B2 sesijoj
+Problema: hero gen išbarstytas per 3 SearchModal save šakas (race, path-dependent) +
+display per `_heroMap` bulk-cache + refresh timer'ius (dae3195/65185e8 = bandaid'ai).
+User'is teisingai flag'ino. **Du švarūs mechanizmai pririšti prie TIKRŲ įvykių:**
+
+- **A. Display = LIVE Firestore subscription** (reaktyvu, kaip usePlants applySnapshot):
+  - `onSnapshot(collection('catalog'))` palaiko hero map'ą gyvai → serveris parašo
+    `heroIllustration` → snapshot → map update → kortelės re-render akimirksniu
+  - **IŠMESTI:** `preloadHeroMap` bulk-load + mount/focus/`lapas:hero-gen-started`
+    refresh timer'ius (App.jsx) + `refreshHeroMap` (catalog.js). Visi bandaid'ai.
+  - Ištaiso „widget niekada neatsinaujina" + hero card stale.
+- **B. Generation = pririšta prie CATALOG WRITE, viena vieta:**
+  - Server catalog-write (saveToCatalogServer/processPlant) → jei nėra heroIllustration
+    → fire gen (jau yra processPlant step 7 — palikti).
+  - Pre-DB/fast-path (client preview write, branch 1) → vienas idempotent
+    `/api/generate-hero` po client catalog upsert (ne SearchModal UI šakose).
+  - **IŠMESTI:** SearchModal 3 branch trigger'ius (fast-path :3072, :802) — pakeisti
+    vienu hook'u prie client catalog-write.
+- Rezultatas: ~5 trigger/refresh bandaid'ai → 2 mechanizmai prie tikrų įvykių.
+- NB: prod `VITE_USE_SERVERSIDE_SAVE="1"` (server-side aktyvus). Fast-path (pre-DB hit)
+  fire'ina PRIEŠ flag check → vis tiek client kelias tiems.
 
 ## PHASE C — Duomenų kokybės audit (vienas praėjimas)
 - [ ] Asmeninės foto global'e — audit: rasti entries su user personal photos kaip `image`; flag/replace (privatumas)
