@@ -190,21 +190,32 @@ export async function searchStage1(userQuery) {
   }
 
   if (plant?.genus) {
-    // Successful DB hit
-    const aspcaMap = await getAspcaMap()
-    const toxicity = aspcaMap[plant.genus.genus] ?? null
-    const result = buildSlimResult({
-      latin,
-      plant,
-      ltEntry,
-      reclass,
-      toxicity,
-      layer: 'db',
-      elapsedMs: Date.now() - startTime,
-      userQuery,
-      ltMatchedFrom,
-    })
-    return result
+    // Genus-only fallback guard: jei pre-DB rado TIK gentį (plant.species == null),
+    // o užklausa nurodė daugiau nei gentį (rūšies/cultivar token'ai, pvz.
+    // „Alocasia regal shield"), tai NĖRA patikima identifikacija — tik genus
+    // fallback'as. Grąžinus jį kaip hit'ą, SearchModal praleidžia AI ir įrašo
+    // genus-vardu („Alokazija") pažymėtą entry su neapdorotu multi-word latin'u
+    // → dublikatai katalogE (kelios „Alokazija" skirtingiems cultivar'ams).
+    // Vietoj to — krentam į db-miss → AI identifikuoja + normalizuoja cultivar'ą
+    // (atstato numatytą „naujas augalas → Phase 2 → global biblioteka" srautą).
+    const latinWordCount = (latin ?? '').trim().split(/\s+/).filter(Boolean).length
+    const genusOnlyButQuerySpecific = !plant.species && latinWordCount > 1
+    if (!genusOnlyButQuerySpecific) {
+      const aspcaMap = await getAspcaMap()
+      const toxicity = aspcaMap[plant.genus.genus] ?? null
+      return buildSlimResult({
+        latin,
+        plant,
+        ltEntry,
+        reclass,
+        toxicity,
+        layer: 'db',
+        elapsedMs: Date.now() - startTime,
+        userQuery,
+        ltMatchedFrom,
+      })
+    }
+    // genus-only-but-specific → krentam žemyn į db-miss → AI fallback
   }
 
   // ── FALLBACK: jei Latin lookup miss'ino ir input ASCII (klasifikatorius
