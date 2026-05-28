@@ -33,7 +33,7 @@
 
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import {
-  Search, ChevronRight, ChevronDown, ImageOff, Layers, Eye, Filter,
+  Search, ChevronRight, ChevronLeft, ChevronDown, ImageOff, Layers, Eye, Filter,
   Save, RotateCcw, Trash2, AlertTriangle, X, CheckCircle2, Plus, Minus,
   Image as ImageIcon, Type, BookOpen, Droplet, Skull, Tag, Info,
 } from 'lucide-react'
@@ -2440,6 +2440,10 @@ function RightPanePreview({ entry, draft, entryType, genusParent }) {
     return () => clearTimeout(t)
   }, [draft])
 
+  // Hero galerijos index'as — reset'inam kai keičiasi augalas
+  const [galleryIdx, setGalleryIdx] = useState(0)
+  useEffect(() => { setGalleryIdx(0) }, [entry?.id])
+
   if (!entry) {
     return (
       <div className={`${WIDGET} flex flex-col h-full overflow-hidden`}>
@@ -2511,25 +2515,35 @@ function RightPanePreview({ entry, draft, entryType, genusParent }) {
     timeline: entry.timeline ?? [],
   }
 
-  // Identiškas user view — hero photo (aspect-3/2 kaip PlantDetail'yje) +
+  // Identiškas user view — hero galerija (aspect-3/2 kaip PlantDetail'yje) +
   // ProfileContent. Skip'inam top bar (status/zone — admin'ui nereikalingi)
   // ir TabBar (admin mato tik Profile content'ą).
-  // Hero — mirror app: watercolor heroIllustration = default catalog augalui,
-  // real foto fallback. Iliustracija = transparent PNG ant cream bg (contain).
+  //
+  // Hero GALERIJA — admin gali cycle'inti [iliustracija, tikra foto, ...gallery]
+  // strėlytėmis, kad palygintų kiek tiksliai watercolor atvaizduoja augalą vs
+  // tikra foto (→ prompt refinement). Default = generated iliustracija (idx 0).
   const heroIllus = debouncedDraft?.heroIllustration ?? entry.heroIllustration ?? null
-  const heroPhoto = heroIllus ?? debouncedDraft?.image ?? entry.image
-  const isIllustration = !!heroIllus && heroPhoto === heroIllus
+  const realPhoto = debouncedDraft?.image ?? entry.image ?? null
+  const gallery = [heroIllus, realPhoto, ...(entry.photos ?? [])]
+    .filter(Boolean)
+    .filter((u, i, a) => a.indexOf(u) === i)
+  const idx = Math.min(galleryIdx, Math.max(0, gallery.length - 1))
+  const currentPhoto = gallery[idx] ?? null
+  const isIllustration = !!heroIllus && currentPhoto === heroIllus
+  const photoLabel = currentPhoto === heroIllus ? 'Iliustracija'
+    : currentPhoto === realPhoto ? 'Tikra foto'
+    : 'Galerija'
   return (
     <div className={`${WIDGET} flex flex-col h-full overflow-hidden`}>
       <PreviewBadge />
       <div className="flex-1 overflow-y-auto relative">
         <div className="pointer-events-none">
-          {/* Hero photo — aspect-3/2 kaip PlantDetail.jsx (line 1781) */}
-          <div className={`w-full ${isIllustration ? '' : 'bg-bone-300'}`}
+          {/* Hero galerija — aspect-3/2; strėlytės pointer-events-auto (parent none) */}
+          <div className={`relative w-full ${isIllustration ? '' : 'bg-bone-300'}`}
                style={{ aspectRatio: '3 / 2', ...(isIllustration ? { background: '#fefdfa' } : {}) }}>
-            {heroPhoto ? (
+            {currentPhoto ? (
               <PlantImage
-                url={heroPhoto}
+                url={currentPhoto}
                 alt={mergedPlant.lietuviškas || mergedPlant.lotyniskas}
                 size="detail"
                 eager
@@ -2538,6 +2552,35 @@ function RightPanePreview({ entry, draft, entryType, genusParent }) {
             ) : (
               <div className="w-full h-full flex items-center justify-center text-7xl">
                 🌿
+              </div>
+            )}
+            {gallery.length > 1 && (
+              <>
+                <button
+                  onClick={() => setGalleryIdx(i => Math.max(0, i - 1))}
+                  disabled={idx === 0}
+                  className="pointer-events-auto absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-sm text-white flex items-center justify-center disabled:opacity-30 transition"
+                  aria-label="Ankstesnė"
+                >
+                  <ChevronLeft size={15} />
+                </button>
+                <button
+                  onClick={() => setGalleryIdx(i => Math.min(gallery.length - 1, i + 1))}
+                  disabled={idx >= gallery.length - 1}
+                  className="pointer-events-auto absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-sm text-white flex items-center justify-center disabled:opacity-30 transition"
+                  aria-label="Kita"
+                >
+                  <ChevronRight size={15} />
+                </button>
+              </>
+            )}
+            {/* Tipo label (Iliustracija / Tikra foto / Galerija) — palyginimui */}
+            <div className="absolute top-2 left-2 px-2 py-0.5 rounded-full bg-black/45 backdrop-blur-sm">
+              <span className="text-[10px] text-white/90 font-medium tracking-wide">{photoLabel}</span>
+            </div>
+            {gallery.length > 1 && (
+              <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/45 backdrop-blur-sm">
+                <span className="text-[10px] text-white/90 font-medium">{idx + 1} / {gallery.length}</span>
               </div>
             )}
           </div>
