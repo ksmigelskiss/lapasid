@@ -880,6 +880,12 @@ function buildHierarchy(catalog, taxonGroups) {
   return [...byGenus.values()].sort((a, b) => a.genus.localeCompare(b.genus))
 }
 
+// ── Thumbnail src helper ───────────────────────────────────────────
+// Admin list + preview: watercolor heroIllustration prioritetas (mirror app —
+// catalog stock augalams iliustracija = default hero). Fallback į real foto.
+// Transparent PNG render'inasi ant bone-200 thumb container'io fono.
+const heroThumb = e => e?.heroIllustration ?? e?.image ?? null
+
 // ── Genus group row (Level 1) ──────────────────────────────────────
 //
 // Renders genus group header (catalog entry if exists, otherwise synthetic
@@ -908,10 +914,10 @@ function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSe
   const hasMembers = members.length > 0
   const genusSelected = entry && selectedId === entry.id
 
-  // Hero image: genus entry's own image, else first species image, else first cultivar image
-  const heroImage = entry?.image ??
-    members.find(m => m.kind === 'species')?.entry?.image ??
-    members.find(m => m.kind === 'series')?.cultivars[0]?.image
+  // Hero image: genus entry's own (watercolor/real), else first species, else first cultivar
+  const heroImage = heroThumb(entry) ??
+    heroThumb(members.find(m => m.kind === 'species')?.entry) ??
+    heroThumb(members.find(m => m.kind === 'series')?.cultivars[0])
 
   return (
     <li>
@@ -1016,7 +1022,7 @@ function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSe
 // cultivar'us su tree connector'iu.
 function SeriesTopLevelRow({ series, expanded, onToggle, selectedId, onSelect, dirty }) {
   const { group, cultivars } = series
-  const heroImage = cultivars[0]?.image
+  const heroImage = heroThumb(cultivars[0])
   const seriesSelected = selectedId === series.id
   const hasCultivars = cultivars.length > 0
   return (
@@ -1079,6 +1085,7 @@ function SeriesTopLevelRow({ series, expanded, onToggle, selectedId, onSelect, d
 
 // ── Species child row (Level 2) ────────────────────────────────────
 function SpeciesChildRow({ entry, selected, onSelect, dirty }) {
+  const thumb = heroThumb(entry)
   return (
     <li>
       <button
@@ -1088,8 +1095,8 @@ function SpeciesChildRow({ entry, selected, onSelect, dirty }) {
         }`}
       >
         <div className="w-6 h-6 flex-shrink-0 rounded-sm overflow-hidden bg-bone-200 flex items-center justify-center">
-          {entry.image ? (
-            <img src={entry.image} alt="" className="w-full h-full object-cover" loading="lazy" />
+          {thumb ? (
+            <img src={thumb} alt="" className="w-full h-full object-cover" loading="lazy" />
           ) : (
             <ImageOff size={10} className="text-forest-300" />
           )}
@@ -1113,7 +1120,7 @@ function SpeciesChildRow({ entry, selected, onSelect, dirty }) {
 // ── Series child row (Level 2) — expandable to cultivars (Level 3) ─
 function SeriesChildRow({ series, expanded, onToggle, selectedId, onSelect, dirty }) {
   const { group, cultivars } = series
-  const heroImage = cultivars[0]?.image
+  const heroImage = heroThumb(cultivars[0])
   const seriesSelected = selectedId === series.id
   return (
     <li>
@@ -1171,6 +1178,7 @@ function SeriesChildRow({ series, expanded, onToggle, selectedId, onSelect, dirt
 
 // ── Cultivar leaf row (Level 3) ────────────────────────────────────
 function CultivarLeafRow({ entry, selected, onSelect, dirty }) {
+  const thumb = heroThumb(entry)
   return (
     <li>
       <button
@@ -1180,8 +1188,8 @@ function CultivarLeafRow({ entry, selected, onSelect, dirty }) {
         }`}
       >
         <div className="w-5 h-5 flex-shrink-0 rounded-sm overflow-hidden bg-bone-200 flex items-center justify-center">
-          {entry.image ? (
-            <img src={entry.image} alt="" className="w-full h-full object-cover" loading="lazy" />
+          {thumb ? (
+            <img src={thumb} alt="" className="w-full h-full object-cover" loading="lazy" />
           ) : (
             <ImageOff size={9} className="text-forest-300" />
           )}
@@ -2506,21 +2514,26 @@ function RightPanePreview({ entry, draft, entryType, genusParent }) {
   // Identiškas user view — hero photo (aspect-3/2 kaip PlantDetail'yje) +
   // ProfileContent. Skip'inam top bar (status/zone — admin'ui nereikalingi)
   // ir TabBar (admin mato tik Profile content'ą).
-  const heroPhoto = debouncedDraft?.image ?? entry.image
+  // Hero — mirror app: watercolor heroIllustration = default catalog augalui,
+  // real foto fallback. Iliustracija = transparent PNG ant cream bg (contain).
+  const heroIllus = debouncedDraft?.heroIllustration ?? entry.heroIllustration ?? null
+  const heroPhoto = heroIllus ?? debouncedDraft?.image ?? entry.image
+  const isIllustration = !!heroIllus && heroPhoto === heroIllus
   return (
     <div className={`${WIDGET} flex flex-col h-full overflow-hidden`}>
       <PreviewBadge />
       <div className="flex-1 overflow-y-auto relative">
         <div className="pointer-events-none">
           {/* Hero photo — aspect-3/2 kaip PlantDetail.jsx (line 1781) */}
-          <div className="w-full bg-bone-300" style={{ aspectRatio: '3 / 2' }}>
+          <div className={`w-full ${isIllustration ? '' : 'bg-bone-300'}`}
+               style={{ aspectRatio: '3 / 2', ...(isIllustration ? { background: '#fefdfa' } : {}) }}>
             {heroPhoto ? (
               <PlantImage
                 url={heroPhoto}
                 alt={mergedPlant.lietuviškas || mergedPlant.lotyniskas}
                 size="detail"
                 eager
-                className="w-full h-full object-cover"
+                className={`w-full h-full ${isIllustration ? 'object-contain' : 'object-cover'}`}
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-7xl">
