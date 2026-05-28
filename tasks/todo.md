@@ -11,8 +11,10 @@ kitos.** Šokinėjimas nuo temos prie temos sustabdytas.
 Atmesta (žr. AI optimizacijos analizę): prompt caching (low value dėl global-lib
 dedup), Haiku narrative (safety-critical auditor), Phase1+2 merge (UX).
 
-> **▶ NEXT SESSION:** Phase C — duomenų kokybės audit (vienas praėjimas). B2
-> (hero display live subscription + gen konsolidacija) ✅ BAIGTA 2026-05-28.
+> **▶ NEXT SESSION:** žr. **`tasks/audit.md`** (pilnas 4-ramsčių + write/state auditas,
+> 2026-05-29). Verdiktas: NE big-bang rewrite, bet tikslinai struktūriniai refaktorai.
+> P0 = user-plant↔catalog denormalizacija (didžiausia tikslumo spraga). P1 = care-data
+> grounding + toksiškumo severity (peržiūrėti KARTU). B2 ✅ BAIGTA 2026-05-28.
 
 ---
 
@@ -93,7 +95,10 @@ flag'ino. **Du švarūs mechanizmai pririšti prie TIKRŲ įvykių:**
 - [ ] 4 mismatch realios foto (Calathea/Dracaena/Ficus/Senecio) — drawing pataisytas, bet galerijos „tikra foto" dar bloga
 - [ ] **User plant ↔ catalog DIVERGENCE** (rasta tiriant Alocasia regal shield): catalog lieka `preview` (pre-DB data: „Alokazija"), user plant turi Phase-1 data („Karališkoji alokazija"). Pilnas Phase-2 catalog reconciliation (upsert + `preview→verified`) nesuveikia fast/pre-DB kelyje → diverge. Fix: kai user save'ina, suderinti catalog su turtingesne data + upgrade status.
 - [ ] **Latin normalizavimas trade-name'ams**: „Alocasia regal shield" → `Alocasia 'Regal Shield'` (hibridas). Latin resolver nenormalizuoja angliškų trade names.
-- [ ] **Phase-1 englishNames haliucinacijos**: Alocasia regal shield gavo `[Taro, taro]` (Taro = Colocasia, ne Alocasia). Filtras/validacija.
+- [x] **Latin trade-name normalizavimas** ✅ (`d57233f`) — PLANT_SYSTEM classify prompt + genus-fallback guard (`6d99682`)
+- [x] **englishNames haliucinacijos** ✅ (`d57233f`) — iNat+GBIF genus-consistency guard
+- [ ] **Toksiškumas ŽMONĖMS — severity per aukšta** (review kartu): oksalato augalai (Alocasia/Monstera) rodo 2 padalas (`vidutinis`) žmonėms, turėtų būti 1 (`silpnas` — burnos dirginimas, ne sisteminis). Principas: gyvūnams=ASPCA (`vidutinis` kai high-conf), žmonėms=PFAF tekstas → bendras `toxic` default'as `vidutinis` (deriveToxicity.js:148-149). Reikia: peržiūrėti filtrus + oxalate-specific de-escalation. **Safety-critical — nekeisti be peržiūros kartu.** Reikės cleanup script'o esamiems įrašams.
+- [ ] **Genus-fallback dublikatai cleanup**: esami „Alokazija" (×2) + kiti genus-vardu pažymėti cultivar įrašai (sukurti prieš `6d99682`) — script: rasti catalog entries kur lietuviškas==genus LT name BET latin turi rūšį/cultivar → re-identify per AI / flag admin'ui.
 
 ## PHASE D — Reviewer/approval flow
 - [ ] `verified`/`reviewedBy`/`reviewedAt` laukai naujam global entry
