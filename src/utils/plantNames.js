@@ -27,7 +27,16 @@ async function fetchINaturalist(latinName) {
     const exactMatch = searchData.results?.find(
       t => t.name.toLowerCase() === searchLower
     )
-    const taxon = exactMatch ?? searchData.results?.[0]
+    let taxon = exactMatch ?? searchData.results?.[0]
+    // Genus-consistency guard: iNat q-search fuzzy-mato, tad pirmas non-exact
+    // rezultatas gali būti kitos genties (pvz. trade-name „Alocasia regal shield"
+    // → Colocasia/„Taro"). Tokie common names užterštų bendrą katalogą. Non-exact
+    // match'ą priimam TIK jei gentis sutampa su užklausa.
+    if (taxon && !exactMatch) {
+      const queriedGenus = searchLower.split(' ')[0]
+      const taxonGenus = (taxon.name ?? '').toLowerCase().split(' ')[0]
+      if (taxonGenus !== queriedGenus) taxon = null
+    }
     if (!taxon) return null
 
     const preferredName = taxon.preferred_common_name ?? null
@@ -87,6 +96,10 @@ async function fetchGBIF(latinName) {
     const match = await matchRes.json()
     const key = match.usageKey ?? match.speciesKey
     if (!key) return null
+    // Genus-consistency guard (tas pats kaip iNat) — GBIF fuzzy match'as gali
+    // grąžinti kitos genties usageKey'ų, kurio vernacular names būtų klaidingi.
+    const queriedGenus = latinName.toLowerCase().split(' ')[0]
+    if (match.genus && match.genus.toLowerCase() !== queriedGenus) return null
 
     // Step 2: fetch vernacular names
     const vernRes = await fetch(

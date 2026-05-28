@@ -432,6 +432,18 @@ cultivar: if the user asked „Clematis 'Boulevard'" and you found
 exactly that, return „Clematis 'Boulevard'" with quotes, NOT
 „Clematis vitalba".
 
+TRADE NAMES / UNQUOTED CULTIVARS: when the query is a commercial trade
+name or an unquoted cultivar you recognize (NOT a real wild species
+epithet), NORMALIZE latinName to proper quoted cultivar form and set
+matchLevel: „cultivar":
+  ✓ „Alocasia regal shield"  → „Alocasia 'Regal Shield'"  (cultivar)
+  ✓ „Philodendron birkin"    → „Philodendron 'Birkin'"    (cultivar)
+  ✓ „Monstera thai constellation" → „Monstera 'Thai Constellation'"
+Do NOT treat the second word as a species epithet when it is actually a
+capitalized cultivar/trade name (there is no species „Alocasia regal").
+If you cannot confirm the cultivar, fall back to the species/genus per
+the ladder above — never invent a fake species epithet.
+
 latinName MUST be a CLEAN taxonomic name — no Lithuanian/English
 suffixes in parentheses, no ® / ™ symbols. Examples:
   ✓ „Clematis 'Olympia'"
