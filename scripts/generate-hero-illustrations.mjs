@@ -58,7 +58,9 @@ const IMAGE_MODEL = 'google/gemini-3-pro-image'
 // Bendras stiliaus suffix'as — IDENTIŠKAS abiems keliams (restyle + text→img)
 // → vientisas stilius. Cream #fefdfa (transparent atkrenta — Gemini kepa fake
 // checkerboard į RGB), kvadratas, augalas užpildo ~90%, be watermark.
-const STYLE_BASE = 'Compose as a SQUARE 1:1 image. The single potted plant (simple terracotta pot) is LARGE and PROMINENT, filling about 90% of the frame — centered, with only a small even margin; do not leave large empty space. Fill the ENTIRE background edge-to-edge with one SOLID FLAT warm off-white colour #FEFDFA — absolutely no checkerboard or transparency pattern, no scenery, no surface, no shadow, no text, no watermark, no signature. Muted natural palette (sage green, bone, warm terracotta), vintage Kew Gardens botanical plate aesthetic.'
+// NB: „plate" buvo dropintas — botaniniai „plates" turi antraštes, modelis
+// įkepdavo tekstą (Ficus „Broadleaf Evergreen Shrub" caption). Sustiprintas no-text.
+const STYLE_BASE = 'Compose as a SQUARE 1:1 image. The single potted plant (simple terracotta pot) is LARGE and PROMINENT, filling about 90% of the frame — centered, with only a small even margin; do not leave large empty space. Fill the ENTIRE background edge-to-edge with one SOLID FLAT warm off-white colour #FEFDFA — absolutely no checkerboard or transparency pattern, no scenery, no surface, no shadow. ABSOLUTELY NO TEXT, no caption, no label, no lettering, no handwriting, no botanical annotations, no watermark, no signature anywhere in the image. Muted natural palette (sage green, bone, warm terracotta), soft vintage botanical watercolor illustration style.'
 
 const BRIEF_RULES = `You are a botanical illustrator's reference assistant. Produce a visual morphology brief for a watercolor illustration of ONE potted specimen of the named species.
 
