@@ -193,6 +193,7 @@ const PlantCard = memo(function PlantCard({
   plant, section, onTap, cardBg = 'bg-bone-50',
   showDashboardBadge = false, zoneName,
   careMode = false, checked = false, onToggle, onCareInfo,
+  heroIllustration = null,
 }) {
   const [imgError, setImgError] = useState(false)
   const [zoomed,   setZoomed]   = useState(false)
@@ -201,7 +202,13 @@ const PlantCard = memo(function PlantCard({
   const didLongPress   = useRef(false)
 
   const status   = plant.status ?? 'healthy'
-  const hasImage = plant.image && !imgError
+  // Hero resolution — watercolor iliustracija (transparent PNG, ant cream bg)
+  // PIRMA, jei catalog turi heroIllustration IR user neturi savo asmeninės
+  // foto override. Kitaip — plant.image (real foto). Personal-photo flow
+  // (užklausa nufotografuoti) = vėliau; kol kas iliustracija default visiems.
+  const useHero  = !!heroIllustration && !imgError
+  const heroSrc  = useHero ? heroIllustration : plant.image
+  const hasImage = heroSrc && !imgError
 
   const onPressStart = (e) => {
     didLongPress.current = false
@@ -316,10 +323,15 @@ const PlantCard = memo(function PlantCard({
       onPointerCancel={careMode ? onPressEnd : undefined}
       onContextMenu={careMode ? e => e.preventDefault() : undefined}
     >
-      {/* Image area */}
+      {/* Image area — watercolor hero ant cream bg (object-contain, kad
+          nesukirptų transparent iliustracijos) ARBA real foto (object-cover). */}
       <div
         className="relative aspect-square overflow-hidden select-none"
-        style={!hasImage ? { background: gradientForPlant(plant.id) } : undefined}
+        style={
+          useHero ? { background: '#fefdfa' }                       // bone-50 cream card (bg lock)
+          : !hasImage ? { background: gradientForPlant(plant.id) }
+          : undefined
+        }
         onPointerDown={!careMode ? onPressStart : undefined}
         onPointerMove={!careMode ? onPressMove : undefined}
         onPointerUp={!careMode ? onPressEnd : undefined}
@@ -327,8 +339,8 @@ const PlantCard = memo(function PlantCard({
         onContextMenu={!careMode ? e => e.preventDefault() : undefined}
       >
         {hasImage ? (
-          <PlantImage url={plant.image} alt={plant.lietuviškas} size="card"
-            className="w-full h-full object-cover pointer-events-none"
+          <PlantImage url={heroSrc} alt={plant.lietuviškas} size="card"
+            className={`w-full h-full pointer-events-none ${useHero ? 'object-contain p-1' : 'object-cover'}`}
             style={{ WebkitTouchCallout: 'none', userSelect: 'none' }}
             onError={() => setImgError(true)} />
         ) : (

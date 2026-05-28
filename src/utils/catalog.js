@@ -192,6 +192,38 @@ export async function searchCatalog(q, excludeDocIds = new Set(), limit = 6) {
     .map(x => x.entry)
 }
 
+// ── Hero illustration map (watercolor heroes) ──────────────────────
+//
+// catalog.heroIllustration (generuotas watercolor, transparent PNG) — atskiras
+// nuo catalog.image (real foto). Module-level cache, kad PlantCard galėtų
+// SYNC resolve'inti be prop threading'o per ZoneSection/QuarantineSection.
+//
+// preloadHeroMap() — kviečiama vieną kartą App mount'e (po collection load).
+// heroIllustrationFor(lotyniskas) — sync lookup card render'iui.
+let _heroMap = {}
+
+/** Preload heroIllustration map iš catalog (cached). Call once on app init. */
+export async function preloadHeroMap() {
+  try {
+    const all = await loadAllCatalog()
+    const map = {}
+    for (const e of all) {
+      if (e.heroIllustration && e._id) map[e._id] = e.heroIllustration
+    }
+    _heroMap = map
+    return map
+  } catch {
+    return _heroMap
+  }
+}
+
+/** Sync lookup — grąžina watercolor hero URL augalui (arba null). */
+export function heroIllustrationFor(lotyniskas) {
+  if (!lotyniskas) return null
+  const slug = catalogDocId(lotyniskas)
+  return slug ? (_heroMap[slug] ?? null) : null
+}
+
 /**
  * catalogEntryToAIResult — pritaiko catalog entry shape'ą prie AI result
  * shape'o, kad jį būtų galima paduoti į `onAddToWishlist`/`onAddToDashboard`

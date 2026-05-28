@@ -19,6 +19,7 @@ import BrandLoader from './components/brand/BrandLoader'
 import DiscoveryToast from './components/DiscoveryToast'
 import T4Icon from './components/brand/T4Icon'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
+import { preloadHeroMap } from './utils/catalog'
 
 // ChunkLoadError (senas SW aptarnauja seną HTML su naujais chunk hash'ais) → force reload.
 // Prieš reload'ą išsaugom esamą tab'ą sessionStorage'e, kad po app restart'o
@@ -94,6 +95,13 @@ export default function App() {
   const [mountedTabs, setMountedTabs] = useState(() => new Set([tab]))
   const [dashCareMode, setDashCareMode] = useState(false)
   const [dashCareConfidence, setDashCareConfidence] = useState(0)
+  // Hero watercolor illustrations — preload'inam catalog heroIllustration map
+  // (module cache) kad PlantCard galėtų sync resolve'inti. heroReady flip'as
+  // → memo bust → cards re-render su watercolor'u kai map'as įkrautas.
+  const [heroReady, setHeroReady] = useState(false)
+  useEffect(() => {
+    preloadHeroMap().then(() => setHeroReady(true)).catch(() => {})
+  }, [])
   const dashboardRef = useRef(null)
   const [showProfile, setShowProfile] = useState(false)
   const [showSearch, setShowSearch]   = useState(false)
@@ -392,6 +400,7 @@ export default function App() {
         plants={dashboard}
         allPlants={library}
         zones={zones}
+        heroReady={heroReady}
         onCareModeChange={setDashCareMode}
         onCareConfidenceChange={setDashCareConfidence}
         onTap={p => openDetail(p, 'auginama')}

@@ -17,6 +17,7 @@ import { TOOL_PREVIEW, TOOL_DETAILS, PLANT_SYSTEM } from './SearchModal'
 import { ensureArray } from '../utils/plantTransform'
 import { getPlantEnrichmentState, getEnrichmentFailureReason } from '../utils/plantState'
 import { getWateringForecast } from '../utils/wateringForecast'
+import { heroIllustrationFor } from '../utils/catalog'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
 import { getPlantMood } from '../utils/plantMood'
@@ -1789,13 +1790,17 @@ export default function PlantDetail({
                   </div>
                 )
               }
-              // Discovery gallery — plant.image (primary) + plant.photos
-              // (alternative discovery sources). Dedupe, filter empty.
-              const gallery = [plant.image, ...(plant.photos ?? [])]
+              // Gallery — watercolor iliustracija PIRMA (default hero), tada
+              // real foto (plant.image) + discovery photos. User „sekanti"
+              // strėlyte pasiekia real foto. Iliustracija = transparent PNG,
+              // render'inama ant cream bg (object-contain), real foto = cover.
+              const heroIllus = heroIllustrationFor(plant.lotyniskas)
+              const gallery = [heroIllus, plant.image, ...(plant.photos ?? [])]
                 .filter(Boolean)
                 .filter((u, i, a) => a.indexOf(u) === i)
               const hasGallery = gallery.length > 1
-              const currentPhoto = gallery[heroPhotoIdx] ?? plant.image
+              const currentPhoto = gallery[heroPhotoIdx] ?? gallery[0] ?? plant.image
+              const isIllustration = currentPhoto === heroIllus
 
               if (!currentPhoto || heroError) {
                 return (
@@ -1805,10 +1810,11 @@ export default function PlantDetail({
                 )
               }
               return (
-                <div className="block w-full h-full overflow-hidden bg-bone-300 relative">
+                <div className={`block w-full h-full overflow-hidden relative ${isIllustration ? '' : 'bg-bone-300'}`}
+                     style={isIllustration ? { background: '#fefdfa' } : undefined}>
                   <PlantImage
                     url={currentPhoto} alt={plant.lietuviškas} size="detail" eager
-                    className="w-full h-full object-cover"
+                    className={`w-full h-full ${isIllustration ? 'object-contain' : 'object-cover'}`}
                     onError={() => setHeroError(true)}
                   />
                   {hasGallery && (

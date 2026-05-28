@@ -18,6 +18,7 @@ import { CARE_COPY, pick, fillTemplate } from '../constants/careCopy'
 import { SORT_OPTIONS, sortPlants } from '../utils/plantSort'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { makeId, today } from '../utils/plantTransform'
+import { heroIllustrationFor } from '../utils/catalog'
 import T4Icon from '../components/brand/T4Icon'
 import Mascot from '../components/brand/Mascot'
 
@@ -69,6 +70,7 @@ function QuarantineSection({ plants, zones, onTap, careMode, careChecked, onCare
                 section="auginama"
                 onTap={() => onTap(plant)}
                 zoneName={zones.find(z => z.id === plant.zonaId)?.name}
+                heroIllustration={heroIllustrationFor(plant.lotyniskas)}
                 careMode={careMode}
                 checked={careChecked?.has(plant.id)}
                 onToggle={() => onCareToggle(plant.id)}
@@ -120,7 +122,7 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
               </div>
               <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
                 {sickPlants.map(plant => (
-                  <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} {...carePropsFn(plant)} />
+                  <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} heroIllustration={heroIllustrationFor(plant.lotyniskas)} {...carePropsFn(plant)} />
                 ))}
               </div>
             </div>
@@ -128,7 +130,7 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
           {healthyPlants.length > 0 && (
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
               {healthyPlants.map(plant => (
-                <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} {...carePropsFn(plant)} />
+                <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)} zoneName={zone.name} heroIllustration={heroIllustrationFor(plant.lotyniskas)} {...carePropsFn(plant)} />
               ))}
             </div>
           )}
@@ -145,7 +147,7 @@ function matchesQuery(plant, q) {
     .some(c => c && c.toLowerCase().includes(lower))
 }
 
-function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, onSearch, onSearchByCamera, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones, onCareModeChange, onCareConfidenceChange, user, collectionId, onSignOut, role = 'owner', allCollections = [], onSwitchCollection, onRenameCollection, ownCollectionId, hideInnerHeader = false }, ref) {
+function Dashboard({ plants, allPlants = [], zones = [], heroReady = false, onTap, onTapFromCare, onSearch, onSearchByCamera, onFetchAllImages, fetchingAll, onSaveToZinynas, onViewPlant, onRefresh, onAddTimelineEvent, onAddZone, onUpdateZone, onDeleteZone, onReorderZones, onCareModeChange, onCareConfidenceChange, user, collectionId, onSignOut, role = 'owner', allCollections = [], onSwitchCollection, onRenameCollection, ownCollectionId, hideInnerHeader = false }, ref) {
   const quarantinePlants = plants.filter(p => p.status === 'quarantine')
   // sick plants stay in their zone (mainPlants includes them)
   const mainPlants       = plants.filter(p => p.status !== 'quarantine')
@@ -630,6 +632,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                       onTap={() => { closeSearch(); onViewPlant(plant) }}
                       showDashboardBadge={plant.kategorija === 'auginama'}
                       zoneName={plant.kategorija === 'auginama' ? zones.find(z => z.id === plant.zonaId)?.name : undefined}
+                      heroIllustration={heroIllustrationFor(plant.lotyniskas)}
                     />
                   ))}
                 </div>
@@ -744,6 +747,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
                         {pinChecked(unzonedPlants.filter(p => p.status === 'sick'), careMode, careChecked).map(plant => (
                           <PlantCard key={plant.id} plant={plant} section="auginama" onTap={() => onTap(plant)}
+                            heroIllustration={heroIllustrationFor(plant.lotyniskas)}
                             careMode={careMode} checked={careChecked.has(plant.id)} onToggle={() => toggleCare(plant.id)} onCareInfo={() => openCareInfo(plant)} />
                         ))}
                       </div>
@@ -770,6 +774,7 @@ function Dashboard({ plants, allPlants = [], zones = [], onTap, onTapFromCare, o
                   plant={plant}
                   section="auginama"
                   onTap={() => onTap(plant)}
+                  heroIllustration={heroIllustrationFor(plant.lotyniskas)}
                   careMode={careMode}
                   checked={careChecked.has(plant.id)}
                   onToggle={() => toggleCare(plant.id)}
