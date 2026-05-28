@@ -50,6 +50,10 @@ import { deriveToxicityFromSourcesServer } from './_lib/deriveToxicity-server.js
 import { generateToxicityNarrativeServer } from './_lib/toxicityNarrativeGenerator-server.js'
 import { saveCatalogWithParentServer } from './_lib/taxon-groups-server.js'
 import { saveUserPlantServer, isUidMember } from './_lib/user-plant-server.js'
+import admin from 'firebase-admin'
+import { adminFirestore } from './_lib/firestore-admin.js'
+import { createHeroGen } from './_lib/heroGen.js'
+import { catalogDocId } from './_lib/catalog-server.js'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -385,6 +389,31 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     console.log('[save-plant] user plant save', {
       plantId, ok: userRes?.ok, reason: userRes?.reason,
     })
+
+    // ── 7. Hero drawing gen (PO catalog+user write) ─────────
+    // Server-side, NE client trigger — client'as fire'indavo /api/generate-hero
+    // IŠKART po onSave, bet catalog entry rašomas čia (async) → race → route 404.
+    // Dabar catalog jau parašytas (step 5) → generuojam tiesiai iš fullPlant.
+    const heroToken = process.env.VERCEL_OIDC_TOKEN || process.env.AI_GATEWAY_API_KEY
+    if (details.laistymasIntervalas && heroToken) {
+      try {
+        const hg = createHeroGen({ token: heroToken })
+        const { buf, heroPromptBrief, heroPhotoAssessment, _heroMethod } =
+          await hg.generateHeroForEntry(fullPlant, { braveApiKey: process.env.BRAVE_API_KEY })
+        const slug = catalogDocId(latinName)
+        const bucket = admin.storage().bucket('geliu-db.firebasestorage.app')
+        const filename = `catalog/${slug}/hero-illus.png`
+        const file = bucket.file(filename)
+        await file.save(buf, { contentType: 'image/png', metadata: { cacheControl: 'public, max-age=31536000, immutable' } })
+        await file.makePublic()
+        const url = `https://storage.googleapis.com/${bucket.name}/${filename}?v=${Date.now()}`
+        await adminFirestore().collection('catalog').doc(slug).update({
+          heroIllustration: url, heroPromptBrief, heroPhotoAssessment, _heroMethod,
+          _heroIllustrationAt: new Date().toISOString(),
+        })
+        console.log('[save-plant] hero gen done', { slug, method: _heroMethod })
+      } catch (e) { console.warn('[save-plant] hero gen failed', e?.message) }
+    }
 
     console.log('[save-plant] DONE', { plantId, totalMs: Date.now() - t0 })
   } catch (err) {

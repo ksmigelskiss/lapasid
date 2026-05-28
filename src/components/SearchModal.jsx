@@ -3104,7 +3104,8 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange,
           enrichmentStartedAt: new Date().toISOString(),
         }
         onSave(resultWithId)
-        triggerHeroGen(resultWithStorageImage.latinName)  // Phase A3: drawing gen (server-side kelias)
+        // Server-side kelias: hero gen vyksta processPlant'e (PO catalog write),
+        // NE čia — client trigger lenktyniaudavo su async catalog write → 404.
         try {
           const idToken = await auth.currentUser?.getIdToken().catch(() => null)
           if (idToken && collectionId) {

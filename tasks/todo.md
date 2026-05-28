@@ -55,8 +55,10 @@ Tikslas: nauji augalai (Phase-2 → global-save) automatiškai gauna drawing
 ---
 
 ## PHASE B — Save/AI flow cleanup  [AKTYVU]
-- [ ] **B1:** Narrative lygiagrečiai su details (`Promise.all`) — `fetchDetails` (SearchModal:615) + `save-plant.js` mirror. -5–15s kiekvienam Save (narrative priklauso tik nuo latinName, ne nuo details output'o)
-- [ ] **B2:** Client/server Save dublikato konsolidacija (server-side = kryptis; drift prevencija)
+- [x] **B1 (client):** Narrative lygiagrečiai su details (`Promise.all`) `fetchDetails` — -5–15s. (server mirror → B2)
+- [x] **Prod flag = server-side:** console atskleidė `VITE_USE_SERVERSIDE_SAVE="1"` PRODUKCIJOJE (A0 skaitė lokalų .env.local OFF — klaidinga). Aktyvus kelias = branch 2 (server). Client triggerHeroGen fire'indavo route IŠKART, bet catalog rašomas async processPlant'e → **route 404 (catalog_entry_not_found)** → jokio drawing.
+- [x] **Server hero hook:** `processPlant` step 7 (PO catalog write) → `generateHeroForEntry` + upload + catalog.heroIllustration. Branch-2 client trigger pašalintas. (Fast-path/flag-off client trigger lieka.) **Tai ir yra teisingoji A3 server-integracija.**
+- [ ] **B2 likę:** Client/server Save dublikato konsolidacija + server narrative parallelize (drift prevencija) — fresh sesija
 
 ## PHASE C — Duomenų kokybės audit (vienas praėjimas)
 - [ ] Asmeninės foto global'e — audit: rasti entries su user personal photos kaip `image`; flag/replace (privatumas)
