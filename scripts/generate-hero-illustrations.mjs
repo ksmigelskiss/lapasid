@@ -1,12 +1,16 @@
 // Generate watercolor hero illustrations for catalog → Firebase Storage.
 //
-// FLOW per entry:
-//   1. recraft-v2 watercolor (transparent bg, „houseplant {latin}")
-//   2. Upload → Firebase Storage: catalog/{slug}/hero-illus.png (RGBA)
-//   3. catalog.heroIllustration = public Storage URL
+// FLOW per entry (backbone + foto refine, do-no-harm):
+//   1. Sonnet (vision ant image + photos[] + mūsų aprasymas/notes + žinios)
+//      → JSON { brief, photo, photoNote } (photo = foto patikimumo įvertinimas)
+//   2. GATE: foto full-habit/partial → Gemini RESTYLE iš foto (img→img,
+//      atkartoja TIKRĄ morfologiją); bloga/mismatch/nėra → Gemini TEXT→img
+//      iš brief'o (žinios+notes — fragmentinė foto nepakenkia)
+//   3. Upload → Firebase Storage: catalog/{slug}/hero-illus.png + ?v= cache-bust
+//   4. catalog.heroIllustration + heroPromptBrief + heroPhotoAssessment + _heroMethod
 //
-// transparent PNG — app render'ina ant cream card'o (bg lock).
-// catalog.image (real foto) NELIEČIAMAS — heroIllustration atskiras field.
+// Stilius: cream #fefdfa fonas, kvadratas, augalas ~90% (vienas modelis abiems
+// keliams → vientisumas). catalog.image (real foto) NELIEČIAMAS — atskiras field.
 //
 // RESUMABLE: skip jei jau turi heroIllustration (nebent --force).
 //
@@ -49,7 +53,11 @@ const bucket = admin.storage().bucket()
 // → heroPhotoAssessment saugomas catalog'e (matomumas + iNat misID detection).
 const GATEWAY = 'https://ai-gateway.vercel.sh/v1'
 const BRIEF_MODEL = 'anthropic/claude-sonnet-4.5'
-const STYLE = 'muted natural palette (sage green, bone, warm terracotta), vintage Kew Gardens botanical plate aesthetic, centered, premium, no text, isolated subject on a fully transparent background, no background scenery, no cast shadow.'
+const IMAGE_MODEL = 'google/gemini-3-pro-image'
+// Bendras stiliaus suffix'as — IDENTIŠKAS abiems keliams (restyle + text→img)
+// → vientisas stilius. Cream #fefdfa (transparent atkrenta — Gemini kepa fake
+// checkerboard į RGB), kvadratas, augalas užpildo ~90%, be watermark.
+const STYLE_BASE = 'Compose as a SQUARE 1:1 image. The single potted plant (simple terracotta pot) is LARGE and PROMINENT, filling about 90% of the frame — centered, with only a small even margin; do not leave large empty space. Fill the ENTIRE background edge-to-edge with one SOLID FLAT warm off-white colour #FEFDFA — absolutely no checkerboard or transparency pattern, no scenery, no surface, no shadow, no text, no watermark, no signature. Muted natural palette (sage green, bone, warm terracotta), vintage Kew Gardens botanical plate aesthetic.'
 
 const BRIEF_RULES = `You are a botanical illustrator's reference assistant. Produce a visual morphology brief for a watercolor illustration of ONE potted specimen of the named species.
 
@@ -125,24 +133,45 @@ async function morphologyBrief(entry) {
   }
 }
 
-function buildPrompt(entry, brief) {
-  const latin = entry.lotyniskas || ''
-  const lt = entry.lietuviškas || ''
-  return `Soft watercolor botanical illustration of the houseplant ${latin}${lt ? ` (${lt})` : ''}. ${brief} Planted in a simple terracotta pot, a single plant only with no extra objects or props. ${STYLE}`
-}
-
-async function generateImage(prompt) {
-  const res = await fetch('https://ai-gateway.vercel.sh/v1/images/generations', {
+// ── Gemini image gen (chat/completions) ─────────────────────────
+// Vienas modelis abiems keliams → vientisas stilius. img→img restyle
+// (atkartoja TIKRĄ formą) ARBA txt→img iš brief'o (fallback blogai foto).
+async function geminiImage(content) {
+  const res = await fetch(`${GATEWAY}/chat/completions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-    body: JSON.stringify({ model: 'recraft/recraft-v2', prompt, n: 1, size: '1024x1024', response_format: 'b64_json' }),
+    body: JSON.stringify({ model: IMAGE_MODEL, messages: [{ role: 'user', content }] }),
   })
-  if (!res.ok) throw new Error(`gen HTTP ${res.status}: ${(await res.text()).slice(0, 140)}`)
-  const json = await res.json()
-  const item = json.data?.[0]
-  if (item?.b64_json) return Buffer.from(item.b64_json, 'base64')
-  if (item?.url) { const r = await fetch(item.url); return Buffer.from(await r.arrayBuffer()) }
-  throw new Error('No image in response')
+  const txt = await res.text()
+  if (!res.ok) throw new Error(`img HTTP ${res.status}: ${txt.slice(0, 160)}`)
+  const msg = JSON.parse(txt).choices?.[0]?.message
+  const toBuf = async (u) => (typeof u === 'string')
+    ? (u.startsWith('data:') ? Buffer.from(u.split(',')[1], 'base64') : Buffer.from(await (await fetch(u)).arrayBuffer()))
+    : null
+  const imgs = msg?.images
+  if (Array.isArray(imgs) && imgs[0]) {
+    const b = await toBuf(imgs[0].image_url?.url || imgs[0].url || imgs[0]); if (b) return b
+  }
+  if (Array.isArray(msg?.content)) for (const p of msg.content) {
+    const b = await toBuf(p.image_url?.url); if (b) return b
+  }
+  throw new Error('no image in gemini response')
+}
+
+// RESTYLE (img→img) — atkartoja tikrą augalo morfologiją iš foto
+async function geminiRestyle(imageUrl) {
+  const part = await fetchImagePart(imageUrl)
+  if (!part) throw new Error('image fetch failed')
+  const instr = `Redraw the EXACT plant shown in this photograph as a soft watercolor botanical illustration. Preserve its true growth habit, real leaf shape, arrangement and trunk/stem form precisely — only change the art style. ${STYLE_BASE}`
+  return geminiImage([{ type: 'text', text: instr }, part])
+}
+
+// TEXT→img — fallback kai nėra geros foto: piešiam iš brief'o (žinios+notes)
+async function geminiTextToImage(entry, brief) {
+  const latin = entry.lotyniskas || ''
+  const lt = entry.lietuviškas || ''
+  const instr = `Soft watercolor botanical illustration of the houseplant ${latin}${lt ? ` (${lt})` : ''}. ${brief} ${STYLE_BASE}`
+  return geminiImage([{ type: 'text', text: instr }])
 }
 
 async function uploadToStorage(slug, buf) {
@@ -189,16 +218,21 @@ for (let i = 0; i < todo.length; i++) {
   if (DRY) { console.log('(dry-run skip)'); continue }
   try {
     const { brief, photo, photoNote } = await morphologyBrief(entry)
-    const buf = await generateImage(buildPrompt(entry, brief))
+    // GATE (do-no-harm): gera foto → restyle iš jos (tiksliausia); bloga/nėra →
+    // tekstas iš brief'o (žinios+notes), kad fragmentinė foto nepakenktų.
+    const usePhoto = !!entry.image && (photo === 'full-habit' || photo === 'partial')
+    const buf = usePhoto ? await geminiRestyle(entry.image) : await geminiTextToImage(entry, brief)
+    const method = usePhoto ? 'gemini-restyle' : 'gemini-text'
     const url = await uploadToStorage(slug, buf)
     await db.collection('catalog').doc(slug).update({
       heroIllustration: url,
       heroPromptBrief: brief,
       heroPhotoAssessment: `${photo}${photoNote ? ` — ${photoNote}` : ''}`,
+      _heroMethod: method,
       _heroIllustrationAt: new Date().toISOString(),
     })
-    const flag = (photo === 'mismatch' || photo === 'unreliable') ? `  ⚠ foto:${photo} (${photoNote})` : `  [foto:${photo}]`
-    console.log(`✓ ${Math.round(buf.length / 1024)}KB${flag}`)
+    const flag = usePhoto ? `[restyle·${photo}]` : `[text·${photo}${photoNote ? ` — ${photoNote}` : ''}]`
+    console.log(`✓ ${Math.round(buf.length / 1024)}KB ${flag}`)
     done++
   } catch (e) {
     console.log(`✗ ${e.message}`)
