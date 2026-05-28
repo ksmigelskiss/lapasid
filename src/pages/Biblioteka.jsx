@@ -7,6 +7,7 @@ import CollectionChat from '../components/CollectionChat'
 import { buildLibrarySystemPrompt } from '../utils/collectionChatContext'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
+import { heroIllustrationForPlant } from '../utils/catalog'
 import Mascot from '../components/brand/Mascot'
 
 // Pagrindinis kategorijos filtras (mutually exclusive). `null` = visi.
@@ -197,6 +198,7 @@ export default function Biblioteka({ plants, onTap, onSearch, onSearchByCamera, 
                   plant={plant}
                   section={plant.kategorija === 'istorija' ? 'istorija' : 'nori'}
                   onTap={() => onTap(plant)}
+                  heroIllustration={heroIllustrationForPlant(plant)}
                 />
               ))}
             </div>
