@@ -1806,26 +1806,36 @@ export default function PlantDetail({
               const currentPhoto = gallery[heroPhotoIdx] ?? gallery[0] ?? plant.image
               const isIllustration = currentPhoto === heroIllus
 
-              if (!currentPhoto || heroError) {
+              if (!currentPhoto) {
                 return (
                   <div className="w-full h-full flex items-center justify-center text-8xl bg-bone-300">
                     {plant.emoji ?? '🌿'}
                   </div>
                 )
               }
+              // Navigacija resetina heroError — kad sugedusi foto (pvz. dead
+              // Brave URL galerijoje) NEužstrigtų: rodyklės LIEKA, placeholder
+              // rodomas hero viduje, user gali nueiti toliau.
+              const goPhoto = (delta) => { setHeroError(false); setHeroPhotoIdx(i => Math.max(0, Math.min(gallery.length - 1, i + delta))) }
               return (
                 <div className={`block w-full h-full overflow-hidden relative ${isIllustration ? '' : 'bg-bone-300'}`}
                      style={isIllustration ? { background: '#fefdfa' } : undefined}>
-                  <PlantImage
-                    key={currentPhoto}
-                    url={currentPhoto} alt={plant.lietuviškas} size="detail" eager
-                    className={`w-full h-full ${isIllustration ? 'object-contain' : 'object-cover'}`}
-                    onError={() => setHeroError(true)}
-                  />
+                  {heroError ? (
+                    <div className="w-full h-full flex items-center justify-center text-8xl bg-bone-300">
+                      {plant.emoji ?? '🌿'}
+                    </div>
+                  ) : (
+                    <PlantImage
+                      key={currentPhoto}
+                      url={currentPhoto} alt={plant.lietuviškas} size="detail" eager
+                      className={`w-full h-full ${isIllustration ? 'object-contain' : 'object-cover'}`}
+                      onError={() => setHeroError(true)}
+                    />
+                  )}
                   {hasGallery && (
                     <>
                       <button
-                        onClick={() => setHeroPhotoIdx(i => Math.max(0, i - 1))}
+                        onClick={() => goPhoto(-1)}
                         disabled={heroPhotoIdx === 0}
                         className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-sm text-white flex items-center justify-center disabled:opacity-30 transition"
                         aria-label="Ankstesnė nuotrauka"
@@ -1833,7 +1843,7 @@ export default function PlantDetail({
                         <ChevronLeft size={16} />
                       </button>
                       <button
-                        onClick={() => setHeroPhotoIdx(i => Math.min(gallery.length - 1, i + 1))}
+                        onClick={() => goPhoto(1)}
                         disabled={heroPhotoIdx >= gallery.length - 1}
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/35 hover:bg-black/55 backdrop-blur-sm text-white flex items-center justify-center disabled:opacity-30 transition"
                         aria-label="Kita nuotrauka"
