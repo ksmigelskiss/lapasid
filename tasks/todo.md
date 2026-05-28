@@ -27,11 +27,10 @@ Tikslas: nauji augalai (Phase-2 → global-save) automatiškai gauna drawing
 
 ### A1. `api/_lib/heroGen.js` — bendras modulis
 - [x] **Žingsnis 1:** iškelta morphologyBrief, geminiRestyle, geminiTextToImage, transparentizeBg + konstantos; batch refaktor'intas naudoti modulį (verifikuota: aloe restyle·full-habit). Upload lieka per-caller.
-- [ ] **Žingsnis 2 (rank-aware):**
-  - genus → text→img (brief hint: „indoor cultivated houseplant form, not wild/outdoor")
-  - species/cultivar → vision-gate parenka geriausią realią foto iš kandidatų → restyle
-  - Vision-gate: kandidatai iš iNat + Wiki + Brave „{name} houseplant potted"; Sonnet parenka; mismatch → reviewer flag
-  - `generateHeroForEntry(...)` orchestrator → `{ heroIllustration, chosenRealPhoto, assessment, method }`
+- [x] **Žingsnis 2 (rank-aware):** ✅ DONE
+  - genus → text→img + houseplant-form hint (verifikuota: Ficus → houseplant, ne medis/tekstas)
+  - species/cultivar → vision-gate (gatherCandidates: entry.image + iNat + Wiki + Brave „{name} houseplant potted") → assessAndPick (Sonnet parenka geriausią) → restyle (fallback text). Verifikuota: Monstera restyle·full-habit
+  - `generateHeroForEntry(entry, {braveApiKey})` → `{ buf, heroPromptBrief, heroPhotoAssessment, _heroMethod, chosenRealPhoto, rank }`
 
 ### A2. `api/generate-hero.js` route
 - [ ] Auth (Bearer, kaip `rehost-image`)

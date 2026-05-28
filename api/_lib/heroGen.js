@@ -11,6 +11,7 @@
 // Token (VERCEL_OIDC_TOKEN) per createHeroGen({token}): batch iš .env.local,
 // route iš Vercel runtime env (auto-injected).
 import sharp from 'sharp'
+import { parseLatinName } from '../../src/utils/latinName.js'
 
 export const GATEWAY = 'https://ai-gateway.vercel.sh/v1'
 export const BRIEF_MODEL = 'anthropic/claude-sonnet-4.5'
@@ -69,6 +70,61 @@ export async function transparentizeBg(buf, T = 44) {
   }
   return sharp(data, { raw: { width: w, height: h, channels: ch } }).png().toBuffer()
 }
+
+// ── Candidate photo fetchers (public APIs; Brave needs key) ───────
+// Vision-gate'ui — surenkam realios foto kandidatus iš kelių šaltinių, kad
+// modelis turėtų iš ko rinktis (iNat/Wiki linkę į laukinius; Brave houseplant-biased).
+function stripCultivar(name) { return (name || '').replace(/\s*'[^']*'/g, '').replace(/\s*"[^"]*"/g, '').trim() }
+
+async function fetchWikiPhoto(latin) {
+  try {
+    const title = latin.trim().replace(/ /g, '_')
+    const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`, { headers: { Accept: 'application/json' } })
+    if (!r.ok) return null
+    const d = await r.json()
+    return d.originalimage?.source ?? d.thumbnail?.source ?? null
+  } catch { return null }
+}
+
+async function fetchINatPhotos(latin) {
+  try {
+    const s = await fetch(`https://api.inaturalist.org/v1/taxa?q=${encodeURIComponent(latin)}&limit=1&rank=species,subspecies,variety,genus`, { headers: { Accept: 'application/json' } })
+    if (!s.ok) return []
+    const taxon = (await s.json()).results?.[0]
+    if (!taxon) return []
+    const ex = (p) => p?.original_url ?? p?.large_url ?? p?.medium_url ?? null
+    const urls = (taxon.taxon_photos ?? []).map(tp => ex(tp.photo)).filter(Boolean)
+    const def = ex(taxon.default_photo); if (def) urls.unshift(def)
+    return [...new Set(urls)].slice(0, 2)
+  } catch { return [] }
+}
+
+async function fetchBravePhotos(query, apiKey, count = 4) {
+  if (!apiKey) return []
+  try {
+    const params = new URLSearchParams({ q: query, count: String(count), safesearch: 'strict', country: 'us' })
+    const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 5000)
+    const r = await fetch(`https://api.search.brave.com/res/v1/images/search?${params}`, { headers: { 'X-Subscription-Token': apiKey, Accept: 'application/json' }, signal: ctrl.signal }).finally(() => clearTimeout(t))
+    if (!r.ok) return []
+    const d = await r.json()
+    return (d.results ?? []).map(it => it.properties?.url ?? it.url).filter(Boolean)
+  } catch { return [] }
+}
+
+// Vision-gate prompt — parenka geriausią kandidatą + brief (species/cultivar).
+export const SELECT_RULES = `You are a botanical illustrator's reference assistant. From several CANDIDATE photos, select the single best one and write a morphology brief.
+
+SELECTION: pick the candidate that best shows a TYPICAL, FULL-HABIT, POTTED INDOOR HOUSEPLANT specimen of the named species. Reject: outdoor mature trees, wild in-habitat shots, single-leaf or single-flower close-ups, and any photo that appears to be a DIFFERENT plant than the named species. If NONE is acceptable, chosenIndex = null.
+
+BRIEF (max ~60 words) — base on canonical KNOWLEDGE + curator NOTES (primary), refined by the chosen photo:
+1. START with overall silhouette in concrete comparative terms.
+2. Trunk/stem: if caudex/pachycaul/swollen succulent base, state the THICK BARE TRUNK IS FULLY VISIBLE AND EXPOSED, foliage only at the top.
+3. Leaves: exact shape + arrangement. If compound, say "feather-like pinnate compound leaves of many small paired leaflets" and add "leaves are NOT round or simple". If simple, give the exact outline.
+4. Iconic flowers only if characteristic.
+5. Plain visual words; do not restate names; do not turn common-name metaphors into literal objects.
+
+Output ONLY valid JSON, no markdown:
+{"chosenIndex": <1-based integer or null>, "photo":"full-habit|partial|unreliable|mismatch|none", "photoNote":"<=12 words", "brief":"<the brief>"}`
 
 // ── Token-bound AI helpers (factory) ──────────────────────────────
 export function createHeroGen({ token }) {
@@ -170,5 +226,74 @@ export function createHeroGen({ token }) {
     return geminiImage([{ type: 'text', text: instr }])
   }
 
-  return { chat, curatorNotes, fetchImagePart, morphologyBrief, geminiImage, geminiRestyle, geminiTextToImage }
+  // Surenka realios foto kandidatus (entry.image + iNat + Wiki + Brave houseplant).
+  async function gatherCandidates(entry, braveApiKey) {
+    const stripped = stripCultivar(entry.lotyniskas)
+    const [inat, wiki, brave] = await Promise.all([
+      fetchINatPhotos(stripped),
+      fetchWikiPhoto(stripped),
+      fetchBravePhotos(`${stripped} houseplant potted indoor`, braveApiKey),
+    ])
+    const urls = [entry.image, ...inat, wiki, ...brave].filter(Boolean)
+    return [...new Set(urls)].slice(0, 6)
+  }
+
+  // Vision-gate: Sonnet parenka geriausią kandidatą + brief. chosenUrl null →
+  // text→img fallback. { brief, chosenUrl, photo, photoNote }.
+  async function assessAndPick(entry, candidateUrls) {
+    const latin = entry.lotyniskas || '', lt = entry.lietuviškas || ''
+    const indexed = [], parts = []
+    for (const u of candidateUrls) {
+      const p = await fetchImagePart(u)
+      if (p) { indexed.push(u); parts.push({ type: 'text', text: `Candidate ${indexed.length}:` }, p) }
+    }
+    if (indexed.length === 0) {
+      const r = await morphologyBrief(entry, [])
+      return { brief: r.brief, chosenUrl: null, photo: 'none', photoNote: 'no candidates' }
+    }
+    const userContent = [
+      { type: 'text', text: `Species: ${latin}\nCommon (LT): ${lt || '—'}\nCurator notes (trusted backbone):\n${curatorNotes(entry)}\n\n${indexed.length} candidate photo(s) follow.` },
+      ...parts,
+    ]
+    const raw = await chat([{ role: 'system', content: SELECT_RULES }, { role: 'user', content: userContent }], 500)
+    try {
+      const obj = JSON.parse(raw.match(/\{[\s\S]*\}/)[0])
+      const ci = obj.chosenIndex
+      const chosenUrl = (Number.isInteger(ci) && ci >= 1 && ci <= indexed.length) ? indexed[ci - 1] : null
+      return { brief: (obj.brief || '').trim(), chosenUrl, photo: obj.photo || 'unknown', photoNote: obj.photoNote || '' }
+    } catch {
+      return { brief: '', chosenUrl: null, photo: 'unknown', photoNote: 'json-parse-fail' }
+    }
+  }
+
+  // ── Orchestrator (rank-aware) ──────────────────────────────────
+  // genus → representative text→img (houseplant forma, ne species-locked).
+  // species/cultivar → vision-gate parenka realią foto → restyle (fallback text).
+  // Grąžina { buf, heroPromptBrief, heroPhotoAssessment, _heroMethod, chosenRealPhoto, rank }.
+  async function generateHeroForEntry(entry, { braveApiKey } = {}) {
+    let rank = 'unknown'
+    try { rank = parseLatinName(entry.lotyniskas).rank } catch { /* keep unknown */ }
+    let buf, brief = '', photo, photoNote = '', chosenRealPhoto = null, method
+
+    if (rank === 'genus') {
+      const r = await morphologyBrief(entry, [])   // knowledge+notes, be species-locking foto
+      brief = r.brief; photo = 'none'; photoNote = 'genus → representative drawing'
+      buf = await geminiTextToImage(entry, `${brief} Depict the common cultivated INDOOR houseplant form, not a wild or outdoor mature tree.`)
+      method = 'gemini-text-genus'
+    } else {
+      const candidates = await gatherCandidates(entry, braveApiKey)
+      const r = await assessAndPick(entry, candidates)
+      brief = r.brief; photo = r.photo; photoNote = r.photoNote
+      if (r.chosenUrl && (photo === 'full-habit' || photo === 'partial')) {
+        buf = await geminiRestyle(r.chosenUrl); chosenRealPhoto = r.chosenUrl; method = 'gemini-restyle'
+      } else {
+        if (!brief) { const b = await morphologyBrief(entry, []); brief = b.brief }
+        buf = await geminiTextToImage(entry, brief); method = 'gemini-text'
+      }
+    }
+    buf = await transparentizeBg(buf)
+    return { buf, heroPromptBrief: brief, heroPhotoAssessment: `${photo}${photoNote ? ` — ${photoNote}` : ''}`, _heroMethod: method, chosenRealPhoto, rank }
+  }
+
+  return { chat, curatorNotes, fetchImagePart, morphologyBrief, geminiImage, geminiRestyle, geminiTextToImage, gatherCandidates, assessAndPick, generateHeroForEntry }
 }

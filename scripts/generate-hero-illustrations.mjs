@@ -13,7 +13,7 @@
 //   node --env-file=.env.local scripts/generate-hero-illustrations.mjs --all --dry-run
 
 import admin from 'firebase-admin'
-import { createHeroGen, transparentizeBg } from '../api/_lib/heroGen.js'
+import { createHeroGen } from '../api/_lib/heroGen.js'
 
 const args = process.argv.slice(2)
 const TIER  = args.find(a => a.startsWith('--tier='))?.split('=')[1] ?? null
@@ -75,22 +75,18 @@ for (let i = 0; i < todo.length; i++) {
   process.stdout.write(`  [${i + 1}/${todo.length}] ${entry.lotyniskas}... `)
   if (DRY) { console.log('(dry-run skip)'); continue }
   try {
-    const { brief, photo, photoNote } = await hg.morphologyBrief(entry)
-    // GATE (do-no-harm): gera foto → restyle iš jos; bloga/nėra → tekstas iš brief'o.
-    const usePhoto = !!entry.image && (photo === 'full-habit' || photo === 'partial')
-    let buf = usePhoto ? await hg.geminiRestyle(entry.image) : await hg.geminiTextToImage(entry, brief)
-    buf = await transparentizeBg(buf)
-    const method = usePhoto ? 'gemini-restyle' : 'gemini-text'
+    // Rank-aware orchestrator: genus→text, species/cultivar→vision-gate+restyle
+    const { buf, heroPromptBrief, heroPhotoAssessment, _heroMethod } =
+      await hg.generateHeroForEntry(entry, { braveApiKey: process.env.BRAVE_API_KEY })
     const url = await uploadToStorage(slug, buf)
     await db.collection('catalog').doc(slug).update({
       heroIllustration: url,
-      heroPromptBrief: brief,
-      heroPhotoAssessment: `${photo}${photoNote ? ` — ${photoNote}` : ''}`,
-      _heroMethod: method,
+      heroPromptBrief,
+      heroPhotoAssessment,
+      _heroMethod,
       _heroIllustrationAt: new Date().toISOString(),
     })
-    const flag = usePhoto ? `[restyle·${photo}]` : `[text·${photo}${photoNote ? ` — ${photoNote}` : ''}]`
-    console.log(`✓ ${Math.round(buf.length / 1024)}KB ${flag}`)
+    console.log(`✓ ${Math.round(buf.length / 1024)}KB [${_heroMethod} · ${heroPhotoAssessment}]`)
     done++
   } catch (e) {
     console.log(`✗ ${e.message}`)
