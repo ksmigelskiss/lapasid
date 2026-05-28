@@ -101,7 +101,11 @@ export default function App() {
   const [heroMapV, setHeroMapV] = useState(0)
   useEffect(() => {
     const bump = () => setHeroMapV(v => v + 1)
-    preloadHeroMap().then(bump).catch(() => {})
+    // Mount: preload iš cache (instant render), TADA fone cache-bust refresh —
+    // kad plain reload pasiimtų fone sugeneruotus drawing'us (mount cache 1h).
+    preloadHeroMap().then(bump).catch(() => {}).finally(() => {
+      refreshHeroMap().then(bump).catch(() => {})
+    })
 
     // Po naujo augalo pridėjimo drawing generuojasi fone (~30-60s). triggerHeroGen
     // dispatch'ina 'lapas:hero-gen-started' → cache-bust refresh'ai (45s, 90s),
