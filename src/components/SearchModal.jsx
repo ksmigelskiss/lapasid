@@ -3073,8 +3073,10 @@ function SaveButton({ label, result, className, onSave, onClose, onSavingChange,
       // yra, tai reiškia merge'as įvyko ir kiti care field'ai irgi pildomi.
       // Fast path BENDRAS abiem flag stat'om — jokios Phase 2 nereikia.
       if (resultWithStorageImage.laistymasIntervalas) {
+        // Fast/pre-DB kelias = catalog HIT su pilnu care info → entry jau egzistuoja
+        // ir hero jau sugeneruotas (pirmojo pilno save metu). Jokio gen trigger'io
+        // čia — buvo redundantiškas idempotent POST kiekvienam hit'ui (server skip).
         onSave(resultWithStorageImage)
-        triggerHeroGen(resultWithStorageImage.latinName)  // Phase A3: drawing gen (fast/pre-DB kelias)
         onClose()
         return
       }

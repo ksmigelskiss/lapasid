@@ -19,7 +19,7 @@ import BrandLoader from './components/brand/BrandLoader'
 import DiscoveryToast from './components/DiscoveryToast'
 import T4Icon from './components/brand/T4Icon'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
-import { preloadHeroMap, refreshHeroMap } from './utils/catalog'
+import { subscribeHeroMap } from './utils/catalog'
 
 // ChunkLoadError (senas SW aptarnauja seną HTML su naujais chunk hash'ais) → force reload.
 // Prieš reload'ą išsaugom esamą tab'ą sessionStorage'e, kad po app restart'o
@@ -95,44 +95,12 @@ export default function App() {
   const [mountedTabs, setMountedTabs] = useState(() => new Set([tab]))
   const [dashCareMode, setDashCareMode] = useState(false)
   const [dashCareConfidence, setDashCareConfidence] = useState(0)
-  // Hero watercolor illustrations — preload'inam catalog heroIllustration map
-  // (module cache) kad PlantCard galėtų sync resolve'inti. heroMapV bump'as
-  // → memo bust → cards re-render su watercolor'u kai map'as (pa)keičiasi.
+  // Hero watercolor illustrations — LIVE catalog subscription palaiko module
+  // cache'ą gyvai (PlantCard sync resolve'ina be prop threading'o). heroMapV
+  // bump'as → cards re-render kai serveris parašo heroIllustration. Pakeitė
+  // preload + 45s/90s/focus refresh timer'ius (widget niekada neatsinaujindavo).
   const [heroMapV, setHeroMapV] = useState(0)
-  useEffect(() => {
-    const bump = () => setHeroMapV(v => v + 1)
-    // Mount: preload iš cache (instant render), TADA fone cache-bust refresh —
-    // kad plain reload pasiimtų fone sugeneruotus drawing'us (mount cache 1h).
-    preloadHeroMap().then(bump).catch(() => {}).finally(() => {
-      refreshHeroMap().then(bump).catch(() => {})
-    })
-
-    // Po naujo augalo pridėjimo drawing generuojasi fone (~30-60s). triggerHeroGen
-    // dispatch'ina 'lapas:hero-gen-started' → cache-bust refresh'ai (45s, 90s),
-    // kad widget pasiimtų naują drawing BE hard-refresh.
-    const timers = []
-    const onHeroGen = () => {
-      timers.push(setTimeout(() => refreshHeroMap().then(bump).catch(() => {}), 45000))
-      timers.push(setTimeout(() => refreshHeroMap().then(bump).catch(() => {}), 90000))
-    }
-    window.addEventListener('lapas:hero-gen-started', onHeroGen)
-
-    // Grįžus į tab'ą — refresh (throttle 30s), pasiima fone sugeneruotus drawing'us.
-    let lastFocus = Date.now()
-    const onVisible = () => {
-      if (document.visibilityState !== 'visible') return
-      if (Date.now() - lastFocus < 30000) return
-      lastFocus = Date.now()
-      refreshHeroMap().then(bump).catch(() => {})
-    }
-    document.addEventListener('visibilitychange', onVisible)
-
-    return () => {
-      window.removeEventListener('lapas:hero-gen-started', onHeroGen)
-      document.removeEventListener('visibilitychange', onVisible)
-      timers.forEach(clearTimeout)
-    }
-  }, [])
+  useEffect(() => subscribeHeroMap(() => setHeroMapV(v => v + 1)), [])
   const dashboardRef = useRef(null)
   const [showProfile, setShowProfile] = useState(false)
   const [showSearch, setShowSearch]   = useState(false)

@@ -33,10 +33,14 @@ export async function claudeCall(body) {
 }
 
 // ── Hero drawing gen trigger (Phase A3) ────────────────────
-// Fire-and-forget — po naujo global-catalog įrašymo (Phase 2 save) async
-// paleidžia /api/generate-hero. Nelaukiam (gen ~30-60s); drawing atsiranda
-// catalog'e vėliau, kiti vartotojai jį mato. Idempotent server-side (skip jei
-// jau turi hero). keepalive — kad request'as išgyventų page navigaciją.
+// Fire-and-forget — po client-side Phase 2 catalog įrašymo (flag-off kelias)
+// async paleidžia /api/generate-hero. Nelaukiam (gen ~30-60s); drawing
+// atsiranda catalog'e vėliau. Idempotent server-side (skip jei jau turi hero).
+// keepalive — kad request'as išgyventų page navigaciją. Display'as pasiima
+// drawing'ą per live catalog subscription (subscribeHeroMap) — jokio event'o
+// dispatch'inti nereikia.
+// NB: produkcijoj (VITE_USE_SERVERSIDE_SAVE) heroGen vyksta processPlant step 7
+// (save-plant.js) PO catalog write — client trigger'is naudojamas tik flag-off.
 export async function triggerHeroGen(latinName, { force = false } = {}) {
   try {
     const idToken = await auth.currentUser?.getIdToken().catch(() => null)
@@ -47,9 +51,6 @@ export async function triggerHeroGen(latinName, { force = false } = {}) {
       body: JSON.stringify({ latinName, force }),
       keepalive: true,
     }).catch(() => {})
-    // Signalas App'ui — drawing gen prasidėjo. App po delay'aus refreshHeroMap'ina
-    // (cache-bust), kad widget pasiimtų naują drawing be hard-refresh.
-    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('lapas:hero-gen-started'))
   } catch { /* ignore — drawing nėra kritinis save flow'ui */ }
 }
 

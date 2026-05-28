@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, getDocs, collection, query, limit } from 'firebase/firestore'
+import { doc, getDoc, setDoc, getDocs, collection, query, limit, onSnapshot } from 'firebase/firestore'
 import { get as idbGet, set as idbSet, del as idbDel, createStore } from 'idb-keyval'
 import { db } from './firebase'
 import { plantFuzzyScore } from './fuzzySearch'
@@ -198,37 +198,40 @@ export async function searchCatalog(q, excludeDocIds = new Set(), limit = 6) {
 // nuo catalog.image (real foto). Module-level cache, kad PlantCard galėtų
 // SYNC resolve'inti be prop threading'o per ZoneSection/QuarantineSection.
 //
-// preloadHeroMap() — kviečiama vieną kartą App mount'e (po collection load).
+// subscribeHeroMap() — LIVE Firestore onSnapshot(catalog). Serveris parašo
+// catalog.heroIllustration (background gen ~30-60s po save) → snapshot fire'ina
+// → _heroMap update → App bump'ina → kortelės pasiima drawing akimirksniu.
+// Pakeitė buvusius preload+45s/90s/focus refresh timer'ius (bandaid'ai, kurie
+// darydavo full re-fetch'us — widget vis tiek neatsinaujindavo).
+// Pigu: persistentLocalCache (firebase.js) serve'ina iš IndexedDB + sync'ina
+// tik delta'as, ne full collection read per session.
 // heroIllustrationFor(lotyniskas) — sync lookup card render'iui.
 let _heroMap = {}
 
-/** Preload heroIllustration map iš catalog (cached). Call once on app init. */
-export async function preloadHeroMap() {
-  try {
-    const all = await loadAllCatalog()
-    const map = {}
-    for (const e of all) {
-      if (e.heroIllustration && e._id) map[e._id] = e.heroIllustration
-    }
-    _heroMap = map
-    return map
-  } catch {
-    return _heroMap
-  }
-}
-
 /**
- * refreshHeroMap — cache-bust + re-preload. Naudojama kai drawing sugeneruotas
- * fone (Phase A async po pridėjimo) — catalog IndexedDB cache (1h) slepia naują
- * heroIllustration. Resetinam in-mem + AWAIT'inam IndexedDB delete (ne fire-
- * and-forget kaip bustCatalogCache — kitaip race: loadAllCatalog pasiimtų seną
- * IDB įrašą) → fresh Firestore fetch → rebuild _heroMap.
+ * subscribeHeroMap(onChange) — live catalog listener, palaiko _heroMap gyvai.
+ * Grąžina unsubscribe. onChange kviečiamas po kiekvieno snapshot'o (App
+ * bump'ina re-render counter'į). Mount once App'e.
  */
-export async function refreshHeroMap() {
-  _catalogMem = null
-  _catalogMemAt = 0
-  if (_idbStore) { try { await idbDel(CACHE_KEY, _idbStore) } catch {} }
-  return preloadHeroMap()
+export function subscribeHeroMap(onChange) {
+  try {
+    return onSnapshot(
+      collection(db, 'catalog'),
+      snap => {
+        const map = {}
+        snap.forEach(d => {
+          const url = d.data()?.heroIllustration
+          if (url) map[d.id] = url
+        })
+        _heroMap = map
+        onChange?.()
+      },
+      e => console.warn('[catalog] hero subscription error:', e),
+    )
+  } catch (e) {
+    console.warn('[catalog] hero subscribe failed:', e)
+    return () => {}
+  }
 }
 
 /** Sync lookup — grąžina watercolor hero URL augalui (arba null). */
