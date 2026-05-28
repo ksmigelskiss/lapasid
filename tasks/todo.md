@@ -48,20 +48,23 @@ Tikslas: nauji augalai (Phase-2 → global-save) automatiškai gauna drawing
 - [x] Diagnozė: route'as fail'ina, nes **Vercel NETURI AI Gateway credential**. Prod env: tik ANTHROPIC_API_KEY + BRAVE_API_KEY. `VERCEL_OIDC_TOKEN` runtime'e neprieinamas (OIDC neįjungtas), `AI_GATEWAY_API_KEY` nenustatytas → route 503 → jokio drawing. (Kiti route'ai veikia per ANTHROPIC_API_KEY.)
 - [x] Bonus bug fix: 16MB kandidatas (Yucca) crash'ino gen (>5MB Sonnet limit) → fetchImagePart dabar resize per sharp (gina ir prod route'ą)
 - [x] Deployment Protection (SSO) įjungtas *.vercel.app; prod domenas = lapasid.lt (public)
-- [ ] **USER ACTION:** Vercel → AI Gateway → create API key → pridėti `AI_GATEWAY_API_KEY` env (Production) → redeploy → route veiks (fallback)
-- [ ] Po to: pridėti naują augalą → drawing auto-generuojasi
-- [x] Manual gens (kol kas): Alocasia, ficus_ginseng, Calathea warscewiczii, Yucca elephantipes ✓
+- [x] **USER pridėjo `AI_GATEWAY_API_KEY`** → trigger+route AUTO-suveikė (Alocasia regal shield gavo drawing be rankinio). **Phase A ✅ BAIGTA.**
+- [x] Manual gens: Alocasia, ficus_ginseng, Calathea warscewiczii, Yucca elephantipes ✓
+- [ ] (polish) widget cache: po auto-gen `preloadHeroMap` įkrautas anksčiau → drawing nematomas iki refresh. Apsvarstyti re-preload po hero gen / catalog bust.
 
 ---
 
-## PHASE B — Save/AI flow cleanup  (KARTU su A3 — tas pats save kodas)
-- [ ] Narrative lygiagrečiai su details (`Promise.all`) — `fetchDetails` (SearchModal:615) + `save-plant.js` mirror. -5–15s kiekvienam Save
-- [ ] Client/server Save dublikato konsolidacija (server-side = kryptis; drift prevencija)
+## PHASE B — Save/AI flow cleanup  [AKTYVU]
+- [ ] **B1:** Narrative lygiagrečiai su details (`Promise.all`) — `fetchDetails` (SearchModal:615) + `save-plant.js` mirror. -5–15s kiekvienam Save (narrative priklauso tik nuo latinName, ne nuo details output'o)
+- [ ] **B2:** Client/server Save dublikato konsolidacija (server-side = kryptis; drift prevencija)
 
 ## PHASE C — Duomenų kokybės audit (vienas praėjimas)
 - [ ] Asmeninės foto global'e — audit: rasti entries su user personal photos kaip `image`; flag/replace (privatumas)
 - [ ] `dracaena_marginata` naming (senas įrašas — LT vardas tik „Dracena")
 - [ ] 4 mismatch realios foto (Calathea/Dracaena/Ficus/Senecio) — drawing pataisytas, bet galerijos „tikra foto" dar bloga
+- [ ] **User plant ↔ catalog DIVERGENCE** (rasta tiriant Alocasia regal shield): catalog lieka `preview` (pre-DB data: „Alokazija"), user plant turi Phase-1 data („Karališkoji alokazija"). Pilnas Phase-2 catalog reconciliation (upsert + `preview→verified`) nesuveikia fast/pre-DB kelyje → diverge. Fix: kai user save'ina, suderinti catalog su turtingesne data + upgrade status.
+- [ ] **Latin normalizavimas trade-name'ams**: „Alocasia regal shield" → `Alocasia 'Regal Shield'` (hibridas). Latin resolver nenormalizuoja angliškų trade names.
+- [ ] **Phase-1 englishNames haliucinacijos**: Alocasia regal shield gavo `[Taro, taro]` (Taro = Colocasia, ne Alocasia). Filtras/validacija.
 
 ## PHASE D — Reviewer/approval flow
 - [ ] `verified`/`reviewedBy`/`reviewedAt` laukai naujam global entry

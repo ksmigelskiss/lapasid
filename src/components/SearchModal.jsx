@@ -613,6 +613,15 @@ async function fetchDetails(latinName, name, baseResult = null) {
     hasCheng: rag.hasCheng,
   })
 
+  // B1: toxicity grandinė (deterministinis deriveToxicityFromSources + narrative AI)
+  // priklauso TIK nuo latinName — NE nuo details output'o. Paleidžiam LYGIAGREČIAI
+  // su details call'u (−5–15s per Save). await'inam žemiau, kur reikia.
+  const toxicityPromise = (async () => {
+    const derivedToxicity = await deriveToxicityFromSources(latinName)
+    const nar = await generateToxicityNarrative({ claudeCall, latinName, derivedToxicity })
+    return { derivedToxicity, nar }
+  })()
+
   const r = await claudeCall({
     maxTokens:  3000,
     temperature: 0.3,   // grąžinta į 0.3 — 0.5 nepadėjo, AI'us tapdavo overload'intas
@@ -713,15 +722,10 @@ Naudok savo botanikos žinias + Wikipedia/RHS info kur reikia. Visi human-readab
   //   • aiSupplementaryHazard = object IF DB tyli BET genus whitelist'e +
   //     hospitalization bar; ELSE null (99% atvejų)
   // Mūsų DB = primary authority. AI gap-fill su strict evidence.
-  const derivedToxicity = await deriveToxicityFromSources(latinName)
-  const narrativeStart = Date.now()
-  const nar = await generateToxicityNarrative({
-    claudeCall,
-    latinName,
-    derivedToxicity,
-  })
-  const narrativeMs = Date.now() - narrativeStart
-  console.log(`[fetchDetails] narrative AI in ${narrativeMs}ms — detales:${nar.detales ? nar.detales.length+'ch' : 'null'} aiSupplementaryHazard:${nar.aiSupplementaryHazard ? 'object' : 'null'}`)
+  // B1: await lygiagrečiai paleistą toxicity grandinę (žr. viršuje) — iki čia
+  // ji jau (beveik) baigta, nes sukosi kartu su details call'u.
+  const { derivedToxicity, nar } = await toxicityPromise
+  console.log(`[fetchDetails] narrative AI (parallel su details) — detales:${nar.detales ? nar.detales.length+'ch' : 'null'} aiSupplementaryHazard:${nar.aiSupplementaryHazard ? 'object' : 'null'}`)
 
   if (derivedToxicity.hasToxicity) {
     // DB turi entry → struktūrizuotas pavojai + LT narrative
