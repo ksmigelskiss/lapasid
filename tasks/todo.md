@@ -32,10 +32,11 @@ Tikslas: nauji augalai (Phase-2 → global-save) automatiškai gauna drawing
   - species/cultivar → vision-gate (gatherCandidates: entry.image + iNat + Wiki + Brave „{name} houseplant potted") → assessAndPick (Sonnet parenka geriausią) → restyle (fallback text). Verifikuota: Monstera restyle·full-habit
   - `generateHeroForEntry(entry, {braveApiKey})` → `{ buf, heroPromptBrief, heroPhotoAssessment, _heroMethod, chosenRealPhoto, rank }`
 
-### A2. `api/generate-hero.js` route
-- [ ] Auth (Bearer, kaip `rehost-image`)
-- [ ] Kviečia heroGen → rašo catalog.heroIllustration + heroPhotoAssessment + chosen real photo
-- [ ] `maxDuration`
+### A2. `api/generate-hero.js` route  ✅ DONE (deploy-verifikacija laukia)
+- [x] Auth (Bearer, `uidFromToken`), `maxDuration: 120`
+- [x] `{ latinName, force }` → catalogDocId → fetch entry → `generateHeroForEntry` → upload + catalog write
+- [x] Idempotent (skip jei turi hero nebent force)
+- [ ] ⚠️ DEPLOY VERIFIKACIJA: ar `process.env.VERCEL_OIDC_TOKEN` prieinamas Vercel funkcijoje (AI Gateway). Jei ne → AI Gateway API key env var
 
 ### A3. Įvielinti į Phase-2 global-save
 - [ ] Po global catalog įrašymo → async (`waitUntil`) trigger hero gen
