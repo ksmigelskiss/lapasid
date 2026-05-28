@@ -32,6 +32,24 @@ export async function claudeCall(body) {
   return res.json()
 }
 
+// ── Hero drawing gen trigger (Phase A3) ────────────────────
+// Fire-and-forget — po naujo global-catalog įrašymo (Phase 2 save) async
+// paleidžia /api/generate-hero. Nelaukiam (gen ~30-60s); drawing atsiranda
+// catalog'e vėliau, kiti vartotojai jį mato. Idempotent server-side (skip jei
+// jau turi hero). keepalive — kad request'as išgyventų page navigaciją.
+export async function triggerHeroGen(latinName, { force = false } = {}) {
+  try {
+    const idToken = await auth.currentUser?.getIdToken().catch(() => null)
+    if (!idToken || !latinName) return
+    fetch('/api/generate-hero', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${idToken}` },
+      body: JSON.stringify({ latinName, force }),
+      keepalive: true,
+    }).catch(() => {})
+  } catch { /* ignore — drawing nėra kritinis save flow'ui */ }
+}
+
 // ── Refresh full plant info via Claude + Wikipedia RAG ─────
 
 /**

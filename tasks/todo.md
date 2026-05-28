@@ -38,15 +38,16 @@ Tikslas: nauji augalai (Phase-2 → global-save) automatiškai gauna drawing
 - [x] Idempotent (skip jei turi hero nebent force)
 - [ ] ⚠️ DEPLOY VERIFIKACIJA: ar `process.env.VERCEL_OIDC_TOKEN` prieinamas Vercel funkcijoje (AI Gateway). Jei ne → AI Gateway API key env var
 
-### A3. Įvielinti į Phase-2 global-save
-- [ ] Po global catalog įrašymo → async (`waitUntil`) trigger hero gen
-- [ ] Drawing = default hero, realios foto galerijoje (kaip dabar)
-- [ ] Pirmas user mato realią foto kol drawing ruošiasi; kiti — su drawing
+### A3. Įvielinti į Phase-2 global-save  ✅ DONE (client kelias)
+- [x] `triggerHeroGen(latinName)` plantAI.js (fire-and-forget, keepalive, auth)
+- [x] SearchModal:802 `saveCatalogWithSpeciesParent(...).then(() => triggerHeroGen(latinName))`
+- [x] Build praeina
+- [ ] Server kelio trigger (`save-plant.js` processPlant) → Phase B (kai konsoliduosim; flag dabar OFF → client aktyvus)
 
-### A4. Verifikacija
-- [ ] Naujo (ne katalogo) augalo pridėjimas → po kelių s atsiranda drawing
-- [ ] Genus vs species elgsena teisinga
-- [ ] Build praeina
+### A4. Verifikacija  [LAUKIA — user + deploy]
+- [ ] Deploy (auto po push) → pridėti NAUJĄ (ne katalogo) augalą → po ~30-60s atsiranda drawing kaip default hero
+- [ ] ⚠️ Jei nėra drawing → Vercel logs: ar VERCEL_OIDC_TOKEN prieinamas. Jei ne → `AI_GATEWAY_API_KEY` env + route tweak
+- [ ] Genus → text-genus; species → restyle (jau verifikuota batch'e)
 
 ---
 

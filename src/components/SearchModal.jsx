@@ -239,6 +239,7 @@ if (typeof window !== 'undefined') {
   }
 }
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
+import { triggerHeroGen } from '../utils/plantAI'
 import { plantFuzzyScore } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
 import PlantSavybesPills from './brand/PlantSavybesPills'
@@ -800,6 +801,7 @@ Naudok savo botanikos žinias + Wikipedia/RHS info kur reikia. Visi human-readab
     fullPlant.schemaVersion = 2
 
     saveCatalogWithSpeciesParent(fullPlant)
+      .then(() => triggerHeroGen(latinName))   // Phase A3: async drawing gen po global-save
       .catch(e => console.warn('[fetchDetails] catalog save failed:', e?.message ?? e))
   }
 
