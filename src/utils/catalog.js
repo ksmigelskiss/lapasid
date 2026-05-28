@@ -225,6 +225,35 @@ export function heroIllustrationFor(lotyniskas) {
 }
 
 /**
+ * heroIsDefaultFor(plant) — ar watercolor iliustracija turi būti DEFAULT hero
+ * šitam augalui? Watercolor yra gražus uniform placeholder'is, bet NIEKADA
+ * neturi uždengti user'io NUOSAVOS foto. Taisyklė:
+ *   • nėra plant.image            → true  (watercolor užpildo tuštumą)
+ *   • useHistoryPhoto === false   → false (user rankiniu būdu užrakino foto:
+ *                                          Galerija pick / upload / camera)
+ *   • turi personal timeline foto → false (augimo nuotraukos = user'io, laimi)
+ *   • stock auto foto (Wiki/iNat, be timeline) → true (watercolor default)
+ * Tokiu būdu user pasirinktos/asmeninės foto visada laimi, o watercolor lieka
+ * tik niekad neliestiems catalog stock augalams.
+ */
+export function heroIsDefaultFor(plant) {
+  if (!plant?.image) return true
+  if (plant.useHistoryPhoto === false) return false
+  const hasTimelinePhoto = (plant.timeline ?? []).some(e => e.type === 'photo' && e.imageUrl)
+  return !hasTimelinePhoto
+}
+
+/**
+ * heroIllustrationForPlant(plant) — combined helper card render'iui: grąžina
+ * watercolor URL TIK jei jis turi būti default šitam augalui (kitaip null →
+ * PlantCard rodo real foto). Vienas call'as visiems Dashboard call site'ams.
+ */
+export function heroIllustrationForPlant(plant) {
+  if (!plant || !heroIsDefaultFor(plant)) return null
+  return heroIllustrationFor(plant.lotyniskas)
+}
+
+/**
  * catalogEntryToAIResult — pritaiko catalog entry shape'ą prie AI result
  * shape'o, kad jį būtų galima paduoti į `onAddToWishlist`/`onAddToDashboard`
  * (jie naudoja `fromAIResult`, kuris laukia `name`/`latinName` keys).

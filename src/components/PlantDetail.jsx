@@ -17,7 +17,7 @@ import { TOOL_PREVIEW, TOOL_DETAILS, PLANT_SYSTEM } from './SearchModal'
 import { ensureArray } from '../utils/plantTransform'
 import { getPlantEnrichmentState, getEnrichmentFailureReason } from '../utils/plantState'
 import { getWateringForecast } from '../utils/wateringForecast'
-import { heroIllustrationFor } from '../utils/catalog'
+import { heroIllustrationFor, heroIsDefaultFor } from '../utils/catalog'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
 import { getPlantMood } from '../utils/plantMood'
@@ -1790,12 +1790,16 @@ export default function PlantDetail({
                   </div>
                 )
               }
-              // Gallery — watercolor iliustracija PIRMA (default hero), tada
-              // real foto (plant.image) + discovery photos. User „sekanti"
-              // strėlyte pasiekia real foto. Iliustracija = transparent PNG,
+              // Gallery — watercolor iliustracija PIRMA tik kai ji yra default
+              // šitam augalui (stock catalog foto / be foto). Jei user turi
+              // NUOSAVĄ foto (užrakintą ar asmeninę) — ji PIRMA, iliustracija
+              // prieinama „sekanti" strėlyte. Iliustracija = transparent PNG,
               // render'inama ant cream bg (object-contain), real foto = cover.
               const heroIllus = heroIllustrationFor(plant.lotyniskas)
-              const gallery = [heroIllus, plant.image, ...(plant.photos ?? [])]
+              const heroDefault = !!heroIllus && heroIsDefaultFor(plant)
+              const gallery = (heroDefault
+                ? [heroIllus, plant.image, ...(plant.photos ?? [])]
+                : [plant.image, heroIllus, ...(plant.photos ?? [])])
                 .filter(Boolean)
                 .filter((u, i, a) => a.indexOf(u) === i)
               const hasGallery = gallery.length > 1
