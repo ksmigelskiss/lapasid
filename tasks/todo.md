@@ -44,10 +44,13 @@ Tikslas: nauji augalai (Phase-2 → global-save) automatiškai gauna drawing
 - [x] Build praeina
 - [ ] Server kelio trigger (`save-plant.js` processPlant) → Phase B (kai konsoliduosim; flag dabar OFF → client aktyvus)
 
-### A4. Verifikacija  [LAUKIA — user + deploy]
-- [ ] Deploy (auto po push) → pridėti NAUJĄ (ne katalogo) augalą → po ~30-60s atsiranda drawing kaip default hero
-- [ ] ⚠️ Jei nėra drawing → Vercel logs: ar VERCEL_OIDC_TOKEN prieinamas. Jei ne → `AI_GATEWAY_API_KEY` env + route tweak
-- [ ] Genus → text-genus; species → restyle (jau verifikuota batch'e)
+### A4. Verifikacija  [ROOT CAUSE RASTAS — laukia env fix]
+- [x] Diagnozė: route'as fail'ina, nes **Vercel NETURI AI Gateway credential**. Prod env: tik ANTHROPIC_API_KEY + BRAVE_API_KEY. `VERCEL_OIDC_TOKEN` runtime'e neprieinamas (OIDC neįjungtas), `AI_GATEWAY_API_KEY` nenustatytas → route 503 → jokio drawing. (Kiti route'ai veikia per ANTHROPIC_API_KEY.)
+- [x] Bonus bug fix: 16MB kandidatas (Yucca) crash'ino gen (>5MB Sonnet limit) → fetchImagePart dabar resize per sharp (gina ir prod route'ą)
+- [x] Deployment Protection (SSO) įjungtas *.vercel.app; prod domenas = lapasid.lt (public)
+- [ ] **USER ACTION:** Vercel → AI Gateway → create API key → pridėti `AI_GATEWAY_API_KEY` env (Production) → redeploy → route veiks (fallback)
+- [ ] Po to: pridėti naują augalą → drawing auto-generuojasi
+- [x] Manual gens (kol kas): Alocasia, ficus_ginseng, Calathea warscewiczii, Yucca elephantipes ✓
 
 ---
 

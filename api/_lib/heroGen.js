@@ -154,10 +154,13 @@ export function createHeroGen({ token }) {
     try {
       const r = await fetch(url)
       if (!r.ok) return null
-      const ct = r.headers.get('content-type') || 'image/jpeg'
+      const ct = r.headers.get('content-type') || ''
       if (!ct.startsWith('image/')) return null
-      const b64 = Buffer.from(await r.arrayBuffer()).toString('base64')
-      return { type: 'image_url', image_url: { url: `data:${ct};base64,${b64}` } }
+      const raw = Buffer.from(await r.arrayBuffer())
+      // Downscale per sharp → po 5MB Sonnet/Gemini limito (kai kurios Brave/Wiki
+      // foto būna 16MB+) + greitesni vision/restyle payload'ai. Fail → null (skip).
+      const resized = await sharp(raw).rotate().resize(1024, 1024, { fit: 'inside', withoutEnlargement: true }).jpeg({ quality: 82 }).toBuffer()
+      return { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${resized.toString('base64')}` } }
     } catch { return null }
   }
 
