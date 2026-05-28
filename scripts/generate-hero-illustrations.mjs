@@ -35,13 +35,65 @@ admin.initializeApp({ credential: admin.credential.cert(sa), storageBucket: 'gel
 const db = admin.firestore()
 const bucket = admin.storage().bucket()
 
-// ── Watercolor prompt (validated POC approach) ──────────────────
-// latin + lt + „houseplant" disambiguacija + transparent bg.
-// Trait hint iš aprasymas pirmojo sakinio (jei vizualus) — light.
-function buildPrompt(entry) {
+// ── Morphology-brief pipeline (validated POC) ───────────────────
+// Generic prompt'as ignoruodavo neįprastas formas (caudex, pinnate lapus) —
+// modelis nepažįsta rūšies. Fix: Claude (per AI Gateway) generuoja DIAGNOSTINĮ
+// morfologijos brief'ą — VISION iš real foto (entry.image) jei yra, kitaip text
+// iš latin+lt. Brief → recraft. heroPromptBrief saugomas catalog'e (reproducible).
+const GATEWAY = 'https://ai-gateway.vercel.sh/v1'
+const BRIEF_MODEL = 'anthropic/claude-sonnet-4.5'
+const STYLE = 'muted natural palette (sage green, bone, warm terracotta), vintage Kew Gardens botanical plate aesthetic, centered, premium, no text, isolated subject on a fully transparent background, no background scenery, no cast shadow.'
+
+const BRIEF_RULES = `You are a botanical illustrator's reference assistant. Output a concise visual morphology brief (max ~60 words) for a watercolor illustration of ONE potted specimen. Rules:
+1. START with the overall silhouette in concrete comparative terms (e.g. "resembles a miniature palm tree", "fat bottle-shaped succulent", "trailing vine").
+2. Stem/trunk: if it has a caudex / pachycaul / swollen succulent base, state the THICK BARE TRUNK IS FULLY VISIBLE AND EXPOSED, foliage only at the very top.
+3. Leaves: exact shape + arrangement. If compound, say "feather-like pinnate compound leaves of many small paired leaflets" and add "leaves are NOT round or simple". If simple, give the exact outline.
+4. Iconic flowers only if characteristic.
+5. Plain visual words a painter follows. Do NOT restate names. Do NOT turn common-name metaphors into literal objects.
+Output ONLY the brief.`
+
+async function chat(messages, max_tokens = 220) {
+  const res = await fetch(`${GATEWAY}/chat/completions`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ model: BRIEF_MODEL, max_tokens, messages }),
+  })
+  if (!res.ok) throw new Error(`brief HTTP ${res.status}: ${(await res.text()).slice(0, 160)}`)
+  const json = await res.json()
+  return json.choices?.[0]?.message?.content?.trim() ?? ''
+}
+
+async function morphologyBrief(entry) {
   const latin = entry.lotyniskas || ''
   const lt = entry.lietuviškas || ''
-  return `Soft watercolor botanical illustration of the houseplant ${latin}${lt ? ` (${lt})` : ''}. Single specimen in a simple terracotta pot, render the plant's distinctive leaf shape, markings and form accurately, muted natural palette (sage green, bone, warm terracotta), vintage Kew Gardens botanical plate aesthetic, centered, premium, no text, isolated subject on a fully transparent background, no background scenery, no cast shadow.`
+  // VISION — grounding iš real foto (tiksliausia)
+  if (entry.image) {
+    try {
+      const r = await fetch(entry.image)
+      if (r.ok) {
+        const ct = r.headers.get('content-type') || 'image/jpeg'
+        const b64 = Buffer.from(await r.arrayBuffer()).toString('base64')
+        return await chat([
+          { role: 'system', content: BRIEF_RULES + '\nBase the brief on the ACTUAL specimen in the provided photo — describe what is really visible (true leaf type, trunk, habit), not a generic idea of the species.' },
+          { role: 'user', content: [
+            { type: 'text', text: `Species: ${latin}\nCommon (LT): ${lt || '—'}\nWrite the morphology brief from this photo:` },
+            { type: 'image_url', image_url: { url: `data:${ct};base64,${b64}` } },
+          ] },
+        ])
+      }
+    } catch { /* fall through to text */ }
+  }
+  // TEXT fallback — nėra real foto arba fetch fail'ino
+  return chat([
+    { role: 'system', content: BRIEF_RULES },
+    { role: 'user', content: `Species: ${latin}\nCommon (LT): ${lt || '—'}` },
+  ])
+}
+
+function buildPrompt(entry, brief) {
+  const latin = entry.lotyniskas || ''
+  const lt = entry.lietuviškas || ''
+  return `Soft watercolor botanical illustration of the houseplant ${latin}${lt ? ` (${lt})` : ''}. ${brief} Planted in a simple terracotta pot, a single plant only with no extra objects or props. ${STYLE}`
 }
 
 async function generateImage(prompt) {
@@ -66,7 +118,9 @@ async function uploadToStorage(slug, buf) {
     metadata: { cacheControl: 'public, max-age=31536000, immutable' },
   })
   await file.makePublic()
-  return `https://storage.googleapis.com/${bucket.name}/${filename}`
+  // Cache-bust: deterministic path + immutable cache → re-gen serv'intų stale.
+  // ?v= keičia URL'ą kiekvienam re-gen'ui → browser/CDN fetch'ina fresh.
+  return `https://storage.googleapis.com/${bucket.name}/${filename}?v=${Date.now()}`
 }
 
 // ── Select entries ───────────────────────────────────────────────
@@ -99,10 +153,12 @@ for (let i = 0; i < todo.length; i++) {
   process.stdout.write(`  [${i + 1}/${todo.length}] ${entry.lotyniskas}... `)
   if (DRY) { console.log('(dry-run skip)'); continue }
   try {
-    const buf = await generateImage(buildPrompt(entry))
+    const brief = await morphologyBrief(entry)
+    const buf = await generateImage(buildPrompt(entry, brief))
     const url = await uploadToStorage(slug, buf)
     await db.collection('catalog').doc(slug).update({
       heroIllustration: url,
+      heroPromptBrief: brief,
       _heroIllustrationAt: new Date().toISOString(),
     })
     console.log(`✓ ${Math.round(buf.length / 1024)}KB`)
