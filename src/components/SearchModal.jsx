@@ -1764,7 +1764,14 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       //     aubrytiana nite lite" garbled seller-name): gate'as nerastų pilno
       //     vardo Wikipedijoj, BET gentis = augalas → leidžiam AI identifikuoti
       //     realų (seller-name fallback „greičiausiai toks"), NE blokuojam.
-      if (!preview?.passesPlantGate && !stage1Result?.genusKnown) {
+      //
+      // VIENAS sprendimas: block'inam TIK aiškiai NE-augalą — pre-DB nežino
+      // genties IR Wikidata nepatvirtino augalo. Jei gentis žinoma (ar Wikidata
+      // patvirtino) → AI valdo identifikaciją (jis turi fallback ladder + „never
+      // hard-reject" taisyklę). Taip gate (hard-reject) ir prompt (never-reject)
+      // nebekonfliktuoja — gate'as atmeta tik tikrą šiukšlę („keptuvė", „xyz123").
+      const blockNonPlant = !stage1Result?.genusKnown && !preview?.passesPlantGate
+      if (blockNonPlant) {
         const wdLabels = preview?.wikidataGate?.labels ?? {}
         const wdName = wdLabels.lt ?? wdLabels.en ?? null
         const wikidataFound = !!preview?.wikidataGate?.found

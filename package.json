@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/build-species-lt-names.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },
