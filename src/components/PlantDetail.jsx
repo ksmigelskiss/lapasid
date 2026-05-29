@@ -17,6 +17,7 @@ import { TOOL_PREVIEW, TOOL_DETAILS, PLANT_SYSTEM } from './SearchModal'
 import { ensureArray } from '../utils/plantTransform'
 import { getPlantEnrichmentState, getEnrichmentFailureReason } from '../utils/plantState'
 import { getWateringForecast } from '../utils/wateringForecast'
+import { getFertilizingSummary } from '../utils/fertilizingForecast'
 import { heroIllustrationFor, heroIsDefaultFor } from '../utils/catalog'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
@@ -720,6 +721,15 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
             <InfoRow icon={<Droplets size={15} />}    label="Laistymas"   value={plant.prieziura.laistymas} />
             <InfoRow icon={<Thermometer size={15} />} label="Temperatūra" value={plant.prieziura.temperatura} />
             <InfoRow icon={<Wind size={15} />}        label="Drėgmė"      value={plant.prieziura.dregme} />
+            {(() => {
+              // Tręšimas — deriviama iš kategorijos (autoritetinė lentelė), ne iš
+              // AI skaičiaus. Rodom kaip care eilutę greta šviesa/laistymas.
+              const fs = getFertilizingSummary(plant)
+              const txt = fs.vasaraDays == null
+                ? `${fs.tip}.`
+                : `Augimo sezonu (pavasaris–ruduo) kas ~${fs.vasaraDays} d.${fs.skipWinter ? ', žiemą nutraukti' : ''}. ${fs.tip}.`
+              return <InfoRow icon={<Leaf size={15} />} label="Tręšimas" value={txt} />
+            })()}
           </div>
         </Section>
       )}

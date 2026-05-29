@@ -57,6 +57,22 @@ export const FERTILIZER_TIPS = {
   mesedis:   'Netręšti — mėsėdžiai maistą gauna iš grobio; trąšos žaloja šaknis',
 }
 
+/**
+ * getFertilizingSummary(plant) — sezono-nepriklausoma tręšimo rekomendacija
+ * (deriviama iš kategorijos). Naudojama care eilutei (PlantDetail) ir admin
+ * read-only display'ui — kad visur rodytume tą patį autoritetinį dydį.
+ */
+export function getFertilizingSummary(plant) {
+  const category = getCategory(plant)
+  return {
+    category,
+    label:      CATEGORY_LABELS[category],
+    vasaraDays: INTERVALS[category].vasara,        // null = mėsėdis (netręšti)
+    skipWinter: INTERVALS[category].žiema === null,
+    tip:        FERTILIZER_TIPS[category],
+  }
+}
+
 export function getFertilizingForecast(plant) {
   const now      = new Date()
   const season   = getSeason(now)

@@ -43,6 +43,7 @@ import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS } from '../../utils/taxonGroups
 import { parseLatinName } from '../../utils/latinName'
 import { auth } from '../../utils/firebase'
 import { ExternalLink, Sun, Droplets, Thermometer, Wind, Sparkles, Calendar } from 'lucide-react'
+import { getFertilizingSummary } from '../../utils/fertilizingForecast'
 
 const WIDGET = 'bg-bone-50 rounded-2xl border border-bone-400/40 shadow-[0_1px_3px_rgba(28,58,42,0.06),0_4px_14px_rgba(28,58,42,0.05)]'
 const MIN_WIDTH_PX = 1280
@@ -1961,8 +1962,8 @@ function TabCareCultivar({ draft, originalDraft, updateField, genusParent }) {
       <FormRow label="Laistymo intervalas" dirty={fieldDirty(draft.laistymasIntervalas, originalDraft?.laistymasIntervalas)}>
         <StructuredLaistymasEditor value={draft.laistymasIntervalas} onChange={v => updateField('laistymasIntervalas', v)} />
       </FormRow>
-      <FormRow label="Tręšimas" dirty={fieldDirty(draft.tresimas, originalDraft?.tresimas)} inherited={inh('tresimas')}>
-        <StructuredTresimasEditor value={draft.tresimas} onChange={v => updateField('tresimas', v)} />
+      <FormRow label="Tręšimas" helper="Deriviama iš kategorijos (tipas + augimo greitis) — per-augalo reikšmė nebenaudojama (forecast ją ignoruoja). Reikšmės keičiamos per kategorijų lentelę.">
+        <DerivedTresimasInfo plant={draft} />
       </FormRow>
       <FormRow label="Ramybės periodas (dormancy)" dirty={fieldDirty(draft.dormancyInfo, originalDraft?.dormancyInfo)} helper="Ar augalas turi atskirą ramybės periodą žiemą. Sukulentai/kaktusai = full, ficusai/dalies tropikų = partial.">
         <StructuredDormancyEditor value={draft.dormancyInfo} onChange={v => updateField('dormancyInfo', v)} />
@@ -2112,6 +2113,27 @@ function StructuredTresimasEditor({ value, onChange }) {
       <SubFieldRow label="Trąšų rūšis / pastabos">
         <TextArea value={v.tipas} onChange={x => update('tipas', x)} rows={2} placeholder="pvz. Universalios skystos NPK 20-20-20, ½ dozės kas savaitę" />
       </SubFieldRow>
+    </div>
+  )
+}
+
+// DerivedTresimasInfo — read-only tręšimo display. Tręšimas deriviamas iš
+// kategorijos (getFertilizingSummary), AI/per-augalo `tresimas` skaičius
+// IGNORUOJAMAS (forecast naudoja lentelę). Editable per-plant fields pašalinti,
+// kad nerodytų klaidinančios (nebenaudojamos) reikšmės.
+function DerivedTresimasInfo({ plant }) {
+  const fs = getFertilizingSummary(plant ?? {})
+  return (
+    <div className="bg-bone-50 border border-bone-400/40 rounded-lg p-3 text-sm text-forest-700 space-y-1.5">
+      <div className="flex items-baseline gap-2">
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-forest-500">Kategorija</span>
+        <span className="font-medium">{fs.label}</span>
+      </div>
+      <div>{fs.vasaraDays == null
+        ? 'Netręšti (mėsėdis / saugumas).'
+        : `Augimo sezonu kas ~${fs.vasaraDays} d.${fs.skipWinter ? '; žiemą nutraukti' : ''}.`}</div>
+      <div className="text-forest-600 text-[13px]">{fs.tip}</div>
+      <div className="text-[11px] text-forest-400">Deriviama iš kategorijos — reikšmės redaguojamos per kategorijų lentelę.</div>
     </div>
   )
 }
