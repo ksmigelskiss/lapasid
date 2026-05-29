@@ -91,6 +91,21 @@ const ARRAY_FIELDS_FOR_NORMALIZE = [
   'sinonimai', 'englishNames', 'photos', 'candidates',
 ]
 
+/** Unwrap'ina AI „self-wrapped" lauką: {"field":"text"} / '{"field":"text"}' → "text". */
+function unwrapSelfWrapped(value, fieldName) {
+  let v = value
+  if (typeof v === 'string') {
+    const t = v.trim()
+    if (t.startsWith('{') && t.includes(`"${fieldName}"`)) {
+      try { v = JSON.parse(t) } catch { return value }  // ne JSON → originalas
+    }
+  }
+  if (v && typeof v === 'object' && !Array.isArray(v) && typeof v[fieldName] === 'string') {
+    return v[fieldName]
+  }
+  return value  // niekas nepasikeitė → originalas
+}
+
 export function normalizeAIResponse(rawDetails) {
   if (!rawDetails || typeof rawDetails !== 'object') return rawDetails
 
@@ -128,6 +143,24 @@ export function normalizeAIResponse(rawDetails) {
       ...out.savybes,
       pavojai: ensureArray(out.savybes.pavojai),
     }
+  }
+
+  // Self-wrapped string laukai — AI kartais grąžina lauką apvyniotą į savo paties
+  // raktą: substratas = {"substratas":"tekstas"} arba '{"substratas":"tekstas"}'.
+  // Be unwrap'o UI rodo žalią JSON (Pilea substratas incident'as 2026-05-29).
+  for (const k of ['aprasymas', 'kilme', 'substratas', 'persodinimas', 'ziemojimas']) {
+    if (k in out) out[k] = unwrapSelfWrapped(out[k], k)
+  }
+
+  // Laistymo intervalo plausibility clamp — apsauga nuo absurdiškų AI reikšmių
+  // (root rot jei <2 d., perdžiūvimas jei >40 d. vasarą). SĄMONINGAI NEverčiam
+  // ziema≥vasara — žiemą-aktyvūs augalai (Schlumbergera) teisėtai laistomi
+  // dažniau žiemą; tos krypties neclobortume.
+  if (out.laistymasIntervalas && typeof out.laistymasIntervalas === 'object' && !Array.isArray(out.laistymasIntervalas)) {
+    const li = { ...out.laistymasIntervalas }
+    if (typeof li.vasara === 'number') li.vasara = Math.max(2, Math.min(40, Math.round(li.vasara)))
+    if (typeof li.ziema  === 'number') li.ziema  = Math.max(2, Math.min(90, Math.round(li.ziema)))
+    out.laistymasIntervalas = li
   }
 
   return out
