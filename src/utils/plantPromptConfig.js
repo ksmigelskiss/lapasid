@@ -114,7 +114,7 @@ export const TOOL_DETAILS = {
         type: 'object',
         properties: {
           sviesa:      { type: 'string', description: 'Lithuanian narrative — light needs in plain language (e.g. „Vidutinė šviesa, 2-3m nuo lango").' },
-          laistymas:   { type: 'string', description: 'Lithuanian narrative — watering pattern (e.g. „Kas 7 dienos vasarą, kas 14 žiemą").' },
+          laistymas:   { type: 'string', description: 'Lithuanian narrative — KOKYBINIS laistymo aprašymas: METODAS + POŽYMIAI kada laistyti + sezono KRYPTIS. SVARBU: NENURODYK konkrečių dienų skaičių (NE „kas 7 dienos") — tikslų grafiką skaičiuoja sistema iš laistymasIntervalas, kad proza nekonfliktuotų su skaičiumi. Pvz.: „Laistyk kai viršutiniai 2–3 cm substrato pradžiūsta; vasarą poreikis didesnis, žiemą gerokai mažesnis; venk užmirkimo."' },
           temperatura: { type: 'string', description: 'Lithuanian narrative — temperature range + notes.' },
           dregme:      { type: 'string', description: 'Lithuanian narrative — humidity needs + tips.' },
         },
@@ -122,7 +122,7 @@ export const TOOL_DETAILS = {
       },
       substratas:   { type: 'string', description: 'Lithuanian — substrate composition + pH if known.' },
       persodinimas: { type: 'string', description: 'Lithuanian — repotting timing + technique.' },
-      ziemojimas:   { type: 'string', description: 'Lithuanian — winter care, dormancy details.' },
+      ziemojimas:   { type: 'string', description: 'Lithuanian — winter care / dormancy: KOKYBINIAI nurodymai (šviesa, temperatūra, laistymo MAŽINIMAS, tręšimo stabdymas). NENURODYK konkrečių dienų intervalų (NE „kas 14 dienų") — tikslias reikšmes rodo sistema.' },
       dauginimas:   { type: 'array', items: { type: 'string' }, description: 'Each item: 1 propagation method in Lithuanian. Recommended 2-4 methods.' },
       problemos: {
         type: 'array',
