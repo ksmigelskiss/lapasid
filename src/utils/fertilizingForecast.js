@@ -12,32 +12,49 @@ export { getSeason, getSeasonStart }
 function getCategory(plant) {
   const tipas   = (plant.tipas ?? '').toLowerCase()
   const greitis = (plant.augimo_greitis ?? '').toLowerCase()
+  const latin   = (plant.lotyniskas ?? plant.latinName ?? '').toLowerCase()
+  // Mėsėdžiai — NETRĘŠTI (saugumui kritiška: trąšos žaloja šaknis). Detektuojam
+  // iš tipas arba genties (AI gali nepažymėti tipas'e).
+  if (tipas.includes('mėsėd') || tipas.includes('carnivor') ||
+      /\b(nepenthes|dionaea|drosera|sarracenia|pinguicula|utricularia|cephalotus|heliamphora)\b/.test(latin))
+    return 'mesedis'
+  // Orchidėjos — silpna dozė dažniau.
+  if (tipas.includes('orchid') || /\b(orchid|phalaenopsis|cattleya|dendrobium|oncidium|paphiopedilum|vanda)\b/.test(latin))
+    return 'orchideja'
   if ((tipas.includes('sulting') && !tipas.includes('pusiau')) || tipas.includes('kaudeks')) return 'sultingas'
   if (tipas.includes('papart') || tipas.includes('epifiti')) return 'papartis'
   if (greitis === 'greitas') return 'greitas'
   return 'vidutinis'
 }
 
-// intervalDays: null = do not fertilize this season
+// intervalDays: null = do not fertilize this season.
+// KONSERVATYVŪS intervalai (2026-05-29, patvirtinta): vazonų kultūroje per-feeding
+// degina šaknis / kaupia druskas, under-feeding nekenkia → linkstam į ilgesnius.
 const INTERVALS = {
-  sultingas: { vasara: 28, žiema: null },
-  papartis:  { vasara: 28, žiema: null },
-  greitas:   { vasara: 14, žiema: null },
-  vidutinis: { vasara: 21, žiema: null },
+  vidutinis: { vasara: 28, žiema: null },  // lapiniai tropiniai, ½ dozės
+  greitas:   { vasara: 21, žiema: null },  // heavy feeders / greiti augintojai
+  sultingas: { vasara: 45, žiema: null },  // sukulentai/kaktusai/kaudeksiniai
+  papartis:  { vasara: 35, žiema: null },  // paparčiai/epifitai
+  orchideja: { vasara: 21, žiema: null },  // silpna dozė + praplovimas
+  mesedis:   { vasara: null, žiema: null },// NETRĘŠTI
 }
 
 export const CATEGORY_LABELS = {
+  vidutinis: 'Vidutinis tropinis',
+  greitas:   'Greitai augantis',
   sultingas: 'Sultingas / kaudeksinis',
   papartis:  'Papartis / epifitas',
-  greitas:   'Greitai augantis',
-  vidutinis: 'Vidutinis tropinis',
+  orchideja: 'Orchidėja',
+  mesedis:   'Mėsėdis',
 }
 
 export const FERTILIZER_TIPS = {
-  sultingas: 'Kaktusų / sukulentų trąšos (mažai azoto), ½ dozės',
+  vidutinis: 'Universalios skystos trąšos (NPK 15-15-15), ½ dozės',
+  greitas:   'Universalios skystos trąšos (NPK 20-20-20), ½–pilna dozė',
+  sultingas: 'Kaktusų / sukulentų trąšos (mažai azoto), ¼–½ dozės',
   papartis:  'Skystos trąšos paparčiams arba universalios ¼ dozės',
-  greitas:   'Universalios skystos trąšos (NPK 20-20-20), pilna dozė',
-  vidutinis: 'Universalios skystos trąšos (NPK 15-15-15), ½–1 dozė',
+  orchideja: 'Orchidėjų trąšos, silpna dozė; kartą per mėnesį praplauti šaknis vandeniu',
+  mesedis:   'Netręšti — mėsėdžiai maistą gauna iš grobio; trąšos žaloja šaknis',
 }
 
 export function getFertilizingForecast(plant) {
@@ -45,20 +62,14 @@ export function getFertilizingForecast(plant) {
   const season   = getSeason(now)
   const category = getCategory(plant)
 
-  const specificV   = plant.tresimas?.intervalVasara
-  const specificZ   = plant.tresimas?.intervalZiema  // may be null = skip
-  const hasSpecific = specificV != null
-
-  // Theoretical interval for current season (AI or default)
-  const theoreticalInterval = hasSpecific
-    ? (season === 'vasara' ? specificV : specificZ)
-    : INTERVALS[category][season]
-
-  const skipsWinter = hasSpecific
-    ? specificZ === null
-    : INTERVALS[category].žiema === null
-
-  const fertilizerTip = plant.tresimas?.tipas || FERTILIZER_TIPS[category]
+  // Tręšimas — KATEGORIJOS lentelė AUTORITETINĖ. AI dieną-skaičiaus (`tresimas`)
+  // nebenaudojam — jis būdavo nepagrįstas (RAG neturi tręšimo skaičių → AI
+  // haliucinuodavo). Kategorija išvedama iš `tipas`/`augimo_greitis` (AI tai
+  // klasifikuoja patikimai). Istorijos blend (žemiau) gali pakoreguoti pagal
+  // realią praktiką. tipas tekstas irgi iš FERTILIZER_TIPS → jokio konflikto.
+  const theoreticalInterval = INTERVALS[category][season]
+  const skipsWinter = INTERVALS[category].žiema === null
+  const fertilizerTip = FERTILIZER_TIPS[category]
 
   const timeline = plant.timeline ?? []
   const fertilizings = [...timeline]

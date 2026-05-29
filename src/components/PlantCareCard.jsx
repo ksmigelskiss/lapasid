@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Sun, Droplets, ChevronRight, FlaskConical, Leaf, Sprout } from 'lucide-react'
 import PostFertilizePrompt from './PostFertilizePrompt'
 import PlantImage from './brand/PlantImage'
+import { getFertilizingForecast } from '../utils/fertilizingForecast'
 
 // ── Forecast helpers ──────────────────────────────────────────────
 
@@ -114,8 +115,11 @@ function WateringStatus({ snapshot, watered }) {
 }
 
 function FertilizingStatus({ snapshot, fertilized }) {
-  const interval = snapshot.laistymasIntervalas?.tresimasIntervalas ?? null
-  const fertInterval = interval ?? snapshot.fertIntervalas ?? null
+  // Tręšimo intervalas — iš AUTORITETINĖS kategorijos lentelės (getFertilizingForecast),
+  // ne iš seno neegzistuojančio lauko (`laistymasIntervalas.tresimasIntervalas` —
+  // visada būdavo null → blokas tuščias). skipSeason (mėsėdis/žiema) → neslepiam bloko.
+  const fertFc = getFertilizingForecast(snapshot)
+  const fertInterval = fertFc.skipSeason ? null : fertFc.intervalDays
   if (!fertInterval && !snapshot.lastFertilized) return null
 
   const lastDate = fertilized
