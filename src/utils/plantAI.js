@@ -37,7 +37,7 @@ export async function claudeCall(body) {
 // async paleidžia /api/generate-hero. Nelaukiam (gen ~30-60s); drawing
 // atsiranda catalog'e vėliau. Idempotent server-side (skip jei jau turi hero).
 // keepalive — kad request'as išgyventų page navigaciją. Display'as pasiima
-// drawing'ą per live catalog subscription (subscribeHeroMap) — jokio event'o
+// drawing'ą per live catalog subscription (subscribeCatalog) — jokio event'o
 // dispatch'inti nereikia.
 // NB: produkcijoj (VITE_USE_SERVERSIDE_SAVE) heroGen vyksta processPlant step 7
 // (save-plant.js) PO catalog write — client trigger'is naudojamas tik flag-off.

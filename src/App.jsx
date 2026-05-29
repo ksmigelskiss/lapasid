@@ -19,7 +19,7 @@ import BrandLoader from './components/brand/BrandLoader'
 import DiscoveryToast from './components/DiscoveryToast'
 import T4Icon from './components/brand/T4Icon'
 import { fetchBestPhoto, uploadImage } from './utils/imageService'
-import { subscribeHeroMap } from './utils/catalog'
+import { subscribeCatalog, resolvePlantView } from './utils/catalog'
 
 // ChunkLoadError (senas SW aptarnauja seną HTML su naujais chunk hash'ais) → force reload.
 // Prieš reload'ą išsaugom esamą tab'ą sessionStorage'e, kad po app restart'o
@@ -100,7 +100,7 @@ export default function App() {
   // bump'as → cards re-render kai serveris parašo heroIllustration. Pakeitė
   // preload + 45s/90s/focus refresh timer'ius (widget niekada neatsinaujindavo).
   const [heroMapV, setHeroMapV] = useState(0)
-  useEffect(() => subscribeHeroMap(() => setHeroMapV(v => v + 1)), [])
+  useEffect(() => subscribeCatalog(() => setHeroMapV(v => v + 1)), [])
   const dashboardRef = useRef(null)
   const [showProfile, setShowProfile] = useState(false)
   const [showSearch, setShowSearch]   = useState(false)
@@ -134,9 +134,12 @@ export default function App() {
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
   } = usePlants(collectionId, viewerToken)
 
+  // F1 reference modelis — perdengiam rūšinius laukus LIVE catalog reikšmėmis
+  // (gyvi augalai). heroMapV bump'as (subscribeCatalog onChange) → App re-render →
+  // resolvePlantView pasiima naujausią catalog → PlantDetail rodo atnaujintą info
+  // be refresh'o. Legacy/offline → inline fallback (resolvePlantView viduje).
   const livePlant = detailPlant
-    ? library.find(p => p.id === detailPlant.plant.id)
-      ?? detailPlant.plant
+    ? resolvePlantView(library.find(p => p.id === detailPlant.plant.id) ?? detailPlant.plant)
     : null
 
   // Keep last plant in memory so PlantDetail stays mounted (eliminates remount lag)

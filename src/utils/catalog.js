@@ -192,44 +192,39 @@ export async function searchCatalog(q, excludeDocIds = new Set(), limit = 6) {
     .map(x => x.entry)
 }
 
-// ── Hero illustration map (watercolor heroes) ──────────────────────
+// ── Live catalog map (reference modelis — F1) ──────────────────────
 //
-// catalog.heroIllustration (generuotas watercolor, transparent PNG) — atskiras
-// nuo catalog.image (real foto). Module-level cache, kad PlantCard galėtų
-// SYNC resolve'inti be prop threading'o per ZoneSection/QuarantineSection.
-//
-// subscribeHeroMap() — LIVE Firestore onSnapshot(catalog). Serveris parašo
-// catalog.heroIllustration (background gen ~30-60s po save) → snapshot fire'ina
-// → _heroMap update → App bump'ina → kortelės pasiima drawing akimirksniu.
-// Pakeitė buvusius preload+45s/90s/focus refresh timer'ius (bandaid'ai, kurie
-// darydavo full re-fetch'us — widget vis tiek neatsinaujindavo).
+// `_catalogById` — pilni catalog entry'ai (slug → entry), palaikomi GYVAI per
+// onSnapshot(catalog). Serveris/admin parašo → snapshot fire'ina → map update →
+// App bump'ina re-render counter'į → display sluoksnis pasiima naują reference
+// data akimirksniu. Pakeitė buvusius preload+45s/90s/focus refresh timer'ius.
 // Pigu: persistentLocalCache (firebase.js) serve'ina iš IndexedDB + sync'ina
 // tik delta'as, ne full collection read per session.
-// heroIllustrationFor(lotyniskas) — sync lookup card render'iui.
-let _heroMap = {}
+//
+// Šis map'as maitina: heroIllustrationFor (watercolor hero) IR resolvePlantView
+// (user-plant reference resolve — gyvi augalai rodo live catalog duomenis,
+// fallback į inline legacy laukus). Žr. tasks/library-reference-refactor.md.
+let _catalogById = {}
 
 /**
- * subscribeHeroMap(onChange) — live catalog listener, palaiko _heroMap gyvai.
- * Grąžina unsubscribe. onChange kviečiamas po kiekvieno snapshot'o (App
- * bump'ina re-render counter'į). Mount once App'e.
+ * subscribeCatalog(onChange) — live catalog listener, palaiko _catalogById gyvai.
+ * Grąžina unsubscribe. onChange kviečiamas po kiekvieno snapshot'o (App bump'ina
+ * re-render counter'į). Mount once App'e.
  */
-export function subscribeHeroMap(onChange) {
+export function subscribeCatalog(onChange) {
   try {
     return onSnapshot(
       collection(db, 'catalog'),
       snap => {
         const map = {}
-        snap.forEach(d => {
-          const url = d.data()?.heroIllustration
-          if (url) map[d.id] = url
-        })
-        _heroMap = map
+        snap.forEach(d => { map[d.id] = { ...d.data(), _id: d.id } })
+        _catalogById = map
         onChange?.()
       },
-      e => console.warn('[catalog] hero subscription error:', e),
+      e => console.warn('[catalog] subscription error:', e),
     )
   } catch (e) {
-    console.warn('[catalog] hero subscribe failed:', e)
+    console.warn('[catalog] subscribe failed:', e)
     return () => {}
   }
 }
@@ -238,7 +233,37 @@ export function subscribeHeroMap(onChange) {
 export function heroIllustrationFor(lotyniskas) {
   if (!lotyniskas) return null
   const slug = catalogDocId(lotyniskas)
-  return slug ? (_heroMap[slug] ?? null) : null
+  return slug ? (_catalogById[slug]?.heroIllustration ?? null) : null
+}
+
+/**
+ * resolvePlantView(plant) — F1 reference resolve. GYVIEMS augalams perdengia
+ * rūšinius laukus (vardai, care, toksiškumas, aprašymas…) LIVE catalog reikšmėmis,
+ * kad admin/global pataisymai pasiektų esamus augalus iškart. Asmeniniai laukai
+ * (PERSONAL_FIELDS) ir display `image` NEPERDENGIAMI — foto logika lieka
+ * heroIsDefaultFor/heroIllustrationForPlant rankose.
+ *
+ * Backward-compat: jei nėra catalog entry (offline cold cache / dar neįrašyta) —
+ * grąžinam plant kaip yra (legacy „fat" doc tarnauja kaip savo paties fallback).
+ * Field-level overlay: tik NON-null catalog laukai perdengia → slim preview
+ * entry NEištrina pilnesnių inline laukų (no regression).
+ *
+ * refFrozen (F2) — mirę augalai naudoja inline snapshot, ignoruoja live.
+ */
+export function resolvePlantView(plant) {
+  if (!plant) return plant
+  if (plant.refFrozen) return plant   // F2: užšaldytas istorinis snapshot
+  const slug = plant.catalogId ?? catalogDocId(plant.lotyniskas ?? plant.latinName)
+  const entry = slug ? _catalogById[slug] : null
+  if (!entry) return plant            // nėra live catalog → legacy inline
+  const ref = { ...entry }
+  // Niekada neperdengiam: docId meta, display image (photo logika atskira),
+  // nei asmeninių laukų (catalog jų neturi, bet defensyviai).
+  delete ref._id; delete ref.updatedAt; delete ref.image
+  for (const k of PERSONAL_FIELDS) delete ref[k]
+  // Drop null/undefined — kad slim catalog entry neištrintų inline reikšmių.
+  for (const k of Object.keys(ref)) if (ref[k] == null) delete ref[k]
+  return { ...plant, ...ref }
 }
 
 /**
