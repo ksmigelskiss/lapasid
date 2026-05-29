@@ -99,6 +99,9 @@ flag'ino. **Du švarūs mechanizmai pririšti prie TIKRŲ įvykių:**
 - [x] **englishNames haliucinacijos** ✅ (`d57233f`) — iNat+GBIF genus-consistency guard
 - [x] **Toksiškumas severity** ✅ (`3eb3081`) — peržiūrėta kartu. Žmonėms: trailing `\b` fix (irritation→silpnas) + oxalate dietinis de-escalation. Saugumas: ASPCA `vidutinis` floor (confidence≠severity) + `abiem`→du pavojai (gyvūnų pusė nebedingsta). Client+server mirror. **Esamiems įrašams:** `node --env-file=.env.local scripts/cleanup-toxicity-severity.mjs --dry-run` (`a4b787c`).
 - [ ] **Genus-fallback dublikatai cleanup**: esami „Alokazija" (×2) + kiti genus-vardu pažymėti cultivar įrašai (sukurti prieš `6d99682`) — script: rasti catalog entries kur lietuviškas==genus LT name BET latin turi rūšį/cultivar → re-identify per AI / flag admin'ui.
+- [x] **Care grounding (audit P1)** ✅ — **Tręšimas:** kategorijos lentelė autoritetinė (AI skaičiaus nebenaudojam), praturtinta orchidėja/mėsėdis(=none), konservatyvios reikšmės; tipas iš FERTILIZER_TIPS. **Laistymas:** AI reikšmė + clamp [2,40]/[2,90] (ziema≥vasara NEverčiam — winter-active). **Narratives kvalitatyvinės** (be dienų-skaičių) → nekonfliktuoja. **substratas JSON-unwrap.** PlantCareCard fert dead-field fix. (commits fert/normalize/prompt)
+- [ ] **Admin editor tręšimo/laistymo lentelei** (žingsnis 2 — patvirtinta): redaguoti INTERVALS/FERTILIZER_TIPS be deploy'o.
+- [ ] (minor) substratas JSON-wrapper esamuose įrašuose (Pilea) — unwrap'as taiso NAUJUS; senus per admin edit ar cleanup.
 
 ## PHASE D — Reviewer/approval flow
 - [ ] `verified`/`reviewedBy`/`reviewedAt` laukai naujam global entry
