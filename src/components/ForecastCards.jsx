@@ -142,7 +142,6 @@ export function FertilizingCard({ plant, section }) {
           {fc.lastType === 'repotting' ? ' · nuo persodinimo' : ''}
         </span>
       }
-      hint={fc.fertilizerTip}
     />
   )
 }

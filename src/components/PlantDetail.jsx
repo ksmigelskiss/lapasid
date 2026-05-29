@@ -17,6 +17,7 @@ import { TOOL_PREVIEW, TOOL_DETAILS, PLANT_SYSTEM } from './SearchModal'
 import { ensureArray } from '../utils/plantTransform'
 import { getPlantEnrichmentState, getEnrichmentFailureReason } from '../utils/plantState'
 import { getWateringForecast } from '../utils/wateringForecast'
+import { getFertilizingSummary } from '../utils/fertilizingForecast'
 import { heroIllustrationFor, heroIsDefaultFor } from '../utils/catalog'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
@@ -270,6 +271,24 @@ function InfoRow({ icon, label, value }) {
       <div className="flex-1 min-w-0">
         <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">{label}</p>
         <p className="text-sm text-forest-700 mt-1 leading-snug">{text}</p>
+      </div>
+    </div>
+  )
+}
+
+// CareRow — vieninga priežiūros eilutė: lygis (DotScore + lygio žodis + ppfd)
+// VIRŠUJE + narrative proza apačioje. Sujungia anksčiau dubliuotus struktūrinį
+// (●●○) ir narrative blokus į vieną (UX dedup 2026-05-29).
+function CareRow({ icon, label, score, value }) {
+  const text = safeStringValue(value)
+  if (!score && !text) return null
+  return (
+    <div className="flex gap-3 py-2.5 border-b border-bone-400/30 last:border-0">
+      <div className="w-6 flex-shrink-0 flex items-center justify-center text-forest-400">{icon}</div>
+      <div className="flex-1 min-w-0">
+        <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">{label}</p>
+        {score && <div className="flex items-center gap-2 flex-wrap mt-1">{score}</div>}
+        {text && <p className="text-sm text-forest-700 mt-1 leading-snug">{text}</p>}
       </div>
     </div>
   )
@@ -630,39 +649,10 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
             <span className="text-sm text-forest-700">{plant.tipas}</span>
           </div>
         )}
-        {plant.augimo_greitis && (
-          <div className="flex items-center gap-3 py-2.5">
-            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0">Augimas</span>
-            <span className="text-sm text-forest-700">{plant.augimo_greitis}</span>
-          </div>
-        )}
         {plant.sunkumas != null && (
           <div className="flex items-center gap-3 py-2.5">
             <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0">Sunkumas</span>
             <Stars value={plant.sunkumas} />
-          </div>
-        )}
-        {plant.sviesa?.taskai != null && (
-          <div className="flex items-center gap-3 py-2.5">
-            <span className="flex items-center gap-1.5 font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0"><Sun size={11} className="text-terracotta-400" /> Šviesa</span>
-            <div className="flex items-center gap-2 flex-wrap">
-              <DotScore value={plant.sviesa.taskai} color="bg-terracotta-400" />
-              <span className="text-sm text-forest-700">{plant.sviesa.lygis}</span>
-              {plant.sviesa?.ppfd && (
-                <span className="font-mono text-[10px] font-medium text-terracotta-600 bg-terracotta-50 border border-terracotta-200/60 rounded-md px-1.5 py-0.5 leading-none">
-                  {plant.sviesa.ppfd.min}–{plant.sviesa.ppfd.max} μmol/m²/s
-                </span>
-              )}
-            </div>
-          </div>
-        )}
-        {plant.vanduo?.taskai != null && (
-          <div className="flex items-center gap-3 py-2.5">
-            <span className="flex items-center gap-1.5 font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0"><Droplets size={11} className="text-forest-400" /> Vanduo</span>
-            <div className="flex items-center gap-2">
-              <DotScore value={plant.vanduo.taskai} color="bg-forest-400" />
-              <span className="text-sm text-forest-700">{plant.vanduo.lygis}</span>
-            </div>
           </div>
         )}
       </div>
@@ -712,14 +702,50 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
         </Section>
       )}
 
-      {/* ── Care ── */}
-      {plant.prieziura && (
+      {/* ── Care — vieningas profilis: lygis (●●○) + narrative + tręšimas vienoje
+            vietoje (UX dedup — anksčiau šviesa/vanduo dubliavosi struktūrinėj meta
+            lentelėj IR čia; tręšimas tik forecast kortelėj). ── */}
+      {(plant.prieziura || plant.sviesa?.taskai != null || plant.vanduo?.taskai != null) && (
         <Section title="Priežiūra" id="prieziura-section">
-          <div className="divide-y divide-bone-400/30">
-            <InfoRow icon={<Sun size={15} />}         label="Šviesa"      value={plant.prieziura.sviesa} />
-            <InfoRow icon={<Droplets size={15} />}    label="Laistymas"   value={plant.prieziura.laistymas} />
-            <InfoRow icon={<Thermometer size={15} />} label="Temperatūra" value={plant.prieziura.temperatura} />
-            <InfoRow icon={<Wind size={15} />}        label="Drėgmė"      value={plant.prieziura.dregme} />
+          <div>
+            <CareRow
+              icon={<Sun size={15} />}
+              label="Šviesa"
+              score={plant.sviesa?.taskai != null && (
+                <>
+                  <DotScore value={plant.sviesa.taskai} color="bg-terracotta-400" />
+                  <span className="text-sm text-forest-700">{plant.sviesa.lygis}</span>
+                  {plant.sviesa?.ppfd && (
+                    <span className="font-mono text-[10px] font-medium text-terracotta-600 bg-terracotta-50 border border-terracotta-200/60 rounded-md px-1.5 py-0.5 leading-none">
+                      {plant.sviesa.ppfd.min}–{plant.sviesa.ppfd.max} μmol/m²/s
+                    </span>
+                  )}
+                </>
+              )}
+              value={plant.prieziura?.sviesa}
+            />
+            <CareRow
+              icon={<Droplets size={15} />}
+              label="Vanduo"
+              score={plant.vanduo?.taskai != null && (
+                <>
+                  <DotScore value={plant.vanduo.taskai} color="bg-forest-400" />
+                  <span className="text-sm text-forest-700">{plant.vanduo.lygis}</span>
+                </>
+              )}
+              value={plant.prieziura?.laistymas}
+            />
+            {(() => {
+              // Tręšimas — derived iš kategorijos (autoritetinė lentelė). Gyvena ČIA
+              // (referencija); viršaus forecast kortelė rodo tik „kada".
+              const fs = getFertilizingSummary(plant)
+              const txt = fs.vasaraDays == null
+                ? `${fs.tip}.`
+                : `Augimo sezonu (pavasaris–ruduo) kas ~${fs.vasaraDays} d.${fs.skipWinter ? ', žiemą nutraukti' : ''}. ${fs.tip}.`
+              return <CareRow icon={<Leaf size={15} />} label="Tręšimas" value={txt} />
+            })()}
+            <CareRow icon={<Thermometer size={15} />} label="Temperatūra" value={plant.prieziura?.temperatura} />
+            <CareRow icon={<Wind size={15} />}        label="Drėgmė"      value={plant.prieziura?.dregme} />
           </div>
         </Section>
       )}
