@@ -457,6 +457,14 @@ NEVER hard-reject as „does not exist" — the plant exists under its real name
 guide the user to the likely match („greičiausiai toks") via fallbackInfo +
 candidates. Use web_search to confirm the real cultivar/species when unsure.
 
+VENDOR-ONLY CONFIDENCE: if you identify a name ONLY from commercial vendor /
+shop / nursery pages (and it is NOT in Wikipedia / Wikidata / a botanical
+reference), it is UNVERIFIED — do NOT report confidence „high". Set confidence
+„medium" (or „low") AND you MUST populate candidates[] with the most likely
+ACCEPTED botanical name(s) (e.g. „Dracaena trifasciata 'Nite Lite'") so the
+user can CHOOSE, instead of silently committing a vendor-only name. A name that
+4 shops use but no taxonomic source confirms = medium + candidates, never high.
+
 latinName MUST be a CLEAN taxonomic name — no Lithuanian/English
 suffixes in parentheses, no ® / ™ symbols. Examples:
   ✓ „Clematis 'Olympia'"
