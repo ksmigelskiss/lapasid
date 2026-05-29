@@ -2653,6 +2653,12 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
               const resultForSave = currentImage !== result.image
                 ? { ...result, image: currentImage }
                 : result
+              // Tiered save (2026-05-29): kai identitetas NEAIŠKUS (low conf arba
+              // nežinoma rūšis) — eskaluojam į NUOTRAUKĄ tiksliam atpažinimui,
+              // o ne blind text-save (genus info nežinomam augalui = netikslu).
+              // Genus-confident medium → leidžiam save + soft photo nudge.
+              // High/verified → įprasti mygtukai.
+              const identityUncertain = result.confidence === 'low' || result.matchLevel === 'unknown'
               return (
                 <div className="space-y-3 pt-1 pb-4">
                   {duplicate ? (
@@ -2666,8 +2672,40 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                       onClose={onClose}
                       onSavingChange={setSavingPhase2}
                     />
+                  ) : identityUncertain ? (
+                    <>
+                      {/* Identity neaiški → photo-escalation primary CTA */}
+                      <button
+                        onClick={() => fileRef.current?.click()}
+                        className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors inline-flex items-center justify-center gap-2"
+                      >
+                        <Camera size={16} /> Pridėk nuotrauką tiksliam atpažinimui
+                      </button>
+                      <p className="text-[11px] text-forest-500 text-center px-3 leading-snug">
+                        Pavadinimas nepatvirtintas botaniškai — nuotrauka leis tiksliai atpažinti rūšį, ne tik spėti gentį.
+                      </p>
+                      {/* Override — vartotojas gali žinoti augalą; saugoma kaip „unverified" */}
+                      <SaveButton
+                        label="Vis tiek pridėti (nepatikrinta)"
+                        result={resultForSave}
+                        kategorija="nori"
+                        className="w-full h-11 rounded-btn font-display text-xs font-medium text-forest-500 bg-transparent border border-bone-400/40 hover:bg-bone-300/30 disabled:opacity-60 transition-colors"
+                        onSave={onAddToWishlist}
+                        onClose={onClose}
+                        onSavingChange={setSavingPhase2}
+                      />
+                    </>
                   ) : (
                     <>
+                      {/* Medium (genus-confident, rūšis fuzzy) → soft photo nudge */}
+                      {result.confidence === 'medium' && (
+                        <button
+                          onClick={() => fileRef.current?.click()}
+                          className="w-full text-[11px] text-forest-500 hover:text-forest-700 inline-flex items-center justify-center gap-1.5 transition-colors"
+                        >
+                          <Camera size={13} /> Patvirtink nuotrauka tikslesniam atpažinimui
+                        </button>
+                      )}
                       {/* Primary action — solid INK button per brandbook auth pattern */}
                       <SaveButton
                         label="Pirkau, turiu!"
