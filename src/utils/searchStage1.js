@@ -215,7 +215,21 @@ export async function searchStage1(userQuery) {
         ltMatchedFrom,
       })
     }
-    // genus-only-but-specific → krentam žemyn į db-miss → AI fallback
+    // genus-only-but-specific → db-miss → AI fallback. `genusKnown` signalas:
+    // gentis YRA realus augalas (pre-DB), tad SearchModal NETURI blokuoti per
+    // Wikidata plant gate'ą (garbled species/cultivar vardas vis tiek = augalas;
+    // AI identifikuoja realų — seller-name fallback). Be šito gate'as blokuoja
+    // „Sansevieria aubrytiana nite lite" tipo užklausas PRIEŠ AI.
+    return {
+      found: false,
+      layer: 'db-miss-genus-known',
+      elapsedMs: Date.now() - startTime,
+      userQuery,
+      parsedQuery: parsed,
+      genusKnown: true,
+      genus: plant.genus.genus,
+      note: 'Genus known, species/cultivar not — route to AI, skip plant gate.',
+    }
   }
 
   // ── FALLBACK: jei Latin lookup miss'ino ir input ASCII (klasifikatorius

@@ -1760,7 +1760,11 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       // Praleidžia:
       //   • Rare cultivar'ai — Wikipedia turi parent'ą, P31=Q16521 → PASS
       //   • Naujos rūšys, hybrids → Wikidata taxon → PASS
-      if (!preview?.passesPlantGate) {
+      //   • genusKnown — gentis realus augalas pre-DB'e (pvz. „Sansevieria
+      //     aubrytiana nite lite" garbled seller-name): gate'as nerastų pilno
+      //     vardo Wikipedijoj, BET gentis = augalas → leidžiam AI identifikuoti
+      //     realų (seller-name fallback „greičiausiai toks"), NE blokuojam.
+      if (!preview?.passesPlantGate && !stage1Result?.genusKnown) {
         const wdLabels = preview?.wikidataGate?.labels ?? {}
         const wdName = wdLabels.lt ?? wdLabels.en ?? null
         const wikidataFound = !!preview?.wikidataGate?.found
