@@ -54,6 +54,22 @@ async function loadLtNames() {
   return loadPromise
 }
 
+let speciesLtCache = null
+let speciesLoadPromise = null
+async function loadSpeciesLt() {
+  if (speciesLtCache) return speciesLtCache
+  if (speciesLoadPromise) return speciesLoadPromise
+  speciesLoadPromise = (async () => {
+    try {
+      const url = new URL('../../data/species-lt-names.json', import.meta.url)
+      const res = await fetch(url)
+      speciesLtCache = res.ok ? await res.json() : {}
+    } catch { speciesLtCache = {} }
+    return speciesLtCache
+  })()
+  return speciesLoadPromise
+}
+
 /**
  * Normalize LT name for comparison (matches build-lt-names.mjs normalization).
  *   "Kraujažolės" → "kraujazole"  (strips diacritics + plural)
@@ -117,24 +133,49 @@ async function getReverseMap() {
  * Or null if no LT name in our DB.
  */
 export async function resolveLt(latinName) {
-  const data = await loadLtNames()
   if (!latinName) return null
-  // Pre-DB index by genus form (e.g., "Aloe", not "ALOE" — properCased)
-  const key = latinName.trim().split(/\s+/)[0]
-  const properKey = key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()
-  const entry = data.ltNames[properKey]
-  if (!entry || !entry.ltName) return null
+  const data = await loadLtNames()
+  const words = latinName.trim().split(/\s+/)
+  const genusKey = words[0].charAt(0).toUpperCase() + words[0].slice(1).toLowerCase()
+  const genusEntry = data.ltNames[genusKey] ?? null
+
+  // SPECIES-FIRST (2026-05-29): species-lygio LT vardas (plants.json →
+  // species-lt-names.json) PRIEŠ genties fallback'ą. Sprendžia genus-fallback
+  // name bug'ą (cultivar/rūšis gaudavo genties vardą).
+  if (words.length >= 2) {
+    const sp = await loadSpeciesLt()
+    const spName = sp[latinName.trim().toLowerCase()]
+                ?? sp[words.slice(0, 2).join(' ').toLowerCase()]
+                ?? null
+    if (spName) {
+      return {
+        ltName: spName,
+        ltSynonyms: [],
+        ltAllForms: [spName],
+        ltFamily: genusEntry?.ltFamily ?? null,
+        confidence: 'high',
+        sources: ['plants-species'],
+        wikiUrl: genusEntry?.wikiUrl ?? null,
+        wikidataId: null,
+        inatTaxonId: null,
+        conflicts: null,
+      }
+    }
+  }
+
+  // Genus fallback (esamas elgesys)
+  if (!genusEntry || !genusEntry.ltName) return null
   return {
-    ltName: entry.ltName,
-    ltSynonyms: entry.ltSynonyms ?? [],
-    ltAllForms: entry.ltAllForms ?? [entry.ltName],
-    ltFamily: entry.ltFamily ?? null,
-    confidence: entry.confidence,
-    sources: entry.sources ?? [],
-    wikiUrl: entry.wikiUrl ?? null,
-    wikidataId: entry.wikidataId ?? null,
-    inatTaxonId: entry.inatTaxonId ?? null,
-    conflicts: entry.conflicts ?? null,
+    ltName: genusEntry.ltName,
+    ltSynonyms: genusEntry.ltSynonyms ?? [],
+    ltAllForms: genusEntry.ltAllForms ?? [genusEntry.ltName],
+    ltFamily: genusEntry.ltFamily ?? null,
+    confidence: genusEntry.confidence,
+    sources: genusEntry.sources ?? [],
+    wikiUrl: genusEntry.wikiUrl ?? null,
+    wikidataId: genusEntry.wikidataId ?? null,
+    inatTaxonId: genusEntry.inatTaxonId ?? null,
+    conflicts: genusEntry.conflicts ?? null,
   }
 }
 

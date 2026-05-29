@@ -52,6 +52,7 @@ const DATA_URLS = {
   'aspca-animals-lt.json':  new URL('../../data/aspca-animals-lt.json',  import.meta.url),
   'pfaf.json':              new URL('../../data/pfaf.json',              import.meta.url),
   'lt-names.json':          new URL('../../data/lt-names.json',          import.meta.url),
+  'species-lt-names.json':  new URL('../../data/species-lt-names.json',  import.meta.url),
   'latin-synonyms-reverse.json': new URL('../../data/latin-synonyms-reverse.json', import.meta.url),
 }
 
