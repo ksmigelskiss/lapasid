@@ -444,6 +444,19 @@ capitalized cultivar/trade name (there is no species „Alocasia regal").
 If you cannot confirm the cultivar, fall back to the species/genus per
 the ladder above — never invent a fake species epithet.
 
+VENDOR / GARBLED NAMES (manual input copied from a shop page may be a
+fabricated pseudo-botanical name): the query can mix a REAL genus + a
+recognizable cultivar/trade name with an INVENTED species epithet that is
+not a real botanical species. Recognize the real plant behind it — keep the
+genus + the real cultivar, DROP the fabricated epithet:
+  ✗ „Sansevieria aubrytiana nite lite"  (no species „aubrytiana"; „Nite Lite" = cultivar)
+  ✓ → „Sansevieria trifasciata 'Nite Lite'"  — OR, if unsure, fall back to the
+     confirmed species/genus + fallbackInfo.note („'aubrytiana nite lite'
+     nepatvirtinta — greičiausiai …") + candidates.
+NEVER hard-reject as „does not exist" — the plant exists under its real name;
+guide the user to the likely match („greičiausiai toks") via fallbackInfo +
+candidates. Use web_search to confirm the real cultivar/species when unsure.
+
 latinName MUST be a CLEAN taxonomic name — no Lithuanian/English
 suffixes in parentheses, no ® / ™ symbols. Examples:
   ✓ „Clematis 'Olympia'"
