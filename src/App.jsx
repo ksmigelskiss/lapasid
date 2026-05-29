@@ -134,6 +134,14 @@ export default function App() {
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
   } = usePlants(collectionId, viewerToken)
 
+  // Reference modelis (kortelės) — perdengiam plant'ų sąrašus LIVE catalog
+  // reikšmėmis prieš paduodant į Dashboard/Biblioteka. heroMapV deps → recompute
+  // kai catalog (pa)keičiasi (subscribeCatalog onChange) → kortelės atsinaujina.
+  // resolvePlantView išlaiko asmeninius laukus + image; legacy/offline → inline.
+  const dashboardView = useMemo(() => dashboard.map(resolvePlantView), [dashboard, heroMapV])
+  const libraryView   = useMemo(() => library.map(resolvePlantView),   [library, heroMapV])
+  const archiveView   = useMemo(() => archive.map(resolvePlantView),   [archive, heroMapV])
+
   // F1 reference modelis — perdengiam rūšinius laukus LIVE catalog reikšmėmis
   // (gyvi augalai). heroMapV bump'as (subscribeCatalog onChange) → App re-render →
   // resolvePlantView pasiima naujausią catalog → PlantDetail rodo atnaujintą info
@@ -399,8 +407,8 @@ export default function App() {
       <Dashboard
         ref={dashboardRef}
         hideInnerHeader={isDesktop}
-        plants={dashboard}
-        allPlants={library}
+        plants={dashboardView}
+        allPlants={libraryView}
         zones={zones}
         heroReady={heroMapV}
         onCareModeChange={setDashCareMode}
@@ -432,7 +440,7 @@ export default function App() {
     { key: 'biblioteka', page: (
       <Suspense fallback={null}>
         <Biblioteka
-          plants={archive}
+          plants={archiveView}
           onTap={p => openDetail(p, p.kategorija)}
           onSearch={q => { setSearchAutoCamera(false); setSearchInitialQuery(q ?? ''); setShowSearch(true) }}
           onSearchByCamera={() => { setSearchAutoCamera(true); setSearchInitialQuery(''); setShowSearch(true) }}

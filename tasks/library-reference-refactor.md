@@ -100,9 +100,9 @@ resolvePlantRef(plant) = plant.refFrozen ? plant.ref
    plant'ams reikia server-side reference resolve (ARBA palikti ref snapshot viewer'iams). Patikrinti.
 4. Server save (processPlant) turi rašyti slim user plant + ref (mirror client modelio).
 
-## Implementacijos fazės (pasiūlymas)
-- **F1:** `subscribeCatalog` + `resolvePlantRef` + display overlay (read-only path) — backward-compat su legacy fat docs. Nieko nelaužo, įjungia live update esamiems.
-- **F2:** Slim write'ai (addToDashboard/wishlist/server) + freeze-on-death.
-- **F3:** Pašalinti vardo edit + redirect „Atnaujinti per AI" į admin.
-- **F4:** (optional) batch declutter migracija + viewer reference resolve.
-> F1 viena duoda P0 vertę (live update) be rizikos. F2-F3 declutterina. Daryti PO/SU care+tox fix'ais (rizikos #1,#2).
+## Implementacijos fazės
+- **F1 ✅** (`21e9c54`): `subscribeCatalog` + `_catalogById` + `resolvePlantView` + PlantDetail overlay (App livePlant). Backward-compat su legacy fat docs.
+- **F2 ✅** (kortelės + freeze): App resolve'ina `dashboardView/libraryView/archiveView` → Dashboard/Biblioteka kortelės live. `snapshotPlantRef` + freeze-on-death (`markAsDied` ref+refFrozen; `moveToDashboard` refFrozen:false). ref/refFrozen persist į Firestore (full-plant setDoc).
+- **F3 ✅** (vardo edit off): PlantDetail editable `<h2>` → read-only.
+- **F2-slim / F4 (LIKĘ, optional):** slim write'ai (addToDashboard/wishlist/server rašo personal+catalogId+ref vietoj fat copy) — pure declutter, ne būtina (resolvePlantView veikia ant fat docs). Viewer (`/api/viewer`) reference resolve. Per-plant `fetchPlantNames`→onUpdateNames write (PlantDetail:1590) — name laukai overlaid-away gyviems, palikta; „Atnaujinti per AI"→admin = Phase D.
+> Funkcinis reference modelis BAIGTAS (F1-F3). Likę = declutter + viewer + Phase D admin redirect.

@@ -3,7 +3,7 @@ import { getDoc, getDocs, setDoc, deleteDoc, doc, collection as fsCol, onSnapsho
 import { db } from '../utils/firebase'
 import { fromAIResult, normalizeSavybes, ensureArray, makeId as _makeId, today as _today } from '../utils/plantTransform'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
-import { saveToCatalog } from '../utils/catalog'
+import { saveToCatalog, snapshotPlantRef } from '../utils/catalog'
 import { isMockMode, MOCK_DATA } from '../utils/mockData'
 
 export { fromAIResult }
@@ -392,6 +392,10 @@ export function usePlants(collectionId, viewerToken = null) {
           deathReason: deathReason ?? '',
           lesson: lesson ?? '',
           timeline: [deathEvent, ...(p.timeline ?? [])],
+          // Freeze-on-death: užšaldom rūšinį snapshot'ą (live-resolved) ir
+          // atjungiam nuo catalog → istorinis įrašas lieka KOKS BUVO mirties metu.
+          ref: snapshotPlantRef(p),
+          refFrozen: true,
         } : p),
       }
     })
@@ -407,6 +411,7 @@ export function usePlants(collectionId, viewerToken = null) {
       deathReason: '',
       lesson: '',
       zonaId: null,
+      refFrozen: false,   // grąžinus iš istorijos — vėl live catalog resolve
     })
   }, [updatePlant])
 

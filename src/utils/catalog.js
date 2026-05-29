@@ -252,18 +252,40 @@ export function heroIllustrationFor(lotyniskas) {
  */
 export function resolvePlantView(plant) {
   if (!plant) return plant
-  if (plant.refFrozen) return plant   // F2: užšaldytas istorinis snapshot
-  const slug = plant.catalogId ?? catalogDocId(plant.lotyniskas ?? plant.latinName)
-  const entry = slug ? _catalogById[slug] : null
-  if (!entry) return plant            // nėra live catalog → legacy inline
-  const ref = { ...entry }
-  // Niekada neperdengiam: docId meta, display image (photo logika atskira),
-  // nei asmeninių laukų (catalog jų neturi, bet defensyviai).
-  delete ref._id; delete ref.updatedAt; delete ref.image
-  for (const k of PERSONAL_FIELDS) delete ref[k]
-  // Drop null/undefined — kad slim catalog entry neištrintų inline reikšmių.
-  for (const k of Object.keys(ref)) if (ref[k] == null) delete ref[k]
-  return { ...plant, ...ref }
+  // Reference šaltinio prioritetas:
+  //   frozen (miręs)  → plant.ref (istorinis snapshot, IGNORUOJA live catalog)
+  //   gyvas           → live catalog entry → plant.ref (slim doc snapshot) → inline
+  let ref
+  if (plant.refFrozen) {
+    ref = plant.ref ?? null
+  } else {
+    const slug = plant.catalogId ?? catalogDocId(plant.lotyniskas ?? plant.latinName)
+    ref = (slug && _catalogById[slug]) ? _catalogById[slug] : (plant.ref ?? null)
+  }
+  if (!ref) return plant              // legacy „fat" doc be ref/catalog → inline as-is
+  const r = { ...ref }
+  // Niekada neperdengiam: docId meta, display image/photos (photo logika atskira —
+  // heroIsDefaultFor), nei asmeninių laukų (catalog jų neturi, bet defensyviai).
+  delete r._id; delete r.updatedAt; delete r.image
+  for (const k of PERSONAL_FIELDS) delete r[k]
+  // Drop null/undefined — kad slim catalog entry neištrintų pilnesnių inline reikšmių.
+  for (const k of Object.keys(r)) if (r[k] == null) delete r[k]
+  return { ...plant, ...r }
+}
+
+/**
+ * snapshotPlantRef(plant) — F2 freeze-on-death. Grąžina rūšinių laukų snapshot'ą
+ * (live-resolved) įšaldymui į user-plant doc'ą, kai augalas miršta/archyvuojamas.
+ * Praleidžia asmeninius laukus + image/photos (jie lieka user-plant doc'e).
+ */
+export function snapshotPlantRef(plant) {
+  const view = resolvePlantView({ ...plant, refFrozen: false })
+  const ref = {}
+  for (const k of Object.keys(view)) {
+    if (PERSONAL_FIELDS.has(k) || k === 'image' || k === '_id' || k === 'ref' || k === 'refFrozen') continue
+    if (view[k] != null) ref[k] = view[k]
+  }
+  return ref
 }
 
 /**

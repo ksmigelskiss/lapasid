@@ -373,8 +373,6 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
     englishNames: ensureArray(rawPlant?.englishNames),
     photos:       ensureArray(rawPlant?.photos),
   }
-  const [editingName, setEditingName] = useState(false)
-  const [nameVal, setNameVal]         = useState('')
   const [refreshing, setRefreshing]   = useState(false)
   const [refreshError, setRefreshError] = useState(null)
 
@@ -571,21 +569,11 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
       {/* ── Title block — Bricolage 600 + Latin + synonyms inline. Scroll'inasi
             su content (vietoj static hero block — taupo scroll erdvę). ── */}
       <div>
-        {editingName ? (
-          <input
-            autoFocus
-            value={nameVal}
-            onChange={e => setNameVal(e.target.value)}
-            onBlur={() => { onUpdateNames?.(plant.id, { 'lietuviškas': nameVal.trim() || plant.lietuviškas }); setEditingName(false) }}
-            onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); if (e.key === 'Escape') setEditingName(false) }}
-            className="font-display text-2xl font-semibold tracking-tight leading-tight text-forest-800 bg-bone-300/40 rounded-lg px-2 py-0.5 outline-none w-full"
-          />
-        ) : (
-          <h2
-            className="font-display text-2xl font-semibold tracking-tight text-forest-800 leading-tight cursor-text"
-            onClick={() => { setNameVal(plant.lietuviškas); setEditingName(true) }}
-          >{plant.lietuviškas}</h2>
-        )}
+        {/* Vardas — read-only. Reference modelis: vardai catalog-owned, user
+            nebekeičia (tik foto/istorija/užrašus). Taisymai vyksta katalogE. */}
+        <h2 className="font-display text-2xl font-semibold tracking-tight text-forest-800 leading-tight">
+          {plant.lietuviškas}
+        </h2>
         {plant.lotyniskas && (
           <p className="text-sm text-forest-500 italic mt-1">{plant.lotyniskas}</p>
         )}
