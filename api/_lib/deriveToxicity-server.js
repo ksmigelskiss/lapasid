@@ -104,7 +104,9 @@ function derivePfafSeverity(hazardsText) {
     baseSeverity = 'vidutinis'
   }
   // SILPNAS — mild reactions
-  else if (/\b(irritat|rash|skin contact|mild|topical)\b/.test(text)) {
+  // NB: NĖRA trailing \b — kad „irritation"/„irritant" matched'intų (suderinta
+  // su derivePfafTipas; anksčiau \b neleisdavo → oksalatai → generic vidutinis).
+  else if (/\b(irritat|rash|skin contact|mild|topical)/.test(text)) {
     baseSeverity = 'silpnas'
   }
   // Generic toxic/poison without specific severity → vidutinis (safer default)
@@ -132,11 +134,18 @@ function derivePfafSeverity(hazardsText) {
       /rarely (cause|fatal|toxic)/i,
       /small (amounts|quantities).*safe/i,
       /usually harmless/i,
+      // Oksalato dietinis „atsargumo" boilerplate (PFAF prideda daugeliui augalų —
+      // mild „jautriems žmonėms" pastaba, NE ūmus toksiškumas). Tikrai pavojingi
+      // oksalatai → stiprus, čia nepatenka. Dieffenbachia „burning/swelling" → step
+      // 2 vidutinis, šių frazių neturi → lieka vidutinis (saugu).
+      /especial caution/i,
+      /aggravate (their|the) condition/i,
       // LT equivalents (jei naudojama knownHazardsLt)
       /prastai (pasisavin|įsisavin|absorbuojam)/i,
       /pereina be žalos/i,
       /mažais kiekiais (saugu|nepavojinga)/i,
       /retai sukelia/i,
+      /turėtų būti atsarg/i,
     ]
     for (const cue of deEscalationCues) {
       if (cue.test(text)) {
@@ -202,7 +211,10 @@ export async function deriveToxicityFromSourcesServer(latinName) {
     result.hasToxicity = true
     result.sources.push('aspca')
 
-    const severity = aspcaEntry.confidence === 'high' ? 'vidutinis' : 'silpnas'
+    // SAUGUMAS (under-report fix, MIRROR client): ASPCA buvimas = realus pet
+    // pavojus. Crosswalk `confidence` ≠ toksiškumo sunkumas — nebe-downgrade'inam
+    // į `silpnas`. Floor'inam į `vidutinis` (saugus default pet-toksiškam).
+    const severity = 'vidutinis'
     const targets = aspcaEntry.toxicTo ?? []
     const targetsLt = translateAnimalTargets(targets, animalTerms)
 

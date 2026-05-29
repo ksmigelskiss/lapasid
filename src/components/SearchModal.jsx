@@ -748,15 +748,19 @@ Naudok savo botanikos žinias + Wikipedia/RHS info kur reikia. Visi human-readab
     // su aiSupplementaryHazard lauke (audit-visible) + minimal pavojai entry
     console.warn(`[fetchDetails] aiSupplementaryHazard ACTIVATED for ${latinName}:`, nar.aiSupplementaryHazard)
     const sup = nar.aiSupplementaryHazard
+    // SAUGUMAS: „abiem" → DU pavojai įrašai (žmonėms + gyvūnams). Anksčiau
+    // collapse'inta į vien „zmonems" → gyvūnų pavojaus pusė tyliai dingdavo
+    // (under-report). MIRROR save-plant.js.
+    const supTargets = sup.target === 'abiem' ? ['zmonems', 'gyvunams'] : [sup.target]
     details.savybes = {
       ...(details.savybes ?? {}),
       aiSupplementaryHazard: sup,
-      pavojai: [{
+      pavojai: supTargets.map(t => ({
         tipas:    'toksiskas',
-        target:   sup.target === 'abiem' ? 'zmonems' : sup.target, // schema enum
+        target:   t,
         severity: sup.severity,
         detales:  `AI papildomas pavojus (${sup.evidence})`,
-      }],
+      })),
       pavojingumas: {
         yra:     true,
         lygis:   sup.severity,

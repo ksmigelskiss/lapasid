@@ -278,15 +278,19 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
         sup: nar.aiSupplementaryHazard,
       })
       const sup = nar.aiSupplementaryHazard
+      // SAUGUMAS: „abiem" → DU pavojai įrašai (žmonėms + gyvūnams). Anksčiau
+      // collapse'inta į vien „zmonems" → gyvūnų pavojaus pusė tyliai dingdavo
+      // (under-report). MIRROR SearchModal.jsx.
+      const supTargets = sup.target === 'abiem' ? ['zmonems', 'gyvunams'] : [sup.target]
       details.savybes = {
         ...(details.savybes ?? {}),
         aiSupplementaryHazard: sup,
-        pavojai: [{
+        pavojai: supTargets.map(t => ({
           tipas:    'toksiskas',
-          target:   sup.target === 'abiem' ? 'zmonems' : sup.target,
+          target:   t,
           severity: sup.severity,
           detales:  `AI papildomas pavojus (${sup.evidence})`,
-        }],
+        })),
         pavojingumas: {
           yra:     true,
           lygis:   sup.severity,

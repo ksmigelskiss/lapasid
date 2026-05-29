@@ -142,7 +142,10 @@ function derivePfafSeverity(hazardsText) {
   if (/\b(paraly[sz]|vomit|nause|burning|diarrho?e|severe|cardiac|nerve|seizur|convuls)\b/.test(text)) {
     baseSeverity = 'vidutinis'
   }
-  else if (/\b(irritat|rash|skin contact|mild|topical)\b/.test(text)) {
+  else if (/\b(irritat|rash|skin contact|mild|topical)/.test(text)) {
+    // NB: NĖRA trailing \b — kad „irritation"/„irritant" matched'intų (anksčiau
+    // \b po „irritat" neleisdavo → oksalatai krisdavo į generic toxic→vidutinis).
+    // Suderinta su derivePfafTipas regex'u (jis jau be \b).
     baseSeverity = 'silpnas'
   }
   else if (/\b(toxic|poison|hazard|harmful)\b/.test(text)) {
@@ -157,8 +160,15 @@ function derivePfafSeverity(hazardsText) {
       /poorly absorbed/i, /pass through without harm/i, /not in fatal amounts/i,
       /rarely (cause|fatal|toxic)/i, /small (amounts|quantities).*safe/i,
       /usually harmless/i,
+      // Oksalato dietinis „atsargumo" boilerplate (PFAF prideda daugeliui augalų —
+      // mild „jautriems žmonėms" pastaba, NE ūmus toksiškumas). Tikrai pavojingi
+      // oksalatai („fatal/poisonous") → stiprus, čia nepatenka (tik vidutinis).
+      // Dieffenbachia-style „burning/swelling" → step 2 vidutinis, šių frazių
+      // neturi → lieka vidutinis (saugu).
+      /especial caution/i, /aggravate (their|the) condition/i,
       /prastai (pasisavin|įsisavin|absorbuojam)/i, /pereina be žalos/i,
       /mažais kiekiais (saugu|nepavojinga)/i, /retai sukelia/i,
+      /turėtų būti atsarg/i,
     ]
     for (const cue of deEscalationCues) {
       if (cue.test(text)) return 'silpnas'
@@ -245,7 +255,11 @@ export async function deriveToxicityFromSources(latinName) {
     result.hasToxicity = true
     result.sources.push('aspca')
 
-    const severity = aspcaEntry.confidence === 'high' ? 'vidutinis' : 'silpnas'
+    // SAUGUMAS (under-report fix): ASPCA buvimas = realus pet pavojus. Crosswalk
+    // `confidence` (manual vs scraped) ≠ toksiškumo sunkumas — anksčiau low-conf
+    // genus-match'as gaudavo `silpnas`, nors augalas realiai pavojingas. Floor'inam
+    // į `vidutinis` (ASPCA negraduoja sunkumo; tai saugus default pet-toksiškam).
+    const severity = 'vidutinis'
     const targets = aspcaEntry.toxicTo ?? []
     // 2026-05-25 — translate cats/dogs/horses → katėms/šunims/žirgams
     const targetsLt = translateAnimalTargets(targets, animalTerms)
