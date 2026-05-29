@@ -98,18 +98,21 @@ function derivePfafSeverity(hazardsText) {
     return 'stiprus'
   }
 
-  // VIDUTINIS — significant symptoms
+  // SEVERITY ≠ TIPAS (2026-05-29, MIRROR client): sunkumas ir tipas — atskiros
+  // ašys. Dirginimas gali būti VIDUTINIS (Euphorbia), ne automatiškai silpnas.
   let baseSeverity = null
   if (/\b(paraly[sz]|vomit|nause|burning|diarrho?e|severe|cardiac|nerve|seizur|convuls)\b/.test(text)) {
     baseSeverity = 'vidutinis'
   }
-  // SILPNAS — mild reactions
-  // NB: NĖRA trailing \b — kad „irritation"/„irritant" matched'intų (suderinta
-  // su derivePfafTipas; anksčiau \b neleisdavo → oksalatai → generic vidutinis).
-  else if (/\b(irritat|rash|skin contact|mild|topical)/.test(text)) {
+  // SILPNAS — TIK eksplicitiškai švelnu.
+  else if (/\b(mild|minor|slight|trivial)\b/.test(text)) {
     baseSeverity = 'silpnas'
   }
-  // Generic toxic/poison without specific severity → vidutinis (safer default)
+  // Dirginimas/kontaktas/latex be „mild" → vidutinis (dirginantis). De-escalation
+  // (žemiau) nuleidžia į silpnas oksalato dietiniam caution'ui.
+  else if (/\b(irritat|rash|skin contact|topical|latex|sap|blister)\b/.test(text)) {
+    baseSeverity = 'vidutinis'
+  }
   else if (/\b(toxic|poison|hazard|harmful)\b/.test(text)) {
     baseSeverity = 'vidutinis'
   } else {
