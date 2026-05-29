@@ -15,8 +15,14 @@
 // saveCatalogEntry / deleteCatalogEntry / etc.).
 
 const KEY = 'search-response-cache-v1'
+const VKEY = 'search-response-cache-build'   // deploy-versijos žyma
 const TTL = 48 * 60 * 60 * 1000  // 48h
 const MAX_ENTRIES = 100           // localStorage bloat apsauga (LRU trim)
+
+// Build ID injektuotas vite.config define'u (timestamp per build). Naujas deploy
+// → kitas BUILD_ID → cache invaliduojasi (žr. loadMap), kad po prompt/logikos
+// pakeitimo vartotojai negautų pre-fix AI rezultatų. typeof guard — dev/test.
+const BUILD_ID = typeof __BUILD_ID__ !== 'undefined' ? __BUILD_ID__ : 'dev'
 
 function normalize(q) {
   return (q ?? '').trim().toLowerCase().replace(/\s+/g, ' ')
@@ -24,6 +30,12 @@ function normalize(q) {
 
 function loadMap() {
   try {
+    // Deploy-versijos invalidacija: jei build pasikeitė — ištrinam stale cache.
+    if (localStorage.getItem(VKEY) !== BUILD_ID) {
+      localStorage.removeItem(KEY)
+      localStorage.setItem(VKEY, BUILD_ID)
+      return {}
+    }
     const raw = localStorage.getItem(KEY)
     return raw ? JSON.parse(raw) : {}
   } catch { return {} }

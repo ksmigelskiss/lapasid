@@ -3,6 +3,12 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  // Build ID (timestamp per `vite build`) — response cache deploy-versijos
+  // invalidacijai: naujas deploy → AI search cache išsivalo, kad vartotojai
+  // negautų pre-fix rezultatų po prompt/logikos pakeitimo.
+  define: {
+    __BUILD_ID__: JSON.stringify(String(Date.now())),
+  },
   plugins: [
     react(),
     VitePWA({
