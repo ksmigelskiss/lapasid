@@ -97,7 +97,7 @@ flag'ino. **Du švarūs mechanizmai pririšti prie TIKRŲ įvykių:**
 - [ ] **Latin normalizavimas trade-name'ams**: „Alocasia regal shield" → `Alocasia 'Regal Shield'` (hibridas). Latin resolver nenormalizuoja angliškų trade names.
 - [x] **Latin trade-name normalizavimas** ✅ (`d57233f`) — PLANT_SYSTEM classify prompt + genus-fallback guard (`6d99682`)
 - [x] **englishNames haliucinacijos** ✅ (`d57233f`) — iNat+GBIF genus-consistency guard
-- [ ] **Toksiškumas ŽMONĖMS — severity per aukšta** (review kartu): oksalato augalai (Alocasia/Monstera) rodo 2 padalas (`vidutinis`) žmonėms, turėtų būti 1 (`silpnas` — burnos dirginimas, ne sisteminis). Principas: gyvūnams=ASPCA (`vidutinis` kai high-conf), žmonėms=PFAF tekstas → bendras `toxic` default'as `vidutinis` (deriveToxicity.js:148-149). Reikia: peržiūrėti filtrus + oxalate-specific de-escalation. **Safety-critical — nekeisti be peržiūros kartu.** Reikės cleanup script'o esamiems įrašams.
+- [x] **Toksiškumas severity** ✅ (`3eb3081`) — peržiūrėta kartu. Žmonėms: trailing `\b` fix (irritation→silpnas) + oxalate dietinis de-escalation. Saugumas: ASPCA `vidutinis` floor (confidence≠severity) + `abiem`→du pavojai (gyvūnų pusė nebedingsta). Client+server mirror. **Esamiems įrašams:** `node --env-file=.env.local scripts/cleanup-toxicity-severity.mjs --dry-run` (`a4b787c`).
 - [ ] **Genus-fallback dublikatai cleanup**: esami „Alokazija" (×2) + kiti genus-vardu pažymėti cultivar įrašai (sukurti prieš `6d99682`) — script: rasti catalog entries kur lietuviškas==genus LT name BET latin turi rūšį/cultivar → re-identify per AI / flag admin'ui.
 
 ## PHASE D — Reviewer/approval flow
