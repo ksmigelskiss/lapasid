@@ -422,9 +422,12 @@ export const TOOL_PREVIEW = {
         },
         required: ['pavojai', 'pavojingumas', 'valgomumas', 'vaistinis'],
       },
-      aprasymas:       { type: 'string',  description: '3-5 sentences in Lithuanian about the GENUS-level plant (e.g. Clematis as a plant, not the specific „Boulevard" series). How it looks, where it grows natively, why it is popular in gardening. Relevant to every series member.' },
+      // NOTE: aprasymas / kilme / idomybes pašalinti iš SLIM (2026-05-30).
+      // Phase 1 kortelėje šie laukai neatvaizduojami; Phase 2 TOOL_DETAILS juos
+      // pildo per save flow (server-side). Schema slim'inimas → ~10-15% mažiau
+      // AI output token'ų, greitesnis identification result'as. seriesNote
+      // paliekamas — naudojamas serijos info'ai kortelėje.
       seriesNote:      { type: ['string', 'null'], description: 'IF latinName contains a series (e.g. „Clematis \\\'Boulevard\\\'", „Rosa Knock Out") — 1-2 sentences in Lithuanian about the series itself: who bred it, what characterises it, when it was introduced. null if this is not a series (specific cultivar, species, or genus only).' },
-      kilme:           { type: 'string', description: '1 sentence in Lithuanian about where the GENUS originates (region, natural habitat). Not about the series.' },
       sviesa: {
         type: 'object',
         properties: {
@@ -442,7 +445,7 @@ export const TOOL_PREVIEW = {
         },
         required: ['taskai', 'lygis'],
       },
-      idomybes: { type: 'array', items: { type: 'string' }, description: '2-3 fun facts in Lithuanian' },
+      // idomybes pašalintas — Phase 1'e nerodomas, Phase 2 pildo per save.
     },
     // SLIM required'as — TIK identification + honesty. Visi rich field'ai
     // (tipas, savybes, aprasymas, kilme, sviesa, vanduo, idomybes ir t.t.)

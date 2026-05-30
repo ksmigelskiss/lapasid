@@ -113,8 +113,7 @@ export async function buildPreDbBaseResult(stage1, preview, opts = {}) {
     lietuviškas: name,
     sinonimai,
     ltSynonyms: stage1.ltSynonyms ?? [],
-    lotyniskiSinonimai: [],
-    englishNames: [],
+    englishNames: [],   // overwritten downstream by fetchPlantNames
 
     // Narrative
     aprasymas,
@@ -167,9 +166,6 @@ export async function buildPreDbBaseResult(stage1, preview, opts = {}) {
     // Phase 2 pointer
     needsStage2: true,
     schemaVersion: 2,
-
-    // No multi-candidates yet — pre-DB returns single hit
-    candidates: undefined,
   }
 }
 
