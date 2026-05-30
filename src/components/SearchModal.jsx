@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
-import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Search, X, Camera, ChevronLeft, ChevronRight, CheckCircle2, Info, AlertTriangle, ChevronDown } from 'lucide-react'
 import { fetchPhotos, resizeImage, fetchWikipediaContext, rehostExternalImage } from '../utils/imageService'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fromAIResult } from '../hooks/usePlants'
@@ -2346,94 +2346,29 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
               </div>
             )}
 
-            {/* Taxonomic fallback banner — rodom kai AI grąžino aukštesnį
-                lygį nei vartotojas paklausė (cultivar→species). Atskirai
-                nuo confidence banner'io, nes čia ne „nesu tikras" o
-                „eksplicitiškai pakeičiau lygį, štai kodėl ir kas tau".
-                Konkretesnis nei confidence banner — visada turi note. */}
-            {result.fallbackInfo && !result.fromCatalog && (
-              <div className="rounded-2xl px-4 py-3 mb-3 border bg-amber-50 border-amber-300/60">
-                <div className="flex items-start gap-2.5">
-                  <span className="text-base flex-shrink-0 mt-0.5 text-amber-600">↑</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[13px] font-semibold text-amber-700">
-                      Pakeičiau lygį
-                      <span className="ml-1.5 font-mono text-[10px] uppercase tracking-[0.14em] opacity-70">
-                        {result.fallbackInfo.from} → {result.fallbackInfo.to}
-                      </span>
-                    </p>
-                    <p className="text-xs leading-relaxed mt-1 text-amber-700/90">
-                      {result.fallbackInfo.note}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* Trust strip — konsoliduotas confidence + fallback indicator'ius
+                (anksciau 3 atskiri callouts'ai: amber „Pakeičiau lygį" +
+                terracotta/bone confidence + forest seriesNote). Visi atsakė
+                į TĄ PAT klausimą („ar pasitikėti šiuo atpažinimu?") —
+                vizualus triukšmas. Vienoda struktūra per visus 3 confidence
+                lygius, expand'inamas „Kodėl?" detalėms (fallbackInfo, matchLevel). */}
+            <TrustStrip result={result} />
 
-            {/* Confidence banner — rodom kai AI confidence != 'high'. Augalo
-                priežiūros info gali būti netiksli; matchLevel padeda suprasti
-                ar tai tik genties lygis, ar visiškai nežinia. */}
-            {result.confidence && result.confidence !== 'high' && !result.fromCatalog && (
-              <div className={`rounded-2xl px-4 py-3 mb-3 border ${
-                result.confidence === 'low'
-                  ? 'bg-terracotta-50 border-terracotta-300/60'
-                  : 'bg-bone-100 border-bone-400/60'
-              }`}>
-                <div className="flex items-start gap-2.5">
-                  <span className={`text-base flex-shrink-0 mt-0.5 ${
-                    result.confidence === 'low' ? 'text-terracotta' : 'text-forest-500'
-                  }`}>
-                    {result.confidence === 'low' ? '⚠' : 'ℹ'}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-[13px] font-semibold ${
-                      result.confidence === 'low' ? 'text-terracotta-600' : 'text-forest-700'
-                    }`}>
-                      {result.confidence === 'low'
-                        ? 'AI nepatvirtina šio augalo'
-                        : 'Apytikrė informacija'}
-                      {result.matchLevel && result.matchLevel !== 'cultivar' && (
-                        <span className="ml-1.5 font-mono text-[10px] uppercase tracking-[0.14em] opacity-70">
-                          {result.matchLevel === 'genus' ? 'genties lygis'
-                            : result.matchLevel === 'species' ? 'rūšies lygis'
-                            : 'neaiškus'}
-                        </span>
-                      )}
-                    </p>
-                    {result.uncertaintyReason && (
-                      <p className={`text-xs leading-relaxed mt-1 ${
-                        result.confidence === 'low' ? 'text-terracotta-600/90' : 'text-forest-600'
-                      }`}>
-                        {result.uncertaintyReason}
-                      </p>
-                    )}
-                    {/* Static disclaimer rodom TIK kai info kokybė tikrai
-                        abejotina: low confidence, unknown match level, ar
-                        mažai šaltinių. Genus-level identifikacija su 2+ web
-                        sources — info patikima struktūra net jei reikia
-                        pasirinkti konkrečią rūšį. (žiūr. 2026-05 UX feedback) */}
-                    {(result.confidence === 'low' ||
-                      result.matchLevel === 'unknown' ||
-                      (result.sources?.length ?? 0) < 2) && (
-                      <p className="text-[11px] text-forest-500 mt-1.5 italic">
-                        Priežiūros info gali būti netiksli — saugok kaip „nepatvirtinta" ir patikrink rankiniu būdu.
-                      </p>
-                    )}
-                  </div>
+            {/* Serijos pastaba — kompaktiška note apie KONKREČIĄ seriją
+                (Boulevard, Wave, Knock Out). Lieka atskirai nuo TrustStrip'o,
+                nes tai INFO (ne trust signal'as) — apie pasirinktą augalą,
+                ne apie identifikacijos patikimumą. Stiliuotas kaip PlantDetail
+                section header'is (hairline + mono caps + body), be coloured
+                callout card'o. */}
+            {result.seriesNote && !result.fromCatalog && (
+              <div className="mb-3 px-1">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <p className="font-mono text-[10px] font-semibold text-forest-500 uppercase tracking-[0.18em]">
+                    Apie seriją
+                  </p>
+                  <div className="h-px flex-1 bg-bone-400/60" />
                 </div>
-              </div>
-            )}
-
-            {/* Serijos pastaba — kompaktiška info apie KONKREČIĄ seriją
-                (Boulevard, Wave, Knock Out) virš kandidatų sąrašo. Genus info
-                lieka ProfileContent'e žemiau. AI grąžina seriesNote per
-                TOOL_PREVIEW kai latinName turi serijos identifikaciją. */}
-            {result.seriesNote && (
-              <div className="mb-3 bg-forest-50/50 border border-forest-200/50 rounded-2xl px-4 py-3">
-                <p className="font-mono text-[10px] font-medium text-forest-600 uppercase tracking-[0.16em] mb-1.5">
-                  Apie šią seriją
-                </p>
-                <p className="text-[13px] text-forest-700 leading-relaxed">
+                <p className="text-[12.5px] text-forest-700 leading-relaxed">
                   {result.seriesNote}
                 </p>
               </div>
@@ -2877,6 +2812,110 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
 
   if (useDesktopPanel) return createPortal(tree, host.container)
   return tree
+}
+
+// ── Trust strip — unified confidence indicator ────────────────────
+// VAIDMUO: vienas vieningas trust indicator'ius pakeičia 3 anksčiau atskirus
+// callout'us (fallback / confidence / series). Visi atsakydavo į TĄ PAT
+// klausimą vartotojui — „ar galiu pasitikėti šiuo atpažinimu?" — bet
+// vizualiai konkuravo tarpusavyje (amber / terracotta / forest stack'as).
+//
+// Tone mapping (brandbook):
+//   • high   → forest (silent confirmation)
+//   • medium → bone (neutral, expandable)
+//   • low    → terracotta (warning, expandable)
+//
+// fromCatalog hide'inam — library entry'iai jau patvirtinti per save flow'ą.
+function TrustStrip({ result }) {
+  const [expanded, setExpanded] = useState(false)
+
+  if (!result || result.fromCatalog) return null
+
+  const confidence = result.confidence ?? 'high'
+  const hasFallback = !!result.fallbackInfo
+  const hasMatchLevelHint = result.matchLevel && result.matchLevel !== 'cultivar'
+  const hasDetails = hasFallback || hasMatchLevelHint
+
+  const config = confidence === 'high'
+    ? {
+        bg: 'bg-forest-50/60', border: 'border-forest-200/60',
+        text: 'text-forest-700', subtle: 'text-forest-600',
+        icon: <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5 text-forest-500" strokeWidth={2} />,
+        label: 'Patvirtinta',
+        body: 'Atpažinimas patvirtintas šaltiniuose.',
+      }
+    : confidence === 'medium'
+    ? {
+        bg: 'bg-bone-100', border: 'border-bone-400/60',
+        text: 'text-forest-700', subtle: 'text-forest-600',
+        icon: <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-forest-500" strokeWidth={2} />,
+        label: 'Apytikrė',
+        body: result.uncertaintyReason ?? 'Genus žinomas, konkretus kultivaras neaiškus.',
+      }
+    : {
+        bg: 'bg-terracotta-50', border: 'border-terracotta-300/60',
+        text: 'text-terracotta-700', subtle: 'text-terracotta-600',
+        icon: <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-terracotta-600" strokeWidth={2} />,
+        label: 'Nepatvirtinta',
+        body: result.uncertaintyReason ?? 'AI nepavyko patikimai atpažinti — pridėk nuotrauką patikslinimui.',
+      }
+
+  return (
+    <div className={`rounded-2xl px-4 py-3 mb-3 border ${config.bg} ${config.border}`}>
+      <div className="flex items-start gap-2.5">
+        {config.icon}
+        <div className="flex-1 min-w-0">
+          <p className={`font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em] ${config.text}`}>
+            {config.label}
+          </p>
+          <p className={`text-[12.5px] leading-relaxed mt-1 ${config.subtle}`}>
+            {config.body}
+          </p>
+
+          {confidence !== 'high' && hasDetails && (
+            <button
+              type="button"
+              onClick={() => setExpanded(e => !e)}
+              className={`mt-2 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.16em] ${config.subtle} hover:${config.text} transition-colors`}
+            >
+              <ChevronDown
+                className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`}
+                strokeWidth={2}
+              />
+              {expanded ? 'Suskleisti' : 'Kodėl?'}
+            </button>
+          )}
+
+          {expanded && (
+            <div className={`mt-2 pt-2 border-t ${config.border} space-y-2`}>
+              {hasFallback && (
+                <div>
+                  <p className={`font-mono text-[9.5px] uppercase tracking-[0.16em] opacity-70 ${config.text} mb-0.5`}>
+                    Pakeičiau lygį · {result.fallbackInfo.from} → {result.fallbackInfo.to}
+                  </p>
+                  <p className={`text-[12px] leading-relaxed ${config.subtle}`}>
+                    {result.fallbackInfo.note}
+                  </p>
+                </div>
+              )}
+              {hasMatchLevelHint && (
+                <p className={`font-mono text-[10px] uppercase tracking-[0.14em] opacity-70 ${config.text}`}>
+                  Tikslumas: {result.matchLevel === 'genus' ? 'genties lygis'
+                    : result.matchLevel === 'species' ? 'rūšies lygis'
+                    : 'neaiškus'}
+                </p>
+              )}
+              {confidence === 'low' && (
+                <p className={`text-[11.5px] italic leading-relaxed ${config.subtle}`}>
+                  Priežiūros info gali būti netiksli — saugok kaip „nepatvirtinta" ir patikrink rankiniu būdu.
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 // ── Full-screen Phase 2 loading overlay ──────────────────────────
