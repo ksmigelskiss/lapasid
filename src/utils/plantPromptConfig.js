@@ -80,7 +80,7 @@ export const TOOL_DETAILS = {
       // Tas override'ina baseResult.lietuviškas (genus-only Phase 1 fallback).
       lietuviskas: {
         type: 'string',
-        description: 'LT vardas (overrides genus-only Phase 1 fallback). Logika: jei latinName yra GENUS-level (vienas zodis, e.g. Maranta) - grazink genus LT name (Maranta). Jei SPECIES-level (du zodziai, e.g. Dracaena trifasciata) - privalomai generuok species-qualified LT name pagal LT botanikos konvencija: arba [Genus LT] [adjective species qualifier] (gaspadorius pavyzdziai: Aspidistra aukstoji, Begonija aukstoji, Ajeras viksvinis, Chrizantema indine, Cirtomis pjautuviskasis), arba [Adjective] [genus LT] (Trijuoste dracena, Marginatoji dracena). JEI nezinai LT species adjective - naudok Latin epithet kaip qualifier: Dracena trifasciata. NIEKADA negrazink tik genus name (e.g. Dracena) kai latinName yra species-level - tas sukuria identicnas etiketes skirtingoms rusims.',
+        description: 'LT vardas (overrides genus-only Phase 1 fallback). KRITISKAI: genus identity MUST buti preserved — naudok genus standartine LT transliteracija (Sansevieria → Sansevierija, Dracaena → Dracena, Monstera → Monstera, Spathiphyllum → Spatifilis, Tradescantia → Tradeskantija, Nepenthes → Asotene). NIEKADA nesubstituok visiskai kito LT zodzio uz genus (e.g. „kanape" uz Sansevierija — istorinis „bowstring hemp" naudojimas; „palme" uz Yucca — ne palmes). Istoriniai vernacular names (Ceilono kanape, Tigro uodega) eina i ltSynonyms[], ne i main name. Logika: jei latinName yra GENUS-level (vienas zodis, e.g. Maranta) - grazink genus LT name (Maranta). Jei SPECIES-level (du zodziai, e.g. Dracaena trifasciata) - privalomai generuok species-qualified LT name pagal LT botanikos konvencija: arba [Genus LT] [adjective species qualifier] (gaspadorius pavyzdziai: Aspidistra aukstoji, Begonija aukstoji, Ajeras viksvinis, Chrizantema indine, Cirtomis pjautuviskasis), arba [Adjective] [genus LT] (Trijuoste dracena, Marginatoji dracena). JEI nezinai LT species adjective - naudok Latin epithet kaip qualifier: Dracena trifasciata. NIEKADA negrazink tik genus name (e.g. Dracena) kai latinName yra species-level - tas sukuria identicnas etiketes skirtingoms rusims.',
       },
 
       // ── CARE INFO (laistymas, tresimas, etc.) ────────────────
@@ -515,10 +515,49 @@ suffixes in parentheses, no ® / ™ symbols. Examples:
 
 ═════════════════════════════════════════════════════════
 
-LITHUANIAN NAME FIELD — the "name" field MUST be a genuine Lithuanian
-name (from a dictionary / Lithuanian Wikipedia). NEVER Latin or
-English. For hybrids without their own name — use the Lithuanian
-genus name (e.g. Nepenthes → „Ąsotenė").
+LITHUANIAN NAME — STRICT CONVENTION:
+
+1. Use the GENUS' standard Lithuanian botanical name. Most house / exotic
+   plants have an established LT name in Lithuanian botanical literature:
+     • Sansevieria → „sansevjera"    (NOT „sansevierija", NOT „kanapė")
+     • Dracaena    → „dracena"
+     • Monstera    → „monstera"
+     • Spathiphyllum → „plokščialapė" (LT translation, not transliteration)
+     • Philodendron → „filodendras"
+     • Tradescantia → „tradeskantė"   (note the ending)
+     • Nepenthes   → „ąsotėlis"
+     • Aglaonema   → „aglaonema"
+     • Calathea    → „kalatėja"
+     • Anthurium   → „antūris"
+     • Ficus       → „fikusas"
+
+2. SPECIES-LEVEL — format is [Capitalized LT adjective] [lowercase genus],
+   OR [Capitalized LT genus] [latin epithet] if no LT adjective is established:
+     ✓ „Trijuostė sansevjera"       (Sansevieria trifasciata)
+     ✓ „Ceiloninė sansevjera"       (Sansevieria zeylanica — if you know)
+     ✓ „Marginatoji dracena"        (Dracaena marginata)
+     ✓ „Dracena marginata"          (also acceptable — Latin epithet kept)
+     ✓ „Saustabėjoji monstera"      (Monstera deliciosa)
+
+3. 🛑 NEVER substitute a COMPLETELY DIFFERENT LT word for the genus.
+   The genus identity MUST be preserved in the main name.
+     ✗ „Ceilono lankinė kanapė" for Sansevieria — „kanapė" = Cannabis,
+        not Sansevieria. Historic „bowstring hemp" English usage is
+        misleading in modern Lithuanian.
+     ✗ „Palmė" for Yucca / Dracaena — they are NOT palms (Arecaceae).
+     ✗ „Ąžuoliukas" for Schefflera — fabricated descriptive name.
+
+4. Historic / vernacular names (e.g. „Ceilono kanapė", „Indijos kanapė",
+   „Tigro uodega" for Sansevieria) go into ltSynonyms[] — NOT the main
+   name. UI shows them as alternative-name chips so users still see them.
+
+5. If you are UNSURE of the genus' LT name — keep the Latin genus AS-IS
+   rather than fabricating a Lithuanian-sounding word:
+     ✓ „Pachypodium succulent" (better than invented „karštas augalas")
+     ✓ Latin genus + epithet is always safer than wrong LT translation.
+
+6. For hybrids without their own name — use the Lithuanian genus name
+   from rule #1 (e.g. Nepenthes hybrid → „ąsotėlis").
 
 PHOTO IDENTIFICATION — identify ONLY the main plant in the photo:
 the one occupying most of the frame or in focus. Completely ignore
