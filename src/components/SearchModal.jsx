@@ -2326,26 +2326,6 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
               </div>
             )}
 
-            {/* Sources chip — kai AI naudojo web_search ir surašė šaltinius.
-                Transparency vartotojui — kur info patikrinta. */}
-            {Array.isArray(result.sources) && result.sources.length > 0 && (
-              <div className="rounded-2xl px-4 py-2 mb-3 border bg-bone-50 border-bone-400/40">
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-forest-500 mb-1">Šaltiniai</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {result.sources.slice(0, 4).map((s, i) => {
-                    let label = s
-                    try { label = new URL(s).hostname.replace(/^www\./, '') } catch {}
-                    return (
-                      <a key={i} href={s} target="_blank" rel="noreferrer"
-                         className="inline-flex items-center text-[11px] text-forest-600 bg-bone-100 border border-bone-400/40 rounded-full px-2 py-0.5 hover:bg-bone-200 transition-colors">
-                        {label}
-                      </a>
-                    )
-                  })}
-                </div>
-              </div>
-            )}
-
             {/* Trust strip — konsoliduotas confidence + fallback indicator'ius
                 (anksciau 3 atskiri callouts'ai: amber „Pakeičiau lygį" +
                 terracotta/bone confidence + forest seriesNote). Visi atsakė
@@ -2378,89 +2358,142 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                 identifikuoti, bet turi 2-5 plausibly atitinkančius cultivars.
                 User'is paspausta vieną → nauja paieška su tikslesniu pavadinimu
                 → high confidence + saved į catalog. */}
-            {Array.isArray(result.candidates) && result.candidates.length > 0 && !result.fromCatalog && (
-              <div className="mb-3">
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-forest-500 mb-2 px-1">
-                  Galimi atitikmenys — pasirink savo augalą
-                </p>
+            {Array.isArray(result.candidates) && result.candidates.length > 0 && !result.fromCatalog && (() => {
+              const [topCandidate, ...alternatives] = result.candidates
+              const pickCandidate = (c) => {
+                setQuery(c.latinName)
+                searchByText(c.latinName)
+              }
+              return (
+                <div className="mb-3">
+                  {/* Header su hairline (PlantDetail pattern) */}
+                  <div className="flex items-center gap-2 mb-2 px-1">
+                    <p className="font-mono text-[10px] font-semibold text-forest-500 uppercase tracking-[0.18em]">
+                      Pasirink savo augalą
+                    </p>
+                    <div className="h-px flex-1 bg-bone-400/60" />
+                  </div>
 
-                {/* Admin bulk save — vienas AI call'as save'ina VISĄ seriją
-                    (taxonGroup + cultivars + photos) į catalog'ą. Pigesnis nei
-                    po vieną. Tinka admin/manager flow'ui — user'iui slėpti
-                    vėliau (žiūr. backlog). */}
-                <button
-                  onClick={() => bulkSaveSeries(query.trim() || result.latinName, result.candidates)}
-                  disabled={!!bulkState && bulkState.phase !== 'done' && bulkState.phase !== 'error'}
-                  className="w-full mb-2 bg-forest-700 hover:bg-forest-800 disabled:opacity-40 text-bone-50 rounded-2xl px-4 py-2.5 text-[13px] font-semibold transition-colors flex items-center justify-center gap-2"
-                >
-                  💾 Pridėti visą seriją į biblioteką
-                  <span className="font-mono text-[10px] opacity-70">(iki {MAX_BULK_BATCH} cultivars · ~$0.10)</span>
-                </button>
-                <div className="space-y-1.5">
-                  {result.candidates.map((c, i) => (
-                    <button
-                      key={i}
-                      onClick={() => {
-                        setQuery(c.latinName)
-                        searchByText(c.latinName)
-                      }}
-                      className="w-full text-left bg-bone-50 border border-bone-400/40 rounded-2xl p-3 hover:bg-bone-100 hover:border-forest-300/60 active:scale-[0.98] transition-all"
-                    >
-                      <div className="flex items-center gap-3">
-                        {/* Thumbnail — photo iš multi-source chain, fallback emoji */}
-                        <div className="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-bone-200 border border-bone-400/40">
-                          {c.imageUrl ? (
-                            <img
-                              src={c.imageUrl}
-                              alt={c.ltName || c.latinName}
-                              className="w-full h-full object-cover"
-                              onError={(e) => { e.currentTarget.style.display = 'none' }}
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-3xl">
-                              🌿
-                            </div>
-                          )}
-                        </div>
-                        {/* Minimalistinis tekstas — TIK pavadinimas + vizualus
-                            aprašymas. Disambiguation stadijoje user'iui
-                            nereikia istorinės info, serijos paaiškinimo, ar
-                            kilmės — tik kaip atskirti vizualiai. */}
-                        <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-forest-800 text-[15px] leading-tight flex items-center gap-1.5">
-                            <span className="truncate">{c.ltName || c.latinName.replace(/^[A-Z][a-z]+\s+['"]/, '').replace(/['"]$/, '')}</span>
-                            {/* Wikidata verification badge — ✓ ikonėlė reiškia,
-                                kad cultivar yra Wikidata entity'je (human-curated
-                                structured data). Stiprus signal'as, kad AI
-                                nehallucinuoja — toks cultivar realiai egzistuoja. */}
-                            {c.wikidataVerified && (
-                              <CheckCircle2
-                                size={13}
-                                className="text-forest-600 flex-shrink-0"
-                                title="Patvirtinta per Wikidata"
-                                aria-label="Patvirtinta per Wikidata"
-                              />
-                            )}
-                          </p>
-                          <p className="font-mono italic text-[11px] text-forest-500 mt-0.5 truncate">
-                            {c.latinName}
-                          </p>
-                          {c.distinguishingFeature && (
-                            <p className="text-[12px] text-forest-700 mt-1.5 leading-snug">
-                              {c.distinguishingFeature}
-                            </p>
-                          )}
-                        </div>
-                        <span className="text-forest-400 text-lg flex-shrink-0">›</span>
+                  {/* TOP CANDIDATE — emphasized: didesnis padding'as, forest accent,
+                      „Geriausias atitikimas" badge. AI grąžina kandidatus rank'intus
+                      pagal panašumą su query → pirmas yra greičiausiai vartotojo
+                      augalas. */}
+                  <button
+                    onClick={() => pickCandidate(topCandidate)}
+                    className="w-full text-left bg-bone-50 border-2 border-forest-300/50 rounded-2xl p-3.5 hover:bg-bone-100 hover:border-forest-400/70 active:scale-[0.99] transition-all mb-3"
+                  >
+                    <p className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-forest-600 font-semibold mb-2 flex items-center gap-1.5">
+                      <CheckCircle2 size={11} strokeWidth={2.5} />
+                      Geriausias atitikimas
+                    </p>
+                    <div className="flex items-center gap-3">
+                      <div className="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-bone-200 border border-bone-400/40">
+                        {topCandidate.imageUrl ? (
+                          <img
+                            src={topCandidate.imageUrl}
+                            alt={topCandidate.ltName || topCandidate.latinName}
+                            className="w-full h-full object-cover"
+                            onError={(e) => { e.currentTarget.style.display = 'none' }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-3xl">🌿</div>
+                        )}
                       </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-forest-800 text-[15px] leading-tight flex items-center gap-1.5">
+                          <span className="truncate">{topCandidate.ltName || topCandidate.latinName.replace(/^[A-Z][a-z]+\s+['"]/, '').replace(/['"]$/, '')}</span>
+                          {topCandidate.wikidataVerified && (
+                            <CheckCircle2 size={13} className="text-forest-600 flex-shrink-0" aria-label="Patvirtinta per Wikidata" />
+                          )}
+                        </p>
+                        <p className="font-mono italic text-[11px] text-forest-500 mt-0.5 truncate">
+                          {topCandidate.latinName}
+                        </p>
+                        {topCandidate.distinguishingFeature && (
+                          <p className="text-[12px] text-forest-700 mt-1.5 leading-snug">
+                            {topCandidate.distinguishingFeature}
+                          </p>
+                        )}
+                      </div>
+                      <ChevronRight className="text-forest-400 w-5 h-5 flex-shrink-0" strokeWidth={2} />
+                    </div>
+                  </button>
+
+                  {/* ALTERNATIVES — kompaktiškesni, mažiau attention'o. Tik kai yra
+                      tikrų alternatyvų (>=1). „Kitos galimybės" antraštė hairline'u. */}
+                  {alternatives.length > 0 && (
+                    <>
+                      <div className="flex items-center gap-2 mb-1.5 px-1">
+                        <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-400">
+                          Kitos galimybės
+                        </p>
+                        <div className="h-px flex-1 bg-bone-400/40" />
+                      </div>
+                      <div className="space-y-1">
+                        {alternatives.map((c, i) => (
+                          <button
+                            key={i}
+                            onClick={() => pickCandidate(c)}
+                            className="w-full text-left bg-bone-50/60 border border-bone-400/30 rounded-xl px-3 py-2 hover:bg-bone-100 hover:border-forest-300/50 active:scale-[0.99] transition-all"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-bone-200 border border-bone-400/30">
+                                {c.imageUrl ? (
+                                  <img
+                                    src={c.imageUrl}
+                                    alt={c.ltName || c.latinName}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => { e.currentTarget.style.display = 'none' }}
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-base">🌿</div>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-semibold text-forest-700 text-[13px] leading-tight flex items-center gap-1.5 truncate">
+                                  <span className="truncate">{c.ltName || c.latinName.replace(/^[A-Z][a-z]+\s+['"]/, '').replace(/['"]$/, '')}</span>
+                                  {c.wikidataVerified && (
+                                    <CheckCircle2 size={11} className="text-forest-600 flex-shrink-0" aria-label="Patvirtinta per Wikidata" />
+                                  )}
+                                </p>
+                                <p className="font-mono italic text-[10.5px] text-forest-500 truncate">
+                                  {c.latinName}
+                                </p>
+                              </div>
+                              <ChevronRight className="text-forest-400 w-4 h-4 flex-shrink-0" strokeWidth={2} />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  {/* Admin bulk save — secondary visual (outline ne solid).
+                      Showinam tik kai >=2 kandidatai (vienos series'os iškvietimas).
+                      Bigger picture rethink: žiūr. task #30 (perkelt į AdminPanel
+                      BulkImport tool'ą, kur quality gate'as prieš save'inant). */}
+                  {result.candidates.length >= 2 && (
+                    <button
+                      onClick={() => bulkSaveSeries(query.trim() || result.latinName, result.candidates)}
+                      disabled={!!bulkState && bulkState.phase !== 'done' && bulkState.phase !== 'error'}
+                      className="w-full mt-3 bg-transparent border border-forest-300/50 text-forest-600 hover:bg-forest-50 hover:border-forest-400/70 disabled:opacity-40 rounded-xl px-3 py-2 text-[12px] font-medium transition-colors flex items-center justify-center gap-1.5"
+                    >
+                      <span className="font-mono text-[10.5px] uppercase tracking-[0.14em]">+ visa serija</span>
+                      <span className="font-mono text-[9.5px] opacity-60">({MAX_BULK_BATCH} cv · ~$0.10)</span>
                     </button>
-                  ))}
+                  )}
+
+                  {/* „Arba" separator — kelias į žemiau esantį fallback save flow'ą */}
+                  <div className="flex items-center gap-2 mt-3 px-1">
+                    <div className="h-px flex-1 bg-bone-400/40" />
+                    <p className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-forest-400">
+                      arba pridėti bendrą
+                    </p>
+                    <div className="h-px flex-1 bg-bone-400/40" />
+                  </div>
                 </div>
-                <p className="text-[11px] text-forest-400 italic mt-2 px-1">
-                  Arba apačioj pridėk su bendra (nepatvirtinta) info.
-                </p>
-              </div>
-            )}
+              )
+            })()}
 
             {/* Hero gallery — mobile bleeds (-mx-4) iki ekrano krašto; desktop'e
                 lieka rounded card su parent padding'u (kad neišlystų už panel'ės).
@@ -2816,9 +2849,10 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
 
 // ── Trust strip — unified confidence indicator ────────────────────
 // VAIDMUO: vienas vieningas trust indicator'ius pakeičia 3 anksčiau atskirus
-// callout'us (fallback / confidence / series). Visi atsakydavo į TĄ PAT
-// klausimą vartotojui — „ar galiu pasitikėti šiuo atpažinimu?" — bet
-// vizualiai konkuravo tarpusavyje (amber / terracotta / forest stack'as).
+// callout'us (fallback / confidence / series) PLIUS absorbuoja šaltinius
+// (AI web_search URLs + Wikipedia + iNat) į „Kodėl?" expand'ą — viskas, kas
+// padeda vartotojui suprasti „ar galiu pasitikėti šiuo atpažinimu?", vienoje
+// vietoje.
 //
 // Tone mapping (brandbook):
 //   • high   → forest (silent confirmation)
@@ -2834,7 +2868,33 @@ function TrustStrip({ result }) {
   const confidence = result.confidence ?? 'high'
   const hasFallback = !!result.fallbackInfo
   const hasMatchLevelHint = result.matchLevel && result.matchLevel !== 'cultivar'
-  const hasDetails = hasFallback || hasMatchLevelHint
+
+  // Source links (AI sources + Wikipedia LT/EN + iNat) — absorbed į expand
+  const fullName = result.latinName ?? result.lotyniskas
+  const genus = fullName?.split(' ')?.[0] ?? fullName
+  const aiSources = Array.isArray(result.sources) ? result.sources.slice(0, 4) : []
+  const refLinks = fullName ? [
+    {
+      label: 'Wikipedia LT',
+      href: result.wikiLtFound
+        ? `https://lt.wikipedia.org/wiki/${encodeURIComponent(fullName)}`
+        : `https://lt.wikipedia.org/w/index.php?search=${encodeURIComponent(genus)}`,
+    },
+    {
+      label: 'Wikipedia EN',
+      href: result.wikiEnFound
+        ? `https://en.wikipedia.org/wiki/${encodeURIComponent(fullName)}`
+        : `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(genus)}`,
+    },
+    ...(result.inatTaxonId
+      ? [{ label: 'iNaturalist', href: `https://www.inaturalist.org/taxa/${result.inatTaxonId}` }]
+      : []),
+  ] : []
+  const hasAnySources = aiSources.length > 0 || refLinks.length > 0
+  const hasDetails = hasFallback || hasMatchLevelHint || hasAnySources
+
+  // HIGH confidence with no extra context → silent (no expand button needed)
+  const isExpandable = (confidence !== 'high' && (hasFallback || hasMatchLevelHint)) || hasAnySources
 
   const config = confidence === 'high'
     ? {
@@ -2872,7 +2932,7 @@ function TrustStrip({ result }) {
             {config.body}
           </p>
 
-          {confidence !== 'high' && hasDetails && (
+          {isExpandable && (
             <button
               type="button"
               onClick={() => setExpanded(e => !e)}
@@ -2882,12 +2942,12 @@ function TrustStrip({ result }) {
                 className={`w-3 h-3 transition-transform ${expanded ? 'rotate-180' : ''}`}
                 strokeWidth={2}
               />
-              {expanded ? 'Suskleisti' : 'Kodėl?'}
+              {expanded ? 'Suskleisti' : (confidence === 'high' ? 'Šaltiniai' : 'Kodėl?')}
             </button>
           )}
 
           {expanded && (
-            <div className={`mt-2 pt-2 border-t ${config.border} space-y-2`}>
+            <div className={`mt-2 pt-2 border-t ${config.border} space-y-2.5`}>
               {hasFallback && (
                 <div>
                   <p className={`font-mono text-[9.5px] uppercase tracking-[0.16em] opacity-70 ${config.text} mb-0.5`}>
@@ -2909,6 +2969,41 @@ function TrustStrip({ result }) {
                 <p className={`text-[11.5px] italic leading-relaxed ${config.subtle}`}>
                   Priežiūros info gali būti netiksli — saugok kaip „nepatvirtinta" ir patikrink rankiniu būdu.
                 </p>
+              )}
+              {hasAnySources && (
+                <div>
+                  <p className={`font-mono text-[9.5px] uppercase tracking-[0.16em] opacity-70 ${config.text} mb-1`}>
+                    Šaltiniai
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {refLinks.map(({ label, href }) => (
+                      <a
+                        key={label}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`inline-flex items-center text-[11px] ${config.subtle} bg-bone-50/50 border ${config.border} rounded-full px-2 py-0.5 hover:bg-bone-100 transition-colors`}
+                      >
+                        {label}
+                      </a>
+                    ))}
+                    {aiSources.map((s, i) => {
+                      let label = s
+                      try { label = new URL(s).hostname.replace(/^www\./, '') } catch {}
+                      return (
+                        <a
+                          key={`ai-${i}`}
+                          href={s}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`inline-flex items-center text-[11px] ${config.subtle} bg-bone-50/50 border ${config.border} rounded-full px-2 py-0.5 hover:bg-bone-100 transition-colors`}
+                        >
+                          {label}
+                        </a>
+                      )
+                    })}
+                  </div>
+                </div>
               )}
             </div>
           )}
@@ -2949,31 +3044,11 @@ function Phase1SlimPreview({ result, isDuplicate = false }) {
   // konfliktinis UX). Suppress'inam Atradimas kai duplicate egzistuoja.
   // Tas reali situacija: user'is pridėjo augalą anksčiau, Phase 2 enrichment'as
   // nepavyko / buvo nutrauktas → catalog tuščias, bet plant'as collection'oje.
-  const isNewToCatalog = !result.laistymasIntervalas && !isDuplicate
-
-  // Source links — Wiki LT/EN + iNat (jei taxon ID žinomas). Logika mirror'as
-  // PlantDetail.jsx — naudoja direct article URL jei wikiLtFound/wikiEnFound,
-  // arba search URL fallback (Phase 1 metu šitie flagai dažniausiai dar nėra
-  // gauti, todėl gausim search URL — kas yra OK).
-  const fullName = result.latinName ?? result.lotyniskas
-  const genus = fullName?.split(' ')?.[0] ?? fullName
-  const sourceLinks = fullName ? [
-    {
-      label: 'Wikipedia LT',
-      href: result.wikiLtFound
-        ? `https://lt.wikipedia.org/wiki/${encodeURIComponent(fullName)}`
-        : `https://lt.wikipedia.org/w/index.php?search=${encodeURIComponent(genus)}`,
-    },
-    {
-      label: 'Wikipedia EN',
-      href: result.wikiEnFound
-        ? `https://en.wikipedia.org/wiki/${encodeURIComponent(fullName)}`
-        : `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(genus)}`,
-    },
-    ...(result.inatTaxonId
-      ? [{ label: 'iNaturalist', href: `https://www.inaturalist.org/taxa/${result.inatTaxonId}` }]
-      : []),
-  ] : []
+  // ATRADIMAS hide'inam ir kai yra candidates — disambiguation kontekste
+  // discovery message'as konfliktuoja („pridėk" vs „pasirink"). User'is jau
+  // turi pasirinkti iš kandidatų; banner'is taps relevant'us pasirinkus.
+  const hasCandidates = Array.isArray(result.candidates) && result.candidates.length > 0
+  const isNewToCatalog = !result.laistymasIntervalas && !isDuplicate && !hasCandidates
 
   return (
     <div className="pt-5 pb-2 space-y-4">
@@ -2996,34 +3071,15 @@ function Phase1SlimPreview({ result, isDuplicate = false }) {
           internally returns null jei nieko nėra → no empty render. */}
       <PlantSavybesPills plant={result} />
 
-      {/* „Pavojai nenustatyti" call-to-action callout — kai DB tyli, kad
-          user'is nepamanytų „nieks neparodyta = saugu". Action framing'as
-          paskatina paspausti save (kur AI Phase 2 dirba versiją plus
-          aiSupplementaryHazard evaluation'ą). */}
-      {!hasToxicity && (
-        <div className="rounded-2xl bg-bone-300/40 border border-bone-400/40 p-3">
-          <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-forest-500 mb-1.5">
-            ⓘ pavojai
-          </p>
-          <p className="text-[12.5px] text-forest-600 leading-relaxed">
-            Mūsų ASPCA + PFAF bazėse įrašo nėra. Tikslesnė pavojų info — kai
-            leisi man surinkti duomenis (paspausk įdėjimo mygtuką).
-          </p>
-        </div>
-      )}
+      {/* „Pavojai nenustatyti" callout — pašalintas (declutter).
+          Kai DB nieko neturi, tylėjimas = neutralus signal'as; AI Phase 2
+          (post-save) papildomai įvertina toxicity (aiSupplementaryHazard).
+          User'ui visuose case'uose Wikipedia EN link'as yra TrustStrip
+          „Šaltiniai" expand'e — gali patikrinti rankiniu būdu. */}
 
-      {/* Source links — visada matomi (palankiu user'iui patikrinti
-          original šaltinį prieš pridedant) */}
-      {sourceLinks.length > 0 && (
-        <div className="flex flex-wrap gap-x-3 gap-y-1 pt-1">
-          {sourceLinks.map(({ label, href }) => (
-            <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-              className="font-mono text-[10px] uppercase tracking-[0.14em] text-forest-500 hover:text-forest-700 underline underline-offset-2 transition-colors">
-              {label}
-            </a>
-          ))}
-        </div>
-      )}
+      {/* Source links — perkelti į TrustStrip „Šaltiniai" expand (declutter).
+          Logika: visi šaltiniai (AI web_search + Wikipedia + iNat) gyvena
+          vienoje vietoje, ne išbarstyti per kortelę. */}
     </div>
   )
 }

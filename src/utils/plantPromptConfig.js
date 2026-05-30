@@ -465,6 +465,15 @@ ACCEPTED botanical name(s) (e.g. „Dracaena trifasciata 'Nite Lite'") so the
 user can CHOOSE, instead of silently committing a vendor-only name. A name that
 4 shops use but no taxonomic source confirms = medium + candidates, never high.
 
+CANDIDATES COUNT — keep it focused (max 3 for vendor-only / cultivar
+disambiguation): the FIRST candidate MUST be the most likely match for the
+user's query (rank by name/visual similarity). UI shows it emphasized as
+„Geriausias atitikimas". Additional candidates are alternatives only — provide
+when there is REAL ambiguity, not to pad the list. 1 candidate is OK if you
+are quite confident. For full series enumeration (when user asked for the
+series itself, e.g. „Rosa Knock Out") you can still list more — that is a
+different intent. Default for vendor-only / typo'd queries: 1-3 candidates.
+
 latinName MUST be a CLEAN taxonomic name — no Lithuanian/English
 suffixes in parentheses, no ® / ™ symbols. Examples:
   ✓ „Clematis 'Olympia'"
