@@ -1316,6 +1316,88 @@ async function enrichCandidates(candidates) {
 }
 
 
+// ── Phase pipeline UI — vertikalus checklist ─────────────────────
+// Backbone'as (animacijos vėliau). Rodom visus 5 phase'us per visus search
+// path'us — vartotojas mato ką sistema dirba realtime. States:
+//   • pending  — neaktyvuotas (○ light bone)
+//   • active   — vyksta dabar (forest dot su pulse vėliau, dabar tik bold)
+//   • done     — atliktas (✓ forest + elapsed time)
+//   • skipped  — nereikia šio path'o (— neutral dim)
+function PhaseTimeline({ phases }) {
+  return (
+    <div className="space-y-1.5 w-full max-w-[280px]">
+      {SEARCH_PHASES.map(({ id, label }) => {
+        const { state, elapsed } = phases[id] ?? { state: 'pending', elapsed: 0 }
+        const isDone    = state === 'done'
+        const isActive  = state === 'active'
+        const isSkipped = state === 'skipped'
+
+        const iconSymbol = isDone ? '✓' : isSkipped ? '—' : isActive ? '⟳' : '○'
+        const labelClass = isActive  ? 'text-forest-700 font-semibold'
+                         : isDone    ? 'text-forest-600'
+                         : isSkipped ? 'text-forest-300/70'
+                         :             'text-forest-400'
+        const iconClass  = isActive  ? 'text-forest-700 animate-pulse'
+                         : isDone    ? 'text-forest-500'
+                         : isSkipped ? 'text-forest-300/60'
+                         :             'text-forest-300'
+
+        return (
+          <div key={id} className="flex items-center gap-2 text-[12.5px]">
+            <span className={`w-4 inline-flex justify-center font-mono ${iconClass}`}>{iconSymbol}</span>
+            <span className={labelClass}>{label}</span>
+            <span className="ml-auto font-mono text-[10.5px] text-forest-400/80">
+              {isDone && `${elapsed.toFixed(1)}s`}
+              {isSkipped && '—'}
+            </span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// ── Search phase pipeline backbone ───────────────────────────────
+// Vienodi 5 phase'ai visiems search path'ams (catalog hit, pre-DB hit,
+// AI full, photo identification). Phase'ai, kurie netaikomi konkrečiam
+// path'ui — pažymėti 'skipped'. Aprašymas vartotojui:
+//   • Biblioteka      — ar augalą turim catalog'e (instant)
+//   • Pre-DB          — botanikos lookup (~1-3s)
+//   • AI atpažinimas  — AI Phase-1 su web_search (~20-40s)
+//   • Nuotraukos      — vizualų rinkimas (~1-4s)
+//   • Patvirtinimas   — Wikidata + final assembly
+//
+// trackStep(label) maps į PHASE'us per LABEL_TO_PHASE žemiau. Skip helper'iu
+// pažymim phase'us, kurie nebevyks (e.g. catalog hit → pre-DB ir AI skipped).
+const SEARCH_PHASES = [
+  { id: 'library', label: 'Biblioteka' },
+  { id: 'predb',   label: 'Pre-DB' },
+  { id: 'ai',      label: 'AI atpažinimas' },
+  { id: 'photos',  label: 'Nuotraukos' },
+  { id: 'verify',  label: 'Patvirtinimas' },
+]
+
+// Static label → phase mapping (dynamic ones handled via startsWith below)
+const LABEL_TO_PHASE_STATIC = {
+  'Tikrinu mūsų bibliotekoje...':    'library',
+  'Tikrinu pre-DB...':               'predb',
+  'AI ieško augalo...':              'ai',
+  'AI identifikuoja augalą...':      'ai',
+  'Apdorojama nuotrauka...':         'ai',
+  'Renkam nuotrauką ir aprašymą...': 'photos',
+  'Renku nuotrauką...':              'photos',
+  'Tikrinu Wikidata...':             'verify',
+}
+function labelToPhase(label) {
+  if (!label) return null
+  if (LABEL_TO_PHASE_STATIC[label]) return LABEL_TO_PHASE_STATIC[label]
+  if (label.startsWith('Renku nuotraukas'))  return 'photos'  // dynamic count variant
+  return null
+}
+function initialPhaseState() {
+  return Object.fromEntries(SEARCH_PHASES.map(p => [p.id, { state: 'pending', elapsed: 0 }]))
+}
+
 export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose, plants = [], onViewPlant, onPromote, onUpdatePlant, initialQuery = '', autoCamera = false }) {
   // Desktop split panel: portaliuojam į RightPanel container'į.
   const isDesktop = useIsDesktop()
@@ -1351,6 +1433,11 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   const [error, setError]         = useState(null)
   const [dots, setDots]           = useState('')
   const [statusMsg, setStatusMsg] = useState('')
+  // Phase pipeline state — 5 phase'ai per visus search path'us. Kiekvienas turi
+  // { state: 'pending' | 'active' | 'done' | 'skipped', elapsed: 0 }. Naudoja
+  // trackStep + skipPhases helper'iai. UI rodom kaip vertikalų checklist'ą
+  // loading overlay'uje. Backbone — animacijos vėliau (per atskirą refining sesiją).
+  const [phases, setPhases]       = useState(initialPhaseState)
   const [previewUrl, setPreview]  = useState(null) // photo search preview
   const [savingPhase2, setSavingPhase2]     = useState(false)
   const [photoIdx, setPhotoIdx]             = useState(0)
@@ -1377,22 +1464,71 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   // Real-time progress tracking — vietoj fake timer cycling (kuris atrodo
   // random nes nieko neatspindi), naudojam helper, kurį iškviečia konkretūs
   // search flow žingsniai. Konsoleje log'inam timings, kad galim matyti
-  // kuris žingsnis lėtas ir optimizuoti.
+  // kuris žingsnis lėtas ir optimizuoti. Be to: updatinam phase state'ą
+  // (žiūr. SEARCH_PHASES / labelToPhase) → UI checklist pasipildo realtime.
   const stepStartRef = useRef(null)
   const trackStep = (label) => {
     const now = Date.now()
     if (stepStartRef.current) {
       const prevLabel = stepStartRef.current.label
-      const elapsed   = ((now - stepStartRef.current.startedAt) / 1000).toFixed(2)
+      const elapsedMs = now - stepStartRef.current.startedAt
+      const elapsed   = (elapsedMs / 1000).toFixed(2)
       console.log(`[search] ✓ ${prevLabel} — ${elapsed}s`)
+
+      // Mark previous phase as done with elapsed time
+      const prevPhase = labelToPhase(prevLabel)
+      if (prevPhase) {
+        setPhases(p => ({ ...p, [prevPhase]: { state: 'done', elapsed: elapsedMs / 1000 } }))
+      }
     }
     if (label) {
       stepStartRef.current = { label, startedAt: now }
       setStatusMsg(label)
+
+      // Mark new phase as active
+      const newPhase = labelToPhase(label)
+      if (newPhase) {
+        setPhases(p => ({ ...p, [newPhase]: { state: 'active', elapsed: 0 } }))
+      }
     } else {
       stepStartRef.current = null
       setStatusMsg('')
     }
+  }
+
+  // Mark phases as skipped — naudojam kai konkretus search path pra'leidžia
+  // tam tikrus etapus (e.g. catalog hit pra'leidžia pre-DB + AI + photos).
+  // Skipped phase'ai rodomi vis tiek UI'e, bet dimmed su „—" žymėjimu.
+  const skipRemainingPhases = () => {
+    setPhases(p => {
+      const next = { ...p }
+      for (const phase of SEARCH_PHASES) {
+        if (next[phase.id]?.state === 'pending') {
+          next[phase.id] = { state: 'skipped', elapsed: 0 }
+        }
+      }
+      return next
+    })
+  }
+  // Combined helper — vienu kartu uždarom step tracking (paskutinę phase pažym
+  // 'done') ir pra'leidžiame likusius. Naudoti search flow terminus path'uose,
+  // kur reikia kad UI checklist'as susitvarkytų korektiškai. Inline'inam
+  // trackStep null logic'ą (be recursion), kad galim safely replace_all.
+  const endTracking = () => {
+    const now = Date.now()
+    if (stepStartRef.current) {
+      const prevLabel = stepStartRef.current.label
+      const elapsedMs = now - stepStartRef.current.startedAt
+      const elapsed   = (elapsedMs / 1000).toFixed(2)
+      console.log(`[search] ✓ ${prevLabel} — ${elapsed}s`)
+      const prevPhase = labelToPhase(prevLabel)
+      if (prevPhase) {
+        setPhases(p => ({ ...p, [prevPhase]: { state: 'done', elapsed: elapsedMs / 1000 } }))
+      }
+    }
+    stepStartRef.current = null
+    setStatusMsg('')
+    skipRemainingPhases()
   }
 
   // Auto-search if launched with a pre-filled query
@@ -1619,6 +1755,7 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
     const controller = new AbortController()
     abortRef.current = controller
     setLoading(true); setResult(null); setError(null); setPreview(null)
+    setPhases(initialPhaseState())  // reset phase checklist
     const totalStartedAt = Date.now()
 
     try {
@@ -1697,7 +1834,7 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
             fromCatalog: true,
           })
           setLoading(false)
-          trackStep(null)
+          endTracking()
           const skipped = merged.length - completeMerged.length
           console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (library-first, ${completeMerged.length} match'as${completeMerged.length === 1 ? '' : 'ai'}, AI praleistas${skipped > 0 ? `; ${skipped} incomplete entries praleisti` : ''})`)
           return
@@ -1736,7 +1873,7 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
         })
         setResult(baseResult)
         setLoading(false)
-        trackStep(null)
+        endTracking()
         console.log(
           `[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s ` +
           `(pre-DB hit, ${stage1Result.layer}/${stage1Result.confidence}, ` +
@@ -1790,7 +1927,7 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
 
         setError(errorMessage)
         setLoading(false)
-        trackStep(null)
+        endTracking()
         console.log(
           `[search] ✗ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s ` +
           `(Wikidata gate BLOCK, reason=${reason}${wdName ? `, wiki=${wdName}` : ''}, AI praleistas)`
@@ -1806,7 +1943,7 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
       if (cachedResponse) {
         setResult(cachedResponse)
         setLoading(false)
-        trackStep(null)
+        endTracking()
         console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (response cache hit, AI praleistas)`)
         return
       }
@@ -1881,7 +2018,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
       if (controller.signal.aborted) return
 
       const previewBlock = r1.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')
-      if (!previewBlock) { setError('Augalas nerastas'); setLoading(false); trackStep(null); return }
+      if (!previewBlock) { setError('Augalas nerastas'); setLoading(false); endTracking(); return }
 
       const aiResult = previewBlock.input
 
@@ -1908,7 +2045,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
       if (trustCatalog) {
         setResult({ ...catalogEntryToAIResult(mergedCached), fromCatalog: true })
         setLoading(false)
-        trackStep(null)
+        endTracking()
         console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (from catalog${cached.taxonGroupId ? ', su taxonGroup merge' : ''})`)
         return
       }
@@ -1927,6 +2064,11 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
       ])
       enriched.candidates = candidatesWithImages
       if (controller.signal.aborted) return
+
+      // Verify phase — Wikidata cross-check + reliability downgrade'imas.
+      // Trumpas finishing step'as, bet UI checklist'ui svarbus — kitaip
+      // 5-tas phase niekada nepasipildo.
+      trackStep('Tikrinu Wikidata...')
 
       // Reliability cross-check — jei AI'us drąsiai sakė „high", bet Wikidata
       // neaptiko nei main result'o, nei nieko iš kandidatų, sąžiningai pažeminam
@@ -1978,7 +2120,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
 
       setResult(enriched)
       setLoading(false)
-      trackStep(null)
+      endTracking()
       // Cache pilną enriched result'ą (su image'ais + Wikidata verification) —
       // kitą kartą šitą query'į gausim per 0ms be AI / web_search latency'o.
       setCachedSearchResponse(q.trim(), enriched, aiResult.confidence)
@@ -1986,20 +2128,21 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
     } catch (e) {
       if (e.name === 'AbortError' || controller.signal.aborted) return
       if (e.code === 'limit_reached') {
-        setLoading(false); trackStep(null)
+        setLoading(false); endTracking()
         setPaywallLimitType(e.limitType); setPaywallOpen(true)
         return
       }
       console.error('[SearchModal] error:', e)
       setError('Klaida ieškant augalo.')
       setLoading(false)
-      trackStep(null)
+      endTracking()
     }
   }
 
   // ── Photo search — Phase 1 (preview) + Phase 2 (details) ───────
   const searchByPhoto = async (file) => {
     setLoading(true); setResult(null); setError(null); setQuery('')
+    setPhases(initialPhaseState())  // reset phase checklist (photo path)
     const totalStartedAt = Date.now()
     trackStep('Apdorojama nuotrauka...')
     try {
@@ -2033,7 +2176,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
       })
 
       const previewBlock = r1.content.find(b => b.type === 'tool_use' && b.name === 'plant_preview')
-      if (!previewBlock) { setError('Nepavyko identifikuoti augalo.'); setLoading(false); trackStep(null); return }
+      if (!previewBlock) { setError('Nepavyko identifikuoti augalo.'); setLoading(false); endTracking(); return }
 
       const aiResult = previewBlock.input
 
@@ -2056,7 +2199,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
       if (trustCatalog) {
         setResult({ ...catalogEntryToAIResult(mergedCached), fromCatalog: true })
         setLoading(false)
-        trackStep(null)
+        endTracking()
         console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s (from catalog${cached.taxonGroupId ? ', su taxonGroup merge' : ''})`)
         return
       }
@@ -2072,23 +2215,27 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
         enrichCandidates(aiResult.candidates),
       ])
       enriched.candidates = candidatesWithImages
+      // Verify phase — UI checklist'ui, kad 5-tas phase pasipildytų. Šis
+      // call'as gali būti trumpas (jokio realaus tinklo darbo čia, nes
+      // enrich'as jau ištraukė Wikidata duomenis), bet vizualus completion'as.
+      trackStep('Tikrinu Wikidata...')
       // NEBE'AUTO-SAVE į catalog'ą iš photo search'o — žiūr. text search
       // paaiškinimą aukščiau. SaveButton + fetchDetails atliks pilną save'ą
       // į catalog su Phase 2 care info, jei vartotojas užklausa.
       setResult(enriched)
       setLoading(false)
-      trackStep(null)
+      endTracking()
       console.log(`[search] ✓ TOTAL — ${((Date.now() - totalStartedAt) / 1000).toFixed(2)}s`)
     } catch (e) {
       if (e.code === 'limit_reached') {
-        setLoading(false); trackStep(null)
+        setLoading(false); endTracking()
         setPaywallLimitType(e.limitType); setPaywallOpen(true)
         return
       }
       console.error('[SearchModal photo] error:', e)
       setError('Nepavyko identifikuoti augalo. Bandykite aiškesnę nuotrauką.')
       setLoading(false)
-      trackStep(null)
+      endTracking()
     }
   }
 
@@ -2282,15 +2429,22 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
           />
         </div>
 
-        {/* Loading */}
+        {/* Loading — phase timeline checklist + brand loader */}
         {loading && (
-          <div className="flex flex-col items-center gap-3 py-8 text-center">
+          <div className="flex flex-col items-center gap-4 py-6 text-center">
             {previewUrl
               ? <img src={previewUrl} alt="" className="w-28 h-28 object-cover rounded-2xl opacity-70" />
               : <BrandLoader />
             }
-            <p className="text-sm text-forest-600 font-medium">{statusMsg}{dots}</p>
-            {!previewUrl && <p className="text-xs text-forest-400 italic">{query}</p>}
+            {query && !previewUrl && (
+              <p className="text-xs text-forest-500 italic px-4 -mt-1">„{query}"</p>
+            )}
+            <PhaseTimeline phases={phases} />
+            {statusMsg && (
+              <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-forest-500/80 -mt-1">
+                {statusMsg.replace('...', '')}{dots}
+              </p>
+            )}
           </div>
         )}
 
