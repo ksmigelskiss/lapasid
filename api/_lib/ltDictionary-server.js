@@ -73,12 +73,16 @@ export async function resolveLtServer(latinName) {
     }
   }
 
+  // ltAllForms — kai species-qualified, NEnaudojam genusEntry.ltAllForms
+  // dėl cross-species/genus pollution (žiūr. client mirror paaiškinimą).
+  const allForms = speciesQualified
+    ? [...new Set([ltName, genusEntry.ltName])]
+    : (genusEntry.ltAllForms ?? [genusEntry.ltName])
+
   return {
     ltName,
     ltSynonyms:  genusEntry.ltSynonyms ?? [],
-    ltAllForms:  speciesQualified
-      ? [ltName, genusEntry.ltName, ...(genusEntry.ltAllForms ?? [])]
-      : (genusEntry.ltAllForms ?? [genusEntry.ltName]),
+    ltAllForms:  allForms,
     ltFamily:    genusEntry.ltFamily ?? null,
     confidence:  genusEntry.confidence,
     sources:     speciesQualified

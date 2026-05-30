@@ -39,7 +39,15 @@ export async function buildPreDbBaseResult(stage1, preview, opts = {}) {
   // ── Identity ────────────────────────────────────────────────
   const latinName = stage1.latin
   const name = stage1.lietuviškas ?? null
-  const sinonimai = (stage1.ltSynonyms ?? []).filter(s => s !== name)
+  // Dedupe sinonimus per Set'ą — kartais ltAllForms turi tą patį vardą
+  // skirtingais case'ais arba tas pats vardas ateina iš kelių šaltinių
+  // (lt-names + species-lt-names + future inat synonyms). Vartotojas nemato
+  // dublikatinių chip'ų.
+  const sinonimai = [...new Set(
+    (stage1.ltSynonyms ?? [])
+      .filter(s => s && s !== name)
+      .map(s => s.trim())
+  )]
 
   // ── Aprasymas — iš Wikipedia extract'o (jei yra) ────────────
   // bestExtract.lang = 'lt' | 'en'. EN atveju flag'inam, kad Phase 2 RAG'as

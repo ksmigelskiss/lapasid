@@ -189,12 +189,20 @@ export async function resolveLt(latinName) {
     }
   }
 
+  // ltAllForms — kai species-qualified, NEnaudojam genusEntry.ltAllForms,
+  // nes tas array'us (per lt-names.json data quality issue) gali turėti
+  // related-species ar related-genus pavadinimus (e.g. Sansevieria genus
+  // turi „Sansevjera trijuostė" — kuri yra trifasciata species, ne zeylanica).
+  // Inkliuduojant juos čia, vartotojas matytų KLAIDINGUS synonimų chip'us.
+  // Žiūr. task #37 dėl lt-names.json source audit'o.
+  const allForms = speciesQualified
+    ? [...new Set([ltName, genusEntry.ltName])]   // tik 2 forms: constructed + genus
+    : (genusEntry.ltAllForms ?? [genusEntry.ltName])
+
   return {
     ltName,
     ltSynonyms: genusEntry.ltSynonyms ?? [],
-    ltAllForms: speciesQualified
-      ? [ltName, genusEntry.ltName, ...(genusEntry.ltAllForms ?? [])]
-      : (genusEntry.ltAllForms ?? [genusEntry.ltName]),
+    ltAllForms: allForms,
     ltFamily: genusEntry.ltFamily ?? null,
     confidence: genusEntry.confidence,
     sources: speciesQualified
