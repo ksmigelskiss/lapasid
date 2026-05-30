@@ -465,14 +465,46 @@ ACCEPTED botanical name(s) (e.g. „Dracaena trifasciata 'Nite Lite'") so the
 user can CHOOSE, instead of silently committing a vendor-only name. A name that
 4 shops use but no taxonomic source confirms = medium + candidates, never high.
 
+🛑 CRITICAL — VENDOR ECHO FORBIDDEN:
+When the user query is a vendor / unverified name (e.g. „Sansevieria aubrytiana
+nite lite"), DO NOT echo it back as the main latinName NOR as the first
+candidate. Both main latinName AND candidates[0] MUST be ACCEPTED botanical
+names from Wikipedia / Wikidata / RHS / botanical references.
+
+  ✗ WRONG (current bug):
+     query: „Sansevieria aubrytiana nite lite"
+     latinName: „Dracaena aubrytiana 'Nite Lite'"   ← vendor echo, no botanical source
+     candidates: [
+       { latinName: „Dracaena aubrytiana 'Nite Lite'" },   ← duplicates main
+       { latinName: „Dracaena trifasciata 'Nite Lite'" },  ← REAL match buried
+     ]
+
+  ✓ CORRECT:
+     query: „Sansevieria aubrytiana nite lite"
+     latinName: „Dracaena trifasciata 'Nite Lite'"   ← REAL accepted name
+     fallbackInfo.from: „Sansevieria aubrytiana nite lite"
+     fallbackInfo.to:   „Dracaena trifasciata 'Nite Lite'"
+     fallbackInfo.reason: „cultivar-uncertain"
+     fallbackInfo.note: „'aubrytiana' yra nepatvirtinta vendor pavadinimo
+       forma; tikrasis kultivaras yra Dracaena trifasciata 'Nite Lite'."
+     candidates: [
+       { latinName: „Dracaena trifasciata 'Nite Lite'" },  ← #1 most likely
+       // OPTIONAL #2-3 only if there are REAL alternative interpretations
+     ]
+
+The user's literal query is preserved by the UI as „original input". The UI
+will offer an explicit „save as typed" path for vendor names — your job is to
+return the BOTANICALLY CORRECT answer, NOT to repeat the vendor's spelling.
+
 CANDIDATES COUNT — keep it focused (max 3 for vendor-only / cultivar
 disambiguation): the FIRST candidate MUST be the most likely match for the
-user's query (rank by name/visual similarity). UI shows it emphasized as
-„Geriausias atitikimas". Additional candidates are alternatives only — provide
-when there is REAL ambiguity, not to pad the list. 1 candidate is OK if you
-are quite confident. For full series enumeration (when user asked for the
-series itself, e.g. „Rosa Knock Out") you can still list more — that is a
-different intent. Default for vendor-only / typo'd queries: 1-3 candidates.
+user's query (rank by name/visual similarity AMONG ACCEPTED NAMES). UI shows
+it emphasized as „Geriausias atitikimas". Additional candidates are
+alternatives only — provide when there is REAL ambiguity, not to pad the
+list. 1 candidate is OK if you are quite confident in the accepted alternative.
+For full series enumeration (when user asked for the series itself, e.g.
+„Rosa Knock Out") you can still list more — that is a different intent.
+Default for vendor-only / typo'd queries: 1-3 candidates.
 
 latinName MUST be a CLEAN taxonomic name — no Lithuanian/English
 suffixes in parentheses, no ® / ™ symbols. Examples:

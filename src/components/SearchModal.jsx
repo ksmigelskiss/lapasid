@@ -2483,33 +2483,72 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                     </button>
                   )}
 
-                  {/* „Arba" separator — kelias į žemiau esantį fallback save flow'ą */}
-                  <div className="flex items-center gap-2 mt-3 px-1">
-                    <div className="h-px flex-1 bg-bone-400/40" />
-                    <p className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-forest-400">
-                      arba pridėti bendrą
-                    </p>
-                    <div className="h-px flex-1 bg-bone-400/40" />
-                  </div>
                 </div>
               )
             })()}
 
-            {/* Hero gallery — mobile bleeds (-mx-4) iki ekrano krašto; desktop'e
-                lieka rounded card su parent padding'u (kad neišlystų už panel'ės).
-                Slepiam jei result yra serijos disambiguation (>=2 candidates) —
-                šitam atveju series-level „hero" nuotrauka tikriausiai bus ar
-                klaidinga (Brave nelabai randa konkretų image'ą serijos
-                užklausai, gali grąžinti random plant'ą), ar mažai informatyvi
-                (vieno cultivar'o nuotrauka neatstovauja visos serijos).
-                Vartotojas mato candidates su jų individualiomis nuotraukomis. */}
-            {/* Hide hero photo kai AI nepatvirtino augalo (low confidence ar
-                unknown match level). Anksčiau Brave/AI grąžindavo random foto
-                kaip „Nežinomas augalas" hero — sci-fi monstrą Xenomorphica
-                paieškoje, etc. Tas siunčia klaidingą signal'ą vartotojui,
-                kad augalas tikrai egzistuoja. (2026-05-21 testavimo fix.) */}
-            {result.image &&
-             !(Array.isArray(result.candidates) && result.candidates.length >= 2) &&
+            {/* „Save as typed" — eksplicitus opt-in path'as kai vartotojas vis tiek
+                nori išsaugoti BŪTENT tai, ką įvedė (e.g. pirko parduotuvėje su tuo
+                vendor pavadinimu). Rodom TIK kai:
+                  • Yra candidates + non-high confidence (= AI rekomenduoja kitką)
+                  • User'io įvestis SKIRIASI nuo AI'aus accepted recommendation'o
+                Save'inant — latinName stays AI'aus accepted (kad Phase 2 enrich
+                neit į nieko), bet pridedamas `userTypedName` + `needsManualVerification`
+                flag'as admin review'ui. */}
+            {Array.isArray(result.candidates) && result.candidates.length >= 1 &&
+             result.confidence !== 'high' && !result.fromCatalog &&
+             query.trim() && query.trim().toLowerCase() !== result.latinName?.toLowerCase() && (
+              <div className="mb-3 mt-1 rounded-2xl bg-bone-50/60 border border-bone-400/40 px-4 py-3">
+                <div className="flex items-start gap-2.5">
+                  <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-forest-500" strokeWidth={2} />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-forest-700">
+                      Arba kaip įvedei
+                    </p>
+                    <p className="text-[12px] text-forest-600 leading-relaxed mt-1">
+                      Tavo įvedimas: <span className="font-mono text-[11.5px] text-forest-700">„{query.trim()}"</span>
+                    </p>
+                    <p className="text-[11.5px] text-forest-500 italic leading-relaxed mt-1.5">
+                      Bus pažymėta „reikia patikrinti" — admin'as peržiūrės. Rekomenduojam pridėti nuotrauką.
+                    </p>
+                    <div className="flex items-center gap-2 mt-2.5">
+                      <button
+                        onClick={() => fileRef.current?.click()}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-bone-100 border border-bone-400/50 text-forest-600 hover:bg-bone-200 text-[11.5px] font-medium transition-colors"
+                      >
+                        <Camera size={12} /> Nuotrauka
+                      </button>
+                      <SaveButton
+                        label="Pridėti kaip įvedei"
+                        result={{
+                          ...result,
+                          latinName: query.trim(),
+                          lotyniskas: query.trim(),
+                          userTypedName: query.trim(),
+                          aiSuggestedLatin: result.latinName,
+                          needsManualVerification: true,
+                          verificationStatus: 'unverified-by-user',
+                        }}
+                        kategorija="nori"
+                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-transparent border border-forest-300/60 text-forest-600 hover:bg-forest-50 text-[11.5px] font-medium transition-colors"
+                        onSave={onAddToWishlist}
+                        onClose={onClose}
+                        onSavingChange={setSavingPhase2}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Hero card / emoji fallback — slepiam VISIŠKAI kai candidates yra +
+                non-high confidence (kortelė būtų duplikatas top candidate'o, nes
+                po prompt fix'o main latinName = top candidate accepted name).
+                Vartotojas matytų tą patį augalą du kartus — sumaišties priežastis.
+                Su candidates flow'u, action'as yra: arba pasirinkti candidate'ą,
+                arba „save as typed" (žemiau atskira kortelė). */}
+            {Array.isArray(result.candidates) && result.candidates.length >= 1 && result.confidence !== 'high' && !result.fromCatalog ? null :
+             result.image &&
              !(result.confidence === 'low' || result.matchLevel === 'unknown') ? (
               <div className={`rounded-3xl overflow-hidden h-56 relative mb-0 ${useDesktopPanel ? '' : '-mx-4'}`}>
                 {/* Cross-fade image swap */}
