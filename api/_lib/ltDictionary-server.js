@@ -58,13 +58,32 @@ export async function resolveLtServer(latinName) {
 
   // Genus fallback (esamas elgesys)
   if (!genusEntry || !genusEntry.ltName) return null
+
+  // SPECIES-QUALIFIED genus fallback — mirror'as client'inio resolveLt.
+  // Kai užklausa species-level, bet species nėra DB'e — konstruojam
+  // „[genus LT] [latin epithet]" formą. Žiūr. src/utils/ltDictionary.js
+  // for detailed comments.
+  let ltName = genusEntry.ltName
+  let speciesQualified = false
+  if (words.length >= 2) {
+    const epithet = words[1].toLowerCase().replace(/^['"]|['"]$/g, '')
+    if (epithet && !genusEntry.ltName.toLowerCase().includes(epithet)) {
+      ltName = `${genusEntry.ltName} ${epithet}`
+      speciesQualified = true
+    }
+  }
+
   return {
-    ltName:      genusEntry.ltName,
+    ltName,
     ltSynonyms:  genusEntry.ltSynonyms ?? [],
-    ltAllForms:  genusEntry.ltAllForms ?? [genusEntry.ltName],
+    ltAllForms:  speciesQualified
+      ? [ltName, genusEntry.ltName, ...(genusEntry.ltAllForms ?? [])]
+      : (genusEntry.ltAllForms ?? [genusEntry.ltName]),
     ltFamily:    genusEntry.ltFamily ?? null,
     confidence:  genusEntry.confidence,
-    sources:     genusEntry.sources ?? [],
+    sources:     speciesQualified
+      ? [...(genusEntry.sources ?? []), 'genus-fallback-qualified']
+      : (genusEntry.sources ?? []),
     wikiUrl:     genusEntry.wikiUrl ?? null,
     wikidataId:  genusEntry.wikidataId ?? null,
     inatTaxonId: genusEntry.inatTaxonId ?? null,

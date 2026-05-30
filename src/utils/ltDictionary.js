@@ -165,13 +165,41 @@ export async function resolveLt(latinName) {
 
   // Genus fallback (esamas elgesys)
   if (!genusEntry || !genusEntry.ltName) return null
+
+  // SPECIES-QUALIFIED genus fallback (2026-05-30): kai užklausa yra
+  // species-level (du žodžiai), bet konkreti species nėra species-lt-names.json'e,
+  // konstruojam „[genus LT] [latin epithet]" formą vietoj bare genus name.
+  // Sprendžia bug'ą, kuriame „Sansevieria zeylanica" → tik „Sansevjera"
+  // (vartotojas mato genties vardą be species qualifier'io).
+  //
+  // Pavyzdys:
+  //   query: „Sansevieria zeylanica"
+  //   genus DB: „sansevjera"
+  //   result: „Sansevjera zeylanica" (NOT just „Sansevjera")
+  //
+  // Confidence laikom mid — nes species LT name'as nėra validuotas (gali būti
+  // istorinis ar netiksli forma), tik genus + epithet konkatenacija.
+  let ltName = genusEntry.ltName
+  let speciesQualified = false
+  if (words.length >= 2) {
+    const epithet = words[1].toLowerCase().replace(/^['"]|['"]$/g, '')  // strip cultivar quotes if any
+    if (epithet && !genusEntry.ltName.toLowerCase().includes(epithet)) {
+      ltName = `${genusEntry.ltName} ${epithet}`
+      speciesQualified = true
+    }
+  }
+
   return {
-    ltName: genusEntry.ltName,
+    ltName,
     ltSynonyms: genusEntry.ltSynonyms ?? [],
-    ltAllForms: genusEntry.ltAllForms ?? [genusEntry.ltName],
+    ltAllForms: speciesQualified
+      ? [ltName, genusEntry.ltName, ...(genusEntry.ltAllForms ?? [])]
+      : (genusEntry.ltAllForms ?? [genusEntry.ltName]),
     ltFamily: genusEntry.ltFamily ?? null,
     confidence: genusEntry.confidence,
-    sources: genusEntry.sources ?? [],
+    sources: speciesQualified
+      ? [...(genusEntry.sources ?? []), 'genus-fallback-qualified']
+      : (genusEntry.sources ?? []),
     wikiUrl: genusEntry.wikiUrl ?? null,
     wikidataId: genusEntry.wikidataId ?? null,
     inatTaxonId: genusEntry.inatTaxonId ?? null,
