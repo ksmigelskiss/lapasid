@@ -1,0 +1,122 @@
+[
+  {
+    "latinGenus": "Apios",
+    "ltName": "Kriaušė",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Pyrus"
+  },
+  {
+    "latinGenus": "Arctium",
+    "ltName": "Dioskoridoaugalas",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Apycumum"
+  },
+  {
+    "latinGenus": "Astrantia",
+    "ltName": "Žvaigždė",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Astrodaucus"
+  },
+  {
+    "latinGenus": "Astrocaryum",
+    "ltName": "Žvaigždė",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Astrodaucus"
+  },
+  {
+    "latinGenus": "Calystegia",
+    "ltName": "Dengtis",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Rhynchostegium"
+  },
+  {
+    "latinGenus": "Filago",
+    "ltName": "Siūlas",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Scytonema"
+  },
+  {
+    "latinGenus": "Juglans",
+    "ltName": "Riešutas",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Carya"
+  },
+  {
+    "latinGenus": "Leucojum",
+    "ltName": "Leukoja",
+    "source": "wiki",
+    "rejectReason": "canonical-of-Matthiola"
+  },
+  {
+    "latinGenus": "Lunaria",
+    "ltName": "Mėnulis",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Menispermum"
+  },
+  {
+    "latinGenus": "Meconopsis",
+    "ltName": "Aguona",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Papaver"
+  },
+  {
+    "latinGenus": "Navicula",
+    "ltName": "Laivelis",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Cymbella"
+  },
+  {
+    "latinGenus": "Nymphoides",
+    "ltName": "Vandenė",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Elatine"
+  },
+  {
+    "latinGenus": "Panicum",
+    "ltName": "Duona",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Artocarpus"
+  },
+  {
+    "latinGenus": "Phytolacca",
+    "ltName": "Augalas",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Schoenoplectus"
+  },
+  {
+    "latinGenus": "Pimenta",
+    "ltName": "Pipiras",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Piper"
+  },
+  {
+    "latinGenus": "Plectranthus",
+    "ltName": "Cimbžieda",
+    "source": "derlingas",
+    "rejectReason": "canonical-of-Plactranthus"
+  },
+  {
+    "latinGenus": "Pyrola",
+    "ltName": "Kriaušė",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Pyrus"
+  },
+  {
+    "latinGenus": "Ravalia",
+    "ltName": "Ravenala",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Ravenala"
+  },
+  {
+    "latinGenus": "Sinningia",
+    "ltName": "Gloksinija",
+    "source": "gaspadorius",
+    "rejectReason": "canonical-of-Gloxinia"
+  },
+  {
+    "latinGenus": "Vigna",
+    "ltName": "Pupuolė",
+    "source": "wiki",
+    "rejectReason": "canonical-of-Soja"
+  }
+]

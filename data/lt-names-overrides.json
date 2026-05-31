@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "purpose": "User-curated overrides for build-lt-names-v2.mjs. Applied LAST in priority chain (above all scraped sources). Used to fix garbage entries in source data without modifying canonical plants.json.",
+    "verifiedBy": "AI verify agent (2026-05-31) + admin review",
+    "verificationReport": "tasks/verify-plants-garbage-2026-05-31.md"
+  },
+  "genus": {
+    "Acacia":       { "ltName": "akacija",   "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP + plants.json species)" },
+    "Blechnum":     { "ltName": "unksmenė",  "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP)" },
+    "Myrica":       { "ltName": "sotvaras",  "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP)" },
+    "Myrrhis":      { "ltName": "garduoklė", "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP)" },
+    "Myrtus":       { "ltName": "mirta",     "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP family Mirtiniai + plants.json + lt-names synonyms)" },
+    "Pistacia":     { "ltName": "pistacija", "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP + plants.json)" },
+    "Potamogeton":  { "ltName": "plūdė",     "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP + plants.json 10+ species)" },
+    "Schoenus":     { "ltName": "vikšrenis", "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP)" },
+    "Sisyrinchium": { "ltName": "vikšruolė", "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP family Vilkdalginiai + lt-names synonyms)" },
+    "Taxus":        { "ltName": "kukmedis",  "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP + plants.json species)" },
+    "Thymus":       { "ltName": "čiobrelis", "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP + plants.json 3+ species)" }
+  },
+  "species": {
+  },
+  "_pending_review": {
+    "_comment": "Šie reikalauja admin/botanist review. Pridėti į 'genus' jei aprovuoji.",
+    "Arachis":    { "ltName": "arachis",   "confidence": "MEDIUM-HIGH", "note": "Latin loan word; standard LT botanical convention" },
+    "Cistus":     { "ltName": "švitrūnas", "confidence": "MEDIUM-HIGH", "note": "Strong commercial+wiki-style consensus, no academic source" },
+    "Arundo":     { "ltName": "arundas",   "confidence": "MEDIUM",      "note": "Search-snippet only — needs botanist confirmation" },
+    "Chondrilla": { "ltName": "?",         "confidence": "LOW",         "note": "3 competing names: arteris / vabalsalotis / širetis — manual pick" }
+  }
+}
