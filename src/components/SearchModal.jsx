@@ -2622,20 +2622,21 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                     </>
                   )}
 
-                  {/* Admin bulk save — secondary visual (outline ne solid).
-                      Showinam tik kai >=2 kandidatai (vienos series'os iškvietimas).
-                      Bigger picture rethink: žiūr. task #30 (perkelt į AdminPanel
-                      BulkImport tool'ą, kur quality gate'as prieš save'inant). */}
-                  {result.candidates.length >= 2 && (
-                    <button
-                      onClick={() => bulkSaveSeries(query.trim() || result.latinName, result.candidates)}
-                      disabled={!!bulkState && bulkState.phase !== 'done' && bulkState.phase !== 'error'}
-                      className="w-full mt-3 bg-transparent border border-forest-300/50 text-forest-600 hover:bg-forest-50 hover:border-forest-400/70 disabled:opacity-40 rounded-xl px-3 py-2 text-[12px] font-medium transition-colors flex items-center justify-center gap-1.5"
-                    >
-                      <span className="font-mono text-[10.5px] uppercase tracking-[0.14em]">+ visa serija</span>
-                      <span className="font-mono text-[9.5px] opacity-60">({MAX_BULK_BATCH} cv · ~$0.10)</span>
-                    </button>
-                  )}
+                  {/* „+ visa serija" mygtukas pašalintas 2026-05-31 (žiūr.
+                      tasks/bulk-series-rethink-2026-05-30.md). Priežastys:
+                        1. NEBUVO admin-gated — bet kuris vartotojas matydavo
+                           (admin-leak bug — `useAuth().isAdmin` niekur netikrintas)
+                        2. Quality gap vs single save: bulk path'as praleidžia
+                           RAG context'ą, D-strict toxicity, per-cultivar narrative;
+                           hardcoded `verificationStatus: 'auto-verified'`
+                        3. Vartotojo intent mismatch — ieško VIENO augalo, gaudavo
+                           25 entries į catalog (cross-user impact)
+                        4. Hallucination amplifier — „surašyk VISUS žinomus iki 25"
+                           prompt versta AI pildyt quota'ą, wikidataVerified=false
+                           nestabdo save'o
+                      Schema (TOOL_BULK_SERIES) + helper (`bulkSaveSeries`) palikti
+                      kaip backup — galima reanimuoti kaip AdminPanel BulkImport
+                      tool'ą su review queue, jei kada nors pain'as iškils. */}
 
                 </div>
               )
