@@ -109,6 +109,35 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
   const t0 = Date.now()
   console.log('[save-plant] START', { uid, latin: latinName, plantId, colId })
 
+  // Progress staging helper (2026-06-01) — write enrichmentStage to catalog
+  // doc per kiekvieną milestone'ą. Client subscribes per onSnapshot ir
+  // gauna realtime updates → ProgressView komponentas rodo informatyvius
+  // statusus + progressively reveal'ina užbaigtus blocks (toxicity, care,
+  // narrative, hero) be 30-90s blank wait.
+  //
+  // Stages (sekvencija):
+  //   'started'   — Phase 2 processing pradėta (rodyt initial loader)
+  //   'rag'       — RAG context surinkta (Wikipedia, PFAF, ASPCA, Cheng)
+  //   'narrative' — AI text + care + toxicity ready (catalog main write)
+  //   'image'     — hero illustration generation in progress (Gemini)
+  //   'complete'  — viskas baigta, hero+thumb URL'ai available
+  //
+  // Idempotent failures: jei stage write fail'ina (Firestore tranzient
+  // issue), tylėjom skip — pagrindiniam flow'ui nedaro reikšmingos žalos.
+  const enrichSlug = catalogDocId(latinName)
+  const writeStage = async (stage, extraFields = {}) => {
+    if (!enrichSlug) return
+    try {
+      await adminFirestore().collection('catalog').doc(enrichSlug).set({
+        enrichmentStage: stage,
+        enrichmentUpdatedAt: new Date().toISOString(),
+        ...extraFields,
+      }, { merge: true })
+    } catch (e) {
+      console.warn(`[save-plant] stage write failed (${stage}):`, e?.message)
+    }
+  }
+
   try {
     // ── 0. Idempotency check (Step 6s — timestamp comparison) ────
     // Plant gali turėti istoriškai phase2CompletedAt (prev save), BET dabar
@@ -145,6 +174,9 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
       console.warn('[save-plant] idempotency check failed (continuing):', e?.message)
     }
 
+    // Stage: started — pirmas signal'as klientui kad enrichment vyksta
+    await writeStage('started', { enrichmentStartedAtServer: new Date().toISOString() })
+
     // ── 1. RAG context ──────────────────────────────────────
     const ragStart = Date.now()
     const rag = await buildPlantRagContextServer(latinName, {
@@ -159,6 +191,9 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
       sources: rag.sources,
       confidence: rag.confidence,
     })
+
+    // Stage: rag — šaltiniai surinkti, AI tuoj startuoja (longest wait coming)
+    await writeStage('rag')
 
     // ── 2. AI Phase 2 call ──────────────────────────────────
     // Grounded system: VOICE_PERSONA + PLANT_SYSTEM + RAG priority + verified facts + LT climate + vet links
@@ -377,7 +412,11 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     }
 
     // ── 5. Catalog write (with parent taxon group) ──────────
+    // Stage 'narrative' implicit'inai įtraukta į saveCatalogWithParentServer:
+    // pridedam fullPlant'e prieš save (vienam Firestore write'ui — efficient).
     if (details.laistymasIntervalas) {
+      fullPlant.enrichmentStage = 'narrative'
+      fullPlant.enrichmentUpdatedAt = new Date().toISOString()
       const catRes = await saveCatalogWithParentServer(fullPlant)
       console.log('[save-plant] catalog save', { plantId, ok: catRes?.ok, id: catRes?.id, reason: catRes?.reason })
     } else {
@@ -400,6 +439,8 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     // Dabar catalog jau parašytas (step 5) → generuojam tiesiai iš fullPlant.
     const heroToken = process.env.VERCEL_OIDC_TOKEN || process.env.AI_GATEWAY_API_KEY
     if (details.laistymasIntervalas && heroToken) {
+      // Stage: image — hero generation starts (longest individual step, 20-40s)
+      await writeStage('image')
       try {
         const hg = createHeroGen({ token: heroToken })
         const { buf: rawBuf, heroPromptBrief, heroPhotoAssessment, _heroMethod } =
@@ -432,9 +473,21 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
           heroThumb: thumbUrl,
           heroPromptBrief, heroPhotoAssessment, _heroMethod,
           _heroIllustrationAt: new Date().toISOString(),
+          // Stage: complete — hero ready, all enrichment done
+          enrichmentStage: 'complete',
+          enrichmentUpdatedAt: new Date().toISOString(),
         })
         console.log('[save-plant] hero gen done', { slug, method: _heroMethod, hero: url, thumb: thumbUrl })
-      } catch (e) { console.warn('[save-plant] hero gen failed', e?.message) }
+      } catch (e) {
+        console.warn('[save-plant] hero gen failed', e?.message)
+        // Hero fail'ino, BET enrichment text/care vis tiek ready (narrative stage'as).
+        // Pažymim 'complete' nors hero missing — UI parodys placeholder/emoji.
+        await writeStage('complete', { _heroError: e?.message ?? 'unknown' })
+      }
+    } else {
+      // Hero gen skipped (no laistymasIntervalas ar no heroToken) — vis tiek
+      // pažymim complete kad client'as UI nelauks amžinai.
+      await writeStage('complete')
     }
 
     console.log('[save-plant] DONE', { plantId, totalMs: Date.now() - t0 })
