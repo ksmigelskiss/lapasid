@@ -28,6 +28,7 @@ import { catalogPreviewUpsert } from '../utils/catalogPreviewUpsert'
 import { buildPlantRagContext } from '../utils/buildPlantRagContext'
 import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../utils/stage2Constants'
 import { VOICE_PERSONA } from '../utils/plantVoicePersona'
+import EnrichmentProgress from './EnrichmentProgress'
 import { deriveToxicityFromSources, isPavojaiEmpty } from '../utils/deriveToxicity'
 import { diagnosticPromptCheck } from '../utils/diagnosticPromptCheck'
 import { runToxicityIsolatedTest } from '../utils/toxicityIsolatedTest'
@@ -1443,6 +1444,29 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   const [photoIdx, setPhotoIdx]             = useState(0)
   const [paywallOpen, setPaywallOpen]       = useState(false)
   const [paywallLimitType, setPaywallLimitType] = useState(null)
+  // EnrichmentProgress watch state (2026-06-01). Kai user'is paspaudžia save —
+  // vietoj iškart uždarymo modal'ą, pereinam į progress view'ą per kurį
+  // matosi Phase 2 enrichment etapai realtime'e. „Tęsti fone" mygtukas
+  // ProgressView'e iškviečia realų onClose'ą kad modal'as uždarytų ir
+  // grįžtų į biblioteką (backward-compat su seniu UX).
+  // null = neaktyvu; { latinName, name, image, plant } = watching.
+  const [enrichmentTarget, setEnrichmentTarget] = useState(null)
+
+  // Wrap SaveButton'o onClose'ą — vietoj iškart uždarymo modal'o, switch'inam
+  // į EnrichmentProgress view'ą su Phase 2 stages tracking'u. Vartotojas matys
+  // realtime kas vyksta, gali laukti informuotai arba „Tęsti fone" -> realus
+  // close. Iškviečia su currentai matomu result'o duomenimis (Phase 1).
+  const handlePostSaveSwitch = () => {
+    if (result) {
+      setEnrichmentTarget({
+        latinName: result.latinName ?? result.lotyniskas,
+        name: result.name ?? result.lietuviškas,
+        image: result.image,
+      })
+    } else {
+      onClose?.()  // fallback: no result → true close
+    }
+  }
 
   // Reset gallery index when a new result arrives
   useEffect(() => { setPhotoIdx(0) }, [result])
@@ -2457,8 +2481,28 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
           </div>
         )}
 
+        {/* EnrichmentProgress — po save'o (handlePostSaveSwitch) per'jungiam į
+            progress view'ą su Phase 2 stage'ais. Vartotojas mato KĄ vyksta
+            realtime, vietoj 30-90s blank wait + grįžimo į biblioteką.
+            „Tęsti fone" mygtukas → realus onClose. (2026-06-01) */}
+        {enrichmentTarget && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+          >
+            <EnrichmentProgress
+              latinName={enrichmentTarget.latinName}
+              name={enrichmentTarget.name}
+              image={enrichmentTarget.image}
+              onClose={onClose}
+              onOpenPlant={onClose /* TODO: navigate to plant detail */}
+            />
+          </motion.div>
+        )}
+
         {/* Result */}
-        {result && !loading && (
+        {result && !loading && !enrichmentTarget && (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -2687,7 +2731,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                         kategorija="nori"
                         className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-transparent border border-forest-300/60 text-forest-600 hover:bg-forest-50 text-[11.5px] font-medium transition-colors"
                         onSave={onAddToWishlist}
-                        onClose={onClose}
+                        onClose={handlePostSaveSwitch}
                         onSavingChange={setSavingPhase2}
                       />
                     </div>
@@ -2856,7 +2900,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                         kategorija="nori"
                         className="w-full h-11 rounded-btn font-display text-xs font-medium text-forest-500 bg-transparent border border-bone-400/40 hover:bg-bone-300/30 disabled:opacity-60 transition-colors"
                         onSave={onAddToWishlist}
-                        onClose={onClose}
+                        onClose={handlePostSaveSwitch}
                         onSavingChange={setSavingPhase2}
                       />
                     </>
@@ -2878,7 +2922,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                         kategorija="auginama"
                         className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 disabled:opacity-60 transition-colors"
                         onSave={onAddToDashboard}
-                        onClose={onClose}
+                        onClose={handlePostSaveSwitch}
                         onSavingChange={setSavingPhase2}
                       />
                       {/* Secondary — bone-50 outline (mažesnis vizualinis svoris) */}
@@ -2888,7 +2932,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                         kategorija="nori"
                         className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 disabled:opacity-60 transition-colors"
                         onSave={onAddToWishlist}
-                        onClose={onClose}
+                        onClose={handlePostSaveSwitch}
                         onSavingChange={setSavingPhase2}
                       />
                     </>
