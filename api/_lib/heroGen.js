@@ -18,9 +18,14 @@ export const BRIEF_MODEL = 'anthropic/claude-sonnet-4.5'
 export const IMAGE_MODEL = 'google/gemini-3-pro-image'
 
 // Bendras stiliaus suffix'as — IDENTIŠKAS restyle + text→img keliams → vientisas
-// stilius. Cream #fefdfa (vėliau transparentize), kvadratas, augalas ~90%, no-text
-// (dropintas „plate" — provokuodavo įkeptas antraštes).
-export const STYLE_BASE = 'Compose as a SQUARE 1:1 image. The single potted plant (simple terracotta pot) is LARGE and PROMINENT, filling about 90% of the frame — centered, with only a small even margin; do not leave large empty space. Fill the ENTIRE background edge-to-edge with one SOLID FLAT warm off-white colour #FEFDFA — absolutely no checkerboard or transparency pattern, no scenery, no surface, no shadow. ABSOLUTELY NO TEXT, no caption, no label, no lettering, no handwriting, no botanical annotations, no watermark, no signature anywhere in the image. Muted natural palette (sage green, bone, warm terracotta), soft vintage botanical watercolor illustration style.'
+// stilius. Cream #fefdfa (vėliau transparentize), 3:2 landscape, augalas centered
+// ir prominent (ne pilnam plotyje, leidžia padding sides), no-text.
+//
+// 2026-06-01: pakeistas iš SQUARE 1:1 į 3:2 LANDSCAPE — atitinka PlantDetail
+// hero zone'os aspect-3/2 (default), išvengia vertikalaus crop'inimo. Widget
+// generates 1:1 thumb iš to paties hero per cropToThumb() (žemiau). Forced
+// 3:2 sharp.extend'u kaip safety net jei Gemini negens 3:2 tiksliai.
+export const STYLE_BASE = 'Compose as a 3:2 LANDSCAPE image (wider than tall). The single potted plant (simple terracotta pot) is CENTERED and PROMINENT, filling about 70-80% of the height — vertically centered, with even margins on left and right; do not leave large empty space at top or bottom. Fill the ENTIRE background edge-to-edge with one SOLID FLAT warm off-white colour #FEFDFA — absolutely no checkerboard or transparency pattern, no scenery, no surface, no shadow. ABSOLUTELY NO TEXT, no caption, no label, no lettering, no handwriting, no botanical annotations, no watermark, no signature anywhere in the image. Muted natural palette (sage green, bone, warm terracotta), soft vintage botanical watercolor illustration style.'
 
 // Backbone + foto refine (do-no-harm): žinios + mūsų notes = pagrindas; foto tik
 // patikslina; fragmentinė/mismatch foto atmetama. Grąžina JSON su foto įvertinimu.
@@ -40,6 +45,62 @@ BRIEF RULES (max ~60 words):
 
 Output ONLY valid JSON, no markdown:
 {"photo":"full-habit|partial|unreliable|mismatch|none","photoNote":"<=12 words why","brief":"<the brief>"}`
+
+// ── Pure: enforce 3:2 landscape aspect via transparent extend ─────
+// Safety net — Gemini gali kartais sugeneruoti close-to-square ar netaip
+// 3:2 kaip prašyta. Šis helper'is normalize'ina į GARANTUOTĄ 3:2 per
+// transparent padding (extend bottom/sides — niekada nekirpiam augalo).
+// Pakvieskite PO transparentizeBg, kad pad'ai būtų jau-transparent.
+export async function forceAspect3x2(buf) {
+  const img = sharp(buf).ensureAlpha()
+  const meta = await img.metadata()
+  const w = meta.width, h = meta.height
+  const targetRatio = 3 / 2
+  const currentRatio = w / h
+  if (Math.abs(currentRatio - targetRatio) < 0.02) return buf  // jau ~3:2
+
+  if (currentRatio < targetRatio) {
+    // Image siauresnis nei 3:2 → extend width (transparent sides)
+    const targetW = Math.round(h * targetRatio)
+    const padTotal = targetW - w
+    const padLeft = Math.floor(padTotal / 2)
+    const padRight = padTotal - padLeft
+    return sharp(buf).ensureAlpha().extend({
+      left: padLeft, right: padRight, top: 0, bottom: 0,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    }).png().toBuffer()
+  } else {
+    // Image platesnis nei 3:2 → extend height (transparent top/bottom)
+    const targetH = Math.round(w / targetRatio)
+    const padTotal = targetH - h
+    const padTop = Math.floor(padTotal / 2)
+    const padBottom = padTotal - padTop
+    return sharp(buf).ensureAlpha().extend({
+      left: 0, right: 0, top: padTop, bottom: padBottom,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    }).png().toBuffer()
+  }
+}
+
+// ── Pure: crop center 1:1 thumb (widget'ams) ──────────────────────
+// PlantCard/widget krauna mažą thumbnail (~150-400px display) ir BE šito
+// download'avosi pilną 1024+ hero PNG (~500KB) — bandwidth nuostolis.
+// Thumb yra:
+//   • 512×512 (4× plotis vs typical display → retina-friendly)
+//   • WebP (su quality 88 → ~30-50KB vs PNG ~500KB)
+//   • Center-cropped iš 3:2 hero (augalas centered → no detail loss)
+export async function cropToThumb(buf, size = 512) {
+  const meta = await sharp(buf).metadata()
+  const w = meta.width, h = meta.height
+  const minDim = Math.min(w, h)
+  const cropX = Math.floor((w - minDim) / 2)
+  const cropY = Math.floor((h - minDim) / 2)
+  return sharp(buf).ensureAlpha()
+    .extract({ left: cropX, top: cropY, width: minDim, height: minDim })
+    .resize(size, size, { fit: 'cover' })
+    .webp({ quality: 88 })
+    .toBuffer()
+}
 
 // ── Pure: bg → transparent (flood-fill iš kraštų, sharp) ──────────
 // Gemini bg tonas/tekstūra varijuoja → seam ant kortelės. Pašalinam foną →

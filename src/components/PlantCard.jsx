@@ -8,6 +8,7 @@ import { getWateringForecast } from '../utils/wateringForecast'
 import PlantImage from './brand/PlantImage'
 import BrandLoader from './brand/BrandLoader'
 import { getPlantEnrichmentState } from '../utils/plantState'
+import { heroThumbFor } from '../utils/catalog'
 
 // Designer'io PlantPhoto gradient pool (paimta iš /tmp/geliai-design styles.css `.pp-*`).
 // Hash from plant.id deterministiškai parinka vieną iš 12 gradient'ų.
@@ -207,7 +208,10 @@ const PlantCard = memo(function PlantCard({
   // foto override. Kitaip — plant.image (real foto). Personal-photo flow
   // (užklausa nufotografuoti) = vėliau; kol kas iliustracija default visiems.
   const useHero  = !!heroIllustration && !imgError
-  const heroSrc  = useHero ? heroIllustration : plant.image
+  // 2026-06-01: widget'as krauna heroThumb (1:1 WebP, ~512px, ~10× mažesnis
+  // file vs full PNG hero). Backward compat: heroThumbFor() grąžina full
+  // heroIllustration jei thumb dar nesugeneruotas (legacy entries iki 2026-06-01).
+  const heroSrc  = useHero ? (heroThumbFor(plant.lotyniskas) || heroIllustration) : plant.image
   const hasImage = heroSrc && !imgError
 
   const onPressStart = (e) => {

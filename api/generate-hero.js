@@ -13,7 +13,7 @@
 // (Sonnet vision + Gemini image). Vercel funkcijos turi OIDC token auto-injected.
 // Jei ne — reikės AI Gateway API key env var.
 import admin from 'firebase-admin'
-import { createHeroGen } from './_lib/heroGen.js'
+import { createHeroGen, forceAspect3x2, cropToThumb } from './_lib/heroGen.js'
 import { catalogDocId } from './_lib/catalog-server.js'
 import { uidFromToken } from './_firestore.js'
 
@@ -66,28 +66,43 @@ export default async function handler(req, res) {
     }
 
     const hg = createHeroGen({ token })
-    const { buf, heroPromptBrief, heroPhotoAssessment, _heroMethod } =
+    const { buf: rawBuf, heroPromptBrief, heroPhotoAssessment, _heroMethod } =
       await hg.generateHeroForEntry(entry, { braveApiKey: process.env.BRAVE_API_KEY })
 
-    const filename = `catalog/${id}/hero-illus.png`
-    const file = bucket.file(filename)
-    await file.save(buf, {
+    // 2026-06-01: enforce 3:2 landscape aspect (safety net jei Gemini negens
+    // tiksliai) + generate thumb 1:1 webp widget'ams (PlantCard).
+    const heroBuf = await forceAspect3x2(rawBuf)
+    const thumbBuf = await cropToThumb(heroBuf, 512)
+
+    const cacheBust = Date.now()
+    const heroFilename = `catalog/${id}/hero-illus.png`
+    const heroFile = bucket.file(heroFilename)
+    await heroFile.save(heroBuf, {
       contentType: 'image/png',
       metadata: { cacheControl: 'public, max-age=31536000, immutable' },
     })
-    await file.makePublic()
-    // ?v= cache-bust — deterministic path + immutable cache → re-gen serv'intų stale.
-    const url = `https://storage.googleapis.com/${bucket.name}/${filename}?v=${Date.now()}`
+    await heroFile.makePublic()
+    const url = `https://storage.googleapis.com/${bucket.name}/${heroFilename}?v=${cacheBust}`
+
+    const thumbFilename = `catalog/${id}/hero-thumb.webp`
+    const thumbFile = bucket.file(thumbFilename)
+    await thumbFile.save(thumbBuf, {
+      contentType: 'image/webp',
+      metadata: { cacheControl: 'public, max-age=31536000, immutable' },
+    })
+    await thumbFile.makePublic()
+    const thumbUrl = `https://storage.googleapis.com/${bucket.name}/${thumbFilename}?v=${cacheBust}`
 
     await db.collection('catalog').doc(id).update({
       heroIllustration: url,
+      heroThumb: thumbUrl,
       heroPromptBrief,
       heroPhotoAssessment,
       _heroMethod,
       _heroIllustrationAt: new Date().toISOString(),
     })
 
-    return res.status(200).json({ heroIllustration: url, method: _heroMethod, assessment: heroPhotoAssessment })
+    return res.status(200).json({ heroIllustration: url, heroThumb: thumbUrl, method: _heroMethod, assessment: heroPhotoAssessment })
   } catch (e) {
     console.error('[generate-hero] failed:', e?.message)
     return res.status(500).json({ error: e?.message ?? 'hero_gen_failed' })

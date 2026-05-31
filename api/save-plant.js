@@ -52,7 +52,7 @@ import { saveCatalogWithParentServer } from './_lib/taxon-groups-server.js'
 import { saveUserPlantServer, isUidMember } from './_lib/user-plant-server.js'
 import admin from 'firebase-admin'
 import { adminFirestore } from './_lib/firestore-admin.js'
-import { createHeroGen } from './_lib/heroGen.js'
+import { createHeroGen, forceAspect3x2, cropToThumb } from './_lib/heroGen.js'
 import { catalogDocId } from './_lib/catalog-server.js'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -402,20 +402,38 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     if (details.laistymasIntervalas && heroToken) {
       try {
         const hg = createHeroGen({ token: heroToken })
-        const { buf, heroPromptBrief, heroPhotoAssessment, _heroMethod } =
+        const { buf: rawBuf, heroPromptBrief, heroPhotoAssessment, _heroMethod } =
           await hg.generateHeroForEntry(fullPlant, { braveApiKey: process.env.BRAVE_API_KEY })
+
+        // 2026-06-01: enforce 3:2 landscape + generate thumb 1:1 webp (mirror'as
+        // generate-hero.js endpoint'ui). PlantDetail naudoja hero (3:2), PlantCard
+        // widget'as krauna thumb (~10× greitiau už PNG hero).
+        const heroBuf = await forceAspect3x2(rawBuf)
+        const thumbBuf = await cropToThumb(heroBuf, 512)
+
         const slug = catalogDocId(latinName)
         const bucket = admin.storage().bucket('geliu-db.firebasestorage.app')
-        const filename = `catalog/${slug}/hero-illus.png`
-        const file = bucket.file(filename)
-        await file.save(buf, { contentType: 'image/png', metadata: { cacheControl: 'public, max-age=31536000, immutable' } })
-        await file.makePublic()
-        const url = `https://storage.googleapis.com/${bucket.name}/${filename}?v=${Date.now()}`
+        const cacheBust = Date.now()
+
+        const heroFilename = `catalog/${slug}/hero-illus.png`
+        const heroFile = bucket.file(heroFilename)
+        await heroFile.save(heroBuf, { contentType: 'image/png', metadata: { cacheControl: 'public, max-age=31536000, immutable' } })
+        await heroFile.makePublic()
+        const url = `https://storage.googleapis.com/${bucket.name}/${heroFilename}?v=${cacheBust}`
+
+        const thumbFilename = `catalog/${slug}/hero-thumb.webp`
+        const thumbFile = bucket.file(thumbFilename)
+        await thumbFile.save(thumbBuf, { contentType: 'image/webp', metadata: { cacheControl: 'public, max-age=31536000, immutable' } })
+        await thumbFile.makePublic()
+        const thumbUrl = `https://storage.googleapis.com/${bucket.name}/${thumbFilename}?v=${cacheBust}`
+
         await adminFirestore().collection('catalog').doc(slug).update({
-          heroIllustration: url, heroPromptBrief, heroPhotoAssessment, _heroMethod,
+          heroIllustration: url,
+          heroThumb: thumbUrl,
+          heroPromptBrief, heroPhotoAssessment, _heroMethod,
           _heroIllustrationAt: new Date().toISOString(),
         })
-        console.log('[save-plant] hero gen done', { slug, method: _heroMethod })
+        console.log('[save-plant] hero gen done', { slug, method: _heroMethod, hero: url, thumb: thumbUrl })
       } catch (e) { console.warn('[save-plant] hero gen failed', e?.message) }
     }
 

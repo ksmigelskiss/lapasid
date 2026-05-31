@@ -237,6 +237,20 @@ export function heroIllustrationFor(lotyniskas) {
 }
 
 /**
+ * Sync lookup — grąžina watercolor hero THUMB URL (small WebP, widget-optimized).
+ * Backward compat: jei thumb neegzistuoja (old entries pre-2026-06-01), fallback
+ * į full heroIllustration. UI consumer'iai (PlantCard) gali šitą iškviesti tiesiai
+ * be papildomos defensyvinės logikos.
+ */
+export function heroThumbFor(lotyniskas) {
+  if (!lotyniskas) return null
+  const slug = catalogDocId(lotyniskas)
+  if (!slug) return null
+  const entry = _catalogById[slug]
+  return entry?.heroThumb ?? entry?.heroIllustration ?? null
+}
+
+/**
  * resolvePlantView(plant) — F1 reference resolve. GYVIEMS augalams perdengia
  * rūšinius laukus (vardai, care, toksiškumas, aprašymas…) LIVE catalog reikšmėmis,
  * kad admin/global pataisymai pasiektų esamus augalus iškart. Asmeniniai laukai
