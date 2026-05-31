@@ -1,16 +1,17 @@
 {
-  "generatedAt": "2026-05-31T08:20:04.436Z",
+  "generatedAt": "2026-05-31T20:47:26.134Z",
   "generator": "build-lt-names-v2.mjs",
   "stats": {
     "totalGenera": 1673,
     "bySource": {
-      "plants-genus": 1208,
-      "plants-species-inferred": 1298,
+      "plants-genus": 1207,
+      "plants-species-inferred": 1297,
       "derlingas": 184,
       "wiki": 556,
       "gaspadorius": 78,
       "gaspadorius-syn": 1,
-      "override-user": 11,
+      "override-user": 23,
+      "override-user-syn": 1,
       "manual-legacy": 1,
       "manual-legacy-syn": 1
     }
@@ -5491,21 +5492,22 @@
     },
     "Clerodendrum": {
       "latin": "Clerodendrum",
-      "ltName": "Klerodendras",
+      "ltName": "Šventmedis",
       "ltSynonyms": [
-        "Šventmedis"
+        "Klerodendras"
       ],
       "ltAllForms": [
-        "Klerodendras",
-        "Šventmedis"
+        "Šventmedis",
+        "Klerodendras"
       ],
       "ltFamily": null,
-      "confidence": "mid",
+      "confidence": "high",
       "sources": [
         "plants-genus",
-        "gaspadorius"
+        "gaspadorius",
+        "override-user"
       ],
-      "primarySource": "plants-genus",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Climacium": {
@@ -5710,22 +5712,23 @@
     },
     "Coffea": {
       "latin": "Coffea",
-      "ltName": "Kavmedis",
+      "ltName": "Kavamedis",
       "ltSynonyms": [
-        "Kavamedis"
+        "Kavmedis"
       ],
       "ltAllForms": [
-        "Kavmedis",
-        "Kavamedis"
+        "Kavamedis",
+        "Kavmedis"
       ],
       "ltFamily": null,
       "confidence": "high",
       "sources": [
         "plants-genus",
         "plants-species-inferred",
-        "wiki"
+        "wiki",
+        "override-user"
       ],
-      "primarySource": "plants-species-inferred",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Cola": {
@@ -7972,18 +7975,17 @@
     },
     "Drosera": {
       "latin": "Drosera",
-      "ltName": "Saulutė",
+      "ltName": "Saulašarė",
       "ltSynonyms": [],
       "ltAllForms": [
-        "Saulutė"
+        "Saulašarė"
       ],
       "ltFamily": null,
-      "confidence": "mid",
+      "confidence": "low",
       "sources": [
-        "plants-genus",
-        "plants-species-inferred"
+        "override-user"
       ],
-      "primarySource": "plants-species-inferred",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Dryas": {
@@ -13535,22 +13537,23 @@
     },
     "Musa": {
       "latin": "Musa",
-      "ltName": "Banalas",
+      "ltName": "Bananas",
       "ltSynonyms": [
-        "Bananas"
+        "Banalas"
       ],
       "ltAllForms": [
-        "Banalas",
-        "Bananas"
+        "Bananas",
+        "Banalas"
       ],
       "ltFamily": null,
       "confidence": "high",
       "sources": [
         "plants-genus",
         "plants-species-inferred",
-        "wiki"
+        "wiki",
+        "override-user"
       ],
-      "primarySource": "plants-species-inferred",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Muscari": {
@@ -14637,22 +14640,23 @@
     },
     "Oxalis": {
       "latin": "Oxalis",
-      "ltName": "Kikiakopstis",
+      "ltName": "Kiškiakopūstis",
       "ltSynonyms": [
-        "Kiškiakopūstis"
+        "Kikiakopstis"
       ],
       "ltAllForms": [
-        "Kikiakopstis",
-        "Kiškiakopūstis"
+        "Kiškiakopūstis",
+        "Kikiakopstis"
       ],
       "ltFamily": null,
       "confidence": "high",
       "sources": [
         "plants-genus",
         "plants-species-inferred",
-        "wiki"
+        "wiki",
+        "override-user"
       ],
-      "primarySource": "plants-species-inferred",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Oxycoccus": {
@@ -17911,21 +17915,22 @@
     },
     "Scirpus": {
       "latin": "Scirpus",
-      "ltName": "Ristis",
+      "ltName": "Viksvameldis",
       "ltSynonyms": [
-        "Viksvameldis"
+        "Ristis"
       ],
       "ltAllForms": [
-        "Ristis",
-        "Viksvameldis"
+        "Viksvameldis",
+        "Ristis"
       ],
       "ltFamily": null,
-      "confidence": "mid",
+      "confidence": "high",
       "sources": [
         "plants-genus",
-        "wiki"
+        "wiki",
+        "override-user"
       ],
-      "primarySource": "plants-genus",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Scleranthus": {
@@ -18014,15 +18019,15 @@
     },
     "Scutellaria": {
       "latin": "Scutellaria",
-      "ltName": "Kalpoka",
+      "ltName": "Kalpokė",
       "ltSynonyms": [
         "Taurelė",
-        "Kalpokė"
+        "Kalpoka"
       ],
       "ltAllForms": [
-        "Kalpoka",
+        "Kalpokė",
         "Taurelė",
-        "Kalpokė"
+        "Kalpoka"
       ],
       "ltFamily": null,
       "confidence": "high",
@@ -18030,9 +18035,10 @@
         "plants-genus",
         "plants-species-inferred",
         "gaspadorius",
-        "wiki"
+        "wiki",
+        "override-user"
       ],
-      "primarySource": "plants-species-inferred",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Scytonema": {
@@ -18451,15 +18457,15 @@
     },
     "Solanum": {
       "latin": "Solanum",
-      "ltName": "Kiaulienažolė",
+      "ltName": "Kiauliauogė",
       "ltSynonyms": [
         "Plačialūpė",
-        "Kiauliauogė"
+        "Kiaulienažolė"
       ],
       "ltAllForms": [
-        "Kiaulienažolė",
+        "Kiauliauogė",
         "Plačialūpė",
-        "Kiauliauogė"
+        "Kiaulienažolė"
       ],
       "ltFamily": null,
       "confidence": "high",
@@ -18467,9 +18473,10 @@
         "plants-genus",
         "plants-species-inferred",
         "gaspadorius",
-        "wiki"
+        "wiki",
+        "override-user"
       ],
-      "primarySource": "plants-species-inferred",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Soja": {
@@ -20759,17 +20766,17 @@
     },
     "Zantedeschia": {
       "latin": "Zantedeschia",
-      "ltName": "Kilija",
+      "ltName": "Kalija",
       "ltSynonyms": [
         "Kotiotoji",
-        "Kalijos",
-        "Kalija"
+        "Kilija",
+        "Kalijos"
       ],
       "ltAllForms": [
-        "Kilija",
+        "Kalija",
         "Kotiotoji",
-        "Kalijos",
-        "Kalija"
+        "Kilija",
+        "Kalijos"
       ],
       "ltFamily": null,
       "confidence": "high",
@@ -20778,9 +20785,10 @@
         "plants-species-inferred",
         "gaspadorius",
         "wiki",
-        "derlingas"
+        "derlingas",
+        "override-user"
       ],
-      "primarySource": "plants-species-inferred",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Zea": {
@@ -22013,14 +22021,14 @@
     },
     "Geranium": {
       "latin": "Geranium",
-      "ltName": "Snaplėtis",
+      "ltName": "Snaputis",
       "ltSynonyms": [
-        "Snaputis",
+        "Snaplėtis",
         "Snapučiai"
       ],
       "ltAllForms": [
-        "Snaplėtis",
         "Snaputis",
+        "Snaplėtis",
         "Snapučiai"
       ],
       "ltFamily": null,
@@ -22028,9 +22036,10 @@
       "sources": [
         "plants-species-inferred",
         "wiki",
-        "derlingas"
+        "derlingas",
+        "override-user"
       ],
-      "primarySource": "plants-species-inferred",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Gigartina": {
@@ -23638,22 +23647,23 @@
     },
     "Polygala": {
       "latin": "Polygala",
-      "ltName": "Putoklė",
+      "ltName": "Putokšlė",
       "ltSynonyms": [
-        "Putokšlė"
+        "Putoklė"
       ],
       "ltAllForms": [
-        "Putoklė",
-        "Putokšlė"
+        "Putokšlė",
+        "Putoklė"
       ],
       "ltFamily": null,
       "confidence": "high",
       "sources": [
         "plants-species-inferred",
         "wiki",
-        "derlingas"
+        "derlingas",
+        "override-user"
       ],
-      "primarySource": "plants-species-inferred",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Polygonatum": {
@@ -26034,19 +26044,23 @@
       "latin": "Hedera",
       "ltName": "Gebenė",
       "ltSynonyms": [
-        "Aralijiniai"
+        "Aralijiniai",
+        "Efėjus"
       ],
       "ltAllForms": [
         "Gebenė",
-        "Aralijiniai"
+        "Aralijiniai",
+        "Efėjus"
       ],
       "ltFamily": null,
-      "confidence": "mid",
+      "confidence": "high",
       "sources": [
         "wiki",
-        "derlingas"
+        "derlingas",
+        "override-user",
+        "override-user-syn"
       ],
-      "primarySource": "derlingas",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Hedychium": {

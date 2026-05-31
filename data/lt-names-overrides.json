@@ -1,29 +1,234 @@
 {
   "_meta": {
-    "purpose": "User-curated overrides for build-lt-names-v2.mjs. Applied LAST in priority chain (above all scraped sources). Used to fix garbage entries in source data without modifying canonical plants.json.",
-    "verifiedBy": "AI verify agent (2026-05-31) + admin review",
-    "verificationReport": "tasks/verify-plants-garbage-2026-05-31.md"
+    "purpose": "User-curated overrides for build-lt-names-v2.mjs. Applied LAST in priority chain.",
+    "verifiedBy": "AI verify agents (2026-05-31) Phase 2a/2b/2c + admin review",
+    "verificationReports": [
+      "tasks/verify-plants-garbage-2026-05-31.md (initial)",
+      "tasks/phase2a-explicit-suspects-verified.md (deep verify 30 suspects)",
+      "tasks/phase2b-summary.md (lightweight blindspots batch 1, 210 entries)",
+      "tasks/phase2c-summary.md (lightweight blindspots batch 2, 209 entries)"
+    ],
+    "lastUpdated": "2026-05-31"
   },
   "genus": {
-    "Acacia":       { "ltName": "akacija",   "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP + plants.json species)" },
-    "Blechnum":     { "ltName": "unksmenė",  "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP)" },
-    "Myrica":       { "ltName": "sotvaras",  "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP)" },
-    "Myrrhis":      { "ltName": "garduoklė", "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP)" },
-    "Myrtus":       { "ltName": "mirta",     "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP family Mirtiniai + plants.json + lt-names synonyms)" },
-    "Pistacia":     { "ltName": "pistacija", "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP + plants.json)" },
-    "Potamogeton":  { "ltName": "plūdė",     "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP + plants.json 10+ species)" },
-    "Schoenus":     { "ltName": "vikšrenis", "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP)" },
-    "Sisyrinchium": { "ltName": "vikšruolė", "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP family Vilkdalginiai + lt-names synonyms)" },
-    "Taxus":        { "ltName": "kukmedis",  "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP + plants.json species)" },
-    "Thymus":       { "ltName": "čiobrelis", "ltSynonyms": [], "source": "verify-2026-05-31 (LT WP + plants.json 3+ species)" }
+    "Acacia": {
+      "ltName": "akacija",
+      "ltSynonyms": [],
+      "source": "verify-2026-05-31 (LT WP + plants.json species)"
+    },
+    "Blechnum": {
+      "ltName": "unksmenė",
+      "ltSynonyms": [],
+      "source": "verify-2026-05-31 (LT WP)"
+    },
+    "Myrica": {
+      "ltName": "sotvaras",
+      "ltSynonyms": [],
+      "source": "verify-2026-05-31 (LT WP)"
+    },
+    "Myrrhis": {
+      "ltName": "garduoklė",
+      "ltSynonyms": [],
+      "source": "verify-2026-05-31 (LT WP)"
+    },
+    "Myrtus": {
+      "ltName": "mirta",
+      "ltSynonyms": [],
+      "source": "verify-2026-05-31 (LT WP family Mirtiniai + plants.json + lt-names synonyms)"
+    },
+    "Pistacia": {
+      "ltName": "pistacija",
+      "ltSynonyms": [],
+      "source": "verify-2026-05-31 (LT WP + plants.json)"
+    },
+    "Potamogeton": {
+      "ltName": "plūdė",
+      "ltSynonyms": [],
+      "source": "verify-2026-05-31 (LT WP + plants.json 10+ species)"
+    },
+    "Schoenus": {
+      "ltName": "vikšrenis",
+      "ltSynonyms": [],
+      "source": "verify-2026-05-31 (LT WP)"
+    },
+    "Sisyrinchium": {
+      "ltName": "vikšruolė",
+      "ltSynonyms": [],
+      "source": "verify-2026-05-31 (LT WP family Vilkdalginiai + lt-names synonyms)"
+    },
+    "Taxus": {
+      "ltName": "kukmedis",
+      "ltSynonyms": [],
+      "source": "verify-2026-05-31 (LT WP + plants.json species)"
+    },
+    "Thymus": {
+      "ltName": "čiobrelis",
+      "ltSynonyms": [],
+      "source": "verify-2026-05-31 (LT WP + plants.json 3+ species)"
+    },
+    "Solanum": {
+      "ltName": "kiauliauogė",
+      "ltSynonyms": [],
+      "source": "phase2a+2c verify-2026-05-31 (LT WP) — Kiaulienažolė was wrong inference from buggy species rows"
+    },
+    "Scirpus": {
+      "ltName": "viksvameldis",
+      "ltSynonyms": [],
+      "source": "phase2a verify-2026-05-31 (LT WP) — \"Ristis\" was wrong (Estijos kaimas, ne augalas)"
+    },
+    "Clerodendrum": {
+      "ltName": "šventmedis",
+      "ltSynonyms": [],
+      "source": "phase2a verify-2026-05-31 — \"švelmedis\"/\"klerodendras\" nėra LT žodžiai; Wikipedia \"šventmedis\""
+    },
+    "Hedera": {
+      "ltName": "gebenė",
+      "ltSynonyms": [
+        "Efėjus"
+      ],
+      "source": "phase2a verify-2026-05-31 (LT WP) — \"Efėjus\" istorinis, modernus \"gebenė\""
+    },
+    "Geranium": {
+      "ltName": "snaputis",
+      "ltSynonyms": [],
+      "source": "phase2b verify (4 species disagreed: snaplėtis → snaputis)"
+    },
+    "Drosera": {
+      "ltName": "saulašarė",
+      "ltSynonyms": [],
+      "source": "phase2b verify (2 species disagreed: saulutė → saulašarė)"
+    },
+    "Polygala": {
+      "ltName": "putokšlė",
+      "ltSynonyms": [],
+      "source": "phase2c verify (5 species: putoklė → putokšlė)"
+    },
+    "Oxalis": {
+      "ltName": "kiškiakopūstis",
+      "ltSynonyms": [],
+      "source": "phase2c verify (3 species: kikiakopstis → kiškiakopūstis — missing diacritics)"
+    },
+    "Scutellaria": {
+      "ltName": "kalpokė",
+      "ltSynonyms": [],
+      "source": "phase2c verify (3 species: kalpoka → kalpokė typo)"
+    },
+    "Coffea": {
+      "ltName": "kavamedis",
+      "ltSynonyms": [],
+      "source": "phase2b verify (2 species: kavmedis → kavamedis — missing \"a\")"
+    },
+    "Zantedeschia": {
+      "ltName": "kalija",
+      "ltSynonyms": [],
+      "source": "phase2c verify (2 species: kilija → kalija typo)"
+    },
+    "Musa": {
+      "ltName": "bananas",
+      "ltSynonyms": [],
+      "source": "phase2c verify (4 species: banalas → bananas typo)"
+    }
   },
   "species": {
+    "alpinia galanga": "didžioji alpinija",
+    "alpinia officinarum": "vaistinė alpinija",
+    "alpinia zerumbet": "gražioji alpinija",
+    "blechnum spicant": "varpotoji unksmenė",
+    "citrus aurantifolia": "rūgščiavaisis citrinmedis",
+    "citrus aurantium": "karčiavaisis citrinmedis",
+    "clerodendrum fragrans": "kvapusis šventmedis",
+    "clerodendrum thomsoniae": "Tomsono šventmedis",
+    "dioscorea oppositia": "batatinė dioskorėja",
+    "epidendrum radicans": "atžalinis epidendras",
+    "hedera canariensis": "kanarinė gebenė",
+    "hedera colchica": "kolchidinė gebenė",
+    "ipomoea batatas": "batatas",
+    "polystichum aculeatum": "miškinis spyglainis",
+    "scirpus sylvaticus": "liekninis viksvameldis",
+    "scirpus tabernaemontani": "melsvasis meldas",
+    "scirpus setaceus": "šerinis meldelis",
+    "selenicereus grandiflorus": "didžiažiedis naktenis",
+    "araucaria bidwillii": "Kvapioji araukarija",
+    "araucaria heterophylla": "Aukštoji araukarija",
+    "asparagus officinalis": "Vaistinis smidras",
+    "asplenium trichomanes": "Šerinė kalnarūtė",
+    "cereus peruvianus": "Peruvinis stulpenis",
+    "citrus maxima": "Didysis citrinmedis",
+    "citrus nobilis": "Apelsininis citrinmedis",
+    "coffea arabica": "Arabinis kavamedis",
+    "coffea canephora": "Didysis kavamedis",
+    "dionaea muscipula": "Jautrusis musėkautas",
+    "dioscorea batatas": "Batatinė dioskorėja",
+    "drosera intermedia": "Mažalapė saulašarė",
+    "drosera rotundifolia": "Apskritalapė saulašarė",
+    "eucalyptus viminalis": "Vytelinis eukaliptas",
+    "euphorbia helioscopia": "Dirvinė karpažolė",
+    "ficus pumila": "Smulkusis fikusas",
+    "fortunella margarita": "Kiaušininis kinkanas",
+    "freesia refracta": "Kvapioji frezija",
+    "geranium lucidum": "Blizgantysis snaputis",
+    "geranium pusillum": "Smulkusis snaputis",
+    "geranium robertianum": "Raudonstiebis snaputis",
+    "geranium sylvaticum": "Miškinis snaputis",
+    "helichrysum arenarium": "Smiltyninis šlamutis",
+    "hibiscus rosa-sinensis": "Tikroji kinrožė",
+    "impatiens walleriana": "Valero sprigė",
+    "monstera deliciosa": "Nuostabioji monstera",
+    "musa textilis": "Pluoštinis bananas",
+    "opuntia ficus-indica": "Figavaisė opuncija",
+    "opuntia microdasys": "Trumpašerė opuncija",
+    "oxalis acetosella": "Paprastasis kiškiakopūstis",
+    "oxalis stricta": "Statusis kiškiakopūstis",
+    "oxalis tuberosa": "Gumbinis kiškiakopūstis",
+    "pereskia aculeata": "Dygliuotoji pereskija",
+    "polygala amarella": "Karčioji putokšlė",
+    "polygala comosa": "Skiauterėtoji putokšlė",
+    "sansevieria cylindrica": "Cilindrinė karduotė",
+    "scutellaria galericulata": "Pelkinė kalpokė",
+    "scutellaria hastifolia": "Iečialapė kalpokė",
+    "senecio paludosus": "Pelkinė žilė",
+    "solanum dulcamara": "Karklavijas",
+    "solanum melongena": "Baklažanas",
+    "solanum nigrum": "Juodoji kiauliauogė",
+    "solanum pseudocapsicum": "Koralinė kiauliauogė",
+    "strelitzia reginae": "Puošnioji strelicija",
+    "tillandsia usneoides": "Kedeninė tilandsija",
+    "zantedeschia aethiopica": "Abisininė kalija"
   },
   "_pending_review": {
     "_comment": "Šie reikalauja admin/botanist review. Pridėti į 'genus' jei aprovuoji.",
-    "Arachis":    { "ltName": "arachis",   "confidence": "MEDIUM-HIGH", "note": "Latin loan word; standard LT botanical convention" },
-    "Cistus":     { "ltName": "švitrūnas", "confidence": "MEDIUM-HIGH", "note": "Strong commercial+wiki-style consensus, no academic source" },
-    "Arundo":     { "ltName": "arundas",   "confidence": "MEDIUM",      "note": "Search-snippet only — needs botanist confirmation" },
-    "Chondrilla": { "ltName": "?",         "confidence": "LOW",         "note": "3 competing names: arteris / vabalsalotis / širetis — manual pick" }
+    "Arachis": {
+      "ltName": "arachis",
+      "confidence": "MEDIUM-HIGH",
+      "note": "Latin loan word; standard LT botanical convention"
+    },
+    "Cistus": {
+      "ltName": "švitrūnas",
+      "confidence": "MEDIUM-HIGH",
+      "note": "Strong commercial+wiki-style consensus, no academic source"
+    },
+    "Arundo": {
+      "ltName": "arundas",
+      "confidence": "MEDIUM",
+      "note": "Search-snippet only — needs botanist confirmation"
+    },
+    "Chondrilla": {
+      "ltName": "?",
+      "confidence": "LOW",
+      "note": "3 competing names: arteris / vabalsalotis / širetis — manual pick"
+    }
+  },
+  "_phase2_naming_convention_disputes": {
+    "_comment": "Wikipedia LT uses different genus convention than plants.json/lt-names.json. NOT applied automatically. Admin/botanist review required.",
+    "Asparagus": {
+      "plants_json": "šparagas",
+      "wiki_lt": "smidras",
+      "affects": "5+ species"
+    },
+    "Hibiscus": {
+      "plants_json": "hibiskas",
+      "wiki_lt": "kinrožė",
+      "affects": "2+ species"
+    }
   }
 }

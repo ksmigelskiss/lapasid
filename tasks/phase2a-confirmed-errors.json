@@ -1,0 +1,89 @@
+{
+  "_meta": {
+    "generatedAt": "2026-05-31",
+    "source": "phase2a-explicit-suspects-verified.md",
+    "verificationSource": "lt.wikipedia.org",
+    "notes": "Keys are lowercased Latin binomials (matches lt-names-overrides.json convention). Values are canonical Lithuanian names per lt.wiki. Only includes entries with strong Wikipedia evidence — see .md for legit-alt, unverifiable, and false-positive entries."
+  },
+  "speciesOverrides": {
+    "alpinia galanga": "didžioji alpinija",
+    "alpinia officinarum": "vaistinė alpinija",
+    "alpinia zerumbet": "gražioji alpinija",
+    "blechnum spicant": "varpotoji unksmenė",
+    "citrus aurantifolia": "rūgščiavaisis citrinmedis",
+    "citrus aurantium": "karčiavaisis citrinmedis",
+    "clerodendrum fragrans": "kvapusis šventmedis",
+    "clerodendrum thomsoniae": "Tomsono šventmedis",
+    "dioscorea oppositia": "batatinė dioskorėja",
+    "epidendrum radicans": "atžalinis epidendras",
+    "hedera canariensis": "kanarinė gebenė",
+    "hedera colchica": "kolchidinė gebenė",
+    "ipomoea batatas": "batatas",
+    "polystichum aculeatum": "miškinis spyglainis",
+    "scirpus sylvaticus": "liekninis viksvameldis",
+    "scirpus tabernaemontani": "melsvasis meldas",
+    "scirpus setaceus": "šerinis meldelis",
+    "selenicereus grandiflorus": "didžiažiedis naktenis"
+  },
+  "genusTokenFixes": {
+    "_note": "Systematic typos / wrong genus tokens to bulk-replace in any lithuanian field. Apply with caution — only as last-word or genus-token replacement, NOT as raw substring (some are common letter sequences).",
+    "švelmedis": "šventmedis",
+    "viksvilėdis": "viksvameldis",
+    "Efėjus": "gebenė",
+    "klerodendras": "šventmedis"
+  },
+  "falsePositives": [
+    {
+      "latin": "Hedera helix",
+      "currentLt": "gebenė lipikė",
+      "reason": "Wikipedia has dedicated article 'Gebenė lipikė' — current name is correct. Phase 1 expectedLastWord algorithm misfired because LT binomial puts genus first."
+    }
+  ],
+  "deferred": [
+    {
+      "latin": "Begonia scandens",
+      "currentLt": "Begonia glabra",
+      "reason": "Latin string in LT field. Taxonomically synonym of B. glabra. Wikipedia has no species article. blindSpots list has 'Begonia glabra → plikoji begonija' — possibly apply that."
+    },
+    {
+      "latin": "Epiphyllum grande",
+      "currentLt": "grande",
+      "reason": "No Wikipedia article. Latin 'grande' may not be a widely accepted species name."
+    },
+    {
+      "latin": "Polystichum formosum",
+      "currentLt": "takažolė",
+      "reason": "Likely Latin typo — Polytrichum formosum is a moss, not a fern. Polystichum formosum is not a standard accepted name."
+    },
+    {
+      "latin": "Senecio cineraria",
+      "currentLt": "Senecio bicolor",
+      "reason": "Latin string in LT field. No lt.wiki article. Horticultural 'sidabrinė žilė' exists in literature but not Wikipedia-verifiable."
+    },
+    {
+      "latin": "Senecio cruentus",
+      "currentLt": "aukštoji cineraria",
+      "reason": "Reclassified to Pericallis cruenta. No lt.wiki article. Current name is horticultural-recognizable; defer."
+    },
+    {
+      "latin": "Solanum sisarum",
+      "currentLt": "saldžiašaknė",
+      "reason": "Actually Sium sisarum (Apiaceae), not Solanum. LT name 'saldžiašaknė' is correct for Sium; genus assignment in plants.json is wrong. Needs genus reclassification, not name fix."
+    },
+    {
+      "latin": "Solanum Smilax",
+      "currentLt": "sarsaparilis",
+      "reason": "'Solanum Smilax' is not a valid binomial. Likely Smilax sarsaparilla. Defer for cleanup."
+    },
+    {
+      "latin": "Solanum china",
+      "currentLt": "kininis sarsaparilis",
+      "reason": "Actually Smilax china, not Solanum. LT name 'kininis sarsaparilis' is colloquial but not Wikipedia-verifiable. Needs genus reclassification."
+    },
+    {
+      "latin": "Scirpus radicans",
+      "currentLt": "pelkinis viksvilėdis",
+      "reason": "No species-level Wikipedia article. Apply genus-token fix viksvilėdis→viksvameldis → result: 'pelkinis viksvameldis' (unverified species but at least valid genus word)."
+    }
+  ]
+}

@@ -30,6 +30,18 @@
     "rejectReason": "canonical-of-Rhynchostegium"
   },
   {
+    "latinGenus": "Drosera",
+    "ltName": "Saulutė",
+    "source": "plants-genus",
+    "rejectReason": "canonical-of-Bellis"
+  },
+  {
+    "latinGenus": "Drosera",
+    "ltName": "Saulutė",
+    "source": "plants-species-inferred",
+    "rejectReason": "canonical-of-Bellis"
+  },
+  {
     "latinGenus": "Filago",
     "ltName": "Siūlas",
     "source": "plants-genus",

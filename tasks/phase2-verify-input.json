@@ -1,0 +1,2351 @@
+{
+  "meta": {
+    "generatedAt": "2026-05-31T20:33:17.567Z",
+    "purpose": "Phase 2 AI verify input — focused indoor + vendor scope",
+    "indoorWhitelistGenera": 275,
+    "vendorListGenera": 181,
+    "combinedGenera": 353
+  },
+  "explicitSuspects": [
+    {
+      "latin": "Alpinia galanga",
+      "currentLt": "didysis galangas",
+      "expectedLastWord": "Alpinija",
+      "actualLastWord": "galangas",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Alpinia officinarum",
+      "currentLt": "vaistinis alpinijos kalgan",
+      "expectedLastWord": "Alpinija",
+      "actualLastWord": "kalgan",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia scandens",
+      "currentLt": "Begonia glabra",
+      "expectedLastWord": "Begonija",
+      "actualLastWord": "glabra",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Blechnum spicant",
+      "currentLt": "varpotoji nukimėlė",
+      "expectedLastWord": "Unksmenė",
+      "actualLastWord": "nukimėlė",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Citrus aurantifolia",
+      "currentLt": "rūgščioji citrina",
+      "expectedLastWord": "Citrinmedis",
+      "actualLastWord": "citrina",
+      "tier": "mismatch",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Citrus aurantium",
+      "currentLt": "karčiavaisis citrina",
+      "expectedLastWord": "Citrinmedis",
+      "actualLastWord": "citrina",
+      "tier": "mismatch",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Clerodendrum fragrans",
+      "currentLt": "kvapusis švelmedis",
+      "expectedLastWord": "Klerodendras",
+      "actualLastWord": "švelmedis",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Clerodendrum thomsoniae",
+      "currentLt": "Tomsono švelmedis",
+      "expectedLastWord": "Klerodendras",
+      "actualLastWord": "švelmedis",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dioscorea oppositia",
+      "currentLt": "oppositia",
+      "expectedLastWord": "Dioskorija",
+      "actualLastWord": "oppositia",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Epiphyllum grande",
+      "currentLt": "grande",
+      "expectedLastWord": "Lapenis",
+      "actualLastWord": "grande",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hedera canariensis",
+      "currentLt": "kanariškas Efėjus",
+      "expectedLastWord": "Gebenė",
+      "actualLastWord": "Efėjus",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hedera colchica",
+      "currentLt": "kolchidinė Efėjus",
+      "expectedLastWord": "Gebenė",
+      "actualLastWord": "Efėjus",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hedera helix",
+      "currentLt": "gebenė lipikė",
+      "expectedLastWord": "Gebenė",
+      "actualLastWord": "lipikė",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ipomoea batatas",
+      "currentLt": "valgomasis bulvas",
+      "expectedLastWord": "Ipomėja",
+      "actualLastWord": "bulvas",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ipomoea purga",
+      "currentLt": "vaistinė jalapa",
+      "expectedLastWord": "Ipomėja",
+      "actualLastWord": "jalapa",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Scirpus radicans",
+      "currentLt": "pelkinis viksvilėdis",
+      "expectedLastWord": "Ristis",
+      "actualLastWord": "viksvilėdis",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Scirpus setaceus",
+      "currentLt": "Isolepis setacea",
+      "expectedLastWord": "Ristis",
+      "actualLastWord": "setacea",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Scirpus sylvaticus",
+      "currentLt": "lieknais viksvilėdis",
+      "expectedLastWord": "Ristis",
+      "actualLastWord": "viksvilėdis",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Scirpus tabernaemontani",
+      "currentLt": "Schoenoplectus tabernaemontani",
+      "expectedLastWord": "Ristis",
+      "actualLastWord": "tabernaemontani",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio cineraria",
+      "currentLt": "Senecio bicolor",
+      "expectedLastWord": "Žilė",
+      "actualLastWord": "bicolor",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio cruentus",
+      "currentLt": "aukštoji cineraria",
+      "expectedLastWord": "Žilė",
+      "actualLastWord": "cineraria",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum sisarum",
+      "currentLt": "saldžiašaknė",
+      "expectedLastWord": "Kiaulienažolė",
+      "actualLastWord": "saldžiašaknė",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum Smilax",
+      "currentLt": "sarsaparilis",
+      "expectedLastWord": "Kiaulienažolė",
+      "actualLastWord": "sarsaparilis",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum china",
+      "currentLt": "kininis sarsaparilis",
+      "expectedLastWord": "Kiaulienažolė",
+      "actualLastWord": "sarsaparilis",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum tuberosum",
+      "currentLt": "valgomoji bulvė",
+      "expectedLastWord": "Kiaulienažolė",
+      "actualLastWord": "bulvė",
+      "tier": "mismatch",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Alpinia zerumbet",
+      "currentLt": "raibasis alpinijos",
+      "expectedLastWord": "Alpinija",
+      "actualLastWord": "alpinijos",
+      "distance": 2,
+      "tier": "typoSuspected",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Epidendrum radicans",
+      "currentLt": "epidendrum",
+      "expectedLastWord": "Epidendrai",
+      "actualLastWord": "epidendrum",
+      "distance": 2,
+      "tier": "typoSuspected",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Selenicereus grandiflorus",
+      "currentLt": "didžiažiedis naktinis",
+      "expectedLastWord": "Naktenis",
+      "actualLastWord": "naktinis",
+      "distance": 1,
+      "tier": "typoSuspected",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Polystichum aculeatum",
+      "currentLt": "nelokinis spyglainis",
+      "genusLatin": "Polystichum",
+      "actualLastWord": "spyglainis",
+      "tier": "noGenusLt",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Polystichum formosum",
+      "currentLt": "takažolė",
+      "genusLatin": "Polystichum",
+      "actualLastWord": "takažolė",
+      "tier": "noGenusLt",
+      "sourceGenusGroup": "indoor-whitelist"
+    }
+  ],
+  "blindSpots": [
+    {
+      "latin": "Achimenes candida",
+      "currentLt": "baltažiedė achimenė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Achimenes coccinea",
+      "currentLt": "raudonžiedė achimenė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Achimenes erecta",
+      "currentLt": "raudonžiedė achimenė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Achimenes grandiflora",
+      "currentLt": "didžiažiedė achimenė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Achimenes longiflora",
+      "currentLt": "ilgažiedė achimenė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Achimenes mexicana",
+      "currentLt": "meksikinė achimenė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Acorus calamus",
+      "currentLt": "balinis ajeras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Adiantum capillus-veneris",
+      "currentLt": "Insiniaplaukis adiantas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Adiantum cuneatum",
+      "currentLt": "pleištalapis adiantas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Aechmea bromeliifolia",
+      "currentLt": "bromelininė echmėja",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Aechmea caudata",
+      "currentLt": "uodeguotoji echmėja",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Aechmea fasciata",
+      "currentLt": "dryžuotoji echmėja",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Agave americana",
+      "currentLt": "amerikinė agava",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Agave cantala",
+      "currentLt": "kantala agava",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Agave fourcroydes",
+      "currentLt": "jukatininė agava",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Agave salmiana",
+      "currentLt": "tamsioji agava",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Agave sisalana",
+      "currentLt": "sizalinė agava",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Alocasia macrorrhiza",
+      "currentLt": "stambiašaknė alokasija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Aloe aristata",
+      "currentLt": "akuotuotasis alavijas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Aloe barbadensis",
+      "currentLt": "tikrasis alavijas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Aloe ferox",
+      "currentLt": "dygliuotasis alavijas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Aloe variegata",
+      "currentLt": "raibasis alavijas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Amaryllis belladonna",
+      "currentLt": "dailioji amarilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ananas bracteatus",
+      "currentLt": "razgvilijinis ananasas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ananas comosus",
+      "currentLt": "valgomasis ananasas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Anastatica hierochuntica",
+      "currentLt": "jerichoninė atgaiva",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Anthurium andreanum",
+      "currentLt": "andrės antūris",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Anthurium crystallinum",
+      "currentLt": "sidabrinis antūris",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Anthurium magnificum",
+      "currentLt": "puikusis antūris",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Anthurium regale",
+      "currentLt": "karališkasis antūris",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Anthurium scherzerianum",
+      "currentLt": "Šercerio antūris",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Araucaria araucana",
+      "currentLt": "čilinė araukarija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Araucaria bidwillii",
+      "currentLt": "Bidvilio araukarija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Araucaria excelsa",
+      "currentLt": "aukštoji araukarija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Araucaria heterophylla",
+      "currentLt": "įvairialapė araukarija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Aristolochia clematitis",
+      "currentLt": "paprastoji kartuolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Aristolochia macrophylla",
+      "currentLt": "didžialapė kartuolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Aristolochia serpentaria",
+      "currentLt": "virginijinė kartuolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Asparagus densiflorus",
+      "currentLt": "tankiažiedis šparagas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Asparagus falcatus",
+      "currentLt": "lenktažiedis šparagas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Asparagus officinalis",
+      "currentLt": "vaistinis šparagas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Asparagus scandens",
+      "currentLt": "kibusis šparagas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Asparagus setaceus",
+      "currentLt": "plunksnastėbis šparagas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Aspidistra elatior",
+      "currentLt": "aukštoji aspidistra",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Asplenium bulbiferum",
+      "currentLt": "gumbinė kalnarūtė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Asplenium ruta-muraria",
+      "currentLt": "mūrinė kalnarūtė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Asplenium septentrionale",
+      "currentLt": "šerinė kalnarūtė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Asplenium trichomanes",
+      "currentLt": "meilingoji kalnarūtė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia convolvulacea",
+      "currentLt": "vijoklinė begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia corallina",
+      "currentLt": "korlinė begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia deliciosa",
+      "currentLt": "puikioji begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia diginata",
+      "currentLt": "pirštuotoji begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia foliosa",
+      "currentLt": "smulkialapė begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia glabra",
+      "currentLt": "plikoji begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia gracilis",
+      "currentLt": "liekapėdė begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia grandis",
+      "currentLt": "įvairiaspalvė begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia heracleifolia",
+      "currentLt": "barščialapė begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia imperialis",
+      "currentLt": "imperatoriškoji begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia incarnata",
+      "currentLt": "rausvoji begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia limmingeana",
+      "currentLt": "svyruoklė begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia maculata",
+      "currentLt": "dėmėtoji begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia manicata",
+      "currentLt": "raštuotoji begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia masoniana",
+      "currentLt": "Mėsono begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia metallica",
+      "currentLt": "metalinė begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia rex",
+      "currentLt": "karališkoji begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia semperflorens",
+      "currentLt": "visadžydė begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia socotrana",
+      "currentLt": "sokotraninė begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Begonia x hybrida",
+      "currentLt": "Voss begonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Beloperone guttata",
+      "currentLt": "taškuotoji beloperonė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Billbergia nutans",
+      "currentLt": "svyruojanti bilbergija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Caladium bicolor",
+      "currentLt": "dvispalvis kaldis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Caladium hortulanum",
+      "currentLt": "puošnusis kaldis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Calceolaria herbeohybrida",
+      "currentLt": "mišrioji kalceolarija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Caryota urens",
+      "currentLt": "aitrioji kariota",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cereus peruvianus",
+      "currentLt": "peruvinis cereus",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Chamaerops humilis",
+      "currentLt": "žemoji chamerops",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Chlorophytum capense",
+      "currentLt": "ilgažiedis chlorofitas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Chlorophytum comosum",
+      "currentLt": "kuokštinis chlorofitas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cissus discolor",
+      "currentLt": "dvispalvis lapfistas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Citrus limon",
+      "currentLt": "tikrasis citrinmedis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Citrus maxima",
+      "currentLt": "pampelmusinis citrinmedis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Citrus medica",
+      "currentLt": "vaistinis citrinmedis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Citrus nobilis",
+      "currentLt": "saldžiavaisis citrinmedis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Citrus paradisi",
+      "currentLt": "greipfrutinis citrinmedis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Citrus reticulata",
+      "currentLt": "mandarininis citrinmedis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Citrus sinensis",
+      "currentLt": "apelsininis citrinmedis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Clerodendrum bungei",
+      "currentLt": "krūmas klerodendras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Clivia miniata",
+      "currentLt": "raudonoji klivija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Clivia nobilis",
+      "currentLt": "kilnioji klivija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Coffea arabica",
+      "currentLt": "arabinis kavmedis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Coffea canephora",
+      "currentLt": "kanefora kavmedis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Coffea liberica",
+      "currentLt": "liberinis kavmedis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Coleus scutellarioides",
+      "currentLt": "buntmesai",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Colocasia esculenta",
+      "currentLt": "valgomoji kolokazija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Columnea gloriosa",
+      "currentLt": "puikioji kolumnėja",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cordyline australis",
+      "currentLt": "pietinė kordilinė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cordyline fruticosa",
+      "currentLt": "plačialapė kordilinė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cordyline indivisa",
+      "currentLt": "sveikalapė kordilinė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cordyline rubra",
+      "currentLt": "raudonoji kordilinė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cordyline stricta",
+      "currentLt": "stačioji kordilinė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Crassula arborescens",
+      "currentLt": "medėjantis storžuolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Crassula lactea",
+      "currentLt": "pieninė storžuolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Crassula muscosa",
+      "currentLt": "samaninė storžuolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Crassula rupestris",
+      "currentLt": "uolinė storžuolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Crinum amabile",
+      "currentLt": "dailusis krinas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Crinum latifolium",
+      "currentLt": "plačialapis krinas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Curculigo capitulata",
+      "currentLt": "keksinis kurkuligas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Curcuma angustifolia",
+      "currentLt": "siauralapė ciberžolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Curcuma longa",
+      "currentLt": "dažinė ciberžolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Curcuma zedoaria",
+      "currentLt": "geltonoji ciberžolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cycas revoluta",
+      "currentLt": "paprastasis cikas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cyclamen europaeum",
+      "currentLt": "europinis alpinukas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cyclamen persicum",
+      "currentLt": "persinis alpinukas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cyclamen purpurascens",
+      "currentLt": "kalninis alpinukas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cyperus alternifolius",
+      "currentLt": "pražangialapė viksvuolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cyperus esculentus",
+      "currentLt": "valgomoji viksvuolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cyperus fuscus",
+      "currentLt": "rudoji viksvuolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Cyperus papyrus",
+      "currentLt": "papirusinė viksvuolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dieffenbachia macrophylla",
+      "currentLt": "stambialapė difenbachija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dieffenbachia maculata",
+      "currentLt": "margalapė difenbachija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dieffenbachia picta",
+      "currentLt": "margalapė difenbachija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dionaea muscipula",
+      "currentLt": "musėgaudė dionaja",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dioscorea alata",
+      "currentLt": "sparnuotoji dioskorija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dioscorea batatas",
+      "currentLt": "baltinė dioskorija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dioscorea bulbifera",
+      "currentLt": "gumbinė dioskorija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dioscorea caucasica",
+      "currentLt": "kaukazinė dioskorija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dioscorea deltoides",
+      "currentLt": "deltiškoji dioskorija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dioscorea floribunda",
+      "currentLt": "gausiažiedė dioskorija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dischidia rafflesiana",
+      "currentLt": "dvilink Umengflanze",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dizygotheca elegantissima",
+      "currentLt": "meilus dizigoteka",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dracaena deremensis",
+      "currentLt": "dryžotoji dracena",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dracaena draco",
+      "currentLt": "tikrinė dracena",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Dracaena fragrans",
+      "currentLt": "kvapsis dracena",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Drosera anglica",
+      "currentLt": "ilgalapė saulutė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Drosera intermedia",
+      "currentLt": "vidutinė saulutė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Drosera obovata",
+      "currentLt": "bukoji saulutė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Drosera rotundifolia",
+      "currentLt": "apskritalapė saulutė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Echeveria agavoides",
+      "currentLt": "agavalipė echeverija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Echeveria gibbiflora",
+      "currentLt": "echeverija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Echeveria pulvinata",
+      "currentLt": "pagalvinė echeverija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Echeveria secunda",
+      "currentLt": "mažoji echeverija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Epiphyllum crenatum",
+      "currentLt": "raižiotasis lapenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Epiphyllum oxypetalum",
+      "currentLt": "didysis lapenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Epiphyllum phyllanthoides",
+      "currentLt": "šakotasis lapenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Eucalyptus cinerea",
+      "currentLt": "rutulinis eukaliptas",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Eucalyptus citriodora",
+      "currentLt": "citrininis eukaliptas",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Eucalyptus cordata",
+      "currentLt": "širdžialapis eukaliptas",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Eucalyptus globulus",
+      "currentLt": "rutulinis eukaliptas",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Eucalyptus sideroxylon",
+      "currentLt": "geležinis eukaliptas",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Eucalyptus viminalis",
+      "currentLt": "vytinis eukaliptas",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Eucharis candida",
+      "currentLt": "baltažiedis eucharis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia balsamifera",
+      "currentLt": "balzaminė karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia cyparissias",
+      "currentLt": "siauralapė karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia esula",
+      "currentLt": "didžioji karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia helioscopia",
+      "currentLt": "saulėžiūrė karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia lathyris",
+      "currentLt": "žirninė karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia milii",
+      "currentLt": "dygliuotoji karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia palustris",
+      "currentLt": "pelkinė karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia peplus",
+      "currentLt": "daržinė karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia polychroma",
+      "currentLt": "įvairiaspalvė karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia pulcherrima",
+      "currentLt": "puošniausioji karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia resinifera",
+      "currentLt": "vaistinė karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Euphorbia virgata",
+      "currentLt": "rykštinė karpažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Fatshedera lizei",
+      "currentLt": "hibridinė fatshedera",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Fatsia japonica",
+      "currentLt": "japoninė fatsija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ficus benghalensis",
+      "currentLt": "bengalinis fikusas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ficus carica",
+      "currentLt": "skintatlapis fikusas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ficus elastica",
+      "currentLt": "stambialapis fikusas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ficus pumila",
+      "currentLt": "smulkiusis fikusas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ficus religiosa",
+      "currentLt": "maldyklinis fikusas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ficus sagittata",
+      "currentLt": "smailalūpis fikusas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ficus sycomorus",
+      "currentLt": "šikmedinis fikusas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Fortunella margarita",
+      "currentLt": "perlinis kinkinas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Freesia refracta",
+      "currentLt": "laužioji frezija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Gasteria maculata",
+      "currentLt": "dėmėtoji gasterija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Gasteria nigricans",
+      "currentLt": "juosvoji gasterija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Gasteria picta",
+      "currentLt": "raštotoji gasterija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Gasteria verrucosa",
+      "currentLt": "karpotoji gasterija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Geranium bohemicum",
+      "currentLt": "bohemiškas snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium columbinum",
+      "currentLt": "balandinis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium dissectum",
+      "currentLt": "karpytasis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium divaricatum",
+      "currentLt": "skėstašakis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium lucidum",
+      "currentLt": "blizgantysis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium macrorrhizum",
+      "currentLt": "stambiašaknis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium molle",
+      "currentLt": "švelnusis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium palustre",
+      "currentLt": "pelkinis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium phaeum",
+      "currentLt": "juodasis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium platypetalum",
+      "currentLt": "plačiažiedis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium pratense",
+      "currentLt": "pievinis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium pusillum",
+      "currentLt": "smulkusis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium pyrenaicum",
+      "currentLt": "pirėninis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium robertianum",
+      "currentLt": "smirdusis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium sanguineum",
+      "currentLt": "raudonžiedis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium sibiricum",
+      "currentLt": "sibirinis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Geranium sylvaticum",
+      "currentLt": "miškinis snaplėtis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Gloxinia maculata",
+      "currentLt": "dėmėtoji gloksinija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Gloxinia perennis",
+      "currentLt": "daugiametė gloksinija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Haworthia attenuata",
+      "currentLt": "siaurėjusi avortija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Haworthia cuspidata",
+      "currentLt": "smailioji avortija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Haworthia fasciata",
+      "currentLt": "juostuotoji avortija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Haworthia margaritifera",
+      "currentLt": "perlinė avortija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Helichrysum arenarium",
+      "currentLt": "smėlyninis šlamutis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Helichrysum bracteatum",
+      "currentLt": "plokščialapis šlamutis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Helichrysum petiolare",
+      "currentLt": "kotuotasis šlamutis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hibiscus abelmoschus",
+      "currentLt": "muskusinis hibiskas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hibiscus cannabinus",
+      "currentLt": "kanapinis hibiskas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hibiscus esculentus",
+      "currentLt": "valgomasis hibiskas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hibiscus rosa-sinensis",
+      "currentLt": "kininis hibiskas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hibiscus syriacus",
+      "currentLt": "sirinis hibiskas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hippeastrum hortorum",
+      "currentLt": "puikusis meilėnis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hippeastrum leopoldii",
+      "currentLt": "Leopoldo meilėnis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hippeastrum vittatum",
+      "currentLt": "juostotasis meilėnis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hoya bella",
+      "currentLt": "puošnioji vaškūnė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Hoya carnosa",
+      "currentLt": "storalāpė vaškūnė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Impatiens balsamina",
+      "currentLt": "balzaminė sprigė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Impatiens glandulifera",
+      "currentLt": "liaukotoji sprigė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Impatiens noli-tangere",
+      "currentLt": "paprastoji sprigė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Impatiens parviflora",
+      "currentLt": "smulkiažiedė sprigė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Impatiens walleriana",
+      "currentLt": "Vilerio sprigė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ipomoea hederacea",
+      "currentLt": "gebenialāpė ipomėja",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Ipomoea purpurea",
+      "currentLt": "purpurinė ipomėja",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Iresine herbstii",
+      "currentLt": "Herbsto irezinė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Jacaranda acutifolia",
+      "currentLt": "dailusis palisandermedis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Jasminum odoratissimum",
+      "currentLt": "kvapnusis jazminžiedis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Jasminum officinale",
+      "currentLt": "vaistinis jazminžiedis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Jasminum sambac",
+      "currentLt": "arābinis jazminžiedis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Kalanchoe blossfeldiana",
+      "currentLt": "raudonžiedė kalankė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Kalanchoe crenata",
+      "currentLt": "riaušiuotoji kalankė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Kalanchoe daigremontiana",
+      "currentLt": "Daigremonto kalankė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Kalanchoe marmorata",
+      "currentLt": "dėmėtoji kalankė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Kalanchoe tomentosa",
+      "currentLt": "plūkštotoji kalankė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Kalanchoe tubiflora",
+      "currentLt": "iižgažiedė kalankė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Lantana camara",
+      "currentLt": "amerikinė lantana",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Laurus nobilis",
+      "currentLt": "kilnusis laurmedis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Livistona australis",
+      "currentLt": "pietinė livistona",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Livistona chinensis",
+      "currentLt": "kininė livistona",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Lotus ambiguus",
+      "currentLt": "blakstienotasis garždenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Lotus arvensis",
+      "currentLt": "dirvinis garždenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Lotus balticus",
+      "currentLt": "baltijinis garždenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Lotus callunetorum",
+      "currentLt": "viržyninis garždenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Lotus corniculatus",
+      "currentLt": "paprastasis garždenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Lotus edulis",
+      "currentLt": "valgomasis garždenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Lotus tenuis",
+      "currentLt": "siauralapis garždenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Lotus uliginosus",
+      "currentLt": "pelkinis garždenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Lygodium japonicum",
+      "currentLt": "japoninis ligodis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Mammillaria prolifera",
+      "currentLt": "mažoji mamiliarija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Maranta arundinacea",
+      "currentLt": "berminuotas marantas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Maranta bicolor",
+      "currentLt": "dvispalvis marantas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Maranta leuconeura",
+      "currentLt": "baltagyslis marantas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Mimosa pudica",
+      "currentLt": "jautrioji mimoza",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Monstera adansonii",
+      "currentLt": "skyletoji monstera",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Monstera deliciosa",
+      "currentLt": "saustabėjoji monstera",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Musa acuminata",
+      "currentLt": "mažasis banalas",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Musa baoyoo",
+      "currentLt": "japoninis banalas",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Musa paradisiaca",
+      "currentLt": "tikrasis banalas",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Musa textilis",
+      "currentLt": "pluošinis banalas",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Myrtus communis",
+      "currentLt": "tikroji mirta",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Nepenthes maxima",
+      "currentLt": "didysis ąsotėlis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Nephrolepis biserrata",
+      "currentLt": "dvivelis inkstapaprėtis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Nephrolepis cordifolia",
+      "currentLt": "širdialapis inkstapaprėtis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Nephrolepis exaltata",
+      "currentLt": "ilgalapis inkstapaprėtis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Nerium oleander",
+      "currentLt": "paprastasis oleandras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Olea europaea",
+      "currentLt": "europinis alyvmedis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Opuntia ficus-indica",
+      "currentLt": "figin opuntija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Opuntia leucotricha",
+      "currentLt": "baltaplauk opuntija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Opuntia microdasys",
+      "currentLt": "smulkiadygl opuntija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Oxalis acetosella",
+      "currentLt": "paprastasis kikiakopstis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Oxalis corniculata",
+      "currentLt": "dvinis kikiakopstis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Oxalis stricta",
+      "currentLt": "statusis kikiakopstis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Oxalis tuberosa",
+      "currentLt": "gumbinis kikiakopstis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pandanus tectorius",
+      "currentLt": "stogins pandnas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pandanus utilis",
+      "currentLt": "pliuotinis pandnas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Paphiopedilum insigne",
+      "currentLt": "rykuoji raibu",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Parthenocissus inserta",
+      "currentLt": "viengeni vynvyt",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Parthenocissus quinquefolia",
+      "currentLt": "penkialap vynvyt",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Parthenocissus tricuspidata",
+      "currentLt": "triskilt vynvyt",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Passiflora caerulea",
+      "currentLt": "mlynoji pasifloro",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Passiflora incarnata",
+      "currentLt": "msvoji pasifloro",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pelargonium grandiflorum",
+      "currentLt": "didiaied pelargonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pelargonium graveolens",
+      "currentLt": "malonioji pelargonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pelargonium odoratissimum",
+      "currentLt": "kvapioji pelargonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pelargonium peltatum",
+      "currentLt": "skydalap pelargonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pelargonium radens",
+      "currentLt": "krminin pelargonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pelargonium zonale",
+      "currentLt": "juostuotoji pelargonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Peperomia argyreia",
+      "currentLt": "sidabrin peperomija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Peperomia blanda",
+      "currentLt": "blykkioji peperomija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Peperomia caperata",
+      "currentLt": "raukltoji peperomija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Peperomia clusiifolia",
+      "currentLt": "raudonkrt peperomija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Peperomia incana",
+      "currentLt": "pilkoji peperomija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Peperomia maculata",
+      "currentLt": "dmtoji peperomija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Peperomia metallica",
+      "currentLt": "metalin peperomija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Peperomia obtusifolia",
+      "currentLt": "bukalap peperomija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pereskia aculeata",
+      "currentLt": "adatuotoji pereskija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pereskia bleo",
+      "currentLt": "raudonied pereskija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Philodendron elegans",
+      "currentLt": "elegantiškas filodendras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Philodendron erubescens",
+      "currentLt": "rausvasis filodendras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Philodendron imbe",
+      "currentLt": "brazilinis filodendras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Philodendron laciniatum",
+      "currentLt": "skeltalapis filodendras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Philodendron melanochrysum",
+      "currentLt": "auksaspalvis filodendras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Philodendron ornatum",
+      "currentLt": "smailalapis filodendras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Philodendron scandens",
+      "currentLt": "laipiojantysis filodendras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Philodendron sellowum",
+      "currentLt": "dėmėtasis filodendras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Philodendron verrucosum",
+      "currentLt": "karpotasis filodendras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Phoenix canariensis",
+      "currentLt": "kanštinis finikas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Phoenix dactylifera",
+      "currentLt": "datulinis finikas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Phoenix reclinata",
+      "currentLt": "lenktašlipas finikas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pilea cadierei",
+      "currentLt": "varpotoji pilea",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pilea nummulariifolia",
+      "currentLt": "skalikinė pilea",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Piper betle",
+      "currentLt": "betelinis pipiras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Piper cubeba",
+      "currentLt": "kubebinis pipiras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Piper guineense",
+      "currentLt": "gvinėjinis pipiras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Piper longum",
+      "currentLt": "ilgasis pipiras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Piper nigrum",
+      "currentLt": "juodasis pipiras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Platycerium alcicorne",
+      "currentLt": "jautragėlinis platicerimas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Platycerium bifurcatum",
+      "currentLt": "plačiašakis platicerimas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Plectranthus fruticosus",
+      "currentLt": "krūminis Mottenkönig",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Polygala amarella",
+      "currentLt": "karčioji putoklė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Polygala comosa",
+      "currentLt": "skiauterėtoji putoklė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Polygala myrtifolia",
+      "currentLt": "mirtalapė putoklė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Polygala senega",
+      "currentLt": "paprastoji putoklė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Polygala vulgaris",
+      "currentLt": "paprastoji putoklė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pteris argyraea",
+      "currentLt": "baltadryžis pteris",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pteris cretica",
+      "currentLt": "krėtinis pteris",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pteris longifolia",
+      "currentLt": "ilgalapis pteris",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Pteris multifida",
+      "currentLt": "daugiaskiltis pteris",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Rhapis excelsa",
+      "currentLt": "aukštoji tapipalmė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Rhoeo discolor",
+      "currentLt": "įvairiaspalvis rėjas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Rhoeo spathacea",
+      "currentLt": "dvispalvis rėjas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sabal blackburniana",
+      "currentLt": "sabalpalmė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sabal minor",
+      "currentLt": "mažoji sabalpalmė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sabal palmetto",
+      "currentLt": "palmėtinė sabalpalmė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Saintpaulia ionantha",
+      "currentLt": "mėlynžiedė sanpolija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sansevieria cylindrica",
+      "currentLt": "cilindrinė sansevjera",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sansevieria grandis",
+      "currentLt": "plačialapė sansevjera",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sansevieria trifasciata",
+      "currentLt": "trijuostė sansevjera",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sarracenia purpurea",
+      "currentLt": "purpurinė saracėnija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Schismatoglottis chinensis",
+      "currentLt": "kininis citrinvytis",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Schlumbergera truncata",
+      "currentLt": "trikriis plokštenis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Scutellaria alpina",
+      "currentLt": "alpinė kalpoka",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Scutellaria galericulata",
+      "currentLt": "pelkinė kalpoka",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Scutellaria hastifolia",
+      "currentLt": "jietėlipė kalpoka",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum acre",
+      "currentLt": "aitrusis šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum album",
+      "currentLt": "baltažiedis šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum compactum",
+      "currentLt": "tankiažiedis šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum dasyphyllum",
+      "currentLt": "tankialilipis šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum hybridum",
+      "currentLt": "pakijų šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum maximum",
+      "currentLt": "didžiusis šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum pachyphyllum",
+      "currentLt": "storaliipis šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum reflexum",
+      "currentLt": "lenktalapis šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum sexangulare",
+      "currentLt": "siauralliipis šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum sieboldii",
+      "currentLt": "melsvasis šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum spectabile",
+      "currentLt": "puošnaisis šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum spurium",
+      "currentLt": "netikrasis šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum telephium",
+      "currentLt": "gurždmotais šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sedum villosum",
+      "currentLt": "plaukotais šilokas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Selaginella martensii",
+      "currentLt": "Martenso plaušaplaisis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Selaginella selaginoides",
+      "currentLt": "į-paprastusis plaušaplaisis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio abrotanifolius",
+      "currentLt": "diemediinė žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio adonidifolius",
+      "currentLt": "adoninė žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio bicolor",
+      "currentLt": "plikvalpyte žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio congestus",
+      "currentLt": "gaurojžė žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio elegans",
+      "currentLt": "gražitojė žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio erucifolius",
+      "currentLt": "gražgarstė žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio fluviatilis",
+      "currentLt": "upinė žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio integrifolius",
+      "currentLt": "dilvinė žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio jacobaea",
+      "currentLt": "Jokūbo žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio paludosus",
+      "currentLt": "aukštoji žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio sylvaticus",
+      "currentLt": "miškinė žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio vernalis",
+      "currentLt": "pavasarinė žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio viscosus",
+      "currentLt": "lipnioji žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Senecio vulgaris",
+      "currentLt": "paprastoji žilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sinningia hybrida",
+      "currentLt": "pukioji singija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sinningia speciosa",
+      "currentLt": "dailioji singija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum aviculare",
+      "currentLt": "paukštinė kiaulienažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum capsicastrum",
+      "currentLt": "papriknė kiaulienažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum cornutum",
+      "currentLt": "ragotoji kiaulienažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum dulcamara",
+      "currentLt": "karklavijinė kiaulienažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum laciniatum",
+      "currentLt": "skiautėtoji kiaulienažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum luteum",
+      "currentLt": "geltonoji kiaulienažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum melongena",
+      "currentLt": "baklažaninė kiaulienažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum nigrum",
+      "currentLt": "juodoji kiaulienažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum pseudocapsicum",
+      "currentLt": "vyšninė kiaulienažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Solanum sisymbriifolium",
+      "currentLt": "pikulalūpė kiaulienažolė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Sophora japonica",
+      "currentLt": "japoninė šoforija",
+      "sourceGenusGroup": "vendor"
+    },
+    {
+      "latin": "Sparmannia africana",
+      "currentLt": "afrikinė spamanija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Spathiphyllum floribundum",
+      "currentLt": "gausiažiedė plokščialapė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Stapelia grandiflora",
+      "currentLt": "stambiažiedė stapelija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Stapelia variegata",
+      "currentLt": "margoji stapelija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Stephanotis floribunda",
+      "currentLt": "gausiažiedė stefanotis",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Strelitzia alba",
+      "currentLt": "baltoji strelicija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Strelitzia nicolai",
+      "currentLt": "Nikolajaus strelicija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Strelitzia reginae",
+      "currentLt": "prašmatnioji strelicija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Tetrastigma voinierianum",
+      "currentLt": "Vinajėro tetrastigma",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Thunbergia alata",
+      "currentLt": "sparnotoji tunbergija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Thunbergia grandiflora",
+      "currentLt": "didžiažiedė tunbergija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Tillandsia usneoides",
+      "currentLt": "kelnenio tilandsija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Tradescantia albiflora",
+      "currentLt": "baltažiedė tradeskantė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Tradescantia blossfeldiana",
+      "currentLt": "argentinė tradeskantė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Tradescantia fluminensis",
+      "currentLt": "brazilinė tradeskantė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Tradescantia virginiana",
+      "currentLt": "virginine tradeskantė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Tradescantia viridis",
+      "currentLt": "žaliasis tradeskantė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Vanilla planifolia",
+      "currentLt": "kvapioji vanilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Vanilla pompona",
+      "currentLt": "stambioji vanilė",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Washingtonia filifera",
+      "currentLt": "paprastoji vašingtonija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Xanthosoma sagittifolium",
+      "currentLt": "strėlialapė ksantosoma",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Yucca aloifolia",
+      "currentLt": "alavijinė juka",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Yucca elephantipes",
+      "currentLt": "drambliakojė juka",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Yucca filamentosa",
+      "currentLt": "pluoštinė juka",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Yucca gloriosa",
+      "currentLt": "puošnioji juka",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Zantedeschia aethiopica",
+      "currentLt": "etiopinė kilija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Zantedeschia elliottiana",
+      "currentLt": "Eliotto kilija",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Zebrina pendula",
+      "currentLt": "kybanti zebrinka",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Zephyranthes candida",
+      "currentLt": "baltasis zefyrantas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Zephyranthes grandiflora",
+      "currentLt": "didžiažiedis zefyrantas",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Zingiber aromaticum",
+      "currentLt": "kvapusis imbieras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Zingiber cassumunar",
+      "currentLt": "geltonasis imbieras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Zingiber mioga",
+      "currentLt": "japoninis imbieras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Zingiber officinale",
+      "currentLt": "tikrasis imbieras",
+      "sourceGenusGroup": "indoor-whitelist"
+    },
+    {
+      "latin": "Zingiber zerumbet",
+      "currentLt": "cerumbinis imbieras",
+      "sourceGenusGroup": "indoor-whitelist"
+    }
+  ]
+}

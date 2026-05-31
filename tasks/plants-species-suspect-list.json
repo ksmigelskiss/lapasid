@@ -1,0 +1,2461 @@
+{
+  "mismatch": [
+    {
+      "latin": "Alcea ocutargula",
+      "currentLt": "Alcea acutiloba",
+      "expectedLastWord": "Piliarožė",
+      "actualLastWord": "acutiloba"
+    },
+    {
+      "latin": "Allium ascalonicum",
+      "currentLt": "askalonas",
+      "expectedLastWord": "Česnakas",
+      "actualLastWord": "askalonas"
+    },
+    {
+      "latin": "Allium cepa",
+      "currentLt": "valgomasis svogūnas",
+      "expectedLastWord": "Česnakas",
+      "actualLastWord": "svogūnas"
+    },
+    {
+      "latin": "Allium porrum",
+      "currentLt": "daržinis poras",
+      "expectedLastWord": "Česnakas",
+      "actualLastWord": "poras"
+    },
+    {
+      "latin": "Allium proliferum",
+      "currentLt": "daugiasluoksnis svogūnas",
+      "expectedLastWord": "Česnakas",
+      "actualLastWord": "svogūnas"
+    },
+    {
+      "latin": "Alnus glutinosa",
+      "currentLt": "juodalksnis",
+      "expectedLastWord": "Alksnis",
+      "actualLastWord": "juodalksnis"
+    },
+    {
+      "latin": "Alnus incana",
+      "currentLt": "baltalksnis",
+      "expectedLastWord": "Alksnis",
+      "actualLastWord": "baltalksnis"
+    },
+    {
+      "latin": "Alpinia galanga",
+      "currentLt": "didysis galangas",
+      "expectedLastWord": "Alpinija",
+      "actualLastWord": "galangas"
+    },
+    {
+      "latin": "Alpinia officinarum",
+      "currentLt": "vaistinis alpinijos kalgan",
+      "expectedLastWord": "Alpinija",
+      "actualLastWord": "kalgan"
+    },
+    {
+      "latin": "Alyssum alyssoides",
+      "currentLt": "taurelinis laibšiūnis",
+      "expectedLastWord": "Laibenis",
+      "actualLastWord": "laibšiūnis"
+    },
+    {
+      "latin": "Alyssum argenteum",
+      "currentLt": "sidabrinis laibšiūnis",
+      "expectedLastWord": "Laibenis",
+      "actualLastWord": "laibšiūnis"
+    },
+    {
+      "latin": "Alyssum gmelinii",
+      "currentLt": "smiltyninis laibšiūnis",
+      "expectedLastWord": "Laibenis",
+      "actualLastWord": "laibšiūnis"
+    },
+    {
+      "latin": "Alyssum maritimum",
+      "currentLt": "Lobularia maritima",
+      "expectedLastWord": "Laibenis",
+      "actualLastWord": "maritima"
+    },
+    {
+      "latin": "Alyssum saxatile",
+      "currentLt": "Aurinia saxatilis",
+      "expectedLastWord": "Laibenis",
+      "actualLastWord": "saxatilis"
+    },
+    {
+      "latin": "Alyssum tortuosum",
+      "currentLt": "vingrusis laibšiūnis",
+      "expectedLastWord": "Laibenis",
+      "actualLastWord": "laibšiūnis"
+    },
+    {
+      "latin": "Angelica archangelica",
+      "currentLt": "vaistinė šveitragėvė",
+      "expectedLastWord": "Skudutis",
+      "actualLastWord": "šveitragėvė"
+    },
+    {
+      "latin": "Angelica fragrans",
+      "currentLt": "kvapnioji angerkasa",
+      "expectedLastWord": "Skudutis",
+      "actualLastWord": "angerkasa"
+    },
+    {
+      "latin": "Angelica sesquipedale",
+      "currentLt": "didysis angrėkas",
+      "expectedLastWord": "Skudutis",
+      "actualLastWord": "angrėkas"
+    },
+    {
+      "latin": "Anomodon attenuatus",
+      "currentLt": "smulkiojo anomodono",
+      "expectedLastWord": "Dantis",
+      "actualLastWord": "anomodono"
+    },
+    {
+      "latin": "Anomodon longifolius",
+      "currentLt": "ilgalapis anomodonas",
+      "expectedLastWord": "Dantis",
+      "actualLastWord": "anomodonas"
+    },
+    {
+      "latin": "Anomodon viticulosus",
+      "currentLt": "krūmiškas anomodonas",
+      "expectedLastWord": "Dantis",
+      "actualLastWord": "anomodonas"
+    },
+    {
+      "latin": "Anthoceros punctatus",
+      "currentLt": "spuoguotoji žvainė",
+      "expectedLastWord": "Žiedas",
+      "actualLastWord": "žvainė"
+    },
+    {
+      "latin": "Arctostaphylos alpinus",
+      "currentLt": "Arctous alpina",
+      "expectedLastWord": "Meška",
+      "actualLastWord": "alpina"
+    },
+    {
+      "latin": "Arctostaphylos uva-ursi",
+      "currentLt": "miltinė meškauogė",
+      "expectedLastWord": "Meška",
+      "actualLastWord": "meškauogė"
+    },
+    {
+      "latin": "Arenaria graminifolia",
+      "currentLt": "Arenaria procera",
+      "expectedLastWord": "Smiltė",
+      "actualLastWord": "procera"
+    },
+    {
+      "latin": "Artemisia dracunculus",
+      "currentLt": "peletrūnas",
+      "expectedLastWord": "Kietis",
+      "actualLastWord": "peletrūnas"
+    },
+    {
+      "latin": "Artocarpus altilis",
+      "currentLt": "paprastasis duonmedis",
+      "expectedLastWord": "Duona",
+      "actualLastWord": "duonmedis"
+    },
+    {
+      "latin": "Artocarpus communis",
+      "currentLt": "Artocarpus altilis",
+      "expectedLastWord": "Duona",
+      "actualLastWord": "altilis"
+    },
+    {
+      "latin": "Artocarpus heterophyllus",
+      "currentLt": "indiškasis duonmedis",
+      "expectedLastWord": "Duona",
+      "actualLastWord": "duonmedis"
+    },
+    {
+      "latin": "Artocarpus integer",
+      "currentLt": "Artocarpus heterophyllus",
+      "expectedLastWord": "Duona",
+      "actualLastWord": "heterophyllus"
+    },
+    {
+      "latin": "Asperula aparine",
+      "currentLt": "Galium aparine",
+      "expectedLastWord": "Krūmė",
+      "actualLastWord": "aparine"
+    },
+    {
+      "latin": "Asperula odorata",
+      "currentLt": "Galium odoratum",
+      "expectedLastWord": "Krūmė",
+      "actualLastWord": "odoratum"
+    },
+    {
+      "latin": "Aster chinensis",
+      "currentLt": "Callistephus chinensis",
+      "expectedLastWord": "Astras",
+      "actualLastWord": "chinensis"
+    },
+    {
+      "latin": "Astrodaucus orientalis",
+      "currentLt": "rytinė morkovinė",
+      "expectedLastWord": "Žvaigždė",
+      "actualLastWord": "morkovinė"
+    },
+    {
+      "latin": "Avena pubescens",
+      "currentLt": "Helictotrichon pubescens",
+      "expectedLastWord": "Aviža",
+      "actualLastWord": "pubescens"
+    },
+    {
+      "latin": "Avena strigosa",
+      "currentLt": "aviža plikūkė",
+      "expectedLastWord": "Aviža",
+      "actualLastWord": "plikūkė"
+    },
+    {
+      "latin": "Baldellia ranunculoides",
+      "currentLt": "vėdrynlapis",
+      "expectedLastWord": "Baldellia",
+      "actualLastWord": "vėdrynlapis"
+    },
+    {
+      "latin": "Ballota borealis",
+      "currentLt": "Ballota nigra",
+      "expectedLastWord": "Paskleisi",
+      "actualLastWord": "nigra"
+    },
+    {
+      "latin": "Ballota foetida",
+      "currentLt": "Ballota nigra",
+      "expectedLastWord": "Paskleisi",
+      "actualLastWord": "nigra"
+    },
+    {
+      "latin": "Ballota nigra",
+      "currentLt": "juodasis akėsis",
+      "expectedLastWord": "Paskleisi",
+      "actualLastWord": "akėsis"
+    },
+    {
+      "latin": "Barbarea arcuata",
+      "currentLt": "Barbarea vulgaris",
+      "expectedLastWord": "Barborytė",
+      "actualLastWord": "vulgaris"
+    },
+    {
+      "latin": "Barbula fallax",
+      "currentLt": "Didymodon fallax",
+      "expectedLastWord": "Barzdelė",
+      "actualLastWord": "fallax"
+    },
+    {
+      "latin": "Batrachium divaricatum",
+      "currentLt": "Ranunculus trichophyllus",
+      "expectedLastWord": "Kurkliažolė",
+      "actualLastWord": "trichophyllus"
+    },
+    {
+      "latin": "Begonia scandens",
+      "currentLt": "Begonia glabra",
+      "expectedLastWord": "Begonija",
+      "actualLastWord": "glabra"
+    },
+    {
+      "latin": "Bergenia pacifica",
+      "currentLt": "Bergenia crassifolia",
+      "expectedLastWord": "Bergenija",
+      "actualLastWord": "crassifolia"
+    },
+    {
+      "latin": "Berula angustifolia",
+      "currentLt": "Berula erecta",
+      "expectedLastWord": "Vandurolis",
+      "actualLastWord": "erecta"
+    },
+    {
+      "latin": "Beta cicla",
+      "currentLt": "Beta vulgaris subsp. vulgaris convar. cicla",
+      "expectedLastWord": "Runkelis",
+      "actualLastWord": "cicla"
+    },
+    {
+      "latin": "Beta maritima",
+      "currentLt": "Beta vulgaris subsp. vulgaris convar. maritima",
+      "expectedLastWord": "Runkelis",
+      "actualLastWord": "maritima"
+    },
+    {
+      "latin": "Betula alba",
+      "currentLt": "Betula pubescens",
+      "expectedLastWord": "Beržas",
+      "actualLastWord": "pubescens"
+    },
+    {
+      "latin": "Betula nana",
+      "currentLt": "beržas keružėlis",
+      "expectedLastWord": "Beržas",
+      "actualLastWord": "keružėlis"
+    },
+    {
+      "latin": "Betula verrucosa",
+      "currentLt": "Betula pendula",
+      "expectedLastWord": "Beržas",
+      "actualLastWord": "pendula"
+    },
+    {
+      "latin": "Blechnum spicant",
+      "currentLt": "varpotoji nukimėlė",
+      "expectedLastWord": "Unksmenė",
+      "actualLastWord": "nukimėlė"
+    },
+    {
+      "latin": "Brassica napus",
+      "currentLt": "rapsas",
+      "expectedLastWord": "Bastutis",
+      "actualLastWord": "rapsas"
+    },
+    {
+      "latin": "Brassica oleracea",
+      "currentLt": "kopūstas",
+      "expectedLastWord": "Bastutis",
+      "actualLastWord": "kopūstas"
+    },
+    {
+      "latin": "Brassica rapa",
+      "currentLt": "ropė",
+      "expectedLastWord": "Bastutis",
+      "actualLastWord": "ropė"
+    },
+    {
+      "latin": "Brosimum galactodendron",
+      "currentLt": "tikrasis pieamedis",
+      "expectedLastWord": "Brosimum",
+      "actualLastWord": "pieamedis"
+    },
+    {
+      "latin": "Bupleurum rotundifolium",
+      "currentLt": "apskritalapis",
+      "expectedLastWord": "Gaivenis",
+      "actualLastWord": "apskritalapis"
+    },
+    {
+      "latin": "Buxbaumia aphylla",
+      "currentLt": "belapis",
+      "expectedLastWord": "Buksbaumija",
+      "actualLastWord": "belapis"
+    },
+    {
+      "latin": "Calamintha acinos",
+      "currentLt": "dirvinis akmenėlis",
+      "expectedLastWord": "Girmėtė",
+      "actualLastWord": "akmenėlis"
+    },
+    {
+      "latin": "Calla aethiopica",
+      "currentLt": "kalė",
+      "expectedLastWord": "Gluosnė",
+      "actualLastWord": "kalė"
+    },
+    {
+      "latin": "Capsella bursa-pastoris",
+      "currentLt": "trikertė žvaginė",
+      "expectedLastWord": "Dėžutė",
+      "actualLastWord": "žvaginė"
+    },
+    {
+      "latin": "Cerasus avium",
+      "currentLt": "trešnė",
+      "expectedLastWord": "Vyšnia",
+      "actualLastWord": "trešnė"
+    },
+    {
+      "latin": "Chara polyacantha",
+      "currentLt": "gausiaadyglė maurabragis",
+      "expectedLastWord": "Chara",
+      "actualLastWord": "maurabragis"
+    },
+    {
+      "latin": "Chara rudis",
+      "currentLt": "stambusis maurabragis",
+      "expectedLastWord": "Chara",
+      "actualLastWord": "maurabragis"
+    },
+    {
+      "latin": "Chara scoparia",
+      "currentLt": "šluotinis maurabragis",
+      "expectedLastWord": "Chara",
+      "actualLastWord": "maurabragis"
+    },
+    {
+      "latin": "Chara tomentosa",
+      "currentLt": "kietšiis maurabragis",
+      "expectedLastWord": "Chara",
+      "actualLastWord": "maurabragis"
+    },
+    {
+      "latin": "Chara vulgaris",
+      "currentLt": "paprastasis maurabragis",
+      "expectedLastWord": "Chara",
+      "actualLastWord": "maurabragis"
+    },
+    {
+      "latin": "Chrysanthemum coronarium",
+      "currentLt": "vainikinė skaistažolė",
+      "expectedLastWord": "Chrizantema",
+      "actualLastWord": "skaistažolė"
+    },
+    {
+      "latin": "Chrysanthemum corymbosum",
+      "currentLt": "kuoknotosios skaistažolė",
+      "expectedLastWord": "Chrizantema",
+      "actualLastWord": "skaistažolė"
+    },
+    {
+      "latin": "Chrysanthemum segetum",
+      "currentLt": "dirvinė skaistažolė",
+      "expectedLastWord": "Chrizantema",
+      "actualLastWord": "skaistažolė"
+    },
+    {
+      "latin": "Chrysanthemum vulgare",
+      "currentLt": "bitkrėslė",
+      "expectedLastWord": "Chrizantema",
+      "actualLastWord": "bitkrėslė"
+    },
+    {
+      "latin": "Citrullus colocynthis",
+      "currentLt": "koloknitas",
+      "expectedLastWord": "Arbūzas",
+      "actualLastWord": "koloknitas"
+    },
+    {
+      "latin": "Citrus aurantifolia",
+      "currentLt": "rūgščioji citrina",
+      "expectedLastWord": "Citrinmedis",
+      "actualLastWord": "citrina"
+    },
+    {
+      "latin": "Citrus aurantium",
+      "currentLt": "karčiavaisis citrina",
+      "expectedLastWord": "Citrinmedis",
+      "actualLastWord": "citrina"
+    },
+    {
+      "latin": "Cladium mariscus",
+      "currentLt": "šakotojo rastainis",
+      "expectedLastWord": "Šakotis",
+      "actualLastWord": "rastainis"
+    },
+    {
+      "latin": "Cladopodiella fluitans",
+      "currentLt": "vandeninė kojinė",
+      "expectedLastWord": "Šaka",
+      "actualLastWord": "kojinė"
+    },
+    {
+      "latin": "Clerodendrum fragrans",
+      "currentLt": "kvapusis švelmedis",
+      "expectedLastWord": "Klerodendras",
+      "actualLastWord": "švelmedis"
+    },
+    {
+      "latin": "Clerodendrum thomsoniae",
+      "currentLt": "Tomsono švelmedis",
+      "expectedLastWord": "Klerodendras",
+      "actualLastWord": "švelmedis"
+    },
+    {
+      "latin": "Cochlearia armoracia",
+      "currentLt": "krienas",
+      "expectedLastWord": "Skarbietas",
+      "actualLastWord": "krienas"
+    },
+    {
+      "latin": "Cochlearia officinalis",
+      "currentLt": "vaistinis skarbinis",
+      "expectedLastWord": "Skarbietas",
+      "actualLastWord": "skarbinis"
+    },
+    {
+      "latin": "Copernicia cerifera",
+      "currentLt": "karnauba",
+      "expectedLastWord": "Kopernikija",
+      "actualLastWord": "karnauba"
+    },
+    {
+      "latin": "Copernicia prunifera",
+      "currentLt": "karnauba",
+      "expectedLastWord": "Kopernikija",
+      "actualLastWord": "karnauba"
+    },
+    {
+      "latin": "Corispermum leptopterum",
+      "currentLt": "siauraspanis drugišlaišis",
+      "expectedLastWord": "Bildinis",
+      "actualLastWord": "drugišlaišis"
+    },
+    {
+      "latin": "Cotoneaster maritima",
+      "currentLt": "pajūrinė balža",
+      "expectedLastWord": "Kaulenis",
+      "actualLastWord": "balža"
+    },
+    {
+      "latin": "Cucumis melo",
+      "currentLt": "sėjamasis melionas",
+      "expectedLastWord": "Agurkas",
+      "actualLastWord": "melionas"
+    },
+    {
+      "latin": "Dinobryon divergens",
+      "currentLt": "E. Imhof",
+      "expectedLastWord": "Dinobris",
+      "actualLastWord": "Imhof"
+    },
+    {
+      "latin": "Dioscorea oppositia",
+      "currentLt": "oppositia",
+      "expectedLastWord": "Dioskorija",
+      "actualLastWord": "oppositia"
+    },
+    {
+      "latin": "Diospyros ebenaster",
+      "currentLt": "juodmedis",
+      "expectedLastWord": "Dievukas",
+      "actualLastWord": "juodmedis"
+    },
+    {
+      "latin": "Diospyros ebenum",
+      "currentLt": "ceiloninis juodmedis",
+      "expectedLastWord": "Dievukas",
+      "actualLastWord": "juodmedis"
+    },
+    {
+      "latin": "Diospyros kaki",
+      "currentLt": "rytinis persimonas",
+      "expectedLastWord": "Dievukas",
+      "actualLastWord": "persimonas"
+    },
+    {
+      "latin": "Diospyros lotus",
+      "currentLt": "kaukazinis persimonas",
+      "expectedLastWord": "Dievukas",
+      "actualLastWord": "persimonas"
+    },
+    {
+      "latin": "Diospyros melanoxylon",
+      "currentLt": "indinis juodmedis",
+      "expectedLastWord": "Dievukas",
+      "actualLastWord": "juodmedis"
+    },
+    {
+      "latin": "Diospyros virginiana",
+      "currentLt": "virginsis persimonas",
+      "expectedLastWord": "Dievukas",
+      "actualLastWord": "persimonas"
+    },
+    {
+      "latin": "Doronicum cordifolium",
+      "currentLt": "columnae",
+      "expectedLastWord": "Raukšlas",
+      "actualLastWord": "columnae"
+    },
+    {
+      "latin": "Encalypta streptocarpa",
+      "currentLt": "suktaubę gtenė",
+      "expectedLastWord": "Suvynioses",
+      "actualLastWord": "gtenė"
+    },
+    {
+      "latin": "Encalypta vulgaris",
+      "currentLt": "paprastoji geltonė",
+      "expectedLastWord": "Suvynioses",
+      "actualLastWord": "geltonė"
+    },
+    {
+      "latin": "Epilobium angustifolium",
+      "currentLt": "siauralapis gauromentis",
+      "expectedLastWord": "Ožkarožė",
+      "actualLastWord": "gauromentis"
+    },
+    {
+      "latin": "Epiphyllum grande",
+      "currentLt": "grande",
+      "expectedLastWord": "Lapenis",
+      "actualLastWord": "grande"
+    },
+    {
+      "latin": "Epipogium epigeium",
+      "currentLt": "epigeium",
+      "expectedLastWord": "Viksvuolaitė",
+      "actualLastWord": "epigeium"
+    },
+    {
+      "latin": "Epischia cupreata",
+      "currentLt": "įvairiaspalvis riešinis",
+      "expectedLastWord": "Epischia",
+      "actualLastWord": "riešinis"
+    },
+    {
+      "latin": "Epischia Klutz",
+      "currentLt": "dangteliis stogelis",
+      "expectedLastWord": "Epischia",
+      "actualLastWord": "stogelis"
+    },
+    {
+      "latin": "Epischia turgida",
+      "currentLt": "didgalvė Epitemija",
+      "expectedLastWord": "Epischia",
+      "actualLastWord": "Epitemija"
+    },
+    {
+      "latin": "Eranthis hyemalis",
+      "currentLt": "žiemkenčio pavasaris",
+      "expectedLastWord": "Erantis",
+      "actualLastWord": "pavasaris"
+    },
+    {
+      "latin": "Erucastrum pollichii",
+      "currentLt": "gallicum",
+      "expectedLastWord": "Šingartė",
+      "actualLastWord": "gallicum"
+    },
+    {
+      "latin": "Erysimum canescens",
+      "currentLt": "diffusum",
+      "expectedLastWord": "Tvertikas",
+      "actualLastWord": "diffusum"
+    },
+    {
+      "latin": "Erysimum hieracifolium",
+      "currentLt": "marschallianum",
+      "expectedLastWord": "Tvertikas",
+      "actualLastWord": "marschallianum"
+    },
+    {
+      "latin": "Eugenia caryophyllata",
+      "currentLt": "Syzygium aromaticum",
+      "expectedLastWord": "Eugenija",
+      "actualLastWord": "aromaticum"
+    },
+    {
+      "latin": "Euglena longicauda",
+      "currentLt": "Phacus longicauda",
+      "expectedLastWord": "Grąžulėlis",
+      "actualLastWord": "longicauda"
+    },
+    {
+      "latin": "Eurhynchium angustirete",
+      "currentLt": "E. angustirete",
+      "expectedLastWord": "Gražiasnapė",
+      "actualLastWord": "angustirete"
+    },
+    {
+      "latin": "Eurhynchium angustifolium",
+      "currentLt": "angustirete",
+      "expectedLastWord": "Gražiasnapė",
+      "actualLastWord": "angustirete"
+    },
+    {
+      "latin": "Eurhynchium strigosum",
+      "currentLt": "E. pulchellum",
+      "expectedLastWord": "Gražiasnapė",
+      "actualLastWord": "pulchellum"
+    },
+    {
+      "latin": "Eurhynchium swartzii",
+      "currentLt": "E. angustirete",
+      "expectedLastWord": "Gražiasnapė",
+      "actualLastWord": "angustirete"
+    },
+    {
+      "latin": "Exochorda grandiflora",
+      "currentLt": "E. racemosa",
+      "expectedLastWord": "Blumenspierė",
+      "actualLastWord": "racemosa"
+    },
+    {
+      "latin": "Filipendula hexapetala",
+      "currentLt": "F. vulgaris",
+      "expectedLastWord": "Vingiorykštė",
+      "actualLastWord": "vulgaris"
+    },
+    {
+      "latin": "Fossombronia dumortieri",
+      "currentLt": "F. foveolata",
+      "expectedLastWord": "Zipfelmoos",
+      "actualLastWord": "foveolata"
+    },
+    {
+      "latin": "Fossombronia wondraczekii",
+      "currentLt": "Vondračeko slieksnė",
+      "expectedLastWord": "Zipfelmoos",
+      "actualLastWord": "slieksnė"
+    },
+    {
+      "latin": "Fothergilla alnifolia",
+      "currentLt": "gardenii",
+      "expectedLastWord": "Vokamis",
+      "actualLastWord": "gardenii"
+    },
+    {
+      "latin": "Fraxinus pubescens",
+      "currentLt": "F. pennsylvanica",
+      "expectedLastWord": "Uosis",
+      "actualLastWord": "pennsylvanica"
+    },
+    {
+      "latin": "Fritillaria eduardii",
+      "currentLt": "F. imperialis",
+      "expectedLastWord": "Margotė",
+      "actualLastWord": "imperialis"
+    },
+    {
+      "latin": "Furcellaria fastigiata",
+      "currentLt": "smulkiai dvišakas baigutilis",
+      "expectedLastWord": "Furcelarija",
+      "actualLastWord": "baigutilis"
+    },
+    {
+      "latin": "Furcellaria lumbricalis",
+      "currentLt": "F. fastigiata",
+      "expectedLastWord": "Furcelarija",
+      "actualLastWord": "fastigiata"
+    },
+    {
+      "latin": "Gagea arvensis",
+      "currentLt": "Acker-Goldstern",
+      "expectedLastWord": "Vištapienė",
+      "actualLastWord": "Acker-Goldstern"
+    },
+    {
+      "latin": "Gaillardia bicolor",
+      "currentLt": "G. pulchella",
+      "expectedLastWord": "Gailiardija",
+      "actualLastWord": "pulchella"
+    },
+    {
+      "latin": "Galanthus latifolius",
+      "currentLt": "G. platyphyllus",
+      "expectedLastWord": "Snieguolė",
+      "actualLastWord": "platyphyllus"
+    },
+    {
+      "latin": "Galinsoga quadriradiata",
+      "currentLt": "G. ciliata",
+      "expectedLastWord": "Galinsoga",
+      "actualLastWord": "ciliata"
+    },
+    {
+      "latin": "Galium odoratum",
+      "currentLt": "kvapioji dusnyčia",
+      "expectedLastWord": "Lipikas",
+      "actualLastWord": "dusnyčia"
+    },
+    {
+      "latin": "Hedera canariensis",
+      "currentLt": "kanariškas Efėjus",
+      "expectedLastWord": "Gebenė",
+      "actualLastWord": "Efėjus"
+    },
+    {
+      "latin": "Hedera colchica",
+      "currentLt": "kolchidinė Efėjus",
+      "expectedLastWord": "Gebenė",
+      "actualLastWord": "Efėjus"
+    },
+    {
+      "latin": "Hedera helix",
+      "currentLt": "gebenė lipikė",
+      "expectedLastWord": "Gebenė",
+      "actualLastWord": "lipikė"
+    },
+    {
+      "latin": "Ipomoea batatas",
+      "currentLt": "valgomasis bulvas",
+      "expectedLastWord": "Ipomėja",
+      "actualLastWord": "bulvas"
+    },
+    {
+      "latin": "Ipomoea purga",
+      "currentLt": "vaistinė jalapa",
+      "expectedLastWord": "Ipomėja",
+      "actualLastWord": "jalapa"
+    },
+    {
+      "latin": "Lamium galeobdolon",
+      "currentLt": "geltonžiedis salinis",
+      "expectedLastWord": "Notrelė",
+      "actualLastWord": "salinis"
+    },
+    {
+      "latin": "Larix americana",
+      "currentLt": "larcina",
+      "expectedLastWord": "Maumedis",
+      "actualLastWord": "larcina"
+    },
+    {
+      "latin": "Leskea polycarpa",
+      "currentLt": "vaisingoji tilninė",
+      "expectedLastWord": "Leskenos",
+      "actualLastWord": "tilninė"
+    },
+    {
+      "latin": "Leucanthemum maximum",
+      "currentLt": "didžiagalvė margerite",
+      "expectedLastWord": "Baltis",
+      "actualLastWord": "margerite"
+    },
+    {
+      "latin": "Leucanthemum vulgare",
+      "currentLt": "paprastoji baltagalvė",
+      "expectedLastWord": "Baltis",
+      "actualLastWord": "baltagalvė"
+    },
+    {
+      "latin": "Liatris arenaria",
+      "currentLt": "smėlyninė rūgšvinė",
+      "expectedLastWord": "Liatris",
+      "actualLastWord": "rūgšvinė"
+    },
+    {
+      "latin": "Lycopodium annotinum",
+      "currentLt": "pataisas vienmetis",
+      "expectedLastWord": "Pataisas",
+      "actualLastWord": "vienmetis"
+    },
+    {
+      "latin": "Lycopodium clavatum",
+      "currentLt": "pataisas šakotasis",
+      "expectedLastWord": "Pataisas",
+      "actualLastWord": "šakotasis"
+    },
+    {
+      "latin": "Matteuccia struthiopteris",
+      "currentLt": "paprastasis strausvinis sparninis",
+      "expectedLastWord": "Jonpapartis",
+      "actualLastWord": "sparninis"
+    },
+    {
+      "latin": "Mentha crispa",
+      "currentLt": "M. spicata",
+      "expectedLastWord": "Mėta",
+      "actualLastWord": "spicata"
+    },
+    {
+      "latin": "Mentha piperita",
+      "currentLt": "pipirmėtė",
+      "expectedLastWord": "Mėta",
+      "actualLastWord": "pipirmėtė"
+    },
+    {
+      "latin": "Mentha spicata",
+      "currentLt": "ilgamėtė",
+      "expectedLastWord": "Mėta",
+      "actualLastWord": "ilgamėtė"
+    },
+    {
+      "latin": "Myosoton aquaticum",
+      "currentLt": "vandeninis pašlinis",
+      "expectedLastWord": "Paštinai",
+      "actualLastWord": "pašlinis"
+    },
+    {
+      "latin": "Myrica gale",
+      "currentLt": "pajūrinis šilvarus",
+      "expectedLastWord": "Sotvaras",
+      "actualLastWord": "šilvarus"
+    },
+    {
+      "latin": "Navicula bory",
+      "currentLt": "laivelis",
+      "expectedLastWord": "Valtelė",
+      "actualLastWord": "laivelis"
+    },
+    {
+      "latin": "Neckera crispa",
+      "currentLt": "garbanotoji plėjusnė",
+      "expectedLastWord": "Neukerą",
+      "actualLastWord": "plėjusnė"
+    },
+    {
+      "latin": "Neckera pennata",
+      "currentLt": "plunksninė plėjusnė",
+      "expectedLastWord": "Neukerą",
+      "actualLastWord": "plėjusnė"
+    },
+    {
+      "latin": "Nicotiana alata",
+      "currentLt": "kvapusis vilkdalgis",
+      "expectedLastWord": "Tabokas",
+      "actualLastWord": "vilkdalgis"
+    },
+    {
+      "latin": "Nitella capillaris",
+      "currentLt": "plaukinis smulkidumblis",
+      "expectedLastWord": "Menčdumblis",
+      "actualLastWord": "smulkidumblis"
+    },
+    {
+      "latin": "Orthotrichum affine",
+      "currentLt": "panaioji tp",
+      "expectedLastWord": "Ortotrikum",
+      "actualLastWord": "tp"
+    },
+    {
+      "latin": "Orthotrichum anomalum",
+      "currentLt": "juostuotoji tp",
+      "expectedLastWord": "Ortotrikum",
+      "actualLastWord": "tp"
+    },
+    {
+      "latin": "Orthotrichum aristatum",
+      "currentLt": "artin inkstlin",
+      "expectedLastWord": "Ortotrikum",
+      "actualLastWord": "inkstlin"
+    },
+    {
+      "latin": "Orthotrichum diaphanum",
+      "currentLt": "vaiskioji tp",
+      "expectedLastWord": "Ortotrikum",
+      "actualLastWord": "tp"
+    },
+    {
+      "latin": "Orthotrichum pumilum",
+      "currentLt": "smulkioji tp",
+      "expectedLastWord": "Ortotrikum",
+      "actualLastWord": "tp"
+    },
+    {
+      "latin": "Orthotrichum speciosum",
+      "currentLt": "puoni tp",
+      "expectedLastWord": "Ortotrikum",
+      "actualLastWord": "tp"
+    },
+    {
+      "latin": "Orthotrichum striatum",
+      "currentLt": "bruotoji tp",
+      "expectedLastWord": "Ortotrikum",
+      "actualLastWord": "tp"
+    },
+    {
+      "latin": "Oxycoccus hiems",
+      "currentLt": "rgtus",
+      "expectedLastWord": "Spangoll",
+      "actualLastWord": "rgtus"
+    },
+    {
+      "latin": "Papaver rhoeas",
+      "currentLt": "aguona birel",
+      "expectedLastWord": "Aguona",
+      "actualLastWord": "birel"
+    },
+    {
+      "latin": "Pellia endiviifolia",
+      "currentLt": "Florencijos advokats",
+      "expectedLastWord": "Pelija",
+      "actualLastWord": "advokats"
+    },
+    {
+      "latin": "Pennisetum americanum",
+      "currentLt": "amerikinis sorinis",
+      "expectedLastWord": "Soruolė",
+      "actualLastWord": "sorinis"
+    },
+    {
+      "latin": "Pennisetum glaucum",
+      "currentLt": "vrpotoji Perlhirse",
+      "expectedLastWord": "Soruolė",
+      "actualLastWord": "Perlhirse"
+    },
+    {
+      "latin": "Petasites albus",
+      "currentLt": "baltažiedis Pestwurz",
+      "expectedLastWord": "Šalkšnis",
+      "actualLastWord": "Pestwurz"
+    },
+    {
+      "latin": "Phlomis tuberosa",
+      "currentLt": "gumbuotoji knifligės",
+      "expectedLastWord": "Vernišinė",
+      "actualLastWord": "knifligės"
+    },
+    {
+      "latin": "Phormium tenax",
+      "currentLt": "phorminis",
+      "expectedLastWord": "Dembėlis",
+      "actualLastWord": "phorminis"
+    },
+    {
+      "latin": "Plagiomnium elatum",
+      "currentLt": "aukštoji lapinė",
+      "expectedLastWord": "Plagiomnis",
+      "actualLastWord": "lapinė"
+    },
+    {
+      "latin": "Pogostemon heyneanus",
+      "currentLt": "indinis pačiulis",
+      "expectedLastWord": "Žiūkrigis",
+      "actualLastWord": "pačiulis"
+    },
+    {
+      "latin": "Pogostemon patchouly",
+      "currentLt": "tikrasis pačiulis",
+      "expectedLastWord": "Žiūkrigis",
+      "actualLastWord": "pačiulis"
+    },
+    {
+      "latin": "Polygonum aviculare",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Rūgtis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Polygonum bistorta",
+      "currentLt": "rūgtis gyvatžolė",
+      "expectedLastWord": "Rūgtis",
+      "actualLastWord": "gyvatžolė"
+    },
+    {
+      "latin": "Polygonum calcatum",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Rūgtis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Polygonum dumetorum",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Rūgtis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Polygonum monspeliense",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Rūgtis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Polygonum nodosum",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Rūgtis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Polygonum scabrum",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Rūgtis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Polygonum tomentosum",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Rūgtis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Polytrichum affine",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Gegužlinis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Polytrichum alpinum",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Gegužlinis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Polytrichum attenuatum",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Gegužlinis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Polytrichum gracile",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Gegužlinis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Polytrichum urnigerum",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Gegužlinis",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Populus candicans",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Tuopa",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Populus gelrica",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Tuopa",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Populus italica",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Tuopa",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Populus pyramidalis",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Tuopa",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Populus regenerata",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Tuopa",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Populus tremula",
+      "currentLt": "drebulė",
+      "expectedLastWord": "Tuopa",
+      "actualLastWord": "drebulė"
+    },
+    {
+      "latin": "Potamogeton densus",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Plūdė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potamogeton mucronatus",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Plūdė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potentilla cinerea",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Sidabražolė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potentilla dissecta",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Sidabražolė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potentilla fragrariastrum",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Sidabražolė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potentilla impolita",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Sidabražolė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potentilla palustris",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Sidabražolė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potentilla procumbens",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Sidabražolė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potentilla silvestris",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Sidabražolė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potentilla tabernaemontani",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Sidabražolė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potentilla tormentilla",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Sidabražolė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potentilla verna",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Sidabražolė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Potentilla sanguisorba",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Sidabražolė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus acida",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus armeniaca",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus avium",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus cerasus",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus communis",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus divaricata",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus fruticosa",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus insititia",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus lusitanica",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus mahaleb",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus padus",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus persica",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus serrulata",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus tenella",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Prunus triloba",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Slyva",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pseudotsuga caesia",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Pseudotsuga",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pseudotsuga douglasii",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Pseudotsuga",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pulicaria prostrata",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Miskreslė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pycnanthemum vulgare",
+      "currentLt": "paprastoji erškėtė",
+      "expectedLastWord": "Piknantemas",
+      "actualLastWord": "erškėtė"
+    },
+    {
+      "latin": "Pyrola secunda",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Kriaušlapė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pyrola umbellata",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Kriaušlapė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pyrola uniflora",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Kriaušlapė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pyrus domestica",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Kriaušė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pyrus sativa",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Kriaušė",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Quercus pedunculata",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Ąžuolas",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Quercus sessilis",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Ąžuolas",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Ranunculus acer",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Vėdrynas",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Ranunculus aquatilis",
+      "currentLt": "takažolė",
+      "expectedLastWord": "Vėdrynas",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Ribes burejense",
+      "currentLt": "būrėjinis agrastas",
+      "expectedLastWord": "Serbentas",
+      "actualLastWord": "agrastas"
+    },
+    {
+      "latin": "Ribes cynosbati",
+      "currentLt": "agrastas didelis",
+      "expectedLastWord": "Serbentas",
+      "actualLastWord": "didelis"
+    },
+    {
+      "latin": "Ribes divaricatum",
+      "currentLt": "išsklaidęs agrastas",
+      "expectedLastWord": "Serbentas",
+      "actualLastWord": "agrastas"
+    },
+    {
+      "latin": "Ribes hirtellum",
+      "currentLt": "mažadyglis agrastas",
+      "expectedLastWord": "Serbentas",
+      "actualLastWord": "agrastas"
+    },
+    {
+      "latin": "Ribes missouriense",
+      "currentLt": "misūrinis agrastas",
+      "expectedLastWord": "Serbentas",
+      "actualLastWord": "agrastas"
+    },
+    {
+      "latin": "Ribes niveum",
+      "currentLt": "baltažiedis agrastas",
+      "expectedLastWord": "Serbentas",
+      "actualLastWord": "agrastas"
+    },
+    {
+      "latin": "Ribes oxyacanthoides",
+      "currentLt": "aštriadyglis agrastas",
+      "expectedLastWord": "Serbentas",
+      "actualLastWord": "agrastas"
+    },
+    {
+      "latin": "Ribes uva-crispa",
+      "currentLt": "paprastasis agrastas",
+      "expectedLastWord": "Serbentas",
+      "actualLastWord": "agrastas"
+    },
+    {
+      "latin": "Rosa chinensis",
+      "currentLt": "kininė rožė",
+      "expectedLastWord": "Erškėtis",
+      "actualLastWord": "rožė"
+    },
+    {
+      "latin": "Rosa damascena",
+      "currentLt": "damaskinė rožė",
+      "expectedLastWord": "Erškėtis",
+      "actualLastWord": "rožė"
+    },
+    {
+      "latin": "Rosa gallica",
+      "currentLt": "prancūzinė rožė",
+      "expectedLastWord": "Erškėtis",
+      "actualLastWord": "rožė"
+    },
+    {
+      "latin": "Rosa laevigata",
+      "currentLt": "lygiažiedė rožė",
+      "expectedLastWord": "Erškėtis",
+      "actualLastWord": "rožė"
+    },
+    {
+      "latin": "Rosa rehderiana",
+      "currentLt": "poliatinė rožė",
+      "expectedLastWord": "Erškėtis",
+      "actualLastWord": "rožė"
+    },
+    {
+      "latin": "Rubus arcticus",
+      "currentLt": "šiaurinė tekšė",
+      "expectedLastWord": "Gervuogė",
+      "actualLastWord": "tekšė"
+    },
+    {
+      "latin": "Rubus idaeus",
+      "currentLt": "paprastoji avietė",
+      "expectedLastWord": "Gervuogė",
+      "actualLastWord": "avietė"
+    },
+    {
+      "latin": "Rubus illecebrosus",
+      "currentLt": "žemuoginė avietė",
+      "expectedLastWord": "Gervuogė",
+      "actualLastWord": "avietė"
+    },
+    {
+      "latin": "Rubus occidentalis",
+      "currentLt": "vakarinė avietė",
+      "expectedLastWord": "Gervuogė",
+      "actualLastWord": "avietė"
+    },
+    {
+      "latin": "Rubus odoratus",
+      "currentLt": "kvapioji avietė",
+      "expectedLastWord": "Gervuogė",
+      "actualLastWord": "avietė"
+    },
+    {
+      "latin": "Rubus phoenicolasius",
+      "currentLt": "raudongyslė avietė",
+      "expectedLastWord": "Gervuogė",
+      "actualLastWord": "avietė"
+    },
+    {
+      "latin": "Rubus saxatilis",
+      "currentLt": "paprastoji katuogė",
+      "expectedLastWord": "Gervuogė",
+      "actualLastWord": "katuogė"
+    },
+    {
+      "latin": "Rubus strigosus",
+      "currentLt": "šerėtoji avietė",
+      "expectedLastWord": "Gervuogė",
+      "actualLastWord": "avietė"
+    },
+    {
+      "latin": "Rumex hydrolapathum",
+      "currentLt": "rūgštynė gludžiodė",
+      "expectedLastWord": "Rūgštynė",
+      "actualLastWord": "gludžiodė"
+    },
+    {
+      "latin": "Salix calodendron",
+      "currentLt": "gluosnis puikuolis",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "puikuolis"
+    },
+    {
+      "latin": "Salix caprea",
+      "currentLt": "blindė",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "blindė"
+    },
+    {
+      "latin": "Salix pentandra",
+      "currentLt": "gluosnis vilbis",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "vilbis"
+    },
+    {
+      "latin": "Salix phylicifolia",
+      "currentLt": "nuvašlikis kalkias",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "kalkias"
+    },
+    {
+      "latin": "Salix polaris",
+      "currentLt": "poliarinis kalkias",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "kalkias"
+    },
+    {
+      "latin": "Salix purpurea",
+      "currentLt": "purpurinis kalkias",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "kalkias"
+    },
+    {
+      "latin": "Salix repens",
+      "currentLt": "gulsčiasis kalkias",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "kalkias"
+    },
+    {
+      "latin": "Salix reticulata",
+      "currentLt": "tinklalapis kalkias",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "kalkias"
+    },
+    {
+      "latin": "Salix rosmarinifolia",
+      "currentLt": "pelkinis kalkias",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "kalkias"
+    },
+    {
+      "latin": "Salix starkeana",
+      "currentLt": "žemkis kalkias",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "kalkias"
+    },
+    {
+      "latin": "Salix triandra",
+      "currentLt": "trešlinis kalkias",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "kalkias"
+    },
+    {
+      "latin": "Salix viminalis",
+      "currentLt": "gluosnis žilvitis",
+      "expectedLastWord": "Gluosnis",
+      "actualLastWord": "žilvitis"
+    },
+    {
+      "latin": "Santolina rosmarinifolia",
+      "currentLt": "žaliojė santolina",
+      "expectedLastWord": "Šventažolė",
+      "actualLastWord": "santolina"
+    },
+    {
+      "latin": "Saponaria officinalis",
+      "currentLt": "vaistinis muilinis",
+      "expectedLastWord": "Putoklis",
+      "actualLastWord": "muilinis"
+    },
+    {
+      "latin": "Satureja acinos",
+      "currentLt": "Acinos arvensis",
+      "expectedLastWord": "Čiobrelinė",
+      "actualLastWord": "arvensis"
+    },
+    {
+      "latin": "Satureja clinopodium",
+      "currentLt": "Clinopodium vulgare",
+      "expectedLastWord": "Čiobrelinė",
+      "actualLastWord": "vulgare"
+    },
+    {
+      "latin": "Scabiosa arvensis",
+      "currentLt": "Knautia arvensis",
+      "expectedLastWord": "Žvaigždinė",
+      "actualLastWord": "arvensis"
+    },
+    {
+      "latin": "Scirpus radicans",
+      "currentLt": "pelkinis viksvilėdis",
+      "expectedLastWord": "Ristis",
+      "actualLastWord": "viksvilėdis"
+    },
+    {
+      "latin": "Scirpus setaceus",
+      "currentLt": "Isolepis setacea",
+      "expectedLastWord": "Ristis",
+      "actualLastWord": "setacea"
+    },
+    {
+      "latin": "Scirpus sylvaticus",
+      "currentLt": "lieknais viksvilėdis",
+      "expectedLastWord": "Ristis",
+      "actualLastWord": "viksvilėdis"
+    },
+    {
+      "latin": "Scirpus tabernaemontani",
+      "currentLt": "Schoenoplectus tabernaemontani",
+      "expectedLastWord": "Ristis",
+      "actualLastWord": "tabernaemontani"
+    },
+    {
+      "latin": "Scopolia stramonifolia",
+      "currentLt": "Scopolia lurida",
+      "expectedLastWord": "Skopolija",
+      "actualLastWord": "lurida"
+    },
+    {
+      "latin": "Scorzonera taustagilyna",
+      "currentLt": "taū-Saglyzs",
+      "expectedLastWord": "Juodakė",
+      "actualLastWord": "taū-Saglyzs"
+    },
+    {
+      "latin": "Sempervivum globiferum",
+      "currentLt": "Jovibara soboliifera",
+      "expectedLastWord": "Šilropės",
+      "actualLastWord": "soboliifera"
+    },
+    {
+      "latin": "Senecio cineraria",
+      "currentLt": "Senecio bicolor",
+      "expectedLastWord": "Žilė",
+      "actualLastWord": "bicolor"
+    },
+    {
+      "latin": "Senecio cruentus",
+      "currentLt": "aukštoji cineraria",
+      "expectedLastWord": "Žilė",
+      "actualLastWord": "cineraria"
+    },
+    {
+      "latin": "Serratula inermis",
+      "currentLt": "Serratula tinctoria",
+      "expectedLastWord": "Pjūklas",
+      "actualLastWord": "tinctoria"
+    },
+    {
+      "latin": "Sesamum orientale",
+      "currentLt": "Sesamum indicum",
+      "expectedLastWord": "Sezamas",
+      "actualLastWord": "indicum"
+    },
+    {
+      "latin": "Seseli libanotis",
+      "currentLt": "Libanotis montana",
+      "expectedLastWord": "Jūukvietis",
+      "actualLastWord": "montana"
+    },
+    {
+      "latin": "Sesleria uliginosa",
+      "currentLt": "Sesleria caerulea",
+      "expectedLastWord": "Melitas",
+      "actualLastWord": "caerulea"
+    },
+    {
+      "latin": "Setaria glauca",
+      "currentLt": "Setaria pumila",
+      "expectedLastWord": "Šerytė",
+      "actualLastWord": "pumila"
+    },
+    {
+      "latin": "Setcreasea purpurea",
+      "currentLt": "Setcreasea pallida",
+      "expectedLastWord": "Setkrezėja",
+      "actualLastWord": "pallida"
+    },
+    {
+      "latin": "Setcreasea striata",
+      "currentLt": "Callisia elegans",
+      "expectedLastWord": "Setkrezėja",
+      "actualLastWord": "elegans"
+    },
+    {
+      "latin": "Silene cucubalus",
+      "currentLt": "Silene vulgaris",
+      "expectedLastWord": "Naktižedis",
+      "actualLastWord": "vulgaris"
+    },
+    {
+      "latin": "Silene otites",
+      "currentLt": "Otrifolifel-Leimkraut",
+      "expectedLastWord": "Naktižedis",
+      "actualLastWord": "Otrifolifel-Leimkraut"
+    },
+    {
+      "latin": "Silene parviflora",
+      "currentLt": "Silene borysthenica",
+      "expectedLastWord": "Naktižedis",
+      "actualLastWord": "borysthenica"
+    },
+    {
+      "latin": "Silphium perfoliatum",
+      "currentLt": "gelžinžiebis",
+      "expectedLastWord": "Plunksnalipis",
+      "actualLastWord": "gelžinžiebis"
+    },
+    {
+      "latin": "Sinapis juncea",
+      "currentLt": "Brassica juncea",
+      "expectedLastWord": "Garstyčia",
+      "actualLastWord": "juncea"
+    },
+    {
+      "latin": "Sinapis nigra",
+      "currentLt": "Brassica nigra",
+      "expectedLastWord": "Garstyčia",
+      "actualLastWord": "nigra"
+    },
+    {
+      "latin": "Solanum sisarum",
+      "currentLt": "saldžiašaknė",
+      "expectedLastWord": "Kiaulienažolė",
+      "actualLastWord": "saldžiašaknė"
+    },
+    {
+      "latin": "Solanum Smilax",
+      "currentLt": "sarsaparilis",
+      "expectedLastWord": "Kiaulienažolė",
+      "actualLastWord": "sarsaparilis"
+    },
+    {
+      "latin": "Solanum china",
+      "currentLt": "kininis sarsaparilis",
+      "expectedLastWord": "Kiaulienažolė",
+      "actualLastWord": "sarsaparilis"
+    },
+    {
+      "latin": "Solanum tuberosum",
+      "currentLt": "valgomoji bulvė",
+      "expectedLastWord": "Kiaulienažolė",
+      "actualLastWord": "bulvė"
+    },
+    {
+      "latin": "Stellaria diffusa",
+      "currentLt": "S. longifolia",
+      "expectedLastWord": "Žliūgė",
+      "actualLastWord": "longifolia"
+    },
+    {
+      "latin": "Subularia aquatica",
+      "currentLt": "vandeninė ylė",
+      "expectedLastWord": "Yla",
+      "actualLastWord": "ylė"
+    },
+    {
+      "latin": "Tanacetum balsamita",
+      "currentLt": "L. Balsamita major",
+      "expectedLastWord": "Sakštinis",
+      "actualLastWord": "major"
+    },
+    {
+      "latin": "Tanacetum cinerariifolium",
+      "currentLt": "daltinis skaisteinis",
+      "expectedLastWord": "Sakštinis",
+      "actualLastWord": "skaisteinis"
+    },
+    {
+      "latin": "Tanacetum coccineum",
+      "currentLt": "rausvažiedis skaisteinis",
+      "expectedLastWord": "Sakštinis",
+      "actualLastWord": "skaisteinis"
+    },
+    {
+      "latin": "Tanacetum corymbosum",
+      "currentLt": "skėtinis skaisteinis",
+      "expectedLastWord": "Sakštinis",
+      "actualLastWord": "skaisteinis"
+    },
+    {
+      "latin": "Tanacetum macrophyllum",
+      "currentLt": "didžialapis skaistenis",
+      "expectedLastWord": "Sakštinis",
+      "actualLastWord": "skaistenis"
+    },
+    {
+      "latin": "Tanacetum parthenifolium",
+      "currentLt": "gelsvalapis skaistenis",
+      "expectedLastWord": "Sakštinis",
+      "actualLastWord": "skaistenis"
+    },
+    {
+      "latin": "Tanacetum parthenium",
+      "currentLt": "vaistinis skaistenis",
+      "expectedLastWord": "Sakštinis",
+      "actualLastWord": "skaistenis"
+    },
+    {
+      "latin": "Tanacetum vulgare",
+      "currentLt": "paprastasis bitkrėslė",
+      "expectedLastWord": "Sakštinis",
+      "actualLastWord": "bitkrėslė"
+    },
+    {
+      "latin": "Tetrastrum multisetum",
+      "currentLt": "daugiašis",
+      "expectedLastWord": "Keturi",
+      "actualLastWord": "daugiašis"
+    },
+    {
+      "latin": "Tetrastrum staurogeniaeforme",
+      "currentLt": "keturlūpis žvaigždžinis",
+      "expectedLastWord": "Keturi",
+      "actualLastWord": "žvaigždžinis"
+    },
+    {
+      "latin": "Thesium ebracteatum",
+      "currentLt": "plikažiedis liūlys",
+      "expectedLastWord": "Thesieus",
+      "actualLastWord": "liūlys"
+    },
+    {
+      "latin": "Thesium linophyllon",
+      "currentLt": "melviniai liūlpiai",
+      "expectedLastWord": "Thesieus",
+      "actualLastWord": "liūlpiai"
+    },
+    {
+      "latin": "Thujopsis dolabrata",
+      "currentLt": "kapšlikinis tujinis",
+      "expectedLastWord": "Dolabrata",
+      "actualLastWord": "tujinis"
+    },
+    {
+      "latin": "Trachycarpus excelsus",
+      "currentLt": "šiurkštvaisė palmė",
+      "expectedLastWord": "Šiurkštus",
+      "actualLastWord": "palmė"
+    },
+    {
+      "latin": "Trachycarpus fortunei",
+      "currentLt": "kuapinė šiurkštvaisė",
+      "expectedLastWord": "Šiurkštus",
+      "actualLastWord": "šiurkštvaisė"
+    },
+    {
+      "latin": "Trichostomum angeinia",
+      "currentLt": "gūžbure",
+      "expectedLastWord": "Plaukas",
+      "actualLastWord": "gūžbure"
+    },
+    {
+      "latin": "Triglochin maritimum",
+      "currentLt": "jūrinis liūlinis",
+      "expectedLastWord": "Smailuma",
+      "actualLastWord": "liūlinis"
+    },
+    {
+      "latin": "Triglochin palustre",
+      "currentLt": "pelkinė naryčiūotė",
+      "expectedLastWord": "Smailuma",
+      "actualLastWord": "naryčiūotė"
+    },
+    {
+      "latin": "Tripleurospermum inodorum",
+      "currentLt": "bekvape ramuneliūtė",
+      "expectedLastWord": "Trišontis",
+      "actualLastWord": "ramuneliūtė"
+    },
+    {
+      "latin": "Tripleurospermum maritimum",
+      "currentLt": "pajūrio smėlynais",
+      "expectedLastWord": "Trišontis",
+      "actualLastWord": "smėlynais"
+    },
+    {
+      "latin": "Triticum spelta",
+      "currentLt": "speltai",
+      "expectedLastWord": "Kviečiai",
+      "actualLastWord": "speltai"
+    },
+    {
+      "latin": "Tussilago farfara",
+      "currentLt": "šalpusnis",
+      "expectedLastWord": "Kosulys",
+      "actualLastWord": "šalpusnis"
+    },
+    {
+      "latin": "Ulmus laevis",
+      "currentLt": "paprastoji vinkšna",
+      "expectedLastWord": "Guoba",
+      "actualLastWord": "vinkšna"
+    },
+    {
+      "latin": "Ulmus minor",
+      "currentLt": "paprastasis skirpstas",
+      "expectedLastWord": "Guoba",
+      "actualLastWord": "skirpstas"
+    },
+    {
+      "latin": "Ulmus pumila",
+      "currentLt": "žemaūgis skirpstas",
+      "expectedLastWord": "Guoba",
+      "actualLastWord": "skirpstas"
+    },
+    {
+      "latin": "Ulmus suberosa",
+      "currentLt": "kaštininis skirpstas",
+      "expectedLastWord": "Guoba",
+      "actualLastWord": "skirpstas"
+    },
+    {
+      "latin": "Vaccinium macrocarpon",
+      "currentLt": "stambiauogė spanguolė",
+      "expectedLastWord": "Šilauogė",
+      "actualLastWord": "spanguolė"
+    },
+    {
+      "latin": "Vaccinium myrtillus",
+      "currentLt": "mėlynė",
+      "expectedLastWord": "Šilauogė",
+      "actualLastWord": "mėlynė"
+    },
+    {
+      "latin": "Vaccinium oxycoccus",
+      "currentLt": "paprastoji spanguolė",
+      "expectedLastWord": "Šilauogė",
+      "actualLastWord": "spanguolė"
+    },
+    {
+      "latin": "Vaccinium uliginosum",
+      "currentLt": "vaivoras",
+      "expectedLastWord": "Šilauogė",
+      "actualLastWord": "vaivoras"
+    },
+    {
+      "latin": "Vaccinium vitis-idaea",
+      "currentLt": "bruknė",
+      "expectedLastWord": "Šilauogė",
+      "actualLastWord": "bruknė"
+    },
+    {
+      "latin": "Verbascum lychnitis",
+      "currentLt": "šakotoji tūbė",
+      "expectedLastWord": "Karklavijas",
+      "actualLastWord": "tūbė"
+    },
+    {
+      "latin": "Verbascum phlomoides",
+      "currentLt": "gauruotoji tūbė",
+      "expectedLastWord": "Karklavijas",
+      "actualLastWord": "tūbė"
+    },
+    {
+      "latin": "Verbascum phoeniceum",
+      "currentLt": "violetinė tūbė",
+      "expectedLastWord": "Karklavijas",
+      "actualLastWord": "tūbė"
+    },
+    {
+      "latin": "Verbascum thapsus",
+      "currentLt": "smulkiažiedė tūbė",
+      "expectedLastWord": "Karklavijas",
+      "actualLastWord": "tūbė"
+    },
+    {
+      "latin": "Vicia faba",
+      "currentLt": "pupa",
+      "expectedLastWord": "Vikis",
+      "actualLastWord": "pupa"
+    }
+  ],
+  "typoSuspected": [
+    {
+      "latin": "Alpinia zerumbet",
+      "currentLt": "raibasis alpinijos",
+      "expectedLastWord": "Alpinija",
+      "actualLastWord": "alpinijos",
+      "distance": 2
+    },
+    {
+      "latin": "Anagallis foemina",
+      "currentLt": "melsvasis pelėjūdis",
+      "expectedLastWord": "Pelėjūdė",
+      "actualLastWord": "pelėjūdis",
+      "distance": 2
+    },
+    {
+      "latin": "Annona cherimola",
+      "currentLt": "perūnė anonė",
+      "expectedLastWord": "Anona",
+      "actualLastWord": "anonė",
+      "distance": 1
+    },
+    {
+      "latin": "Bidens cernua",
+      "currentLt": "nukabusis lakstinys",
+      "expectedLastWord": "Laksinys",
+      "actualLastWord": "lakstinys",
+      "distance": 1
+    },
+    {
+      "latin": "Chrysanthemum balsamita",
+      "currentLt": "didysis chrizantemas",
+      "expectedLastWord": "Chrizantema",
+      "actualLastWord": "chrizantemas",
+      "distance": 1
+    },
+    {
+      "latin": "Chrysanthemum carinatum",
+      "currentLt": "įvairiaspalvis chrizantemas",
+      "expectedLastWord": "Chrizantema",
+      "actualLastWord": "chrizantemas",
+      "distance": 1
+    },
+    {
+      "latin": "Chrysanthemum cinerariifolium",
+      "currentLt": "pelenėtasis chrizantemas",
+      "expectedLastWord": "Chrizantema",
+      "actualLastWord": "chrizantemas",
+      "distance": 1
+    },
+    {
+      "latin": "Desmodium canadense",
+      "currentLt": "kanadinė jakšlinė",
+      "expectedLastWord": "Jaksloje",
+      "actualLastWord": "jakšlinė",
+      "distance": 2
+    },
+    {
+      "latin": "Epidendrum radicans",
+      "currentLt": "epidendrum",
+      "expectedLastWord": "Epidendrai",
+      "actualLastWord": "epidendrum",
+      "distance": 2
+    },
+    {
+      "latin": "Galium aparine",
+      "currentLt": "kibieji lipikai",
+      "expectedLastWord": "Lipikas",
+      "actualLastWord": "lipikai",
+      "distance": 1
+    },
+    {
+      "latin": "Lyngbya aestuarii",
+      "currentLt": "liūnbijos liūnbija",
+      "expectedLastWord": "Lingbija",
+      "actualLastWord": "liūnbija",
+      "distance": 2
+    },
+    {
+      "latin": "Mentha pulegium",
+      "currentLt": "takkščioji mėtė",
+      "expectedLastWord": "Mėta",
+      "actualLastWord": "mėtė",
+      "distance": 1
+    },
+    {
+      "latin": "Myrrhis odorata",
+      "currentLt": "kvapioji garduvėlė",
+      "expectedLastWord": "Garduoklė",
+      "actualLastWord": "garduvėlė",
+      "distance": 2
+    },
+    {
+      "latin": "Orchis militaris",
+      "currentLt": "almuotoji gegrair",
+      "expectedLastWord": "Gegrais",
+      "actualLastWord": "gegrair",
+      "distance": 1
+    },
+    {
+      "latin": "Orchis morio",
+      "currentLt": "maoji gegrair",
+      "expectedLastWord": "Gegrais",
+      "actualLastWord": "gegrair",
+      "distance": 1
+    },
+    {
+      "latin": "Orchis palustris",
+      "currentLt": "pelkin gegrair",
+      "expectedLastWord": "Gegrais",
+      "actualLastWord": "gegrair",
+      "distance": 1
+    },
+    {
+      "latin": "Orchis traunsteineri",
+      "currentLt": "Traunteinerio gegrair",
+      "expectedLastWord": "Gegrais",
+      "actualLastWord": "gegrair",
+      "distance": 1
+    },
+    {
+      "latin": "Orchis ustulata",
+      "currentLt": "smilkusioji gegrair",
+      "expectedLastWord": "Gegrais",
+      "actualLastWord": "gegrair",
+      "distance": 1
+    },
+    {
+      "latin": "Oscillatoria acuminata",
+      "currentLt": "smailioji vyturl",
+      "expectedLastWord": "Vyburl",
+      "actualLastWord": "vyturl",
+      "distance": 1
+    },
+    {
+      "latin": "Oscillatoria agardhii",
+      "currentLt": "Agardo vyturl",
+      "expectedLastWord": "Vyburl",
+      "actualLastWord": "vyturl",
+      "distance": 1
+    },
+    {
+      "latin": "Pennisetum alopecuroides",
+      "currentLt": "plauktotoji soruol",
+      "expectedLastWord": "Soruolė",
+      "actualLastWord": "soruol",
+      "distance": 1
+    },
+    {
+      "latin": "Pennisetum purpureum",
+      "currentLt": "dramblin soruol",
+      "expectedLastWord": "Soruolė",
+      "actualLastWord": "soruol",
+      "distance": 1
+    },
+    {
+      "latin": "Schoenus ferrugineus",
+      "currentLt": "rusvasis viksvinis",
+      "expectedLastWord": "Vikšrenis",
+      "actualLastWord": "viksvinis",
+      "distance": 2
+    },
+    {
+      "latin": "Schoenus nigricans",
+      "currentLt": "juosvasis viksvinis",
+      "expectedLastWord": "Vikšrenis",
+      "actualLastWord": "viksvinis",
+      "distance": 2
+    },
+    {
+      "latin": "Selenicereus grandiflorus",
+      "currentLt": "didžiažiedis naktinis",
+      "expectedLastWord": "Naktenis",
+      "actualLastWord": "naktinis",
+      "distance": 1
+    },
+    {
+      "latin": "Sempervivum tectorum",
+      "currentLt": "stogiine šilropė",
+      "expectedLastWord": "Šilropės",
+      "actualLastWord": "šilropė",
+      "distance": 1
+    },
+    {
+      "latin": "Serratula tinctoria",
+      "currentLt": "dažinė pjūklė",
+      "expectedLastWord": "Pjūklas",
+      "actualLastWord": "pjūklė",
+      "distance": 2
+    },
+    {
+      "latin": "Sisyrinchium montanum",
+      "currentLt": "viksvuolė",
+      "expectedLastWord": "Vikšruolė",
+      "actualLastWord": "viksvuolė",
+      "distance": 1
+    },
+    {
+      "latin": "Tomentypnum nitens",
+      "currentLt": "žvilgančioji veltinė",
+      "expectedLastWord": "Veltinis",
+      "actualLastWord": "veltinė",
+      "distance": 2
+    }
+  ],
+  "noGenusLt": [
+    {
+      "latin": "Abutilon avicennae",
+      "currentLt": "teofrastinis abutilas",
+      "genusLatin": "Abutilon",
+      "actualLastWord": "abutilas"
+    },
+    {
+      "latin": "Abutilon hybridum",
+      "currentLt": "hibridinis galėnis",
+      "genusLatin": "Abutilon",
+      "actualLastWord": "galėnis"
+    },
+    {
+      "latin": "Abutilon theophrasti",
+      "currentLt": "pūslėtinis galėnis",
+      "genusLatin": "Abutilon",
+      "actualLastWord": "galėnis"
+    },
+    {
+      "latin": "Aethusa cynapium",
+      "currentLt": "šunpetrė",
+      "genusLatin": "Aethusa",
+      "actualLastWord": "šunpetrė"
+    },
+    {
+      "latin": "Alhagi persarum",
+      "currentLt": "persinė kupranugarine zoloka",
+      "genusLatin": "Alhagi",
+      "actualLastWord": "zoloka"
+    },
+    {
+      "latin": "Alhagi pseudalhagi",
+      "currentLt": "kupranugarine dyglyžolė",
+      "genusLatin": "Alhagi",
+      "actualLastWord": "dyglyžolė"
+    },
+    {
+      "latin": "Anisantha sterilis",
+      "currentLt": "nevaisingoji anišanta",
+      "genusLatin": "Anisantha",
+      "actualLastWord": "anišanta"
+    },
+    {
+      "latin": "Anisantha tectorum",
+      "currentLt": "stoginis dirsuolis",
+      "genusLatin": "Anisantha",
+      "actualLastWord": "dirsuolis"
+    },
+    {
+      "latin": "Anisantha pfitzeri",
+      "currentLt": "pficerio anišanta",
+      "genusLatin": "Anisantha",
+      "actualLastWord": "anišanta"
+    },
+    {
+      "latin": "Anthriscus cerefolium",
+      "currentLt": "valgomoji daržovė",
+      "genusLatin": "Anthriscus",
+      "actualLastWord": "daržovė"
+    },
+    {
+      "latin": "Anthriscus sylvestris",
+      "currentLt": "miškinis builis",
+      "genusLatin": "Anthriscus",
+      "actualLastWord": "builis"
+    },
+    {
+      "latin": "Areca catechu",
+      "currentLt": "katechinė",
+      "genusLatin": "Areca",
+      "actualLastWord": "katechinė"
+    },
+    {
+      "latin": "Buphthalmum salicifolium",
+      "currentLt": "gluosnialapis",
+      "genusLatin": "Buphthalmum",
+      "actualLastWord": "gluosnialapis"
+    },
+    {
+      "latin": "Buphthalmum speciosum",
+      "currentLt": "puošnusis",
+      "genusLatin": "Buphthalmum",
+      "actualLastWord": "puošnusis"
+    },
+    {
+      "latin": "Cardaminopsis arenosa",
+      "currentLt": "smiltyninis ankštinis",
+      "genusLatin": "Cardaminopsis",
+      "actualLastWord": "ankštinis"
+    },
+    {
+      "latin": "Eraphila verna",
+      "currentLt": "L.",
+      "genusLatin": "Eraphila",
+      "actualLastWord": "L."
+    },
+    {
+      "latin": "Erophila verna",
+      "currentLt": "pavasarinė pavasaris",
+      "genusLatin": "Erophila",
+      "actualLastWord": "pavasaris"
+    },
+    {
+      "latin": "Gymnodinium Penard",
+      "currentLt": "gimnodinis",
+      "genusLatin": "Gymnodinium",
+      "actualLastWord": "gimnodinis"
+    },
+    {
+      "latin": "Gymnadenia conopsea",
+      "currentLt": "pievinis plonėtis",
+      "genusLatin": "Gymnadenia",
+      "actualLastWord": "plonėtis"
+    },
+    {
+      "latin": "Gymnadenia odoratissima",
+      "currentLt": "kvapioji plūretė",
+      "genusLatin": "Gymnadenia",
+      "actualLastWord": "plūretė"
+    },
+    {
+      "latin": "Gymnocarpium dryopteris",
+      "currentLt": "trakeližmedis",
+      "genusLatin": "Gymnocarpium",
+      "actualLastWord": "trakeližmedis"
+    },
+    {
+      "latin": "Gymnocarpium robertianum",
+      "currentLt": "papartlitis",
+      "genusLatin": "Gymnocarpium",
+      "actualLastWord": "papartlitis"
+    },
+    {
+      "latin": "Gymnodinium paradoxum",
+      "currentLt": "netikras gimnodinis",
+      "genusLatin": "Gymnodinium",
+      "actualLastWord": "gimnodinis"
+    },
+    {
+      "latin": "Libanotis montana",
+      "currentLt": "kalninis sklerinis",
+      "genusLatin": "Libanotis",
+      "actualLastWord": "sklerinis"
+    },
+    {
+      "latin": "Peucedanum americanum",
+      "currentLt": "amerikinė peršėja",
+      "genusLatin": "Peucedanum",
+      "actualLastWord": "peršėja"
+    },
+    {
+      "latin": "Peucedanum persica",
+      "currentLt": "persikinė peršėja",
+      "genusLatin": "Peucedanum",
+      "actualLastWord": "peršėja"
+    },
+    {
+      "latin": "Peucedanum vulgaris",
+      "currentLt": "paprastasis persikas",
+      "genusLatin": "Peucedanum",
+      "actualLastWord": "persikas"
+    },
+    {
+      "latin": "Peucedanum cervaria",
+      "currentLt": "standžialūpis sausvė",
+      "genusLatin": "Peucedanum",
+      "actualLastWord": "sausvė"
+    },
+    {
+      "latin": "Peucedanum officinale",
+      "currentLt": "vaistinis sausvė",
+      "genusLatin": "Peucedanum",
+      "actualLastWord": "sausvė"
+    },
+    {
+      "latin": "Peucedanum oreoselinum",
+      "currentLt": "šilinis sausvė",
+      "genusLatin": "Peucedanum",
+      "actualLastWord": "sausvė"
+    },
+    {
+      "latin": "Peucedanum ostruthium",
+      "currentLt": "šlamabriaunis sausvė",
+      "genusLatin": "Peucedanum",
+      "actualLastWord": "sausvė"
+    },
+    {
+      "latin": "Peucedanum palustre",
+      "currentLt": "pelkinis sausvė",
+      "genusLatin": "Peucedanum",
+      "actualLastWord": "sausvė"
+    },
+    {
+      "latin": "Polystichum aculeatum",
+      "currentLt": "nelokinis spyglainis",
+      "genusLatin": "Polystichum",
+      "actualLastWord": "spyglainis"
+    },
+    {
+      "latin": "Polystichum formosum",
+      "currentLt": "takažolė",
+      "genusLatin": "Polystichum",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pyrethrum carneum",
+      "currentLt": "takažolė",
+      "genusLatin": "Pyrethrum",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pyrethrum cinerariifolium",
+      "currentLt": "takažolė",
+      "genusLatin": "Pyrethrum",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pyrethrum coccineum",
+      "currentLt": "takažolė",
+      "genusLatin": "Pyrethrum",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pyrethrum corymbosum",
+      "currentLt": "takažolė",
+      "genusLatin": "Pyrethrum",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pyrethrum macrophyllum",
+      "currentLt": "takažolė",
+      "genusLatin": "Pyrethrum",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pyrethrum majus",
+      "currentLt": "takažolė",
+      "genusLatin": "Pyrethrum",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Pyrethrum parthenifolium",
+      "currentLt": "takažolė",
+      "genusLatin": "Pyrethrum",
+      "actualLastWord": "takažolė"
+    },
+    {
+      "latin": "Ruppia cirrhosa",
+      "currentLt": "spiraliainasis salde",
+      "genusLatin": "Ruppia",
+      "actualLastWord": "salde"
+    },
+    {
+      "latin": "Ruppia maritima",
+      "currentLt": "jūrinė rupija",
+      "genusLatin": "Ruppia",
+      "actualLastWord": "rupija"
+    },
+    {
+      "latin": "Salpiglossis sinuata",
+      "currentLt": "trimitas",
+      "genusLatin": "Salpiglossis",
+      "actualLastWord": "trimitas"
+    }
+  ]
+}

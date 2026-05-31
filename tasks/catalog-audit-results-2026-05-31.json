@@ -1,0 +1,139 @@
+[audit] credentials: FIREBASE_SERVICE_ACCOUNT env
+[audit] loading reference data...
+[audit] pre-DB: 1649 genera, 8171 species
+[audit] lt-names: 1673 genus entries
+[audit] species-lt-names: 4438 entries
+[audit] plants.json: 5786 entries
+[audit] species LT reverse map: 4331 entries
+[audit] reading catalog...
+[audit] 89 catalog entries fetched in 612ms
+{
+  "meta": {
+    "scannedAt": "2026-05-31T15:15:19.348Z",
+    "totalEntries": 89,
+    "credentialSource": "FIREBASE_SERVICE_ACCOUNT env",
+    "flagApply": false
+  },
+  "categories": {
+    "vendorEchoSuspected": {
+      "count": 4,
+      "weak": 13,
+      "samples": [
+        {
+          "docId": "brighamia_insignis",
+          "latin": "Brighamia insignis",
+          "lt": "Havajų palmė",
+          "reason": "unknown-genus",
+          "genus": "Brighamia"
+        },
+        {
+          "docId": "doryopteris_pedata",
+          "latin": "Doryopteris pedata",
+          "lt": "Pėdų formos papartis",
+          "reason": "unknown-genus",
+          "genus": "Doryopteris"
+        },
+        {
+          "docId": "howea_forsteriana",
+          "latin": "Howea forsteriana",
+          "lt": "Kentijos palmė",
+          "reason": "unknown-genus",
+          "genus": "Howea"
+        },
+        {
+          "docId": "jatropha_podagrica",
+          "latin": "Jatropha podagrica",
+          "lt": "Podagrinė jatrofa",
+          "reason": "unknown-genus",
+          "genus": "Jatropha"
+        }
+      ]
+    },
+    "genusOnlyBug": {
+      "count": 0,
+      "weak": 1,
+      "samples": []
+    },
+    "hallucinationLikely": {
+      "count": 4,
+      "samples": [
+        {
+          "docId": "adenium_obesum",
+          "latin": "Adenium obesum",
+          "lt": "Dykumos rožė",
+          "sourceField": "lietuviškas",
+          "name": "Dykumos rožė",
+          "hits": [
+            {
+              "word": "rožė",
+              "expectedGenera": [
+                "ROSA"
+              ],
+              "ownGenus": "ADENIUM"
+            }
+          ]
+        },
+        {
+          "docId": "araucaria_heterophylla",
+          "latin": "Araucaria heterophylla",
+          "lt": "Heterolapis araukarija",
+          "sourceField": "sinonimai",
+          "name": "Norfolko salos pušis",
+          "hits": [
+            {
+              "word": "pušis",
+              "expectedGenera": [
+                "PINUS"
+              ],
+              "ownGenus": "ARAUCARIA"
+            }
+          ]
+        },
+        {
+          "docId": "spathiphyllum",
+          "latin": "Spathiphyllum",
+          "lt": "Vėzdūnė",
+          "sourceField": "sinonimai",
+          "name": "Taikos lelija",
+          "hits": [
+            {
+              "word": "lelija",
+              "expectedGenera": [
+                "LILIUM"
+              ],
+              "ownGenus": "SPATHIPHYLLUM"
+            }
+          ]
+        },
+        {
+          "docId": "zantedeschia",
+          "latin": "Zantedeschia",
+          "lt": "Kalija",
+          "sourceField": "sinonimai",
+          "name": "Kala lelija",
+          "hits": [
+            {
+              "word": "lelija",
+              "expectedGenera": [
+                "LILIUM"
+              ],
+              "ownGenus": "ZANTEDESCHIA"
+            }
+          ]
+        }
+      ]
+    },
+    "crossSpeciesSinonimai": {
+      "count": 0,
+      "samples": []
+    },
+    "missingLatinName": {
+      "count": 0,
+      "samples": []
+    },
+    "missingLtName": {
+      "count": 0,
+      "samples": []
+    }
+  }
+}
