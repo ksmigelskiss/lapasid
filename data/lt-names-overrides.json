@@ -127,6 +127,11 @@
       "ltName": "bananas",
       "ltSynonyms": [],
       "source": "phase2c verify (4 species: banalas → bananas typo)"
+    },
+    "Hibiscus": {
+      "ltName": "kinrožė",
+      "ltSynonyms": ["hibiskas"],
+      "source": "admin review 2026-05-31 — kinrožė įprastai naudojama LT botanikoj; hibiskas yra sinonimas"
     }
   },
   "species": {
@@ -219,16 +224,18 @@
     }
   },
   "_phase2_naming_convention_disputes": {
-    "_comment": "Wikipedia LT uses different genus convention than plants.json/lt-names.json. NOT applied automatically. Admin/botanist review required.",
+    "_comment": "Wikipedia LT uses different genus convention than plants.json/lt-names.json. Admin review status below.",
     "Asparagus": {
       "plants_json": "šparagas",
       "wiki_lt": "smidras",
-      "affects": "5+ species"
+      "affects": "5+ species",
+      "admin_decision": "DEFERRED — abu sinonimai, palieku ateičiai; specialistui galimybė redaguoti via admin UI"
     },
     "Hibiscus": {
       "plants_json": "hibiskas",
       "wiki_lt": "kinrožė",
-      "affects": "2+ species"
+      "affects": "2+ species",
+      "admin_decision": "RESOLVED (2026-05-31): kinrožė įprastai naudojama LT botanikoj → primary; hibiskas → synonym. Žiūr. genus.Hibiscus override aukščiau."
     }
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T20:47:26.134Z",
+  "generatedAt": "2026-05-31T20:53:57.722Z",
   "generator": "build-lt-names-v2.mjs",
   "stats": {
     "totalGenera": 1673,
@@ -10,8 +10,8 @@
       "wiki": 556,
       "gaspadorius": 78,
       "gaspadorius-syn": 1,
-      "override-user": 23,
-      "override-user-syn": 1,
+      "override-user": 24,
+      "override-user-syn": 2,
       "manual-legacy": 1,
       "manual-legacy-syn": 1
     }
@@ -10034,22 +10034,24 @@
     },
     "Hibiscus": {
       "latin": "Hibiscus",
-      "ltName": "Hibiskas",
+      "ltName": "Kinrožė",
       "ltSynonyms": [
-        "Kinrožė"
+        "Hibiskas"
       ],
       "ltAllForms": [
-        "Hibiskas",
-        "Kinrožė"
+        "Kinrožė",
+        "Hibiskas"
       ],
       "ltFamily": null,
       "confidence": "high",
       "sources": [
         "plants-genus",
         "plants-species-inferred",
-        "wiki"
+        "wiki",
+        "override-user",
+        "override-user-syn"
       ],
-      "primarySource": "plants-species-inferred",
+      "primarySource": "override-user",
       "conflicts": null
     },
     "Hieracium": {
