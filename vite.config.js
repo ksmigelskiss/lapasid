@@ -50,7 +50,11 @@ export default defineConfig({
             handler: 'CacheFirst',
             options: {
               cacheName: 'firebase-storage',
-              expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              // 2026-06-01: padidinta 200→500, lifetime 30→60d — catalog turi
+              // 88 entries × 2 variants (hero PNG + thumb WebP) = 176 entries
+              // TIK iš catalog'o. Plus user plant photos, candidate thumbnails
+              // per search'us. 200 buvo arti limit'o → LRU eviction → re-fetch'ai.
+              expiration: { maxEntries: 500, maxAgeSeconds: 60 * 60 * 24 * 60 },
               cacheableResponse: { statuses: [0, 200] },
             },
           },

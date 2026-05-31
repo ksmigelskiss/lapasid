@@ -59,6 +59,23 @@ export function transformPlantImageUrl(url, size = 'card') {
   return url
 }
 
+/**
+ * Stale-while-revalidate image swap (2026-06-01):
+ *
+ * Kai `url` prop pasikeičia (e.g. subscribeCatalog atneša naują heroIllustration
+ * po Phase 2 enrichment'o, ar admin'as pergeneravo paveiksliuką), KEEP'inam
+ * rodyti SENĄJĮ image tol, kol naujasis fully užsikrauna network'u, tada
+ * smooth opacity swap. Tas pašalina vizualų „loading flash" tarp catalog
+ * write'ų.
+ *
+ * Pirmą kartą rendinant (no previous): tiesiai naujas — toks UX kaip iki šiol.
+ *
+ * Pattern'as įprastas industry — analogiškas SWR, React Suspense fallback'ams,
+ * Next.js Image priority loading'ui. Reusable visur kur image url gali keistis
+ * runtime'e (ne tik plant cards).
+ */
+import { useState, useEffect, useRef } from 'react'
+
 export default function PlantImage({
   url,
   size = 'card',
@@ -70,11 +87,43 @@ export default function PlantImage({
   draggable,
   style,
 }) {
-  const src = transformPlantImageUrl(url, size)
-  if (!src) return null
+  const targetSrc = transformPlantImageUrl(url, size)
+
+  // displayedSrc — kas faktiškai render'inta <img>'e (gali būti SENAS kol naujas
+  // user'iui nepakliuvęs); targetSrc — kur norim eit (props url). Jei jie skiriasi
+  // → background preload + atomic swap kai naujas ready.
+  const [displayedSrc, setDisplayedSrc] = useState(targetSrc)
+  const lastTargetRef = useRef(targetSrc)
+
+  useEffect(() => {
+    // Pirmas mount ar targetSrc nepasikeitė — nieko nedarom.
+    if (!targetSrc || targetSrc === lastTargetRef.current) {
+      lastTargetRef.current = targetSrc
+      return
+    }
+    lastTargetRef.current = targetSrc
+
+    // Naujas URL — preload'inam background'e. SENAS lieka rodomas iki preload
+    // baigsis. Kai baigsis — setDisplayedSrc → React re-render su naujo URL
+    // <img>'u; browser jau turi cached → instant DOM swap, jokio flash'o.
+    const preload = new Image()
+    let cancelled = false
+
+    preload.onload = () => {
+      if (!cancelled) setDisplayedSrc(targetSrc)
+    }
+    preload.onerror = () => {
+      if (!cancelled) onError?.()
+    }
+    preload.src = targetSrc
+
+    return () => { cancelled = true }
+  }, [targetSrc, onError])
+
+  if (!displayedSrc) return null
   return (
     <img
-      src={src}
+      src={displayedSrc}
       alt={alt}
       loading={eager ? 'eager' : 'lazy'}
       decoding="async"
