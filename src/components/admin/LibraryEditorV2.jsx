@@ -595,6 +595,7 @@ export default function LibraryEditorV2({
         setActiveFilter={setActiveFilter}
         expanded={expanded}
         toggleExpand={toggleExpand}
+        setExpanded={setExpanded}
         selectedId={selectedId}
         onSelect={handleSelect}
         dirty={dirty}
@@ -675,7 +676,7 @@ function LeftPaneList({
   catalog, taxonGroups,
   search, setSearch,
   activeFilter, setActiveFilter,
-  expanded, toggleExpand,
+  expanded, toggleExpand, setExpanded,
   selectedId, onSelect, dirty,
 }) {
   // 3-level hierarchy: Genus → Species → (Series → Cultivars)
@@ -697,28 +698,25 @@ function LeftPaneList({
   const filteredItems = useMemo(() => {
     let result = items
 
-    // Filter chips (adapted to 3-level hierarchy):
-    //  • 'standalone' = genus groups su ≤1 member'iu (single entry, no children)
-    //  • 'series' = genus groups, kuriose yra bent viena taxonGroup series
-    //  • 'modified' = grupės, kur bent vienas entry batch-enriched per 7d
+    // Filter chips (2026-06-01 flat structure):
+    //  • 'all'        — genus groups su entries (g.members) ir/arba genus entry
+    //  • 'standalone' — genus groups su ≤1 member'iu (single entry, no children)
+    //  • 'orphan'     — bent vienas cultivar entry'is be taxonGroupId
+    //  • 'modified'   — grupės, kur bent vienas entry batch-enriched per 7d
+    //  • 'series'     — VIEN g.series taxonGroups (care templates, atskira
+    //                   per filter mode'as — main tree'oj nerodom)
     if (activeFilter === 'standalone') {
       result = result.filter(g => (g.entry ? 1 : 0) + g.members.length <= 1)
     } else if (activeFilter === 'series') {
-      result = result.filter(g => g.members.some(m => m.kind === 'series'))
+      result = result.filter(g => g.series.length > 0)
     } else if (activeFilter === 'orphan') {
-      // Grupės, kuriose yra bent vienas orphan cultivar (rank='cultivar' bet
-      // be taxonGroupId → atsiranda root'e vietoj nest'inimo po species).
-      result = result.filter(g => g.members.some(m => m.kind === 'species' && m.isOrphanCultivar))
+      result = result.filter(g => g.members.some(m => m.isOrphanCultivar))
     } else if (activeFilter === 'modified') {
       const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000
       const isModified = e => e?._batchEnrichedAt && new Date(e._batchEnrichedAt).getTime() > cutoff
       result = result.filter(g => {
         if (isModified(g.entry)) return true
-        return g.members.some(m => {
-          if (m.kind === 'species' && isModified(m.entry)) return true
-          if (m.kind === 'series') return m.cultivars.some(isModified)
-          return false
-        })
+        return g.members.some(m => isModified(m.entry))
       })
     }
 
@@ -730,78 +728,80 @@ function LeftPaneList({
         const groupMatches = group.genus.toLowerCase().includes(q) ||
           (group.entry && (`${group.entry.lotyniskas ?? ''} ${group.entry.lietuviškas ?? ''}`.toLowerCase().includes(q)))
         if (groupMatches) return group
-        // Filter members by match
-        const matchingMembers = group.members
-          .map(m => {
-            if (m.kind === 'species') {
-              const hay = `${m.entry.lotyniskas ?? ''} ${m.entry.lietuviškas ?? ''}`.toLowerCase()
-              return hay.includes(q) ? m : null
-            }
-            // series — match group name OR any cultivar
-            const seriesHay = `${m.group.genus ?? ''} ${m.group.name ?? ''}`.toLowerCase()
-            if (seriesHay.includes(q)) return m
-            const matchingCults = m.cultivars.filter(c =>
-              `${c.lotyniskas ?? ''} ${c.lietuviškas ?? ''}`.toLowerCase().includes(q),
-            )
-            if (matchingCults.length > 0) return { ...m, cultivars: matchingCults }
-            return null
+        if (activeFilter === 'series') {
+          // Series filter mode — search across series scientific names
+          const matchingSeries = group.series.filter(s => {
+            const seriesHay = `${s.group.genus ?? ''} ${s.group.name ?? ''} ${s.latin ?? ''}`.toLowerCase()
+            return seriesHay.includes(q)
           })
-          .filter(Boolean)
+          if (matchingSeries.length > 0) return { ...group, series: matchingSeries }
+          return null
+        }
+        // Default — search across flat entries (members)
+        const matchingMembers = group.members.filter(m =>
+          `${m.entry.lotyniskas ?? ''} ${m.entry.lietuviškas ?? ''}`.toLowerCase().includes(q),
+        )
         if (matchingMembers.length > 0) return { ...group, members: matchingMembers }
         return null
       })
       .filter(Boolean)
   }, [items, search, activeFilter])
 
-  // Auto-expand genus groups + series kai paieška grąžina nested match'us
+  // Auto-expand genus groups kai paieška grąžina nested match'us
   useEffect(() => {
     if (!search.trim()) return
     filteredItems.forEach(group => {
       const genusKey = `genus:${group.id}`
       if (!expanded.has(genusKey)) toggleExpand(genusKey)
-      for (const m of group.members) {
-        if (m.kind === 'series') {
-          const seriesKey = `series:${m.id}`
-          if (!expanded.has(seriesKey)) toggleExpand(seriesKey)
-        }
-      }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search])
 
-  // Render items — singleton synthetic groups flattened.
-  //
-  // Jei genus grupė turi NULL entry (catalog'e nėra genus įrašo) IR turi tik
-  // 1 member'į (species ar series), promote'inam tą member'į į top-level
-  // (be synthetic group header'io). Praleidžiama vizualinė depth + „no entry"
-  // gray indicator'ius kai grouping'as neduoda realios vertės.
-  //
-  // 2+ members case'e — synthetic header LIEKA (rodome „no entry · N"),
-  // nes ten grupavimas vis tiek naudingas (rodo, kad species priklauso vienam
-  // genus'ui).
+  // 2026-06-01 — default expand all genus groups on first catalog load.
+  // Su 47+ genus grupėmis open'inti rankom kiekvieną būtų varginanti. Naudoja
+  // ref'ą kaip „initialized" guard'ą — admin'o collapse veiksmai išlieka
+  // sesijoje (neresetinami catalog snapshot update'ams).
+  const expandInitRef = useRef(false)
+  useEffect(() => {
+    if (expandInitRef.current) return
+    if (items.length === 0) return
+    expandInitRef.current = true
+    const keys = items.map(g => `genus:${g.id}`)
+    setExpanded(prev => {
+      const next = new Set(prev)
+      for (const k of keys) next.add(k)
+      return next
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items.length > 0])
+
+  // 2026-06-01 — singleton flattening (2-level FLAT struct):
+  // Genus group be entry + 1 member → promote member'į į entry slot'ą
+  // (no synthetic „no entry" header'io).
+  // Series filter mode'e: jei tik 1 series ir nėra entries → promote.
   const renderItems = useMemo(() => {
     return filteredItems.map(group => {
+      const isSeriesMode = activeFilter === 'series'
+      if (isSeriesMode) {
+        // Series view — render series instead of members
+        if (!group.entry && group.series.length === 1) {
+          return { ...group, _singletonSeries: group.series[0] }
+        }
+        return group
+      }
+      // Default view — render members (flat entries)
       const isSingletonSynthetic = !group.entry && group.members.length === 1
       if (!isSingletonSynthetic) return group
       const m = group.members[0]
-      if (m.kind === 'species') {
-        // Promote species į entry slot — UI mato kaip standalone genus row
-        return { ...group, entry: m.entry, members: [], _promotedFrom: 'species' }
-      }
-      if (m.kind === 'series') {
-        // Series singleton — render kaip top-level series (be genus header'io
-        // virš). Naudojam `_singletonSeries` flag'ą GenusGroupRow'ui.
-        return { ...group, _singletonSeries: m }
-      }
-      return group
+      return { ...group, entry: m.entry, members: [], _promotedFrom: 'entry' }
     })
-  }, [filteredItems])
+  }, [filteredItems, activeFilter])
 
   // Flat list keyboard nav'ui — TIK matomi (expanded'inti) items
   const flatNavItems = useMemo(() => {
     const flat = []
+    const isSeriesMode = activeFilter === 'series'
     for (const group of renderItems) {
-      // Singleton series flattening — series row at top level
       if (group._singletonSeries) {
         const m = group._singletonSeries
         flat.push({ id: m.id, type: 'series' })
@@ -814,22 +814,22 @@ function LeftPaneList({
         flat.push({ id: group.entry.id, type: 'cultivar' })
       }
       if (expanded.has(`genus:${group.id}`)) {
-        for (const m of group.members) {
-          if (m.kind === 'species') {
-            flat.push({ id: m.id, type: 'cultivar' })
-          } else if (m.kind === 'series') {
-            flat.push({ id: m.id, type: 'series' })
-            if (expanded.has(`series:${m.id}`)) {
-              for (const c of m.cultivars) {
-                flat.push({ id: c.id, type: 'cultivar' })
-              }
+        if (isSeriesMode) {
+          for (const s of group.series) {
+            flat.push({ id: s.id, type: 'series' })
+            if (expanded.has(`series:${s.id}`)) {
+              for (const c of s.cultivars) flat.push({ id: c.id, type: 'cultivar' })
             }
+          }
+        } else {
+          for (const m of group.members) {
+            flat.push({ id: m.id, type: 'cultivar' })
           }
         }
       }
     }
     return flat
-  }, [renderItems, expanded])
+  }, [renderItems, expanded, activeFilter])
 
   useEffect(() => {
     const handler = (e) => {
@@ -905,6 +905,7 @@ function LeftPaneList({
                 selectedId={selectedId}
                 onSelect={onSelect}
                 dirty={dirty}
+                seriesMode={activeFilter === 'series'}
               />
             ))}
           </ul>
@@ -1014,34 +1015,24 @@ function buildHierarchy(catalog, taxonGroups) {
     const key = genus.toLowerCase()
     let g = byGenus.get(key)
     if (!g) {
-      g = { id: key, genus, entry: null, members: [] }
+      g = { id: key, genus, entry: null, members: [], series: [] }
       byGenus.set(key, g)
     }
     return g
   }
 
-  // Step 1: series su cultivars — placement pagal series'os Latin genus
-  const cultivarIds = new Set()
-  for (const tg of taxonGroups) {
-    const seriesLatin = (tg.scientificName || `${tg.genus ?? ''} ${tg.name ?? ''}`).trim()
-    if (!seriesLatin) continue
-    const cultivars = catalog.filter(c => c.taxonGroupId === tg.id)
-    for (const c of cultivars) cultivarIds.add(c.id)
-    const parsed = parseLatinName(seriesLatin)
-    if (!parsed.genus) continue
-    const group = getGroup(parsed.genus)
-    group.members.push({
-      kind: 'series',
-      id: tg.id,
-      group: tg,
-      latin: seriesLatin,
-      cultivars,
-    })
-  }
+  // 2026-06-01 — FLAT structure. Anksčiau cultivars nestydavomės po series
+  // wrapper'iuose (3 lygiai: genus → series → cultivar). Pakeitėm į 2 lygius
+  // (genus → entry), nes:
+  //   • Rank caption'as (rūšis/veislė) palieka taxonomy aiškią be vizualinio
+  //     nesting'o
+  //   • Alphabet'iškai natūraliai grupuojasi „Oxalis vulcanicola" + „Oxalis
+  //     vulcanicola 'Crazy Plum'" greta
+  //   • Series taxonGroups = backend care-template koncepcija, ne kasdienis
+  //     admin focus — perkeliam į „Serijos" filter'į
 
-  // Step 2: catalog entries (not cultivars in series)
+  // Step 1: visi catalog entries → flat members (species + cultivars + kt.)
   for (const c of catalog) {
-    if (cultivarIds.has(c.id)) continue
     if (!c.lotyniskas) continue
     const parsed = parseLatinName(c.lotyniskas)
     if (!parsed.genus) continue
@@ -1050,24 +1041,46 @@ function buildHierarchy(catalog, taxonGroups) {
       group.entry = c  // catalog doc IS the genus
     } else {
       group.members.push({
-        kind: 'species',
+        kind: 'entry',
         id: c.id,
         entry: c,
         latin: c.lotyniskas,
         rank: parsed.rank,
-        // Cultivar entries, kurie atsidūrė genus group'e (nepriklausą series'ai),
-        // yra orphan'ai — admin'ui reikia priskirti taxonGroupId arba lieka
-        // root'e su warning badge'u. parentTaxonGroupIdFor server'is auto-
-        // assign'ina naujiems entries, bet legacy data + manual edits gali
-        // palikti orphan'ą.
         isOrphanCultivar: parsed.rank === 'cultivar' && !c.taxonGroupId,
       })
     }
   }
 
-  // Step 3: sort members within each group by Latin name (alphabetical)
+  // Step 2: series taxonGroups → atskira g.series list'a (rodoma TIK
+  // 'series' filter'yje). Care šablonų editavimo entry point'as.
+  for (const tg of taxonGroups) {
+    const seriesLatin = (tg.scientificName || `${tg.genus ?? ''} ${tg.name ?? ''}`).trim()
+    if (!seriesLatin) continue
+    const parsed = parseLatinName(seriesLatin)
+    if (!parsed.genus) continue
+    const group = getGroup(parsed.genus)
+    const cultivars = catalog.filter(c => c.taxonGroupId === tg.id)
+    group.series.push({
+      kind: 'series',
+      id: tg.id,
+      group: tg,
+      latin: seriesLatin,
+      cultivars,
+    })
+  }
+
+  // Step 3: sort'inu members'us pagal rank'ą (rūšys pirma, paskui veislės),
+  // antra eile — pagal latin'ą (vulcanicola pirma, paskui vulcanicola 'Crazy
+  // Plum'). Admin'ui aiškiau ką jis randa.
+  const rankOrder = { species: 0, subspecies: 1, variety: 2, forma: 3, cultivar: 4 }
   for (const g of byGenus.values()) {
-    g.members.sort((a, b) => (a.latin ?? '').localeCompare(b.latin ?? ''))
+    g.members.sort((a, b) => {
+      const ar = rankOrder[a.rank] ?? 99
+      const br = rankOrder[b.rank] ?? 99
+      if (ar !== br) return ar - br
+      return (a.latin ?? '').localeCompare(b.latin ?? '')
+    })
+    g.series.sort((a, b) => (a.latin ?? '').localeCompare(b.latin ?? ''))
   }
 
   // Step 4: sort groups alphabetically by genus
@@ -1088,8 +1101,11 @@ const heroThumb = e => e?.heroIllustration ?? e?.image ?? null
 // SINGLETON SERIES: jei grupė turi `_singletonSeries` flag'ą (synthetic
 // genus su 1 series member'iu), rodom seriją tiesiai top-level — be genus
 // header'io virš. Vienodumas su standalone genus entries.
-function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSeries, selectedId, onSelect, dirty }) {
-  const { genus, entry, members } = group
+function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSeries, selectedId, onSelect, dirty, seriesMode }) {
+  const { genus, entry, members, series } = group
+  // Series filter mode'e rodom g.series; default — g.members (flat entries).
+  const renderList = seriesMode ? series : members
+  const hasItems = renderList.length > 0
 
   // Singleton series — render kaip top-level series (be genus wrapper)
   if (group._singletonSeries) {
@@ -1105,13 +1121,13 @@ function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSe
     )
   }
 
-  const hasMembers = members.length > 0
+  const hasMembers = hasItems
   const genusSelected = entry && selectedId === entry.id
 
-  // Hero image: genus entry's own (watercolor/real), else first species, else first cultivar
+  // Hero image: genus entry'io own → first member entry → first series first cultivar
   const heroImage = heroThumb(entry) ??
-    heroThumb(members.find(m => m.kind === 'species')?.entry) ??
-    heroThumb(members.find(m => m.kind === 'series')?.cultivars[0])
+    heroThumb(members[0]?.entry) ??
+    heroThumb(series[0]?.cultivars[0])
 
   return (
     <li>
@@ -1154,7 +1170,7 @@ function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSe
               </p>
               <p className="text-[10px] text-forest-500 italic truncate leading-tight">
                 {entry.lotyniskas}
-                {hasMembers && <span className="font-mono ml-1 not-italic">· {members.length}</span>}
+                {hasMembers && <span className="font-mono ml-1 not-italic">· {renderList.length}</span>}
               </p>
             </div>
           </button>
@@ -1169,40 +1185,41 @@ function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSe
                 {genus}
               </p>
               <p className="text-[10px] text-forest-400 font-mono leading-tight">
-                no entry · {members.length}
+                no entry · {renderList.length}
               </p>
             </div>
           </div>
         )}
       </div>
 
-      {/* Expanded members — su vertical tree connector'iu kairėje, kad būtų
-          aišku jog children priklauso parent grupei. */}
-      {expanded && hasMembers && (
+      {/* Expanded children — flat entries arba series (priklauso filter mode'o).
+          Vertikalus tree connector'is kairėje, kad būtų aišku jog children
+          priklauso parent grupei. */}
+      {expanded && hasItems && (
         <div className="relative ml-3.5 mt-0.5 pl-3.5 border-l-2 border-forest-200/70">
           <ul className="space-y-0.5">
-            {members.map(m =>
-              m.kind === 'species' ? (
-                <SpeciesChildRow
-                  key={m.id}
-                  entry={m.entry}
-                  selected={selectedId === m.id}
-                  onSelect={() => onSelect(m.id, 'cultivar')}
-                  dirty={dirty}
-                  isOrphanCultivar={m.isOrphanCultivar}
-                />
-              ) : (
-                <SeriesChildRow
-                  key={m.id}
-                  series={m}
-                  expanded={expandedSet.has(`series:${m.id}`)}
-                  onToggle={() => onToggleSeries(m.id)}
-                  selectedId={selectedId}
-                  onSelect={onSelect}
-                  dirty={dirty}
-                />
-              ),
-            )}
+            {seriesMode
+              ? renderList.map(s => (
+                  <SeriesChildRow
+                    key={s.id}
+                    series={s}
+                    expanded={expandedSet.has(`series:${s.id}`)}
+                    onToggle={() => onToggleSeries(s.id)}
+                    selectedId={selectedId}
+                    onSelect={onSelect}
+                    dirty={dirty}
+                  />
+                ))
+              : renderList.map(m => (
+                  <SpeciesChildRow
+                    key={m.id}
+                    entry={m.entry}
+                    selected={selectedId === m.id}
+                    onSelect={() => onSelect(m.id, 'cultivar')}
+                    dirty={dirty}
+                    isOrphanCultivar={m.isOrphanCultivar}
+                  />
+                ))}
           </ul>
         </div>
       )}
