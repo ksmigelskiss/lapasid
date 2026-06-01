@@ -45,6 +45,8 @@ const EXPLICIT_OVERRIDES = new Set([
   'Adenium obesum',
   'Peperomia caperata',
   "Peperomia caperata 'Rosso'",
+  'Nephrolepis exaltata',
+  "Nephrolepis exaltata 'Bostoniensis'",
   // Plus 2017 reclassification — Sansevieria → Dracaena synonyms ALL grąžinti
   // į „Trijuostė sansevjera" etc. — apima ir senus Sansevieria entries
   'Sansevieria trifasciata',
