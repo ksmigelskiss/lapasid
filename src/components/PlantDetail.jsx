@@ -385,7 +385,7 @@ function HeroSafetyStrip({ plant }) {
     : 0
 
   return (
-    <div className="flex items-center gap-1.5 px-4 py-1.5 border-b border-bone-400/40 bg-bone overflow-x-auto scrollbar-none">
+    <div className="flex items-center gap-1.5 px-4 py-1.5 bg-bone-50 overflow-x-auto scrollbar-none">
       {worstTox && (
         <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[9.5px] font-medium uppercase tracking-[0.14em] ${TIPAS_STYLE[worstTox.tipas]} flex-shrink-0`}>
           <svg width="9" height="8" viewBox="0 0 12 10" fill="currentColor" aria-hidden>
