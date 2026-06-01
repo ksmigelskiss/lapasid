@@ -1849,6 +1849,10 @@ export default function PlantDetail({
               // render'inama ant cream bg (object-contain), real foto = cover.
               const heroIllus = heroIllustrationFor(plant.lotyniskas)
               const heroDefault = !!heroIllus && heroIsDefaultFor(plant)
+              // 2026-06-01: kol watercolor dar piešiamas Phase 2 Gemini'u
+              // (~20-40s), ant hero foto rodom subtle loading badge'ą.
+              // Vėliau pakeisim tinkama animacija per atskirą polish sprint'ą.
+              const heroIllusLoading = !heroIllus && isEnriching
               const gallery = (heroDefault
                 ? [heroIllus, plant.image, ...(plant.photos ?? [])]
                 : [plant.image, heroIllus, ...(plant.photos ?? [])])
@@ -1883,6 +1887,15 @@ export default function PlantDetail({
                       className={`w-full h-full ${isIllustration ? 'object-contain' : 'object-cover'}`}
                       onError={() => setHeroError(true)}
                     />
+                  )}
+                  {/* Watercolor loading badge — kol Gemini piešia iliustraciją
+                      (Phase 2 enrichment), rodom subtle pill apačioje. Vartotojas
+                      žino, kad watercolor ateis netrukus. Animacija — vėliau. */}
+                  {heroIllusLoading && !heroError && (
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/45 backdrop-blur-md rounded-full px-3 py-1.5 inline-flex items-center gap-1.5 text-bone text-[11px] font-mono uppercase tracking-[0.14em] pointer-events-none">
+                      <Loader2 size={11} className="animate-spin" strokeWidth={2.5} />
+                      Piešiu iliustraciją...
+                    </div>
                   )}
                   {hasGallery && (
                     <>
