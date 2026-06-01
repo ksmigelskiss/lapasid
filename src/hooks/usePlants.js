@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { getDoc, getDocs, setDoc, deleteDoc, doc, collection as fsCol, onSnapshot } from 'firebase/firestore'
 import { db } from '../utils/firebase'
-import { fromAIResult, normalizeSavybes, ensureArray, makeId as _makeId, today as _today } from '../utils/plantTransform'
+import { fromAIResult, ensureArray, makeId as _makeId, today as _today } from '../utils/plantTransform'
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { saveToCatalog, snapshotPlantRef } from '../utils/catalog'
 import { isMockMode, MOCK_DATA } from '../utils/mockData'
@@ -427,87 +427,12 @@ export function usePlants(collectionId, viewerToken = null) {
     updatePlant(id, { uzrasai })
   }, [updatePlant])
 
-  // „Atnaujinti per AI" — perpildo statinę plant info iš naujausio AI rezultato.
-  // Vartotojo daiktai (timeline, image, uzrasai, zonaId, status, kategorija,
-  // data_prideta, id, lietuviškas/lotyniskas) išsaugomi. Likę laukai (savybes,
-  // aprasymas, kilme, sviesa, vanduo, prieziura, idomybes ir t.t.) perrašomi.
-  const refreshPlantFromAIResult = useCallback((id, aiData) => {
-    // Whitelist'as laukų, kurie ATEINA iš AI ir perrašo esamus.
-    // PRIDĖTI: substratas, persodinimas, ziemojimas, prieziura — anksčiau
-    // nebuvo whitelist'e, dėl ko korumpuoti laukai (indexed-char objektai)
-    // nebuvo overwrite'inami. Dabar Atnaujinti per AI taip pat juos
-    // atstato į švarią string'ą.
-    const aiFields = [
-      'tipas', 'augimo_greitis', 'sunkumas',
-      'toksiskas', 'toksiskumo_info',  // backward compat
-      'aprasymas', 'kilme',
-      'sviesa', 'vanduo', 'idomybes',
-      'substratas', 'persodinimas', 'ziemojimas',
-      'prieziura', 'dauginimas', 'problemos',
-      'laistymasIntervalas', 'tresimas', 'dormancyInfo',
-      'sinonimai', 'englishNames', 'inatLtName',
-    ]
-    // Laukai, kurie PRIVALO būti array'ai — AI kartais grąžina string'ą arba
-    // null'ą, dėl ko vėliau .map crash'ina. fromAIResult tai daro, refresh'ui
-    // dabar irgi.
-    const ARRAY_FIELDS  = new Set(['idomybes', 'dauginimas', 'problemos', 'sinonimai', 'englishNames'])
-    // Laukai, kurie PRIVALO būti string'ai — apsauga nuo indexed-char object
-    // corruption'o ({0:"P",1:"u",...}). Jei AI grąžina ne-string, log'inam +
-    // skip'inam (kad neperrašytume gero string'o su sugadintu objektu).
-    const STRING_FIELDS = new Set(['aprasymas', 'kilme', 'tipas', 'augimo_greitis',
-      'toksiskumo_info', 'substratas', 'persodinimas', 'ziemojimas', 'inatLtName'])
-    const patch = {}
-    const filledFields = []
-    const skippedFields = []
-    for (const k of aiFields) {
-      if (aiData[k] === undefined) { skippedFields.push(k); continue }
-      if (ARRAY_FIELDS.has(k)) {
-        // ensureArray — palaiko ir JSON-string'us su [...] shape (defense-
-        // in-depth — plantAI.refreshPlantFromAI jau normalize'ina, bet defensive
-        // čia padengia rare edge case'us, kai refreshPlantFromAIResult kviečiamas
-        // iš kito source'o (pvz. tiesiogiai admin'as patcha plant'ą).
-        patch[k] = ensureArray(aiData[k])
-        filledFields.push(k)
-      } else if (STRING_FIELDS.has(k)) {
-        // String validation — AI turi grąžinti string'ą, kitaip skip'inam
-        if (typeof aiData[k] === 'string') {
-          patch[k] = aiData[k]
-          filledFields.push(k)
-        } else {
-          console.warn(`[refresh] field "${k}" expected string, got`, typeof aiData[k], '— skipped')
-          skippedFields.push(`${k} (bad type: ${typeof aiData[k]})`)
-        }
-      } else {
-        patch[k] = aiData[k]
-        filledFields.push(k)
-      }
-    }
-    // Savybes — normalizuojam per tą pačią funkciją kaip fromAIResult, kad
-    // nesaugotume raw AI struktūros (gali turėti netinkamus enum'us).
-    if (aiData.savybes !== undefined) {
-      patch.savybes = normalizeSavybes(aiData.savybes, aiData.toksiskas, aiData.toksiskumo_info)
-      filledFields.push('savybes')
-    } else {
-      skippedFields.push('savybes')
-    }
-
-    // ── Diagnostika ───────────────────────────────────────────────
-    // Logujam visus aiData key'us + kiek užpildytų / praleistų laukų.
-    // Jei AI grąžina tuščią ar minimal tool_use — pamatysim konkrečiai.
-    console.log('[refresh] aiData keys:', Object.keys(aiData ?? {}))
-    console.log('[refresh] filled:', filledFields)
-    console.log('[refresh] skipped:', skippedFields)
-    console.log('[refresh] raw aiData:', aiData)
-
-    // Timestamp'as — leidžia UI rodyti „paskutinį kartą atnaujinta YYYY-MM-DD"
-    // ant mygtuko. Laikinai (kol „Atnaujinti per AI" yra dev tool'as).
-    patch.aiRefreshedAt = today()
-    updatePlant(id, patch)
-
-    // Grąžinam summary, kad caller (handleRefresh) galėtų rodyti useful
-    // klaidą, jei tik timestamp atnaujėjo be turinio.
-    return { filledFields, skippedFields, hasContentUpdate: filledFields.length > 0 }
-  }, [updatePlant])
+  // 2026-06-01 — refreshPlantFromAIResult pašalintas. Buvo broken F1 world'e
+  // (rašė tik į user plant doc, bet catalog overlay'us per resolvePlantView
+  // perdengia su catalog reikšmėmis). Single source of truth dabar —
+  // reEnrichPlant (PlantDetail) → POST /api/save-plant → pilna server-side
+  // Phase 2 pipeline su deriveToxicityFromSourcesServer + Sonnet narrative +
+  // Gemini hero regen + catalog write (F1 auto-propagacija į VISUS plants).
 
   const toggleZinynasStarred = useCallback((id) => {
     update(prev => ({
@@ -693,7 +618,6 @@ export function usePlants(collectionId, viewerToken = null) {
     library, archive,
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred, updateZinynasTitle,
     updateUzrasai,
-    refreshPlantFromAIResult,
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
     settings, updateSettings,
   }

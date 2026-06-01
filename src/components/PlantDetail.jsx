@@ -12,7 +12,6 @@ import BarcodeLifeline from './brand/BarcodeLifeline'
 import PlantSavybesPills, { PlantSafetyCallout } from './brand/PlantSavybesPills'
 import PlantImage from './brand/PlantImage'
 import BrandLoader from './brand/BrandLoader'
-import { refreshPlantFromAI } from '../utils/plantAI'
 import { TOOL_PREVIEW, TOOL_DETAILS, PLANT_SYSTEM } from './SearchModal'
 import { ensureArray, makeId, today } from '../utils/plantTransform'
 import { getPlantEnrichmentState, getEnrichmentFailureReason } from '../utils/plantState'
@@ -501,7 +500,7 @@ function PassportSection({ plant, collectionId, onToggle }) {
 
 // ── Profile tab content ────────────────────────────────────────
 
-export function ProfileContent({ plant: rawPlant, section, onAction, onClose, collectionId, onTogglePassport, onUpdateNames, onRefreshFromAI, className }) {
+export function ProfileContent({ plant: rawPlant, section, onAction, onClose, collectionId, onTogglePassport, onUpdateNames, className }) {
   // LEGACY READ-TIME SAFETY NET — kai kurie SENI catalog/plant įrašai
   // (saved'inti prieš normalizeAIResponse boundary refaktorą) turi array
   // laukus kaip JSON-string'us. Naujieji save'ai per fetchDetails →
@@ -515,39 +514,6 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
     sinonimai:    ensureArray(rawPlant?.sinonimai),
     englishNames: ensureArray(rawPlant?.englishNames),
     photos:       ensureArray(rawPlant?.photos),
-  }
-  const [refreshing, setRefreshing]   = useState(false)
-  const [refreshError, setRefreshError] = useState(null)
-
-  const handleRefresh = async () => {
-    if (refreshing || !onRefreshFromAI) return
-    setRefreshing(true); setRefreshError(null)
-    try {
-      console.log('[refresh] start for plant:', plant.lotyniskas, '(', plant.lietuviškas, ')')
-      const aiData = await refreshPlantFromAI(plant, { tools: [TOOL_PREVIEW, TOOL_DETAILS], system: PLANT_SYSTEM })
-      console.log('[refresh] AI returned, keys:', Object.keys(aiData ?? {}).length)
-      const summary = await onRefreshFromAI(plant.id, aiData)
-      // Diagnostika: jei AI nepateikė turinio (tik timestamp atnaujėjo) —
-      // rodom warning'ą, kad vartotojas nemanytų, jog viskas pavyko.
-      if (summary && !summary.hasContentUpdate) {
-        console.warn('[refresh] AI grąžino tuščią payload — content nepasikeitė')
-        setRefreshError(`AI negrąžino turinio (Crassula muscosa pavyzdys). Patikrink console'je „[refresh]" log'us.`)
-      } else if (summary) {
-        console.log('[refresh] done — atnaujinta', summary.filledFields.length, 'laukų:', summary.filledFields.join(', '))
-        if (summary.skippedFields.length > 0) {
-          console.warn('[refresh] praleisti laukai (AI negrąžino):', summary.skippedFields.join(', '))
-        }
-      }
-    } catch (e) {
-      console.error('[refresh] failed:', e)
-      console.error('[refresh] error stack:', e?.stack)
-      const detail = e?.code === 'limit_reached'
-        ? 'AI limitas pasiektas.'
-        : `Atnaujinimas nepavyko: ${e?.message ?? 'unknown error'}`
-      setRefreshError(detail)
-    } finally {
-      setRefreshing(false)
-    }
   }
 
   // Synonyms — inline editorial proza
@@ -1005,33 +971,12 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
               Noriu nusipirkti vėl
             </button>
           </>)}
-          {/* Laikinas „Atnaujinti per AI" mygtukas — perpildo statinę info pagal
-              naujausią schema'ą (savybes su pavojai/valgomumas/vaistinis). Vartotojo
-              daiktai (timeline, image, uzrasai, zonaId, status) išsaugomi.
-              Pašalinsim kai visi augalai migruoti. */}
-          {onRefreshFromAI && plant.lotyniskas && section === 'auginama' && (
-            <>
-              <button onClick={handleRefresh} disabled={refreshing}
-                className="w-full py-3 rounded-btn text-sm font-display font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 disabled:opacity-60 transition-colors flex items-center justify-center gap-2">
-                {refreshing
-                  ? <><BrandLoader inline size={16} ink="forest" /><span>Atnaujinama per AI...</span></>
-                  : (
-                    <>
-                      <span>✦ Atnaujinti per AI</span>
-                      {plant.aiRefreshedAt && (
-                        <span className="font-mono text-[10px] font-medium text-forest-400 tracking-[0.12em] uppercase">
-                          · {plant.aiRefreshedAt}
-                        </span>
-                      )}
-                    </>
-                  )
-                }
-              </button>
-              {refreshError && (
-                <p className="text-xs text-terracotta-600 text-center">{refreshError}</p>
-              )}
-            </>
-          )}
+          {/* 2026-06-01 — senas „Atnaujinti per AI" mygtukas pašalintas. Buvo broken
+              F1 world'e (rašė tik į plant doc, bet catalog overlay'us perdengia).
+              Single source of truth dabar — ... menu „Atnaujinti AI duomenis"
+              (kviečia reEnrichPlant → POST /api/save-plant → pilna Phase 2
+              pipeline su deriveToxicityFromSourcesServer, Sonnet narrative,
+              Gemini hero regen, catalog write su F1 auto-propagacija). */}
           {(section === 'auginama' || section === 'nori' || section === 'istorija') && (
             <button onClick={() => onAction('delete', plant)}
               className="w-full py-3 rounded-2xl text-sm font-medium text-gray-400 hover:text-red-400 transition-colors">
@@ -1491,7 +1436,6 @@ export default function PlantDetail({
   onStatusChange,
   onUpdateNames,
   onImageSave,
-  onRefreshFromAI,
   onSaveChat,
   onSaveToZinynas,
   onAddTimelineEvent,
@@ -2131,7 +2075,6 @@ export default function PlantDetail({
                   collectionId={collectionId}
                   onTogglePassport={role !== 'viewer' && role !== 'member' ? togglePassport : null}
                   onUpdateNames={onUpdateNames}
-                  onRefreshFromAI={role !== 'viewer' ? onRefreshFromAI : null}
                 />
               </motion.div>
             )}
