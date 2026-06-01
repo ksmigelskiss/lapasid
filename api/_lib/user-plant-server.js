@@ -13,6 +13,25 @@
 import { adminFirestore } from './firestore-admin.js'
 import { fromAIResult, stripUndefinedDeep } from '../../src/utils/plantTransform.js'
 
+// MIRROR src/utils/catalog.js PERSONAL_FIELDS — laukai, kurie priklauso
+// vartotojo personal state'ui ir NIEKADA neperrašomi per server-side AI
+// merge'ą. fromAIResult grąžina defaults šitiem laukam (status='healthy',
+// komentaras='', data_prideta=today, photos=AI photos), bet tai INITIAL
+// save default'ai — RE-ENRICH atveju jie perrašytų user'io state'ą.
+//
+// 2026-06-01 bug fix: re-enrich Karantinas plant'ą → status'as resetinosi
+// į 'healthy' → plant'as dingdavo iš Karantinas Dashboard sekcijos. Žr.
+// tasks/lessons.md.
+//
+// `id` ir `kategorija` strip'inami iš fromAIResult, paskui caller'is explicit
+// pri-set'ina abu (id=plantId, kategorija=arg). Visi kiti personal field'ai
+// strip'inami visam laikui (catalog merge nelies user state'o).
+const PERSONAL_STATE_FIELDS = new Set([
+  'status', 'komentaras', 'uzrasai', 'data_prideta',
+  'timeline', 'chat', 'zonaId', 'pirkinys', 'diedDate', 'deathReason',
+  'lesson', 'useHistoryPhoto', 'photos',
+])
+
 /**
  * Check if a uid is a member of a collection.
  *
@@ -59,8 +78,21 @@ export async function saveUserPlantServer({ uid, colId, plantId, aiResult, kateg
 
   // fromAIResult — pure function (src/utils/plantTransform.js). Mirror'as
   // client'o usePlants.addToDashboard logikai: plant = { ...fromAIResult(aiResult), kategorija }
+  //
+  // 2026-06-01 — STRIP personal state laukai PRIEŠ merge'ą. fromAIResult
+  // hardcodina INITIAL save defaults (status='healthy', komentaras='',
+  // data_prideta=today, photos=AI photos). Initial save'ui — OK, nes client
+  // pirmasis rašo tuos pačius defaults. RE-ENRICH atveju — bug: defaults'ai
+  // perrašytų user'io 'quarantine' status'ą, komentarus, original date'ą,
+  // accumulated photos. Strip'inam viską, kas yra PERSONAL_STATE_FIELDS
+  // sąraše — initial save'as kompensuojamas client'o pre-write'u, re-enrich
+  // saugiai išsaugo user'io state'ą.
+  const aiPlant = fromAIResult(aiResult)
+  for (const k of PERSONAL_STATE_FIELDS) {
+    delete aiPlant[k]
+  }
   const plant = {
-    ...fromAIResult(aiResult),
+    ...aiPlant,
     id: plantId,           // override — client'as davė plantId, naudojam jį
     kategorija,
   }
