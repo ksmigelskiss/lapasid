@@ -144,6 +144,8 @@
     "dracaena ballyi": "Mahanakorn sansevjera",
     "_comment_modern_vernacular": "Modernus LT vernacular names kuriuos plants.json scrape'as (pre-2017) nepagavo. Pilea peperomioides paplito ~2016+ kaip Chinese money plant; LT bendruomene prieme Kininis piniginis augalas / UFO augalas.",
     "pilea peperomioides": "Kininis piniginis augalas",
+    "_comment_vernacular_over_academic": "Vernacular pavadinimai amateur gardeners auditorijai. plants.json default'as paima akademini transliteracija (e.g. Platycerium bifurcatum -> Placiasakis platicerimas), bet vernacular Elniaragis papartis daug atpazistesnis LT bendruomenei. Akademinis lieka ltSynonyms (rodomas Taip pat eiluteje).",
+    "platycerium bifurcatum": "Elniaragis papartis",
     "alpinia galanga": "didžioji alpinija",
     "alpinia officinarum": "vaistinė alpinija",
     "alpinia zerumbet": "gražioji alpinija",
