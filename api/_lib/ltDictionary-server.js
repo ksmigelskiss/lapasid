@@ -66,9 +66,16 @@ export async function resolveLtServer(latinName) {
   let ltName = genusEntry.ltName
   let speciesQualified = false
   if (words.length >= 2) {
-    const epithet = words[1].toLowerCase().replace(/^['"]|['"]$/g, '')
+    // MIRROR client (2026-06-01): preserve ICNCP cultivar quotes 'Davana'
+    // signalas iš input epithet'o. Žiūr. src/utils/ltDictionary.js detailed
+    // paaiškinimą.
+    const rawEpithet = words[1]
+    const hadCultivarQuotes = /^['"].*['"]$/.test(rawEpithet)
+    const epithet = rawEpithet.toLowerCase().replace(/^['"]|['"]$/g, '')
     if (epithet && !genusEntry.ltName.toLowerCase().includes(epithet)) {
-      ltName = `${genusEntry.ltName} ${epithet}`
+      ltName = hadCultivarQuotes
+        ? `${genusEntry.ltName} '${epithet}'`
+        : `${genusEntry.ltName} ${epithet}`
       speciesQualified = true
     }
   }

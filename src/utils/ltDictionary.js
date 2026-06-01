@@ -182,9 +182,18 @@ export async function resolveLt(latinName) {
   let ltName = genusEntry.ltName
   let speciesQualified = false
   if (words.length >= 2) {
-    const epithet = words[1].toLowerCase().replace(/^['"]|['"]$/g, '')  // strip cultivar quotes if any
+    const rawEpithet = words[1]
+    // ICNCP cultivar notation: 'Davana' su single-quotes signalas, kad tai
+    // CULTIVAR (ne species). Anksčiau strip'inom quotes ir construct'inom
+    // be jų — botaniškai netiksli display ("Flebodijus davana" vs teisingas
+    // "Flebodijus 'davana'"). Dabar preserve'inam: jei input epithet'as
+    // turėjo quotes, output ltName irgi turės.
+    const hadCultivarQuotes = /^['"].*['"]$/.test(rawEpithet)
+    const epithet = rawEpithet.toLowerCase().replace(/^['"]|['"]$/g, '')
     if (epithet && !genusEntry.ltName.toLowerCase().includes(epithet)) {
-      ltName = `${genusEntry.ltName} ${epithet}`
+      ltName = hadCultivarQuotes
+        ? `${genusEntry.ltName} '${epithet}'`
+        : `${genusEntry.ltName} ${epithet}`
       speciesQualified = true
     }
   }
