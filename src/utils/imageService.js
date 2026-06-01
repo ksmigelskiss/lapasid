@@ -280,7 +280,14 @@ export async function uploadImage(dataUrl, plantId) {
     const bytes  = new Uint8Array(binary.length)
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
     const imageRef = ref(storage, `plants/${plantId}/${Date.now()}.${ext}`)
-    await uploadBytes(imageRef, bytes, { contentType: mime })
+    // 2026-06-01 — aggressive cache-control: path'as turi unikalų timestamp,
+    // tad failas effectively immutable. Browser + SW gali laikyti 1 metus.
+    // Anksčiau be šio metadata Firebase default'ino į max-age=3600 → cycling
+    // per augalus dashboard'e re-fetchindavo nepaisant SW cache pastangų.
+    await uploadBytes(imageRef, bytes, {
+      contentType: mime,
+      cacheControl: 'public, max-age=31536000, immutable',
+    })
     return getDownloadURL(imageRef)
   } catch (err) {
     console.error('uploadImage failed:', err)
@@ -347,7 +354,12 @@ export async function uploadImageWithThumb(dataUrl, plantId) {
       const bytes  = new Uint8Array(binary.length)
       for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
       const r = ref(storage, `plants/${plantId}/${ts}${suffix}.${ext}`)
-      await uploadBytes(r, bytes, { contentType: mime })
+      // 2026-06-01 — aggressive cache-control: timestamp'as path'e garantuoja
+      // immutability. 1 metų SW + browser cache per cycle'us tarp augalų.
+      await uploadBytes(r, bytes, {
+        contentType: mime,
+        cacheControl: 'public, max-age=31536000, immutable',
+      })
       return getDownloadURL(r)
     }
     const [url, thumbUrl] = await Promise.all([

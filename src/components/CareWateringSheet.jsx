@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { Droplets, FlaskConical, Check, X, MapPin, ChevronLeft, ChevronRight, Leaf } from 'lucide-react'
@@ -147,6 +147,39 @@ export default function CareWateringSheet({
   const intervals = plant.laistymasIntervalas
   const hasFert = fc.intervalDays != null || fc.lastDate
   const showInspect = wc.isOverdue && wc.lastType === 'watering'
+
+  // Hero collapse on scroll (2026-06-01) — MIRROR PlantDetail pattern'ą.
+  // ~60px scroll'o link žemyn → hero susikrečia iš aspect-3/2 į aspect-3/1
+  // → status block'ai gauna ~33% papildomos vertikalios erdvės. Hysteresis
+  // 40/60 saugo nuo flicker'io ties threshold'u.
+  const scrollContainerRef = useRef(null)
+  const [heroCollapsed, setHeroCollapsed] = useState(false)
+  useEffect(() => {
+    const el = scrollContainerRef.current
+    if (!el) return
+    let raf = null
+    const handler = () => {
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = null
+        const y = el.scrollTop
+        setHeroCollapsed(prev => prev ? y > 40 : y > 60)
+      })
+    }
+    el.addEventListener('scroll', handler, { passive: true })
+    return () => {
+      el.removeEventListener('scroll', handler)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  // Plant change → reset scroll + hero expanded
+  useEffect(() => {
+    const el = scrollContainerRef.current
+    if (!el) return
+    el.scrollTop = 0
+    setHeroCollapsed(false)
+  }, [plant.id])
   const currentZone = zones.find(z => z.id === plant.zonaId)
   const [postFert, setPostFert] = useState(false)
 
@@ -303,9 +336,12 @@ export default function CareWateringSheet({
             (iOS Photos.app pattern'as). */}
         {(onPrev || onNext) ? (
           <motion.div
-            className="relative w-full aspect-[3/2] overflow-hidden bg-bone-300 flex-shrink-0 cursor-grab active:cursor-grabbing"
+            className="relative w-full overflow-hidden bg-bone-300 flex-shrink-0 cursor-grab active:cursor-grabbing"
             onPanEnd={handlePhotoPanEnd}
             style={{ touchAction: 'pan-y' }}
+            initial={false}
+            animate={{ aspectRatio: heroCollapsed ? '3 / 1' : '3 / 2' }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
             {hasImg ? (
               <PlantImage url={plant.image} alt={plant.lietuviškas} size="detail" eager className="w-full h-full object-cover pointer-events-none select-none" draggable={false} />
@@ -337,19 +373,24 @@ export default function CareWateringSheet({
             )}
           </motion.div>
         ) : (
-          hasImg ? (
-            <div className="w-full aspect-[3/2] overflow-hidden bg-bone-300 flex-shrink-0">
+          <motion.div
+            className="w-full overflow-hidden bg-bone-300 flex-shrink-0"
+            initial={false}
+            animate={{ aspectRatio: heroCollapsed ? '3 / 1' : '3 / 2' }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {hasImg ? (
               <PlantImage url={plant.image} alt={plant.lietuviškas} size="detail" eager className="w-full h-full object-cover" />
-            </div>
-          ) : (
-            <div className="w-full aspect-[3/2] flex items-center justify-center text-8xl bg-bone-300 flex-shrink-0">
-              {plant.emoji ?? '🌿'}
-            </div>
-          )
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-8xl">
+                {plant.emoji ?? '🌿'}
+              </div>
+            )}
+          </motion.div>
         )}
 
         {/* ── Scrollable content ── */}
-        <div className="overflow-y-auto flex-1 px-5 pt-4 pb-4 space-y-6">
+        <div ref={scrollContainerRef} className="overflow-y-auto flex-1 px-5 pt-4 pb-4 space-y-6">
           {/* Title block */}
           <div>
             <h2 className="font-display text-2xl font-semibold tracking-tight text-forest-800 leading-tight">

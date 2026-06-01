@@ -1955,8 +1955,12 @@ export default function PlantDetail({
                       {plant.emoji ?? '🌿'}
                     </div>
                   ) : (
+                    // 2026-06-01 — key={currentPhoto} PAŠALINTAS. Force-remount
+                    // sukeldavo flicker'į cyclining'inant tarp augalų ir bypass'ino
+                    // PlantImage SWR pattern'ą (old image lieka rodomas kol new
+                    // preload'ina). Dabar PlantImage handle'ina URL change'us
+                    // grakščiau — no blank flash, no fresh-fetch every cycle.
                     <PlantImage
-                      key={currentPhoto}
                       url={currentPhoto} alt={plant.lietuviškas} size="detail" eager
                       className={`w-full h-full ${isIllustration ? 'object-contain' : 'object-cover'}`}
                       onError={() => setHeroError(true)}
