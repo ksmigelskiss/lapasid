@@ -15,6 +15,7 @@
  *     nereikia — pridėti kai prireiks)
  */
 import { loadJson } from './dataLoader-server.js'
+import { parseLatinName } from '../../src/utils/latinName.js'
 
 async function loadLtNames() {
   return loadJson('lt-names.json')
@@ -66,17 +67,18 @@ export async function resolveLtServer(latinName) {
   let ltName = genusEntry.ltName
   let speciesQualified = false
   if (words.length >= 2) {
-    // MIRROR client (2026-06-01): preserve ICNCP cultivar quotes 'Davana'
-    // signalas iš input epithet'o. Žiūr. src/utils/ltDictionary.js detailed
-    // paaiškinimą.
-    const rawEpithet = words[1]
-    const hadCultivarQuotes = /^['"].*['"]$/.test(rawEpithet)
-    const epithet = rawEpithet.toLowerCase().replace(/^['"]|['"]$/g, '')
-    if (epithet && !genusEntry.ltName.toLowerCase().includes(epithet)) {
-      ltName = hadCultivarQuotes
-        ? `${genusEntry.ltName} '${epithet}'`
-        : `${genusEntry.ltName} ${epithet}`
+    // MIRROR client (2026-06-01): parseLatinName proper'ly handles multi-word
+    // cultivar quotes ('Orange Star', 'White Joy'). Žiūr. src/utils/ltDictionary.js.
+    const parsed = parseLatinName(latinName)
+    if (parsed.cultivar) {
+      ltName = `${genusEntry.ltName} '${parsed.cultivar}'`
       speciesQualified = true
+    } else if (parsed.species) {
+      const epithet = parsed.species.toLowerCase()
+      if (!genusEntry.ltName.toLowerCase().includes(epithet)) {
+        ltName = `${genusEntry.ltName} ${epithet}`
+        speciesQualified = true
+      }
     }
   }
 

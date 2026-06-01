@@ -37,6 +37,8 @@
  *   }
  */
 
+import { parseLatinName } from './latinName.js'
+
 let ltCache = null
 let normalizedReverseMap = null  // normalized_lt → latin
 let loadPromise = null
@@ -182,19 +184,24 @@ export async function resolveLt(latinName) {
   let ltName = genusEntry.ltName
   let speciesQualified = false
   if (words.length >= 2) {
-    const rawEpithet = words[1]
-    // ICNCP cultivar notation: 'Davana' su single-quotes signalas, kad tai
-    // CULTIVAR (ne species). Anksčiau strip'inom quotes ir construct'inom
-    // be jų — botaniškai netiksli display ("Flebodijus davana" vs teisingas
-    // "Flebodijus 'davana'"). Dabar preserve'inam: jei input epithet'as
-    // turėjo quotes, output ltName irgi turės.
-    const hadCultivarQuotes = /^['"].*['"]$/.test(rawEpithet)
-    const epithet = rawEpithet.toLowerCase().replace(/^['"]|['"]$/g, '')
-    if (epithet && !genusEntry.ltName.toLowerCase().includes(epithet)) {
-      ltName = hadCultivarQuotes
-        ? `${genusEntry.ltName} '${epithet}'`
-        : `${genusEntry.ltName} ${epithet}`
+    // 2026-06-01 — parseLatinName proper'ly handles cultivar quotes
+    // (multi-word: 'Orange Star', 'White Joy' etc.). Mano ankstesnis naive
+    // words[1] split lūždavo ant multi-word cultivars („Aglaonema 'Orange
+    // Star'" → words = ["Aglaonema","'Orange","Star'"] → losing both
+    // structure + close quote detection).
+    const parsed = parseLatinName(latinName)
+    if (parsed.cultivar) {
+      // Cultivar epithet — ICNCP notation su single-quotes. Preserve original
+      // capitalization (ne lowercase): 'White Joy', 'Orange Star', 'Davana'.
+      ltName = `${genusEntry.ltName} '${parsed.cultivar}'`
       speciesQualified = true
+    } else if (parsed.species) {
+      // Species epithet — be quotes, lowercase.
+      const epithet = parsed.species.toLowerCase()
+      if (!genusEntry.ltName.toLowerCase().includes(epithet)) {
+        ltName = `${genusEntry.ltName} ${epithet}`
+        speciesQualified = true
+      }
     }
   }
 
