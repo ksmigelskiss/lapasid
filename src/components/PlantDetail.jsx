@@ -294,6 +294,24 @@ function CareRow({ icon, label, score, value }) {
   )
 }
 
+// Skeleton placeholder for enrichment-in-progress sections (2026-06-01).
+// Naudoja animate-pulse + bone-300/60 bg — matches PlantImage SW cache and
+// EnrichmentProgress patterns. Lines parametras controls how many shimmer
+// bars (typical: 2 = short blok, 3 = aprasymas-tipo paragraph).
+function SkeletonLines({ lines = 2, className = '' }) {
+  return (
+    <div className={`space-y-2 animate-pulse ${className}`}>
+      {Array.from({ length: lines }).map((_, i) => (
+        <div
+          key={i}
+          className="h-3 rounded bg-bone-300/60"
+          style={{ width: i === lines - 1 ? '70%' : '100%' }}
+        />
+      ))}
+    </div>
+  )
+}
+
 // ── Augalo pasas sekcija ───────────────────────────────────────
 
 function PassportSection({ plant, collectionId, onToggle }) {
@@ -637,12 +655,17 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
 
       {/* ── Quick stats — editorial table (mono caps label + Bricolage value). ── */}
       <div className="divide-y divide-bone-400/30">
-        {plant.kilme && (
+        {plant.kilme ? (
           <div className="flex items-start gap-3 py-2.5">
             <span className="flex items-center gap-1.5 font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0"><MapPin size={11} className="text-forest-400" /> Kilmė</span>
             <span className="text-sm text-forest-700 leading-snug flex-1">{plant.kilme}</span>
           </div>
-        )}
+        ) : isEnriching ? (
+          <div className="flex items-start gap-3 py-2.5">
+            <span className="flex items-center gap-1.5 font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0"><MapPin size={11} className="text-forest-400" /> Kilmė</span>
+            <div className="flex-1"><SkeletonLines lines={2} /></div>
+          </div>
+        ) : null}
         {plant.tipas && (
           <div className="flex items-center gap-3 py-2.5">
             <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em] w-24 flex-shrink-0">Tipas</span>
@@ -657,7 +680,12 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
         )}
       </div>
 
-      {/* ── Description + external links ── */}
+      {/* ── Description + external links — su skeleton kol Phase 2 enrich vyksta */}
+      {!plant.aprasymas && isEnriching && (
+        <Section title="Apie augalą">
+          <SkeletonLines lines={3} />
+        </Section>
+      )}
       {plant.aprasymas && (
         <Section title="Apie augalą">
           {/* Step 6k — honest provenance marker. UI'us nemaskuoja AI synthesis
@@ -705,6 +733,16 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
       {/* ── Care — vieningas profilis: lygis (●●○) + narrative + tręšimas vienoje
             vietoje (UX dedup — anksčiau šviesa/vanduo dubliavosi struktūrinėj meta
             lentelėj IR čia; tręšimas tik forecast kortelėj). ── */}
+      {/* Skeleton state — kai enrichment dar vyksta ir priežiūros duomenų nėra */}
+      {!plant.prieziura && plant.sviesa?.taskai == null && plant.vanduo?.taskai == null && isEnriching && (
+        <Section title="Priežiūra" id="prieziura-section">
+          <div className="space-y-3 py-1">
+            <SkeletonLines lines={2} />
+            <SkeletonLines lines={2} />
+            <SkeletonLines lines={2} />
+          </div>
+        </Section>
+      )}
       {(plant.prieziura || plant.sviesa?.taskai != null || plant.vanduo?.taskai != null) && (
         <Section title="Priežiūra" id="prieziura-section">
           <div>

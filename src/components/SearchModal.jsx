@@ -1451,27 +1451,28 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   // kiekvieną text search'ą. Photo searches inkrementuoja.
   const [photoAttempts, setPhotoAttempts] = useState(0)
 
-  // EnrichmentProgress watch state (2026-06-01). Kai user'is paspaudžia save —
-  // vietoj iškart uždarymo modal'ą, pereinam į progress view'ą per kurį
-  // matosi Phase 2 enrichment etapai realtime'e. „Tęsti fone" mygtukas
-  // ProgressView'e iškviečia realų onClose'ą kad modal'as uždarytų ir
-  // grįžtų į biblioteką (backward-compat su seniu UX).
-  // null = neaktyvu; { latinName, name, image, plant } = watching.
-  const [enrichmentTarget, setEnrichmentTarget] = useState(null)
-
-  // Wrap SaveButton'o onClose'ą — vietoj iškart uždarymo modal'o, switch'inam
-  // į EnrichmentProgress view'ą su Phase 2 stages tracking'u. Vartotojas matys
-  // realtime kas vyksta, gali laukti informuotai arba „Tęsti fone" -> realus
-  // close. Iškviečia su currentai matomu result'o duomenimis (Phase 1).
+  // Post-save plant tracking (2026-06-01 redesign): SaveButton'o onSave'e
+  // capture'inam saved plant'ą per lastSavedRef. Po onSave'o → onClose triggers
+  // handlePostSaveSwitch → uždarom modal'ą + navigate'inam į PlantDetail per
+  // onViewPlant callback'ą. PlantDetail jau handle'ina skeleton states for
+  // missing data per resolvePlantView LIVE catalog update'us.
+  //
+  // PIVOT (vakar buvo EnrichmentProgress separate view) — pagal Kęstučio
+  // observation, geriau išlaikyti vienodą PlantDetail layout vietoj atskiros
+  // progress UI'os. „Loading laukai vyktu savo vietose" (skeleton'ai
+  // PlantDetail sekcijose).
+  const lastSavedRef = useRef(null)
+  const captureSave = (originalCallback) => (plant) => {
+    lastSavedRef.current = plant
+    return originalCallback(plant)
+  }
   const handlePostSaveSwitch = () => {
-    if (result) {
-      setEnrichmentTarget({
-        latinName: result.latinName ?? result.lotyniskas,
-        name: result.name ?? result.lietuviškas,
-        image: result.image,
-      })
-    } else {
-      onClose?.()  // fallback: no result → true close
+    const saved = lastSavedRef.current
+    onClose?.()
+    if (saved && onViewPlant) {
+      // Nedidelis delay, kad modal'o close animation pradėtų ir state'as
+      // (plant'as collection'oje) susėstų prieš PlantDetail mount.
+      setTimeout(() => onViewPlant(saved), 100)
     }
   }
 
@@ -2371,17 +2372,12 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
         if (group) enriched = mergeWithSeries(entry, group)
       }
       const aiShape = catalogEntryToAIResult(enriched)
+      lastSavedRef.current = aiShape  // capture for post-save navigation
       await onAddToWishlist(aiShape)
-      // 2026-06-01 — switch to EnrichmentProgress instead of onClose for
-      // consistency su SaveButton'o flow'u. Catalog hit case'as: enrichment
-      // jau complete (catalog turi visą data) — EnrichmentProgress detect'ins
-      // tai per catalog'o jau-egzistuojantį `laistymasIntervalas` ir parodys
-      // immediate „complete" state'ą.
-      setEnrichmentTarget({
-        latinName: enriched.lotyniskas ?? entry.lotyniskas,
-        name: enriched.lietuviškas ?? entry.lietuviškas,
-        image: enriched.image ?? entry.image,
-      })
+      // 2026-06-01 pivot — uždarom modal'ą + navigate'inam į PlantDetail.
+      // PlantDetail handle'ina skeleton states jei enrichment dar nepilnas
+      // (catalog hit'as: viskas jau yra → no skeletons matomas).
+      handlePostSaveSwitch()
     } catch (e) {
       console.warn('[handleCatalogAdd] failed:', e?.message)
       onClose?.()
@@ -2502,28 +2498,14 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
           </div>
         )}
 
-        {/* EnrichmentProgress — po save'o (handlePostSaveSwitch) per'jungiam į
-            progress view'ą su Phase 2 stage'ais. Vartotojas mato KĄ vyksta
-            realtime, vietoj 30-90s blank wait + grįžimo į biblioteką.
-            „Tęsti fone" mygtukas → realus onClose. (2026-06-01) */}
-        {enrichmentTarget && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, ease: 'easeOut' }}
-          >
-            <EnrichmentProgress
-              latinName={enrichmentTarget.latinName}
-              name={enrichmentTarget.name}
-              image={enrichmentTarget.image}
-              onClose={onClose}
-              onOpenPlant={onClose /* TODO: navigate to plant detail */}
-            />
-          </motion.div>
-        )}
+        {/* EnrichmentProgress separate view deprecated 2026-06-01
+            (žiūr. handlePostSaveSwitch komentarą + lastSavedRef). Po save'o
+            vartotojas navigate'inasi tiesiai į PlantDetail, kuris pats handle'ina
+            skeleton states for missing data per resolvePlantView LIVE catalog
+            updates. Vienodas plantinfo layout, ne atskira progress view. */}
 
         {/* Result */}
-        {result && !loading && !enrichmentTarget && (
+        {result && !loading && (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -2751,7 +2733,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                         }}
                         kategorija="nori"
                         className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-transparent border border-forest-300/60 text-forest-600 hover:bg-forest-50 text-[11.5px] font-medium transition-colors"
-                        onSave={onAddToWishlist}
+                        onSave={captureSave(onAddToWishlist)}
                         onClose={handlePostSaveSwitch}
                         onSavingChange={setSavingPhase2}
                       />
@@ -2941,7 +2923,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                             result={resultForSave}
                             kategorija="nori"
                             className="w-full h-11 rounded-btn font-display text-xs font-medium text-forest-500 bg-transparent border border-bone-400/40 hover:bg-bone-300/30 disabled:opacity-60 transition-colors"
-                            onSave={onAddToWishlist}
+                            onSave={captureSave(onAddToWishlist)}
                             onClose={handlePostSaveSwitch}
                             onSavingChange={setSavingPhase2}
                           />
@@ -2965,7 +2947,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                         result={resultForSave}
                         kategorija="auginama"
                         className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 disabled:opacity-60 transition-colors"
-                        onSave={onAddToDashboard}
+                        onSave={captureSave(onAddToDashboard)}
                         onClose={handlePostSaveSwitch}
                         onSavingChange={setSavingPhase2}
                       />
@@ -2975,7 +2957,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                         result={resultForSave}
                         kategorija="nori"
                         className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-700 bg-bone-50 border border-bone-400/50 hover:bg-bone-300/40 disabled:opacity-60 transition-colors"
-                        onSave={onAddToWishlist}
+                        onSave={captureSave(onAddToWishlist)}
                         onClose={handlePostSaveSwitch}
                         onSavingChange={setSavingPhase2}
                       />
