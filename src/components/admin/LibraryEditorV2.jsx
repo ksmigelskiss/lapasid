@@ -375,21 +375,55 @@ export default function LibraryEditorV2({
   // nepaliečiami. originalDraft.image atnaujinamas, kad image nebebūtų dirty.
   // ── 2026-06-01 — AI re-enrich actions (admin-only) ──────────────────
   //
-  // Tris veiksmai prienami iš sticky toolbar:
-  //   • 'hero' — TIK iliustracija. POST /api/generate-hero force=true. await'inam
-  //     ~20-40s, gauname { heroIllustration, heroThumb, method, assessment }.
+  // Trys veiksmai per „Atnaujinti duomenis" dropdown'ą sticky toolbar'e:
   //   • 'text' — TIK tekstas (RAG + Sonnet narrative + care + toxicity).
-  //     [NOT YET WIRED — laukia naujo /api/admin-reenrich-catalog endpoint'o,
-  //     nes /api/save-plant reikalauja user plant doc + colId, kuriuos admin
-  //     panel-ui kontekste neturime.]
-  //   • 'full' — abu pipelines. [PENDING tas pats endpoint'as.]
+  //     POST /api/save-plant admin mode, skipHero=true. 202 ACK + background
+  //     ~25-35s. Catalog'as gauna naują enrichmentStage='complete' kai baigta.
+  //   • 'hero' — TIK iliustracija (Gemini watercolor). POST /api/generate-hero
+  //     force=true. SYNC response su nauja URL ~20-40s.
+  //   • 'full' — abu pipelines. POST /api/save-plant admin mode, skipHero=false.
+  //     202 ACK + background ~30-40s (parallel pipelines).
   //
   // aiActionState reikšmės:
-  //   null            — idle, mygtukai available
-  //   'hero'          — hero regen vyksta (toolbar button su Loader2 spin)
-  //   'hero-error'    — paskutinis bandymas suklydo (5s flash, paskui null)
+  //   null         — idle
+  //   'text' | 'hero' | 'full' — vyksta atitinkamas veiksmas
+  //   'text-error' | 'hero-error' | 'full-error' — paskutinis suklydo
+  //
+  // COMPLETION DETECTION — async (text, full):
+  //   POST grąžina 202 iškart, background pipeline trunka ~25-40s. Negalim
+  //   await'inti response'o. Sprendimas: catalog onSnapshot listener'is jau
+  //   yra (catalog prop'as ateina su live updates). Tracking'inam
+  //   aiActionStartedAt timestamp'ą, useEffect žiūri ar selectedEntry.
+  //   enrichmentUpdatedAt nupasakojo PO mūsų klick'o → clear state.
   const [aiActionState, setAiActionState] = useState(null)
   const [aiActionError, setAiActionError] = useState(null)
+  const [aiActionStartedAt, setAiActionStartedAt] = useState(null)
+
+  // Listener — detect background pipeline completion via catalog snapshot.
+  // selectedEntry.enrichmentUpdatedAt iš save-plant.js writeStage('complete').
+  // Failsafe: 90s timeout (jei pipeline'as stuck → vis tiek išvalom loading).
+  useEffect(() => {
+    if (!aiActionStartedAt) return
+    if (aiActionState !== 'text' && aiActionState !== 'full') return
+    const updatedAt = selectedEntry?.enrichmentUpdatedAt
+    const stage = selectedEntry?.enrichmentStage
+    if (updatedAt && new Date(updatedAt).getTime() > aiActionStartedAt && (stage === 'complete' || stage === 'failed')) {
+      setAiActionState(null)
+      setAiActionStartedAt(null)
+      console.log('[admin] async re-enrich complete (catalog snapshot)', { stage, updatedAt })
+    }
+  }, [selectedEntry?.enrichmentUpdatedAt, selectedEntry?.enrichmentStage, aiActionStartedAt, aiActionState])
+
+  useEffect(() => {
+    if (!aiActionStartedAt) return
+    if (aiActionState !== 'text' && aiActionState !== 'full') return
+    const failsafe = setTimeout(() => {
+      console.warn('[admin] re-enrich 90s failsafe — clearing loading state', { aiActionState })
+      setAiActionState(null)
+      setAiActionStartedAt(null)
+    }, 90000)
+    return () => clearTimeout(failsafe)
+  }, [aiActionStartedAt, aiActionState])
 
   const handleRegenHero = useCallback(async () => {
     if (!selectedEntry || selectedType !== 'cultivar') return
@@ -415,10 +449,6 @@ export default function LibraryEditorV2({
         const err = await res.json().catch(() => ({}))
         throw new Error(err.error || `HTTP ${res.status}`)
       }
-      // Catalog onSnapshot listener auto-update'ins entry.heroIllustration →
-      // preview pane perrender'ins su nauju watercolor'iu. Mes tik išvalom
-      // loading state'ą — sukurta meta (method, assessment, prompt) ateina
-      // su tuo pačiu snapshot'u.
       setAiActionState(null)
     } catch (e) {
       console.warn('[admin] hero regen failed:', e?.message)
@@ -430,6 +460,70 @@ export default function LibraryEditorV2({
       }, 5000)
     }
   }, [selectedEntry, selectedType])
+
+  // Shared helper — text / full re-enrich via save-plant admin mode.
+  // Mode'ą rinkomes per `skipHero` parametrą: 'text' → skip hero, 'full' → don't skip.
+  // selectedEntry sufurnishina baseResult fields (image, aprasymas, sources, ...)
+  // kuriuos backend'as naudoja kaip Phase 1 reference (RAG augmentation, hero input).
+  const dispatchReEnrich = useCallback(async (mode /* 'text' | 'full' */) => {
+    if (!selectedEntry || selectedType !== 'cultivar') return
+    const latinName = selectedEntry.lotyniskas
+    if (!latinName) {
+      setAiActionError('Augalui trūksta lotyniško pavadinimo.')
+      return
+    }
+    const startedAtMs = Date.now()
+    setAiActionState(mode)
+    setAiActionError(null)
+    setAiActionStartedAt(startedAtMs)
+    try {
+      const idToken = await auth.currentUser?.getIdToken().catch(() => null)
+      if (!idToken) throw new Error('Auth token missing — perlogink')
+      const res = await fetch('/api/save-plant', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({
+          latinName,
+          name: selectedEntry.lietuviškas ?? selectedEntry.lietuviskas ?? latinName,
+          baseResult: {
+            latinName,
+            name: selectedEntry.lietuviškas ?? selectedEntry.lietuviskas ?? latinName,
+            image: selectedEntry.image ?? null,
+            aprasymas: selectedEntry.aprasymas ?? null,
+            aprasymasLang: selectedEntry.aprasymasLang ?? null,
+            kilme: selectedEntry.kilme ?? null,
+            savybes: selectedEntry.savybes ?? null,
+            sources: selectedEntry.sources ?? null,
+          },
+          // Admin mode triggeris — plantId/colId omit'inam, backend'as detect'ina
+          // ir verify'ina isAdmin Firestore flag'ą.
+          skipHero: mode === 'text',
+        }),
+      })
+      if (res.status !== 202 && !res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.error || `HTTP ${res.status}`)
+      }
+      // 202 ACK — pipeline running in background. State'as bus išvalytas per
+      // catalog listener useEffect (kai enrichmentStage='complete' atvyks).
+      console.log(`[admin] dispatched re-enrich ${mode} mode (waiting for snapshot)`)
+    } catch (e) {
+      console.warn(`[admin] re-enrich ${mode} failed:`, e?.message)
+      setAiActionError(e?.message || `Nepavyko paleisti „${mode}" pipeline'o`)
+      setAiActionState(`${mode}-error`)
+      setAiActionStartedAt(null)
+      setTimeout(() => {
+        setAiActionState(null)
+        setAiActionError(null)
+      }, 5000)
+    }
+  }, [selectedEntry, selectedType])
+
+  const handleRegenText = useCallback(() => dispatchReEnrich('text'), [dispatchReEnrich])
+  const handleRegenFull = useCallback(() => dispatchReEnrich('full'), [dispatchReEnrich])
 
   const handleSaveImageOnly = useCallback(async (newUrl) => {
     if (!selectedEntry || selectedType !== 'cultivar') return
@@ -507,6 +601,8 @@ export default function LibraryEditorV2({
         aiActionState={aiActionState}
         aiActionError={aiActionError}
         onRegenHero={handleRegenHero}
+        onRegenText={handleRegenText}
+        onRegenFull={handleRegenFull}
       />
       <RightPanePreview
         entry={selectedEntry}
@@ -1288,7 +1384,7 @@ function CenterPaneEditor({
   activeTab, setActiveTab,
   taxonGroups,
   genusParent,
-  aiActionState, aiActionError, onRegenHero,
+  aiActionState, aiActionError, onRegenHero, onRegenText, onRegenFull,
 }) {
   if (!entry || !draft) {
     return (
@@ -1378,25 +1474,18 @@ function CenterPaneEditor({
               <Save size={12} />
               {saving ? 'Saugoma…' : dirty ? `Saugoti${dirtyCount > 0 ? ` (${dirtyCount})` : ''}` : 'Be pakeitimų'}
             </button>
-            {/* 2026-06-01 — AI re-enrich actions (admin-only). Cultivar tab'e
-                visada matomi; series tab'e neturi prasmės (serija = template,
-                ne konkretus augalas). */}
+            {/* 2026-06-01 — AI re-enrich dropdown (admin-only). „Atnaujinti
+                duomenis ▾" → 3 veiksmai (info/foto/viskas). Cultivar tab'e
+                visada matomi; series tab'e neturi prasmės (serija = template). */}
             {entryType === 'cultivar' && entry?.lotyniskas && (
               <>
                 <span className="w-px h-5 bg-bone-400/50 mx-1" aria-hidden />
-                <button
-                  onClick={onRegenHero}
-                  disabled={aiActionState === 'hero'}
-                  title={aiActionState === 'hero'
-                    ? 'Generuojama nauja iliustracija (~20-40s)…'
-                    : 'Sugeneruoti naują watercolor iliustraciją iš AI šaltinio (~20-40s, perrašys esamą)'}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-btn-sm text-xs font-semibold bg-forest-100 hover:bg-forest-200 text-forest-700 disabled:opacity-60 disabled:cursor-wait transition-colors"
-                >
-                  {aiActionState === 'hero'
-                    ? <Loader2 size={12} className="animate-spin" />
-                    : <Palette size={12} />}
-                  {aiActionState === 'hero' ? 'Generuojama…' : 'Iliustracija'}
-                </button>
+                <ReEnrichMenu
+                  state={aiActionState}
+                  onText={onRegenText}
+                  onHero={onRegenHero}
+                  onFull={onRegenFull}
+                />
               </>
             )}
           </div>
@@ -1477,6 +1566,115 @@ function CenterPaneEditor({
         </button>
       </div>
     </div>
+  )
+}
+
+// ── ReEnrichMenu — „Atnaujinti duomenis ▾" dropdown ───────────────────
+//
+// 2026-06-01 — vieta admin'ui paleisti AI pipelines iš sticky toolbar'o.
+// 3 veiksmai:
+//   • Atnaujinti info     — RAG + Sonnet narrative + care + toxicity
+//                            (NE liečia heroIllustration). ~25-35s.
+//   • Atnaujinti foto     — Gemini watercolor regen (NE liečia narrative).
+//                            ~20-40s, sync await.
+//   • Atnaujinti viską    — abu pipeline'ai paralel. ~30-40s.
+//
+// Loading state'as: kai state matches 'text'|'hero'|'full', trigger button
+// rodo Loader2 spin + atitinkamą copy ("Atnaujinama info…"). Visi dropdown
+// item'ai disabled kol veiksmas vyksta.
+//
+// Outside click → close. ESC → close. Single-action policy.
+function ReEnrichMenu({ state, onText, onHero, onFull }) {
+  const [open, setOpen] = useState(false)
+  const isActive = state === 'text' || state === 'hero' || state === 'full'
+  const label = state === 'text' ? 'Atnaujinama info…'
+              : state === 'hero' ? 'Atnaujinama foto…'
+              : state === 'full' ? 'Atnaujinama viskas…'
+              : 'Atnaujinti duomenis'
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false) }
+    const onClick = (e) => {
+      // Close jei click išorėje
+      if (!e.target.closest('[data-reenrich-menu]')) setOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('mousedown', onClick)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('mousedown', onClick)
+    }
+  }, [open])
+
+  const fire = (handler) => {
+    setOpen(false)
+    handler?.()
+  }
+
+  return (
+    <div className="relative" data-reenrich-menu>
+      <button
+        onClick={() => setOpen(v => !v)}
+        disabled={isActive}
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-btn-sm text-xs font-semibold bg-forest-100 hover:bg-forest-200 text-forest-700 disabled:opacity-60 disabled:cursor-wait transition-colors"
+        title={isActive ? 'Vyksta AI re-enrich — palauk pabaigos' : 'Atnaujinti AI duomenis (3 variantai)'}
+      >
+        {isActive
+          ? <Loader2 size={12} className="animate-spin" />
+          : <Sparkles size={12} />}
+        {label}
+        {!isActive && <ChevronDown size={12} className="opacity-60" />}
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-1.5 bg-bone-50 rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/50 overflow-hidden z-[100] min-w-[260px]">
+          <p className="font-mono text-[9.5px] font-medium text-forest-500 uppercase tracking-[0.18em] px-3 pt-2.5 pb-1.5">
+            Atnaujinti duomenis
+          </p>
+          <div className="px-1 pb-1 space-y-px">
+            <ReEnrichItem
+              icon={<BookOpen size={13} />}
+              title="Atnaujinti info"
+              hint="Aprašymas · care · toxicity · narrative (be foto)"
+              cost="~25-35s"
+              onClick={() => fire(onText)}
+            />
+            <ReEnrichItem
+              icon={<Palette size={13} />}
+              title="Atnaujinti foto"
+              hint="Generuojama nauja watercolor iliustracija"
+              cost="~20-40s"
+              onClick={() => fire(onHero)}
+            />
+            <ReEnrichItem
+              icon={<Sparkles size={13} />}
+              title="Atnaujinti viską"
+              hint="Tekstas + foto kartu (paraleliai)"
+              cost="~30-40s"
+              onClick={() => fire(onFull)}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ReEnrichItem({ icon, title, hint, cost, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full flex items-start gap-2.5 px-3 py-2.5 rounded-xl text-forest-700 hover:bg-bone-300/60 transition-colors text-left"
+    >
+      <span className="flex-shrink-0 mt-0.5 text-forest-500">{icon}</span>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-baseline justify-between gap-2">
+          <span className="font-display text-sm font-semibold tracking-tight">{title}</span>
+          <span className="font-mono text-[9.5px] text-forest-400 flex-shrink-0">{cost}</span>
+        </div>
+        <p className="text-[10.5px] text-forest-500 mt-0.5 leading-snug">{hint}</p>
+      </div>
+    </button>
   )
 }
 
@@ -1953,7 +2151,12 @@ function IllustrationSection({ entry, aiActionState, onRegenHero }) {
   const heroAssessment = entry?.heroPhotoAssessment ?? null
   const heroPrompt = entry?.heroPromptBrief ?? null
   const heroAt = entry?._heroIllustrationAt ?? null
-  const isGenerating = aiActionState === 'hero'
+  // Overlay'as ant iliustracijos rodomas TIK kai vyksta 'hero' arba 'full'
+  // (tie veiksmai modifikuoja heroIllustration). 'text' nemenkina foto.
+  const isHeroGen = aiActionState === 'hero' || aiActionState === 'full'
+  // Inline button disable jei VISIŠKAI bet kuris AI veiksmas vyksta — kad
+  // admin'as nepradėtų antrojo veiksmo kol pirmas vyksta.
+  const isAnyGen = aiActionState === 'hero' || aiActionState === 'full' || aiActionState === 'text'
 
   // Method label LT — short, friendly
   const methodLabel = heroMethod === 'gemini-restyle'
@@ -1976,7 +2179,7 @@ function IllustrationSection({ entry, aiActionState, onRegenHero }) {
             <p className="text-[11px] text-forest-500">Dar nesugeneruota</p>
           </div>
         )}
-        {isGenerating && (
+        {isHeroGen && (
           <div className="absolute inset-0 bg-bone-50/85 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2">
             <Loader2 size={24} className="animate-spin text-forest-600" />
             <p className="text-[11px] font-mono uppercase tracking-wider text-forest-700">Generuojama…</p>
@@ -1999,12 +2202,14 @@ function IllustrationSection({ entry, aiActionState, onRegenHero }) {
           </div>
           <button
             onClick={onRegenHero}
-            disabled={isGenerating}
+            disabled={isAnyGen}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-btn-sm text-[11px] font-semibold bg-forest-700 hover:bg-forest-800 text-bone disabled:opacity-60 disabled:cursor-wait transition-colors flex-shrink-0"
-            title="Sugeneruoti naują watercolor iliustraciją (perrašys esamą catalog.heroIllustration)"
+            title={isAnyGen
+              ? 'Vyksta AI veiksmas — palauk pabaigos'
+              : 'Sugeneruoti naują watercolor iliustraciją (perrašys esamą catalog.heroIllustration)'}
           >
-            {isGenerating ? <Loader2 size={11} className="animate-spin" /> : <Palette size={11} />}
-            {isGenerating ? 'Generuojama…' : 'Atnaujinti'}
+            {isHeroGen ? <Loader2 size={11} className="animate-spin" /> : <Palette size={11} />}
+            {isHeroGen ? 'Generuojama…' : 'Atnaujinti'}
           </button>
         </div>
         {heroPrompt && (
@@ -2823,9 +3028,10 @@ function RightPanePreview({ entry, draft, entryType, genusParent, aiActionState 
               </div>
             )}
             {/* 2026-06-01 — hero regen overlay. Rodom kai admin'as paspaudė
-                „Iliustracija" mygtuką sticky toolbar'e arba IllustrationSection'e.
-                Mato gražų loader'į, žinom kad vyksta darbas — ne uždarytas tab'as. */}
-            {aiActionState === 'hero' && isIllustration && (
+                „Atnaujinti foto" arba „Atnaujinti viską" (abu modifikuoja
+                heroIllustration). „Atnaujinti info" NEliečia foto, todėl ne
+                overlay'um — tas vyksta neutraliame state'e. */}
+            {(aiActionState === 'hero' || aiActionState === 'full') && isIllustration && (
               <div className="pointer-events-auto absolute inset-0 bg-bone-50/85 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2">
                 <Loader2 size={28} className="animate-spin text-forest-600" />
                 <p className="text-[11px] font-mono uppercase tracking-wider text-forest-700">Generuojama nauja iliustracija</p>

@@ -76,42 +76,75 @@ export default async function handler(req, res) {
   // catalog'as jau turi gerą hero artwork'ą, o user nori atnaujinti tik
   // tekstinę info (e.g. care updated po naujo PFAF data, narrative bug fix).
   // Hero gen kainuoja ~$0.003 + 20-40s + perrašo Storage'e — taupymas vertas.
+  //
+  // 2026-06-01 — ADMIN MODE: jei plantId IR colId abudu MISSING → admin mode'as.
+  // Naudojamas admin panel'ėje, kur admin atnaujina TIK catalog'ą (be user
+  // plant doc update'o). Reikalauja Firestore users/{uid}.isAdmin === true.
+  // Skip'inam:
+  //   • idempotency check'ą (admin'as visada nori naujo run'o)
+  //   • user plant doc write'ą (catalog-only target)
+  //   • membership check'ą (admin'as nepriklauso konkrečiai kolekcijai)
   const { latinName, name, baseResult, colId, plantId, kategorija, skipHero = false } = req.body || {}
   if (!latinName || typeof latinName !== 'string') {
     return res.status(400).json({ error: 'latinName required (string)' })
   }
-  if (!plantId || typeof plantId !== 'string') {
-    return res.status(400).json({ error: 'plantId required (string)' })
-  }
-  if (!colId || typeof colId !== 'string') {
-    return res.status(400).json({ error: 'colId required (string)' })
-  }
 
-  // ── Membership pre-flight ───────────────────────────────────
-  // Greitas patikrinimas DIDŽIULĖS klaidos atveju (uid nepriklauso colId).
-  // Tas pats check pakartojamas processPlant'e — bet čia jis grąžina 403
-  // sinchroniškai (vs background fail), kad client'as gautų aiškią klaidą.
-  const allowed = await isUidMember(uid, colId)
-  if (!allowed) {
-    return res.status(403).json({ error: 'not a member of this collection' })
+  const isAdminMode = !plantId && !colId
+  if (!isAdminMode) {
+    if (!plantId || typeof plantId !== 'string') {
+      return res.status(400).json({ error: 'plantId required (string)' })
+    }
+    if (!colId || typeof colId !== 'string') {
+      return res.status(400).json({ error: 'colId required (string)' })
+    }
+    // ── Membership pre-flight ────────────────────────────────
+    // Greitas patikrinimas DIDŽIULĖS klaidos atveju (uid nepriklauso colId).
+    // Tas pats check pakartojamas processPlant'e — bet čia jis grąžina 403
+    // sinchroniškai (vs background fail), kad client'as gautų aiškią klaidą.
+    const allowed = await isUidMember(uid, colId)
+    if (!allowed) {
+      return res.status(403).json({ error: 'not a member of this collection' })
+    }
+  } else {
+    // Admin mode — verify isAdmin Firestore flag
+    const isAdmin = await isUidAdmin(uid)
+    if (!isAdmin) {
+      return res.status(403).json({ error: 'admin mode requires users/{uid}.isAdmin === true' })
+    }
+    console.log('[save-plant] admin mode dispatch', { uid, latinName, skipHero })
   }
 
   // ── Schedule background work ────────────────────────────────
   // waitUntil keeps the Fluid Compute instance alive after we return 202.
-  waitUntil(processPlant({ uid, latinName, name, baseResult, colId, plantId, kategorija, skipHero }))
+  waitUntil(processPlant({ uid, latinName, name, baseResult, colId, plantId, kategorija, skipHero, isAdminMode }))
 
   // ── 202 ACK ─────────────────────────────────────────────────
   return res.status(202).json({
     ok: true,
-    plantId,
+    plantId: plantId ?? null,
+    adminMode: isAdminMode,
     message: 'Processing started — close UI any time',
   })
+}
+
+// 2026-06-01 — admin mode helper. Tikrina Firestore users/{uid}.isAdmin.
+// Atspindi useAuth.js client-side patikrinimą (line 167 ir kitur). Catch'ina
+// errors silently → grąžina false (defensive — niekada nepraleisti per klaidą).
+async function isUidAdmin(uid) {
+  if (!uid) return false
+  try {
+    const snap = await adminFirestore().collection('users').doc(uid).get()
+    return snap.exists && snap.data()?.isAdmin === true
+  } catch (e) {
+    console.warn('[isUidAdmin] check failed:', e?.message)
+    return false
+  }
 }
 
 /**
  * Background pipeline — runs after 202 ACK, kept alive by waitUntil.
  */
-async function processPlant({ uid, latinName, name, baseResult, colId, plantId, kategorija, skipHero = false }) {
+async function processPlant({ uid, latinName, name, baseResult, colId, plantId, kategorija, skipHero = false, isAdminMode = false }) {
   const t0 = Date.now()
   console.log('[save-plant] START', { uid, latin: latinName, plantId, colId })
 
@@ -152,32 +185,38 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
     //
     // Logic: skip TIK kai completion is at-least-as-recent kaip last start
     //        (no pending request).
-    try {
-      const { adminFirestore } = await import('./_lib/firestore-admin.js')
-      const snap = await adminFirestore()
-        .collection('collections').doc(colId)
-        .collection('plants').doc(plantId)
-        .get()
-      if (snap.exists) {
-        const data = snap.data() ?? {}
-        const completedAt = data.phase2CompletedAt
-          ? new Date(data.phase2CompletedAt).getTime()
-          : 0
-        const startedAt = data.enrichmentStartedAt
-          ? new Date(data.enrichmentStartedAt).getTime()
-          : 0
-        if (completedAt > 0 && completedAt >= startedAt) {
-          console.log('[save-plant] IDEMPOTENT skip — completedAt >= startedAt', {
-            plantId,
-            completedAt: data.phase2CompletedAt,
-            startedAt: data.enrichmentStartedAt ?? '(missing)',
-          })
-          return
+    //
+    // Admin mode (2026-06-01): SKIP idempotency check'ą — admin'as VISADA
+    // nori naujo run'o (regen reason yra force-fresh). Be to, admin mode'e
+    // mes neturime plantId/colId, tad query nuo gražaus rasti negalėtų.
+    if (!isAdminMode) {
+      try {
+        const { adminFirestore } = await import('./_lib/firestore-admin.js')
+        const snap = await adminFirestore()
+          .collection('collections').doc(colId)
+          .collection('plants').doc(plantId)
+          .get()
+        if (snap.exists) {
+          const data = snap.data() ?? {}
+          const completedAt = data.phase2CompletedAt
+            ? new Date(data.phase2CompletedAt).getTime()
+            : 0
+          const startedAt = data.enrichmentStartedAt
+            ? new Date(data.enrichmentStartedAt).getTime()
+            : 0
+          if (completedAt > 0 && completedAt >= startedAt) {
+            console.log('[save-plant] IDEMPOTENT skip — completedAt >= startedAt', {
+              plantId,
+              completedAt: data.phase2CompletedAt,
+              startedAt: data.enrichmentStartedAt ?? '(missing)',
+            })
+            return
+          }
         }
+      } catch (e) {
+        // Idempotency check fail'inasi — vis tiek tęsiam (saugiau nei skip'inti)
+        console.warn('[save-plant] idempotency check failed (continuing):', e?.message)
       }
-    } catch (e) {
-      // Idempotency check fail'inasi — vis tiek tęsiam (saugiau nei skip'inti)
-      console.warn('[save-plant] idempotency check failed (continuing):', e?.message)
     }
 
     // Stage: started — pirmas signal'as klientui kad enrichment vyksta
@@ -542,14 +581,21 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     }
 
     // ── 6. User plant write ─────────────────────────────────
-    const userRes = await saveUserPlantServer({
-      uid, colId, plantId,
-      aiResult: fullPlant,
-      kategorija: kategorija ?? 'auginama',
-    })
-    console.log('[save-plant] user plant save', {
-      plantId, ok: userRes?.ok, reason: userRes?.reason,
-    })
+    // Admin mode (2026-06-01): SKIP. Admin'as atnaujina TIK catalog'ą —
+    // user plant docs propaguojami per F1 overlay'ą automatiškai (live
+    // resolvePlantView'as merge'ina freshiausią catalog).
+    if (!isAdminMode) {
+      const userRes = await saveUserPlantServer({
+        uid, colId, plantId,
+        aiResult: fullPlant,
+        kategorija: kategorija ?? 'auginama',
+      })
+      console.log('[save-plant] user plant save', {
+        plantId, ok: userRes?.ok, reason: userRes?.reason,
+      })
+    } else {
+      console.log('[save-plant] admin mode — skipping user plant write')
+    }
 
     // ── 7. Wait for parallel hero pipeline ─────────────────
     // Hero gen pradėjom paraleliai (step 0.5). Dabar laukiam pabaigos, kad
