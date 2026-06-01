@@ -1281,6 +1281,10 @@ function SeriesTopLevelRow({ series, expanded, onToggle, selectedId, onSelect, d
 // ── Species child row (Level 2) ────────────────────────────────────
 function SpeciesChildRow({ entry, selected, onSelect, dirty, isOrphanCultivar }) {
   const thumb = heroThumb(entry)
+  // 2026-06-01 — rodom rank'ą šalia latin, kad admin'as iškart matytų ar
+  // tai rūšis (be cultivar children) ar veislė (orphan). Anksčiau abu
+  // rodėsi vienodai → klaidino.
+  const rank = parseLatinName(entry.lotyniskas).rank
   return (
     <li>
       <button
@@ -1311,8 +1315,9 @@ function SpeciesChildRow({ entry, selected, onSelect, dirty, isOrphanCultivar })
             )}
             {selected && dirty && <span className="ml-1 text-terracotta-600">*</span>}
           </p>
-          <p className="text-[9px] text-forest-500 italic truncate leading-tight">
-            {entry.lotyniskas}
+          <p className="text-[9px] text-forest-500 truncate leading-tight">
+            <span className="italic">{entry.lotyniskas}</span>
+            <span className="not-italic text-forest-400 font-mono"> · {rankLT(rank).toLowerCase()}</span>
           </p>
         </div>
       </button>
@@ -1483,7 +1488,9 @@ function CenterPaneEditor({
         <div className="px-5 py-3 flex items-start gap-3">
           <div className="flex-1 min-w-0">
             <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500">
-              {entryType === 'series' ? 'Serija' : 'Cultivar'}
+              {entryType === 'series'
+                ? 'Serija'
+                : rankLT(parseLatinName(entry?.lotyniskas).rank)}
               {dirty && <span className="ml-2 text-terracotta-600">⚡ {dirtyCount} change{dirtyCount === 1 ? '' : 's'}</span>}
             </p>
             <h2 className="font-display text-base font-semibold tracking-tight text-forest-800 truncate italic">
@@ -1743,6 +1750,22 @@ function ReEnrichItem({ icon, title, hint, cost, onClick }) {
 // 2026-06-01 — server-side enrichmentStage → LT label'as banner'iui.
 // Atspindi save-plant.js writeStage() etapus, kad admin'as matytų realią
 // pipeline pažangą (ne tik generic „atnaujinama").
+// 2026-06-01 — parsed Latin name'o rank'o LT pavadinimas. Naudojamas
+// sticky header'io badge'ui ir tree row caption'ams, kad admin'as iškart
+// matytų ar entry'is yra rūšis, gentis, ar veislė (anksčiau hardcoded'as
+// „CULTIVAR" rodėsi net species-rank entry'ams — klaidinanti UI).
+function rankLT(rank) {
+  switch (rank) {
+    case 'genus':      return 'Gentis'
+    case 'species':    return 'Rūšis'
+    case 'cultivar':   return 'Veislė'
+    case 'variety':    return 'Atmaina'
+    case 'subspecies': return 'Porūšis'
+    case 'forma':      return 'Forma'
+    default:           return rank || '—'
+  }
+}
+
 function stageLabel(stage) {
   switch (stage) {
     case 'started':   return 'startavom'
