@@ -610,6 +610,7 @@ export default function App() {
             scrollToCare={detailForRender.scrollToCare ?? false}
             visible={!!(detailPlant && livePlant)}
             role={role}
+            isAdmin={isAdmin}
             collectionId={collectionId}
           />
         </Suspense>

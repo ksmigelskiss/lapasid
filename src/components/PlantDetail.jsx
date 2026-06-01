@@ -19,6 +19,7 @@ import { getWateringForecast } from '../utils/wateringForecast'
 import { getFertilizingSummary } from '../utils/fertilizingForecast'
 import { heroIllustrationFor, heroIsDefaultFor } from '../utils/catalog'
 import { fetchPlantNames } from '../utils/plantNames'
+import { triggerHeroGen } from '../utils/plantAI'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
 import { getPlantMood } from '../utils/plantMood'
 import PlantChat from './PlantChat'
@@ -1461,6 +1462,7 @@ export default function PlantDetail({
   scrollToCare = false,
   visible = true,
   role = 'owner',
+  isAdmin = false,
   collectionId = null,
 }) {
   // Desktop split panel: render'inam į RightPanel'ą per createPortal,
@@ -1832,6 +1834,25 @@ export default function PlantDetail({
                         <RefreshCw size={14} className="flex-shrink-0" />
                         <span className="font-display text-sm font-semibold tracking-tight">Atnaujinti AI duomenis</span>
                       </button>
+                      {/* 2026-06-01 — admin-only: regenerate TIK hero illustration
+                          (be Phase 2 re-enrich). Naudinga kai narrative/care
+                          duomenys OK, bet hero looks wrong / wants restyle.
+                          Calls /api/generate-hero su force=true (overwrite'ina
+                          esamą catalog.heroIllustration). Hero atsiranda visiems
+                          F1 overlay'ą gaunantiems augalams (per catalog listener).
+                          Gate'inta isAdmin'u — destruktyvi catalog mutacija. */}
+                      {isAdmin && plant?.lotyniskas && (
+                        <button
+                          onClick={() => {
+                            setShowActionMenu(false)
+                            triggerHeroGen(plant.lotyniskas, { force: true })
+                          }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
+                        >
+                          <ImageIcon size={14} className="flex-shrink-0" />
+                          <span className="font-display text-sm font-semibold tracking-tight">Atnaujinti paveikslėlį</span>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </>
