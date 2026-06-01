@@ -2555,11 +2555,47 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
               </div>
             )}
 
+            {/* Smart match auto-identify (2026-06-01) — kai vartotojo query
+                yra substring-match su top candidate'u, NEberodom „Pasirink savo
+                augalą" disambiguation list'o (būtų absurdiškas — pasirinkimas
+                tarp X ir X). Vietoj to hero + save mygtukai normaliai, kaip
+                identified result. TrustStrip lieka medium su paaiškinimu
+                (transparent uncertainty preserved). Tipiškas case:
+                  Query: „Syngonium Pink Rolli"
+                  Top candidate: „Syngonium podophyllum 'Pink Rolli'"
+                  → match (visi query words yra candidate latinName'e) →
+                  auto-identified.
+                Algoritmas: kiekvienas reikšmingas query word (>=3 chars,
+                normalizuotas) turi būti substring top candidate latinName'e. */}
+            {(() => {
+              const queryStr = (query?.trim() || '').toLowerCase()
+              const normalizeMatch = (s) => (s || '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '')
+              const queryWords = queryStr
+                .split(/\s+/)
+                .map(normalizeMatch)
+                .filter(w => w.length >= 3)
+              const topCand = result.candidates?.[0]
+              const topNorm = normalizeMatch(topCand?.latinName)
+              const _queryMatchesTopCandidate =
+                topCand &&
+                queryWords.length > 0 &&
+                queryWords.every(w => topNorm.includes(w))
+              if (_queryMatchesTopCandidate) {
+                // Stash flag for later checks (hero hide, identityUncertain) —
+                // attach to result so other code branches can detect without
+                // recomputing.
+                result._queryMatchesTopCandidate = true
+              } else {
+                result._queryMatchesTopCandidate = false
+              }
+              return null
+            })()}
+
             {/* Kandidatai — pasirinkimo kortelės kai AI nepavyko 100%
                 identifikuoti, bet turi 2-5 plausibly atitinkančius cultivars.
-                User'is paspausta vieną → nauja paieška su tikslesniu pavadinimu
-                → high confidence + saved į catalog. */}
-            {Array.isArray(result.candidates) && result.candidates.length > 0 && !result.fromCatalog && (() => {
+                Rodom TIK kai query NE-match'inasi su top candidate (kitaip
+                disambiguation cirkas — top yra TA PATI kaip user'is įvedė). */}
+            {Array.isArray(result.candidates) && result.candidates.length > 0 && !result.fromCatalog && !result._queryMatchesTopCandidate && (() => {
               const [topCandidate, ...alternatives] = result.candidates
               const pickCandidate = (c) => {
                 setQuery(c.latinName)
@@ -2699,6 +2735,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                 flag'as admin review'ui. */}
             {Array.isArray(result.candidates) && result.candidates.length >= 1 &&
              result.confidence !== 'high' && !result.fromCatalog &&
+             !result._queryMatchesTopCandidate &&
              query.trim() && query.trim().toLowerCase() !== result.latinName?.toLowerCase() && (
               <div className="mb-3 mt-1 rounded-2xl bg-bone-50/60 border border-bone-400/40 px-4 py-3">
                 <div className="flex items-start gap-2.5">
@@ -2749,7 +2786,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                 Vartotojas matytų tą patį augalą du kartus — sumaišties priežastis.
                 Su candidates flow'u, action'as yra: arba pasirinkti candidate'ą,
                 arba „save as typed" (žemiau atskira kortelė). */}
-            {Array.isArray(result.candidates) && result.candidates.length >= 1 && result.confidence !== 'high' && !result.fromCatalog ? null :
+            {Array.isArray(result.candidates) && result.candidates.length >= 1 && result.confidence !== 'high' && !result.fromCatalog && !result._queryMatchesTopCandidate ? null :
              result.image &&
              !(result.confidence === 'low' || result.matchLevel === 'unknown') ? (
               <div className={`rounded-3xl overflow-hidden h-56 relative mb-0 ${useDesktopPanel ? '' : '-mx-4'}`}>
@@ -2875,13 +2912,14 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
               // photo CTA + Atšaukti. „Vis tiek pridėti" NESLEPIAM kol photo
               // nepabandyta. Po photoAttempts >= 1 ir vis dar uncertain → atveriam
               // override opcijas + „Bandyti su kita nuotrauka".
-              const identityUncertain =
+              const identityUncertain = !result._queryMatchesTopCandidate && (
                 result.confidence === 'low' ||
                 result.matchLevel === 'unknown' ||
                 result.matchLevel === 'genus' ||
                 (result.confidence === 'medium' &&
                  (!result.candidates || result.candidates.length === 0) &&
                  result.uncertaintyReason)
+              )
               const photoTried = photoAttempts >= 1
               return (
                 <div className="space-y-3 pt-1 pb-4">
@@ -3314,14 +3352,18 @@ function Phase1SlimPreview({ result, isDuplicate = false }) {
   //   • Kai identitetas uncertain (medium+no-candidates+uncertaintyReason,
   //     low conf, ar unknown match) — reward tonas „+1 AI užklausa" yra
   //     out-of-place kai tikslumas dar nepatvirtintas (declutter, 2026-06-01).
-  const hasCandidates = Array.isArray(result.candidates) && result.candidates.length > 0
-  const identityUncertain =
+  // candidates galim turėti, BET jei query match'inasi su top candidate'u
+  // (žiūr. main render block'ą), traktuojam kaip identified (no disambiguation).
+  const queryMatchesTop = !!result._queryMatchesTopCandidate
+  const hasCandidates = Array.isArray(result.candidates) && result.candidates.length > 0 && !queryMatchesTop
+  const identityUncertain = !queryMatchesTop && (
     result.confidence === 'low' ||
     result.matchLevel === 'unknown' ||
     result.matchLevel === 'genus' ||
     (result.confidence === 'medium' &&
      !hasCandidates &&
      result.uncertaintyReason)
+  )
   const isNewToCatalog = !result.laistymasIntervalas && !isDuplicate && !hasCandidates && !identityUncertain
 
   return (
