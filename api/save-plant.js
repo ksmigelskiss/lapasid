@@ -630,29 +630,47 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
   } catch (err) {
     console.error('[save-plant] FAILED', {
       plantId,
+      isAdminMode,
       totalMs: Date.now() - t0,
       error: err?.message,
       stack: err?.stack?.split('\n').slice(0, 6).join('\n'),
     })
-    // Variant E — explicit error signal į user plant doc'ą per merge:true.
-    // Klientas naudoja šitą field'ą show'inti „failed" state'ą su retry
-    // button'u. Failsafe — jei Vercel function hard-crash'inasi PRIEŠ
-    // šitą write'ą (e.g. OOM), klientas vis tiek pereis į 'failed' state'ą
-    // per timing fallback'ą (data_prideta + 90s).
+
+    // 2026-06-01 — ALWAYS write 'failed' stage į catalog'ą. Tai pagrindinis
+    // signal'as klientui (admin mode 90s failsafe loop'as klausosi
+    // enrichmentStage='complete' ARBA 'failed'). Anksčiau ši write'a tik
+    // į user plant doc'ą → admin mode'e (kur plantId/colId yra undefined)
+    // failure liko silent'as, client'as 90s laukdavo timeout'o.
     try {
-      const { adminFirestore } = await import('./_lib/firestore-admin.js')
-      await adminFirestore()
-        .collection('collections').doc(colId)
-        .collection('plants').doc(plantId)
-        .set({
-          enrichmentError: {
-            reason: err?.message ?? 'unknown error',
-            at: new Date().toISOString(),
-          },
-        }, { merge: true })
-      console.log('[save-plant] enrichmentError written for retry UI', plantId)
-    } catch (writeErr) {
-      console.error('[save-plant] failed to write enrichmentError:', writeErr?.message)
+      await writeStage('failed', {
+        enrichmentError: err?.message ?? 'unknown error',
+      })
+      console.log('[save-plant] failure stage written to catalog')
+    } catch (stageErr) {
+      console.error('[save-plant] failed to write failure stage:', stageErr?.message)
+    }
+
+    // User mode — papildomai įrašom į user plant doc'ą per merge:true.
+    // Klientas naudoja šitą field'ą show'inti „failed" state'ą su retry
+    // button'u (PlantDetail enrichment banner). Failsafe — jei Vercel
+    // function hard-crash'inasi PRIEŠ šitą write'ą (e.g. OOM), klientas
+    // vis tiek pereis į 'failed' state'ą per timing fallback'ą.
+    if (!isAdminMode && colId && plantId) {
+      try {
+        const { adminFirestore } = await import('./_lib/firestore-admin.js')
+        await adminFirestore()
+          .collection('collections').doc(colId)
+          .collection('plants').doc(plantId)
+          .set({
+            enrichmentError: {
+              reason: err?.message ?? 'unknown error',
+              at: new Date().toISOString(),
+            },
+          }, { merge: true })
+        console.log('[save-plant] enrichmentError written for retry UI', plantId)
+      } catch (writeErr) {
+        console.error('[save-plant] failed to write enrichmentError:', writeErr?.message)
+      }
     }
   }
 }

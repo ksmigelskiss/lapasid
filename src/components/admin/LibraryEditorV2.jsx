@@ -401,19 +401,30 @@ export default function LibraryEditorV2({
   const [aiActionStartedAt, setAiActionStartedAt] = useState(null)
 
   // Listener — detect background pipeline completion via catalog snapshot.
-  // selectedEntry.enrichmentUpdatedAt iš save-plant.js writeStage('complete').
+  // selectedEntry.enrichmentUpdatedAt iš save-plant.js writeStage('complete'|'failed').
   // Failsafe: 90s timeout (jei pipeline'as stuck → vis tiek išvalom loading).
   useEffect(() => {
     if (!aiActionStartedAt) return
     if (aiActionState !== 'text' && aiActionState !== 'full') return
     const updatedAt = selectedEntry?.enrichmentUpdatedAt
     const stage = selectedEntry?.enrichmentStage
-    if (updatedAt && new Date(updatedAt).getTime() > aiActionStartedAt && (stage === 'complete' || stage === 'failed')) {
+    if (!updatedAt || new Date(updatedAt).getTime() <= aiActionStartedAt) return
+    if (stage === 'complete') {
       setAiActionState(null)
       setAiActionStartedAt(null)
       console.log('[admin] async re-enrich complete (catalog snapshot)', { stage, updatedAt })
+    } else if (stage === 'failed') {
+      const reason = selectedEntry?.enrichmentError ?? 'unknown error'
+      setAiActionError(typeof reason === 'string' ? reason : 'AI pipeline suklydo')
+      setAiActionState(`${aiActionState}-error`)
+      setAiActionStartedAt(null)
+      setTimeout(() => {
+        setAiActionState(null)
+        setAiActionError(null)
+      }, 5000)
+      console.warn('[admin] async re-enrich failed (catalog snapshot)', { stage, updatedAt, reason })
     }
-  }, [selectedEntry?.enrichmentUpdatedAt, selectedEntry?.enrichmentStage, aiActionStartedAt, aiActionState])
+  }, [selectedEntry?.enrichmentUpdatedAt, selectedEntry?.enrichmentStage, selectedEntry?.enrichmentError, aiActionStartedAt, aiActionState])
 
   useEffect(() => {
     if (!aiActionStartedAt) return
@@ -1513,6 +1524,22 @@ function CenterPaneEditor({
             )}
           </div>
         </div>
+
+        {/* 2026-06-01 — AI action progress banner. Tab-independent, kad
+            admin'as matytų progress'ą net būdamas Identifikacija/Toksiškumas
+            tab'e (kur IllustrationSection ir RightPanePreview iliustracijos
+            overlay'ų nemato). Sticky header rodo banner'į kiek visi 3
+            pipeline'ai vyksta. */}
+        {(aiActionState === 'text' || aiActionState === 'hero' || aiActionState === 'full') && (
+          <div className="mx-5 mb-3 px-3 py-2 bg-forest-50 border border-forest-200/60 rounded-md text-[11px] text-forest-700 flex items-center gap-2">
+            <Loader2 size={11} className="animate-spin flex-shrink-0" />
+            <span>
+              {aiActionState === 'text' && 'Tekstas atnaujinamas fone — RAG + Sonnet narrative + care + toxicity (~25-35s)…'}
+              {aiActionState === 'hero' && 'Iliustracija generuojama — Gemini watercolor restyle (~20-40s)…'}
+              {aiActionState === 'full' && 'Tekstas + foto generuojami paraleliai (~30-40s)…'}
+            </span>
+          </div>
+        )}
 
         {/* AI action error flash — 5s auto-dismiss per parent timeout */}
         {aiActionError && (
