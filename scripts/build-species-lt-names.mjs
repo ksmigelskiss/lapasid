@@ -25,6 +25,20 @@ const plants = JSON.parse(readFileSync(join(DATA, 'plants.json'), 'utf-8'))
 const overrides = JSON.parse(readFileSync(join(DATA, 'lt-names-overrides.json'), 'utf-8'))
 const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s)
 
+// 2026-06-01 — sanitize Latvian-style macrons (ā, ē, ī, ō) kurie patenka
+// iš plants.json scrape'o klaidingo source'o (Latvian-LT mixed page, OCR
+// errors). LT alphabet'e tokie chars NĖRA — tik ū (charCode 363) yra validus.
+// 22 entries plants.json'e turi šitokias corruptions (Canna, Hoya carnosa,
+// Hosta, Iris chamaeiris, etc.) — sanitize'inam į plain a/e/i/o.
+function sanitizeLtMacrons(s) {
+  if (!s || typeof s !== 'string') return s
+  return s
+    .replace(/ā/g, 'a').replace(/Ā/g, 'A')
+    .replace(/ē/g, 'e').replace(/Ē/g, 'E')
+    .replace(/ī/g, 'i').replace(/Ī/g, 'I')
+    .replace(/ō/g, 'o').replace(/Ō/g, 'O')
+}
+
 const map = {}
 let speciesSeen = 0
 let dupes = 0
@@ -35,7 +49,7 @@ for (const e of plants) {
   speciesSeen++
   const key = latin.toLowerCase()
   if (key in map) { dupes++; continue } // first wins
-  map[key] = cap(e.lithuanian.trim())
+  map[key] = sanitizeLtMacrons(cap(e.lithuanian.trim()))
 }
 
 // Apply curated overrides LAST (highest priority — overwrite plants.json

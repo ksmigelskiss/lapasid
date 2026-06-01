@@ -119,9 +119,22 @@ function looksLikePlaceholderGarbage(ltName) {
   return false
 }
 
+// 2026-06-01 — sanitize Latvian-style macrons (ā, ē, ī, ō) iš plants.json
+// scrape'o corrupted source'o. LT alphabet'e tokie chars NĖRA — tik ū yra
+// validus (charCode 363). 22 plants.json entries turi šitokias corruptions
+// (Canna→„kanā", Hoya carnosa→„storalāpė vaškūnė", etc.) — strip į plain.
+function sanitizeLtMacrons(s) {
+  if (!s || typeof s !== 'string') return s
+  return s
+    .replace(/ā/g, 'a').replace(/Ā/g, 'A')
+    .replace(/ē/g, 'e').replace(/Ē/g, 'E')
+    .replace(/ī/g, 'i').replace(/Ī/g, 'I')
+    .replace(/ō/g, 'o').replace(/Ō/g, 'O')
+}
+
 function cleanLtName(name) {
   if (!name) return null
-  let n = name.trim()
+  let n = sanitizeLtMacrons(name.trim())
   for (let i = 0; i < 3; i++) {
     let changed = false
     for (const re of GARBAGE_PREFIXES) {

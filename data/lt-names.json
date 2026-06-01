@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T20:53:57.722Z",
+  "generatedAt": "2026-06-01T14:04:34.856Z",
   "generator": "build-lt-names-v2.mjs",
   "stats": {
     "totalGenera": 1673,
@@ -3917,13 +3917,11 @@
     },
     "Canna": {
       "latin": "Canna",
-      "ltName": "Kanā",
+      "ltName": "Kana",
       "ltSynonyms": [
-        "Kana",
         "Kanos"
       ],
       "ltAllForms": [
-        "Kanā",
         "Kana",
         "Kanos"
       ],
@@ -10195,12 +10193,12 @@
       "latin": "Hosta",
       "ltName": "Meiluvė",
       "ltSynonyms": [
-        "Trātt",
+        "Tratt",
         "Melsvė"
       ],
       "ltAllForms": [
         "Meiluvė",
-        "Trātt",
+        "Tratt",
         "Melsvė"
       ],
       "ltFamily": null,
@@ -10250,12 +10248,12 @@
     },
     "Hydrocharis": {
       "latin": "Hydrocharis",
-      "ltName": "Varlialēšis",
+      "ltName": "Varlialešis",
       "ltSynonyms": [
         "Vandenplūkis"
       ],
       "ltAllForms": [
-        "Varlialēšis",
+        "Varlialešis",
         "Vandenplūkis"
       ],
       "ltFamily": null,
