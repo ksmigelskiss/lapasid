@@ -1069,17 +1069,14 @@ function buildHierarchy(catalog, taxonGroups) {
     })
   }
 
-  // Step 3: sort'inu members'us pagal rank'ą (rūšys pirma, paskui veislės),
-  // antra eile — pagal latin'ą (vulcanicola pirma, paskui vulcanicola 'Crazy
-  // Plum'). Admin'ui aiškiau ką jis randa.
-  const rankOrder = { species: 0, subspecies: 1, variety: 2, forma: 3, cultivar: 4 }
+  // Step 3: sort'inu members'us PURE ALPHABETICAL pagal latin'ą. Tai užtikrina,
+  // kad parent species + jo cultivars visada būna adjacent (nes latin prefiksas
+  // dalinasi):
+  //   „Acer palmatum"             < „Acer palmatum 'Bloodgood'" < „Acer rubrum"
+  // Rank caption'as (· rūšis / · veislė) palieka admin'ui aiškų lygį be
+  // reikalo grupuoti pagal rank'ą atskirai.
   for (const g of byGenus.values()) {
-    g.members.sort((a, b) => {
-      const ar = rankOrder[a.rank] ?? 99
-      const br = rankOrder[b.rank] ?? 99
-      if (ar !== br) return ar - br
-      return (a.latin ?? '').localeCompare(b.latin ?? '')
-    })
+    g.members.sort((a, b) => (a.latin ?? '').localeCompare(b.latin ?? ''))
     g.series.sort((a, b) => (a.latin ?? '').localeCompare(b.latin ?? ''))
   }
 
