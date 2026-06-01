@@ -1252,7 +1252,7 @@ function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSe
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
-                    if (window.confirm(`Sukurti tuščią catalog entry „${genus}"?\n\nGausi clickable header'į, kuriame galėsi pildyti LT pavadinimą + care šabloną rankomis. AI nepildysiu.\n\nPASTABA: care cascade į esamas species'as neveiks — species jau turi savo reikšmes po AI enrich'imo. Genus įrašas naudingas LT pavadinimui ir UI consistency.`)) {
+                    if (window.confirm(`Sukurti tuščią catalog entry „${genus}"?\n\nKAI VERTA sukurti gentį:\n  • Kai user'is gali įvesti tik „${genus}" (be species) search'e → su entry'iu iškart matys cached info, be entry'io triggers'is Phase 1 AI search'as (~$0.002 + ~10-15s wait).\n  • Kai nori curated LT pavadinimą tree header'yje (vs italic Latin).\n\nKAI NEVERTA:\n  • Care cascade į esamas species — NEVEIKS. Species jau turi savo reikšmes po AI enrich'imo.\n\nAI nepildysiu. Pats užpildysi LT name + (opcionaliai) care.`)) {
                       onCreateGenusEntry(genus, { autoFillWithAI: false })
                     }
                   }}
@@ -1265,7 +1265,7 @@ function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSe
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
-                    if (window.confirm(`Sukurti „${genus}" + AI auto-fill?\n\nFlow'as: sukursim catalog entry'į → iškart paleisim „Atnaujinti viską" pipeline'ą (~30-40s) → AI užpildys LT pavadinimą, aprašymą, care, toxicity, hero iliustraciją.\n\nGali atmesti rezultatą po review (Atmesti mygtukas) jei netiks.`)) {
+                    if (window.confirm(`Sukurti „${genus}" + AI auto-fill?\n\nFlow'as: sukursim catalog entry'į → iškart paleisim „Atnaujinti viską" pipeline'ą (~30-40s) → AI užpildys LT pavadinimą, aprašymą, care, toxicity, hero iliustraciją.\n\nNAUDA: user'is search'indamas tik „${genus}" (be species) iškart matys curated info, be Phase 1 AI search'o cost'o ir delay.\n\nGali atmesti rezultatą po review (Atmesti mygtukas) jei netiks.`)) {
                       onCreateGenusEntry(genus, { autoFillWithAI: true })
                     }
                   }}
