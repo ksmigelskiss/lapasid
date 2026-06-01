@@ -290,7 +290,18 @@ export function createHeroGen({ token }) {
     return geminiImage([{ type: 'text', text: instr }])
   }
 
-  // Surenka realios foto kandidatus (entry.image + iNat + Wiki + Brave houseplant).
+  // Surenka realios foto kandidatus TIK iš external sources (iNat + Wiki + Brave).
+  //
+  // 2026-06-01 — anksčiau entry.image (caller'io perduota „best image" optimization)
+  // įtraukdavom į pool'ą. Bet re-enrich path'e tai contamination risk'as: PlantDetail
+  // reEnrichPlant siunčia baseResult.image = plant.image, kuri gali būti user'io
+  // ASMENINĖ foto (jo dekoratyvinis vazonas, apšvietimas, angle). Jei Sonnet vision-
+  // gate'as ją parenka kaip „best candidate" → Gemini restyle'ina į watercolor su
+  // user'io vazonu → global catalog hero turi personal artifacts.
+  //
+  // Fix: VISADA fetch'inam tik iš external auto-sources. Pure species-level imagery.
+  // Naujam save'ui — vienas papildomas iNat round-trip (Phase 1 jau pasiima, Phase 2
+  // pakartoja — toleruotina cost'as cleanness'o naudai). Re-enrich path'e — zero leak.
   async function gatherCandidates(entry, braveApiKey) {
     const stripped = stripCultivar(entry.lotyniskas)
     const [inat, wiki, brave] = await Promise.all([
@@ -298,7 +309,7 @@ export function createHeroGen({ token }) {
       fetchWikiPhoto(stripped),
       fetchBravePhotos(`${stripped} houseplant potted indoor`, braveApiKey),
     ])
-    const urls = [entry.image, ...inat, wiki, ...brave].filter(Boolean)
+    const urls = [...inat, wiki, ...brave].filter(Boolean)
     return [...new Set(urls)].slice(0, 6)
   }
 
