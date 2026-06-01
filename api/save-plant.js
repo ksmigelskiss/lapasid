@@ -459,6 +459,15 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
       lotyniskas: latinName,
       lietuviškas: name,
       ...details,
+      // 2026-06-01 — STRUCTURAL FIX: AI tool grąžina `lietuviskas` (be ė
+      // diakritinio — JSON schema constraint), o app naudoja `lietuviškas`
+      // (su š) kaip canonical display field. Be šio reconciliation'o,
+      // line 460 `lietuviškas: name` (= client's stale baseResult.name)
+      // OVERRIDE'ina line 461 spread'o `lietuviskas` (AI's value arba mūsų
+      // resolveLt override) — abu egzistuoja kaip atskiri object keys.
+      // Po šio fix'o: AI's lietuviskas (jau pataisytas resolveLt override'u
+      // line 350) explicit'iškai kopijuojamas į `lietuviškas` field'ą.
+      ...(details.lietuviskas ? { lietuviškas: details.lietuviskas } : {}),
       // RAG provenance
       ragSources: rag.sources,
       ragConfidence: rag.confidence,
