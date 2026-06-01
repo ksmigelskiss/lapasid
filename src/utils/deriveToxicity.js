@@ -24,6 +24,39 @@
  *   • general "toxic"/"poisonous" be specific'o → vidutinis (saugesnis default)
  */
 
+// ── IRRITANT-ONLY GENERA (2026-06-01) ─────────────────────────
+// Genera kur „toxic" ženklas reiškia LOKALŲ dirginimą (kalcio oksalato
+// rafidės arba saponinai), ne sisteminį nuodingumą. Botanically:
+//   • Araceae (Monstera, Philodendron, Dieffenbachia, etc.) →
+//     insoluble Ca-oxalate raphides → burnos/gerklės degimą, seilėtekis
+//     (skausminga, bet ne mirtina, neabsorbuojama į kraują)
+//   • Asparagaceae (Sansevieria, Dracaena, Yucca) → saponinai →
+//     mild GI upset (poorly absorbed by mammals)
+//   • Araliaceae (Schefflera) → tos pačios oxalate raphides
+//
+// ASPCA ir PFAF įrašo šias gentis kaip „toxic" be diferenciacijos tarp
+// local irritation vs systemic poisoning. Mes override'inam tipas →
+// 'dirginantis' kad UI rodytų tikslesnį pavojaus pobūdį — botaniškai
+// teisingas badge (≠ Aconitum/Nerium/Taxus kurie tikrai sisteminiai).
+//
+// MIRROR api/_lib/deriveToxicity-server.js IRRITANT_ONLY_GENERA.
+const IRRITANT_ONLY_GENERA = new Set([
+  // Araceae — calcium oxalate raphides (local mouth/throat irritation)
+  'AGLAONEMA', 'ALOCASIA', 'ANTHURIUM', 'ARISAEMA', 'ARUM',
+  'CALADIUM', 'CALLA', 'COLOCASIA', 'DIEFFENBACHIA', 'EPIPREMNUM',
+  'MONSTERA', 'PHILODENDRON', 'PISTIA', 'POTHOS', 'SCINDAPSUS',
+  'SPATHIPHYLLUM', 'SYNGONIUM', 'XANTHOSOMA', 'ZANTEDESCHIA',
+  // Asparagaceae — saponinai (mild GI upset)
+  'SANSEVIERIA', 'DRACAENA', 'YUCCA',
+  // Araliaceae — oxalate raphides
+  'SCHEFFLERA',
+])
+
+function isIrritantOnlyGenus(genus) {
+  if (!genus) return false
+  return IRRITANT_ONLY_GENERA.has(genus.toUpperCase())
+}
+
 let aspcaCache = null
 let pfafCache = null
 let aspcaGenusMapCache = null
@@ -269,19 +302,30 @@ export async function deriveToxicityFromSources(latinName) {
     // 2026-05-25 — translate cats/dogs/horses → katėms/šunims/žirgams
     const targetsLt = translateAnimalTargets(targets, animalTerms)
 
+    // 2026-06-01 — Araceae/Asparagaceae oxalate/saponin override: ASPCA
+    // įrašo lokalų dirginimą kaip „toxic" be diferenciacijos. Mes mark'inam
+    // tipas='dirginantis' šioms genčiams (botanically tikslesnis pavojaus
+    // pobūdis). Severity lieka 'vidutinis' — real irritation, ne minor.
+    const isIrritant = isIrritantOnlyGenus(genus)
+    const tipasAspca = isIrritant ? 'dirginantis' : 'toksiskas'
+
     if (targets.length > 0) {
       result.pavojai.push({
-        tipas: 'toksiskas',
+        tipas: tipasAspca,
         target: 'gyvunams',
         severity,
-        detales: `${targetsLt} (ASPCA)`,
+        detales: isIrritant
+          ? `Dirgina burną/virškinimą: ${targetsLt} (ASPCA)`
+          : `${targetsLt} (ASPCA)`,
       })
     }
 
     result.pavojingumas = {
       yra: true,
       lygis: severity,
-      detales: `Toksiška ${targetsLt}. ${aspcaEntry.matchedEntries?.[0]?.detailUrl ?? 'https://www.aspca.org/pet-care/animal-poison-control'}`,
+      detales: isIrritant
+        ? `Dirgina ${targetsLt} — kalcio oksalato kristalai arba saponinai sukelia lokalų burnos/virškinimo dirginimą, ne sisteminį nuodingumą. ${aspcaEntry.matchedEntries?.[0]?.detailUrl ?? 'https://www.aspca.org/pet-care/animal-poison-control'}`
+        : `Toksiška ${targetsLt}. ${aspcaEntry.matchedEntries?.[0]?.detailUrl ?? 'https://www.aspca.org/pet-care/animal-poison-control'}`,
     }
   }
 
@@ -303,7 +347,15 @@ export async function deriveToxicityFromSources(latinName) {
       // Tipas iš severity + hazardsText (6d refinement) — Monstera-style
       // irritation gauna 'dirginantis', Aconitum-style systemic lieka
       // 'toksiskas'.
-      const tipas = derivePfafTipas(pfafEntry.knownHazards, severity)
+      let tipas = derivePfafTipas(pfafEntry.knownHazards, severity)
+      // 2026-06-01 — Araceae/Asparagaceae override: jei genus žinomai
+      // lokalus dirgiklis (oksalato rafidės/saponinai) ir PFAF nemini
+      // mirties/stipraus toksiškumo (severity !== 'stiprus'), force
+      // 'dirginantis'. Apsaugo nuo PFAF text generic „toxic" wording'o
+      // kuris klaidina derivePfafTipas → 'toksiskas' default'an.
+      if (tipas === 'toksiskas' && severity !== 'stiprus' && isIrritantOnlyGenus(genus)) {
+        tipas = 'dirginantis'
+      }
 
       // Pridėti pavojai entry per žmones (PFAF kontekstas dažniausiai apie žmones,
       // ne pet'us — ASPCA tvarko gyvūnus, PFAF tvarko bendrą toxicity).
@@ -334,6 +386,8 @@ export async function deriveToxicityFromSources(latinName) {
       // TODO: ateityje pre-translate PFAF knownHazards į LT build-time.
       const ltPlaceholder =
         severity === 'stiprus' ? 'Stipriai toksiškas. Kreipkitės į veterinarą ar Pet Poison Helpline nelaimei.'
+      : (severity === 'vidutinis' && tipas === 'dirginantis')
+          ? 'Sultyse yra kalcio oksalato kristalų arba saponinų — nurijus dirgina burną ir gerklę, kontaktas gali dirginti odą. Lokalus poveikis, ne sisteminis nuodingumas.'
       : severity === 'vidutinis' ? 'Toksiškas augalas — venkite nurijimo ir kontakto su sultimis. Kreipkitės į veterinarą jei įvyko apsinuodijimas.'
       : 'Augalas gali sukelti dirginimą — venkite kontakto su sultimis.'
 

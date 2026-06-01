@@ -590,17 +590,35 @@ hospitalisation or severe systemic effects.
        detales: „Pomidoro lapuose ir žaliuose vaisiuose yra glikoalkaloido
        solanino; nurijus dideliais kiekiais sukelia virškinimo sutrikimus."
    ✓ Monstera → calcium oxalate raphides; nurijus sukelia burnos ir
-     skrandžio dirginimą žmonėms ir gyvūnams →
+     skrandžio dirginimą žmonėms ir gyvūnams (LOKALUS poveikis, ne sisteminis) →
        pavojai: [
-         { tipas:'toksiskas', target:'zmonems',  severity:'vidutinis' },
-         { tipas:'toksiskas', target:'gyvunams', severity:'vidutinis' }
+         { tipas:'dirginantis', target:'zmonems',  severity:'vidutinis' },
+         { tipas:'dirginantis', target:'gyvunams', severity:'vidutinis' }
        ]
        detales: „Visi augalo audiniai turi kalcio oksalato kristalų; nurijus
        sukelia burnos ir gerklės dirginimą, seilėtekį, kosulį."
-   ✓ Aglaonema → saponins + raphides; alergenas kontaktui →
-       pavojai: [{ tipas:'alergiskas', target:'zmonems', severity:'silpnas' }]
+   ✓ Aglaonema → saponins + oxalate raphides; lokalus dirginimas →
+       pavojai: [
+         { tipas:'dirginantis', target:'zmonems',  severity:'vidutinis' },
+         { tipas:'dirginantis', target:'gyvunams', severity:'vidutinis' }
+       ]
+       detales: „Sultyse yra saponinų ir kalcio oksalato kristalų — nurijus
+       dirgina burną/gerklę, kontaktas su sultimis gali dirginti odą."
    ✗ „Plant has alkaloids" be konkretaus poveikio aprašymo → palik pavojai
      tuščią ir užpildyk tik pavojingumas.* saugiklį.
+
+TIPAS AXIS (atskira nuo severity):
+  • tipas='toksiskas'    → sisteminis nuodingumas (kraują absorbuojami toksinai,
+    nerve/cardiac/organ damage). Aconitum, Digitalis, Nerium, Taxus, Conium.
+  • tipas='dirginantis'  → LOKALUS dirginimas (kalcio oksalato rafidės, saponinai,
+    latex). NIEKADA neabsorbuojama sisteminiu būdu. Araceae (Monstera, Philodendron,
+    Dieffenbachia, Spathiphyllum, Anthurium, Aglaonema, Alocasia, Caladium,
+    Epipremnum, Pothos, Scindapsus, Syngonium, Zantedeschia), Sansevieria, Dracaena,
+    Yucca, Schefflera, Euphorbia. severity gali būti 'vidutinis' (skausminga
+    burnos/gerklės dirginimas), ne automatiškai 'silpnas'.
+  • tipas='alergiskas'   → IgE-mediated hypersensitivity reakcija konkretiems
+    žmonėms (ne universalus). Rare — naudoti tik kai PFAF/RAG eksplicitiškai
+    įvardija anafilaksiją/alergiją.
 
 USE pavojai[] kaip DEFAULT'Ą kai tipas+target aiški iš tavo žinių. PAVOJINGUMAS
 saugiklis lieka FALLBACK'ui, kai net tipas neaiškus („yra alkaloidų bet
