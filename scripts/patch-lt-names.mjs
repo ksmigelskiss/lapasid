@@ -42,6 +42,9 @@ const EXPLICIT_OVERRIDES = new Set([
   'Dracaena ballyi',
   'Pilea peperomioides',
   'Platycerium bifurcatum',
+  'Adenium obesum',
+  'Peperomia caperata',
+  "Peperomia caperata 'Rosso'",
   // Plus 2017 reclassification — Sansevieria → Dracaena synonyms ALL grąžinti
   // į „Trijuostė sansevjera" etc. — apima ir senus Sansevieria entries
   'Sansevieria trifasciata',
