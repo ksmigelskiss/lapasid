@@ -613,37 +613,37 @@ export default function App() {
               initialQuery={searchInitialQuery}
               autoCamera={searchAutoCamera}
               onAddToWishlist={plant => {
+                // 2026-06-01: NEBE-uždarom modal'ą ČIA. SearchModal'as pats
+                // sprendžia kada uždaryti (handlePostSaveSwitch → EnrichmentProgress
+                // → „Tęsti fone" → realus onClose). App'as tik atnaujina state'ą.
                 const newPlant = addToWishlist(plant)
-                setShowSearch(false)
-                setSearchInitialQuery('')
-                setSearchAutoCamera(false)
-                setTab('biblioteka')
-                console.log('[App] onAddToWishlist → biblioteka tab', { newId: newPlant?.id, archiveCountAtCall: archive.length })
-                // Step 6i — DiscoveryToast trigger TIK kai augalas ėjo per
-                // Phase 2 enrichment'ą (t.y. nebuvo catalog fast-path).
-                // Fast-path turi laistymasIntervalas iš karto → joko AI
-                // call'as, joko discovery moment'as → joko toast.
+                console.log('[App] onAddToWishlist (modal control delegated to SearchModal)', { newId: newPlant?.id, archiveCountAtCall: archive.length })
                 if (!plant.laistymasIntervalas) {
-                  // Step 6m — post-save = REWARD CONFIRMATION ("gavai"), ne
+                  // Step 6m — post-save = REWARD CONFIRMATION („gavai"), ne
                   // discovery invitation. Discovery hint atskirai rodomas
                   // Phase1SlimPreview'e prieš save (žiūr. Phase1SlimPreview).
                   showDiscoveryToast('+1 AI užklausa gauta. Ačiū už indėlį!')
                 }
               }}
               onAddToDashboard={plant => {
-                const newPlant = addToDashboard(plant)
-                setShowSearch(false)
-                setSearchInitialQuery('')
-                setSearchAutoCamera(false)
-                setTab('dashboard')
+                // 2026-06-01: NEBE-uždarom modal'ą / NEswitch'inam tab'ą ČIA —
+                // SearchModal'as kontroliuoja per EnrichmentProgress flow'ą.
+                addToDashboard(plant)
                 if (!plant.laistymasIntervalas) {
-                  // Step 6m — post-save = REWARD CONFIRMATION ("gavai"), ne
-                  // discovery invitation. Discovery hint atskirai rodomas
-                  // Phase1SlimPreview'e prieš save (žiūr. Phase1SlimPreview).
                   showDiscoveryToast('+1 AI užklausa gauta. Ačiū už indėlį!')
                 }
               }}
-              onClose={() => { setShowSearch(false); setSearchInitialQuery(''); setSearchAutoCamera(false) }}
+              onClose={() => {
+                // True close — iškviečiamas iš SearchModal'o (X mygtukas, ESC,
+                // ProgressView'o „Tęsti fone" / „Grįžti į biblioteką"). Vienas
+                // unified close path — pereinam į biblioteką ar dashboard pagal
+                // paskutinį pridėtą plant'o tipą... aktualumas: dažniausiai
+                // biblioteka (newly saved iki Phase 2 nuėjimo lieka „nori").
+                setShowSearch(false)
+                setSearchInitialQuery('')
+                setSearchAutoCamera(false)
+                setTab('biblioteka')
+              }}
               onViewPlant={plant => {
                 setShowSearch(false)
                 setSearchInitialQuery('')
