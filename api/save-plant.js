@@ -343,6 +343,26 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     // „Dracaena trifasciata"). Pulled iš species-lt-names.json + overrides.
     const ltEntry = await resolveLtServer(latinName).catch(() => null)
     const ltNameForNarrative = ltEntry?.ltName ?? null
+
+    // 2026-06-01 — HARD OVERRIDE: jei curated lookup'as turi 'high' confidence
+    // LT name'ą, override'inam AI's returned `lietuviskas` value. AI prompt'as
+    // (TOOL_DETAILS) explicit'iškai instructina Lithuanianize'inti genus
+    // („Sansevieria → Sansevierija", „Dracaena → Dracena"), ignore'ina RAG
+    // context line. Curated species-lt-names.json + overrides IR YRA single
+    // source of truth — Sansevieria/Dracaena reclassification case'us kur
+    // vernacular keeps old name negali būti algorithmically derived AI'us.
+    if (ltEntry?.ltName && ltEntry.confidence === 'high') {
+      const aiReturned = details.lietuviskas ?? null
+      if (aiReturned !== ltEntry.ltName) {
+        console.log('[save-plant] LT name override', {
+          plantId, latin: latinName,
+          ai: aiReturned, canonical: ltEntry.ltName,
+          source: ltEntry.sources.join('+'),
+        })
+        details.lietuviskas = ltEntry.ltName
+      }
+    }
+
     const nar = await generateToxicityNarrativeServer({
       latinName,
       ltName: ltNameForNarrative,
