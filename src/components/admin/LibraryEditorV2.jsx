@@ -443,7 +443,10 @@ export default function LibraryEditorV2({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${idToken}`,
         },
-        body: JSON.stringify({ latinName, force: true }),
+        // useCuratedReference=true — backend'as skip'ins gatherCandidates
+        // discovery + Sonnet voting, naudos catalog.image tiesiogiai kaip
+        // restyle source. Admin'as eksplicitai curat'ino → respect'inam.
+        body: JSON.stringify({ latinName, force: true, useCuratedReference: true }),
       })
       if (!res.ok) {
         const err = await res.json().catch(() => ({}))

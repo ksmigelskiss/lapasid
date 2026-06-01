@@ -245,8 +245,18 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
       if (!heroToken) return { ok: false, reason: 'no-token' }
       try {
         const hg = createHeroGen({ token: heroToken })
+        // Admin mode + entry has image → admin'as curated reference'ą,
+        // naudojam tiesiogiai (skip discovery). User mode (fresh save) —
+        // null, gatherCandidates fresh fetch'ina iNat+Wiki+Brave.
+        const refImg = (isAdminMode && baseResult?.image) ? baseResult.image : null
+        if (refImg) {
+          console.log('[save-plant] hero using curated reference', { latin: latinName, ref: refImg.slice(0, 80) })
+        }
         const { buf: rawBuf, heroPromptBrief, heroPhotoAssessment, _heroMethod } =
-          await hg.generateHeroForEntry(heroEntry, { braveApiKey: process.env.BRAVE_API_KEY })
+          await hg.generateHeroForEntry(heroEntry, {
+            braveApiKey: process.env.BRAVE_API_KEY,
+            referenceImage: refImg,
+          })
 
         // Sharp pipeline: enforce 3:2 landscape + crop to square thumb
         const heroBuf = await forceAspect3x2(rawBuf)

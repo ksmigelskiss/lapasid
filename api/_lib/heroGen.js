@@ -344,26 +344,61 @@ export function createHeroGen({ token }) {
   // ── Orchestrator (rank-aware) ──────────────────────────────────
   // genus → representative text→img (houseplant forma, ne species-locked).
   // species/cultivar → vision-gate parenka realią foto → restyle (fallback text).
+  //
+  // 2026-06-01 — `referenceImage` SHORT-CIRCUIT (admin curated source path):
+  //   Kai admin'as pakeičia catalog.image (e.g. įkelia geresnę vintage botaninę
+  //   iliustraciją vietoj prastos iNat foto) ir trigger'ina hero regen, jis
+  //   tikisi, kad TĄ KONKREČIĄ foto Gemini paims kaip restyle source. Bet
+  //   gatherCandidates() FRESH'ina iNat+Wiki+Brave po assessAndPick → deterministic
+  //   Sonnet votes always picks same external candidate → admin'o curated
+  //   reference ignored, regen output identical kiekvieną kartą.
+  //
+  //   Sprendimas: kai caller perduoda { referenceImage }, skip'inam discovery
+  //   + voting → tiesiogiai geminiRestyle(referenceImage). Admin explicit'iškai
+  //   pasakė „naudok šitą", tai naudojam. Brief'as paliekamas tuščias (restyle
+  //   image-grounded, prompt'as nieko nekeičia).
+  //
   // Grąžina { buf, heroPromptBrief, heroPhotoAssessment, _heroMethod, chosenRealPhoto, rank }.
-  async function generateHeroForEntry(entry, { braveApiKey } = {}) {
+  async function generateHeroForEntry(entry, { braveApiKey, referenceImage } = {}) {
     let rank = 'unknown'
     try { rank = parseLatinName(entry.lotyniskas).rank } catch { /* keep unknown */ }
     let buf, brief = '', photo, photoNote = '', chosenRealPhoto = null, method
 
-    if (rank === 'genus') {
-      const r = await morphologyBrief(entry, [])   // knowledge+notes, be species-locking foto
-      brief = r.brief; photo = 'none'; photoNote = 'genus → representative drawing'
-      buf = await geminiTextToImage(entry, `${brief} Depict the common cultivated INDOOR houseplant form, not a wild or outdoor mature tree.`)
-      method = 'gemini-text-genus'
-    } else {
-      const candidates = await gatherCandidates(entry, braveApiKey)
-      const r = await assessAndPick(entry, candidates)
-      brief = r.brief; photo = r.photo; photoNote = r.photoNote
-      if (r.chosenUrl && (photo === 'full-habit' || photo === 'partial')) {
-        buf = await geminiRestyle(r.chosenUrl); chosenRealPhoto = r.chosenUrl; method = 'gemini-restyle'
+    // SHORT-CIRCUIT: admin curated reference. Genus turi text-mode net su
+    // reference'u (genus = abstract category, restyle of one species'o foto'os
+    // → klaidina representation'ą).
+    if (referenceImage && rank !== 'genus') {
+      try {
+        buf = await geminiRestyle(referenceImage)
+        chosenRealPhoto = referenceImage
+        method = 'gemini-restyle-curated'
+        photo = 'full-habit'
+        photoNote = 'admin curated reference (skip discovery + voting)'
+        brief = 'Curated reference — Sonnet brief skipped.'
+      } catch (e) {
+        // Restyle suklydo (e.g. URL broken) → graceful fallback į standartinį
+        // discovery path'ą. Log'as kad admin'as suprastų kodėl jo reference
+        // nepateko.
+        console.warn('[heroGen] curated restyle failed, falling back to discovery:', e?.message)
+      }
+    }
+
+    if (!buf) {
+      if (rank === 'genus') {
+        const r = await morphologyBrief(entry, [])   // knowledge+notes, be species-locking foto
+        brief = r.brief; photo = 'none'; photoNote = 'genus → representative drawing'
+        buf = await geminiTextToImage(entry, `${brief} Depict the common cultivated INDOOR houseplant form, not a wild or outdoor mature tree.`)
+        method = 'gemini-text-genus'
       } else {
-        if (!brief) { const b = await morphologyBrief(entry, []); brief = b.brief }
-        buf = await geminiTextToImage(entry, brief); method = 'gemini-text'
+        const candidates = await gatherCandidates(entry, braveApiKey)
+        const r = await assessAndPick(entry, candidates)
+        brief = r.brief; photo = r.photo; photoNote = r.photoNote
+        if (r.chosenUrl && (photo === 'full-habit' || photo === 'partial')) {
+          buf = await geminiRestyle(r.chosenUrl); chosenRealPhoto = r.chosenUrl; method = 'gemini-restyle'
+        } else {
+          if (!brief) { const b = await morphologyBrief(entry, []); brief = b.brief }
+          buf = await geminiTextToImage(entry, brief); method = 'gemini-text'
+        }
       }
     }
     buf = await transparentizeBg(buf)

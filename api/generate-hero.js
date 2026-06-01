@@ -38,7 +38,11 @@ export default async function handler(req, res) {
   if (!idToken) return res.status(401).json({ error: 'auth_required' })
   if (!uidFromToken(idToken)) return res.status(401).json({ error: 'invalid_token' })
 
-  const { latinName, force = false } = req.body ?? {}
+  // 2026-06-01 — useCuratedReference: kai true, naudoja catalog.image kaip
+  // restyle source (skip'inant gatherCandidates + Sonnet voting). Admin'as
+  // pasakė „naudok šitą foto", tai naudojam. Default'as false (Phase 1 ir
+  // fresh hero gen flow'ai veikia kaip anksčiau — fresh discovery).
+  const { latinName, force = false, useCuratedReference = false } = req.body ?? {}
   if (!latinName || typeof latinName !== 'string') {
     return res.status(400).json({ error: 'latinName required' })
   }
@@ -66,8 +70,18 @@ export default async function handler(req, res) {
     }
 
     const hg = createHeroGen({ token })
+    // Curated reference path'as — kai admin'as explicit'iškai paprašė naudoti
+    // catalog.image kaip restyle source. entry.image saugomas catalog'e (paprastai
+    // rehosted Storage URL po Brave search'o arba admin upload'o).
+    const referenceImage = (useCuratedReference && entry.image) ? entry.image : null
+    if (referenceImage) {
+      console.log('[generate-hero] using curated reference', { id, ref: referenceImage.slice(0, 80) })
+    }
     const { buf: rawBuf, heroPromptBrief, heroPhotoAssessment, _heroMethod } =
-      await hg.generateHeroForEntry(entry, { braveApiKey: process.env.BRAVE_API_KEY })
+      await hg.generateHeroForEntry(entry, {
+        braveApiKey: process.env.BRAVE_API_KEY,
+        referenceImage,
+      })
 
     // 2026-06-01: enforce 3:2 landscape aspect (safety net jei Gemini negens
     // tiksliai) + generate thumb 1:1 webp widget'ams (PlantCard).
