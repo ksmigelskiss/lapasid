@@ -142,6 +142,8 @@
     "dracaena pearsonii": "Pearson sansevjera",
     "dracaena hyacinthoides": "Hiacintinė sansevjera",
     "dracaena ballyi": "Mahanakorn sansevjera",
+    "_comment_modern_vernacular": "Modernus LT vernacular names kuriuos plants.json scrape'as (pre-2017) nepagavo. Pilea peperomioides paplito ~2016+ kaip Chinese money plant; LT bendruomene prieme Kininis piniginis augalas / UFO augalas.",
+    "pilea peperomioides": "Kininis piniginis augalas",
     "alpinia galanga": "didžioji alpinija",
     "alpinia officinarum": "vaistinė alpinija",
     "alpinia zerumbet": "gražioji alpinija",

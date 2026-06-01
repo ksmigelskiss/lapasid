@@ -344,14 +344,22 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     const ltEntry = await resolveLtServer(latinName).catch(() => null)
     const ltNameForNarrative = ltEntry?.ltName ?? null
 
-    // 2026-06-01 — HARD OVERRIDE: jei curated lookup'as turi 'high' confidence
-    // LT name'ą, override'inam AI's returned `lietuviskas` value. AI prompt'as
-    // (TOOL_DETAILS) explicit'iškai instructina Lithuanianize'inti genus
-    // („Sansevieria → Sansevierija", „Dracaena → Dracena"), ignore'ina RAG
-    // context line. Curated species-lt-names.json + overrides IR YRA single
-    // source of truth — Sansevieria/Dracaena reclassification case'us kur
-    // vernacular keeps old name negali būti algorithmically derived AI'us.
-    if (ltEntry?.ltName && ltEntry.confidence === 'high') {
+    // 2026-06-01 — CONSERVATIVE OVERRIDE: TIK kai resolveLt grąžino CURATED
+    // species-level entry'į (sources turi 'plants-species'). Genus-fallback-
+    // qualified (e.g. „Pilea peperomioides" = constructed iš genus „Pilea"
+    // + Latin epithet) NĖRA authoritative — gali būti identiškas Latin
+    // binomial'iui (Pilea genus LT name = „Pilea" verbatim). Jei override'intume
+    // tame atveju, regresuotume gerai žinomus vernacular pavadinimus iš
+    // inatLtName arba AI-curated value („Kininis piniginis augalas").
+    //
+    // SOURCE TYPES:
+    //   'plants-species'         → curated species hit (overrides.json arba
+    //                              plants.json scrape)  → AUTHORITATIVE
+    //   'genus-fallback-qualified' → constructed [genus] + [latin epithet]
+    //                              → NE-authoritative (often Latin verbatim)
+    //   other                    → genus-only fallback → ne species-qualified
+    const isCuratedSpeciesHit = ltEntry?.sources?.includes('plants-species')
+    if (ltEntry?.ltName && ltEntry.confidence === 'high' && isCuratedSpeciesHit) {
       const aiReturned = details.lietuviskas ?? null
       if (aiReturned !== ltEntry.ltName) {
         console.log('[save-plant] LT name override', {
@@ -361,6 +369,12 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
         })
         details.lietuviskas = ltEntry.ltName
       }
+    } else if (ltEntry?.ltName) {
+      console.log('[save-plant] LT name override SKIPPED (not curated species)', {
+        plantId, latin: latinName,
+        ai: details.lietuviskas, candidate: ltEntry.ltName,
+        sources: ltEntry.sources?.join('+'),
+      })
     }
 
     const nar = await generateToxicityNarrativeServer({
