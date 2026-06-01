@@ -549,9 +549,14 @@ export default function LibraryEditorV2({
   // Synthetic genus group'as rodomas italic + „no entry" kai catalog'e
   // nėra atitinkamo įrašo (e.g. yra „Alocasia portodora" species, bet
   // nėra paties „Alocasia" genus entry'io). Click ant naujo „+ Sukurti"
-  // mygtuko → sukuria minimalų genus catalog'o įrašą + auto-select edit'ui.
-  // Po sukūrimo header'is tampa clickable kaip įprastas catalog entry'is.
-  const handleCreateGenusEntry = useCallback(async (latinGenus) => {
+  // mygtuko → sukuria minimalų genus catalog'o įrašą + auto-select edit'ui
+  // + opcijonaliai auto-trigger'ina AI fill (Phase 2 pipeline'ą).
+  //
+  // pendingAutoAIRef — kai user'is paspaudė „Sukurti + AI", flag'as
+  // signalizuoja useEffect'ui, kad fire'intų dispatchReEnrich('full') iškart
+  // kai selectedEntry resolve'inasi į naują doc'ą (post-snapshot landing).
+  const pendingAutoAIRef = useRef(null)
+  const handleCreateGenusEntry = useCallback(async (latinGenus, { autoFillWithAI = false } = {}) => {
     if (!latinGenus) return
     const id = catalogDocId(latinGenus)
     if (!id) return
@@ -567,16 +572,31 @@ export default function LibraryEditorV2({
         schemaVersion: 2,
         kategorija: 'auginama',
       })
-      // onSnapshot listener'is per AdminPanel atneš naują entry'į; setSelectedId
-      // čia immediate, kad admin'as iškart pamatytų edit form'ą (selectedEntry
-      // resolve'inasi iš catalog state'o, kuris greitai sinchronizuosis).
       setSelectedId(id)
       setSelectedType('cultivar')
+      if (autoFillWithAI) {
+        pendingAutoAIRef.current = id
+      }
     } catch (e) {
       console.error('[admin] create genus entry failed:', e?.message)
       alert(`Nepavyko sukurti gentį „${latinGenus}": ${e?.message ?? 'unknown error'}`)
     }
   }, [catalog, onSaveCatalog])
+
+  // Auto-fire AI fill kai selectedEntry resolve'inasi į pendingAutoAI doc'ą.
+  // Catalog onSnapshot atneša naują entry'į (sub-second po setDoc'o), tada
+  // selectedEntry useMemo regeneruosis su naujo doc'o data. Effect'as
+  // detect'ina matche'ą ir fire'ina dispatchReEnrich('full').
+  useEffect(() => {
+    if (!pendingAutoAIRef.current) return
+    if (!selectedEntry) return
+    if (selectedEntry.id !== pendingAutoAIRef.current) return
+    // Match — fire AI pipeline ir clear flag.
+    const pending = pendingAutoAIRef.current
+    pendingAutoAIRef.current = null
+    console.log('[admin] auto-firing AI fill for newly created genus', pending)
+    dispatchReEnrich('full')
+  }, [selectedEntry, dispatchReEnrich])
 
   const handleSaveImageOnly = useCallback(async (newUrl) => {
     if (!selectedEntry || selectedType !== 'cultivar') return
@@ -1228,19 +1248,34 @@ function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSe
               </div>
             </div>
             {onCreateGenusEntry && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (window.confirm(`Sukurti catalog entry „${genus}"?\n\nVisi šio genus'o species/cultivars galės paveldėti šio entry'io care/info laukus (kilme, savybes, sviesa, vanduo, ...).`)) {
-                    onCreateGenusEntry(genus)
-                  }
-                }}
-                className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-btn-sm text-[10px] font-medium text-forest-600 hover:bg-forest-100 transition-colors"
-                title={`Sukurti gentį „${genus}" catalog'e (galėsi pridėti LT pavadinimą + care šabloną)`}
-              >
-                <Plus size={10} />
-                <span>Sukurti</span>
-              </button>
+              <div className="flex-shrink-0 flex items-center gap-0.5">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (window.confirm(`Sukurti tuščią catalog entry „${genus}"?\n\nGausi clickable header'į, kuriame galėsi pildyti LT pavadinimą + care šabloną rankomis. AI nepildysiu.\n\nPASTABA: care cascade į esamas species'as neveiks — species jau turi savo reikšmes po AI enrich'imo. Genus įrašas naudingas LT pavadinimui ir UI consistency.`)) {
+                      onCreateGenusEntry(genus, { autoFillWithAI: false })
+                    }
+                  }}
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded-btn-sm text-[10px] font-medium text-forest-600 hover:bg-forest-100 transition-colors"
+                  title={`Sukurti tuščią gentį „${genus}" — admin'as pildys rankomis`}
+                >
+                  <Plus size={10} />
+                  <span>Tuščią</span>
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (window.confirm(`Sukurti „${genus}" + AI auto-fill?\n\nFlow'as: sukursim catalog entry'į → iškart paleisim „Atnaujinti viską" pipeline'ą (~30-40s) → AI užpildys LT pavadinimą, aprašymą, care, toxicity, hero iliustraciją.\n\nGali atmesti rezultatą po review (Atmesti mygtukas) jei netiks.`)) {
+                      onCreateGenusEntry(genus, { autoFillWithAI: true })
+                    }
+                  }}
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded-btn-sm text-[10px] font-medium bg-forest-100 text-forest-700 hover:bg-forest-200 transition-colors"
+                  title={`Sukurti „${genus}" + paleisti AI Phase 2 pipeline'ą (~30-40s, pildys care/narrative/hero)`}
+                >
+                  <Sparkles size={10} />
+                  <span>+ AI</span>
+                </button>
+              </div>
             )}
           </div>
         )}
