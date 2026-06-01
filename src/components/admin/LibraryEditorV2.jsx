@@ -1056,7 +1056,7 @@ function SeriesTopLevelRow({ series, expanded, onToggle, selectedId, onSelect, d
             <p className={`text-xs font-semibold truncate leading-tight italic ${
               seriesSelected ? 'text-forest-800' : 'text-forest-700'
             }`}>
-              {group.genus} {group.name}
+              {group.genus === group.name ? group.genus : `${group.genus} ${group.name}`}
               {seriesSelected && dirty && <span className="ml-1 text-terracotta-600">*</span>}
             </p>
             <p className="text-[10px] text-forest-500 font-mono leading-tight">
@@ -1149,7 +1149,7 @@ function SeriesChildRow({ series, expanded, onToggle, selectedId, onSelect, dirt
             <p className={`text-[11px] font-semibold truncate leading-tight italic ${
               seriesSelected ? 'text-forest-800' : 'text-forest-700'
             }`}>
-              {group.genus} {group.name}
+              {group.genus === group.name ? group.genus : `${group.genus} ${group.name}`}
               {seriesSelected && dirty && <span className="ml-1 text-terracotta-600">*</span>}
             </p>
             <p className="text-[9px] text-forest-500 font-mono leading-tight">
