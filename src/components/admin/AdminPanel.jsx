@@ -4,6 +4,7 @@ import { Users, Database, X, Shield, Sparkles, BadgeCheck, Loader2, RefreshCw, C
 import { db } from '../../utils/firebase'
 import { bustCatalogCache } from '../../utils/catalog'
 import { bustSearchResponseCache } from '../../utils/searchResponseCache'
+import { parentTaxonGroupIdFor } from '../../utils/taxonGroupId'
 import T4Icon from '../brand/T4Icon'
 import LibraryEditorV2 from './LibraryEditorV2'
 // v1 (LibraryTab.jsx) lieka repo'je kaip backup — revert su `git revert HEAD`
@@ -313,6 +314,23 @@ export default function AdminPanel({ currentUid, onClose }) {
    */
   const saveCatalogEntry = async (entryId, patch) => {
     try {
+      // 2026-06-01 — Auto-assign taxonGroupId orphan cultivar'ams.
+      // Server-side path'as (/api/save-plant → saveCatalogWithParentServer)
+      // jau handle'ina šitą, bet admin'as manual'iai redaguodamas cultivar'ą
+      // gali palikti taxonGroupId tuščią → entry'is rodomas root'e kaip
+      // standalone cultivar (visual confusion). Mirror'inam server logiką:
+      // deterministic ID derivation iš Latin name'o + check'as ar parent
+      // taxonGroup egzistuoja. Jei taip — auto-set'inam patch'e.
+      const currentEntry = catalog.find(e => e.id === entryId)
+      const merged = { ...currentEntry, ...patch }
+      if (!merged.taxonGroupId && merged.lotyniskas) {
+        const parentId = parentTaxonGroupIdFor(merged.lotyniskas)
+        if (parentId && taxonGroups.some(tg => tg.id === parentId)) {
+          patch = { ...patch, taxonGroupId: parentId }
+          console.log('[admin] auto-assigned taxonGroupId for cultivar', { entryId, parentId })
+        }
+      }
+
       await setDoc(doc(db, 'catalog', entryId), {
         ...patch,
         updatedAt: new Date().toISOString(),

@@ -53,6 +53,7 @@ const MIN_WIDTH_PX = 1280
 const FILTERS = [
   { id: 'all',        label: 'Visi'        },
   { id: 'modified',   label: 'Pakeisti'    },  // _batchEnrichedAt < 7d
+  { id: 'orphan',     label: 'Be parent'   },  // cultivar entries be taxonGroupId
   { id: 'standalone', label: 'Standalone' },
   { id: 'series',     label: 'Serijos'     },
 ]
@@ -689,6 +690,10 @@ function LeftPaneList({
       result = result.filter(g => (g.entry ? 1 : 0) + g.members.length <= 1)
     } else if (activeFilter === 'series') {
       result = result.filter(g => g.members.some(m => m.kind === 'series'))
+    } else if (activeFilter === 'orphan') {
+      // Grupės, kuriose yra bent vienas orphan cultivar (rank='cultivar' bet
+      // be taxonGroupId → atsiranda root'e vietoj nest'inimo po species).
+      result = result.filter(g => g.members.some(m => m.kind === 'species' && m.isOrphanCultivar))
     } else if (activeFilter === 'modified') {
       const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000
       const isModified = e => e?._batchEnrichedAt && new Date(e._batchEnrichedAt).getTime() > cutoff
@@ -1035,6 +1040,12 @@ function buildHierarchy(catalog, taxonGroups) {
         entry: c,
         latin: c.lotyniskas,
         rank: parsed.rank,
+        // Cultivar entries, kurie atsidūrė genus group'e (nepriklausą series'ai),
+        // yra orphan'ai — admin'ui reikia priskirti taxonGroupId arba lieka
+        // root'e su warning badge'u. parentTaxonGroupIdFor server'is auto-
+        // assign'ina naujiems entries, bet legacy data + manual edits gali
+        // palikti orphan'ą.
+        isOrphanCultivar: parsed.rank === 'cultivar' && !c.taxonGroupId,
       })
     }
   }
@@ -1163,6 +1174,7 @@ function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSe
                   selected={selectedId === m.id}
                   onSelect={() => onSelect(m.id, 'cultivar')}
                   dirty={dirty}
+                  isOrphanCultivar={m.isOrphanCultivar}
                 />
               ) : (
                 <SeriesChildRow
@@ -1252,7 +1264,7 @@ function SeriesTopLevelRow({ series, expanded, onToggle, selectedId, onSelect, d
 }
 
 // ── Species child row (Level 2) ────────────────────────────────────
-function SpeciesChildRow({ entry, selected, onSelect, dirty }) {
+function SpeciesChildRow({ entry, selected, onSelect, dirty, isOrphanCultivar }) {
   const thumb = heroThumb(entry)
   return (
     <li>
@@ -1270,10 +1282,18 @@ function SpeciesChildRow({ entry, selected, onSelect, dirty }) {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <p className={`text-[11px] font-medium truncate leading-tight ${
+          <p className={`text-[11px] font-medium truncate leading-tight flex items-center gap-1 ${
             selected ? 'text-forest-800' : 'text-forest-700'
           }`}>
-            {entry.lietuviškas || '—'}
+            <span className="truncate">{entry.lietuviškas || '—'}</span>
+            {isOrphanCultivar && (
+              <span
+                className="flex-shrink-0 inline-flex items-center"
+                title="Cultivar be parent serijos (taxonGroupId). Atidaryk Identifikacija tab'ą → priskirk parent species, kad UI nest'intų po species."
+              >
+                <AlertTriangle size={9} className="text-terracotta-600" />
+              </span>
+            )}
             {selected && dirty && <span className="ml-1 text-terracotta-600">*</span>}
           </p>
           <p className="text-[9px] text-forest-500 italic truncate leading-tight">
