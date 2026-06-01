@@ -329,7 +329,14 @@ function SkeletonLines({ lines = 2, className = '' }) {
 //     (liaudies) — tas pats ikonos sprendimas kaip PlantSavybesPills.
 //
 // Nothing to show → komponentas grąžina null (strip dingsta brand new plant'uose).
-function HeroSafetyStrip({ plant }) {
+function HeroSafetyStrip({ plant, section }) {
+  // 2026-06-01 — strip slėpiamas Dashboard auginamuose plant'uose.
+  // Rezonas: user'is jau ŽINO savo augalo savybes (jis pats jį pridėjo),
+  // o ant personal photo hero solid pill'ai jaučiasi imposed/aggressive.
+  // Biblioteka/wishlist (nori, istorija) — discovery contextas, strip
+  // naudingas at-a-glance toxicity reference'iui.
+  if (section === 'auginama') return null
+
   const s = plant?.savybes
   if (!s) return null
 
@@ -373,9 +380,13 @@ function HeroSafetyStrip({ plant }) {
     dirginantis: 'DIRGINA',
     atsargiai:   'ATSARGIAI',
   }
+  // 2026-06-01 — TOKSIŠKA spalva sušvelninta nuo solid terracotta į
+  // terracotta-200/700 (matches alergiškas saturation). Per user feedback'ą
+  // solid pill ant user photo hero'o jautėsi per agresyvus. Severity bars
+  // (1/2/3 filled) toliau koduoja sunkumo hierarchiją, color'as ne kritinis.
   const TIPAS_STYLE = {
-    toksiskas:   'bg-terracotta text-bone',
-    alergiskas:  'bg-terracotta-200 text-terracotta-600',
+    toksiskas:   'bg-terracotta-200 text-terracotta-700',
+    alergiskas:  'bg-terracotta-100 text-terracotta-600',
     dirginantis: 'bg-terracotta-50 text-terracotta-600',
     atsargiai:   'bg-terracotta-100 text-terracotta-600',
   }
@@ -2034,7 +2045,7 @@ export default function PlantDetail({
         {/* Safety strip — kompaktinis savybes summary tarp hero + tab bar
             (2026-06-01). Rodom tik kai yra duomenų (pavojai / valgomumas /
             vaistinis). Brand new plant'uose dingsta automatiškai. */}
-        <HeroSafetyStrip plant={plant} />
+        <HeroSafetyStrip plant={plant} section={section} />
 
         {/* Tab bar */}
         <TabBar active={activeTab} onChange={setActiveTab} noteCount={loadNotes(plant).length} />
