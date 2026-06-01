@@ -109,3 +109,41 @@ Tačiau jei žinau, kad sprendimas yra teisingas, jis ne „long-term" — jis *
 - Teisingas iškart = vienas commit'as, jokios skolos
 
 **Plačiau:** „Trumpalaikis" sprendimas reiškia, kad mes priimam architektūrinę skolą. Skola visada brangesnė vėliau (admin'as turi perdaryti, user'iai mato broken images, debugging time). Code'as, kuris žinai reikės perdarinėti, NĖRA acceptable kaip „šiandien".
+
+---
+
+## N. Multi-layer data flow — kiekvienas layer'is gali ignore'inti curated truth
+
+**Data:** 2026-06-01
+**Trigger:** Sansevieria trifasciata bardakas. `species-lt-names.json` TURĖJO `"sansevieria trifasciata": "Trijuostė sansevjera"` nuo seno. Vis tiek display'us rodė „Sansevieria" arba „Sansevierija" / „Trijuoste dracena". Reikėjo KETURIŲ commit'ų pataisymui per skirtingus layer'ius:
+- `28dddcd` — pridėti `dracaena trifasciata` override (2017 reclassification)
+- `4421929` — perduoti ltName į narrative gen Sonnet'ą
+- `51be7ef` — server-side override AI's lietuviskas
+- `879a7be` — structural diacritic reconcile (lietuviškas vs lietuviskas)
+
+**Patternas:** mes turim curated data (lt-names, pre-DB), bet pipeline'e yra **AT LEAST 4 layeriai**, kur informacija prarasdavo:
+
+| Layer | Failure mode |
+|-------|-------------|
+| **L1: lookup** | Entry missing (Dracaena trifasciata po Sansevieria reclass) |
+| **L2: AI prompt** | Tool description tells AI to generate own value, ignoring RAG |
+| **L3: Structural** | Du atskiri JS object keys su / be diacritics — abu egzistuoja, display reads vienas |
+| **L4: Downstream specialists** | Atskiri Sonnet call'ai (narrative, hero gen) negauna RAG context'o |
+
+**Rule:** prieš pridedant naują „authoritative source" (lt-names extension, species-lt-names, future datapoint), užtikrinti, kad VISI naudotojai jį skaito:
+1. Phase 1 lookup ✓
+2. RAG context build ✓
+3. AI tool prompt — INSTRUCTS to use, ne to override
+4. Server-side validation/override — safety net jei AI ignore'ina (NOT primary path)
+5. Structural consistency (single key name, no diacritic variants)
+6. Downstream specialists (narrative gen, hero gen) — pass canonical
+7. F1 catalog overlay — preserve correctly
+
+**Anti-pattern (bandaid):** server-side post-AI override. Tai saugo, bet user'is gali nerasti ROOT cause (prompt instructions tells AI to do wrong thing). Geriausia: RAG instructive prompt + override kaip safety net.
+
+**Specifinis Sansevieria atvejis (botaninis context — reikalingas mental model):**
+- 2017 Mansoor et al. publikacija: Sansevieria genus susijungė į Dracaena genetiškai
+- Botanikai priėmė merge (Kew, POWO)
+- BET vernacular community (gardeners, vendors) toliau naudoja „sansevjera"
+- Algorithmic Lithuanianization „Dracaena → Dracena → Trijuoste dracena" yra TECHNIŠKAI nuoseklus, bet BOTANIŠKAI klaida
+- Curated dictionary (mūsų override) yra autoritetingesnė už AI's training-derived rules
