@@ -14,7 +14,7 @@ import PlantImage from './brand/PlantImage'
 import BrandLoader from './brand/BrandLoader'
 import { refreshPlantFromAI } from '../utils/plantAI'
 import { TOOL_PREVIEW, TOOL_DETAILS, PLANT_SYSTEM } from './SearchModal'
-import { ensureArray } from '../utils/plantTransform'
+import { ensureArray, makeId, today } from '../utils/plantTransform'
 import { getPlantEnrichmentState, getEnrichmentFailureReason } from '../utils/plantState'
 import { getWateringForecast } from '../utils/wateringForecast'
 import { getFertilizingSummary } from '../utils/fertilizingForecast'
@@ -1784,10 +1784,65 @@ export default function PlantDetail({
               )}
             </div>
 
-            {/* 2026-06-01 — Zone + Status chips perkelti ant hero foto kaip
-                overlay (žr. hero motion.div'e žemiau). Toolbar lieka švarus:
-                tik ... veiksmų meniu + X uždarymas. StatusMenu anchor'as
-                irgi perkeltas į hero (visada renderinasi tame slot'e). */}
+            {/* Zone — clickable, atidaro ZonePicker.
+                2026-06-01: rodom TIK jei plant'as PRISKIRTAS prie zonos. Default
+                „Nepriskirta" placeholder slėpiamas (clutter freshly-saved augaluose).
+                Zonai priskirti — naudoti „Priskirti zoną" iš ... menu. */}
+            {section === 'auginama' && zones.length > 0 && currentZone && (
+              <button
+                onClick={() => setShowZonePicker(v => !v)}
+                className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 hover:text-forest-700 transition-colors min-w-0"
+              >
+                <MapPin size={11} className="text-forest-400 flex-shrink-0" />
+                <span className="truncate">{currentZone.name}</span>
+              </button>
+            )}
+
+            {section === 'auginama' && zones.length > 0 && currentZone && status !== 'healthy' && (
+              <span className="text-forest-300 flex-shrink-0" aria-hidden>·</span>
+            )}
+
+            {/* Status — clickable, atidaro StatusMenu.
+                2026-06-01: wrapper visada mount'inamas (StatusMenu anchor'inasi
+                relative parent'e), bet trigger button matomas TIK kai status ≠
+                'healthy'. Default „Sveikas" slėpiamas (clutter). Status pakeisti —
+                per „Pakeisti būklę" iš ... menu, kuri fire'ina setStatusMenu(true);
+                StatusMenu vis tiek pasirodo šiame anchor slot'e. */}
+            {section === 'auginama' && (
+              <div className="relative">
+                {status !== 'healthy' && (
+                  <button
+                    onClick={() => setStatusMenu(v => !v)}
+                    className={`inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] transition-colors ${
+                      status === 'quarantine' || status === 'sick'
+                        ? 'text-terracotta-600 hover:text-terracotta-700'
+                        : status === 'numire'
+                          ? 'text-forest-800 hover:text-forest-900'
+                          : 'text-forest-600 hover:text-forest-700'
+                    }`}
+                  >
+                    {(() => {
+                      const StatusIcon = STATUS_ICON[status]
+                      return StatusIcon ? <StatusIcon size={11} /> : null
+                    })()}
+                    <span>{getStatusMeta(status).label}</span>
+                    <ChevronDown size={10} className="opacity-60" />
+                  </button>
+                )}
+                {showStatusMenu && (
+                  <StatusMenu
+                    status={status}
+                    section={section}
+                    onClose={() => setStatusMenu(false)}
+                    onSelect={key => {
+                      setStatusMenu(false)
+                      if (key === 'numire') { onAction?.('died', plant); onClose?.() }
+                      else setPendingStatus({ newStatus: key, fromStatus: status })
+                    }}
+                  />
+                )}
+              </div>
+            )}
 
             <button
               onClick={onClose}
@@ -1864,78 +1919,45 @@ export default function PlantDetail({
                     />
                   )}
 
-                  {/* ── Hero overlay: top-left chips (Zone + Status) ─────────
-                      2026-06-01 — chips perkelti iš toolbar'o ant hero foto.
-                      Inner .relative div'as visada mount'inamas — StatusMenu
-                      anchor'inasi tame slot'e net kai default state'e (status=
-                      'healthy', no zone) chip'ai paslėpti. Tada „Pakeisti būklę"
-                      iš ... menu vis tiek atidaro StatusMenu hero kairiajame
-                      viršuje. */}
-                  {section === 'auginama' && (
-                    <div className="absolute top-3 left-3 z-10">
-                      <div className="relative inline-flex items-center">
-                        {(currentZone || status !== 'healthy') && (
-                          <div className="inline-flex items-center gap-2 bg-black/45 backdrop-blur-md rounded-full px-3 py-1.5">
-                            {currentZone && (
-                              <button
-                                onClick={() => setShowZonePicker(v => !v)}
-                                className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-white/90 hover:text-white transition-colors min-w-0"
-                              >
-                                <MapPin size={11} className="text-white/60 flex-shrink-0" />
-                                <span className="truncate max-w-[10rem]">{currentZone.name}</span>
-                              </button>
-                            )}
-                            {currentZone && status !== 'healthy' && (
-                              <span className="text-white/40" aria-hidden>·</span>
-                            )}
-                            {status !== 'healthy' && (
-                              <button
-                                onClick={() => setStatusMenu(v => !v)}
-                                className={`inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] transition-colors ${
-                                  status === 'quarantine' || status === 'sick'
-                                    ? 'text-terracotta-300 hover:text-terracotta-200'
-                                    : 'text-white/90 hover:text-white'
-                                }`}
-                              >
-                                {(() => {
-                                  const StatusIcon = STATUS_ICON[status]
-                                  return StatusIcon ? <StatusIcon size={11} /> : null
-                                })()}
-                                <span>{getStatusMeta(status).label}</span>
-                                <ChevronDown size={10} className="opacity-60" />
-                              </button>
-                            )}
-                          </div>
-                        )}
-                        {showStatusMenu && (
-                          <StatusMenu
-                            status={status}
-                            section={section}
-                            onClose={() => setStatusMenu(false)}
-                            onSelect={key => {
-                              setStatusMenu(false)
-                              if (key === 'numire') { onAction?.('died', plant); onClose?.() }
-                              else setPendingStatus({ newStatus: key, fromStatus: status })
-                            }}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  )}
-
                   {/* ── Camera quick action (bottom-left) ────────────────────
-                      2026-06-01 — visada matomas dashboard plant'uose, skatina
-                      pridėti nuotrauką į augalo istoriją. Tas pats handler'is
-                      kaip ir „Pakeisti nuotrauką" iš ... menu — photo sheet
-                      pati sprendžia append vs replace. */}
+                      2026-06-01 — tiesioginis „add to history" flow'as:
+                      device camera → resize → addTimelineEvent({type:'photo'}).
+                      Jei useHistoryPhoto !== false (default), nauja foto auto-
+                      becomes hero per addTimelineEvent logiką (žr. usePlants.js
+                      line 577). NEatidarom „Pakeisti nuotrauką" sheet'o —
+                      vienas tap = vienas snap = istorijos event'as + hero
+                      automatiškai atsinaujins. Pilną sheet flow'ą lieka ...
+                      menu „Pakeisti nuotrauką" — kai user nori EXPLICIT
+                      replace, ne add-to-history. */}
                   {section === 'auginama' && (
-                    <button
-                      onClick={() => setShowPhoto(true)}
-                      className="absolute bottom-3 left-3 w-10 h-10 rounded-full bg-black/45 hover:bg-black/65 backdrop-blur-md flex items-center justify-center text-white transition-colors z-10"
-                      aria-label="Pridėti nuotrauką"
+                    <label
+                      className="absolute bottom-3 left-3 w-10 h-10 rounded-full bg-black/45 hover:bg-black/65 backdrop-blur-md flex items-center justify-center text-white transition-colors z-10 cursor-pointer"
+                      aria-label="Pridėti nuotrauką į istoriją"
                     >
                       <Camera size={16} />
-                    </button>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        className="hidden"
+                        onChange={async e => {
+                          const file = e.target.files?.[0]
+                          e.target.value = ''
+                          if (!file) return
+                          try {
+                            const imageUrl = await resizeImage(file)
+                            onAddTimelineEvent?.(plant.id, {
+                              id: makeId(),
+                              type: 'photo',
+                              date: today(),
+                              imageUrl,
+                            })
+                          } catch (err) {
+                            console.warn('[hero-camera] failed', err)
+                          }
+                        }}
+                      />
+                    </label>
                   )}
 
                   {/* Watercolor loading badge — kol Gemini piešia iliustraciją
