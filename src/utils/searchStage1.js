@@ -81,17 +81,37 @@ async function getAspcaMap() {
  *   - Capitalized first letter + ascii only + ≤2 words → likely Latin
  *   - Lowercase + ascii → ambiguous, try Latin first
  */
-function classifyQuery(query) {
+async function classifyQuery(query) {
   const trimmed = query.trim()
   if (!trimmed) return { type: 'empty' }
 
   const hasLtDiacritics = /[ąęįųėčšž]/i.test(trimmed)
   if (hasLtDiacritics) {
+    // 2026-06-01 — hybrid detection (1/2): LT vernacular su diacritic'ais +
+    // Latin epithet (e.g. „Trijuostė sansevjera marginata" arba „kinrožė
+    // chinensis"). Be šio fix'o LT path tikrindavo TIK full ltName reverse
+    // lookup — neradus bandydavo AI Phase 2. Dabar splitint'inam į genus+rest
+    // ir bandom rekonstruoti Latin binomial.
+    const reconstructed = await tryHybridLtPlusLatin(trimmed)
+    if (reconstructed) {
+      return { type: 'latin', latin: reconstructed, genus: reconstructed.split(/\s+/)[0] }
+    }
     return { type: 'lt', ltName: trimmed }
   }
 
-  // ASCII only — could be Latin
+  // ASCII only — could be Latin OR LT vernacular without diacritics (e.g.
+  // „sansevjera trifasciata", „kinroze chinensis"). Phase 1 miss-class'ina šitas
+  // kaip Latin („Sansevjera trifasciata"), pre-DB miss'ina genus → AI Phase 2.
+  // Hybrid detection (2/2): bandom matchint pirmajam žodžiui kaip LT vernacular
+  // PRIEŠ classify'inti kaip Latin.
   const words = trimmed.split(/\s+/)
+  if (words.length === 2) {
+    const reconstructed = await tryHybridLtPlusLatin(trimmed)
+    if (reconstructed) {
+      return { type: 'latin', latin: reconstructed, genus: reconstructed.split(/\s+/)[0] }
+    }
+  }
+
   const looksLatin = /^[A-Z][a-z]+$/.test(words[0]) || /^[a-z]+$/.test(words[0])
   if (looksLatin) {
     // Auto-capitalize: "monstera" → "Monstera"
@@ -110,6 +130,29 @@ function classifyQuery(query) {
   return { type: 'lt', ltName: trimmed }
 }
 
+/**
+ * Hybrid LT vernacular + Latin epithet reconstructor.
+ *
+ * Bando: pirmasis žodis = LT vernacular (e.g. „sansevjera", „kinrožė").
+ *         antrasis žodis = Latin epithet (a-z only) (e.g. „trifasciata").
+ * Jei abu pasiteisina → grąžina rekonstruotą Latin binomial („Sansevieria
+ * trifasciata"). Kitu atveju null.
+ *
+ * Naudoja resolveLatin reverse lookup'ą — diacritic+plural insensitive.
+ */
+async function tryHybridLtPlusLatin(query) {
+  const words = query.trim().split(/\s+/)
+  if (words.length !== 2) return null
+  const epithet = words[1].toLowerCase()
+  // Latin epithet pattern — striktai a-z (no diacritics, no caps, single token)
+  if (!/^[a-z]+$/.test(epithet)) return null
+  const latinGenus = await resolveLatin(words[0])
+  if (!latinGenus) return null
+  // Single-word Latin genus expected (e.g. "Sansevieria"). Skip if multi.
+  if (/\s/.test(latinGenus)) return null
+  return `${latinGenus} ${epithet}`
+}
+
 // ── Main Stage 1 search ──────────────────────────────────────
 
 /**
@@ -120,7 +163,7 @@ function classifyQuery(query) {
  */
 export async function searchStage1(userQuery) {
   const startTime = Date.now()
-  const parsed = classifyQuery(userQuery)
+  const parsed = await classifyQuery(userQuery)
 
   if (parsed.type === 'empty') {
     return { found: false, error: 'empty query', layer: null }
