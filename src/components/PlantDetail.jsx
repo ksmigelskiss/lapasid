@@ -1848,49 +1848,48 @@ export default function PlantDetail({
               </button>
             )}
 
-            {section === 'auginama' && zones.length > 0 && currentZone && status !== 'healthy' && (
+            {section === 'auginama' && zones.length > 0 && currentZone && (
               <span className="text-forest-300 flex-shrink-0" aria-hidden>·</span>
             )}
 
-            {/* Status — clickable, atidaro StatusMenu (bottom sheet).
-                2026-06-01: StatusMenu refactored į bottom sheet pattern'ą,
-                portal-based render — anchor wrapper'is nebereikalingas. Chip
-                matomas TIK kai status ≠ 'healthy' (default-hide kaip ir Zone'os
-                chip'as). Status pakeitimui kai default state — naudoti
-                „Pakeisti būklę" iš ... menu. */}
-            {section === 'auginama' && status !== 'healthy' && (
-              <button
-                onClick={() => setStatusMenu(true)}
-                className={`inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] transition-colors ${
-                  status === 'quarantine' || status === 'sick'
-                    ? 'text-terracotta-600 hover:text-terracotta-700'
-                    : status === 'numire'
-                      ? 'text-forest-800 hover:text-forest-900'
-                      : 'text-forest-600 hover:text-forest-700'
-                }`}
-              >
-                {(() => {
-                  const StatusIcon = STATUS_ICON[status]
-                  return StatusIcon ? <StatusIcon size={11} /> : null
-                })()}
-                <span>{getStatusMeta(status).label}</span>
-                <ChevronDown size={10} className="opacity-60" />
-              </button>
-            )}
-            {/* StatusMenu — portal-based bottom sheet, render'inasi nuo PlantDetail
-                lygmens (ne anchored). Mount'inamas kai showStatusMenu=true (chip
-                click arba ... menu „Pakeisti būklę"). */}
-            {section === 'auginama' && showStatusMenu && (
-              <StatusMenu
-                status={status}
-                section={section}
-                onClose={() => setStatusMenu(false)}
-                onSelect={key => {
-                  setStatusMenu(false)
-                  if (key === 'numire') { onAction?.('died', plant); onClose?.() }
-                  else setPendingStatus({ newStatus: key, fromStatus: status })
-                }}
-              />
+            {/* Status — clickable, atidaro StatusMenu (dropdown).
+                2026-06-01: status chip'as VISADA matomas (net 'healthy' state'e),
+                kad būtų aiškus glance reference + dropdown'o anchor'as visada
+                egzistuoja. Zone chip default-hide lieka (Nepriskirta = placeholder),
+                bet status (Sveikas/Dėmesio/Karantinas/Numirė) nešioja realią
+                semantinę informaciją — visada verta rodyti. */}
+            {section === 'auginama' && (
+              <div className="relative">
+                <button
+                  onClick={() => setStatusMenu(v => !v)}
+                  className={`inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] transition-colors ${
+                    status === 'quarantine' || status === 'sick'
+                      ? 'text-terracotta-600 hover:text-terracotta-700'
+                      : status === 'numire'
+                        ? 'text-forest-800 hover:text-forest-900'
+                        : 'text-forest-600 hover:text-forest-700'
+                  }`}
+                >
+                  {(() => {
+                    const StatusIcon = STATUS_ICON[status]
+                    return StatusIcon ? <StatusIcon size={11} /> : null
+                  })()}
+                  <span>{getStatusMeta(status).label}</span>
+                  <ChevronDown size={10} className="opacity-60" />
+                </button>
+                {showStatusMenu && (
+                  <StatusMenu
+                    status={status}
+                    section={section}
+                    onClose={() => setStatusMenu(false)}
+                    onSelect={key => {
+                      setStatusMenu(false)
+                      if (key === 'numire') { onAction?.('died', plant); onClose?.() }
+                      else setPendingStatus({ newStatus: key, fromStatus: status })
+                    }}
+                  />
+                )}
+              </div>
             )}
 
             <button
