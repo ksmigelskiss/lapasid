@@ -92,12 +92,17 @@ function ZoneSection({ zone, plants, onTap, careMode, careChecked, onCareToggle,
   const sickPlants    = pinChecked(plants.filter(p => p.status === 'sick'),    careMode, careChecked)
   const healthyPlants = pinChecked(plants.filter(p => p.status !== 'sick'), careMode, careChecked)
 
-  const carePropsFn = (plant) => careMode ? {
-    careMode: true,
-    checked: careChecked?.has(plant.id),
-    onToggle: () => onCareToggle(plant.id),
+  // 2026-06-02 — onCareInfo perduodamas VISADA (ne tik careMode), kad
+  // dashboard kortelės long-press atvertų CareWateringSheet'ą be careMode
+  // toggle. Kiti careMode-specific props (checked, onToggle) tik kai aktyvus.
+  const carePropsFn = (plant) => ({
     onCareInfo: () => onCareInfo?.(plant),
-  } : {}
+    ...(careMode ? {
+      careMode: true,
+      checked: careChecked?.has(plant.id),
+      onToggle: () => onCareToggle(plant.id),
+    } : {}),
+  })
 
   return (
     <div ref={containerRef} className="mb-3">
