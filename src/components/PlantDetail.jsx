@@ -1744,6 +1744,26 @@ export default function PlantDetail({
                   <div className="absolute left-0 top-full mt-2 bg-bone rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/50 overflow-hidden z-[200] min-w-[220px]">
                     <p className="font-mono text-[9.5px] font-medium text-forest-500 uppercase tracking-[0.18em] px-3 pt-2.5 pb-1.5">Veiksmai</p>
                     <div className="px-1 pb-1 space-y-px">
+                      {/* 2026-06-01 — Zone/Status entry points (chips default state'e
+                          paslėpti header'yje, tad reikalingas alternatyvus access path) */}
+                      {section === 'auginama' && zones.length > 0 && (
+                        <button
+                          onClick={() => { setShowActionMenu(false); setShowZonePicker(true) }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
+                        >
+                          <MapPin size={14} className="flex-shrink-0" />
+                          <span className="font-display text-sm font-semibold tracking-tight">{currentZone ? 'Keisti zoną' : 'Priskirti zoną'}</span>
+                        </button>
+                      )}
+                      {section === 'auginama' && (
+                        <button
+                          onClick={() => { setShowActionMenu(false); setStatusMenu(true) }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
+                        >
+                          <Leaf size={14} className="flex-shrink-0" />
+                          <span className="font-display text-sm font-semibold tracking-tight">Pakeisti būklę</span>
+                        </button>
+                      )}
                       <button
                         onClick={() => { setShowActionMenu(false); setShowPhoto(true) }}
                         className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
@@ -1764,41 +1784,51 @@ export default function PlantDetail({
               )}
             </div>
 
-            {/* Zone — clickable, atidaro ZonePicker */}
-            {section === 'auginama' && zones.length > 0 && (
+            {/* Zone — clickable, atidaro ZonePicker.
+                2026-06-01: rodom TIK jei plant'as PRISKIRTAS prie zonos. Default
+                „Nepriskirta" placeholder slėpiamas (clutter freshly-saved augaluose).
+                Zonai priskirti — naudoti „Priskirti zoną" iš ... menu. */}
+            {section === 'auginama' && zones.length > 0 && currentZone && (
               <button
                 onClick={() => setShowZonePicker(v => !v)}
                 className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 hover:text-forest-700 transition-colors min-w-0"
               >
                 <MapPin size={11} className="text-forest-400 flex-shrink-0" />
-                <span className="truncate">{currentZone ? currentZone.name : 'Nepriskirta'}</span>
+                <span className="truncate">{currentZone.name}</span>
               </button>
             )}
 
-            {section === 'auginama' && zones.length > 0 && (
+            {section === 'auginama' && zones.length > 0 && currentZone && status !== 'healthy' && (
               <span className="text-forest-300 flex-shrink-0" aria-hidden>·</span>
             )}
 
-            {/* Status — clickable, atidaro StatusMenu */}
+            {/* Status — clickable, atidaro StatusMenu.
+                2026-06-01: wrapper visada mount'inamas (StatusMenu anchor'inasi
+                relative parent'e), bet trigger button matomas TIK kai status ≠
+                'healthy'. Default „Sveikas" slėpiamas (clutter). Status pakeisti —
+                per „Pakeisti būklę" iš ... menu, kuri fire'ina setStatusMenu(true);
+                StatusMenu vis tiek pasirodo šiame anchor slot'e. */}
             {section === 'auginama' && (
               <div className="relative">
-                <button
-                  onClick={() => setStatusMenu(v => !v)}
-                  className={`inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] transition-colors ${
-                    status === 'quarantine' || status === 'sick'
-                      ? 'text-terracotta-600 hover:text-terracotta-700'
-                      : status === 'numire'
-                        ? 'text-forest-800 hover:text-forest-900'
-                        : 'text-forest-600 hover:text-forest-700'
-                  }`}
-                >
-                  {(() => {
-                    const StatusIcon = STATUS_ICON[status]
-                    return StatusIcon ? <StatusIcon size={11} /> : null
-                  })()}
-                  <span>{getStatusMeta(status).label}</span>
-                  <ChevronDown size={10} className="opacity-60" />
-                </button>
+                {status !== 'healthy' && (
+                  <button
+                    onClick={() => setStatusMenu(v => !v)}
+                    className={`inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] transition-colors ${
+                      status === 'quarantine' || status === 'sick'
+                        ? 'text-terracotta-600 hover:text-terracotta-700'
+                        : status === 'numire'
+                          ? 'text-forest-800 hover:text-forest-900'
+                          : 'text-forest-600 hover:text-forest-700'
+                    }`}
+                  >
+                    {(() => {
+                      const StatusIcon = STATUS_ICON[status]
+                      return StatusIcon ? <StatusIcon size={11} /> : null
+                    })()}
+                    <span>{getStatusMeta(status).label}</span>
+                    <ChevronDown size={10} className="opacity-60" />
+                  </button>
+                )}
                 {showStatusMenu && (
                   <StatusMenu
                     status={status}
