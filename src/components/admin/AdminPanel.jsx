@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { getDocs, getDoc, collection, doc, setDoc, updateDoc, deleteDoc, arrayRemove, deleteField, query, orderBy } from 'firebase/firestore'
+import { getDocs, getDoc, collection, doc, setDoc, updateDoc, deleteDoc, arrayRemove, deleteField, query, orderBy, onSnapshot } from 'firebase/firestore'
 import { Users, Database, X, Shield, Sparkles, BadgeCheck, Loader2, RefreshCw, ChevronRight, Mail, Trash2, AlertTriangle, UserCheck, Pencil, Check, BookOpen } from 'lucide-react'
 import { db } from '../../utils/firebase'
 import { bustCatalogCache } from '../../utils/catalog'
@@ -50,14 +50,16 @@ export default function AdminPanel({ currentUid, onClose }) {
   const loadAll = useCallback(async () => {
     setLoading(true); setError(null)
     try {
-      // Parallel loads — catalog ir taxonGroups dabar admin'ui prieinami
-      // tiesiogiai (rules leidžia visiems auth'intiems read'ą).
-      const [usersSnap, colsSnap, invitesSnap, catalogSnap, taxonGroupsSnap] = await Promise.all([
+      // One-shot loads — users / collections / invites keičiasi retai
+      // (admin actions, ne pipeline rezultatai). catalog + taxonGroups
+      // turi atskirą live onSnapshot subscription (žemiau), nes server-side
+      // AI re-enrich pipeline'ai (hero gen, save-plant admin mode)
+      // atnaujina catalog'ą fone — be live subscription, AdminPanel state
+      // užšaldomas mount'e ir UI nerodo realybės (reikia hard refresh).
+      const [usersSnap, colsSnap, invitesSnap] = await Promise.all([
         getDocs(collection(db, 'users')),
         getDocs(collection(db, 'collections')),
         getDocs(collection(db, 'invites')),
-        getDocs(collection(db, 'catalog')),
-        getDocs(collection(db, 'taxonGroups')),
       ])
       const usersList = usersSnap.docs.map(d => ({ uid: d.id, ...d.data() }))
 
@@ -80,14 +82,10 @@ export default function AdminPanel({ currentUid, onClose }) {
       }))
 
       const invitesList = invitesSnap.docs.map(d => ({ token: d.id, ...d.data() }))
-      const catalogList = catalogSnap.docs.map(d => ({ id: d.id, ...d.data() }))
-      const taxonGroupsList = taxonGroupsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
 
       setUsers(usersList.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')))
       setCollections(colsList.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')))
       setInvites(invitesList.sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? '')))
-      setCatalog(catalogList.sort((a, b) => (a.lotyniskas ?? '').localeCompare(b.lotyniskas ?? '')))
-      setTaxonGroups(taxonGroupsList.sort((a, b) => (a.genus ?? a.name ?? '').localeCompare(b.genus ?? b.name ?? '')))
     } catch (e) {
       console.error('[admin] load failed:', e)
       setError(e?.message ?? 'Nepavyko įkelti duomenų. Patikrink Firestore Rules.')
@@ -96,6 +94,39 @@ export default function AdminPanel({ currentUid, onClose }) {
   }, [])
 
   useEffect(() => { loadAll() }, [loadAll])
+
+  // ── Live catalog + taxonGroups subscription (2026-06-01) ─────────────
+  //
+  // Anksčiau AdminPanel'ė naudojo getDocs() (one-shot) — catalog state
+  // užšaldomas mount'e. Kai admin'as paspaudžia „Atnaujinti foto", server'is
+  // perrašo catalog.heroIllustration, BET AdminPanel state nesigauna update'o
+  // → IllustrationSection ir LIVE preview rodo seną iliustraciją iki kol
+  // admin'as nepadarys hard refresh'o (full page reload → AdminPanel remount →
+  // fresh getDocs).
+  //
+  // Fix'as: onSnapshot live subscription. Pirmas snapshot'as fire'inasi
+  // beveik instant, vėlesni — kai serveris keičia. Cost: dvi papildomos
+  // listener jungtys per admin sesiją (catalog ~100 docs, taxonGroups <50).
+  // Pigūs vs hard refresh UX.
+  useEffect(() => {
+    const unsubCatalog = onSnapshot(
+      collection(db, 'catalog'),
+      snap => {
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        setCatalog(list.sort((a, b) => (a.lotyniskas ?? '').localeCompare(b.lotyniskas ?? '')))
+      },
+      e => console.warn('[admin] catalog subscription error:', e),
+    )
+    const unsubTaxons = onSnapshot(
+      collection(db, 'taxonGroups'),
+      snap => {
+        const list = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        setTaxonGroups(list.sort((a, b) => (a.genus ?? a.name ?? '').localeCompare(b.genus ?? b.name ?? '')))
+      },
+      e => console.warn('[admin] taxonGroups subscription error:', e),
+    )
+    return () => { unsubCatalog(); unsubTaxons() }
+  }, [])
 
   // ── Mutations ────────────────────────────────────────────────────
   const toggleAdmin = async (uid, current) => {
