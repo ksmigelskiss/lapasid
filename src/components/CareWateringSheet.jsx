@@ -426,10 +426,17 @@ export default function CareWateringSheet({
           </div>
 
           {/* LAISTYMAS sekcija */}
+          {/* 2026-06-02 — methodHint dabar iš prieziura.laistymas (WHEN+KODĖL
+              narrative) vietoj metodas (HOW technika). Sheet kontekste user'iui
+              aktualiausia: kada laistyti (kai sluoksnis pradžiūsta? laistant iš
+              karto kai praeina X dienų? ar yra signal'as iš augalo?). „Iš viršaus,
+              kol išteka" technika čia padeda mažiau — admin'as paprastai jau
+              moka laistyti, nori žinoti TIMING signal'ą.
+              Fallback'as į metodas (legacy) jei narrative dar netrūksta. */}
           <StatusBlock
             icon={<Droplets size={18} />}
             title="Laistymas"
-            methodHint={wc.metodas}
+            methodHint={plant.prieziura?.laistymas || wc.metodas}
             lastDate={wc.lastDate}
             intervalLabel={waterIntervalLabel}
             nextDate={wc.nextDate}
