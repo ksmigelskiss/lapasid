@@ -42,6 +42,7 @@ import { ProfileContent } from '../PlantDetail'
 import PlantImage from '../brand/PlantImage'
 import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS } from '../../utils/taxonGroups'
 import { parseLatinName } from '../../utils/latinName'
+import { catalogDocId } from '../../utils/catalog'
 import { auth } from '../../utils/firebase'
 import { ExternalLink, Sun, Droplets, Thermometer, Wind, Sparkles, Calendar } from 'lucide-react'
 import { getFertilizingSummary } from '../../utils/fertilizingForecast'
@@ -544,6 +545,39 @@ export default function LibraryEditorV2({
   const handleRegenText = useCallback(() => dispatchReEnrich('text'), [dispatchReEnrich])
   const handleRegenFull = useCallback(() => dispatchReEnrich('full'), [dispatchReEnrich])
 
+  // 2026-06-01 — Create genus entry on-demand iš sintezuoto header'io.
+  // Synthetic genus group'as rodomas italic + „no entry" kai catalog'e
+  // nėra atitinkamo įrašo (e.g. yra „Alocasia portodora" species, bet
+  // nėra paties „Alocasia" genus entry'io). Click ant naujo „+ Sukurti"
+  // mygtuko → sukuria minimalų genus catalog'o įrašą + auto-select edit'ui.
+  // Po sukūrimo header'is tampa clickable kaip įprastas catalog entry'is.
+  const handleCreateGenusEntry = useCallback(async (latinGenus) => {
+    if (!latinGenus) return
+    const id = catalogDocId(latinGenus)
+    if (!id) return
+    if (catalog.some(c => c.id === id)) {
+      // Race — jau egzistuoja (galbūt kitas admin'as sukūrė tuo metu)
+      setSelectedId(id)
+      setSelectedType('cultivar')
+      return
+    }
+    try {
+      await onSaveCatalog(id, {
+        lotyniskas: latinGenus,
+        schemaVersion: 2,
+        kategorija: 'auginama',
+      })
+      // onSnapshot listener'is per AdminPanel atneš naują entry'į; setSelectedId
+      // čia immediate, kad admin'as iškart pamatytų edit form'ą (selectedEntry
+      // resolve'inasi iš catalog state'o, kuris greitai sinchronizuosis).
+      setSelectedId(id)
+      setSelectedType('cultivar')
+    } catch (e) {
+      console.error('[admin] create genus entry failed:', e?.message)
+      alert(`Nepavyko sukurti gentį „${latinGenus}": ${e?.message ?? 'unknown error'}`)
+    }
+  }, [catalog, onSaveCatalog])
+
   const handleSaveImageOnly = useCallback(async (newUrl) => {
     if (!selectedEntry || selectedType !== 'cultivar') return
     setSaving(true)
@@ -596,6 +630,7 @@ export default function LibraryEditorV2({
         expanded={expanded}
         toggleExpand={toggleExpand}
         setExpanded={setExpanded}
+        onCreateGenusEntry={handleCreateGenusEntry}
         selectedId={selectedId}
         onSelect={handleSelect}
         dirty={dirty}
@@ -678,6 +713,7 @@ function LeftPaneList({
   activeFilter, setActiveFilter,
   expanded, toggleExpand, setExpanded,
   selectedId, onSelect, dirty,
+  onCreateGenusEntry,
 }) {
   // 3-level hierarchy: Genus → Species → (Series → Cultivars)
   //
@@ -906,6 +942,7 @@ function LeftPaneList({
                 onSelect={onSelect}
                 dirty={dirty}
                 seriesMode={activeFilter === 'series'}
+                onCreateGenusEntry={onCreateGenusEntry}
               />
             ))}
           </ul>
@@ -1098,7 +1135,7 @@ const heroThumb = e => e?.heroIllustration ?? e?.image ?? null
 // SINGLETON SERIES: jei grupė turi `_singletonSeries` flag'ą (synthetic
 // genus su 1 series member'iu), rodom seriją tiesiai top-level — be genus
 // header'io virš. Vienodumas su standalone genus entries.
-function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSeries, selectedId, onSelect, dirty, seriesMode }) {
+function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSeries, selectedId, onSelect, dirty, seriesMode, onCreateGenusEntry }) {
   const { genus, entry, members, series } = group
   // Series filter mode'e rodom g.series; default — g.members (flat entries).
   const renderList = seriesMode ? series : members
@@ -1172,19 +1209,39 @@ function GenusGroupRow({ group, expanded, onToggleGenus, expandedSet, onToggleSe
             </div>
           </button>
         ) : (
-          // Genus entry nėra catalog'e — synthetic header, NEclickable
-          <div className="flex-1 flex items-center gap-2 min-w-0 opacity-70" title="Genus catalog entry'is neegzistuoja — grupuojama vizualiai pagal Latin name">
-            <div className="w-7 h-7 flex-shrink-0 rounded-md bg-bone-200/60 flex items-center justify-center">
-              <Layers size={11} className="text-forest-300" />
+          // Genus entry nėra catalog'e — synthetic header. Pridedam mažytį
+          // „+ Sukurti" mygtuką dešinėje, kad admin'as galėtų lengvai
+          // sukurti realų catalog entry'į genus'ui (LT pavadinimas + care
+          // šablonas → cascade į species).
+          <div className="flex-1 flex items-center gap-2 min-w-0">
+            <div className="flex items-center gap-2 flex-1 min-w-0 opacity-70" title="Genus catalog entry'is neegzistuoja — grupuojama vizualiai pagal Latin name">
+              <div className="w-7 h-7 flex-shrink-0 rounded-md bg-bone-200/60 flex items-center justify-center">
+                <Layers size={11} className="text-forest-300" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold truncate leading-tight italic text-forest-500">
+                  {genus}
+                </p>
+                <p className="text-[10px] text-forest-400 font-mono leading-tight">
+                  no entry · {renderList.length}
+                </p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold truncate leading-tight italic text-forest-500">
-                {genus}
-              </p>
-              <p className="text-[10px] text-forest-400 font-mono leading-tight">
-                no entry · {renderList.length}
-              </p>
-            </div>
+            {onCreateGenusEntry && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (window.confirm(`Sukurti catalog entry „${genus}"?\n\nVisi šio genus'o species/cultivars galės paveldėti šio entry'io care/info laukus (kilme, savybes, sviesa, vanduo, ...).`)) {
+                    onCreateGenusEntry(genus)
+                  }
+                }}
+                className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-btn-sm text-[10px] font-medium text-forest-600 hover:bg-forest-100 transition-colors"
+                title={`Sukurti gentį „${genus}" catalog'e (galėsi pridėti LT pavadinimą + care šabloną)`}
+              >
+                <Plus size={10} />
+                <span>Sukurti</span>
+              </button>
+            )}
           </div>
         )}
       </div>
