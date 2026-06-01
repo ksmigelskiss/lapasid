@@ -429,11 +429,15 @@ export default function LibraryEditorV2({
   useEffect(() => {
     if (!aiActionStartedAt) return
     if (aiActionState !== 'text' && aiActionState !== 'full') return
+    // 2026-06-01 — 90s buvo per arti ribos: Sonnet Phase 2 trunka iki ~60s
+    // hard atvejais, plus snapshot delivery delay'us. 180s padengia 99%
+    // realių atvejų; jei kažkas užstrigsta ilgesniam laikui — admin'as
+    // gali iškart refresh'inti.
     const failsafe = setTimeout(() => {
-      console.warn('[admin] re-enrich 90s failsafe — clearing loading state', { aiActionState })
+      console.warn('[admin] re-enrich 180s failsafe — clearing loading state', { aiActionState })
       setAiActionState(null)
       setAiActionStartedAt(null)
-    }, 90000)
+    }, 180000)
     return () => clearTimeout(failsafe)
   }, [aiActionStartedAt, aiActionState])
 
@@ -1528,16 +1532,24 @@ function CenterPaneEditor({
         {/* 2026-06-01 — AI action progress banner. Tab-independent, kad
             admin'as matytų progress'ą net būdamas Identifikacija/Toksiškumas
             tab'e (kur IllustrationSection ir RightPanePreview iliustracijos
-            overlay'ų nemato). Sticky header rodo banner'į kiek visi 3
-            pipeline'ai vyksta. */}
+            overlay'ų nemato). Sticky header rodo banner'į kol visi 3
+            pipeline'ai vyksta. Real-time stage'as surfacin'amas iš
+            catalog snapshot'o (entry.enrichmentStage). */}
         {(aiActionState === 'text' || aiActionState === 'hero' || aiActionState === 'full') && (
           <div className="mx-5 mb-3 px-3 py-2 bg-forest-50 border border-forest-200/60 rounded-md text-[11px] text-forest-700 flex items-center gap-2">
             <Loader2 size={11} className="animate-spin flex-shrink-0" />
-            <span>
-              {aiActionState === 'text' && 'Tekstas atnaujinamas fone — RAG + Sonnet narrative + care + toxicity (~25-35s)…'}
-              {aiActionState === 'hero' && 'Iliustracija generuojama — Gemini watercolor restyle (~20-40s)…'}
-              {aiActionState === 'full' && 'Tekstas + foto generuojami paraleliai (~30-40s)…'}
-            </span>
+            <div className="flex-1 min-w-0">
+              <p className="leading-tight">
+                {aiActionState === 'text' && 'Tekstas atnaujinamas fone — RAG + Sonnet narrative + care + toxicity (~25-60s)'}
+                {aiActionState === 'hero' && 'Iliustracija generuojama — Gemini watercolor restyle (~20-40s)'}
+                {aiActionState === 'full' && 'Tekstas + foto generuojami paraleliai (~30-60s)'}
+              </p>
+              {entry?.enrichmentStage && entry.enrichmentStage !== 'complete' && entry.enrichmentStage !== 'failed' && (
+                <p className="text-[10px] text-forest-500 mt-0.5 font-mono">
+                  Server stage: <span className="font-semibold">{stageLabel(entry.enrichmentStage)}</span>
+                </p>
+              )}
+            </div>
           </div>
         )}
 
@@ -1726,6 +1738,19 @@ function ReEnrichItem({ icon, title, hint, cost, onClick }) {
       </div>
     </button>
   )
+}
+
+// 2026-06-01 — server-side enrichmentStage → LT label'as banner'iui.
+// Atspindi save-plant.js writeStage() etapus, kad admin'as matytų realią
+// pipeline pažangą (ne tik generic „atnaujinama").
+function stageLabel(stage) {
+  switch (stage) {
+    case 'started':   return 'startavom'
+    case 'rag':       return 'renkam šaltinius (Wikipedia/PFAF/ASPCA)'
+    case 'narrative': return 'AI rašo tekstą + care + toxicity'
+    case 'image':     return 'generuojam iliustraciją'
+    default:          return stage
+  }
 }
 
 function TabButton({ tab, active, dirty, onClick, shortcutIdx }) {

@@ -58,6 +58,13 @@ import { catalogDocId } from './_lib/catalog-server.js'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
+// 2026-06-01 — pinning maxDuration. Default Vercel'io 300s (Node 24 LTS),
+// bet eksplicitiškai dėl waitUntil() background pipeline'o: RAG (~10s) +
+// Sonnet Phase 2 (~30s) + parallel hero (~30s) + catalog/user writes (~2s)
+// = realiai ~45-75s, hard edge case'ai (Sonnet retry, hero re-roll) gali
+// pakelti iki ~120s. 300s buferis padengia.
+export const config = { maxDuration: 300 }
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
