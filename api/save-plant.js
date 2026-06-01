@@ -48,6 +48,7 @@ import { normalizeAIResponse } from '../src/utils/plantTransform.js'
 import { buildPlantRagContextServer } from './_lib/buildPlantRagContext-server.js'
 import { deriveToxicityFromSourcesServer } from './_lib/deriveToxicity-server.js'
 import { generateToxicityNarrativeServer } from './_lib/toxicityNarrativeGenerator-server.js'
+import { resolveLtServer } from './_lib/ltDictionary-server.js'
 import { saveCatalogWithParentServer } from './_lib/taxon-groups-server.js'
 import { saveUserPlantServer, isUidMember } from './_lib/user-plant-server.js'
 import admin from 'firebase-admin'
@@ -337,8 +338,14 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     //   • aiSupplementaryHazard: gap-fill IF DB tyli + whitelist + bar
     // Mūsų DB authority + AI gap-fill (audit-visible per separate field).
     const derivedTox = await deriveToxicityFromSourcesServer(latinName)
+    // 2026-06-01 — resolveLt canonical LT name → narrative gen Sonnet'as
+    // gauna autorityšką LT vardą ir nehallucinate'ina (e.g. „Drakena" iš
+    // „Dracaena trifasciata"). Pulled iš species-lt-names.json + overrides.
+    const ltEntry = await resolveLtServer(latinName).catch(() => null)
+    const ltNameForNarrative = ltEntry?.ltName ?? null
     const nar = await generateToxicityNarrativeServer({
       latinName,
+      ltName: ltNameForNarrative,
       derivedToxicity: derivedTox,
     })
     console.log('[save-plant] narrative AI', {

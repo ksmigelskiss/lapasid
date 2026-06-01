@@ -41,11 +41,14 @@ import { VOICE_PERSONA } from './plantVoicePersona.js'
  * @param {object} opts.derivedToxicity — output of deriveToxicityFromSources
  * @returns {Promise<{detales: string|null, aiSupplementaryHazard: object|null}>}
  */
-export async function generateToxicityNarrative({ claudeCall, latinName, derivedToxicity }) {
+export async function generateToxicityNarrative({ claudeCall, latinName, ltName, derivedToxicity }) {
   const empty = { detales: null, aiSupplementaryHazard: null }
 
-  // Build SOURCE TEXT
+  // Build SOURCE TEXT — su LT name guard, mirror server-side path'o
   const sourceLines = [`PLANT: ${latinName}`]
+  if (ltName) {
+    sourceLines.push(`LT NAME (canonical, USE THIS EXACTLY): ${ltName}`)
+  }
   sourceLines.push('')
 
   if (derivedToxicity?.hasToxicity) {

@@ -39,12 +39,19 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
  *   error?: string,
  * }>}
  */
-export async function generateToxicityNarrativeServer({ latinName, derivedToxicity }) {
+export async function generateToxicityNarrativeServer({ latinName, ltName, derivedToxicity }) {
   const t0 = Date.now()
   const empty = { detales: null, aiSupplementaryHazard: null, elapsedMs: 0 }
 
   // Build SOURCE TEXT — branch'as: DB has data vs DB empty
+  // 2026-06-01 — perduodam canonical LT name iš resolveLt lookup'o (curated
+  // species-lt-names.json + lt-names-overrides.json). Sonnet anksčiau matydavo
+  // tik Latin name → Lithuanianize'indavo pats (e.g. „Dracaena trifasciata"
+  // → „Drakena"). Naudojam Phase 1 dictionary kaip authoritative LT source.
   const sourceLines = [`PLANT: ${latinName}`]
+  if (ltName) {
+    sourceLines.push(`LT NAME (canonical, USE THIS EXACTLY): ${ltName}`)
+  }
   sourceLines.push('')
 
   if (derivedToxicity?.hasToxicity) {
