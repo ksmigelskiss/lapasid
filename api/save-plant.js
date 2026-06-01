@@ -177,6 +177,65 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
     // Stage: started — pirmas signal'as klientui kad enrichment vyksta
     await writeStage('started', { enrichmentStartedAtServer: new Date().toISOString() })
 
+    // ── 0.5. Hero pipeline (PARALLEL — independent of text pipeline) ────
+    // 2026-06-01: Gemini hero gen needs only Phase 1 data (latin + name +
+    // image), so run paraleliai su RAG/Sonnet/toxicity text pipeline'u.
+    // Total wall time max(text, hero) instead of sequential sum (~30s saved).
+    //
+    // Hero writes own catalog field (heroIllustration + heroThumb) per
+    // merge:true update — saugu kartu su text pipeline saveCatalogWithParentServer.
+    //
+    // Promise PALEISTA dabar, AWAIT'INTA žemiau po text pipeline done.
+    const heroToken = process.env.VERCEL_OIDC_TOKEN || process.env.AI_GATEWAY_API_KEY
+    const heroEntry = {
+      lotyniskas: latinName,
+      lietuviškas: name,
+      image: baseResult?.image ?? null,
+    }
+    const heroPromise = (async () => {
+      if (!heroToken) return { ok: false, reason: 'no-token' }
+      try {
+        const hg = createHeroGen({ token: heroToken })
+        const { buf: rawBuf, heroPromptBrief, heroPhotoAssessment, _heroMethod } =
+          await hg.generateHeroForEntry(heroEntry, { braveApiKey: process.env.BRAVE_API_KEY })
+
+        // Sharp pipeline: enforce 3:2 landscape + crop to square thumb
+        const heroBuf = await forceAspect3x2(rawBuf)
+        const thumbBuf = await cropToThumb(heroBuf, 512)
+
+        const slug = catalogDocId(latinName)
+        const bucket = admin.storage().bucket('geliu-db.firebasestorage.app')
+        const cacheBust = Date.now()
+
+        const heroFilename = `catalog/${slug}/hero-illus.png`
+        const heroFile = bucket.file(heroFilename)
+        await heroFile.save(heroBuf, { contentType: 'image/png', metadata: { cacheControl: 'public, max-age=31536000, immutable' } })
+        await heroFile.makePublic()
+        const url = `https://storage.googleapis.com/${bucket.name}/${heroFilename}?v=${cacheBust}`
+
+        const thumbFilename = `catalog/${slug}/hero-thumb.webp`
+        const thumbFile = bucket.file(thumbFilename)
+        await thumbFile.save(thumbBuf, { contentType: 'image/webp', metadata: { cacheControl: 'public, max-age=31536000, immutable' } })
+        await thumbFile.makePublic()
+        const thumbUrl = `https://storage.googleapis.com/${bucket.name}/${thumbFilename}?v=${cacheBust}`
+
+        // Write hero fields ATSKIRAI (independent merge) — ProgressView'as
+        // gali rodyti watercolor tiek pat anksti kiek hero baigia, NESVARBU
+        // kas su text pipeline.
+        await adminFirestore().collection('catalog').doc(slug).set({
+          heroIllustration: url,
+          heroThumb: thumbUrl,
+          heroPromptBrief, heroPhotoAssessment, _heroMethod,
+          _heroIllustrationAt: new Date().toISOString(),
+        }, { merge: true })
+        console.log('[save-plant] hero gen done (parallel)', { slug, method: _heroMethod })
+        return { ok: true, url, thumbUrl }
+      } catch (e) {
+        console.warn('[save-plant] hero gen failed (parallel):', e?.message)
+        return { ok: false, reason: e?.message ?? 'unknown' }
+      }
+    })()
+
     // ── 1. RAG context ──────────────────────────────────────
     const ragStart = Date.now()
     const rag = await buildPlantRagContextServer(latinName, {
@@ -433,62 +492,18 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
       plantId, ok: userRes?.ok, reason: userRes?.reason,
     })
 
-    // ── 7. Hero drawing gen (PO catalog+user write) ─────────
-    // Server-side, NE client trigger — client'as fire'indavo /api/generate-hero
-    // IŠKART po onSave, bet catalog entry rašomas čia (async) → race → route 404.
-    // Dabar catalog jau parašytas (step 5) → generuojam tiesiai iš fullPlant.
-    const heroToken = process.env.VERCEL_OIDC_TOKEN || process.env.AI_GATEWAY_API_KEY
-    if (details.laistymasIntervalas && heroToken) {
-      // Stage: image — hero generation starts (longest individual step, 20-40s)
-      await writeStage('image')
-      try {
-        const hg = createHeroGen({ token: heroToken })
-        const { buf: rawBuf, heroPromptBrief, heroPhotoAssessment, _heroMethod } =
-          await hg.generateHeroForEntry(fullPlant, { braveApiKey: process.env.BRAVE_API_KEY })
+    // ── 7. Wait for parallel hero pipeline ─────────────────
+    // Hero gen pradėjom paraleliai (step 0.5). Dabar laukiam pabaigos, kad
+    // galėtume pažymėti final 'complete' stage'ą. Hero gali finish'inti
+    // ANKSCIAU nei text pipeline (~20s vs ~30s) arba VĖLIAU — nesvarbu,
+    // abu rezultatai atsiranda catalog'e per atskirus merge:true write'us.
+    const heroResult = await heroPromise
+    console.log('[save-plant] hero pipeline result', { plantId, ok: heroResult?.ok, reason: heroResult?.reason })
 
-        // 2026-06-01: enforce 3:2 landscape + generate thumb 1:1 webp (mirror'as
-        // generate-hero.js endpoint'ui). PlantDetail naudoja hero (3:2), PlantCard
-        // widget'as krauna thumb (~10× greitiau už PNG hero).
-        const heroBuf = await forceAspect3x2(rawBuf)
-        const thumbBuf = await cropToThumb(heroBuf, 512)
-
-        const slug = catalogDocId(latinName)
-        const bucket = admin.storage().bucket('geliu-db.firebasestorage.app')
-        const cacheBust = Date.now()
-
-        const heroFilename = `catalog/${slug}/hero-illus.png`
-        const heroFile = bucket.file(heroFilename)
-        await heroFile.save(heroBuf, { contentType: 'image/png', metadata: { cacheControl: 'public, max-age=31536000, immutable' } })
-        await heroFile.makePublic()
-        const url = `https://storage.googleapis.com/${bucket.name}/${heroFilename}?v=${cacheBust}`
-
-        const thumbFilename = `catalog/${slug}/hero-thumb.webp`
-        const thumbFile = bucket.file(thumbFilename)
-        await thumbFile.save(thumbBuf, { contentType: 'image/webp', metadata: { cacheControl: 'public, max-age=31536000, immutable' } })
-        await thumbFile.makePublic()
-        const thumbUrl = `https://storage.googleapis.com/${bucket.name}/${thumbFilename}?v=${cacheBust}`
-
-        await adminFirestore().collection('catalog').doc(slug).update({
-          heroIllustration: url,
-          heroThumb: thumbUrl,
-          heroPromptBrief, heroPhotoAssessment, _heroMethod,
-          _heroIllustrationAt: new Date().toISOString(),
-          // Stage: complete — hero ready, all enrichment done
-          enrichmentStage: 'complete',
-          enrichmentUpdatedAt: new Date().toISOString(),
-        })
-        console.log('[save-plant] hero gen done', { slug, method: _heroMethod, hero: url, thumb: thumbUrl })
-      } catch (e) {
-        console.warn('[save-plant] hero gen failed', e?.message)
-        // Hero fail'ino, BET enrichment text/care vis tiek ready (narrative stage'as).
-        // Pažymim 'complete' nors hero missing — UI parodys placeholder/emoji.
-        await writeStage('complete', { _heroError: e?.message ?? 'unknown' })
-      }
-    } else {
-      // Hero gen skipped (no laistymasIntervalas ar no heroToken) — vis tiek
-      // pažymim complete kad client'as UI nelauks amžinai.
-      await writeStage('complete')
-    }
+    // Final stage: complete — abu pipelines done, viskas yra
+    await writeStage('complete', {
+      ...(!heroResult?.ok ? { _heroError: heroResult?.reason ?? 'unknown' } : {}),
+    })
 
     console.log('[save-plant] DONE', { plantId, totalMs: Date.now() - t0 })
   } catch (err) {

@@ -2363,9 +2363,21 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
       }
       const aiShape = catalogEntryToAIResult(enriched)
       await onAddToWishlist(aiShape)
+      // 2026-06-01 — switch to EnrichmentProgress instead of onClose for
+      // consistency su SaveButton'o flow'u. Catalog hit case'as: enrichment
+      // jau complete (catalog turi visą data) — EnrichmentProgress detect'ins
+      // tai per catalog'o jau-egzistuojantį `laistymasIntervalas` ir parodys
+      // immediate „complete" state'ą.
+      setEnrichmentTarget({
+        latinName: enriched.lotyniskas ?? entry.lotyniskas,
+        name: enriched.lietuviškas ?? entry.lietuviškas,
+        image: enriched.image ?? entry.image,
+      })
+    } catch (e) {
+      console.warn('[handleCatalogAdd] failed:', e?.message)
+      onClose?.()
     } finally {
       setSavingPhase2(false)
-      onClose?.()
     }
   }
 
