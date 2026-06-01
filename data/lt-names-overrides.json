@@ -130,8 +130,540 @@
     },
     "Hibiscus": {
       "ltName": "kinrožė",
-      "ltSynonyms": ["hibiskas"],
+      "ltSynonyms": [
+        "hibiskas"
+      ],
       "source": "admin review 2026-05-31 — kinrožė įprastai naudojama LT botanikoj; hibiskas yra sinonimas"
+    },
+    "Acaena": {
+      "ltName": "Acenos",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+sodospalvos-names.json)"
+    },
+    "Achillea": {
+      "ltName": "kraujažolė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Aconitum": {
+      "ltName": "Kurpelė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Actaea": {
+      "ltName": "Juodžolė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Actinidia": {
+      "ltName": "Aktinidija",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Agrostemma": {
+      "ltName": "Raugė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Alocasia": {
+      "ltName": "Alokazija",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: gaspadorius-detail.json+lt-names-wiki.json)"
+    },
+    "Alyssum": {
+      "ltName": "Laibenis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Amaranthus": {
+      "ltName": "Burnotis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Antennaria": {
+      "ltName": "Katpėdė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Anthurium": {
+      "ltName": "Anturis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: sodospalvos-names.json+gaspadorius-detail.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Anthyllis": {
+      "ltName": "Perluotis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Aquilegia": {
+      "ltName": "Sinavadas",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Armeria": {
+      "ltName": "Gvaizdė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: sodospalvos-names.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Arnica": {
+      "ltName": "Arnika",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Asparagus": {
+      "ltName": "Smidras",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: gaspadorius-detail.json+inat-names.json)"
+    },
+    "Atriplex": {
+      "ltName": "Balandūnė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Aubrieta": {
+      "ltName": "Aubretė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Bidens": {
+      "ltName": "Lakišius",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Caladium": {
+      "ltName": "Kaladis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: gaspadorius-detail.json+lt-names-wiki.json)"
+    },
+    "Camellia": {
+      "ltName": "Kamelijos",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: sodospalvos-names.json+inat-names.json)"
+    },
+    "Canna": {
+      "ltName": "Kanos",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+sodospalvos-names.json)"
+    },
+    "Cardamine": {
+      "ltName": "Kartenė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Cerastium": {
+      "ltName": "Glažutė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Cereus": {
+      "ltName": "stulpenis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+derlingas-pairs.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Chrysosplenium": {
+      "ltName": "Blužnutė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Citrus": {
+      "ltName": "Citrinmedis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: gaspadorius-detail.json+lt-names-wiki.json)"
+    },
+    "Clematis": {
+      "ltName": "Raganė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Crassula": {
+      "ltName": "storlapis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+inat-names.json)"
+    },
+    "Cyclamen": {
+      "ltName": "Ciklamenai",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+sodospalvos-names.json)"
+    },
+    "Cynoglossum": {
+      "ltName": "Šunlielė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Cytisus": {
+      "ltName": "Raipstas",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Dahlia": {
+      "ltName": "Jurginai",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+sodospalvos-names.json)"
+    },
+    "Dicentra": {
+      "ltName": "Auskarėliai",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: sodospalvos-names.json+lt-names-wiki.json)"
+    },
+    "Draba": {
+      "ltName": "Anksta",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: sodospalvos-names.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Echeveria": {
+      "ltName": "eševerija",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+gaspadorius-detail.json)"
+    },
+    "Echinops": {
+      "ltName": "Bandrenis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Echium": {
+      "ltName": "Ežeinis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Epidendrum": {
+      "ltName": "epidendrai",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+sodospalvos-names.json)"
+    },
+    "Epiphyllum": {
+      "ltName": "lapenis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+lt-names-wiki.json)"
+    },
+    "Eranthis": {
+      "ltName": "Erantis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Erodium": {
+      "ltName": "Dalgutis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Eupatorium": {
+      "ltName": "Kemeras",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Fritillaria": {
+      "ltName": "Margutė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Galega": {
+      "ltName": "Ožiarūtis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Geum": {
+      "ltName": "Žiognagė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Hesperis": {
+      "ltName": "Vakarutė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Hippeastrum": {
+      "ltName": "meilenis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Hosta": {
+      "ltName": "Melsvė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+derlingas-pairs.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Hydrocharis": {
+      "ltName": "Vandenplūkis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Iberis": {
+      "ltName": "Rudgrūdėlė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Ipomoea": {
+      "ltName": "Sukutis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Isopyrum": {
+      "ltName": "Bligna",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Jasminum": {
+      "ltName": "Jazminaitis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+sodospalvos-names.json+lt-names-wiki.json)"
+    },
+    "Juglans": {
+      "ltName": "Riešutmedis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Laburnum": {
+      "ltName": "Pupmedis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Lamium": {
+      "ltName": "Notrelė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Laurus": {
+      "ltName": "Lauramedis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Leucojum": {
+      "ltName": "Leukoja",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Liriodendron": {
+      "ltName": "Tulpmedis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Lunaria": {
+      "ltName": "Blizgė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Maianthemum": {
+      "ltName": "Medutė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Maranta": {
+      "ltName": "Maranta",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: gaspadorius-detail.json+inat-names.json)"
+    },
+    "Monarda": {
+      "ltName": "Monarda",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+lt-names-wiki.json)"
+    },
+    "Myriophyllum": {
+      "ltName": "Plunksnalapė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Narcissus": {
+      "ltName": "narcizai",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+sodospalvos-names.json)"
+    },
+    "Nepenthes": {
+      "ltName": "Ąsoteniai",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: sodospalvos-names.json+inat-names.json)"
+    },
+    "Nuphar": {
+      "ltName": "Lūgnė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Nymphoides": {
+      "ltName": "Plaumuonė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Oenothera": {
+      "ltName": "Nakviša",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Omphalodes": {
+      "ltName": "Poraitis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Ononis": {
+      "ltName": "Dirvenis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Opuntia": {
+      "ltName": "opuncija",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+lt-names-wiki.json)"
+    },
+    "Ornithogalum": {
+      "ltName": "Paukštpienė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: sodospalvos-names.json+sodospalvos-names.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Paphiopedilum": {
+      "ltName": "raibuolės",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+sodospalvos-names.json)"
+    },
+    "Parthenocissus": {
+      "ltName": "Vynvytis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Passiflora": {
+      "ltName": "Pasiflora",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: sodospalvos-names.json+gaspadorius-detail.json+inat-names.json)"
+    },
+    "Petasites": {
+      "ltName": "Šaukštis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Phlox": {
+      "ltName": "Flioksai",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+sodospalvos-names.json)"
+    },
+    "Phytolacca": {
+      "ltName": "Fitolaka",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Pilea": {
+      "ltName": "Pilėja",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: gaspadorius-detail.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Pinguicula": {
+      "ltName": "Tuklė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Potentilla": {
+      "ltName": "Sidabražolė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Pulsatilla": {
+      "ltName": "Šilagėlė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Pyrola": {
+      "ltName": "Kriaušlapė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Rhododendron": {
+      "ltName": "Rododendras",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Rosa": {
+      "ltName": "Erškėtis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Saintpaulia": {
+      "ltName": "Sanpaulija",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+derlingas-pairs.json+lt-names-wiki.json)"
+    },
+    "Saponaria": {
+      "ltName": "Putoklis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: sodospalvos-names.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Saxifraga": {
+      "ltName": "Uolaskėlė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Scabiosa": {
+      "ltName": "Žvaigždūnė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Sedum": {
+      "ltName": "Šilokai",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+derlingas-pairs.json+sodospalvos-names.json)"
+    },
+    "Sempervivum": {
+      "ltName": "šilropės",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+sodospalvos-names.json)"
+    },
+    "Sesleria": {
+      "ltName": "Mėlitai",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: sodospalvos-names.json+sodospalvos-names.json)"
+    },
+    "Silene": {
+      "ltName": "Naktižiedė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Solidago": {
+      "ltName": "Rykštenė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Spathiphyllum": {
+      "ltName": "Vėzdūnė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Stachys": {
+      "ltName": "Notra",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+inat-names.json+lt-names-wiki.json)"
+    },
+    "Tamarix": {
+      "ltName": "Eglūnas",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Tanacetum": {
+      "ltName": "Bitkrėslė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Teucrium": {
+      "ltName": "Berutis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Trifolium": {
+      "ltName": "Dobilas",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Tropaeolum": {
+      "ltName": "Nasturtė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Utricularia": {
+      "ltName": "Skendenis",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Verbascum": {
+      "ltName": "Tūbė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: inat-names.json+lt-names-wiki.json)"
+    },
+    "Zinnia": {
+      "ltName": "Gvaizdūnė",
+      "ltSynonyms": [],
+      "source": "audit-2026-06-01 (consensus: derlingas-pairs.json+inat-names.json+lt-names-wiki.json)"
     }
   },
   "species": {
@@ -213,7 +745,16 @@
     "solanum pseudocapsicum": "Koralinė kiauliauogė",
     "strelitzia reginae": "Puošnioji strelicija",
     "tillandsia usneoides": "Kedeninė tilandsija",
-    "zantedeschia aethiopica": "Abisininė kalija"
+    "zantedeschia aethiopica": "Abisininė kalija",
+    "acorus calamus": "Ajeras balinis",
+    "centaurea cyanus": "Rugiagėlė",
+    "chlorophytum comosum": "Chlorofitas",
+    "echinacea purpurea": "Rausvažiedė ežiuolė",
+    "erica carnea": "Pavasarinė erika",
+    "hydrangea macrophylla": "Didžialapės hortenzijos",
+    "koeleria glauca": "Kelerija Melsvoji",
+    "lysimachia nummularia": "Šliaužiančioji šilingė",
+    "pulsatilla vulgaris": "Paprastoji šilagėlė"
   },
   "_pending_review": {
     "_comment": "Šie reikalauja admin/botanist review. Pridėti į 'genus' jei aprovuoji.",
