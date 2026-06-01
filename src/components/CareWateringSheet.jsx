@@ -37,10 +37,22 @@ function daysSince(iso) {
   return Math.floor((Date.now() - new Date(iso + 'T00:00:00')) / 86400000)
 }
 
-// ── Editorial status block — vienas patternas Laistymui + Tręšimui ────────
-// Mono caps section header + border-l accent + label/value rows.
+// ── Compact status block — action-focused care decision view (2026-06-01) ──
+//
+// Decluttered layout su 3 vertikaliomis linijomis (vs anksčiau 6+ label/value
+// rows + full narrative):
+//
+//   💧 Laistymas
+//      Vėluoja 7 d.                        ← primary signal (BOLD overdue)
+//      Paskutinis 05-18 · kas 7 d.         ← secondary context (small)
+//      💡 Iš apačios, venk žiedų centro    ← optional method tip (subtle)
+//
+// Drop'inta: ilgas description narrative'as (duplikatas iš PlantDetail) +
+// daugkartinės METODAS/PASKUTINIS/REKOMENDUOJAMA/VĖLUOJA/KITAS row'os.
+// Action-focused: vartotojas šitame sheet'e turi greitai matyti „ar reikia
+// laistyti dabar" — ne mokytis apie augalą.
 
-function StatusBlock({ icon, title, description, methodHint, lastDate, intervalLabel, nextDate, daysUntil, isOverdue, isSnoozed, tone, snoozedUntil, lastInspectionDate }) {
+function StatusBlock({ icon, title, methodHint, lastDate, intervalLabel, nextDate, daysUntil, isOverdue, isSnoozed, tone, snoozedUntil, lastInspectionDate }) {
   // tone: 'forest' (water) | 'terracotta' (fert)
   const accentColor = isOverdue
     ? 'border-terracotta'
@@ -50,62 +62,55 @@ function StatusBlock({ icon, title, description, methodHint, lastDate, intervalL
   const titleColor = tone === 'terracotta' ? 'text-terracotta-600' : 'text-forest-700'
   const iconColor  = tone === 'terracotta' ? 'text-terracotta-500' : 'text-forest-500'
 
+  // Primary signal — vienoje linijoje rodom „ką dabar daryti"
+  let primarySignal = null
+  let primaryClass = 'text-forest-700'
+  if (isSnoozed && snoozedUntil) {
+    primarySignal = `Ramybė iki ${fmtDate(snoozedUntil)}`
+    primaryClass = 'text-forest-600'
+  } else if (isOverdue && daysUntil != null) {
+    primarySignal = `Vėluoja ${Math.abs(daysUntil)} d.`
+    primaryClass = 'text-terracotta-600 font-bold'
+  } else if (daysUntil === 0) {
+    primarySignal = 'Šiandien'
+    primaryClass = 'text-forest-700 font-bold'
+  } else if (daysUntil != null && daysUntil > 0) {
+    primarySignal = `Po ${daysUntil} d.${nextDate ? ` · ${fmtDate(nextDate)}` : ''}`
+  } else if (intervalLabel) {
+    primarySignal = `Kas ${intervalLabel.replace(/^kas /, '')}`
+  }
+
+  // Secondary context — compact „Paskutinis X · kas Y d."
+  const since = daysSince(lastDate)
+  const contextParts = []
+  if (lastDate) {
+    contextParts.push(`Paskutinis ${fmtDate(lastDate)}${since != null ? ` (${since} d.)` : ''}`)
+  }
+  if (intervalLabel && !primarySignal?.startsWith('Kas')) {
+    contextParts.push(intervalLabel)
+  }
+
   return (
-    <section className="space-y-2.5">
+    <section className="space-y-1.5">
       <div className="flex items-center gap-2">
         <div className={iconColor}>{icon}</div>
         <h3 className={`font-display text-base font-semibold tracking-tight ${titleColor}`}>{title}</h3>
       </div>
 
-      {description && (
-        <p className="text-sm text-forest-600 leading-relaxed">{description}</p>
-      )}
-
-      <div className={`pl-3 border-l-2 ${accentColor} space-y-1.5`}>
+      <div className={`pl-3 border-l-2 ${accentColor} space-y-1`}>
+        {primarySignal && (
+          <p className={`text-base tabular-nums ${primaryClass}`}>{primarySignal}</p>
+        )}
+        {contextParts.length > 0 && (
+          <p className="text-xs text-forest-500 tabular-nums">{contextParts.join(' · ')}</p>
+        )}
+        {isSnoozed && lastInspectionDate && !isOverdue && (
+          <p className="text-xs text-forest-500">Patikrinta {fmtDate(lastInspectionDate)}</p>
+        )}
         {methodHint && (
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Metodas</span>
-            <span className="text-sm text-forest-700 text-right max-w-[60%]">{methodHint}</span>
-          </div>
-        )}
-        {lastDate && (
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Paskutinis</span>
-            <span className="text-sm text-forest-700 tabular-nums text-right">
-              {fmtDate(lastDate)}
-              {daysSince(lastDate) != null && (
-                <span className="text-forest-400 font-normal"> · {daysSince(lastDate)} d. atgal</span>
-              )}
-            </span>
-          </div>
-        )}
-        {intervalLabel && (
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Rekomenduojama</span>
-            <span className="text-sm text-forest-700 tabular-nums text-right">{intervalLabel}</span>
-          </div>
-        )}
-        {daysUntil != null && (
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">
-              {isOverdue ? 'Vėluoja' : 'Kitas'}
-            </span>
-            <span className={`text-sm font-bold tabular-nums text-right ${isOverdue ? 'text-terracotta-600' : 'text-forest-700'}`}>
-              {isOverdue
-                ? `${Math.abs(daysUntil)} d.`
-                : daysUntil === 0
-                  ? 'šiandien'
-                  : `po ${daysUntil} d.${nextDate ? ` · ${fmtDate(nextDate)}` : ''}`}
-            </span>
-          </div>
-        )}
-        {isSnoozed && snoozedUntil && (
-          <div className="flex items-baseline justify-between gap-3">
-            <span className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">Patikrinta</span>
-            <span className="text-sm text-forest-700 text-right">
-              {fmtDate(lastInspectionDate)} · ramybė iki {fmtDate(snoozedUntil)}
-            </span>
-          </div>
+          <p className="text-xs text-forest-400 italic leading-snug pt-0.5">
+            <span aria-hidden>💡</span> {methodHint}
+          </p>
         )}
       </div>
     </section>
@@ -140,7 +145,6 @@ export default function CareWateringSheet({
   const fc = getFertilizingForecast(plant)
   const hasImg = !!plant.image
   const intervals = plant.laistymasIntervalas
-  const wateringDesc = plant.prieziura?.laistymas
   const hasFert = fc.intervalDays != null || fc.lastDate
   const showInspect = wc.isOverdue && wc.lastType === 'watering'
   const currentZone = zones.find(z => z.id === plant.zonaId)
@@ -360,7 +364,6 @@ export default function CareWateringSheet({
           <StatusBlock
             icon={<Droplets size={18} />}
             title="Laistymas"
-            description={wateringDesc}
             methodHint={wc.metodas}
             lastDate={wc.lastDate}
             intervalLabel={waterIntervalLabel}
@@ -378,7 +381,7 @@ export default function CareWateringSheet({
             <StatusBlock
               icon={<Leaf size={18} />}
               title="Tręšimas"
-              description={fc.fertilizerTip}
+              methodHint={fc.fertilizerTip}
               lastDate={fc.lastDate}
               intervalLabel={fertIntervalLabel}
               nextDate={fc.nextDate}
