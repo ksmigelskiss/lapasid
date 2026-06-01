@@ -1483,6 +1483,15 @@ export default function PlantDetail({
   const [timelineMode, setTimelineMode]     = useState('events') // 'events' | 'photos' — timeline filtras
   const [heroError, setHeroError]           = useState(false)
   const [heroCollapsed, setHeroCollapsed]   = useState(false)
+
+  // 2026-06-01 — outer scope isEnriching derivation. Anksčiau hero render'yje
+  // (line ~1929) buvo referencuojamas `isEnriching` iš ProfileContent vidinės
+  // funkcijos scope'o → out-of-scope ReferenceError kai augalas neturi heroIllus
+  // (e.g. Sansevieria pre-enrich). `!heroIllus` true → JS skaitydavo isEnriching
+  // → crash. Su heroIllus → short-circuit. Dabar derive'iname outer scope'e ir
+  // ProfileContent vis tiek turi savo lokalų (line 562) — nemodifikuojam ten.
+  const outerEnrichmentState = getPlantEnrichmentState(plant)
+  const outerIsEnriching = outerEnrichmentState === 'enriching'
   // Hero gallery cycling — naudoja plant.photos array'ą (discovery photos
   // iš search'o: Brave + iNat + Wikidata + Wikipedia). Resetinasi į 0 kai
   // pasikeičia plant.id (kitas augalas).
@@ -1926,7 +1935,7 @@ export default function PlantDetail({
               // 2026-06-01: kol watercolor dar piešiamas Phase 2 Gemini'u
               // (~20-40s), ant hero foto rodom subtle loading badge'ą.
               // Vėliau pakeisim tinkama animacija per atskirą polish sprint'ą.
-              const heroIllusLoading = !heroIllus && isEnriching
+              const heroIllusLoading = !heroIllus && outerIsEnriching
               const gallery = (heroDefault
                 ? [heroIllus, plant.image, ...(plant.photos ?? [])]
                 : [plant.image, heroIllus, ...(plant.photos ?? [])])
