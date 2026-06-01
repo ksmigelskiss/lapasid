@@ -17,6 +17,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const DATA = join(__dirname, '..', 'data')
 
 const plants = JSON.parse(readFileSync(join(DATA, 'plants.json'), 'utf-8'))
+// 2026-06-01 — overrides nuo lt-names-overrides.json species section'os.
+// Naudojama curated fix'ams kur plants.json silent'as ar klaidingas (e.g.
+// 2017 Sansevieria→Dracaena reclassification — plants.json scrape'inta tuo
+// metu kai Sansevieria dar buvo atskira gentis, todėl Dracaena trifasciata
+// nėra; overrides užpildo gap'ą).
+const overrides = JSON.parse(readFileSync(join(DATA, 'lt-names-overrides.json'), 'utf-8'))
 const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s)
 
 const map = {}
@@ -32,10 +38,23 @@ for (const e of plants) {
   map[key] = cap(e.lithuanian.trim())
 }
 
+// Apply curated overrides LAST (highest priority — overwrite plants.json
+// duomenis kur reikia). Skip _comment_* meta keys.
+let overrideCount = 0
+let overrideAdded = 0
+for (const [key, value] of Object.entries(overrides.species ?? {})) {
+  if (key.startsWith('_')) continue
+  const wasNew = !(key in map)
+  map[key] = cap(value)
+  overrideCount++
+  if (wasNew) overrideAdded++
+}
+
 const sorted = Object.fromEntries(Object.keys(map).sort().map((k) => [k, map[k]]))
 writeFileSync(join(DATA, 'species-lt-names.json'), JSON.stringify(sorted) + '\n')
 
 console.log(`[build-species-lt] plants.json entries:   ${plants.length}`)
 console.log(`[build-species-lt] multi-word (species):  ${speciesSeen}`)
+console.log(`[build-species-lt] curated overrides:     ${overrideCount} (added: ${overrideAdded}, replaced: ${overrideCount - overrideAdded})`)
 console.log(`[build-species-lt] unique species keys:   ${Object.keys(sorted).length} (dupes skipped: ${dupes})`)
 console.log(`[build-species-lt] → data/species-lt-names.json`)

@@ -135,6 +135,13 @@
     }
   },
   "species": {
+    "_comment_dracaena_sansevieria": "2017 taksonominis merge: Sansevieria genus → Dracaena (genetiniai studijai). LT vernacular community ir toliau naudoja 'sansevjera', NE 'drakena'. AI matydama naują Latin name be lt-names lookup'o hallucinate'ina 'Drakena'/'Trijuostė dracena' — 100% klaida. Šie override'ai užtikrina, kad lookup grąžins korektišką 'Sansevjera' / 'Trijuostė sansevjera' / etc. visiems reclasifikuotiems species.",
+    "dracaena trifasciata": "Trijuostė sansevjera",
+    "dracaena angolensis": "Cilindrinė sansevjera",
+    "dracaena masoniana": "Mason sansevjera",
+    "dracaena pearsonii": "Pearson sansevjera",
+    "dracaena hyacinthoides": "Hiacintinė sansevjera",
+    "dracaena ballyi": "Mahanakorn sansevjera",
     "alpinia galanga": "didžioji alpinija",
     "alpinia officinarum": "vaistinė alpinija",
     "alpinia zerumbet": "gražioji alpinija",
