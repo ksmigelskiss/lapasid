@@ -3015,15 +3015,22 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
               Tavo augalai ({localMatches.length})
             </p>
             <div className="space-y-1.5">
-              {localMatches.map(p => (
+              {localMatches.map(p => {
+                // 2026-06-01 — prefer heroIllustration (watercolor) over real
+                // image. resolvePlantView F1 overlay perduoda catalog.heroIllustration
+                // į user plant view'ą, todėl p.heroIllustration ir p.heroThumb
+                // dažniausiai bus užpildyti. Fallback chain: heroIllustration →
+                // image → emoji placeholder.
+                const thumbSrc = p.heroThumb ?? p.heroIllustration ?? p.image
+                return (
                 <button
                   key={p.id}
                   onClick={() => onViewPlant?.(p)}
                   className="w-full flex items-center gap-3 px-3 py-2.5 bg-bone-50 border border-bone-400/40 rounded-2xl text-left hover:bg-bone-300/40 transition-colors"
                 >
                   <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 bg-bone-300">
-                    {p.image ? (
-                      <PlantImage url={p.image} alt="" size="thumb" className="w-full h-full object-cover" />
+                    {thumbSrc ? (
+                      <PlantImage url={thumbSrc} alt="" size="thumb" className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-xl">{p.emoji ?? '🌿'}</div>
                     )}
@@ -3040,7 +3047,8 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                     {p.kategorija === 'auginama' ? 'Auginu' : p.kategorija === 'nori' ? 'Noriu' : 'Istorija'}
                   </span>
                 </button>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}
@@ -3053,14 +3061,20 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
               Iš bendros bibliotekos ({catalogMatches.length})
             </p>
             <div className="space-y-1.5 max-h-[50vh] overflow-y-auto pr-1">
-              {catalogMatches.map(entry => (
+              {catalogMatches.map(entry => {
+                // 2026-06-01 — fallback chain: watercolor heroThumb (mažas WebP,
+                // optimal'us thumbnail'ui) → heroIllustration (full PNG) → image
+                // (real foto fallback) → emoji. Anksčiau šokom tiesiai į entry.image,
+                // todėl admin'ai matydavo iNat foto vietoj sugeneruotos iliustracijos.
+                const thumbSrc = entry.heroThumb ?? entry.heroIllustration ?? entry.image
+                return (
                 <div
                   key={entry._id}
                   className="w-full flex items-center gap-3 px-3 py-2.5 bg-bone-50 border border-bone-400/40 rounded-2xl"
                 >
                   <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 bg-bone-300">
-                    {entry.image ? (
-                      <PlantImage url={entry.image} alt="" size="thumb" className="w-full h-full object-cover" />
+                    {thumbSrc ? (
+                      <PlantImage url={thumbSrc} alt="" size="thumb" className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-xl">{entry.emoji ?? '🌿'}</div>
                     )}
@@ -3077,7 +3091,8 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                     + Pridėti
                   </button>
                 </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}
