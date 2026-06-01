@@ -147,3 +147,80 @@ Tačiau jei žinau, kad sprendimas yra teisingas, jis ne „long-term" — jis *
 - BET vernacular community (gardeners, vendors) toliau naudoja „sansevjera"
 - Algorithmic Lithuanianization „Dracaena → Dracena → Trijuoste dracena" yra TECHNIŠKAI nuoseklus, bet BOTANIŠKAI klaida
 - Curated dictionary (mūsų override) yra autoritetingesnė už AI's training-derived rules
+
+---
+
+## N+1. Short-circuit evaluation hides scope bugs
+
+**Data:** 2026-06-01
+**Trigger:** Sansevieria crashed PlantDetail su `ReferenceError: isEnriching is not defined`. Mėnesius kodas veikė. Kodėl būtent Sansevieria?
+
+**Patternas:** Code'as `const x = !heroIllus && isEnriching` per JS short-circuit:
+- Augalai SU heroIllus (95%): `!heroIllus = false` → JS NIEKADA neperskaito antrojo operando → no crash
+- Augalai BE heroIllus (5%, e.g. Sansevieria pre-enrich): `!heroIllus = true` → JS bando skaityti `isEnriching` → out-of-scope ReferenceError
+
+`isEnriching` buvo declared'as INNER funkcijoje (ProfileContent) bet referencavomas OUTER komponente. Bug egzistavo nuo įvedimo, bet trigger condition buvo retas.
+
+**Rule:** kai naudoji JS short-circuit (`A && B`, `A || B`, `A ?? B`), VISI operandai turi būti valid reference'ai SCOPE'e net jei rarely evaluated. Jei B yra optional, naudok explicit `const B = (...)`, ne implicit scope leak.
+
+**Test strategy:** edge case'ai (empty data, missing fields, default states) yra trigger conditions. Visada testuoti su PILNAI tuščiu plant'u, ne tik filled fixtures.
+
+---
+
+## N+2. `fromAIResult` defaults — initial save vs re-enrich semantic mismatch
+
+**Data:** 2026-06-01
+**Trigger:** User'is re-enrich'ino Karantinas plant'ą → status reset'inosi į 'healthy', plant'as dingo iš Karantinas sekcijos.
+
+**Patternas:** `fromAIResult(aiResult)` (plantTransform.js) grąžina hardcoded defaults personal field'ams: `status: 'healthy'`, `komentaras: ''`, `data_prideta: today()`, `photos: ensureArray(aiResult.photos)`.
+
+INITIAL SAVE: defaults teisingi (klientas pirmasis rašo tuos pačius defaults per dual-write).
+RE-ENRICH: defaults DESTROY user state (status='quarantine' → 'healthy', etc.)
+
+Function buvo parašyta INITIAL save context'e. Kai re-use'inta re-enrich path'e (saveUserPlantServer merge:true), defaults overrode user state.
+
+**Rule:** **Pure transformation functions su default'ais ne tinka MERGE patternuose.** Du sprendimai:
+1. Strip personal field'us iš function output prieš merge (mūsų fix #61)
+2. Du atskiri function variantai: `fromAIResultForCreate` (su defaults) + `fromAIResultForOverlay` (be personal)
+
+Bendras principas: **funkcijos signatures turi išryškinti kontekstą.** `merge: true` su default-filled object'u = silent overwrite bug magnet'as.
+
+---
+
+## N+3. UX iteration sometimes ends in revert — that's fine
+
+**Data:** 2026-06-01
+**Trigger:** StatusMenu redizainas: dropdown → bottom sheet (consistent su ZonePicker) → user feedback'as „prieš tai patiko" → revert į dropdown.
+
+**Patternas:** Trys atskiri commit'ai vienam UX elementui:
+1. #55 default-hide („slėpti Sveikas chip")
+2. #62 bottom sheet refactor (didesnis touch target, consistency)
+3. #63 revert į dropdown + chip visada matomas
+
+Total: ~150 lines code churn už net effect ≈ niekas iš originalaus state'o.
+
+**Rule:** **UX iteration cost yra real**, bet NĖRA failure. Be šitų iteracijų user'is nežinotų, kad jam patiko original — net pats sakė „prieš tai patiko". Vertingas insight'as gimsta išbandant.
+
+**Mitigation patterns:**
+- Mažus UX exp'us labai aiškiai paženklinti commit'e („ux-experiment", „revert-on-feedback OK")
+- Po revert'o — RAŠYTI down KODĖL revert'inta, ne tik kad revert'inta. Kitą kartą pasiūlys problem'ą iš kito kampo.
+- NĖRA need apkraustyti save'osi dėl iteracijos churn'o — visada parodoma user'iui prieš commit'inant.
+
+**Konkretus insight'as iš #63 revert'o:** „semantic state" vs „absence state" turi skirtingą default-hide treatment'ą:
+- Status (healthy/sick/karantinas/numire): kiekviena reikšmė nešioja semantic state'ą → always show
+- Zone (assigned vs Nepriskirta): absence vs presence → hide when absent OK
+
+---
+
+## N+4. Cache-Control silent default == perceived „slow loading"
+
+**Data:** 2026-06-01
+**Trigger:** User'is matė visible photo resize Dashboard kortelėse cycling'inant tarp augalų. Biblioteka cards (watercolor) — fast, Dashboard cards (real photos) — slow.
+
+**Patternas:** Firebase Storage uploads DEFAULTINA į `max-age=3600` (1h) jei `cacheControl` metadata nepateikta. Service Worker workbox cache RULE'as match'ino firebasestorage URLs, bet HTTP cache'as silpnas. Dashboard cycling A→B→A→B užtekdavo invalidate'inti SW LRU eviction'u plant'uose su retų visit'ų.
+
+Catalog heroes (heroGen) JAU turėjo `cacheControl: 'public, max-age=31536000, immutable'` — kodėl Biblioteka jaučiasi greitai. User uploads (uploadImage) — pamiršta metadata → silent slow.
+
+**Rule:** Visiems Storage upload'ams setting'inti EXPLICIT `cacheControl` metadata, net jei feature'as ne performance-driven. Default'as „1 hour" tinka log files'ams, NETINKA media assets'ams. Path uniqueness (timestamp filename'e) garantuoja immutability.
+
+**Future watchlist:** kiekvieną `uploadBytes()` call'ą code review'inti dėl metadata.
