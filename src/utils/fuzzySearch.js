@@ -183,3 +183,48 @@ export function plantFuzzyScore(plant, query) {
 export function plantMatchesQuery(plant, query) {
   return plantFuzzyScore(plant, query) !== Infinity
 }
+
+/**
+ * 2026-06-02 — findMatchedSynonym(plant, query) → grąžina sinonimo/englishName
+ * string'ą, kuris geriausiai match'ino užklausą, ARBA null jei primary fields
+ * (lietuviškas / lotyniskas / inatLtName) jau match'ino.
+ *
+ * Tikslas: search dropdown'e parodyti „↳ Raudonalapė dracena" caption'ą TIK
+ * kai user'is rado entry'į ne per primary pavadinimą, o per sinonimą — kad
+ * matytų, KODĖL šis match'as atsirado (pvz., suvedęs „raudon" gauna Dracena
+ * marginata, ir caption paaiškina „rasta per Raudonalapė dracena").
+ *
+ * Logika:
+ *   1. Jei primary field'ai (lietuviškas/lotyniskas/inatLtName) match'ina query →
+ *      grąžinam null (nereikia hint'o, vartotojas matosi pavadinime).
+ *   2. Antraip ieškom best match per sinonimai + englishNames → grąžinam
+ *      tą string'ą.
+ */
+export function findMatchedSynonym(plant, query) {
+  if (!query?.trim() || !plant) return null
+  const q = query.trim()
+
+  // Step 1 — primary check. Jei kuri nors primary'inė vertė matches, hint
+  // nereikalingas (pavadinimas pats save'aiškina).
+  for (const f of [plant.lietuviškas, plant.lotyniskas, plant.inatLtName]) {
+    if (!f) continue
+    if (fuzzyScore(q, f).matched) return null
+  }
+
+  // Step 2 — secondary fields. Ieškom best match.
+  let best = null
+  let bestScore = Infinity
+  const secondary = [
+    ...(Array.isArray(plant.sinonimai) ? plant.sinonimai : []),
+    ...(Array.isArray(plant.englishNames) ? plant.englishNames : []),
+  ]
+  for (const f of secondary) {
+    if (!f || typeof f !== 'string') continue
+    const { matched, score } = fuzzyScore(q, f)
+    if (matched && score < bestScore) {
+      bestScore = score
+      best = f
+    }
+  }
+  return best
+}

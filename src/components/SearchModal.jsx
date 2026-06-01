@@ -241,7 +241,7 @@ if (typeof window !== 'undefined') {
 }
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { triggerHeroGen } from '../utils/plantAI'
-import { plantFuzzyScore } from '../utils/fuzzySearch'
+import { plantFuzzyScore, findMatchedSynonym } from '../utils/fuzzySearch'
 import { ProfileContent } from './PlantDetail'
 import PlantSavybesPills from './brand/PlantSavybesPills'
 import { auth } from '../utils/firebase'
@@ -3022,6 +3022,10 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                 // dažniausiai bus užpildyti. Fallback chain: heroIllustration →
                 // image → emoji placeholder.
                 const thumbSrc = p.heroThumb ?? p.heroIllustration ?? p.image
+                // 2026-06-02 — jei match'as atėjo per sinonimą/englishName (ne per
+                // primary lietuviškas/lotyniskas), rodom „↳ Raudonalapė dracena"
+                // caption'ą, kad user'is suprastų, kodėl šis entry'is gražintas.
+                const matchedSyn = findMatchedSynonym(p, query)
                 return (
                 <button
                   key={p.id}
@@ -3038,6 +3042,11 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                   <div className="flex-1 min-w-0">
                     <p className="font-display text-sm font-semibold tracking-tight text-forest-800 truncate">{p.lietuviškas}</p>
                     <p className="text-xs text-forest-500 italic truncate">{p.lotyniskas}</p>
+                    {matchedSyn && (
+                      <p className="text-[10px] text-forest-400 italic truncate leading-tight mt-0.5">
+                        ↳ {matchedSyn}
+                      </p>
+                    )}
                   </div>
                   <span className={`font-mono text-[10px] font-medium px-1.5 py-0.5 rounded-full flex-shrink-0 ${
                     p.kategorija === 'auginama' ? 'bg-forest-100 text-forest-700' :
@@ -3067,6 +3076,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                 // (real foto fallback) → emoji. Anksčiau šokom tiesiai į entry.image,
                 // todėl admin'ai matydavo iNat foto vietoj sugeneruotos iliustracijos.
                 const thumbSrc = entry.heroThumb ?? entry.heroIllustration ?? entry.image
+                const matchedSyn = findMatchedSynonym(entry, query)
                 return (
                 <div
                   key={entry._id}
@@ -3082,6 +3092,11 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                   <div className="flex-1 min-w-0">
                     <p className="font-display text-sm font-semibold tracking-tight text-forest-800 truncate">{entry.lietuviškas}</p>
                     <p className="text-xs text-forest-500 italic truncate">{entry.lotyniskas}</p>
+                    {matchedSyn && (
+                      <p className="text-[10px] text-forest-400 italic truncate leading-tight mt-0.5">
+                        ↳ {matchedSyn}
+                      </p>
+                    )}
                   </div>
                   <button
                     onClick={() => handleCatalogAdd(entry)}
