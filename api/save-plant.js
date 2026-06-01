@@ -71,7 +71,12 @@ export default async function handler(req, res) {
   if (!uid) return res.status(401).json({ error: 'Invalid token' })
 
   // ── Body validation ─────────────────────────────────────────
-  const { latinName, name, baseResult, colId, plantId, kategorija } = req.body || {}
+  // skipHero (default false) — re-enrich tik tekstinį pipeline'ą (RAG + Sonnet
+  // narrative + care + toxicity), be hero illustration regen'o. Naudinga kai
+  // catalog'as jau turi gerą hero artwork'ą, o user nori atnaujinti tik
+  // tekstinę info (e.g. care updated po naujo PFAF data, narrative bug fix).
+  // Hero gen kainuoja ~$0.003 + 20-40s + perrašo Storage'e — taupymas vertas.
+  const { latinName, name, baseResult, colId, plantId, kategorija, skipHero = false } = req.body || {}
   if (!latinName || typeof latinName !== 'string') {
     return res.status(400).json({ error: 'latinName required (string)' })
   }
@@ -93,7 +98,7 @@ export default async function handler(req, res) {
 
   // ── Schedule background work ────────────────────────────────
   // waitUntil keeps the Fluid Compute instance alive after we return 202.
-  waitUntil(processPlant({ uid, latinName, name, baseResult, colId, plantId, kategorija }))
+  waitUntil(processPlant({ uid, latinName, name, baseResult, colId, plantId, kategorija, skipHero }))
 
   // ── 202 ACK ─────────────────────────────────────────────────
   return res.status(202).json({
@@ -106,7 +111,7 @@ export default async function handler(req, res) {
 /**
  * Background pipeline — runs after 202 ACK, kept alive by waitUntil.
  */
-async function processPlant({ uid, latinName, name, baseResult, colId, plantId, kategorija }) {
+async function processPlant({ uid, latinName, name, baseResult, colId, plantId, kategorija, skipHero = false }) {
   const t0 = Date.now()
   console.log('[save-plant] START', { uid, latin: latinName, plantId, colId })
 
@@ -194,6 +199,10 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
       image: baseResult?.image ?? null,
     }
     const heroPromise = (async () => {
+      if (skipHero) {
+        console.log('[save-plant] hero gen skipped (skipHero=true)')
+        return { ok: false, reason: 'skipped-by-request' }
+      }
       if (!heroToken) return { ok: false, reason: 'no-token' }
       try {
         const hg = createHeroGen({ token: heroToken })
@@ -550,9 +559,15 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     const heroResult = await heroPromise
     console.log('[save-plant] hero pipeline result', { plantId, ok: heroResult?.ok, reason: heroResult?.reason })
 
-    // Final stage: complete — abu pipelines done, viskas yra
+    // Final stage: complete — abu pipelines done, viskas yra.
+    // skipped-by-request NĖRA error — neraportuoti į _heroError (kitaip
+    // catalog'as turėtų klaidingą failure stamp'ą po normalaus „tik tekstas"
+    // re-enrich'o).
+    const heroSkippedIntentionally = heroResult?.reason === 'skipped-by-request'
     await writeStage('complete', {
-      ...(!heroResult?.ok ? { _heroError: heroResult?.reason ?? 'unknown' } : {}),
+      ...(!heroResult?.ok && !heroSkippedIntentionally
+        ? { _heroError: heroResult?.reason ?? 'unknown' }
+        : {}),
     })
 
     console.log('[save-plant] DONE', { plantId, totalMs: Date.now() - t0 })

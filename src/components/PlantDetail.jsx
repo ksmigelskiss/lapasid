@@ -1515,7 +1515,11 @@ export default function PlantDetail({
   // enrichmentError → POST /api/save-plant. Server timestamp idempotency
   // mato startedAt > completedAt → naujas ciklas. Listener'is rerender'ins
   // kortelę kai phase2CompletedAt atvyks su naujais care/aprasymas/narrative.
-  const reEnrichPlant = async () => {
+  //
+  // 2026-06-01 — { skipHero } opcija: jei true, backend praleidžia hero
+  // illustration regen'ą (taupo ~$0.003 + 20-40s ir, svarbiausia, nesirgreba
+  // esamo gero artwork'o). Naudojama „Atnaujinti tik tekstą" menu entry'ui.
+  const reEnrichPlant = async ({ skipHero = false } = {}) => {
     const idToken = await auth.currentUser?.getIdToken().catch(() => null)
     if (!idToken || !collectionId || !plant?.id) {
       console.warn('[re-enrich] missing auth/collectionId/plantId')
@@ -1552,13 +1556,14 @@ export default function PlantDetail({
           colId:     collectionId,
           plantId:   plant.id,
           kategorija: plant.kategorija ?? 'auginama',
+          skipHero,
         }),
       })
       if (!res.ok) {
         console.warn('[re-enrich] HTTP', res.status)
         return false
       }
-      console.log('[re-enrich] dispatched — listener updatins UI po server completion')
+      console.log('[re-enrich] dispatched — listener updatins UI po server completion', { skipHero })
       return true
     } catch (e) {
       console.warn('[re-enrich] POST failed:', e?.message)
@@ -1572,6 +1577,15 @@ export default function PlantDetail({
   const handleMenuReEnrich = async () => {
     setShowActionMenu(false)
     await reEnrichPlant()
+    onClose?.()
+  }
+
+  // 2026-06-01 — text-only re-enrich. Identiškas handleMenuReEnrich, bet
+  // perduoda skipHero=true → backend praleidžia hero pipeline'ą. Naudinga
+  // kai hero artwork'as jau geras, o tekstinė info reikia atnaujinti.
+  const handleMenuReEnrichTextOnly = async () => {
+    setShowActionMenu(false)
+    await reEnrichPlant({ skipHero: true })
     onClose?.()
   }
 
@@ -1834,6 +1848,21 @@ export default function PlantDetail({
                         <RefreshCw size={14} className="flex-shrink-0" />
                         <span className="font-display text-sm font-semibold tracking-tight">Atnaujinti AI duomenis</span>
                       </button>
+                      {/* 2026-06-01 — admin-only: re-enrich TIK tekstas (RAG +
+                          Sonnet narrative + care + toxicity), be hero regen'o.
+                          Naudinga kai catalog'as jau turi gerą hero artwork'ą, o
+                          user nori atnaujinti TIK aprasymą / care / narrative
+                          (e.g. po naujo PFAF data, narrative bug fix). Hero gen
+                          taupymas: ~$0.003 + 20-40s + nesirgrebia esamo artwork'o. */}
+                      {isAdmin && plant?.lotyniskas && (
+                        <button
+                          onClick={handleMenuReEnrichTextOnly}
+                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
+                        >
+                          <RefreshCw size={14} className="flex-shrink-0" />
+                          <span className="font-display text-sm font-semibold tracking-tight">Atnaujinti tik tekstą</span>
+                        </button>
+                      )}
                       {/* 2026-06-01 — admin-only: regenerate TIK hero illustration
                           (be Phase 2 re-enrich). Naudinga kai narrative/care
                           duomenys OK, bet hero looks wrong / wants restyle.
