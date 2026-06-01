@@ -479,7 +479,7 @@ export const TOOL_BULK_SERIES = {
         type: 'object',
         description: 'Shared atributai visiems šios serijos cultivars',
         properties: {
-          type:               { type: 'string', enum: ['cultivar-series', 'species', 'hybrid', 'genus-care', 'cultivar-group', 'variety', 'subspecies'] },
+          type:               { type: 'string', enum: ['species', 'genus-care'] },
           name:               { type: 'string', description: 'Serijos pavadinimas (pvz. „Boulevard", „Hosta sieboldiana")' },
           genus:              { type: 'string', description: 'Genus (pvz. „Clematis")' },
           breeder:            { type: ['string', 'null'], description: 'Brand owner / breeder (pvz. „Raymond Evison"). null jei nežinai arba neaktualus.' },

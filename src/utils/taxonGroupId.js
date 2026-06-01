@@ -12,14 +12,23 @@ import { parseLatinName } from './latinName.js'
 // MAX_BULK_BATCH ir CATALOG_SCHEMA_VERSION irgi gali būti pure'ūs, bet
 // kol kas paliekam taxonGroups.js'e — nereikia testavimui šiandien.
 
+// 2026-06-01 — declutter'ėm dropdown'ą. Anksčiau buvo 7 type'ai
+// (cultivar-series, species, hybrid, genus-care, cultivar-group, variety,
+// subspecies), bet realiai catalog'e naudojami TIK du: 'species' (4 series)
+// ir 'genus-care' (1 series). Mirusios opcijos:
+//   - hybrid: auto-detected per parseLatinName iš „×" simbolio (rank'as,
+//     ne taxonGroup type'as)
+//   - cultivar-series / cultivar-group: skirti formaliam botaniniam
+//     grupavimui (Knock Out roses ir pan.) — LapasID houseplant context'e
+//     neaktualu
+//   - variety / subspecies: taxonomic detalė retai naudojama
+//
+// Jei ateityje prireiks, atvirkščiai pridėt 1 minutė. Be to, taxonGroupDocId
+// ir parentTaxonGroupIdFor toliau handle'ina senus type'us defensyviai
+// (jei legacy data pasitaikytų), tik UI/AI schema'os nebepateikia jų.
 export const TAXON_GROUP_TYPES = [
-  'cultivar-series',   // Boulevard, Wave, Knock Out
-  'species',           // Coleus scutellarioides, Hosta sieboldiana
-  'hybrid',            // Clematis × jackmanii, Heuchera × heucherella
-  'genus-care',        // „Echeveria genus" — kai bendros care info pakanka
-  'cultivar-group',    // Tea Roses, Tall Bearded Iris, Zonal Pelargoniums
-  'variety',           // Acer palmatum var. dissectum (botanical var.)
-  'subspecies',        // Picea pungens ssp. engelmannii
+  'species',           // Nephrolepis exaltata, Oxalis vulcanicola — parent rūšies šablonas
+  'genus-care',        // Aglaonema, Hosta — care šablonas visam genus'ui
 ]
 
 /**
