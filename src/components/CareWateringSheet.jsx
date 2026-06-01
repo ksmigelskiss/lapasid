@@ -150,8 +150,21 @@ export default function CareWateringSheet({
 
   // Hero collapse on scroll (2026-06-01) — MIRROR PlantDetail pattern'ą.
   // ~60px scroll'o link žemyn → hero susikrečia iš aspect-3/2 į aspect-3/1
-  // → status block'ai gauna ~33% papildomos vertikalios erdvės. Hysteresis
-  // 40/60 saugo nuo flicker'io ties threshold'u.
+  // → status block'ai gauna ~33% papildomos vertikalios erdvės.
+  //
+  // ⚠️ ANTI-BOUNCE PROTECTION (2026-06-01 #66 fix): collapse atlaisvina ~33%
+  // hero height'o → scroll container clientHeight padidėja → maxScroll
+  // sumažėja. Jei content'as trumpas (CareSheet su mažu plant'u dažnas
+  // case'as), naujas maxScroll < current scrollTop → browser auto-clamp'ina
+  // scrollTop žemyn → trigger'ina un-collapse → re-collapse → ∞ flicker'is.
+  //
+  // Du saugumo mechanizmai:
+  //   1. MIN_SCROLLABLE — neperjungiam jei content'as ne pakankamai aukštas,
+  //      kad collapse'as išliktų stabilus (need pre-collapse maxScroll ≥
+  //      hero shrink amount + hysteresis low threshold, ~200px safe buffer)
+  //   2. MONOTONIC un-collapse — kai jau collapsed, atsiverčiam TIK kai
+  //      scrollTop visiškai grįžta į 0 (ne 40 hysteresis). Mažas content'as
+  //      su trumpu scroll'u negali oscillate'inti tarp būsenų.
   const scrollContainerRef = useRef(null)
   const [heroCollapsed, setHeroCollapsed] = useState(false)
   useEffect(() => {
@@ -163,7 +176,18 @@ export default function CareWateringSheet({
       raf = requestAnimationFrame(() => {
         raf = null
         const y = el.scrollTop
-        setHeroCollapsed(prev => prev ? y > 40 : y > 60)
+        const maxScroll = el.scrollHeight - el.clientHeight
+        // Safety #1: need enough scrollable distance to safely collapse
+        if (maxScroll < 200) {
+          setHeroCollapsed(false)
+          return
+        }
+        // Safety #2: monotonic transitions — collapse at >60, un-collapse only at 0
+        setHeroCollapsed(prev => {
+          if (!prev && y > 60) return true   // expand → collapse
+          if (prev && y === 0) return false  // collapse → expand (TIK at scroll top)
+          return prev
+        })
       })
     }
     el.addEventListener('scroll', handler, { passive: true })
