@@ -1794,26 +1794,10 @@ export default function PlantDetail({
                   <div className="absolute left-0 top-full mt-2 bg-bone rounded-2xl shadow-[0_12px_32px_rgba(28,58,42,0.18)] border border-bone-400/50 overflow-hidden z-[200] min-w-[220px]">
                     <p className="font-mono text-[9.5px] font-medium text-forest-500 uppercase tracking-[0.18em] px-3 pt-2.5 pb-1.5">Veiksmai</p>
                     <div className="px-1 pb-1 space-y-px">
-                      {/* 2026-06-01 — Zone/Status entry points (chips default state'e
-                          paslėpti header'yje, tad reikalingas alternatyvus access path) */}
-                      {section === 'auginama' && zones.length > 0 && (
-                        <button
-                          onClick={() => { setShowActionMenu(false); setShowZonePicker(true) }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
-                        >
-                          <MapPin size={14} className="flex-shrink-0" />
-                          <span className="font-display text-sm font-semibold tracking-tight">{currentZone ? 'Keisti zoną' : 'Priskirti zoną'}</span>
-                        </button>
-                      )}
-                      {section === 'auginama' && (
-                        <button
-                          onClick={() => { setShowActionMenu(false); setStatusMenu(true) }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
-                        >
-                          <Leaf size={14} className="flex-shrink-0" />
-                          <span className="font-display text-sm font-semibold tracking-tight">Pakeisti būklę</span>
-                        </button>
-                      )}
+                      {/* 2026-06-01 — Zone + Status entries pašalinti. Abu chip'ai
+                          dabar visada matomi toolbar'yje (zone su „Nepriskirta"
+                          placeholder, status visada), tad ... menu dublikatas
+                          nereikalingas. */}
                       <button
                         onClick={() => { setShowActionMenu(false); setShowPhoto(true) }}
                         className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
@@ -1835,20 +1819,21 @@ export default function PlantDetail({
             </div>
 
             {/* Zone — clickable, atidaro ZonePicker.
-                2026-06-01: rodom TIK jei plant'as PRISKIRTAS prie zonos. Default
-                „Nepriskirta" placeholder slėpiamas (clutter freshly-saved augaluose).
-                Zonai priskirti — naudoti „Priskirti zoną" iš ... menu. */}
-            {section === 'auginama' && zones.length > 0 && currentZone && (
+                2026-06-01: VISADA matomas (kaip ir status chip), su „Nepriskirta"
+                placeholder'iu kai zonos nepriskirta. Visual TODO indikatorius +
+                visada visible access path'as (... menu „Priskirti zoną" entry
+                nebereikalingas). */}
+            {section === 'auginama' && zones.length > 0 && (
               <button
                 onClick={() => setShowZonePicker(v => !v)}
                 className="inline-flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-forest-500 hover:text-forest-700 transition-colors min-w-0"
               >
                 <MapPin size={11} className="text-forest-400 flex-shrink-0" />
-                <span className="truncate">{currentZone.name}</span>
+                <span className="truncate">{currentZone ? currentZone.name : 'Nepriskirta'}</span>
               </button>
             )}
 
-            {section === 'auginama' && zones.length > 0 && currentZone && (
+            {section === 'auginama' && zones.length > 0 && (
               <span className="text-forest-300 flex-shrink-0" aria-hidden>·</span>
             )}
 
