@@ -35,7 +35,8 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import {
   Search, ChevronRight, ChevronLeft, ChevronDown, ImageOff, Layers, Eye, Filter,
   Save, RotateCcw, Trash2, AlertTriangle, X, CheckCircle2, Plus, Minus,
-  Image as ImageIcon, Type, BookOpen, Droplet, Skull, Tag, Info,
+  Image as ImageIcon, Type, BookOpen, Droplet, Skull, Tag, Info, Loader2,
+  Palette,
 } from 'lucide-react'
 import { ProfileContent } from '../PlantDetail'
 import PlantImage from '../brand/PlantImage'
@@ -372,6 +373,64 @@ export default function LibraryEditorV2({
   // Naudojama Foto tab'e: nuotraukos picker'is arba „Saugoti tik nuotrauką"
   // mini-button. Patch'as turi TIK image lauką → kiti draft pakeitimai
   // nepaliečiami. originalDraft.image atnaujinamas, kad image nebebūtų dirty.
+  // ── 2026-06-01 — AI re-enrich actions (admin-only) ──────────────────
+  //
+  // Tris veiksmai prienami iš sticky toolbar:
+  //   • 'hero' — TIK iliustracija. POST /api/generate-hero force=true. await'inam
+  //     ~20-40s, gauname { heroIllustration, heroThumb, method, assessment }.
+  //   • 'text' — TIK tekstas (RAG + Sonnet narrative + care + toxicity).
+  //     [NOT YET WIRED — laukia naujo /api/admin-reenrich-catalog endpoint'o,
+  //     nes /api/save-plant reikalauja user plant doc + colId, kuriuos admin
+  //     panel-ui kontekste neturime.]
+  //   • 'full' — abu pipelines. [PENDING tas pats endpoint'as.]
+  //
+  // aiActionState reikšmės:
+  //   null            — idle, mygtukai available
+  //   'hero'          — hero regen vyksta (toolbar button su Loader2 spin)
+  //   'hero-error'    — paskutinis bandymas suklydo (5s flash, paskui null)
+  const [aiActionState, setAiActionState] = useState(null)
+  const [aiActionError, setAiActionError] = useState(null)
+
+  const handleRegenHero = useCallback(async () => {
+    if (!selectedEntry || selectedType !== 'cultivar') return
+    const latinName = selectedEntry.lotyniskas
+    if (!latinName) {
+      setAiActionError('Augalui trūksta lotyniško pavadinimo — negaliu generuoti.')
+      return
+    }
+    setAiActionState('hero')
+    setAiActionError(null)
+    try {
+      const idToken = await auth.currentUser?.getIdToken().catch(() => null)
+      if (!idToken) throw new Error('Auth token missing — perlogink')
+      const res = await fetch('/api/generate-hero', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({ latinName, force: true }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.error || `HTTP ${res.status}`)
+      }
+      // Catalog onSnapshot listener auto-update'ins entry.heroIllustration →
+      // preview pane perrender'ins su nauju watercolor'iu. Mes tik išvalom
+      // loading state'ą — sukurta meta (method, assessment, prompt) ateina
+      // su tuo pačiu snapshot'u.
+      setAiActionState(null)
+    } catch (e) {
+      console.warn('[admin] hero regen failed:', e?.message)
+      setAiActionError(e?.message || 'Nepavyko sugeneruoti iliustracijos')
+      setAiActionState('hero-error')
+      setTimeout(() => {
+        setAiActionState(null)
+        setAiActionError(null)
+      }, 5000)
+    }
+  }, [selectedEntry, selectedType])
+
   const handleSaveImageOnly = useCallback(async (newUrl) => {
     if (!selectedEntry || selectedType !== 'cultivar') return
     setSaving(true)
@@ -445,8 +504,17 @@ export default function LibraryEditorV2({
         setActiveTab={setActiveTab}
         taxonGroups={taxonGroups}
         genusParent={genusParent}
+        aiActionState={aiActionState}
+        aiActionError={aiActionError}
+        onRegenHero={handleRegenHero}
       />
-      <RightPanePreview entry={selectedEntry} draft={draft} entryType={selectedType} genusParent={genusParent} />
+      <RightPanePreview
+        entry={selectedEntry}
+        draft={draft}
+        entryType={selectedType}
+        genusParent={genusParent}
+        aiActionState={aiActionState}
+      />
 
       {pendingNav && (
         <UnsavedChangesModal
@@ -1220,6 +1288,7 @@ function CenterPaneEditor({
   activeTab, setActiveTab,
   taxonGroups,
   genusParent,
+  aiActionState, aiActionError, onRegenHero,
 }) {
   if (!entry || !draft) {
     return (
@@ -1309,9 +1378,37 @@ function CenterPaneEditor({
               <Save size={12} />
               {saving ? 'Saugoma…' : dirty ? `Saugoti${dirtyCount > 0 ? ` (${dirtyCount})` : ''}` : 'Be pakeitimų'}
             </button>
+            {/* 2026-06-01 — AI re-enrich actions (admin-only). Cultivar tab'e
+                visada matomi; series tab'e neturi prasmės (serija = template,
+                ne konkretus augalas). */}
+            {entryType === 'cultivar' && entry?.lotyniskas && (
+              <>
+                <span className="w-px h-5 bg-bone-400/50 mx-1" aria-hidden />
+                <button
+                  onClick={onRegenHero}
+                  disabled={aiActionState === 'hero'}
+                  title={aiActionState === 'hero'
+                    ? 'Generuojama nauja iliustracija (~20-40s)…'
+                    : 'Sugeneruoti naują watercolor iliustraciją iš AI šaltinio (~20-40s, perrašys esamą)'}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-btn-sm text-xs font-semibold bg-forest-100 hover:bg-forest-200 text-forest-700 disabled:opacity-60 disabled:cursor-wait transition-colors"
+                >
+                  {aiActionState === 'hero'
+                    ? <Loader2 size={12} className="animate-spin" />
+                    : <Palette size={12} />}
+                  {aiActionState === 'hero' ? 'Generuojama…' : 'Iliustracija'}
+                </button>
+              </>
+            )}
           </div>
         </div>
 
+        {/* AI action error flash — 5s auto-dismiss per parent timeout */}
+        {aiActionError && (
+          <div className="mx-5 mb-3 px-3 py-2 bg-terracotta-50 border border-terracotta-200/60 rounded-md text-[11px] text-terracotta-700 flex items-start gap-2">
+            <AlertTriangle size={11} className="flex-shrink-0 mt-0.5" />
+            <span>AI veiksmas nepavyko: {aiActionError}</span>
+          </div>
+        )}
         {saveError && (
           <div className="mx-5 mb-3 px-3 py-2 bg-terracotta-50 border border-terracotta-200/60 rounded-md text-[11px] text-terracotta-700 flex items-start gap-2">
             <AlertTriangle size={11} className="flex-shrink-0 mt-0.5" />
@@ -1364,6 +1461,8 @@ function CenterPaneEditor({
           taxonGroups={taxonGroups}
           onSaveImageOnly={onSaveImageOnly}
           genusParent={genusParent}
+          aiActionState={aiActionState}
+          onRegenHero={onRegenHero}
         />
       </div>
 
@@ -1406,8 +1505,8 @@ function TabButton({ tab, active, dirty, onClick, shortcutIdx }) {
 
 // ── Tab content dispatcher ───────────────────────────────────────────
 
-function TabContent({ tabId, entry, entryType, draft, originalDraft, updateField, taxonGroups, onSaveImageOnly, genusParent }) {
-  const props = { entry, entryType, draft, originalDraft, updateField, taxonGroups, onSaveImageOnly, genusParent }
+function TabContent({ tabId, entry, entryType, draft, originalDraft, updateField, taxonGroups, onSaveImageOnly, genusParent, aiActionState, onRegenHero }) {
+  const props = { entry, entryType, draft, originalDraft, updateField, taxonGroups, onSaveImageOnly, genusParent, aiActionState, onRegenHero }
   if (entryType === 'series') {
     switch (tabId) {
       case 'identification': return <TabIdentificationSeries {...props} />
@@ -1474,13 +1573,27 @@ function TabIdentificationCultivar({ entry, draft, originalDraft, updateField, t
 // Merged Foto + Aprašymas tab (Audit fix #5). Photo picker top-section
 // + aprasymas/kilme/idomybes apačioje. Visi „pasakojantys" laukai vienoj
 // vietoj.
-function TabAprasymasCultivar({ entry, draft, originalDraft, updateField, onSaveImageOnly, genusParent }) {
+function TabAprasymasCultivar({ entry, draft, originalDraft, updateField, onSaveImageOnly, genusParent, aiActionState, onRegenHero }) {
   const inh = (f) => makeInherited(f, draft, genusParent)
   return (
     <div className="space-y-6 max-w-3xl">
-      {/* Foto picker — buvo TabPhoto, perkeltas čia */}
+      {/* 2026-06-01 — UX restruktūra. Anksčiau viena „Nuotrauka" sekcija
+          su iNat photo, bet user'iai mato visai kitą asset'ą (heroIllustration
+          watercolor). Disconnect'as suklaidindavo admin'us: „dabar pasirinktas"
+          rodė referencinę foto, o LIVE preview rodė watercolor'į.
+
+          Dabar dvi aiškiai pavadintos sekcijos:
+            • AI šaltinis — referencinė foto, kurią Gemini naudoja kaip vizualų
+              guide watercolor generavimui (taip pat F2 freeze fallback).
+            • Iliustracija — generated watercolor + provenance (method,
+              photo assessment, prompt brief, timestamp). Čia gyvena
+              regen veiksmas, kuris dubliuoja sticky toolbar mygtuką. */}
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-forest-500 mb-3">Nuotrauka</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-forest-500 mb-1">AI šaltinis</p>
+        <p className="text-[11px] text-forest-500 leading-relaxed mb-3">
+          Referencinė foto, kurią Gemini naudoja kaip vizualų guide generuojant watercolor iliustraciją.
+          User'iai šios foto NEMATO (rodoma tik iliustracija žemiau).
+        </p>
         <PhotoPickerSection
           draft={draft}
           originalDraft={originalDraft}
@@ -1489,7 +1602,19 @@ function TabAprasymasCultivar({ entry, draft, originalDraft, updateField, onSave
         />
       </div>
 
-      <div className="pt-3 border-t border-bone-400/30">
+      <div className="pt-5 border-t border-bone-400/30">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-forest-500 mb-1">Iliustracija</p>
+        <p className="text-[11px] text-forest-500 leading-relaxed mb-3">
+          Generated watercolor (Gemini) — TAI rodome user'iams Dashboard'e, kortelėse, PlantDetail'yje.
+        </p>
+        <IllustrationSection
+          entry={entry}
+          aiActionState={aiActionState}
+          onRegenHero={onRegenHero}
+        />
+      </div>
+
+      <div className="pt-5 border-t border-bone-400/30">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-forest-500 mb-3">Tekstinis pasakojimas</p>
       </div>
 
@@ -1802,6 +1927,97 @@ function PhotoPickerSection({ draft, originalDraft, updateField, onSaveImageOnly
           </p>
         </div>
       )}
+    </div>
+  )
+}
+
+// ── IllustrationSection — generated hero watercolor + provenance ─────
+//
+// Naujas (2026-06-01) atskiras komponentas Aprašymas tab'e, tarnaujantis
+// kaip aiškus separation iš AI ŠALTINIS (PhotoPickerSection). Rodo:
+//   • heroIllustration preview (transparent PNG, bone-100 backing)
+//   • Provenance metadata (gerai žinoti, KODĖL toks rezultatas):
+//       _heroMethod         — 'gemini-restyle' | 'gemini-text' | 'gemini-text-genus'
+//       heroPhotoAssessment — 'full-habit' | 'partial' | 'none — ...'
+//       heroPromptBrief     — AI's morphology brief'as
+//       _heroIllustrationAt — last gen timestamp
+//   • „Atnaujinti iliustraciją" mygtuką (su loading) — dubliuoja sticky
+//     toolbar action'ą tam atvejui, kai admin'as scroll'ina tab content'e.
+//
+// Per user'io feedback'ą (2026-06-01): „gerai zinoti pagal ka generavo nes
+// kartais norisi pergenruoti nes per mazai detalumo, tai bent butu aisku
+// kodel." — provenance metadata atsako į šitą.
+function IllustrationSection({ entry, aiActionState, onRegenHero }) {
+  const hero = entry?.heroIllustration ?? null
+  const heroMethod = entry?._heroMethod ?? null
+  const heroAssessment = entry?.heroPhotoAssessment ?? null
+  const heroPrompt = entry?.heroPromptBrief ?? null
+  const heroAt = entry?._heroIllustrationAt ?? null
+  const isGenerating = aiActionState === 'hero'
+
+  // Method label LT — short, friendly
+  const methodLabel = heroMethod === 'gemini-restyle'
+    ? 'Restyle (iš tikros foto)'
+    : heroMethod === 'gemini-text'
+      ? 'Tekstinė generacija'
+      : heroMethod === 'gemini-text-genus'
+        ? 'Tekstinė (genus level)'
+        : heroMethod ?? '—'
+
+  return (
+    <div className="space-y-3 max-w-3xl">
+      {/* Hero preview — 3:2 landscape, watercolor over bone background */}
+      <div className="relative rounded-lg overflow-hidden border border-bone-400/40 bg-[#fefdfa]" style={{ aspectRatio: '3 / 2', maxWidth: 480 }}>
+        {hero ? (
+          <img src={hero} alt="" className="w-full h-full object-contain" />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center text-forest-300 gap-1">
+            <Palette size={32} />
+            <p className="text-[11px] text-forest-500">Dar nesugeneruota</p>
+          </div>
+        )}
+        {isGenerating && (
+          <div className="absolute inset-0 bg-bone-50/85 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2">
+            <Loader2 size={24} className="animate-spin text-forest-600" />
+            <p className="text-[11px] font-mono uppercase tracking-wider text-forest-700">Generuojama…</p>
+            <p className="text-[10px] text-forest-500">~20-40s — Gemini restyle/text-to-image</p>
+          </div>
+        )}
+      </div>
+
+      {/* Provenance metadata + regen action — kompaktinis kortelė tipo card */}
+      <div className="bg-bone-100/60 border border-bone-400/30 rounded-md px-3 py-2.5 space-y-1.5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0 space-y-1">
+            <MetaRow k="Metodas" v={methodLabel} mono />
+            {heroAssessment && (
+              <MetaRow k="Photo assessment" v={heroAssessment} mono />
+            )}
+            {heroAt && (
+              <MetaRow k="Generuota" v={shortDate(heroAt)} />
+            )}
+          </div>
+          <button
+            onClick={onRegenHero}
+            disabled={isGenerating}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-btn-sm text-[11px] font-semibold bg-forest-700 hover:bg-forest-800 text-bone disabled:opacity-60 disabled:cursor-wait transition-colors flex-shrink-0"
+            title="Sugeneruoti naują watercolor iliustraciją (perrašys esamą catalog.heroIllustration)"
+          >
+            {isGenerating ? <Loader2 size={11} className="animate-spin" /> : <Palette size={11} />}
+            {isGenerating ? 'Generuojama…' : 'Atnaujinti'}
+          </button>
+        </div>
+        {heroPrompt && (
+          <details className="pt-1">
+            <summary className="cursor-pointer text-[10px] font-mono uppercase tracking-[0.14em] text-forest-500 hover:text-forest-700">
+              Prompt brief (kuo Gemini'is rėmėsi)
+            </summary>
+            <p className="text-[11px] text-forest-600 leading-relaxed mt-1.5 italic">
+              „{heroPrompt}"
+            </p>
+          </details>
+        )}
+      </div>
     </div>
   )
 }
@@ -2453,7 +2669,7 @@ function shortDate(iso) {
 
 // ── Right pane: live ProfileContent preview ───────────────────────
 
-function RightPanePreview({ entry, draft, entryType, genusParent }) {
+function RightPanePreview({ entry, draft, entryType, genusParent, aiActionState }) {
   // ── Debounced draft (300ms) — prevents preview re-render on every keystroke
   const [debouncedDraft, setDebouncedDraft] = useState(draft)
   useEffect(() => {
@@ -2604,6 +2820,16 @@ function RightPanePreview({ entry, draft, entryType, genusParent }) {
             {gallery.length > 1 && (
               <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/45 backdrop-blur-sm">
                 <span className="text-[10px] text-white/90 font-medium">{idx + 1} / {gallery.length}</span>
+              </div>
+            )}
+            {/* 2026-06-01 — hero regen overlay. Rodom kai admin'as paspaudė
+                „Iliustracija" mygtuką sticky toolbar'e arba IllustrationSection'e.
+                Mato gražų loader'į, žinom kad vyksta darbas — ne uždarytas tab'as. */}
+            {aiActionState === 'hero' && isIllustration && (
+              <div className="pointer-events-auto absolute inset-0 bg-bone-50/85 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2">
+                <Loader2 size={28} className="animate-spin text-forest-600" />
+                <p className="text-[11px] font-mono uppercase tracking-wider text-forest-700">Generuojama nauja iliustracija</p>
+                <p className="text-[10px] text-forest-500">~20-40s · Gemini watercolor</p>
               </div>
             )}
           </div>

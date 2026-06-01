@@ -19,7 +19,6 @@ import { getWateringForecast } from '../utils/wateringForecast'
 import { getFertilizingSummary } from '../utils/fertilizingForecast'
 import { heroIllustrationFor, heroIsDefaultFor } from '../utils/catalog'
 import { fetchPlantNames } from '../utils/plantNames'
-import { triggerHeroGen } from '../utils/plantAI'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
 import { getPlantMood } from '../utils/plantMood'
 import PlantChat from './PlantChat'
@@ -631,13 +630,6 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
     if (retrying) return
     setRetrying(true)
     try { await reEnrichPlant() } finally { setRetrying(false) }
-  }
-
-  // Step 6s — action menu „Atnaujinti AI duomenis" — closes detail
-  const handleMenuReEnrich = async () => {
-    setShowActionMenu(false)
-    await reEnrichPlant()
-    onClose?.()  // close detail → user grįžta į library, mato loading overlay
   }
 
   return (
@@ -1511,83 +1503,11 @@ export default function PlantDetail({
   // padariau — krašu „showActionMenu is not defined" runtime error'as).
   const [showActionMenu, setShowActionMenu] = useState(false)
 
-  // Step 6s — re-enrich helper. Bumps enrichmentStartedAt + clears
-  // enrichmentError → POST /api/save-plant. Server timestamp idempotency
-  // mato startedAt > completedAt → naujas ciklas. Listener'is rerender'ins
-  // kortelę kai phase2CompletedAt atvyks su naujais care/aprasymas/narrative.
-  //
-  // 2026-06-01 — { skipHero } opcija: jei true, backend praleidžia hero
-  // illustration regen'ą (taupo ~$0.003 + 20-40s ir, svarbiausia, nesirgreba
-  // esamo gero artwork'o). Naudojama „Atnaujinti tik tekstą" menu entry'ui.
-  const reEnrichPlant = async ({ skipHero = false } = {}) => {
-    const idToken = await auth.currentUser?.getIdToken().catch(() => null)
-    if (!idToken || !collectionId || !plant?.id) {
-      console.warn('[re-enrich] missing auth/collectionId/plantId')
-      return false
-    }
-    try {
-      await setDoc(doc(db, 'collections', collectionId, 'plants', plant.id), {
-        enrichmentStartedAt: new Date().toISOString(),
-        enrichmentError: null,
-      }, { merge: true })
-    } catch (e) {
-      console.warn('[re-enrich] firestore startedAt bump failed:', e?.message)
-    }
-    try {
-      const res = await fetch('/api/save-plant', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`,
-        },
-        body: JSON.stringify({
-          latinName: plant.lotyniskas,
-          name:      plant.lietuviškas,
-          baseResult: {
-            latinName: plant.lotyniskas,
-            name: plant.lietuviškas,
-            image: plant.image,
-            aprasymas: plant.aprasymas,
-            aprasymasLang: plant.aprasymasLang,
-            kilme: plant.kilme,
-            savybes: plant.savybes,
-            sources: plant.sources,
-          },
-          colId:     collectionId,
-          plantId:   plant.id,
-          kategorija: plant.kategorija ?? 'auginama',
-          skipHero,
-        }),
-      })
-      if (!res.ok) {
-        console.warn('[re-enrich] HTTP', res.status)
-        return false
-      }
-      console.log('[re-enrich] dispatched — listener updatins UI po server completion', { skipHero })
-      return true
-    } catch (e) {
-      console.warn('[re-enrich] POST failed:', e?.message)
-      return false
-    }
-  }
-
-  // Step 6s — action menu „Atnaujinti AI duomenis" — close detail card
-  // after dispatch. User'is grįžta į library tab'ą, mato kortelę su
-  // forest-700 loading overlay'um (state 'enriching' per timestamp compare).
-  const handleMenuReEnrich = async () => {
-    setShowActionMenu(false)
-    await reEnrichPlant()
-    onClose?.()
-  }
-
-  // 2026-06-01 — text-only re-enrich. Identiškas handleMenuReEnrich, bet
-  // perduoda skipHero=true → backend praleidžia hero pipeline'ą. Naudinga
-  // kai hero artwork'as jau geras, o tekstinė info reikia atnaujinti.
-  const handleMenuReEnrichTextOnly = async () => {
-    setShowActionMenu(false)
-    await reEnrichPlant({ skipHero: true })
-    onClose?.()
-  }
+  // 2026-06-01 — re-enrich helpers (reEnrichPlant + handleMenuReEnrich*)
+  // PAŠALINTI. Funkcijos perkeltos į admin panel (LibraryEditorV2 sticky
+  // toolbar). User-side action menu nebeturi AI re-enrich entry'ų. Retry
+  // banner'is naudoja ProfileContent'o vidinį reEnrichPlant (line ~575),
+  // kuris likęs failure-recovery atveju.
 
   // App.jsx laiko PlantDetail mount'intą per lastDetailRef (greitam reopen),
   // todėl sub-modal state'ai (ZonePicker, photo sheet, status menu) PERSIST'INA
@@ -1834,6 +1754,13 @@ export default function PlantDetail({
                           dabar visada matomi toolbar'yje (zone su „Nepriskirta"
                           placeholder, status visada), tad ... menu dublikatas
                           nereikalingas. */}
+                      {/* 2026-06-01 — user-side AI update actions PAŠALINTOS.
+                          „Atnaujinti AI duomenis", „Atnaujinti tik tekstą",
+                          „Atnaujinti paveikslėlį" perkeltos į admin panel
+                          (LibraryEditorV2). User'iai nebenori manual AI
+                          re-enrich'o — catalog overlay (F1) auto-propagate'ina
+                          admin'o atnaujinimus visiems. Liko TIK „Pakeisti
+                          nuotrauką" (asmeninė foto, ne AI). */}
                       <button
                         onClick={() => { setShowActionMenu(false); setShowPhoto(true) }}
                         className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
@@ -1841,47 +1768,6 @@ export default function PlantDetail({
                         <Camera size={14} className="flex-shrink-0" />
                         <span className="font-display text-sm font-semibold tracking-tight">Pakeisti nuotrauką</span>
                       </button>
-                      <button
-                        onClick={handleMenuReEnrich}
-                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
-                      >
-                        <RefreshCw size={14} className="flex-shrink-0" />
-                        <span className="font-display text-sm font-semibold tracking-tight">Atnaujinti AI duomenis</span>
-                      </button>
-                      {/* 2026-06-01 — admin-only: re-enrich TIK tekstas (RAG +
-                          Sonnet narrative + care + toxicity), be hero regen'o.
-                          Naudinga kai catalog'as jau turi gerą hero artwork'ą, o
-                          user nori atnaujinti TIK aprasymą / care / narrative
-                          (e.g. po naujo PFAF data, narrative bug fix). Hero gen
-                          taupymas: ~$0.003 + 20-40s + nesirgrebia esamo artwork'o. */}
-                      {isAdmin && plant?.lotyniskas && (
-                        <button
-                          onClick={handleMenuReEnrichTextOnly}
-                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
-                        >
-                          <RefreshCw size={14} className="flex-shrink-0" />
-                          <span className="font-display text-sm font-semibold tracking-tight">Atnaujinti tik tekstą</span>
-                        </button>
-                      )}
-                      {/* 2026-06-01 — admin-only: regenerate TIK hero illustration
-                          (be Phase 2 re-enrich). Naudinga kai narrative/care
-                          duomenys OK, bet hero looks wrong / wants restyle.
-                          Calls /api/generate-hero su force=true (overwrite'ina
-                          esamą catalog.heroIllustration). Hero atsiranda visiems
-                          F1 overlay'ą gaunantiems augalams (per catalog listener).
-                          Gate'inta isAdmin'u — destruktyvi catalog mutacija. */}
-                      {isAdmin && plant?.lotyniskas && (
-                        <button
-                          onClick={() => {
-                            setShowActionMenu(false)
-                            triggerHeroGen(plant.lotyniskas, { force: true })
-                          }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
-                        >
-                          <ImageIcon size={14} className="flex-shrink-0" />
-                          <span className="font-display text-sm font-semibold tracking-tight">Atnaujinti paveikslėlį</span>
-                        </button>
-                      )}
                     </div>
                   </div>
                 </>
