@@ -1444,6 +1444,13 @@ export default function SearchModal({ onAddToWishlist, onAddToDashboard, onClose
   const [photoIdx, setPhotoIdx]             = useState(0)
   const [paywallOpen, setPaywallOpen]       = useState(false)
   const [paywallLimitType, setPaywallLimitType] = useState(null)
+  // Photo escalation attempts (2026-06-01) — kai medium+no-candidates ar
+  // low confidence atvejis, foto yra mandatory pirma kart, bet po photo
+  // attempt'o ir TIK jei vis dar neaišku → atveriam override opcijas
+  // („Vis tiek pridėti", „Bandyti su kita nuotrauka"). Reset'inasi prieš
+  // kiekvieną text search'ą. Photo searches inkrementuoja.
+  const [photoAttempts, setPhotoAttempts] = useState(0)
+
   // EnrichmentProgress watch state (2026-06-01). Kai user'is paspaudžia save —
   // vietoj iškart uždarymo modal'ą, pereinam į progress view'ą per kurį
   // matosi Phase 2 enrichment etapai realtime'e. „Tęsti fone" mygtukas
@@ -1780,6 +1787,7 @@ Naudok web_search RHS / Wikipedia / breeder svetainėse jei reikia patvirtinti t
     abortRef.current = controller
     setLoading(true); setResult(null); setError(null); setPreview(null)
     setPhases(initialPhaseState())  // reset phase checklist
+    setPhotoAttempts(0)              // reset photo escalation counter (fresh text query)
     const totalStartedAt = Date.now()
 
     try {
@@ -2167,6 +2175,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
   const searchByPhoto = async (file) => {
     setLoading(true); setResult(null); setError(null); setQuery('')
     setPhases(initialPhaseState())  // reset phase checklist (photo path)
+    setPhotoAttempts(n => n + 1)     // increment — used for escalation UI logic
     const totalStartedAt = Date.now()
     trackStep('Apdorojama nuotrauka...')
     try {
@@ -2874,12 +2883,24 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
               const resultForSave = currentImage !== result.image
                 ? { ...result, image: currentImage }
                 : result
-              // Tiered save (2026-05-29): kai identitetas NEAIŠKUS (low conf arba
-              // nežinoma rūšis) — eskaluojam į NUOTRAUKĄ tiksliam atpažinimui,
-              // o ne blind text-save (genus info nežinomam augalui = netikslu).
-              // Genus-confident medium → leidžiam save + soft photo nudge.
-              // High/verified → įprasti mygtukai.
-              const identityUncertain = result.confidence === 'low' || result.matchLevel === 'unknown'
+              // Tiered save su strict photo escalation (2026-06-01):
+              //   identityUncertain = atvejis, kai save'as duotų low-quality entry
+              //   Praplėsta vs anksciau: medium+no-candidates+uncertaintyReason
+              //   ATVEJIS dabar irgi escalator'inasi į photo CTA (anksciau iškrisdavo
+              //   į normal save — encouraging trash).
+              //
+              // STRICT MODE: pirmas kartas atvejis (photoAttempts === 0) — TIK
+              // photo CTA + Atšaukti. „Vis tiek pridėti" NESLEPIAM kol photo
+              // nepabandyta. Po photoAttempts >= 1 ir vis dar uncertain → atveriam
+              // override opcijas + „Bandyti su kita nuotrauka".
+              const identityUncertain =
+                result.confidence === 'low' ||
+                result.matchLevel === 'unknown' ||
+                result.matchLevel === 'genus' ||
+                (result.confidence === 'medium' &&
+                 (!result.candidates || result.candidates.length === 0) &&
+                 result.uncertaintyReason)
+              const photoTried = photoAttempts >= 1
               return (
                 <div className="space-y-3 pt-1 pb-4">
                   {duplicate ? (
@@ -2900,21 +2921,32 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                         onClick={() => fileRef.current?.click()}
                         className="w-full h-12 rounded-btn font-display text-sm font-semibold text-bone bg-forest-700 hover:bg-forest-800 transition-colors inline-flex items-center justify-center gap-2"
                       >
-                        <Camera size={16} /> Pridėk nuotrauką tiksliam atpažinimui
+                        <Camera size={16} /> {photoTried ? 'Bandyti su kita nuotrauka' : 'Pridėk nuotrauką tiksliam atpažinimui'}
                       </button>
-                      <p className="text-[11px] text-forest-500 text-center px-3 leading-snug">
-                        Pavadinimas nepatvirtintas botaniškai — nuotrauka leis tiksliai atpažinti rūšį, ne tik spėti gentį.
-                      </p>
-                      {/* Override — vartotojas gali žinoti augalą; saugoma kaip „unverified" */}
-                      <SaveButton
-                        label="Vis tiek pridėti (nepatikrinta)"
-                        result={resultForSave}
-                        kategorija="nori"
-                        className="w-full h-11 rounded-btn font-display text-xs font-medium text-forest-500 bg-transparent border border-bone-400/40 hover:bg-bone-300/30 disabled:opacity-60 transition-colors"
-                        onSave={onAddToWishlist}
-                        onClose={handlePostSaveSwitch}
-                        onSavingChange={setSavingPhase2}
-                      />
+                      {!photoTried && (
+                        <p className="text-[11px] text-forest-500 text-center px-3 leading-snug">
+                          Pavadinimas nepatvirtintas botaniškai — nuotrauka leis tiksliai atpažinti rūšį, ne tik spėti gentį.
+                        </p>
+                      )}
+                      {/* Override „Vis tiek pridėti" — TIK po photo attempt'o (ir
+                          vis tiek uncertain). Apsaugo nuo lazy save'o, bet leidžia
+                          vartotojui sprąsti jei jau matė kad foto irgi nepadeda. */}
+                      {photoTried && (
+                        <>
+                          <p className="text-[11px] text-forest-500 text-center px-3 leading-snug mt-1">
+                            Vis dar netikslus atpažinimas. Gali pridėti su esama info — bus pažymėta „nepatvirtinta".
+                          </p>
+                          <SaveButton
+                            label="Vis tiek pridėti (nepatikrinta)"
+                            result={resultForSave}
+                            kategorija="nori"
+                            className="w-full h-11 rounded-btn font-display text-xs font-medium text-forest-500 bg-transparent border border-bone-400/40 hover:bg-bone-300/30 disabled:opacity-60 transition-colors"
+                            onSave={onAddToWishlist}
+                            onClose={handlePostSaveSwitch}
+                            onSavingChange={setSavingPhase2}
+                          />
+                        </>
+                      )}
                     </>
                   ) : (
                     <>
@@ -3294,11 +3326,21 @@ function Phase1SlimPreview({ result, isDuplicate = false }) {
   // konfliktinis UX). Suppress'inam Atradimas kai duplicate egzistuoja.
   // Tas reali situacija: user'is pridėjo augalą anksčiau, Phase 2 enrichment'as
   // nepavyko / buvo nutrauktas → catalog tuščias, bet plant'as collection'oje.
-  // ATRADIMAS hide'inam ir kai yra candidates — disambiguation kontekste
-  // discovery message'as konfliktuoja („pridėk" vs „pasirink"). User'is jau
-  // turi pasirinkti iš kandidatų; banner'is taps relevant'us pasirinkus.
+  // ATRADIMAS hide'inam:
+  //   • Kai yra candidates — disambiguation kontekste discovery konfliktuoja
+  //     („pridėk" vs „pasirink"). Banner'is taps relevant'us pasirinkus.
+  //   • Kai identitetas uncertain (medium+no-candidates+uncertaintyReason,
+  //     low conf, ar unknown match) — reward tonas „+1 AI užklausa" yra
+  //     out-of-place kai tikslumas dar nepatvirtintas (declutter, 2026-06-01).
   const hasCandidates = Array.isArray(result.candidates) && result.candidates.length > 0
-  const isNewToCatalog = !result.laistymasIntervalas && !isDuplicate && !hasCandidates
+  const identityUncertain =
+    result.confidence === 'low' ||
+    result.matchLevel === 'unknown' ||
+    result.matchLevel === 'genus' ||
+    (result.confidence === 'medium' &&
+     !hasCandidates &&
+     result.uncertaintyReason)
+  const isNewToCatalog = !result.laistymasIntervalas && !isDuplicate && !hasCandidates && !identityUncertain
 
   return (
     <div className="pt-5 pb-2 space-y-4">
