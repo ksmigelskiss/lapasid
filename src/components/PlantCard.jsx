@@ -343,7 +343,13 @@ const PlantCard = memo(function PlantCard({
         onContextMenu={!careMode ? e => e.preventDefault() : undefined}
       >
         {hasImage ? (
-          <PlantImage url={heroSrc} alt={plant.lietuviškas} size="card"
+          // 2026-06-01 — kai useHero=false (user nuotrauka), perduodam
+          // plant.imageThumb kaip thumbUrl → PlantImage renderins 480px
+          // variant'ą size='card' Dashboard kortelėms. useHero=true atveju
+          // heroSrc jau yra heroThumbFor() reikšmė (catalog hero thumb),
+          // tad thumbUrl unused.
+          <PlantImage url={heroSrc} thumbUrl={!useHero ? plant.imageThumb : null}
+            alt={plant.lietuviškas} size="card"
             className={`w-full h-full pointer-events-none ${useHero ? 'object-contain p-1' : 'object-cover'}`}
             style={{ WebkitTouchCallout: 'none', userSelect: 'none' }}
             onError={() => setImgError(true)} />

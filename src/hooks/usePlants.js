@@ -527,8 +527,14 @@ export function usePlants(collectionId, viewerToken = null) {
     }))
   }, [update])
 
-  const updateImage = useCallback((id, image, fromHistory = false) => {
-    updatePlant(id, { image, ...(fromHistory ? {} : { useHistoryPhoto: false }) })
+  const updateImage = useCallback((id, image, fromHistory = false, imageThumb = null) => {
+    // 2026-06-01 — dual upload: image (900px) + imageThumb (240px). Plant
+    // doc'e abu URL'ai. Dashboard kortelės skaitys imageThumb (jei ne null);
+    // PlantDetail hero skaito image. Backward-compat: jei imageThumb=null,
+    // NEpridedam į patch (esamos plant.imageThumb reikšmės nepakeisim).
+    const patch = { image, ...(fromHistory ? {} : { useHistoryPhoto: false }) }
+    if (imageThumb !== null) patch.imageThumb = imageThumb
+    updatePlant(id, patch)
   }, [updatePlant])
 
   const updateStatus = useCallback((id, newStatus, meta = {}) => {
@@ -573,9 +579,13 @@ export function usePlants(collectionId, viewerToken = null) {
       plants: prev.plants.map(p => {
         if (p.id !== plantId) return p
         const updated = { ...p, timeline: [event, ...(p.timeline ?? [])] }
-        // Auto-set profile photo when useHistoryPhoto is on (default true) or plant has no image yet
+        // Auto-set profile photo when useHistoryPhoto is on (default true) or plant has no image yet.
+        // 2026-06-01 — dual upload: kartu kopijuojam event.imageUrlThumb į plant.imageThumb
+        // (jei event'as turi thumb URL'ą). Dashboard kortelės skaitys plant.imageThumb (mažas
+        // file → no resize flash); PlantDetail hero skaitys plant.image.
         if (event.type === 'photo' && event.imageUrl && (p.useHistoryPhoto !== false || !p.image)) {
           updated.image = event.imageUrl
+          if (event.imageUrlThumb) updated.imageThumb = event.imageUrlThumb
         }
         return updated
       }),

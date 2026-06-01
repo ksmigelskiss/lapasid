@@ -78,6 +78,7 @@ import { useState, useEffect, useRef } from 'react'
 
 export default function PlantImage({
   url,
+  thumbUrl,
   size = 'card',
   alt = '',
   eager = false,
@@ -87,7 +88,15 @@ export default function PlantImage({
   draggable,
   style,
 }) {
-  const targetSrc = transformPlantImageUrl(url, size)
+  // 2026-06-01 — dual upload support: kai render'inam SMALL display dydį
+  // ('thumb' arba 'card'), prioritetinkime thumbUrl prop'ą (mūsų pre-resized
+  // ~480px Firebase Storage variant). Dashboard PlantCard naudoja size='card',
+  // PhotoSheet grid'as — size='thumb'. Abiem atvejais 480px užtenka net retina'e.
+  // transformPlantImageUrl toliau handle'ina iNat/Wiki source-side resize.
+  // Firebase Storage upload'ams be thumbUrl pasiliekam full URL → no regression.
+  const useThumb = (size === 'thumb' || size === 'card') && thumbUrl
+  const baseUrl = useThumb ? thumbUrl : url
+  const targetSrc = transformPlantImageUrl(baseUrl, size)
 
   // displayedSrc — kas faktiškai render'inta <img>'e (gali būti SENAS kol naujas
   // user'iui nepakliuvęs); targetSrc — kur norim eit (props url). Jei jie skiriasi

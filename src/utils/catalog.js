@@ -278,9 +278,11 @@ export function resolvePlantView(plant) {
   }
   if (!ref) return plant              // legacy „fat" doc be ref/catalog → inline as-is
   const r = { ...ref }
-  // Niekada neperdengiam: docId meta, display image/photos (photo logika atskira —
-  // heroIsDefaultFor), nei asmeninių laukų (catalog jų neturi, bet defensyviai).
-  delete r._id; delete r.updatedAt; delete r.image
+  // Niekada neperdengiam: docId meta, display image/imageThumb/photos (photo
+  // logika atskira — heroIsDefaultFor), nei asmeninių laukų (catalog jų neturi,
+  // bet defensyviai). 2026-06-01: imageThumb pridėtas — dual upload artifact'as,
+  // tas pats išskyrimas kaip ir image (user-specific Storage URL).
+  delete r._id; delete r.updatedAt; delete r.image; delete r.imageThumb
   for (const k of PERSONAL_FIELDS) delete r[k]
   // Drop null/undefined — kad slim catalog entry neištrintų pilnesnių inline reikšmių.
   for (const k of Object.keys(r)) if (r[k] == null) delete r[k]
@@ -296,7 +298,7 @@ export function snapshotPlantRef(plant) {
   const view = resolvePlantView({ ...plant, refFrozen: false })
   const ref = {}
   for (const k of Object.keys(view)) {
-    if (PERSONAL_FIELDS.has(k) || k === 'image' || k === '_id' || k === 'ref' || k === 'refFrozen') continue
+    if (PERSONAL_FIELDS.has(k) || k === 'image' || k === 'imageThumb' || k === '_id' || k === 'ref' || k === 'refFrozen') continue
     if (view[k] != null) ref[k] = view[k]
   }
   return ref

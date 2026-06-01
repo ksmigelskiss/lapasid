@@ -138,6 +138,50 @@ export function resizeImage(file, maxSize = 900, quality = 0.82) {
   })
 }
 
+/**
+ * resizeImagePair(file) — 2026-06-01. Vienoje praeityje produces TWO data URLs:
+ *   • full:  900px JPEG quality 0.82 (~50-150 KB) — hero/detail render'iui
+ *   • thumb: 240px JPEG quality 0.78 (~8-20 KB)  — kortelių grid'ams
+ *
+ * Vienas img decode → dvi canvas resize operacijos. Daug pigiau nei du
+ * resizeImage() call'ai (kiekvienas savo Image load + decode).
+ *
+ * Naudojama Dashboard widget'uose, kur skaitomas plant.imageThumb (jei
+ * egzistuoja) vietoj 900px image'o → mažiau kraunamų byte'ų ant grid'o
+ * → no visible „resize flash" kortelės užkrovimo metu.
+ */
+export function resizeImagePair(file, { fullSize = 900, fullQ = 0.82, thumbSize = 240, thumbQ = 0.78 } = {}) {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    const url = URL.createObjectURL(file)
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      // Helper — fit longest edge to target, preserve aspect
+      const fit = (target) => {
+        let { width, height } = img
+        if (width > height) {
+          if (width > target) { height = Math.round(height * target / width); width = target }
+        } else {
+          if (height > target) { width = Math.round(width * target / height); height = target }
+        }
+        const canvas = document.createElement('canvas')
+        canvas.width = width; canvas.height = height
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height)
+        return canvas
+      }
+      try {
+        const fullDataUrl  = fit(fullSize).toDataURL('image/jpeg', fullQ)
+        const thumbDataUrl = fit(thumbSize).toDataURL('image/jpeg', thumbQ)
+        resolve({ full: fullDataUrl, thumb: thumbDataUrl })
+      } catch (e) {
+        reject(e)
+      }
+    }
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image load failed')) }
+    img.src = url
+  })
+}
+
 // ── Upload ────────────────────────────────────────────────────
 
 /**
@@ -241,5 +285,78 @@ export async function uploadImage(dataUrl, plantId) {
   } catch (err) {
     console.error('uploadImage failed:', err)
     return null
+  }
+}
+
+/**
+ * uploadImageWithThumb(dataUrl, plantId) — 2026-06-01. Vienu žingsniu:
+ *   1. Decode'ina data URL'ą atgal į Image
+ *   2. Generuoja 240px thumb canvas-on-the-fly
+ *   3. Upload'ina ABU (full + thumb) paraleliai į Firebase Storage
+ *   4. Grąžina { url, thumbUrl }
+ *
+ * Pravartu kai caller'is jau turi resized data URL'ą (e.g. resizeImage(file)
+ * call'ą iš seno code path'o) — nereikia keisti viso upstream chain'o, vis
+ * tiek gauname dual upload benefits.
+ *
+ * Storage path'ai:
+ *   plants/{id}/{ts}.jpg        — full (900px JPEG)
+ *   plants/{id}/{ts}_thumb.jpg  — thumb (240px JPEG)
+ *
+ * Failsoft — bet kuris upload nepavyks → grąžinam null tam URL'ui (caller'is
+ * gali užfiksuoti full be thumb, ar abu null).
+ *
+ * Plain URL (ne data:) passthrough — external photo (iNat, Wiki) grąžinam
+ * kaip yra, su thumbUrl=null (PlantImage transformPlantImageUrl jas gali
+ * resize'inti per URL pattern'ą).
+ */
+export async function uploadImageWithThumb(dataUrl, plantId) {
+  if (!dataUrl) return { url: null, thumbUrl: null }
+  if (!dataUrl.startsWith('data:')) return { url: dataUrl, thumbUrl: null }
+  try {
+    // 1) Decode data URL atgal į Image
+    const img = await new Promise((resolve, reject) => {
+      const i = new Image()
+      i.onload  = () => resolve(i)
+      i.onerror = () => reject(new Error('data URL decode failed'))
+      i.src = dataUrl
+    })
+    // 2) Generuoti thumb canvas-on-the-fly (~480px = retina 2x sweet spot
+    //    Dashboard PlantCard usage'ui ~200-250px CSS dydžio kortelei)
+    const fitThumb = (target = 480) => {
+      let { width, height } = img
+      if (width > height) {
+        if (width > target) { height = Math.round(height * target / width); width = target }
+      } else {
+        if (height > target) { width = Math.round(width * target / height); height = target }
+      }
+      const c = document.createElement('canvas')
+      c.width = width; c.height = height
+      c.getContext('2d').drawImage(img, 0, 0, width, height)
+      return c.toDataURL('image/jpeg', 0.78)
+    }
+    const thumbDataUrl = fitThumb(240)
+
+    // 3) Upload'inti abu paraleliai. Tas pats timestamp natūraliai atsekamumui.
+    const ts  = Date.now()
+    const uploadOne = async (dUrl, suffix) => {
+      const base64 = dUrl.split(',')[1]
+      const mime   = dUrl.match(/data:([^;]+)/)?.[1] ?? 'image/jpeg'
+      const ext    = mime === 'image/png' ? 'png' : 'jpg'
+      const binary = atob(base64)
+      const bytes  = new Uint8Array(binary.length)
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+      const r = ref(storage, `plants/${plantId}/${ts}${suffix}.${ext}`)
+      await uploadBytes(r, bytes, { contentType: mime })
+      return getDownloadURL(r)
+    }
+    const [url, thumbUrl] = await Promise.all([
+      uploadOne(dataUrl, ''),
+      uploadOne(thumbDataUrl, '_thumb'),
+    ])
+    return { url, thumbUrl }
+  } catch (err) {
+    console.error('uploadImageWithThumb failed:', err)
+    return { url: null, thumbUrl: null }
   }
 }

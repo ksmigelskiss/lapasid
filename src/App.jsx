@@ -18,7 +18,7 @@ import PendingApprovalScreen from './components/PendingApprovalScreen'
 import BrandLoader from './components/brand/BrandLoader'
 import DiscoveryToast from './components/DiscoveryToast'
 import T4Icon from './components/brand/T4Icon'
-import { fetchBestPhoto, uploadImage } from './utils/imageService'
+import { fetchBestPhoto, uploadImage, uploadImageWithThumb } from './utils/imageService'
 import { subscribeCatalog, resolvePlantView } from './utils/catalog'
 
 // ChunkLoadError (senas SW aptarnauja seną HTML su naujais chunk hash'ais) → force reload.
@@ -238,11 +238,18 @@ export default function App() {
     })()
   }, [library.length > 0]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Upload timeline photo to Storage before saving (avoids Firestore 1MB doc limit)
+  // Upload timeline photo to Storage before saving (avoids Firestore 1MB doc limit).
+  // 2026-06-01 — dual upload (full + thumb) per uploadImageWithThumb. Thumb URL
+  // saugomas event.imageUrlThumb; usePlants.addTimelineEvent kopijuoja į
+  // plant.imageThumb kai photo event tampa hero (useHistoryPhoto sync).
   const addTimelineEventWithUpload = async (plantId, event) => {
     if (event.imageUrl?.startsWith('data:')) {
-      const uploaded = await uploadImage(event.imageUrl, plantId)
-      addTimelineEvent(plantId, { ...event, imageUrl: uploaded ?? event.imageUrl })
+      const { url, thumbUrl } = await uploadImageWithThumb(event.imageUrl, plantId)
+      addTimelineEvent(plantId, {
+        ...event,
+        imageUrl: url ?? event.imageUrl,
+        ...(thumbUrl ? { imageUrlThumb: thumbUrl } : {}),
+      })
     } else {
       addTimelineEvent(plantId, event)
     }
@@ -584,7 +591,13 @@ export default function App() {
             onStatusChange={(id, status, meta) => updateStatus(id, status, meta)}
             onUpdateNames={(id, patch) => updatePlant(id, patch)}
             onRefreshFromAI={refreshPlantFromAIResult}
-            onImageSave={async (id, url, fromHistory = false) => updateImage(id, await uploadImage(url, id), fromHistory)}
+            onImageSave={async (id, url, fromHistory = false) => {
+              // 2026-06-01 — dual upload: full + thumb (Dashboard kortelėms).
+              // uploadImageWithThumb passthrough'ina Storage/external URL'us (no
+              // thumb gen). Data URL atveju — generate'ina thumb + upload'ina abu.
+              const { url: uploadedUrl, thumbUrl } = await uploadImageWithThumb(url, id)
+              updateImage(id, uploadedUrl ?? url, fromHistory, thumbUrl)
+            }}
             onSaveChat={(id, msgs) => updateChat(id, msgs.map(({ imageUrl, ...m }) => m))}
             onSaveToZinynas={addToZinynas}
             onAddTimelineEvent={addTimelineEventWithUpload}
