@@ -2162,13 +2162,15 @@ function IllustrationSection({ entry, aiActionState, onRegenHero }) {
   const isAnyGen = aiActionState === 'hero' || aiActionState === 'full' || aiActionState === 'text'
 
   // Method label LT — short, friendly
-  const methodLabel = heroMethod === 'gemini-restyle'
-    ? 'Restyle (iš tikros foto)'
-    : heroMethod === 'gemini-text'
-      ? 'Tekstinė generacija'
-      : heroMethod === 'gemini-text-genus'
-        ? 'Tekstinė (genus level)'
-        : heroMethod ?? '—'
+  const methodLabel = heroMethod === 'gemini-restyle-curated'
+    ? 'Restyle (admin curated foto)'
+    : heroMethod === 'gemini-restyle'
+      ? 'Restyle (auto-pasirinkta foto)'
+      : heroMethod === 'gemini-text'
+        ? 'Tekstinė generacija (be foto)'
+        : heroMethod === 'gemini-text-genus'
+          ? 'Tekstinė (genus level)'
+          : heroMethod ?? '—'
 
   return (
     <div className="space-y-3 max-w-3xl">
