@@ -624,7 +624,7 @@ export default function App() {
           <Suspense fallback={null}>
             <SearchModal
               key="search"
-              plants={library}
+              plants={libraryView}
               initialQuery={searchInitialQuery}
               autoCamera={searchAutoCamera}
               onAddToWishlist={plant => {
