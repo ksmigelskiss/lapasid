@@ -1,7 +1,5 @@
 import { useState, useRef, memo } from 'react'
-import { createPortal } from 'react-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileText, MapPin, FlaskConical, Check, X, Apple, HeartPlus, User, Cat } from 'lucide-react'
+import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileText, MapPin, FlaskConical, Check, Apple, HeartPlus, User, Cat } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
 import { getWateringForecast } from '../utils/wateringForecast'
@@ -197,7 +195,6 @@ const PlantCard = memo(function PlantCard({
   heroIllustration = null,
 }) {
   const [imgError, setImgError] = useState(false)
-  const [zoomed,   setZoomed]   = useState(false)
   const longPressTimer = useRef(null)
   const startPos       = useRef(null)
   const didLongPress   = useRef(false)
@@ -217,20 +214,16 @@ const PlantCard = memo(function PlantCard({
   const onPressStart = (e) => {
     didLongPress.current = false
     startPos.current = { x: e.clientX, y: e.clientY }
-    if (careMode) {
-      longPressTimer.current = setTimeout(() => {
-        didLongPress.current = true
-        onCareInfo?.()
-        navigator.vibrate?.(30)
-      }, 450)
-    } else {
-      if (!hasImage) return
-      longPressTimer.current = setTimeout(() => {
-        didLongPress.current = true
-        setZoomed(true)
-        navigator.vibrate?.(30)
-      }, 450)
-    }
+    // 2026-06-02 — long-press VISADA atveria CareWateringSheet (anksčiau
+    // careMode'ui kraišo: care, kitur photo zoom). User'iui dažniau reikia
+    // quick care action'o (palaistyti vieną augalą be careMode toggle'o),
+    // o photo zoom — retas use case'as, perkeltas į PlantDetail hero
+    // long-press. Care mode'as palieka batch flow'ą (tap → toggle done).
+    longPressTimer.current = setTimeout(() => {
+      didLongPress.current = true
+      onCareInfo?.()
+      navigator.vibrate?.(30)
+    }, 450)
   }
   const onPressMove = (e) => {
     if (!longPressTimer.current) return
@@ -581,43 +574,9 @@ const PlantCard = memo(function PlantCard({
       </div>
     </div>
 
-    {/* Full-screen photo zoom portal */}
-    {createPortal(
-      <AnimatePresence>
-        {zoomed && (
-          <motion.div
-            className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-black/95"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            onPointerDown={() => setZoomed(false)}
-          >
-            <motion.img
-              src={plant.image}
-              alt={plant.lietuviškas}
-              className="max-w-full max-h-[80dvh] object-contain pointer-events-none select-none"
-              style={{ WebkitTouchCallout: 'none', userSelect: 'none' }}
-              initial={{ scale: 0.88, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.88, opacity: 0 }}
-              transition={{ type: 'spring', damping: 26, stiffness: 300 }}
-            />
-            <div className="absolute bottom-16 left-0 right-0 text-center px-6 pointer-events-none">
-              <p className="text-white font-bold text-base leading-tight">{plant.lietuviškas}</p>
-              {plant.lotyniskas && <p className="text-white/50 text-sm italic mt-0.5">{plant.lotyniskas}</p>}
-            </div>
-            <button
-              className="absolute top-14 right-4 w-9 h-9 rounded-btn bg-white/10 flex items-center justify-center"
-              onPointerDown={e => { e.stopPropagation(); setZoomed(false) }}
-            >
-              <X size={16} className="text-white" />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>,
-      document.body
-    )}
+    {/* 2026-06-02 — Photo zoom modal pašalintas (perkeltas į PlantDetail hero
+        long-press). Card long-press dabar atveria CareWateringSheet — quick
+        care action svarbesnis nei photo zoom šiame view'e. */}
     </>
   )
 })

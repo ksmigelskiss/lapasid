@@ -1490,6 +1490,35 @@ export default function PlantDetail({
   // iš search'o: Brave + iNat + Wikidata + Wikipedia). Resetinasi į 0 kai
   // pasikeičia plant.id (kitas augalas).
   const [heroPhotoIdx, setHeroPhotoIdx]     = useState(0)
+  // 2026-06-02 — photo zoom modal'as, perkeltas iš PlantCard'o (kur dashboard
+  // long-press dabar atveria CareWateringSheet). Long-press ant PlantDetail
+  // hero foto → zoom view su full-screen image + close X.
+  const [heroZoomed, setHeroZoomed]         = useState(false)
+  const heroLongPressTimerRef               = useRef(null)
+  const heroDidLongPressRef                 = useRef(false)
+  const heroPressStartPosRef                = useRef(null)
+  const onHeroPressStart = (e) => {
+    heroDidLongPressRef.current = false
+    heroPressStartPosRef.current = { x: e.clientX, y: e.clientY }
+    heroLongPressTimerRef.current = setTimeout(() => {
+      heroDidLongPressRef.current = true
+      setHeroZoomed(true)
+      navigator.vibrate?.(30)
+    }, 450)
+  }
+  const onHeroPressMove = (e) => {
+    if (!heroLongPressTimerRef.current) return
+    const dx = e.clientX - (heroPressStartPosRef.current?.x ?? e.clientX)
+    const dy = e.clientY - (heroPressStartPosRef.current?.y ?? e.clientY)
+    if (dx * dx + dy * dy > 100) {
+      clearTimeout(heroLongPressTimerRef.current)
+      heroLongPressTimerRef.current = null
+    }
+  }
+  const onHeroPressEnd = () => {
+    clearTimeout(heroLongPressTimerRef.current)
+    heroLongPressTimerRef.current = null
+  }
   const [showPhotoSheet, setShowPhoto]      = useState(false)
   const [showChat, setShowChat]             = useState(false)
   const [chatInitialQuery, setChatQuery]    = useState('')
@@ -1894,7 +1923,11 @@ export default function PlantDetail({
               const goPhoto = (delta) => { setHeroError(false); setHeroPhotoIdx(i => Math.max(0, Math.min(gallery.length - 1, i + delta))) }
               return (
                 <div className={`block w-full h-full overflow-hidden relative ${isIllustration ? '' : 'bg-bone-300'}`}
-                     style={isIllustration ? { background: '#fefdfa' } : undefined}>
+                     style={isIllustration ? { background: '#fefdfa' } : undefined}
+                     onPointerDown={onHeroPressStart}
+                     onPointerMove={onHeroPressMove}
+                     onPointerUp={onHeroPressEnd}
+                     onPointerCancel={onHeroPressEnd}>
                   {heroError ? (
                     <div className="w-full h-full flex items-center justify-center text-8xl bg-bone-300">
                       {plant.emoji ?? '🌿'}
@@ -2155,6 +2188,47 @@ export default function PlantDetail({
           />
         )}
       </AnimatePresence>
+
+      {/* 2026-06-02 — Photo zoom portal. Long-press ant hero foto → atveria
+          full-screen zoom view. Anksčiau gyveno PlantCard'e (dashboard
+          long-press), perkeltas čia, kai PlantCard'o long-press tapo
+          „atverti CareWateringSheet". Retas use case'as bet retoms reikia. */}
+      {createPortal(
+        <AnimatePresence>
+          {heroZoomed && (
+            <motion.div
+              className="fixed inset-0 z-[120] flex flex-col items-center justify-center bg-black/95"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              onPointerDown={() => setHeroZoomed(false)}
+            >
+              <motion.img
+                src={plant.image || plant.heroIllustration}
+                alt={plant.lietuviškas}
+                className="max-w-full max-h-[80dvh] object-contain pointer-events-none select-none"
+                style={{ WebkitTouchCallout: 'none', userSelect: 'none' }}
+                initial={{ scale: 0.88, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.88, opacity: 0 }}
+                transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+              />
+              <div className="absolute bottom-16 left-0 right-0 text-center px-6 pointer-events-none">
+                <p className="text-white font-bold text-base leading-tight">{plant.lietuviškas}</p>
+                {plant.lotyniskas && <p className="text-white/50 text-sm italic mt-0.5">{plant.lotyniskas}</p>}
+              </div>
+              <button
+                className="absolute top-14 right-4 w-9 h-9 rounded-btn bg-white/10 flex items-center justify-center"
+                onPointerDown={e => { e.stopPropagation(); setHeroZoomed(false) }}
+              >
+                <X size={16} className="text-white" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </div>
   )
 
