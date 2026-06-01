@@ -321,10 +321,13 @@ export default function App() {
 
   // ── DesktopHeader hooks (turi būt PRIEŠ auth gate, kad hook order'is
   //    nesikaitė kai auth gate trigger'inasi vs. užkrauta) ─────────
-  const carePopupPlants = useMemo(
-    () => dashboard.filter(p => p.status !== 'quarantine'),
-    [dashboard]
-  )
+  // 2026-06-01 — INCLUDE quarantine plants. Anksčiau filtravom quarantine'ą
+  // iš care notification counts, bet karantine augalai vis tiek prašo
+  // laistymo/tręšimo (žiūr. analogišką fix'ą Dashboard.jsx:155). Dėl filter'io
+  // header'io droplet badge rodydavo „0", net jei greeting text'as ir
+  // Karantinas card teigia, kad augalas ištroškęs. Inconsistency tarp dviejų
+  // counter'ių, kuriuos mato user'is.
+  const carePopupPlants = dashboard
   const careLists = useCareLists(carePopupPlants)
   const careNotificationCount = careLists.total
   const careWaterCount = careLists.wateringList.length
