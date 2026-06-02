@@ -17,7 +17,7 @@ import { ensureArray, makeId, today } from '../utils/plantTransform'
 import { getPlantEnrichmentState, getEnrichmentFailureReason } from '../utils/plantState'
 import { getWateringForecast } from '../utils/wateringForecast'
 import { getFertilizingSummary } from '../utils/fertilizingForecast'
-import { heroIllustrationFor, heroIsDefaultFor } from '../utils/catalog'
+import { heroIllustrationFor, heroThumbFor, heroIsDefaultFor } from '../utils/catalog'
 import { fetchPlantNames } from '../utils/plantNames'
 import { fetchPhotos, resizeImage } from '../utils/imageService'
 import { getPlantMood } from '../utils/plantMood'
@@ -1941,6 +1941,12 @@ export default function PlantDetail({
               const hasGallery = gallery.length > 1
               const currentPhoto = gallery[heroPhotoIdx] ?? gallery[0] ?? plant.image
               const isIllustration = currentPhoto === heroIllus
+              // 2026-06-02 — thumbUrl detail hero'ui: cached grid thumb rodom IŠKART
+              // (progressive LQIP PlantImage'e), full swap'inasi → jokio „pop" po
+              // kortelės atidarymo. Watercolor → heroThumb; user foto → imageThumb.
+              const currentThumb = isIllustration
+                ? heroThumbFor(plant.lotyniskas)
+                : (currentPhoto === plant.image ? (plant.imageThumb ?? null) : null)
 
               if (!currentPhoto) {
                 return (
@@ -1974,7 +1980,7 @@ export default function PlantDetail({
                     // (švarus object-fit), o cyclining tarp foto lieka sklandus (SWR).
                     <PlantImage
                       key={isIllustration ? 'illus' : 'photo'}
-                      url={currentPhoto} alt={plant.lietuviškas} size="detail" eager
+                      url={currentPhoto} thumbUrl={currentThumb} alt={plant.lietuviškas} size="detail" eager
                       className={`w-full h-full ${isIllustration ? 'object-contain' : 'object-cover'}`}
                       onError={() => setHeroError(true)}
                     />

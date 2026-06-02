@@ -98,11 +98,20 @@ export default function PlantImage({
   const baseUrl = useThumb ? thumbUrl : url
   const targetSrc = transformPlantImageUrl(baseUrl, size)
 
-  // displayedSrc — kas faktiškai render'inta <img>'e (gali būti SENAS kol naujas
+  // 2026-06-02 — progressive LQIP: full-res display (pvz. size='detail') su turimu
+  // thumbUrl → pradinis paint = THUMB (cached iš grid'o → instant, jokio „pop" po
+  // kortelės atidarymo animacijos), tada preload full + atomic swap. Be thumbUrl
+  // ar small dydžiams (card/thumb) — elgesys NEPAKITĘS.
+  const lqipThumb = (!useThumb && thumbUrl && url) ? transformPlantImageUrl(thumbUrl, size) : null
+  const initialSrc = lqipThumb ?? targetSrc
+
+  // displayedSrc — kas faktiškai render'inta <img>'e (gali būti SENAS/thumb kol naujas
   // user'iui nepakliuvęs); targetSrc — kur norim eit (props url). Jei jie skiriasi
   // → background preload + atomic swap kai naujas ready.
-  const [displayedSrc, setDisplayedSrc] = useState(targetSrc)
-  const lastTargetRef = useRef(targetSrc)
+  // lqip atveju initialSrc=thumb (≠targetSrc) → effect mount'e preload'ina full+swap.
+  // Kitaip initialSrc=targetSrc → effect mount'e skip (originalus elgesys).
+  const [displayedSrc, setDisplayedSrc] = useState(initialSrc)
+  const lastTargetRef = useRef(initialSrc)
 
   useEffect(() => {
     // targetSrc nepasikeitė — nieko nedarom.
