@@ -344,7 +344,7 @@ const PlantCard = memo(function PlantCard({
           // variant'ą size='card' Dashboard kortelėms. useHero=true atveju
           // heroSrc jau yra heroThumbFor() reikšmė (catalog hero thumb),
           // tad thumbUrl unused.
-          <PlantImage url={heroSrc} thumbUrl={!useHero ? plant.imageThumb : null}
+          <PlantImage key={heroSrc} url={heroSrc} thumbUrl={!useHero ? plant.imageThumb : null}
             alt={plant.lietuviškas} size="card"
             className={`w-full h-full pointer-events-none ${useHero ? 'object-contain p-1' : 'object-cover'}`}
             style={{ WebkitTouchCallout: 'none', userSelect: 'none' }}
