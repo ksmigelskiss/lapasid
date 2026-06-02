@@ -354,6 +354,17 @@ export function heroIsDefaultFor(plant) {
  */
 export function heroIllustrationForPlant(plant) {
   if (!plant || !heroIsDefaultFor(plant)) return null
+  // 2026-06-02 DIAGNOSTIC (laikinas) — widget rodo watercolor nors yra image.
+  // Logina TIK bug sąlygą → repro metu parodo kurio lauko trūksta renderyje.
+  if (plant.image) {
+    console.log('[hero-debug] watercolor DESPITE image', {
+      id: plant.id,
+      name: plant.lietuviškas,
+      useHistoryPhoto: plant.useHistoryPhoto,
+      timelinePhotos: (plant.timeline ?? []).filter(e => e.type === 'photo' && e.imageUrl).length,
+      imageHead: String(plant.image).slice(0, 48),
+    })
+  }
   return heroIllustrationFor(plant.lotyniskas)
 }
 
