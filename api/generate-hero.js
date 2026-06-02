@@ -15,7 +15,7 @@
 import admin from 'firebase-admin'
 import { createHeroGen, forceAspect3x2, cropToThumb } from './_lib/heroGen.js'
 import { catalogDocId } from './_lib/catalog-server.js'
-import { uidFromToken } from './_firestore.js'
+import { verifyAuthToken } from './_lib/firestore-admin.js'
 
 export const config = { maxDuration: 120 }  // Sonnet vision + Gemini + sharp cutout ~30-60s
 
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
   // Auth — Bearer (konsistent su rehost-image / claude pattern'u)
   const idToken = (req.headers.authorization ?? '').replace(/^Bearer\s+/i, '')
   if (!idToken) return res.status(401).json({ error: 'auth_required' })
-  if (!uidFromToken(idToken)) return res.status(401).json({ error: 'invalid_token' })
+  if (!(await verifyAuthToken(idToken))) return res.status(401).json({ error: 'invalid_token' })
 
   // 2026-06-01 — useCuratedReference: kai true, naudoja catalog.image kaip
   // restyle source (skip'inant gatherCandidates + Sonnet voting). Admin'as

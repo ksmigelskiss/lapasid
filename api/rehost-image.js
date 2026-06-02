@@ -18,7 +18,7 @@
 
 import admin from 'firebase-admin'
 import sharp from 'sharp'
-import { uidFromToken } from './_firestore.js'
+import { verifyAuthToken } from './_lib/firestore-admin.js'
 
 // Server-side latinName → catalog slug derivation.
 // MIRROR'as src/utils/catalog.js'o `catalogDocId` funkcijos. Lengvai
@@ -82,7 +82,7 @@ export default async function handler(req, res) {
   // admin.auth().verifyIdToken() vienu šuoliu.
   const idToken = (req.headers.authorization ?? '').replace(/^Bearer\s+/i, '')
   if (!idToken) return res.status(401).json({ error: 'auth_required' })
-  const uid = uidFromToken(idToken)
+  const uid = await verifyAuthToken(idToken)
   if (!uid) return res.status(401).json({ error: 'invalid_token' })
 
   // ── BODY PARSING ─────────────────────────────────────────────

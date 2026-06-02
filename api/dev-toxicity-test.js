@@ -34,11 +34,17 @@
  * NEPAVADINTAS production endpoint'u — kai versija plus (Step 6b) bus
  * stabili ir nereikės iteruoti, gali būti ištrintas.
  */
-import { uidFromToken } from './_firestore.js'
+import { verifyAuthToken } from './_lib/firestore-admin.js'
 import { deriveToxicityFromSourcesServer } from './_lib/deriveToxicity-server.js'
 import { generateToxicityNarrativeServer } from './_lib/toxicityNarrativeGenerator-server.js'
 
 export default async function handler(req, res) {
+  // 2026-06-02 (P0/P2 security) — dev-only endpoint'as. Production'e 404 →
+  // pašalina cost-abuse attack surface (kiekvienas call ~$0.0008). Lokaliai
+  // (NODE_ENV !== 'production') lieka prieinamas testavimui.
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).json({ error: 'not_found' })
+  }
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
@@ -46,7 +52,7 @@ export default async function handler(req, res) {
   // Auth — minimum protection nuo random users
   const idToken = req.headers.authorization?.replace('Bearer ', '')
   if (!idToken) return res.status(401).json({ error: 'Missing token' })
-  const uid = uidFromToken(idToken)
+  const uid = await verifyAuthToken(idToken)
   if (!uid) return res.status(401).json({ error: 'Invalid token' })
 
   const { latinName } = req.body || {}

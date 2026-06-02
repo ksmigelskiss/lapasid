@@ -54,3 +54,35 @@ export function serverTimestamp() {
   initAdmin()
   return admin.firestore.FieldValue.serverTimestamp()
 }
+
+/**
+ * 2026-06-02 (P0-1 security fix) — Firebase ID token VERIFICATION.
+ *
+ * Pakeičia seną `uidFromToken` (api/_firestore.js), kuris tik base64-decode'ino
+ * JWT payload'ą BE parašo verifikacijos → bet kas galėjo forge'inti token'ą su
+ * norimu UID ir bypass'inti visus auth check'us (įsk. admin escalation per
+ * save-plant admin mode).
+ *
+ * `admin.auth().verifyIdToken()` kriptografiškai patikrina:
+ *   • RS256 parašą prieš Google viešuosius raktus (auto key rotation)
+ *   • `exp` (expiration) + `iat` (issued-at)
+ *   • `aud` (= projekto ID) + `iss` (= securetoken.google.com/{project})
+ *
+ * Grąžina uid (string) jei token validus, arba null. Niekada nemeta — caller'is
+ * tik tikrina `if (!uid) return 401`.
+ *
+ * NOTE: pirmas call'as per function instance'ą fetch'ina Google public keys
+ * (cache'inama SDK viduje per key TTL). Cold-start cost ~100-300ms, bet
+ * dominuojamas AI/Firestore latency šiuose endpoint'uose.
+ */
+export async function verifyAuthToken(token) {
+  if (!token || typeof token !== 'string') return null
+  try {
+    initAdmin()
+    const decoded = await admin.auth().verifyIdToken(token)
+    return decoded?.uid ?? null
+  } catch (e) {
+    console.warn('[auth] ID token verification failed:', e?.message)
+    return null
+  }
+}

@@ -1,7 +1,8 @@
 // Vercel serverless function — SSE streaming Anthropic proxy
 // Naudojamas: useChatStream (PlantChat, CollectionChat, ZinynasChat)
 import Anthropic from '@anthropic-ai/sdk'
-import { fsGet, fsIncrement, uidFromToken, checkLimit } from '../_firestore.js'
+import { fsGet, fsIncrement, checkLimit } from '../_firestore.js'
+import { verifyAuthToken } from '../_lib/firestore-admin.js'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -19,7 +20,7 @@ export default async function handler(req, res) {
   let uid = null
   if (limitType) {
     if (!idToken) return res.status(401).json({ error: 'Unauthorized' })
-    uid = uidFromToken(idToken)
+    uid = await verifyAuthToken(idToken)
     if (!uid) return res.status(401).json({ error: 'Invalid token' })
 
     const user = await fsGet('users', uid, idToken)

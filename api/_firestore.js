@@ -53,13 +53,9 @@ export async function fsIncrement(collection, id, fieldPath, idToken) {
   } catch {}
 }
 
-// Gauna UID iš Firebase ID tokeno (JWT payload — base64 decode)
-export function uidFromToken(token) {
-  try {
-    const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString('utf8'))
-    return payload.sub || payload.user_id || null
-  } catch { return null }
-}
+// 2026-06-02 (P0-1 security) — `uidFromToken` PAŠALINTA. Ji tik base64-decode'ino
+// JWT payload'ą BE parašo verifikacijos → forge'inamas UID. Pakeista saugiu
+// `verifyAuthToken` (api/_lib/firestore-admin.js → admin.auth().verifyIdToken).
 
 // Free tier limitai
 export const FREE_LIMITS = { searches: 5, chats: 5, fbPosts: 2 }

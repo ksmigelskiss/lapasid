@@ -1,7 +1,8 @@
 // Vercel serverless function — non-streaming Anthropic proxy
 // Naudojamas: SearchModal (Phase 1 + Phase 2 plant search)
 import Anthropic from '@anthropic-ai/sdk'
-import { fsGet, fsIncrement, uidFromToken, checkLimit } from './_firestore.js'
+import { fsGet, fsIncrement, checkLimit } from './_firestore.js'
+import { verifyAuthToken } from './_lib/firestore-admin.js'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -14,11 +15,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'messages array required' })
   }
 
-  // Auth tikrinimas + limito patikrinimas (tik kai limitType nurodytas)
+  // Auth tikrinimas + limito patikrinimas (tik kai limitType nurodytas).
+  // 2026-06-02 — uid hoist'intas į handler scope, kad inkrement'o block'as
+  // (po success) reuse'intų verified UID be antro verifyIdToken call'o.
   const idToken = req.headers.authorization?.replace('Bearer ', '')
+  let uid = null
   if (limitType) {
     if (!idToken) return res.status(401).json({ error: 'Unauthorized' })
-    const uid  = uidFromToken(idToken)
+    uid = await verifyAuthToken(idToken)
     if (!uid)   return res.status(401).json({ error: 'Invalid token' })
 
     const user = await fsGet('users', uid, idToken)
@@ -41,10 +45,9 @@ export default async function handler(req, res) {
       messages,
     })
 
-    // Sekmingai — incrementiname skaitiklį
-    if (limitType && idToken) {
-      const uid = uidFromToken(idToken)
-      if (uid) fsIncrement('users', uid, `aiUsage.${limitType}`, idToken)
+    // Sekmingai — incrementiname skaitiklį (uid jau verified aukščiau)
+    if (limitType && idToken && uid) {
+      fsIncrement('users', uid, `aiUsage.${limitType}`, idToken)
     }
 
     res.json(response)

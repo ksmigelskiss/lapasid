@@ -40,7 +40,6 @@
  */
 import { waitUntil } from '@vercel/functions'
 import Anthropic from '@anthropic-ai/sdk'
-import { uidFromToken } from './_firestore.js'
 import { TOOL_DETAILS, PLANT_SYSTEM } from '../src/utils/plantPromptConfig.js'
 import { LT_CLIMATE_CONTEXT, VET_LINKS, RAG_PRIORITY_INSTRUCTION } from '../src/utils/stage2Constants.js'
 import { VOICE_PERSONA } from '../src/utils/plantVoicePersona.js'
@@ -52,7 +51,7 @@ import { resolveLtServer } from './_lib/ltDictionary-server.js'
 import { saveCatalogWithParentServer } from './_lib/taxon-groups-server.js'
 import { saveUserPlantServer, isUidMember } from './_lib/user-plant-server.js'
 import admin from 'firebase-admin'
-import { adminFirestore } from './_lib/firestore-admin.js'
+import { adminFirestore, verifyAuthToken } from './_lib/firestore-admin.js'
 import { createHeroGen, forceAspect3x2, cropToThumb } from './_lib/heroGen.js'
 import { catalogDocId } from './_lib/catalog-server.js'
 
@@ -74,7 +73,7 @@ export default async function handler(req, res) {
   const idToken = req.headers.authorization?.replace('Bearer ', '')
   if (!idToken) return res.status(401).json({ error: 'Missing token' })
 
-  const uid = uidFromToken(idToken)
+  const uid = await verifyAuthToken(idToken)
   if (!uid) return res.status(401).json({ error: 'Invalid token' })
 
   // ── Body validation ─────────────────────────────────────────
