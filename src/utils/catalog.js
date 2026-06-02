@@ -212,21 +212,45 @@ let _catalogById = {}
  * re-render counter'į). Mount once App'e.
  */
 export function subscribeCatalog(onChange) {
-  try {
-    return onSnapshot(
-      collection(db, 'catalog'),
-      snap => {
-        const map = {}
-        snap.forEach(d => { map[d.id] = { ...d.data(), _id: d.id } })
-        _catalogById = map
-        onChange?.()
-      },
-      e => console.warn('[catalog] subscription error:', e),
-    )
-  } catch (e) {
-    console.warn('[catalog] subscribe failed:', e)
-    return () => {}
+  // 2026-06-02 — bounded retry. Jei subscription error'ina su permission-denied
+  // (auth-timing race: catalog rule reikalauja request.auth != null, o auth dar
+  // gali nebūti ready net ir po App gate'o — transient propagation), bandom dar
+  // kelis kartus su backoff'u vietoj tylaus mirimo. Be šito _catalogById liko
+  // tuščias iki page refresh'o (watercolor overlay dingdavo, biblioteka tuščia).
+  let unsub = () => {}
+  let retryTimer = null
+  let attempts = 0
+  const MAX_RETRIES = 4
+
+  const start = () => {
+    try {
+      unsub = onSnapshot(
+        collection(db, 'catalog'),
+        snap => {
+          attempts = 0 // sėkmė → reset retry counter
+          const map = {}
+          snap.forEach(d => { map[d.id] = { ...d.data(), _id: d.id } })
+          _catalogById = map
+          onChange?.()
+        },
+        e => {
+          const code = e?.code || e?.message || 'unknown'
+          console.warn('[catalog] subscription error:', code)
+          if (code === 'permission-denied' && attempts < MAX_RETRIES) {
+            attempts++
+            const delay = Math.min(1000 * attempts, 4000) // 1s,2s,3s,4s
+            console.warn(`[catalog] retry ${attempts}/${MAX_RETRIES} po ${delay}ms`)
+            retryTimer = setTimeout(start, delay)
+          }
+        },
+      )
+    } catch (e) {
+      console.warn('[catalog] subscribe failed:', e?.message)
+    }
   }
+
+  start()
+  return () => { clearTimeout(retryTimer); unsub() }
 }
 
 /** Sync lookup — grąžina watercolor hero URL augalui (arba null). */

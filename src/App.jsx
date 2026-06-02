@@ -100,7 +100,17 @@ export default function App() {
   // bump'as → cards re-render kai serveris parašo heroIllustration. Pakeitė
   // preload + 45s/90s/focus refresh timer'ius (widget niekada neatsinaujindavo).
   const [heroMapV, setHeroMapV] = useState(0)
-  useEffect(() => subscribeCatalog(() => setHeroMapV(v => v + 1)), [])
+  // 2026-06-02 — GATE on auth. Anksčiau deps=[] → subscription startuodavo on
+  // mount PRIEŠ auth ready → catalog rule (request.auth != null) denied →
+  // subscription miršta (error tik log'inamas, NEretry'ina) → _catalogById
+  // tuščias iki refresh'o. Symptom'ai: search rodo real foto (ne watercolor,
+  // nes overlay neturi heroIllustration), biblioteka kartais tuščia. Dabar
+  // subscribe TIK kai user/viewer authed; re-subscribe kai auth keičiasi.
+  // subscribeCatalog viduje papildomas bounded retry permission-denied atvejui.
+  useEffect(() => {
+    if (!user && !viewerToken) return
+    return subscribeCatalog(() => setHeroMapV(v => v + 1))
+  }, [user?.uid, viewerToken])
   const dashboardRef = useRef(null)
   const [showProfile, setShowProfile] = useState(false)
   const [showSearch, setShowSearch]   = useState(false)
