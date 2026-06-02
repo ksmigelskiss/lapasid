@@ -17,7 +17,10 @@ import { createHeroGen, finalizeHeroBuffers } from './_lib/heroGen.js'
 import { catalogDocId } from './_lib/catalog-server.js'
 import { verifyAuthToken } from './_lib/firestore-admin.js'
 
-export const config = { maxDuration: 120 }  // Sonnet vision + Gemini + sharp cutout ~30-60s
+// 2026-06-02 — 120→300 (suvienodinta su save-plant.js, platformos default 300s).
+// Cultivar'ai be reference foto (Wiki 404 → text-to-image lėčiausias kelias) +
+// Sonnet vision + Gemini + sharp cutout + watermark gali viršyti 120s → 504.
+export const config = { maxDuration: 300 }
 
 let _init = false
 function initAdmin() {
