@@ -302,7 +302,7 @@ export function createHeroGen({ token }) {
   async function geminiRestyle(imageUrl) {
     const part = await fetchImagePart(imageUrl)
     if (!part) throw new Error('image fetch failed')
-    const instr = `Redraw the EXACT plant shown in this photograph as a soft watercolor botanical illustration. Preserve its true growth habit, real leaf shape, arrangement and trunk/stem form precisely — only change the art style. ${STYLE_BASE}`
+    const instr = `Redraw the EXACT plant shown in this photograph as a soft watercolor botanical illustration. Preserve its true growth habit, real leaf shape, arrangement and trunk/stem form precisely — only change the art style. Faithfully retain the distinctive details that are VISIBLE IN THE PHOTO — flowers, inflorescences and seed heads, leaf margins, tips and venation, variegation — render them clearly rather than smoothing, simplifying or omitting them; but if the photo shows no such feature, do NOT invent one. ${STYLE_BASE}`
     return geminiImage([{ type: 'text', text: instr }, part])
   }
 
