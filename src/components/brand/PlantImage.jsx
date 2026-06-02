@@ -105,12 +105,14 @@ export default function PlantImage({
   const lastTargetRef = useRef(targetSrc)
 
   useEffect(() => {
-    // Pirmas mount ar targetSrc nepasikeitė — nieko nedarom.
-    if (!targetSrc || targetSrc === lastTargetRef.current) {
-      lastTargetRef.current = targetSrc
-      return
-    }
+    // targetSrc nepasikeitė — nieko nedarom.
+    if (targetSrc === lastTargetRef.current) return
     lastTargetRef.current = targetSrc
+
+    // 2026-06-02 — image PAŠALINTAS (revert / delete-from-history → url=null).
+    // Išvalom displayedSrc, kad nepaliktų seno paveikslėlio (anksčiau `!targetSrc`
+    // return'indavo be išvalymo → senas hero likdavo matomas).
+    if (!targetSrc) { setDisplayedSrc(null); return }
 
     // Naujas URL — preload'inam background'e. SENAS lieka rodomas iki preload
     // baigsis. Kai baigsis — setDisplayedSrc → React re-render su naujo URL

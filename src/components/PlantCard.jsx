@@ -1,4 +1,4 @@
-import { useState, useRef, memo } from 'react'
+import { useState, useRef, useEffect, memo } from 'react'
 import { Sun, Droplets, Star, Leaf, Moon, Sprout, Snowflake, House, Ghost, FileText, MapPin, FlaskConical, Check, Apple, HeartPlus, User, Cat } from 'lucide-react'
 import { getFertilizingForecast } from '../utils/fertilizingForecast'
 import { getDormancyForecast } from '../utils/dormancyForecast'
@@ -195,6 +195,9 @@ const PlantCard = memo(function PlantCard({
   heroIllustration = null,
 }) {
   const [imgError, setImgError] = useState(false)
+  // 2026-06-02 — reset imgError kai image šaltinis pasikeičia (nauja foto / hero).
+  // Anksčiau vienąkart sugedęs URL nuolat nuodydavo kortelę iki remount'o.
+  useEffect(() => { setImgError(false) }, [plant.image, heroIllustration])
   const longPressTimer = useRef(null)
   const startPos       = useRef(null)
   const didLongPress   = useRef(false)

@@ -96,18 +96,11 @@ export function usePlants(collectionId, viewerToken = null) {
   // kiekvienam snapshot'ui (jei pirmasis async setDoc'as dar nepraėjo).
   const migrationDoneRef = useRef(new Set()) // Set<colId>: kuriose kolekcijose jau išvalyta
 
-  // 2026-06-02 — PROPER optimistic reconciliation (2 sluoksniai, ne laiko langas):
-  //
-  // (A) Pending-write guard, Map<id, plant>. Laikom optimistinį local write'ą kol
-  //     serveris PATVIRTINA (snapshot atspindi tą doc'ą). Confirmation-based —
-  //     apsaugo nuo in-flight stale snapshot'o, kuris atvyksta PO mūsų write'o.
-  // (B) lastPlantCount — incomplete-snapshot guard: neperrašom pilno state'o
-  //     nepilnu (fromCache) snapshot'u, kuris SUMAŽINA augalų kiekį (Firestore
-  //     pristato transient `subPlantCount:1` cache snapshot'us load/write metu →
-  //     nuplaudavo visus augalus + foto). Serverio (fromCache:false) snapshot'ai
-  //     visada apply (autoritetingi, įsk. legit delete).
-  const pendingWritesRef = useRef(new Map())
-  const lastPlantCountRef = useRef(0)
+  // 2026-06-02 — Sync layer = PER-DOC reconciliacija (žr. listener'ius žemiau).
+  // Firestore SDK PATS daro optimistic latency compensation (local write iškart
+  // matomas snapshot'e su hasPendingWrites). Tad NEREIKIA rankinio pending guard'o,
+  // incomplete-snapshot guard'o ar viso state'o perrašymo — jie tik kompensavo
+  // whole-state-replace sukurtą race'ą (foto dingdavo). Audito sprendimas: ištrinti.
 
   // Optimistic local update + write į Firestore. SDK su persistence
   // (firebase.js) queues offline writes į IndexedDB ir auto-flush'ina kai
@@ -136,14 +129,12 @@ export function usePlants(collectionId, viewerToken = null) {
 
       for (const [id, plant] of nextMap) {
         if (prevMap.get(id) !== plant) {
-          pendingWritesRef.current.set(id, plant)
           setDoc(doc(db, 'collections', cid, 'plants', id), stripUndefined(plant))
-            .catch(e => { console.warn('[firestore] plant write:', e); pendingWritesRef.current.delete(id) })
+            .catch(e => console.warn('[firestore] plant write:', e))
         }
       }
       for (const id of prevMap.keys()) {
         if (!nextMap.has(id)) {
-          pendingWritesRef.current.delete(id)  // kad incomplete-guard neresurrect'intų
           deleteDoc(doc(db, 'collections', cid, 'plants', id))
             .catch(e => console.warn('[firestore] plant delete:', e))
         }
@@ -162,83 +153,12 @@ export function usePlants(collectionId, viewerToken = null) {
     })
   }, []) // stabilus — naudoja ref viduje
 
-  // Suliejame `meta` + `subPlants` į lokalų state'ą. Bendras kelias
-  // tiek real-time onSnapshot listener'iui (Etapas B), tiek vienkartiniam
-  // syncFromRemote (pull-to-refresh / viewer polling).
-  const applySnapshot = useCallback((meta, subPlants, fromCache = false, hasPendingWrites = false) => {
-    const cid = colIdRef.current
-    if (!cid) return
-
-    const safeMeta = meta ?? {}
-    const subIds   = new Set(subPlants.map(p => p.id))
-
-    // Suliejame: meta.plants[] (legacy) + subCol. SubCol turi prioritetą
-    // konflikt'ams (legacy data perrašoma fresh subCol data).
-    const byId = new Map()
-    if (safeMeta.plants?.length > 0) {
-      safeMeta.plants.forEach(p => byId.set(p.id, p))
-    }
-    subPlants.forEach(p => byId.set(p.id, p))
-
-    // (A) Pending-write guard (confirmation-based) — laikom optimistinį local'ą
-    // kol serveris PATVIRTINA tą doc'ą (key personal laukai sutampa). Apsaugo nuo
-    // in-flight stale snapshot'o, atvykusio PO mūsų write'o.
-    const pending = pendingWritesRef.current
-    const plants = [...byId.values()].map(sp => {
-      const local = pending.get(sp.id)
-      if (!local) return sp
-      const matches =
-        sp.image === local.image &&
-        (sp.imageThumb ?? null) === (local.imageThumb ?? null) &&
-        sp.useHistoryPhoto === local.useHistoryPhoto &&
-        (sp.timeline?.length ?? 0) === (local.timeline?.length ?? 0)
-      // Drop pending TIK kai serveris PATVIRTINO (!hasPendingWrites) IR sutampa.
-      // Ant latency-comp snapshot'o (hasPendingWrites:true) NEdrop'inam — kitaip
-      // vėlesnis stale snapshot'as nuplautų (drop-too-early bug).
-      const serverConfirmed = !hasPendingWrites && matches
-      console.log(`[pg] ${sp.lietuviškas} hpw=${hasPendingWrites} match=${matches} conf=${serverConfirmed} sp="${String(sp.image ?? 'NULL').slice(-18)}" loc="${String(local.image ?? 'NULL').slice(-18)}"`)
-      if (serverConfirmed) { pending.delete(sp.id); return sp }
-      return local  // dar nepatvirtinta serverio → laikom optimistinį local'ą
-    })
-    // Brand-new pending augalai (dar ne snapshot'e) → optimistiškai
-    for (const [id, local] of pending) {
-      if (!byId.has(id)) plants.push(local)
-    }
-
-    // (B) Incomplete-snapshot guard — nepilnas (fromCache) snapshot'as, kuris
-    // SUMAŽINA augalų kiekį (transient subPlantCount:1), praleidžiamas, kad
-    // nenuplautų state'o + optimistinio foto. Serverio (fromCache:false) snapshot'ai
-    // visada apply (autoritetingi, įsk. legit delete).
-    if (fromCache && lastPlantCountRef.current > 0 && plants.length < lastPlantCountRef.current) {
-      console.log('[usePlants] skip incomplete snapshot', { got: plants.length, had: lastPlantCountRef.current })
-      return
-    }
-    lastPlantCountRef.current = plants.length
-
-    const next   = { plants, zinynas: safeMeta.zinynas ?? [], zones: safeMeta.zones ?? [], settings: safeMeta.settings ?? {} }
-    // Step 6r diagnostic — sekam ar snapshot fire'inasi su naujais plant'ais
-    // (post-save) ar overwriting'a optimistic local state'ą stale data
-    // 2026-05-27 — pridėtos zones diagnostikos po user'io bug report'o
-    // („cache clear → augalai be zones"). Padeda atskirti Firestore data
-    // issue vs UI rendering bug'ą.
-    const plantsWithZoneId = plants.filter(p => p.zonaId).length
-    console.log('[usePlants] applySnapshot', {
-      subPlantCount: subPlants.length,
-      mergedPlantCount: plants.length,
-      zonesCount: next.zones.length,
-      zonesSample: next.zones.slice(0, 3).map(z => ({ id: z.id, name: z.name })),
-      plantsWithZoneId,
-      plantsWithoutZoneId: plants.length - plantsWithZoneId,
-      ids: plants.map(p => p.id).slice(0, 5),
-    })
-    setData(next)
-
-    // ── ONE-TIME localStorage → Firestore migration ─────────────────────
-    // Senesni vartotojai (prieš persistence enable'inimą) turi augalų
-    // localStorage'e, kurių setDoc'as galėjo nepasiekti server'io (offline,
-    // ad-blocker). Push'inam juos vieną kartą per device, paskui flag'as
-    // sustabdo. Po migration'o localStorage augalų DB tampa redundant'us
-    // (Firestore SDK persistence cache'ina pats per IDB).
+  // Vienkartinės legacy migracijos — NE realtime snapshot path'e (anksčiau jos
+  // vykdydavosi kiekvienam snapshot'ui → write churn). Paleidžiama VIENĄ kartą per
+  // kolekciją, kai pirmas plants+meta load baigtas (žr. listener maybeMigrate).
+  //   1. localStorage → Firestore (seni device'ai prieš persistence).
+  //   2. legacy meta.plants[] → subCol + meta.plants cleanup.
+  const runMigrationsOnce = useCallback((cid, meta, plantIds) => {
     if (!isLocalMigrationDone(cid)) {
       try {
         const localRaw = localStorage.getItem(storageKey(cid))
@@ -246,7 +166,7 @@ export function usePlants(collectionId, viewerToken = null) {
           const local = JSON.parse(localRaw)
           let pushed = 0
           ;(local.plants ?? []).forEach(p => {
-            if (p?.id && !byId.has(p.id)) {
+            if (p?.id && !plantIds.has(p.id)) {
               setDoc(doc(db, 'collections', cid, 'plants', p.id), stripUndefined(p))
                 .catch(e => console.warn('[migrate] push failed:', e))
               if (p.lotyniskas) saveToCatalog(p).catch(() => {})
@@ -259,35 +179,17 @@ export function usePlants(collectionId, viewerToken = null) {
       markLocalMigrationDone(cid)
     }
 
-    // ── Legacy `meta.plants[]` → subCol migration (atskiras nuo localStorage) ─
-    // Old kolekcijos turi augalus pagrindinio doc.plants[] field'e, ne
-    // subCol'e. Push'inam į subCol, paskui clean'inam meta.plants.
-    // 2026-06-02 — IŠSKIRIAM pending augalus: juos jau rašo update() (setDoc).
-    // Be šito pending-guard pridėti brand-new augalai patekdavo į `missing` →
-    // pakartotinis setDoc kiekvienam snapshot'ui → WRITE CHURN → hpw užstringa true.
-    const missing = plants.filter(p => !subIds.has(p.id) && !pending.has(p.id))
-    if (missing.length > 0) {
-      missing.forEach(p => {
-        setDoc(doc(db, 'collections', cid, 'plants', p.id), stripUndefined(p))
-          .catch(e => console.warn('[migrate-meta] push failed:', e))
-        if (p.lotyniskas) saveToCatalog(p).catch(() => {})
+    if (meta?.plants?.length > 0) {
+      meta.plants.forEach(p => {
+        if (p?.id && !plantIds.has(p.id)) {
+          setDoc(doc(db, 'collections', cid, 'plants', p.id), stripUndefined(p))
+            .catch(e => console.warn('[migrate-meta] push failed:', e))
+          if (p.lotyniskas) saveToCatalog(p).catch(() => {})
+        }
       })
-    }
-
-    // Cleanup meta.plants[] kai jau viskas subCol'e (per-cid ref guard'as
-    // — kad onSnapshot'as nepradėtų pakartotinai cleanup'inti).
-    if (
-      safeMeta.plants?.length > 0 &&
-      missing.length === 0 &&
-      !migrationDoneRef.current.has(cid)
-    ) {
-      migrationDoneRef.current.add(cid)
-      const { plants: _, ...cleanMeta } = safeMeta
+      const { plants: _drop, ...cleanMeta } = meta
       setDoc(doc(db, 'collections', cid), cleanMeta)
-        .catch(e => {
-          console.warn('[migrate-meta] cleanup failed:', e)
-          migrationDoneRef.current.delete(cid)
-        })
+        .catch(e => console.warn('[migrate-meta] cleanup failed:', e))
     }
   }, [])
 
@@ -298,49 +200,56 @@ export function usePlants(collectionId, viewerToken = null) {
   useEffect(() => {
     if (isMockMode() || !collectionId || viewerToken) return
     const cid = collectionId
+    const DEFAULTS = { plants: [], zinynas: [], zones: [], settings: {} }
+    let metaLoaded = false, plantsLoaded = false
+    let latestMeta = {}, latestPlantIds = new Set()
 
-    let currentMeta      = null
-    let currentSubPlants = null
-    let currentFromCache = false
-    let currentHasPending = false
-    let metaLoaded       = false
-    let plantsLoaded     = false
-
-    // applySnapshot triggerinamas tik kai abu listener'iai bent kartą fire'ino —
-    // antraip pirmasis snapshot'as overwrite'intų state'ą be plants/meta dalies.
-    const tryApply = () => {
-      if (metaLoaded && plantsLoaded) {
-        applySnapshot(currentMeta, currentSubPlants, currentFromCache, currentHasPending)
+    const maybeMigrate = () => {
+      if (metaLoaded && plantsLoaded && !migrationDoneRef.current.has(cid)) {
+        migrationDoneRef.current.add(cid)
+        runMigrationsOnce(cid, latestMeta, latestPlantIds)
       }
     }
 
+    // META doc — zones/zinynas/settings (atskiras slice nuo plants; neperrašo plants).
     const unsubMeta = onSnapshot(
       doc(db, 'collections', cid),
       snap => {
-        currentMeta = snap.exists() ? snap.data() : {}
-        metaLoaded  = true
-        tryApply()
+        const m = snap.exists() ? snap.data() : {}
+        latestMeta = m
+        metaLoaded = true
+        setData(prev => ({ ...DEFAULTS, ...prev, zinynas: m.zinynas ?? [], zones: m.zones ?? [], settings: m.settings ?? {} }))
+        maybeMigrate()
       },
       e => console.warn('[snapshot] meta error:', e)
     )
 
+    // PLANTS subcol — PER-DOC reconciliacija per snap.docChanges(). SDK įtraukia
+    // local pending mutations (hasPendingWrites) → optimistinis write matomas IŠKART
+    // ir NIEKAD neperrašomas stale full-read'u (liečiam tik pakeistus doc'us).
+    // Jokio whole-state replace, jokių guard'ų.
     const unsubPlants = onSnapshot(
       fsCol(db, 'collections', cid, 'plants'),
       snap => {
-        currentSubPlants  = snap.docs.map(d => d.data())
-        currentFromCache   = snap.metadata.fromCache
-        currentHasPending  = snap.metadata.hasPendingWrites
-        plantsLoaded      = true
-        tryApply()
+        setData(prev => {
+          const safe = { ...DEFAULTS, ...prev }
+          const byId = new Map(safe.plants.map(p => [p.id, p]))
+          snap.docChanges().forEach(ch => {
+            const d = ch.doc.data()
+            if (ch.type === 'removed') byId.delete(d.id)
+            else byId.set(d.id, d)  // added | modified
+          })
+          return { ...safe, plants: [...byId.values()] }
+        })
+        latestPlantIds = new Set(snap.docs.map(d => d.id))
+        plantsLoaded = true
+        maybeMigrate()
       },
       e => console.warn('[snapshot] plants error:', e)
     )
 
-    return () => {
-      unsubMeta()
-      unsubPlants()
-    }
-  }, [collectionId, viewerToken, applySnapshot])
+    return () => { unsubMeta(); unsubPlants() }
+  }, [collectionId, viewerToken, runMigrationsOnce])
 
   // Vienkartinis refresh — pull-to-refresh + viewer polling. Listener'iai
   // jau handle'ina realtime case'us, bet šis backup'as naudingas kai network
@@ -364,15 +273,17 @@ export function usePlants(collectionId, viewerToken = null) {
       return
     }
 
+    // Explicit pull-to-refresh — whole-set iš serverio (vartotojas nori fresh).
     Promise.all([
       getDoc(doc(db, 'collections', cid)),
       getDocs(fsCol(db, 'collections', cid, 'plants')),
     ]).then(([metaSnap, plantsSnap]) => {
-      const meta      = metaSnap.exists() ? metaSnap.data() : {}
-      const subPlants = plantsSnap.docs.map(d => d.data())
-      applySnapshot(meta, subPlants)
+      const meta = metaSnap.exists() ? metaSnap.data() : {}
+      const byId = new Map(plantsSnap.docs.map(d => [d.id, d.data()]))
+      if (meta.plants?.length) meta.plants.forEach(p => { if (p?.id && !byId.has(p.id)) byId.set(p.id, p) })
+      setData({ plants: [...byId.values()], zinynas: meta.zinynas ?? [], zones: meta.zones ?? [], settings: meta.settings ?? {} })
     }).catch(e => console.warn('[firestore] load failed:', e))
-  }, [applySnapshot])
+  }, [])
 
   // (Pašalintas visibilitychange handler'is — su onSnapshot listener'iais
   // Firebase SDK pats auto-reconnect'ina po network/PWA wake. Manual refresh
