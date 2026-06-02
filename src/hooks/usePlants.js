@@ -96,12 +96,18 @@ export function usePlants(collectionId, viewerToken = null) {
   // kiekvienam snapshot'ui (jei pirmasis async setDoc'as dar nepraėjo).
   const migrationDoneRef = useRef(new Set()) // Set<colId>: kuriose kolekcijose jau išvalyta
 
-  // 2026-06-02 — Pending-write guard su LAIKO LANGU. Map<id, {plant, t}>.
-  // Firestore persistence (ypač po cache clear → IndexedDB flaky) pristato
-  // pasenusius/out-of-order snapshot'us, kurie perrašo optimistinį foto write'ą
-  // → nauja foto dingsta kol refresh. Laikom optimistinį local'ą GRACE_MS, kad
-  // vėlyvas stale snapshot'as nenuplautų. Po lango — pasitikim serveriu.
+  // 2026-06-02 — PROPER optimistic reconciliation (2 sluoksniai, ne laiko langas):
+  //
+  // (A) Pending-write guard, Map<id, plant>. Laikom optimistinį local write'ą kol
+  //     serveris PATVIRTINA (snapshot atspindi tą doc'ą). Confirmation-based —
+  //     apsaugo nuo in-flight stale snapshot'o, kuris atvyksta PO mūsų write'o.
+  // (B) lastPlantCount — incomplete-snapshot guard: neperrašom pilno state'o
+  //     nepilnu (fromCache) snapshot'u, kuris SUMAŽINA augalų kiekį (Firestore
+  //     pristato transient `subPlantCount:1` cache snapshot'us load/write metu →
+  //     nuplaudavo visus augalus + foto). Serverio (fromCache:false) snapshot'ai
+  //     visada apply (autoritetingi, įsk. legit delete).
   const pendingWritesRef = useRef(new Map())
+  const lastPlantCountRef = useRef(0)
 
   // Optimistic local update + write į Firestore. SDK su persistence
   // (firebase.js) queues offline writes į IndexedDB ir auto-flush'ina kai
@@ -130,13 +136,14 @@ export function usePlants(collectionId, viewerToken = null) {
 
       for (const [id, plant] of nextMap) {
         if (prevMap.get(id) !== plant) {
-          pendingWritesRef.current.set(id, { plant, t: Date.now() })
+          pendingWritesRef.current.set(id, plant)
           setDoc(doc(db, 'collections', cid, 'plants', id), stripUndefined(plant))
             .catch(e => { console.warn('[firestore] plant write:', e); pendingWritesRef.current.delete(id) })
         }
       }
       for (const id of prevMap.keys()) {
         if (!nextMap.has(id)) {
+          pendingWritesRef.current.delete(id)  // kad incomplete-guard neresurrect'intų
           deleteDoc(doc(db, 'collections', cid, 'plants', id))
             .catch(e => console.warn('[firestore] plant delete:', e))
         }
@@ -158,7 +165,7 @@ export function usePlants(collectionId, viewerToken = null) {
   // Suliejame `meta` + `subPlants` į lokalų state'ą. Bendras kelias
   // tiek real-time onSnapshot listener'iui (Etapas B), tiek vienkartiniam
   // syncFromRemote (pull-to-refresh / viewer polling).
-  const applySnapshot = useCallback((meta, subPlants) => {
+  const applySnapshot = useCallback((meta, subPlants, fromCache = false) => {
     const cid = colIdRef.current
     if (!cid) return
 
@@ -173,21 +180,36 @@ export function usePlants(collectionId, viewerToken = null) {
     }
     subPlants.forEach(p => byId.set(p.id, p))
 
-    // Pending-write guard su laiko langu — neperrašom optimistinio local'o
-    // pasenusiu/out-of-order snapshot'u GRACE_MS lange (apsaugo VISUS laukus).
-    const GRACE_MS = 8000
+    // (A) Pending-write guard (confirmation-based) — laikom optimistinį local'ą
+    // kol serveris PATVIRTINA tą doc'ą (key personal laukai sutampa). Apsaugo nuo
+    // in-flight stale snapshot'o, atvykusio PO mūsų write'o.
     const pending = pendingWritesRef.current
-    const now = Date.now()
     const plants = [...byId.values()].map(sp => {
-      const entry = pending.get(sp.id)
-      if (!entry) return sp
-      if (now - entry.t > GRACE_MS) { pending.delete(sp.id); return sp } // langas baigėsi → serveris
-      return entry.plant                                                  // lange → optimistinis local'as
+      const local = pending.get(sp.id)
+      if (!local) return sp
+      const confirmed =
+        sp.image === local.image &&
+        (sp.imageThumb ?? null) === (local.imageThumb ?? null) &&
+        sp.useHistoryPhoto === local.useHistoryPhoto &&
+        (sp.timeline?.length ?? 0) === (local.timeline?.length ?? 0)
+      if (confirmed) { pending.delete(sp.id); return sp }
+      return local  // dar nepatvirtinta → laikom optimistinį local'ą
     })
-    // Brand-new pending augalai, kurių snapshot dar neturi → optimistiškai
-    for (const [id, entry] of pending) {
-      if (!byId.has(id) && now - entry.t <= GRACE_MS) plants.push(entry.plant)
+    // Brand-new pending augalai (dar ne snapshot'e) → optimistiškai
+    for (const [id, local] of pending) {
+      if (!byId.has(id)) plants.push(local)
     }
+
+    // (B) Incomplete-snapshot guard — nepilnas (fromCache) snapshot'as, kuris
+    // SUMAŽINA augalų kiekį (transient subPlantCount:1), praleidžiamas, kad
+    // nenuplautų state'o + optimistinio foto. Serverio (fromCache:false) snapshot'ai
+    // visada apply (autoritetingi, įsk. legit delete).
+    if (fromCache && lastPlantCountRef.current > 0 && plants.length < lastPlantCountRef.current) {
+      console.log('[usePlants] skip incomplete snapshot', { got: plants.length, had: lastPlantCountRef.current })
+      return
+    }
+    lastPlantCountRef.current = plants.length
+
     const next   = { plants, zinynas: safeMeta.zinynas ?? [], zones: safeMeta.zones ?? [], settings: safeMeta.settings ?? {} }
     // Step 6r diagnostic — sekam ar snapshot fire'inasi su naujais plant'ais
     // (post-save) ar overwriting'a optimistic local state'ą stale data
@@ -271,6 +293,7 @@ export function usePlants(collectionId, viewerToken = null) {
 
     let currentMeta      = null
     let currentSubPlants = null
+    let currentFromCache = false
     let metaLoaded       = false
     let plantsLoaded     = false
 
@@ -278,7 +301,7 @@ export function usePlants(collectionId, viewerToken = null) {
     // antraip pirmasis snapshot'as overwrite'intų state'ą be plants/meta dalies.
     const tryApply = () => {
       if (metaLoaded && plantsLoaded) {
-        applySnapshot(currentMeta, currentSubPlants)
+        applySnapshot(currentMeta, currentSubPlants, currentFromCache)
       }
     }
 
@@ -296,6 +319,7 @@ export function usePlants(collectionId, viewerToken = null) {
       fsCol(db, 'collections', cid, 'plants'),
       snap => {
         currentSubPlants = snap.docs.map(d => d.data())
+        currentFromCache = snap.metadata.fromCache
         plantsLoaded     = true
         tryApply()
       },
