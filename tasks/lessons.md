@@ -301,3 +301,19 @@ Catalog heroes (heroGen) JAU turėjo `cacheControl: 'public, max-age=31536000, i
 - **Pernaudok esamą design-system elementą, ne kurk naują.** Ghost badge JAU egzistavo PlantCard'e (`bg-black/55 rounded-full h-[20px]`). „Native" variantas = mažiausiai netvarkos, dažnai user'io preferuojamas.
 - **Kai užklimpsti į reprocess/heavy fix, sustok ir paklausk „ar yra trivialus CSS/1-eilutės kelias?"** Halo „dėžė" sprendėsi vienu `filter` ant viso card, ne 99 paveikslų reprocess'u.
 - **Verify-don't-guess pigus UI darbe:** vienas `grep` komponente < kelios preview iteracijos. Tas pats principas kaip self-check grep po Explore fan-out (N+7).
+
+---
+
+## N+9: inline funkcija useEffect deps + cleanup cancel = race
+
+**Data:** 2026-06-02
+**Trigger:** Mano LQIP (progressive thumb→full) sukėlė regresiją — mirusio augalo detail hero užstrigdavo ant thumb'o (rodė `_thumb.jpg`, per maža). User pranešė.
+
+**Root cause:** PlantImage effect deps buvo `[targetSrc, onError]`. `onError` = **inline arrow** (`onError={() => setHeroError(true)}` iš PlantDetail) → NAUJA referencija kiekvienam render. Tad effect re-run'ino kiekvienam parent render. Su LQIP'u: effect (1) preload'ina full, bet (2) re-render (onError nauja ref) → React paleidžia CLEANUP (`cancelled=true`) PRIEŠ preload onload → naujas effect mato `targetSrc === lastTargetRef.current` → grįžta anksti, naujo preload nestartuoja → displayedSrc lieka LQIP thumb. **Necached/lėtas full → re-render laimi race; cached → onload greičiau, todėl living augalams nematėsi.**
+
+**Rules:**
+- **NIEKAD nedėk inline funkcijų (ar kitų nestabilių ref'ų) į useEffect deps**, jei effect turi cleanup, kuris nutraukia async darbą. Inline arrow = nauja ref kas render → effect churn → cleanup nutraukia in-flight darbą. Naudok `useRef` callback'ui (`onErrorRef.current = onError`) ir deps tik realiai kintančias reikšmes.
+- **Cleanup-cancel + early-return guard pavojinga kombinacija:** jei guard'as „jau apdorota" (lastTargetRef) suveikia PO to kai cleanup nutraukė darbą, darbas niekada nebaigiamas. Arba neturėk early-return guard'o (visada restartuok darbą), arba neturėk spurious re-run'ų.
+- **LQIP/progressive image bug'ai matosi TIK necached atvejais** (lėtas full) — testuok su švariu cache / retai matytu augalu, ne tik ką žiūrėtu (browser cache slepia).
+
+**Meta:** ši klasė bug'ų (stale closure / unstable deps) — viena dažniausių React. Kai effect „kartais neveikia", pirma tikrink deps stabilumą + cleanup timing.
