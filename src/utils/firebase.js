@@ -1,8 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import {
   initializeFirestore,
-  persistentLocalCache,
-  persistentMultipleTabManager,
+  memoryLocalCache,
   getFirestore,
 } from 'firebase/firestore'
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider, setPersistence, browserLocalPersistence, signInAnonymously as _signInAnonymously, updateProfile } from 'firebase/auth'
@@ -19,26 +18,21 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 
-// Firestore SU IndexedDB persistence — pakeičia mūsų manualų localStorage
-// caching layer'į. SDK pats užkrauna IDB cache'ą, queues offline writes
-// (cross-app-close persistence), ir invalidates cache'ą kai server sako
-// kad doc'as ištrintas (cross-device delete propagacija veikia natūraliai).
-//
-// persistentMultipleTabManager — multi-tab koordinacija (lyderio rinkimas
-// write'ams, kad du tab'ai nekonkurentuotų dėl IDB locks). Browser'iuose,
-// kurie IDB nepalaiko (Safari private mode), SDK auto-fallback'ina į
-// memory cache su warning'u.
+// 2026-06-02 — MEMORY cache (anksčiau persistentLocalCache + IndexedDB multi-tab).
+// IndexedDB persistence sugadindavo (multi-tab lock contention + „database
+// connection is closing" klaidos ypač po cache clear) → onSnapshot listener'is
+// serveuodavo STALE cached duomenis: nauja foto/write nepasiekdavo UI live, tik
+// page reload (fresh server read) parodydavo. Memory cache:
+//   • write'ai atsispindi iškart (in-memory latency compensation),
+//   • listener'is fresh iš serverio (jokio stale IDB cache),
+//   • jokio IDB corruption / „connection closing" klaidų.
+// Kaina: nėra cross-session offline cache (app re-fetch'ina load'e per onSnapshot)
+// + offline write queue (app online-first: auth/AI/catalog reikia tinklo).
 let _db
 try {
-  _db = initializeFirestore(app, {
-    localCache: persistentLocalCache({
-      tabManager: persistentMultipleTabManager(),
-    }),
-  })
+  _db = initializeFirestore(app, { localCache: memoryLocalCache() })
 } catch (e) {
-  // initializeFirestore gali throw'inti jei jau buvo getFirestore call'inta
-  // (race condition module load'e). Fallback'inu į regular getFirestore'ą.
-  console.warn('[firestore] persistence init failed, falling back:', e)
+  console.warn('[firestore] cache init failed, falling back:', e)
   _db = getFirestore(app)
 }
 export const db = _db
