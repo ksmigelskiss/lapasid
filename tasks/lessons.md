@@ -243,3 +243,20 @@ Catalog heroes (heroGen) JAU turėjo `cacheControl: 'public, max-age=31536000, i
 **Pattern ateičiai:** geriausia — visiškai centralizuoti (vienas `adminApp()` helper'is, visi consumer'iai importuoja jį, jokio lokalaus init'o). Minimal fix — apps.length guard visur. Patikrinti: `grep -rln "admin.initializeApp" api/` + ar kiekvienas turi apps.length guard.
 
 **Meta-lesson:** security-logic pakeitimas (auth) gali turėti netiesioginių side-effect'ų per shared init order'į. Deploy'inant tokius — verify VISUS endpoint'us, kurie naudoja tą patį shared modulį, ne tik tuos, kuriuos tiesiogiai keitei.
+
+---
+
+## N+6. Firestore client subscription VISADA gate'inti on auth-ready
+
+**Data:** 2026-06-02
+**Trigger:** Po backbone security/reliability/declutter darbo, user verifikuodamas rado regresiją — search rodė real foto (ne watercolor), stale LT vardus, biblioteka kartais tuščia. Console: `[catalog] subscription error: Missing or insufficient permissions`.
+
+**Root cause:** `App.jsx` subscribeCatalog `useEffect(() => subscribeCatalog(...), [])` — deps=`[]` → subscription startuodavo on mount PRIEŠ auth ready. catalog Firestore rule reikalauja `request.auth != null` → permission denied → onSnapshot error handler tik log'ino (NEretry'ino) → `_catalogById` liko tuščias iki page refresh'o → resolvePlantView F1 overlay neaplikuojamas → user augalai be heroIllustration/correct LT name.
+
+**Kodėl tapo matomas DABAR:** tikėtina, kad API key referrer restriction (Console security darbas) pridėjo auth latency → praplėtė race window. Bug'as tikriausiai egzistavo seniai, bet intermittent.
+
+**Rule 1:** Bet koks client-side Firestore `onSnapshot`/`getDocs`, kurio rule reikalauja `request.auth != null`, TURI būti gate'intas on auth-ready. React: `useEffect(() => { if (!user) return; return subscribe() }, [user?.uid])`, NE deps=`[]`.
+
+**Rule 2:** onSnapshot error handler'iai turi RETRY permission-denied atveju (bounded backoff), ne tylėti. Tylus mirimas → empty state iki manual refresh'o.
+
+**Meta:** security pakeitimai (čia — API key restriction) gali turėti netiesioginių timing side-effect'ų, kurie atskleidžia latentinius race'us. Po security darbo — verify user-facing flows, ne tik tai, ką tiesiogiai keitei.
