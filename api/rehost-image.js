@@ -42,7 +42,11 @@ function catalogSlug(latinName) {
 // Lazy init — Vercel function instance gali atgaivinti tarp request'ų.
 let _initialized = false
 function initAdmin() {
-  if (_initialized) return
+  // 2026-06-02 — admin.apps.length guard. Po JWT fix'o verifyAuthToken
+  // (firestore-admin.js) init'ina global app PIRMA. Be šio guard'o čia,
+  // rehost'o init'as bandytų initializeApp() ANTRĄ kartą → „default app
+  // already exists" throw → 500. Reuse'inam esamą app instance'ą.
+  if (_initialized || admin.apps.length > 0) { _initialized = true; return }
   let serviceAccount
   try {
     serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)

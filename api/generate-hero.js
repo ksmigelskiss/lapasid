@@ -21,7 +21,9 @@ export const config = { maxDuration: 120 }  // Sonnet vision + Gemini + sharp cu
 
 let _init = false
 function initAdmin() {
-  if (_init) return
+  // 2026-06-02 — admin.apps.length guard (žr. rehost-image.js). verifyAuthToken
+  // init'ina global app pirma → be šio guard'o double-init „already exists" → 500.
+  if (_init || admin.apps.length > 0) { _init = true; return }
   let sa
   try { sa = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT) }
   catch (e) { throw new Error('FIREBASE_SERVICE_ACCOUNT parse failed: ' + e.message) }
