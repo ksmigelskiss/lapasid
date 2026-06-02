@@ -196,7 +196,7 @@ export function usePlants(collectionId, viewerToken = null) {
       // Ant latency-comp snapshot'o (hasPendingWrites:true) NEdrop'inam — kitaip
       // vėlesnis stale snapshot'as nuplautų (drop-too-early bug).
       const serverConfirmed = !hasPendingWrites && matches
-      console.log('[pg]', { id: sp.id, name: sp.lietuviškas, hpw: hasPendingWrites, matches, serverConfirmed, spImg: String(sp.image ?? '').slice(-14), locImg: String(local.image ?? '').slice(-14) })
+      console.log(`[pg] ${sp.lietuviškas} hpw=${hasPendingWrites} match=${matches} conf=${serverConfirmed} sp="${String(sp.image ?? 'NULL').slice(-18)}" loc="${String(local.image ?? 'NULL').slice(-18)}"`)
       if (serverConfirmed) { pending.delete(sp.id); return sp }
       return local  // dar nepatvirtinta serverio → laikom optimistinį local'ą
     })
