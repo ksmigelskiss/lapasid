@@ -5,6 +5,7 @@ import { fromAIResult, ensureArray, makeId as _makeId, today as _today } from '.
 import { migrate, LEGACY_KEYS } from '../utils/dataMigration'
 import { saveToCatalog, snapshotPlantRef } from '../utils/catalog'
 import { isMockMode, MOCK_DATA } from '../utils/mockData'
+import { deleteImageByUrl } from '../utils/imageService'
 
 export { fromAIResult }
 
@@ -95,13 +96,6 @@ export function usePlants(collectionId, viewerToken = null) {
   // kiekvienam snapshot'ui (jei pirmasis async setDoc'as dar nepraėjo).
   const migrationDoneRef = useRef(new Set()) // Set<colId>: kuriose kolekcijose jau išvalyta
 
-  // 2026-06-02 — Pending-write guard. Map<plantId, localPlant>. Kai darom
-  // optimistinį local write'ą (update), įrašom čia. applySnapshot NEPERRAŠO šių
-  // augalų pasenusiu serverio snapshot'u, kol serveris „pasiveja" (echo match) —
-  // taip optimistinis foto pakeitimas nebedingsta async upload lango metu
-  // (bug: nauja foto → watercolor kol refresh). Drop'inam kai server echo'ina.
-  const pendingWritesRef = useRef(new Map())
-
   // Optimistic local update + write į Firestore. SDK su persistence
   // (firebase.js) queues offline writes į IndexedDB ir auto-flush'ina kai
   // network atsigauna. Jokio manualaus localStorage caching'o — server
@@ -129,11 +123,8 @@ export function usePlants(collectionId, viewerToken = null) {
 
       for (const [id, plant] of nextMap) {
         if (prevMap.get(id) !== plant) {
-          // Pending-write guard — saugom optimistinį local'ą kol serveris echo'ina.
-          pendingWritesRef.current.set(id, plant)
-          console.log('[pending-set]', { id, name: plant.lietuviškas, img: String(plant.image ?? '').slice(-18), tl: plant.timeline?.length ?? 0, uhp: plant.useHistoryPhoto })
           setDoc(doc(db, 'collections', cid, 'plants', id), stripUndefined(plant))
-            .catch(e => { console.warn('[firestore] plant write:', e); pendingWritesRef.current.delete(id) })
+            .catch(e => console.warn('[firestore] plant write:', e))
         }
       }
       for (const id of prevMap.keys()) {
@@ -174,31 +165,7 @@ export function usePlants(collectionId, viewerToken = null) {
     }
     subPlants.forEach(p => byId.set(p.id, p))
 
-    // Pending-write guard — neperrašom optimistinio local'o pasenusiu snapshot'u.
-    const pending = pendingWritesRef.current
-    const plants = [...byId.values()].map(sp => {
-      const local = pending.get(sp.id)
-      if (!local) return sp
-      // Serveris echo'ino mūsų write'ą (key personal laukai sutampa)? → drop pending.
-      const echoed =
-        sp.image === local.image &&
-        (sp.imageThumb ?? null) === (local.imageThumb ?? null) &&
-        sp.useHistoryPhoto === local.useHistoryPhoto &&
-        (sp.timeline?.length ?? 0) === (local.timeline?.length ?? 0)
-      // DIAGNOSTIC (laikinas) — guard sprendimas pending augalui.
-      console.log('[pending-guard]', {
-        id: sp.id, name: sp.lietuviškas, echoed, kept: !echoed,
-        spImg: String(sp.image ?? '').slice(-18), localImg: String(local.image ?? '').slice(-18),
-        spTl: sp.timeline?.length ?? 0, localTl: local.timeline?.length ?? 0,
-        spUHP: sp.useHistoryPhoto, localUHP: local.useHistoryPhoto,
-      })
-      if (echoed) { pending.delete(sp.id); return sp }
-      return local  // server dar pasenęs → laikom optimistinį local'ą
-    })
-    // Brand-new pending augalai, kurių snapshot dar neturi → įdedam optimistiškai
-    for (const [id, local] of pending) {
-      if (!byId.has(id)) plants.push(local)
-    }
+    const plants = [...byId.values()]
     const next   = { plants, zinynas: safeMeta.zinynas ?? [], zones: safeMeta.zones ?? [], settings: safeMeta.settings ?? {} }
     // Step 6r diagnostic — sekam ar snapshot fire'inasi su naujais plant'ais
     // (post-save) ar overwriting'a optimistic local state'ą stale data
@@ -640,6 +607,12 @@ export function usePlants(collectionId, viewerToken = null) {
         if (p.id !== plantId) return p
         const removed  = (p.timeline ?? []).find(e => e.id === eventId)
         const timeline = (p.timeline ?? []).filter(e => e.id !== eventId)
+        // Storage cleanup — pašalinam foto failą (fire-and-forget), kad nekauptume
+        // šiukšlių. deleteImageByUrl skip'ina external/ne-mūsų URL'us.
+        if (removed?.type === 'photo') {
+          deleteImageByUrl(removed.imageUrl)
+          deleteImageByUrl(removed.imageUrlThumb)
+        }
         const next = { ...p, timeline }
         // 2026-06-02 — jei ištrinta foto BUVO dabartinis profilis (plant.image),
         // perskaičiuojam (anksčiau likdavo orphaned image → hero/widget rodė

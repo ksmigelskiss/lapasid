@@ -438,12 +438,20 @@ export function fromAIResult(aiResult) {
     kategorija:   'auginama',
     komentaras:   '',
     data_prideta: today(),
-    image:        aiResult.image ?? null,
+    // 2026-06-02 — ŠVARUS MODELIS: plant.image = TIK user pasirinkta/įkelta foto.
+    // Stock (iNat/Wiki) NEBEdedam į image (anksčiau → watercolor flicker, nes
+    // heroIsDefaultFor painiojo stock vs user). image=null → heroIsDefaultFor
+    // grąžina watercolor (default). Stock lieka galerijoje (photos[]) — user
+    // gali jį pasirinkti per „Pakeisti nuotrauką".
+    image:        null,
+    imageThumb:   null,
     // Discovery photos array iš search'o (Brave + iNat + Wikidata + Wikipedia
-    // + Commons). Naudojama PlantDetail hero gallery cycling'ui — vartotojas
-    // gali peržiūrėti alternativias nuotraukas net po save'o, ne tik prieš.
-    // Limit 10 — saugumo dėlei nuo bloated plant doc'o.
-    photos:       ensureArray(aiResult.photos).slice(0, 10),
+    // + Commons) + stock image priekyje. PlantDetail hero gallery + PhotoSheet
+    // galerija. Limit 10 — saugumo dėlei nuo bloated plant doc'o.
+    photos:       [aiResult.image, ...ensureArray(aiResult.photos)]
+                    .filter(Boolean)
+                    .filter((u, i, a) => a.indexOf(u) === i)
+                    .slice(0, 10),
     status:       'healthy',
     inatLtName:   aiResult.inatLtName   ?? null,
     inatTaxonId:  aiResult.inatTaxonId  ?? null,

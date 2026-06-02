@@ -341,10 +341,13 @@ export function snapshotPlantRef(plant) {
  * tik niekad neliestiems catalog stock augalams.
  */
 export function heroIsDefaultFor(plant) {
-  if (!plant?.image) return true
-  if (plant.useHistoryPhoto === false) return false
-  const hasTimelinePhoto = (plant.timeline ?? []).some(e => e.type === 'photo' && e.imageUrl)
-  return !hasTimelinePhoto
+  // 2026-06-02 ŠVARUS MODELIS — plant.image = TIK user pasirinkta/įkelta foto
+  // (stock NEBEdedam į image, žr. fromAIResult). Tad taisyklė trivialiai robust:
+  //   • nėra image → watercolor iliustracija (default)
+  //   • yra image (user foto) → rodom ją
+  // Jokio timeline/useHistoryPhoto proxy → jokio stock-vs-user race (reactivity
+  // bug dingo iš šaknies).
+  return !plant?.image
 }
 
 /**

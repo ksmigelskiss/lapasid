@@ -1,5 +1,19 @@
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { storage, auth } from './firebase'
+
+// 2026-06-02 — Storage cleanup. Trinant foto (timeline / profilio) pašalinam ir
+// Firebase Storage failą, kad nekauptume šiukšlių. TIK mūsų `plants/...` failai
+// (external iNat/Wiki — ne mūsų, skip). Fire-and-forget; object-not-found OK.
+export async function deleteImageByUrl(url) {
+  if (!url || typeof url !== 'string') return
+  if (!url.includes('firebasestorage.googleapis.com') && !url.includes('storage.googleapis.com')) return
+  if (!url.includes('/plants/') && !url.includes('plants%2F')) return  // tik user upload'ai
+  try {
+    await deleteObject(ref(storage, url))
+  } catch (e) {
+    if (e?.code !== 'storage/object-not-found') console.warn('[storage delete]', e?.message)
+  }
+}
 
 // ── Fetch ──────────────────────────────────────────────────────
 
