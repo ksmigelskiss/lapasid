@@ -1953,12 +1953,15 @@ export default function PlantDetail({
                       {plant.emoji ?? '🌿'}
                     </div>
                   ) : (
-                    // 2026-06-01 — key={currentPhoto} PAŠALINTAS. Force-remount
-                    // sukeldavo flicker'į cyclining'inant tarp augalų ir bypass'ino
-                    // PlantImage SWR pattern'ą (old image lieka rodomas kol new
-                    // preload'ina). Dabar PlantImage handle'ina URL change'us
-                    // grakščiau — no blank flash, no fresh-fetch every cycle.
+                    // 2026-06-02 — key={object-fit režimas}, NE key={currentPhoto}.
+                    // key={currentPhoto} (pašalintas 2026-06-01) flicker'indavo
+                    // KIEKVIENĄ galerijos cycle'ą. Bet BE jokio key, kai pridedi foto
+                    // (watercolor→foto), SWR rodo SENĄ watercolor su NAUJU object-cover
+                    // className → watercolor apkarpomas, bg patamsėja („tarp layerių").
+                    // key={isIllustration} remount'ina TIK toggle'inant illus↔foto
+                    // (švarus object-fit), o cyclining tarp foto lieka sklandus (SWR).
                     <PlantImage
+                      key={isIllustration ? 'illus' : 'photo'}
                       url={currentPhoto} alt={plant.lietuviškas} size="detail" eager
                       className={`w-full h-full ${isIllustration ? 'object-contain' : 'object-cover'}`}
                       onError={() => setHeroError(true)}
