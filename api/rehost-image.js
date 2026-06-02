@@ -69,6 +69,43 @@ export const config = {
   maxDuration: 30,
 }
 
+// 2026-06-02 (P0-7 SSRF) — blokuoja private/internal/metadata fetch target'us.
+// Apsaugo nuo:
+//   • cloud metadata endpoint'ų (169.254.169.254, metadata.google.internal) —
+//     GCP/AWS service account token theft
+//   • loopback (localhost, 127.x), private IPv4 (10 / 192.168 / 172.16-31)
+//   • link-local (169.254), this-host (0.x), IPv6 loopback/link-local/unique-local
+//
+// LIMITACIJA: hostname-based. DNS rebinding (legit hostname → private IP) NEapsaugotas
+// (reikėtų DNS resolve + IP pin per fetch'ą). Houseplant rehost'ui hostname blocklist'as
+// + admin-gated endpoint'as pakankama apsauga; full IP-pinning — future jei prireiks.
+function isUrlSafeForFetch(rawUrl) {
+  let u
+  try { u = new URL(rawUrl) } catch { return false }
+  const host = u.hostname.toLowerCase().replace(/^\[|\]$/g, '') // strip IPv6 [brackets]
+
+  // Metadata + loopback hostnames
+  if (host === 'localhost' || host === 'metadata' || host.endsWith('.internal')) return false
+  if (host === '0.0.0.0' || host === '::1' || host === '::') return false
+
+  // IPv4 literal ranges
+  const m = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/)
+  if (m) {
+    const a = Number(m[1]), b = Number(m[2])
+    if (a === 127) return false                        // loopback
+    if (a === 10)  return false                        // private
+    if (a === 0)   return false                        // this-host
+    if (a === 169 && b === 254) return false           // link-local + metadata (169.254.169.254)
+    if (a === 192 && b === 168) return false           // private
+    if (a === 172 && b >= 16 && b <= 31) return false  // private
+  }
+
+  // IPv6 unique-local (fc00::/7) + link-local (fe80::/10)
+  if (/^(fc|fd|fe8|fe9|fea|feb)/.test(host)) return false
+
+  return true
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
@@ -103,6 +140,12 @@ export default async function handler(req, res) {
   // bandytų fetch'inti local files ar internal services (SSRF rizika).
   if (!/^https?:\/\//i.test(url)) {
     return res.status(400).json({ error: 'url_protocol_must_be_http_or_https' })
+  }
+
+  // ── SSRF GUARD (P0-7) — block private/internal/metadata target'us ──
+  if (!isUrlSafeForFetch(url)) {
+    console.warn('[rehost-image] uid=' + uid + ' blocked SSRF target:', url.slice(0, 80))
+    return res.status(400).json({ error: 'url_target_blocked', detail: 'private/internal/metadata addresses not allowed' })
   }
 
   // ── PATH HINT — SERVER DERIVED ───────────────────────────────
