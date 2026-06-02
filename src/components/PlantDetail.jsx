@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
-import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronLeft, ChevronRight, ChevronDown, Share2, Copy, Check, Link2, User, Cat, Apple, BadgeCheck, HeartPlus } from 'lucide-react'
+import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronLeft, ChevronRight, ChevronDown, Share2, Copy, Check, Link2, User, Cat, Apple, BadgeCheck, HeartPlus, Palette } from 'lucide-react'
 import { doc, setDoc } from 'firebase/firestore'
 import { db, auth } from '../utils/firebase'
 import { ZonePicker } from './ZoneManager'
@@ -55,7 +55,7 @@ function fmtDate(str) {
 }
 
 
-function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
+function PhotoSheet({ plant, onClose, onSave, onCapture, onRevert, onToggleHistoryPhoto }) {
   // Step 6u — PhotoSheet rewrite. Unified design po stack-on-top chaos'o:
   //   • Drop'inta iNat live search (redundant — plant.photos[] jau cache'ina
   //     search'o metu surinktas referencias)
@@ -77,10 +77,13 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
   const host = useDetailHost()
   const useDesktopPanel = isDesktop && !!host?.container
 
-  const handleFile = async (file) => {
+  // Capture (camera/upload) → foto į TIMELINE (istoriją), NE pin. Jei „Auto iš
+  // istorijos" įjungtas, naujausia tampa profiliu (addTimelineEvent sync).
+  // Skiriasi nuo pick'o (galerija/istorija → pin + auto off).
+  const handleFile = (file) => {
     if (!file) return
     onClose()
-    try { onSave(await resizeImage(file)) } catch {}
+    onCapture?.(file)
   }
 
   const handleSave = () => {
@@ -134,7 +137,23 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
         </p>
 
         <div className="space-y-4">
-          {/* History auto-sync toggle (lieka kaip yra) */}
+          {/* CAPTURE — primary. Foto → istorija; jei „Auto", tampa profiliu. */}
+          <div className="space-y-2">
+            <label className="flex items-center gap-4 bg-forest-600 hover:bg-forest-700 rounded-2xl px-4 py-3.5 cursor-pointer transition-colors">
+              <span className="text-bone"><Camera size={22} /></span>
+              <span className="font-display text-sm font-semibold tracking-tight text-bone">Fotografuoti</span>
+              <input type="file" accept="image/*" capture="environment" className="hidden"
+                onChange={e => { handleFile(e.target.files[0]); e.target.value = '' }} />
+            </label>
+            <label className="flex items-center gap-4 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 rounded-2xl px-4 py-3.5 cursor-pointer transition-colors">
+              <span className="text-forest-500"><ImageIcon size={22} /></span>
+              <span className="font-display text-sm font-semibold tracking-tight text-forest-800">Įkelti iš įrenginio</span>
+              <input type="file" accept="image/*" className="hidden"
+                onChange={e => { handleFile(e.target.files[0]); e.target.value = '' }} />
+            </label>
+          </div>
+
+          {/* „Auto iš istorijos" toggle — profilis seka naujausią augimo foto */}
           {historyPhotos.length > 0 && (
             <button
               onClick={onToggleHistoryPhoto}
@@ -157,22 +176,7 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
             </button>
           )}
 
-          {/* GALERIJA — plant.photos[] iš Stage 1 fetch'o */}
-          {galleryPhotos.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <p className="font-mono text-[11px] font-semibold text-forest-700 uppercase tracking-[0.18em]">Galerija</p>
-                <div className="flex-1 h-px bg-bone-400/60" />
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {galleryPhotos.map((url, i) => (
-                  <PhotoThumb key={`g-${i}`} url={url} fromHistory={false} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* MŪSŲ ISTORIJA — timeline photo events */}
+          {/* MŪSŲ ISTORIJA — timeline photo events. Pick → pin (auto off). */}
           {historyPhotos.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center gap-3">
@@ -187,7 +191,29 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
             </div>
           )}
 
-          {/* Saugoti button — patvirtina selection iš Galerijos arba Istorijos */}
+          {/* GALERIJA — plant.photos[] iš Stage 1 fetch'o. Pick → pin (auto off). */}
+          {galleryPhotos.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <p className="font-mono text-[11px] font-semibold text-forest-700 uppercase tracking-[0.18em]">Galerija</p>
+                <div className="flex-1 h-px bg-bone-400/60" />
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {galleryPhotos.map((url, i) => (
+                  <PhotoThumb key={`g-${i}`} url={url} fromHistory={false} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Hint — pick'as išjungia Auto (konsistentiškai galerijai+istorijai) */}
+          {useHistory && (historyPhotos.length > 0 || galleryPhotos.length > 0) && (
+            <p className="text-xs text-forest-500 text-center px-3 -mt-1">
+              Pasirinkus konkrečią nuotrauką, „Auto iš istorijos" išsijungs.
+            </p>
+          )}
+
+          {/* Išsaugoti — patvirtina pasirinktą nuotrauką → pin */}
           {selected && (
             <button
               onClick={handleSave}
@@ -197,21 +223,15 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
             </button>
           )}
 
-          {/* Capture / Upload — instant flows (joko select-confirm) */}
-          <div className="space-y-2">
-            <label className="flex items-center gap-4 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 rounded-2xl px-4 py-3.5 cursor-pointer transition-colors">
-              <span className="text-forest-500"><Camera size={22} /></span>
-              <span className="font-display text-sm font-semibold tracking-tight text-forest-800">Fotografuoti</span>
-              <input type="file" accept="image/*" capture="environment" className="hidden"
-                onChange={e => { handleFile(e.target.files[0]); e.target.value = '' }} />
-            </label>
-            <label className="flex items-center gap-4 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 rounded-2xl px-4 py-3.5 cursor-pointer transition-colors">
-              <span className="text-forest-500"><ImageIcon size={22} /></span>
-              <span className="font-display text-sm font-semibold tracking-tight text-forest-800">Įkelti iš įrenginio</span>
-              <input type="file" accept="image/*" className="hidden"
-                onChange={e => { handleFile(e.target.files[0]); e.target.value = '' }} />
-            </label>
-          </div>
+          {/* Grįžti į iliustraciją — išvalo asmeninės foto override → watercolor */}
+          {plant.image && (
+            <button
+              onClick={() => { onRevert?.(); onClose() }}
+              className="w-full h-12 rounded-2xl font-display text-sm font-semibold text-forest-700 bg-bone-50 border border-bone-400/40 hover:bg-bone-300/40 transition-colors flex items-center justify-center gap-2"
+            >
+              <Palette size={18} className="text-forest-500" /> Rodyti iliustraciją
+            </button>
+          )}
 
           <button
             className="w-full h-12 rounded-btn font-display text-sm font-semibold text-forest-600 bg-bone-300 hover:bg-bone-400/70 transition-colors"
@@ -2130,6 +2150,14 @@ export default function PlantDetail({
             plant={plant}
             onClose={() => setShowPhoto(false)}
             onSave={(url, fromHistory = false, thumb = null) => { onImageSave?.(plant.id, url, fromHistory, thumb); setShowPhoto(false) }}
+            onCapture={async file => {
+              // Capture → timeline (istorija). Jei „Auto", tampa profiliu (addTimelineEvent sync).
+              try {
+                const imageUrl = await resizeImage(file)
+                onAddTimelineEvent?.(plant.id, { id: makeId(), type: 'photo', date: today(), imageUrl })
+              } catch (err) { console.warn('[photo-capture] failed', err) }
+            }}
+            onRevert={() => onUpdateNames?.(plant.id, { image: null, imageThumb: null, useHistoryPhoto: false })}
             onToggleHistoryPhoto={() => onUpdateNames?.(plant.id, { useHistoryPhoto: plant.useHistoryPhoto !== false ? false : true })}
           />
         )}

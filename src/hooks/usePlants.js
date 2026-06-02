@@ -452,16 +452,15 @@ export function usePlants(collectionId, viewerToken = null) {
     }))
   }, [update])
 
-  const updateImage = useCallback((id, image, fromHistory = false, imageThumb = null) => {
-    // 2026-06-01 — dual upload: image (900px) + imageThumb (240px). Plant
-    // doc'e abu URL'ai. Dashboard kortelės skaito imageThumb; PlantDetail hero
-    // skaito image.
-    // 2026-06-02 — imageThumb VISADA rašomas LOCKSTEP su image (net null), kad
-    // widget'as niekada nerodytų stale thumb'o priklausančio KITAM image (bug:
-    // renkant istorijos/galerijos foto image keisdavosi, imageThumb likdavo
-    // senas). null → PlantImage fallback'ina į pilną image (teisingas turinys).
-    const patch = { image, imageThumb, ...(fromHistory ? {} : { useHistoryPhoto: false }) }
-    updatePlant(id, patch)
+  const updateImage = useCallback((id, image, _fromHistory = false, imageThumb = null) => {
+    // updateImage = "PRISEGTI konkrečią nuotrauką kaip profilį" (manual pick:
+    // galerija / istorija / set-as-profile / fetchAllImages). VISADA pin'ina:
+    // 2026-06-02 — useHistoryPhoto:false KONSISTENTIŠKAI (anksčiau istorijos
+    //   pick palikdavo auto on → naujesnė augimo foto persirašydavo pasirinkimą).
+    //   Capture (camera/upload) eina per addTimelineEvent (NE čia) → auto-follow.
+    // 2026-06-02 — imageThumb LOCKSTEP su image (net null → PlantImage rodo
+    //   pilną image, niekada stale wrong thumb).
+    updatePlant(id, { image, imageThumb, useHistoryPhoto: false })
   }, [updatePlant])
 
   const updateStatus = useCallback((id, newStatus, meta = {}) => {
