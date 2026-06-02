@@ -150,7 +150,12 @@ export default function App() {
   // reikšmėmis prieš paduodant į Dashboard/Biblioteka. heroMapV deps → recompute
   // kai catalog (pa)keičiasi (subscribeCatalog onChange) → kortelės atsinaujina.
   // resolvePlantView išlaiko asmeninius laukus + image; legacy/offline → inline.
-  const dashboardView = useMemo(() => dashboard.map(resolvePlantView), [dashboard, heroMapV])
+  const dashboardView = useMemo(() => {
+    const v = dashboard.map(resolvePlantView)
+    const fp = v.find(p => /ilodendras/.test(p.lietuviškas ?? ''))
+    if (fp) console.log(`[dv] recompute — Filodendras img="${String(fp.image ?? 'NULL').slice(-14)}"`)
+    return v
+  }, [dashboard, heroMapV])
   const libraryView   = useMemo(() => library.map(resolvePlantView),   [library, heroMapV])
   const archiveView   = useMemo(() => archive.map(resolvePlantView),   [archive, heroMapV])
 
