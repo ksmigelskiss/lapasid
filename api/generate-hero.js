@@ -113,9 +113,21 @@ export default async function handler(req, res) {
     await thumbFile.makePublic()
     const thumbUrl = `https://storage.googleapis.com/${bucket.name}/${thumbFilename}?v=${cacheBust}`
 
+    // 2026-06-02 — RAW originalo saugojimas (pre-watermark, pre-3:2, transparent bg).
+    // PRIVATUS — JOKIO makePublic()! Originalas be watermark → viešas URL apeitų
+    // forensic+visual apsaugą. catalog/* default-deny client SDK'ui, server (admin
+    // SDK) bypass'ina → pasiekiamas tik re-process script'ams. Tikslas: būsimi
+    // ratio/watermark/thumb pakeitimai be brangaus Gemini regen (re-process iš originalo).
+    const origFilename = `catalog/${id}/hero-original.png`
+    await bucket.file(origFilename).save(rawBuf, {
+      contentType: 'image/png',
+      metadata: { cacheControl: 'private, max-age=0' },
+    })
+
     await db.collection('catalog').doc(id).update({
       heroIllustration: url,
       heroThumb: thumbUrl,
+      _heroOriginalPath: origFilename,
       heroPromptBrief,
       heroPhotoAssessment,
       _heroMethod,
