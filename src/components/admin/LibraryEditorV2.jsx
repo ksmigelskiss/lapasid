@@ -416,13 +416,12 @@ export default function LibraryEditorV2({
       console.log('[admin] async re-enrich complete (catalog snapshot)', { stage, updatedAt })
     } else if (stage === 'failed') {
       const reason = selectedEntry?.enrichmentError ?? 'unknown error'
+      // P1 (2026-06-02) — PERSISTENT error. Anksčiau 5s auto-clear → admin
+      // praleisdavo klaidą jei pažiūrėdavo kitur. Dabar error lieka kol admin
+      // dismiss'ina (X) arba paleidžia naują veiksmą (kuris išvalo start'e).
       setAiActionError(typeof reason === 'string' ? reason : 'AI pipeline suklydo')
-      setAiActionState(`${aiActionState}-error`)
+      setAiActionState(null)
       setAiActionStartedAt(null)
-      setTimeout(() => {
-        setAiActionState(null)
-        setAiActionError(null)
-      }, 5000)
       console.warn('[admin] async re-enrich failed (catalog snapshot)', { stage, updatedAt, reason })
     }
   }, [selectedEntry?.enrichmentUpdatedAt, selectedEntry?.enrichmentStage, selectedEntry?.enrichmentError, aiActionStartedAt, aiActionState])
@@ -473,11 +472,7 @@ export default function LibraryEditorV2({
     } catch (e) {
       console.warn('[admin] hero regen failed:', e?.message)
       setAiActionError(e?.message || 'Nepavyko sugeneruoti iliustracijos')
-      setAiActionState('hero-error')
-      setTimeout(() => {
-        setAiActionState(null)
-        setAiActionError(null)
-      }, 5000)
+      setAiActionState(null)  // P1 — persistent error (dismiss via X / next action)
     }
   }, [selectedEntry, selectedType])
 
@@ -533,12 +528,8 @@ export default function LibraryEditorV2({
     } catch (e) {
       console.warn(`[admin] re-enrich ${mode} failed:`, e?.message)
       setAiActionError(e?.message || `Nepavyko paleisti „${mode}" pipeline'o`)
-      setAiActionState(`${mode}-error`)
+      setAiActionState(null)  // P1 — persistent error (dismiss via X / next action)
       setAiActionStartedAt(null)
-      setTimeout(() => {
-        setAiActionState(null)
-        setAiActionError(null)
-      }, 5000)
     }
   }, [selectedEntry, selectedType])
 
@@ -678,6 +669,7 @@ export default function LibraryEditorV2({
         onRegenHero={handleRegenHero}
         onRegenText={handleRegenText}
         onRegenFull={handleRegenFull}
+        onDismissAiError={() => setAiActionError(null)}
       />
       <RightPanePreview
         entry={selectedEntry}
@@ -1533,7 +1525,7 @@ function CenterPaneEditor({
   activeTab, setActiveTab,
   taxonGroups,
   genusParent,
-  aiActionState, aiActionError, onRegenHero, onRegenText, onRegenFull,
+  aiActionState, aiActionError, onRegenHero, onRegenText, onRegenFull, onDismissAiError,
 }) {
   if (!entry || !draft) {
     return (
@@ -1666,11 +1658,22 @@ function CenterPaneEditor({
           </div>
         )}
 
-        {/* AI action error flash — 5s auto-dismiss per parent timeout */}
+        {/* AI action error — P1: PERSISTENT + dismissible (X). Anksčiau 5s
+            auto-dismiss → admin praleisdavo. Dabar lieka kol dismiss'ina arba
+            paleidžia naują veiksmą. */}
         {aiActionError && (
           <div className="mx-5 mb-3 px-3 py-2 bg-terracotta-50 border border-terracotta-200/60 rounded-md text-[11px] text-terracotta-700 flex items-start gap-2">
             <AlertTriangle size={11} className="flex-shrink-0 mt-0.5" />
-            <span>AI veiksmas nepavyko: {aiActionError}</span>
+            <span className="flex-1">AI veiksmas nepavyko: {aiActionError}</span>
+            {onDismissAiError && (
+              <button
+                onClick={onDismissAiError}
+                className="flex-shrink-0 text-terracotta-500 hover:text-terracotta-700 transition-colors"
+                title="Atmesti klaidą"
+              >
+                <X size={12} />
+              </button>
+            )}
           </div>
         )}
         {saveError && (

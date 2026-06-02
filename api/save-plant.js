@@ -380,9 +380,13 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     const block = response.content.find(b => b.type === 'tool_use' && b.name === 'plant_details')
     if (!block?.input) {
       console.warn('[save-plant] AI returned no tool_use', { plantId, aiMs })
-      // Save'as fail'ina, BET ne hard error — nepalieka pusiau-save'into stato.
-      // Future TODO: maybe save baseResult-only catalog'as ir user plant'as
-      // be care info? Kol kas — silent abort.
+      // P0-3 (2026-06-02) — VISADA writeStage('failed'). Anksčiau silent return
+      // → admin mode client (LibraryEditorV2) laukdavo 180s failsafe'o, nes
+      // catalog'as negaudavo nei 'complete' nei 'failed' signalo. Dabar
+      // eksplicit failure → client iškart mato klaidą + retry.
+      await writeStage('failed', {
+        enrichmentError: 'AI grąžino atsakymą be tool_use block (Sonnet failure ar rate limit)',
+      })
       return
     }
 
@@ -587,10 +591,12 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     // ── 5. Catalog write (with parent taxon group) ──────────
     // Stage 'narrative' implicit'inai įtraukta į saveCatalogWithParentServer:
     // pridedam fullPlant'e prieš save (vienam Firestore write'ui — efficient).
+    let catalogSaved = false
     if (details.laistymasIntervalas) {
       fullPlant.enrichmentStage = 'narrative'
       fullPlant.enrichmentUpdatedAt = new Date().toISOString()
       const catRes = await saveCatalogWithParentServer(fullPlant)
+      catalogSaved = catRes?.ok !== false
       console.log('[save-plant] catalog save', { plantId, ok: catRes?.ok, id: catRes?.id, reason: catRes?.reason })
     } else {
       console.warn('[save-plant] skipping catalog save — no laistymasIntervalas', plantId)
@@ -621,16 +627,30 @@ Naudok botanikos žinias + Wikipedia/RHS info. Visi human-readable laukai LIETUV
     const heroResult = await heroPromise
     console.log('[save-plant] hero pipeline result', { plantId, ok: heroResult?.ok, reason: heroResult?.reason })
 
-    // Final stage: complete — abu pipelines done, viskas yra.
-    // skipped-by-request NĖRA error — neraportuoti į _heroError (kitaip
-    // catalog'as turėtų klaidingą failure stamp'ą po normalaus „tik tekstas"
-    // re-enrich'o).
-    const heroSkippedIntentionally = heroResult?.reason === 'skipped-by-request'
-    await writeStage('complete', {
-      ...(!heroResult?.ok && !heroSkippedIntentionally
-        ? { _heroError: heroResult?.reason ?? 'unknown' }
-        : {}),
-    })
+    // P0-4 (2026-06-02) — admin mode + catalog NEišsaugotas (AI negrąžino
+    // laistymasIntervalas) → 'failed', NE 'complete'. Anksčiau toks entry'is
+    // rodydavo 'complete' BET catalog'e jokios care info → silent partial,
+    // admin galvoja „pavyko", o realiai care duomenų nėra. Admin mode'e
+    // catalog yra VIENINTELIS target'as; jei jis neišsaugotas — nieko nepavyko.
+    // (User mode lieka kaip buvo: user plant doc su slim baseResult vis tiek
+    // saugomas, partial save naudingas — nepažymim 'failed'.)
+    if (isAdminMode && !catalogSaved) {
+      console.warn('[save-plant] admin mode: catalog NOT saved (no laistymasIntervalas) → failed', plantId)
+      await writeStage('failed', {
+        enrichmentError: 'AI negrąžino care intervalų (laistymasIntervalas) — catalog neišsaugotas, bandyk dar kartą',
+      })
+    } else {
+      // Final stage: complete — abu pipelines done, viskas yra.
+      // skipped-by-request NĖRA error — neraportuoti į _heroError (kitaip
+      // catalog'as turėtų klaidingą failure stamp'ą po normalaus „tik tekstas"
+      // re-enrich'o).
+      const heroSkippedIntentionally = heroResult?.reason === 'skipped-by-request'
+      await writeStage('complete', {
+        ...(!heroResult?.ok && !heroSkippedIntentionally
+          ? { _heroError: heroResult?.reason ?? 'unknown' }
+          : {}),
+      })
+    }
 
     console.log('[save-plant] DONE', { plantId, totalMs: Date.now() - t0 })
   } catch (err) {
