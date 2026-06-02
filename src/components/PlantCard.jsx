@@ -472,7 +472,7 @@ const PlantCard = memo(function PlantCard({
             Pakeičia hazard/benefit pill'us (žemiau slepiami isHistory atveju). */}
         {isHistory && memorialYM && (
           <div className="absolute top-2 left-2 z-[2]">
-            <span className="inline-flex items-center gap-1 bg-forest-500 rounded-full px-2 h-[20px] shadow-[0_1px_3px_rgba(20,43,31,0.25)]">
+            <span className="inline-flex items-center gap-1 bg-forest-700 rounded-full px-2 h-[20px] shadow-[0_1px_3px_rgba(20,43,31,0.28)]">
               {isDied && <Ghost size={13} strokeWidth={2.2} className="text-bone" />}
               <span className="text-[10px] leading-none tabular-nums font-medium text-bone">{memorialYM}</span>
             </span>
