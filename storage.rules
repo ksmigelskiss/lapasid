@@ -4,48 +4,39 @@ rules_version = '2';
 // Firebase Storage rules — lapasid (geliu-db projektas)
 // ──────────────────────────────────────────────────────────────────────
 //
-// 2026-06-02 (Block 1 / storage.rules) — anksčiau storage.rules NEegzistavo
-// repo'jyje (security audit flagino kaip gap'ą). Šis failas — paruoštas
-// ruleset'as. DEPLOY: rankiniu būdu per Firebase Console → Storage → Rules
-// (tas pats manual flow kaip firestore.rules, nes nėra firebase.json CLI deploy).
+// 2026-06-02 — VERSION-CONTROLLED kopija dabartinių Console taisyklių.
+// Security audit flagino „no storage.rules file" kaip gap'ą, BET tai buvo
+// REPO gap (failo nebuvo versijų kontrolėje), NE security gap — Console'je
+// taisyklės egzistavo ir yra sound'ios. Šis failas dabar atspindi deployed
+// reality. DEPLOY (jei keisi) = manual Console (nėra firebase.json CLI deploy).
 //
-// ⚠️ PRIEŠ DEPLOY — verify:
-//   1. User foto upload (PlantDetail → Pakeisti nuotrauką → įkelti) veikia
-//   2. User foto display kortelėse veikia
-//   3. Admin „Atnaujinti foto" (hero gen) veikia (server admin SDK bypass'ina)
-//   Jei kuris lūžta po deploy'o — revert į ankstesnes Console taisykles.
+// ── Ką šios taisyklės dengia ──────────────────────────────────────────
+//   • plants/** — user augalų foto. Authed read+write. Client upload'ina čia
+//     (uploadImageWithThumb). Reads dažnai per getDownloadURL token-URL'ą
+//     (bypass'ina rules), bet SDK read'ui taip pat auth.
+//   • catalog/* — hero iliustracijos. NĖRA explicit match → DEFAULT DENY SDK
+//     prieigai. BET:
+//       - server (generate-hero / save-plant / rehost-image per admin SDK)
+//         BYPASS'ina rules → hero gen veikia
+//       - user'iai mato hero per makePublic() public URL (storage.googleapis.com)
+//         → public HTTP GET, NE Firebase SDK, rules netaikomos
+//     Tad client'as NEGALI rašyti į catalog/* (default deny) — overwrite-hero
+//     gap'as uždarytas. Reads veikia per public URL.
+//   • Bet koks kitas path — DEFAULT DENY (Firebase Storage rules_version 2
+//     default'as unmatched path'ams). „Open storage" uždaryta.
 //
-// Access modelis:
-//   • catalog/{slug}/*  — hero iliustracijos + thumb'ai. Rašo TIK serveris
-//     (generate-hero / save-plant / rehost-image per admin SDK, kuris
-//     BYPASS'ina šias taisykles). Client niekada nerašo čia. Read public
-//     (hero images vis tiek makePublic()). → read: public, write: false.
-//   • plants/{plantId}/* — user augalų foto. Client upload'ina (authed user).
-//     LIMITACIJA: path neturi colId, tad rule NEGALI verifikuoti, ar user
-//     valdo plantId (reikėtų colId reverse-lookup, neįmanoma Storage rule'e).
-//     Geriausias praktinis lygis — auth != null. Future: jei path keisis į
-//     collections/{colId}/plants/{plantId}/*, galima members check per
-//     firestore.get().
-//   • Visi kiti path'ai — default DENY (uždaro „open storage" gap'ą).
+// ── ŽINOMA LIMITACIJA ─────────────────────────────────────────────────
+//   plants/{plantId} path neturi colId, tad rule NEGALI verifikuoti, ar
+//   authed user valdo plantId → bet kuris authed user gali skaityti/rašyti
+//   bet kurią plant foto (jei žino plantId). Struktūrinis apribojimas.
+//   Future fix: path → collections/{colId}/plants/{plantId}/* + members check
+//   per firestore.get(). Demo stage'e priimtina (mažai user'ių, plantId ne
+//   guessable, foto ne sensityvi).
 
 service firebase.storage {
   match /b/{bucket}/o {
-
-    // Hero iliustracijos — server-only write, public read
-    match /catalog/{allPaths=**} {
-      allow read:  if true;
-      allow write: if false;   // server admin SDK bypass'ina; client blokuotas
-    }
-
-    // User augalų foto — authed upload + read
-    match /plants/{plantId}/{allPaths=**} {
-      allow read:  if request.auth != null;
-      allow write: if request.auth != null;
-    }
-
-    // Default deny — bet koks kitas path'as
-    match /{allPaths=**} {
-      allow read, write: if false;
+    match /plants/{allPaths=**} {
+      allow read, write: if request.auth != null;
     }
   }
 }
