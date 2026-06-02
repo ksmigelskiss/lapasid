@@ -105,40 +105,33 @@ export default function PlantImage({
   const lqipThumb = (!useThumb && thumbUrl && url) ? transformPlantImageUrl(thumbUrl, size) : null
   const initialSrc = lqipThumb ?? targetSrc
 
-  // displayedSrc — kas faktiškai render'inta <img>'e (gali būti SENAS/thumb kol naujas
-  // user'iui nepakliuvęs); targetSrc — kur norim eit (props url). Jei jie skiriasi
-  // → background preload + atomic swap kai naujas ready.
-  // lqip atveju initialSrc=thumb (≠targetSrc) → effect mount'e preload'ina full+swap.
-  // Kitaip initialSrc=targetSrc → effect mount'e skip (originalus elgesys).
+  // displayedSrc — kas faktiškai render'inta <img>'e. Pradžioj: lqip → thumb
+  // (instant), kitaip → targetSrc. Effect preload'ina targetSrc (full) ir swap'ina
+  // kai ready; SENAS/thumb lieka rodomas iki onload (SWR — jokio flash'o/loading'o).
   const [displayedSrc, setDisplayedSrc] = useState(initialSrc)
-  const lastTargetRef = useRef(initialSrc)
+
+  // onError per ref — kad effect deps NEturėtų inline funkcijos. Anksčiau
+  // [targetSrc, onError]: onError (inline arrow iš PlantDetail) keisdavo referenciją
+  // kas render → effect re-run → cleanup cancel'indavo in-flight full preload PRIEŠ
+  // swap → LQIP užstrigdavo ant thumb'o (ypač necached/lėtų full'ų). Bug fix 2026-06-02.
+  const onErrorRef = useRef(onError)
+  onErrorRef.current = onError
 
   useEffect(() => {
-    // targetSrc nepasikeitė — nieko nedarom.
-    if (targetSrc === lastTargetRef.current) return
-    lastTargetRef.current = targetSrc
-
-    // 2026-06-02 — image PAŠALINTAS (revert / delete-from-history → url=null).
-    // Išvalom displayedSrc, kad nepaliktų seno paveikslėlio (anksčiau `!targetSrc`
-    // return'indavo be išvalymo → senas hero likdavo matomas).
+    // image PAŠALINTAS (revert / delete-from-history → url=null) — išvalom.
     if (!targetSrc) { setDisplayedSrc(null); return }
 
-    // Naujas URL — preload'inam background'e. SENAS lieka rodomas iki preload
-    // baigsis. Kai baigsis — setDisplayedSrc → React re-render su naujo URL
-    // <img>'u; browser jau turi cached → instant DOM swap, jokio flash'o.
-    const preload = new Image()
+    // Preload target (full); SENAS/thumb lieka rodomas iki onload → atomic swap.
+    // Vienas dep [targetSrc] → re-run TIK kai realiai keičiasi paveikslo URL
+    // (re-enrich / gallery nav / mount), niekad ne dėl render'o churn'o.
     let cancelled = false
-
-    preload.onload = () => {
-      if (!cancelled) setDisplayedSrc(targetSrc)
-    }
-    preload.onerror = () => {
-      if (!cancelled) onError?.()
-    }
+    const preload = new Image()
+    preload.onload  = () => { if (!cancelled) setDisplayedSrc(targetSrc) }
+    preload.onerror = () => { if (!cancelled) onErrorRef.current?.() }
     preload.src = targetSrc
 
     return () => { cancelled = true }
-  }, [targetSrc, onError])
+  }, [targetSrc])
 
   if (!displayedSrc) return null
   return (
