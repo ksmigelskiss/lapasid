@@ -262,7 +262,10 @@ export function usePlants(collectionId, viewerToken = null) {
     // ── Legacy `meta.plants[]` → subCol migration (atskiras nuo localStorage) ─
     // Old kolekcijos turi augalus pagrindinio doc.plants[] field'e, ne
     // subCol'e. Push'inam į subCol, paskui clean'inam meta.plants.
-    const missing = plants.filter(p => !subIds.has(p.id))
+    // 2026-06-02 — IŠSKIRIAM pending augalus: juos jau rašo update() (setDoc).
+    // Be šito pending-guard pridėti brand-new augalai patekdavo į `missing` →
+    // pakartotinis setDoc kiekvienam snapshot'ui → WRITE CHURN → hpw užstringa true.
+    const missing = plants.filter(p => !subIds.has(p.id) && !pending.has(p.id))
     if (missing.length > 0) {
       missing.forEach(p => {
         setDoc(doc(db, 'collections', cid, 'plants', p.id), stripUndefined(p))
