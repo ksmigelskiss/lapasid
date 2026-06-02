@@ -214,6 +214,14 @@ const PlantCard = memo(function PlantCard({
   const heroSrc  = useHero ? (heroThumbFor(plant.lotyniskas) || heroIllustration) : plant.image
   const hasImage = heroSrc && !imgError
 
+  // Memorial — istorija augalai (miręs / removed): paveikslas B&W (grayscale) +
+  // top-left forest-800 badge (Ghost mirusiems + data YY-MM). Signalas „nebėra"
+  // be dominavimo. Iš kategorijos, ne section (section čia gali būt 'history').
+  const isHistory    = plant.kategorija === 'istorija'
+  const isDied       = plant.historyKind === 'died' || (!plant.historyKind && !!plant.diedDate)
+  const memorialDate = plant.diedDate || plant.removedDate
+  const memorialYM   = memorialDate ? String(memorialDate).slice(2, 7) : null   // YYYY-MM-DD → YY-MM
+
   const onPressStart = (e) => {
     didLongPress.current = false
     startPos.current = { x: e.clientX, y: e.clientY }
@@ -346,7 +354,7 @@ const PlantCard = memo(function PlantCard({
           // tad thumbUrl unused.
           <PlantImage key={heroSrc} url={heroSrc} thumbUrl={!useHero ? plant.imageThumb : null}
             alt={plant.lietuviškas} size="card"
-            className={`w-full h-full pointer-events-none ${useHero ? 'object-contain p-1' : 'object-cover'}`}
+            className={`w-full h-full pointer-events-none ${useHero ? 'object-contain p-1' : 'object-cover'} ${isHistory ? 'grayscale' : ''}`}
             style={{ WebkitTouchCallout: 'none', userSelect: 'none' }}
             onError={() => setImgError(true)} />
         ) : (
@@ -460,7 +468,17 @@ const PlantCard = memo(function PlantCard({
             (User/Cat) prieš label'į: kam pavojingas (žmonėms, gyvūnams,
             abiems). Visa logika konsoliduota strongestBenefitPill +
             strongestHazardPill funkcijose. */}
-        {(() => {
+        {/* Memorial badge (istorija) — forest-800 pill, Ghost (miręs) + data YY-MM.
+            Pakeičia hazard/benefit pill'us (žemiau slepiami isHistory atveju). */}
+        {isHistory && memorialYM && (
+          <div className="absolute top-2 left-2 z-[2]">
+            <span className="inline-flex items-center gap-1 bg-forest-800 rounded-full px-2 h-[20px] shadow-[0_1px_3px_rgba(20,43,31,0.30)]">
+              {isDied && <Ghost size={13} strokeWidth={2.2} className="text-bone" />}
+              <span className="text-[10px] leading-none tabular-nums font-medium text-bone">{memorialYM}</span>
+            </span>
+          </div>
+        )}
+        {!isHistory && (() => {
           const benefit = strongestBenefitPill(plant)
           const hazard  = strongestHazardPill(plant)
           if (!benefit && !hazard) return null

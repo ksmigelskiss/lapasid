@@ -138,7 +138,7 @@ export default function App() {
     syncFromRemote,
     dashboard, library, archive,
     addToDashboard, addToWishlist,
-    markAsDied, moveToDashboard,
+    markAsDied, markAsRemoved, regrowPlant, moveToDashboard,
     updateComment, updateImage, updateStatus, updatePlant, deletePlant,
     addTimelineEvent, deleteTimelineEvent, updateChat,
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred, updateZinynasTitle,
@@ -301,8 +301,8 @@ export default function App() {
       }
       return
     }
-    if (action === 'tryAgain'){ moveToDashboard(plant.id); setTab('dashboard'); setPhotoPromptTarget(plant) }
-    if (action === 'wantAgain'){ updatePlant(plant.id, { kategorija: 'nori' }); setTab('biblioteka') }
+    // „Bandyti vėl" — FORK: naujas švarus augalas, miręs įrašas LIEKA memorial'u.
+    if (action === 'tryAgain'){ const fresh = regrowPlant(plant.id); closeDetail(); setTab('dashboard'); if (fresh) setPhotoPromptTarget(fresh) }
     if (action === 'delete')  setDeleteTarget({ plant, section: 'library' })
   }
 
@@ -311,10 +311,12 @@ export default function App() {
     setDeleteTarget(null)
   }
 
-  const handleDeleteMoveToLibrary = () => {
-    updatePlant(deleteTarget.plant.id, { kategorija: 'nori' })
+  // „Nebeauginu" — tylus removed įrašas istorijoje (ne wishlist!). Užšaldo snapshot'ą.
+  const handleDeleteRemoved = () => {
+    markAsRemoved(deleteTarget.plant.id)
     setDeleteTarget(null)
     closeDetail()
+    setTab('biblioteka')
   }
 
   const handleDeleteForever = () => {
@@ -727,7 +729,7 @@ export default function App() {
             plant={deleteTarget.plant}
             section={deleteTarget.section}
             onDied={handleDeleteDied}
-            onMoveToLibrary={handleDeleteMoveToLibrary}
+            onRemoved={handleDeleteRemoved}
             onDeleteForever={handleDeleteForever}
             onClose={() => setDeleteTarget(null)}
           />

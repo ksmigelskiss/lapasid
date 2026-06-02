@@ -20,7 +20,7 @@ function hazardTargets(plant) {
  * Context-aware portal: jei PlantDetail panel atviras desktop'e — modal'as
  * iškyla kortelės viduje. Kitaip — fullscreen overlay.
  */
-export default function DeleteModal({ plant, section, onDied, onMoveToLibrary, onDeleteForever, onClose }) {
+export default function DeleteModal({ plant, section, onDied, onRemoved, onDeleteForever, onClose }) {
   const isDashboard = section === 'auginama'
   const isDesktop = useIsDesktop()
   const host = useDetailHost()
@@ -87,15 +87,23 @@ export default function DeleteModal({ plant, section, onDied, onMoveToLibrary, o
               className="w-full bg-bone-50 hover:bg-bone-300 rounded-2xl px-4 py-4 transition-colors text-left"
             >
               <p className="font-display text-sm font-semibold tracking-tight text-forest-800">Numirė</p>
-              <p className="text-xs text-forest-500 mt-0.5">Įrašysime į istoriją su priežastimi</p>
+              <p className="text-xs text-forest-500 mt-0.5">Įrašysime į istoriją su priežastimi ir pamoka</p>
             </button>
 
             <button
-              onClick={onMoveToLibrary}
+              onClick={onRemoved}
               className="w-full bg-bone-50 hover:bg-bone-300 rounded-2xl px-4 py-4 transition-colors text-left"
             >
-              <p className="font-display text-sm font-semibold tracking-tight text-forest-800">Kita priežastis</p>
-              <p className="text-xs text-forest-500 mt-0.5">Augalas lieka bibliotekoje kaip įrašas</p>
+              <p className="font-display text-sm font-semibold tracking-tight text-forest-800">Nebeauginu</p>
+              <p className="text-xs text-forest-500 mt-0.5">Atidaviau, persodinau… — lieka istorijoje kaip įrašas</p>
+            </button>
+
+            <button
+              onClick={onDeleteForever}
+              className="w-full bg-bone-50 hover:bg-terracotta-50 rounded-2xl px-4 py-4 transition-colors text-left"
+            >
+              <p className="font-display text-sm font-semibold tracking-tight text-terracotta-600">Ištrinti visam</p>
+              <p className="text-xs text-forest-500 mt-0.5">Istorija ir užrašai dings negrįžtamai</p>
             </button>
           </div>
         ) : (

@@ -954,6 +954,14 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
       {section === 'istorija' && (
         <Section title="Augalo istorija">
           <div className="space-y-4">
+            {(plant.diedDate || plant.removedDate) && (
+              <div className="pl-3 border-l-2 border-forest-300/60">
+                <p className="font-mono text-[10px] font-medium text-forest-500 uppercase tracking-[0.16em]">
+                  {plant.historyKind === 'removed' ? 'Nebeauginu nuo' : 'Numirė'}
+                </p>
+                <p className="text-sm text-forest-700 mt-1 tabular-nums">{plant.diedDate || plant.removedDate}</p>
+              </div>
+            )}
             {plant.deathReason && (
               <div className="pl-3 border-l-2 border-terracotta/40">
                 <p className="font-mono text-[10px] font-medium text-terracotta-600 uppercase tracking-[0.16em]">Priežastis</p>
@@ -985,16 +993,12 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
               Pirkau, turiu!
             </button>
           )}
-          {section === 'istorija' && (<>
+          {section === 'istorija' && (
             <button onClick={() => { onAction('tryAgain', plant); onClose() }}
               className="w-full py-3.5 rounded-2xl text-sm font-medium text-white bg-forest-600 hover:bg-forest-700 transition-colors">
               Bandyti vėl
             </button>
-            <button onClick={() => { onAction('wantAgain', plant); onClose() }}
-              className="w-full py-3 rounded-2xl text-sm font-medium bg-surface-2 text-gray-600 hover:bg-surface-2 transition-colors">
-              Noriu nusipirkti vėl
-            </button>
-          </>)}
+          )}
           {/* 2026-06-01 — senas „Atnaujinti per AI" mygtukas pašalintas. Buvo broken
               F1 world'e (rašė tik į plant doc, bet catalog overlay'us perdengia).
               Single source of truth dabar — ... menu „Atnaujinti AI duomenis"

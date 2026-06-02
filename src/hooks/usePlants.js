@@ -355,6 +355,7 @@ export function usePlants(collectionId, viewerToken = null) {
         plants: prev.plants.map(p => p.id === id ? {
           ...p,
           kategorija: 'istorija',
+          historyKind: 'died',
           status: 'healthy',
           diedDate: today(),
           deathReason: deathReason ?? '',
@@ -369,6 +370,56 @@ export function usePlants(collectionId, viewerToken = null) {
     })
   }, [update])
 
+  // „Kita priežastis" — augalo nebeauginu (atidaviau, persodinau, ...). Lieka
+  // istorijoje kaip TYLUS įrašas (be priežasties/pamokos), užšaldytas snapshot'as.
+  // Skiriasi nuo mirties: historyKind='removed', be Ghost/lesson UI.
+  const markAsRemoved = useCallback((id) => {
+    update(prev => {
+      const plant = prev.plants.find(p => p.id === id)
+      if (!plant) return prev
+      return {
+        ...prev,
+        plants: prev.plants.map(p => p.id === id ? {
+          ...p,
+          kategorija: 'istorija',
+          historyKind: 'removed',
+          status: 'healthy',
+          removedDate: today(),
+          // Tylus įrašas — jokio timeline event'o. Istorija (laistymai ir kt) lieka.
+          ref: snapshotPlantRef(p),
+          refFrozen: true,
+        } : p),
+      }
+    })
+  }, [update])
+
+  // „Bandyti vėl" — FORK, ne move. Miręs/removed įrašas LIEKA memorial'u, o
+  // sukuriam NAUJĄ švarų auginama augalą (nauja istorija, live catalog, prašo foto).
+  // Grąžinam naują plant'ą → caller setPhotoPromptTarget(fresh).
+  const regrowPlant = useCallback((id) => {
+    const dead = plants.find(p => p.id === id)
+    if (!dead) return null
+    // Naują kuriam PRIEŠ update'ą (kaip addToDashboard) — kad grąžinta reikšmė
+    // būtų patikima (setData updater'is gali būt async → return null klaida).
+    const fresh = {
+      ...dead,
+      id: makeId(),
+      kategorija: 'auginama',
+      data_prideta: today(),
+      status: 'healthy',
+      timeline: [],
+      image: null, imageThumb: null, useHistoryPhoto: undefined,
+      diedDate: null, removedDate: null, deathReason: '', lesson: '', historyKind: null,
+      komentaras: '', uzrasai: '',
+      zonaId: null,
+      refFrozen: false,   // naujas augalas — vėl live catalog resolve
+    }
+    update(prev => ({ ...prev, plants: [fresh, ...prev.plants] }))
+    return fresh
+  }, [plants, update])
+
+  // moveToDashboard — wishlist („nori") → auginama. MUTATE-move (vieną kartą norim).
+  // NE mirusiems (jiems regrowPlant fork'as). Paliekam švarų wishlist→auginama kelią.
   const moveToDashboard = useCallback((id) => {
     updatePlant(id, {
       kategorija: 'auginama',
@@ -604,7 +655,7 @@ export function usePlants(collectionId, viewerToken = null) {
     syncFromRemote,
     dashboard, wishlist, history,
     addToDashboard, addToWishlist,
-    markAsDied, moveToDashboard,
+    markAsDied, markAsRemoved, regrowPlant, moveToDashboard,
     updateComment, updateImage, updateStatus, updatePlant, deletePlant,
     addTimelineEvent, deleteTimelineEvent, clearTimeline, updateChat,
     library, archive,
