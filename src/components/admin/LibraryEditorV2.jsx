@@ -51,12 +51,13 @@ import { WIDGET } from './adminConstants'
 const MIN_WIDTH_PX = 1280
 
 // ── Filter definitions ─────────────────────────────────────────────
+// 2026-06-02 — outdated data-quality filtrai (Pakeisti/Be parent/Standalone)
+// numesti. Liko VIEW toggle: Augalai ↔ Serijos. „Serijos" nėra paprastas
+// filtras — tai vienintelis prieigos kelias redaguoti genties care šablonus
+// (taxonGroups), tad jis lieka. Sort'as nekeičiamas (A–Z lotyniškai, buildHierarchy).
 const FILTERS = [
-  { id: 'all',        label: 'Visi'        },
-  { id: 'modified',   label: 'Pakeisti'    },  // _batchEnrichedAt < 7d
-  { id: 'orphan',     label: 'Be parent'   },  // cultivar entries be taxonGroupId
-  { id: 'standalone', label: 'Standalone' },
-  { id: 'series',     label: 'Serijos'     },
+  { id: 'all',    label: 'Augalai' },
+  { id: 'series', label: 'Serijos' },
 ]
 
 // ── Schema enums (chip select'iams) ──────────────────────────────────
@@ -746,26 +747,11 @@ function LeftPaneList({
   const filteredItems = useMemo(() => {
     let result = items
 
-    // Filter chips (2026-06-01 flat structure):
-    //  • 'all'        — genus groups su entries (g.members) ir/arba genus entry
-    //  • 'standalone' — genus groups su ≤1 member'iu (single entry, no children)
-    //  • 'orphan'     — bent vienas cultivar entry'is be taxonGroupId
-    //  • 'modified'   — grupės, kur bent vienas entry batch-enriched per 7d
-    //  • 'series'     — VIEN g.series taxonGroups (care templates, atskira
-    //                   per filter mode'as — main tree'oj nerodom)
-    if (activeFilter === 'standalone') {
-      result = result.filter(g => (g.entry ? 1 : 0) + g.members.length <= 1)
-    } else if (activeFilter === 'series') {
+    // View toggle (2026-06-02 — outdated data-quality filtrai numesti):
+    //  • 'all'    — augalai (genus groups su entries/members)
+    //  • 'series' — VIEN g.series taxonGroups (genties care šablonai, atskiras view)
+    if (activeFilter === 'series') {
       result = result.filter(g => g.series.length > 0)
-    } else if (activeFilter === 'orphan') {
-      result = result.filter(g => g.members.some(m => m.isOrphanCultivar))
-    } else if (activeFilter === 'modified') {
-      const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000
-      const isModified = e => e?._batchEnrichedAt && new Date(e._batchEnrichedAt).getTime() > cutoff
-      result = result.filter(g => {
-        if (isModified(g.entry)) return true
-        return g.members.some(m => isModified(m.entry))
-      })
     }
 
     // Paieška — match'inam genus name, entry LT/Latin, ar bet kurio member'io
@@ -937,7 +923,7 @@ function LeftPaneList({
         {filteredItems.length === 0 ? (
           <p className="text-center text-forest-500 text-xs py-12 px-3">
             {search.trim() ? `Nieko nerasta su „${search}"`
-              : activeFilter !== 'all' ? 'Šiame filtre tuščia.'
+              : activeFilter === 'series' ? 'Serijų (care šablonų) dar nėra.'
               : 'Biblioteka tuščia.'}
           </p>
         ) : (
