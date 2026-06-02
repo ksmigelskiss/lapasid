@@ -131,6 +131,7 @@ export function usePlants(collectionId, viewerToken = null) {
         if (prevMap.get(id) !== plant) {
           // Pending-write guard — saugom optimistinį local'ą kol serveris echo'ina.
           pendingWritesRef.current.set(id, plant)
+          console.log('[pending-set]', { id, name: plant.lietuviškas, img: String(plant.image ?? '').slice(-18), tl: plant.timeline?.length ?? 0, uhp: plant.useHistoryPhoto })
           setDoc(doc(db, 'collections', cid, 'plants', id), stripUndefined(plant))
             .catch(e => { console.warn('[firestore] plant write:', e); pendingWritesRef.current.delete(id) })
         }
@@ -184,6 +185,13 @@ export function usePlants(collectionId, viewerToken = null) {
         (sp.imageThumb ?? null) === (local.imageThumb ?? null) &&
         sp.useHistoryPhoto === local.useHistoryPhoto &&
         (sp.timeline?.length ?? 0) === (local.timeline?.length ?? 0)
+      // DIAGNOSTIC (laikinas) — guard sprendimas pending augalui.
+      console.log('[pending-guard]', {
+        id: sp.id, name: sp.lietuviškas, echoed, kept: !echoed,
+        spImg: String(sp.image ?? '').slice(-18), localImg: String(local.image ?? '').slice(-18),
+        spTl: sp.timeline?.length ?? 0, localTl: local.timeline?.length ?? 0,
+        spUHP: sp.useHistoryPhoto, localUHP: local.useHistoryPhoto,
+      })
       if (echoed) { pending.delete(sp.id); return sp }
       return local  // server dar pasenęs → laikom optimistinį local'ą
     })
