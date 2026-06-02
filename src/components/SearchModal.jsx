@@ -295,7 +295,7 @@ async function claudeCall(body) {
 // Bet `required` masyve jų nebėra — AI gali grąžinti tuščius/null.
 export const TOOL_PREVIEW = {
   name: 'plant_preview',
-  description: 'Identify a plant + return disambiguation candidates if uncertain. SLIM mode — ONLY identification info (latinName, ltName, candidates, confidence). DO NOT fill description, origin, care, properties, fun facts — leave null/empty. Rich info filled later via bulk_series (when admin clicks "Add series") or plant_details (when user clicks Save). All human-readable output fields (name, ltName, aprasymas, kilme, seriesNote, uncertaintyReason, fallbackInfo.note) MUST be written in Lithuanian.',
+  description: 'Identify a plant + return disambiguation candidates if uncertain. SLIM mode — ONLY identification info (latinName, ltName, candidates, confidence) PLUS auginimas classification (kambarinis/sodo/laukinis — required). DO NOT fill description, origin, care, properties, fun facts — leave null/empty. Rich info filled later via bulk_series (when admin clicks "Add series") or plant_details (when user clicks Save). All human-readable output fields (name, ltName, aprasymas, kilme, seriesNote, uncertaintyReason, fallbackInfo.note) MUST be written in Lithuanian.',
   input_schema: {
     type: 'object',
     properties: {
@@ -345,6 +345,12 @@ export const TOOL_PREVIEW = {
       cultivarsExist: {
         type: ['boolean', 'null'],
         description: 'true = you know with high certainty that named cultivars/variants of this species or genus exist (ideally you list some in candidates). false = monotypic / no notable cultivars known. null = unknown.',
+      },
+      // 2026-06-02 — kambarinis-only soft-warn gate. UI rodo įspėjimą jei ne 'kambarinis'.
+      auginimas: {
+        type: 'string',
+        enum: ['kambarinis', 'sodo', 'laukinis'],
+        description: 'RŪŠINĖ kategorija (NE auginimo vieta): kambarinis=tropic/subtropic rūšis gyvenanti viduje (Monstera, Sansevieria, Spathiphyllum, Aloe, Ficus, Calathea); sodo=ornamentinis/produktyvus lauko augalas (rožės, bijūnai, daržovės, vaistažolės, dekoratyviniai krūmai); laukinis=LT pievų/miškų rūšis (beržas, pakalnutė, ramunė, ąžuolas). LapasID = kambarinių app — klasifikuok tiksliai pagal rūšies prigimtį.',
       },
       sources: {
         type: 'array',
@@ -455,7 +461,7 @@ export const TOOL_PREVIEW = {
     // kai nereikia (nėra fallback'o / nežinia ar yra kultivarų).
     // (Žiūr. `user-search-v1` git tag — pilna senesnė required lista.)
     required: ['confidence', 'matchLevel', 'uncertaintyReason', 'sources', 'candidates',
-               'name', 'latinName', 'emoji'],
+               'name', 'latinName', 'emoji', 'auginimas'],
   },
 }
 
@@ -2187,7 +2193,7 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
         role: 'user',
         content: [
           { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
-          { type: 'text',  text: 'Identify the plant in this photo (or on a label). SLIM mode: FILL latinName, ltName, candidates if uncertain, confidence, aprasymas (GENUS-level info — 3-5 Lithuanian sentences), kilme (1 Lithuanian sentence), seriesNote (1-2 Lithuanian sentences if a series). DO NOT FILL care info (sviesa/vanduo/etc), savybes, augimo_greitis — null/empty. All human-readable text MUST be in Lithuanian. TAXONOMIC FALLBACK: if the label shows a specific cultivar you cannot confirm, step up to the species and fill fallbackInfo (see system prompt). Set cultivarsExist=true when you fallback to a species/genus that you know has named cultivars.' },
+          { type: 'text',  text: 'Identify the plant in this photo (or on a label). SLIM mode: FILL latinName, ltName, candidates if uncertain, confidence, auginimas (kambarinis/sodo/laukinis), aprasymas (GENUS-level info — 3-5 Lithuanian sentences), kilme (1 Lithuanian sentence), seriesNote (1-2 Lithuanian sentences if a series). DO NOT FILL care info (sviesa/vanduo/etc), savybes, augimo_greitis — null/empty. All human-readable text MUST be in Lithuanian. TAXONOMIC FALLBACK: if the label shows a specific cultivar you cannot confirm, step up to the species and fill fallbackInfo (see system prompt). Set cultivarsExist=true when you fallback to a species/genus that you know has named cultivars.' },
         ],
       }
 
@@ -2531,6 +2537,18 @@ Care + savybes are filled in a later step via other tools (TOOL_BULK_SERIES, TOO
                 į TĄ PAT klausimą („ar pasitikėti šiuo atpažinimu?") —
                 vizualus triukšmas. Vienoda struktūra per visus 3 confidence
                 lygius, expand'inamas „Kodėl?" detalėms (fallbackInfo, matchLevel). */}
+            {/* 2026-06-02 — kambarinis-only SOFT WARN. LapasID = kambarinių app;
+                jei AI klasifikuoja sodo/laukinį (auginimas), įspėjam — NE blokuojam,
+                save lieka. Apsauga nuo misclassification (user sprendžia). */}
+            {result.auginimas && result.auginimas !== 'kambarinis' && (
+              <div className="rounded-2xl px-4 py-2.5 mb-3 border bg-terracotta-50 border-terracotta-200/60 flex items-start gap-2">
+                <span className="text-base leading-none mt-0.5">🏡</span>
+                <p className="text-[12px] text-terracotta-600 leading-snug">
+                  Tai <span className="font-semibold">{result.auginimas === 'sodo' ? 'sodo' : 'laukinis'}</span> augalas, ne tipinis kambarinis. Gali pridėti, bet LapasID priežiūros patarimai orientuoti į kambarinius.
+                </p>
+              </div>
+            )}
+
             <TrustStrip result={result} />
 
             {/* Serijos pastaba — kompaktiška note apie KONKREČIĄ seriją
