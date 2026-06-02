@@ -40,7 +40,7 @@ import {
 } from 'lucide-react'
 import { ProfileContent } from '../PlantDetail'
 import PlantImage from '../brand/PlantImage'
-import { TAXON_GROUP_TYPES, CULTIVATION_CONTEXTS } from '../../utils/taxonGroups'
+import { TAXON_GROUP_TYPES } from '../../utils/taxonGroups'
 import { parseLatinName } from '../../utils/latinName'
 import { catalogDocId } from '../../utils/catalog'
 import { auth } from '../../utils/firebase'
@@ -1003,7 +1003,7 @@ const INHERITABLE_FIELDS = [
   // Care info (bendrai taikoma per visą genus)
   'sviesa', 'vanduo', 'substratas', 'persodinimas', 'ziemojimas', 'tresimas', 'prieziura',
   // Klasifikacija
-  'tipas', 'sunkumas', 'augimo_greitis', 'cultivationContext', 'lifecycle', 'hardiness',
+  'tipas', 'sunkumas', 'augimo_greitis', 'lifecycle', 'hardiness',
   'auginimas',
   // Kilmė (genus origin = species origin paprastai)
   'kilme',
@@ -3738,9 +3738,9 @@ function normalizeCultivar(c) {
     englishNames:       c.englishNames       ?? [],
     auginimas:          c.auginimas          ?? '',
     infoConfidence:     c.infoConfidence     ?? '',
-    // cultivationContext IŠTRINTA — duplikavo auginimas (subagent §1, user
-    // patvirtino 2026-05-27). taxonGroup serijoms paliekamas (serijos
-    // metadata, kitokia semantika).
+    // cultivationContext PILNAI IŠTRINTA (2026-06-02) — duplikavo `auginimas`
+    // (kambarinis/sodo/laukinis). Buvo dead: AI rašė → merge kopijavo → Firestore,
+    // bet niekur neskaitytas. Žr. audit-2026-06-02.md.
   }
 }
 

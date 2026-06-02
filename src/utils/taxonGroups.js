@@ -22,7 +22,6 @@ export { TAXON_GROUP_TYPES, taxonGroupDocId, parentTaxonGroupIdFor }
 // Standalone cultivars (be serijos / genus parent) → `taxonGroupId: null`,
 // visi field'ai tiesiogiai catalog doc'e (flat behavior, kaip seniai).
 
-export const CULTIVATION_CONTEXTS = ['indoor', 'outdoor', 'both']
 export const LIFECYCLES = ['annual', 'biennial', 'perennial', 'woody', 'bulbous']
 export const PHOTO_TYPES = ['flower', 'plant', 'foliage', 'winter', 'fruit', 'seedling']
 
@@ -323,7 +322,6 @@ export function mergeWithSeries(cultivar, group) {
     idomybes:           group.idomybes,
     dauginimas:         group.dauginimas,
     problemos:          group.problemos,
-    cultivationContext: group.cultivationContext,
     lifecycle:          group.lifecycle,
     hardiness:          group.hardiness,
 
