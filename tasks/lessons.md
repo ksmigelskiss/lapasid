@@ -260,3 +260,27 @@ Catalog heroes (heroGen) JAU turėjo `cacheControl: 'public, max-age=31536000, i
 **Rule 2:** onSnapshot error handler'iai turi RETRY permission-denied atveju (bounded backoff), ne tylėti. Tylus mirimas → empty state iki manual refresh'o.
 
 **Meta:** security pakeitimai (čia — API key restriction) gali turėti netiesioginių timing side-effect'ų, kurie atskleidžia latentinius race'us. Po security darbo — verify user-facing flows, ne tik tai, ką tiesiogiai keitei.
+
+---
+
+## N+7. „Nauja foto dingsta kol refresh" — multi-layer bug + debug pamokos
+
+**Data:** 2026-06-02
+**Trigger:** Po švaraus foto modelio (image = TIK user foto, ne stock), nauja įkelta foto nesirodydavo widget'e/hero kol page refresh. ~15 iteracijų kol galutinai sutvarkyta.
+
+**Tikrosios priežastys (DAUGIAU NEI VIENA — todėl ilgai):**
+1. **Server enrichment overwrite (PRIMARY data).** `saveUserPlantServer` (api/_lib/user-plant-server.js) enrichinant naują augalą strip'ina personal laukus prieš merge, BET `image`/`imageThumb` NEBUVO `PERSONAL_STATE_FIELDS` sąraše. Su nauju modeliu `fromAIResult` grąžina image=null → serverio enrichment write (merge:true) PERRAŠYDAVO user'io ką tik įkeltą foto į null. **Fix: image/imageThumb → PERSONAL_STATE_FIELDS.**
+2. **PlantImage SWR stuck-swap (render).** `key={heroSrc}` PlantCard'e — be jo PlantImage stale-while-revalidate „užstrigdavo" ant ką tik uploadinto URL'o (value→value swap neperrender'indavo). Detail hero: `key={isIllustration}` — be jo SWR rodydavo seną watercolor su nauju object-cover className → „tarp layerių" vaizdas.
+3. **Sync architektūra (audito).** `applySnapshot` perrašydavo VISĄ state'ą kiekvienu snapshot'u → prireikė rankinių guard'ų (pendingWritesRef, lastPlantCountRef) → race'ai. **Fix: per-doc `snap.docChanges()` reconciliacija + meta/plants atskiri slice'ai. SDK pats daro optimizmą (latency comp) — nebekovok prieš jį.**
+
+**Rule (PERSONAL_STATE_FIELDS):** kai keiti lauko semantiką (image: stock → user-photo), PATIKRINK VISUS server-side merge/write taškus, kurie tą lauką liečia. `fromAIResult` defaults + server merge = klasikinis „initial-save defaults perrašo user state'ą" bug'as (tas pats kaip N+5 re-enrich status reset).
+
+**Rule (PlantImage swap):** stale-while-revalidate value→value swap nepatikimas just-uploaded URL'ams. `key={contentIdentity}` priverstinis remount, kai keičiasi paveikslėlio identitetas/režimas — patikimiau nei pasikliauti SWR preload swap'u.
+
+**Rule (Firestore sync):** NEPERRAŠYK viso state'o per snapshot. Naudok `snap.docChanges()` per-doc — SDK įtraukia local pending mutations (hasPendingWrites), optimistinis write matomas iškart, niekad neperrašomas stale full-read'u.
+
+**DEBUG META-pamokos (kainavo daugiausia laiko):**
+- **Service Worker bundle cache = testavimo košmaras.** User'is ~5 kartus testavo SENĄ bundle (SW serveuoja cache). KIEKVIENĄ deploy verifikuok bundle hash pasikeitė. Testuojant: DevTools → Application → SW → „Update on reload" ☑ ARBA Unregister.
+- **Flat-string log'ai, ne object'ai.** `console.log('[x]', {obj})` truncatina (`…`) — kritinis laukas pasislepia. `console.log(\`[x] field="${val}"\`)` — visada matosi.
+- **Target'ink konkretų entity, ne visus.** Hardcoded filtras (Filodendras) praleido kalankės testą → tuščias logas. Logink plačiai arba paklausk kurį testuoja.
+- **Daug priežasčių vienam simptomui.** „Foto dingsta" buvo 3 atskiri bug'ai (server + 2 render). Sutvarkius vieną, simptomas liko → atrodė „nepataisyta". Reikia atskirti sluoksnius (data layer ground-truth log VS render layer log).
