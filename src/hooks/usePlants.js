@@ -96,6 +96,13 @@ export function usePlants(collectionId, viewerToken = null) {
   // kiekvienam snapshot'ui (jei pirmasis async setDoc'as dar nepraėjo).
   const migrationDoneRef = useRef(new Set()) // Set<colId>: kuriose kolekcijose jau išvalyta
 
+  // 2026-06-02 — Pending-write guard su LAIKO LANGU. Map<id, {plant, t}>.
+  // Firestore persistence (ypač po cache clear → IndexedDB flaky) pristato
+  // pasenusius/out-of-order snapshot'us, kurie perrašo optimistinį foto write'ą
+  // → nauja foto dingsta kol refresh. Laikom optimistinį local'ą GRACE_MS, kad
+  // vėlyvas stale snapshot'as nenuplautų. Po lango — pasitikim serveriu.
+  const pendingWritesRef = useRef(new Map())
+
   // Optimistic local update + write į Firestore. SDK su persistence
   // (firebase.js) queues offline writes į IndexedDB ir auto-flush'ina kai
   // network atsigauna. Jokio manualaus localStorage caching'o — server
@@ -123,8 +130,9 @@ export function usePlants(collectionId, viewerToken = null) {
 
       for (const [id, plant] of nextMap) {
         if (prevMap.get(id) !== plant) {
+          pendingWritesRef.current.set(id, { plant, t: Date.now() })
           setDoc(doc(db, 'collections', cid, 'plants', id), stripUndefined(plant))
-            .catch(e => console.warn('[firestore] plant write:', e))
+            .catch(e => { console.warn('[firestore] plant write:', e); pendingWritesRef.current.delete(id) })
         }
       }
       for (const id of prevMap.keys()) {
@@ -165,7 +173,21 @@ export function usePlants(collectionId, viewerToken = null) {
     }
     subPlants.forEach(p => byId.set(p.id, p))
 
-    const plants = [...byId.values()]
+    // Pending-write guard su laiko langu — neperrašom optimistinio local'o
+    // pasenusiu/out-of-order snapshot'u GRACE_MS lange (apsaugo VISUS laukus).
+    const GRACE_MS = 8000
+    const pending = pendingWritesRef.current
+    const now = Date.now()
+    const plants = [...byId.values()].map(sp => {
+      const entry = pending.get(sp.id)
+      if (!entry) return sp
+      if (now - entry.t > GRACE_MS) { pending.delete(sp.id); return sp } // langas baigėsi → serveris
+      return entry.plant                                                  // lange → optimistinis local'as
+    })
+    // Brand-new pending augalai, kurių snapshot dar neturi → optimistiškai
+    for (const [id, entry] of pending) {
+      if (!byId.has(id) && now - entry.t <= GRACE_MS) plants.push(entry.plant)
+    }
     const next   = { plants, zinynas: safeMeta.zinynas ?? [], zones: safeMeta.zones ?? [], settings: safeMeta.settings ?? {} }
     // Step 6r diagnostic — sekam ar snapshot fire'inasi su naujais plant'ais
     // (post-save) ar overwriting'a optimistic local state'ą stale data
