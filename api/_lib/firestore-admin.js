@@ -36,8 +36,16 @@ function initAdmin() {
     serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n')
   }
 
+  // 2026-06-02 — storageBucket BŪTINAS. Po JWT fix'o verifyAuthToken triggerina
+  // šitą initAdmin'ą PIRMA (auth check prieš storage usage) endpoint'uose
+  // rehost-image + generate-hero, kurie naudoja `admin.storage().bucket()`
+  // (default bucket). Jei čia bucket nesukonfigūruotas, jų savas initAdmin
+  // grįžta anksti (admin.apps.length > 0 guard) NEpriskyręs bucket'o →
+  // `bucket()` lūžta → 500. Centralizuotas init'as turi turėti VISĄ config'ą,
+  // kuriuo bet kuris consumer'is remiasi.
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
+    storageBucket: 'geliu-db.firebasestorage.app',
   })
   _initialized = true
   return admin
