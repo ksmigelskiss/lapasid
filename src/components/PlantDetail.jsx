@@ -984,8 +984,9 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
         <PassportSection plant={plant} collectionId={collectionId} onToggle={onTogglePassport} />
       )}
 
-      {/* ── Actions ── */}
-      {onAction && (
+      {/* ── Actions — TIK primary CTA'ai (nori/istorija). Sekundariniai
+          (Dublikuoti, Ištrinti) perkelti į „..." meniu toolbar'yje. ── */}
+      {onAction && (section === 'nori' || section === 'istorija') && (
         <div className="flex flex-col gap-2 pt-1">
           {section === 'nori' && (
             <button onClick={() => onAction('buy', plant)}
@@ -997,18 +998,6 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
             <button onClick={() => { onAction('tryAgain', plant); onClose() }}
               className="w-full py-3.5 rounded-2xl text-sm font-medium text-white bg-forest-600 hover:bg-forest-700 transition-colors">
               Bandyti vėl
-            </button>
-          )}
-          {/* 2026-06-01 — senas „Atnaujinti per AI" mygtukas pašalintas. Buvo broken
-              F1 world'e (rašė tik į plant doc, bet catalog overlay'us perdengia).
-              Single source of truth dabar — ... menu „Atnaujinti AI duomenis"
-              (kviečia reEnrichPlant → POST /api/save-plant → pilna Phase 2
-              pipeline su deriveToxicityFromSourcesServer, Sonnet narrative,
-              Gemini hero regen, catalog write su F1 auto-propagacija). */}
-          {(section === 'auginama' || section === 'nori' || section === 'istorija') && (
-            <button onClick={() => onAction('delete', plant)}
-              className="w-full py-3 rounded-2xl text-sm font-medium text-gray-400 hover:text-red-400 transition-colors">
-              Ištrinti
             </button>
           )}
         </div>
@@ -1820,6 +1809,25 @@ export default function PlantDetail({
                       >
                         <Camera size={14} className="flex-shrink-0" />
                         <span className="font-display text-sm font-semibold tracking-tight">Pakeisti nuotrauką</span>
+                      </button>
+                      {/* 2026-06-02 — sekundariniai veiksmai (Dublikuoti, Ištrinti)
+                          perkelti iš content'o į „..." meniu (iOS pattern, švaresnės
+                          kortelės). Dublikuoti tik auginama (naujas egzempliorius). */}
+                      {section === 'auginama' && (
+                        <button
+                          onClick={() => { setShowActionMenu(false); onAction?.('duplicate', plant) }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-forest-600 hover:bg-bone-300/60 transition-colors"
+                        >
+                          <Copy size={14} className="flex-shrink-0" />
+                          <span className="font-display text-sm font-semibold tracking-tight">Dublikuoti</span>
+                        </button>
+                      )}
+                      <button
+                        onClick={() => { setShowActionMenu(false); onAction?.('delete', plant) }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-terracotta-500 hover:bg-terracotta-50 transition-colors"
+                      >
+                        <Trash2 size={14} className="flex-shrink-0" />
+                        <span className="font-display text-sm font-semibold tracking-tight">Ištrinti</span>
                       </button>
                     </div>
                   </div>

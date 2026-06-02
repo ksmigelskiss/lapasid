@@ -285,6 +285,9 @@ export default function App() {
   const handleDashboardAction = (action, plant) => {
     if (action === 'died')   setDeathTarget(plant)
     if (action === 'delete') setDeleteTarget({ plant, section: 'auginama' })
+    // Dublikuoti — naujas atskiras egzempliorius (švarus klonas, šaltinis nepaliestas).
+    // regrowPlant: nauja id, ta pati rūšies tapatybė, tuščia istorija → prašo foto.
+    if (action === 'duplicate') { const fresh = regrowPlant(plant.id); closeDetail(); setTab('dashboard'); if (fresh) setPhotoPromptTarget(fresh) }
   }
 
   const handleLibraryAction = (action, plant) => {
