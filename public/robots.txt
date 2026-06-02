@@ -1,0 +1,52 @@
+# lapasid.lt — robots.txt
+# 2026-06-02 — data-protection Phase A1.
+#
+# Tikslas: (1) blokuoti AI training scraper'ius (catalog protection),
+#          (2) uždrausti admin/api crawl'inimą,
+#          (3) PALIKTI indexable viešus augalų pasus (/p/*) — jie skirti dalintis.
+# NB: jokio blanket <meta noindex> index.html'e — tai SPA, noindex nukirstų ir /p/* pasus.
+
+# ── Įprasti search engine'ai: leidžiam, bet ne admin/api ──
+User-agent: *
+Disallow: /admin
+Disallow: /api/
+
+# ── AI training / LLM scraper'iai: visiškas draudimas ──
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
