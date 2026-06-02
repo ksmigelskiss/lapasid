@@ -444,18 +444,15 @@ const PlantCard = memo(function PlantCard({
         {/* Right-side badge column — vientisas siluetas su forecast'ais
             (rounded-full, h-[20px], backdrop-blur-sm). Sage legacy
             pakeistas į forest brand tone. */}
-        {(showDashboardBadge || section === 'istorija' || noteCount > 0) && (
+        {(showDashboardBadge || noteCount > 0) && (
           <div className={`absolute ${section === 'auginama' ? 'top-[68px]' : 'top-2'} right-2 flex flex-col gap-1 items-center`}>
             {showDashboardBadge && (
               <div className="inline-flex items-center justify-center bg-forest-500/90 backdrop-blur-sm rounded-full w-[20px] h-[20px]">
                 <House size={13} className="text-white" />
               </div>
             )}
-            {section === 'istorija' && (
-              <div className="inline-flex items-center justify-center bg-black/55 backdrop-blur-sm rounded-full w-[20px] h-[20px]">
-                <Ghost size={13} className="text-white" />
-              </div>
-            )}
+            {/* 2026-06-02 — senas top-right Ghost badge pašalintas: dabar memorial
+                signalas = top-left forest-800 pill (Ghost + data YY-MM). Nebedubliuojam. */}
             {noteCount > 0 && (
               <div className="inline-flex items-center gap-1 bg-black/55 backdrop-blur-sm rounded-full px-2 h-[20px]">
                 <FileText size={13} className="text-white" />
