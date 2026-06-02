@@ -357,6 +357,12 @@ export function heroIsDefaultFor(plant) {
  */
 export function heroIllustrationForPlant(plant) {
   if (!plant || !heroIsDefaultFor(plant)) return null
+  // DIAGNOSTIC (laikinas) — ką PlantCard gauna (vs [pg] data layer). Jei
+  // auginama augalas gauna watercolor su image=NULL, o [pg] rodo loc=foto →
+  // dashboardView stale (render/memo problema, ne data).
+  if (plant.kategorija === 'auginama') {
+    console.log(`[card] ${plant.lietuviškas} WATERCOLOR image="${String(plant.image ?? 'NULL').slice(-18)}"`)
+  }
   return heroIllustrationFor(plant.lotyniskas)
 }
 
