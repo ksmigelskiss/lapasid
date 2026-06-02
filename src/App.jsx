@@ -152,8 +152,8 @@ export default function App() {
   // resolvePlantView išlaiko asmeninius laukus + image; legacy/offline → inline.
   const dashboardView = useMemo(() => {
     const v = dashboard.map(resolvePlantView)
-    const fp = v.find(p => /ilodendras/.test(p.lietuviškas ?? ''))
-    if (fp) console.log(`[dv] recompute — Filodendras img="${String(fp.image ?? 'NULL').slice(-14)}"`)
+    const userPhotos = v.filter(p => p.image && /\/plants\/|plants%2F/.test(p.image))
+    console.log(`[dv] recompute ${v.length} plants | user-foto: ${userPhotos.map(p => p.lietuviškas + '=' + String(p.image).slice(-10)).join(', ') || 'none'}`)
     return v
   }, [dashboard, heroMapV])
   const libraryView   = useMemo(() => library.map(resolvePlantView),   [library, heroMapV])
