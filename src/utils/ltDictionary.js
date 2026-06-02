@@ -2,7 +2,7 @@
  * LT name resolver — connects Lithuanian plant names ↔ Latin binomials.
  *
  * USAGE:
- *   import { resolveLt, resolveLatin, getAllLtForms } from './ltDictionary'
+ *   import { resolveLt, resolveLatin } from './ltDictionary'
  *
  *   // User types "alijošius" → returns "Aloe" (Latin genus)
  *   const latin = await resolveLatin('alijošius')
@@ -247,27 +247,7 @@ export async function resolveLatin(ltName) {
   return reverse.get(normalized) ?? null
 }
 
-/**
- * Check if a string is a known LT plant name (exact or normalized).
- */
-export async function isKnownLtName(ltName) {
-  const latin = await resolveLatin(ltName)
-  return latin !== null
-}
-
-/**
- * Get all forms (canonical + synonyms) for a Latin name.
- * Used by UI for displaying all LT name variations.
- */
-export async function getAllLtForms(latinName) {
-  const entry = await resolveLt(latinName)
-  return entry?.ltAllForms ?? []
-}
-
-/**
- * Stats — for debug/admin.
- */
-export async function getLtStats() {
-  const data = await loadLtNames()
-  return data.stats
-}
+// 2026-06-02 (Block 3 declutter) — isKnownLtName / getAllLtForms / getLtStats
+// PAŠALINTOS. 0 realių importerių (buvo tik JSDoc komentaro example). Jei
+// prireiks UI/admin tool'ams ateityje — trivialūs wrapper'iai aplink
+// resolveLatin/resolveLt/loadLtNames.

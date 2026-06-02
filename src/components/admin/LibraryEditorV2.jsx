@@ -46,8 +46,8 @@ import { catalogDocId } from '../../utils/catalog'
 import { auth } from '../../utils/firebase'
 import { ExternalLink, Sun, Droplets, Thermometer, Wind, Sparkles, Calendar } from 'lucide-react'
 import { getFertilizingSummary } from '../../utils/fertilizingForecast'
+import { WIDGET } from './adminConstants'
 
-const WIDGET = 'bg-bone-50 rounded-2xl border border-bone-400/40 shadow-[0_1px_3px_rgba(28,58,42,0.06),0_4px_14px_rgba(28,58,42,0.05)]'
 const MIN_WIDTH_PX = 1280
 
 // ── Filter definitions ─────────────────────────────────────────────
@@ -1095,7 +1095,10 @@ function buildHierarchy(catalog, taxonGroups) {
         entry: c,
         latin: c.lotyniskas,
         rank: parsed.rank,
-        isOrphanCultivar: parsed.rank === 'cultivar' && !c.taxonGroupId,
+        // 2026-06-02 (Block 3) — orphan detection apima visus infraspecific
+        // rank'us (ne tik cultivar). variety/subspecies/forma irgi turi turėti
+        // parent taxonGroupId per parentTaxonGroupIdFor; be jo — orphan'ai.
+        isOrphanCultivar: ['cultivar', 'variety', 'subspecies', 'forma'].includes(parsed.rank) && !c.taxonGroupId,
       })
     }
   }

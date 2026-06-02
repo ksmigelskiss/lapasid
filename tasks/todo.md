@@ -103,10 +103,12 @@ flag'ino. **Du švarūs mechanizmai pririšti prie TIKRŲ įvykių:**
 - [ ] **Admin editor tręšimo/laistymo lentelei** (žingsnis 2 — patvirtinta): redaguoti INTERVALS/FERTILIZER_TIPS be deploy'o.
 - [ ] (minor) substratas JSON-wrapper esamuose įrašuose (Pilea) — unwrap'as taiso NAUJUS; senus per admin edit ar cleanup.
 
-## PHASE D — Reviewer/approval flow
+## PHASE D — Reviewer/approval flow (LAUKIA — po UX-3-tier consolidation)
 - [ ] `verified`/`reviewedBy`/`reviewedAt` laukai naujam global entry
 - [ ] Admin „nauji nepatikrinti" eilė; regenerate-hero + approve → verified
+- [ ] **Admin langas perprojektavimas** (kartu su reviewer flow — daug naujų unverified/fallback įrašų)
 - [ ] „Atnaujinti per AI" (`plantAI.js`) → admin-only (greičiausiai stale schema — patikrinti)
+- [ ] (refine, ne dabar) **Greitis:** AI Phase 1 (vendor name) 24→45s — apriboti web_search max_uses, prompt trumpinti, ar timeout. Phase 2 irgi ilgokai (ar nėra blokuojančių klaidų — patikrinti). Tikslas: greičiau nepralaimint kokybei.
 
 ## PHASE E — Backlog (mažiausias skubumas)
 - [ ] „Įsigijau" → nufotografuoti → asmeninė foto flow

@@ -7,8 +7,9 @@ import { bustSearchResponseCache } from '../../utils/searchResponseCache'
 import { parentTaxonGroupIdFor } from '../../utils/taxonGroupId'
 import T4Icon from '../brand/T4Icon'
 import LibraryEditorV2 from './LibraryEditorV2'
-// v1 (LibraryTab.jsx) lieka repo'je kaip backup — revert su `git revert HEAD`
-// jei v2 sukels problemų. Naudoti per: `import LibraryTab from './LibraryTab'`
+import { WIDGET } from './adminConstants'
+// 2026-06-02 — LibraryTab.jsx (v1 backup) IŠTRINTAS Block 3 declutter metu.
+// Git history saugo, jei prireiktų: `git log --all -- src/components/admin/LibraryTab.jsx`
 
 /**
  * AdminPanel — primityvi admin dashboard kolekcijoms ir vartotojams.
@@ -22,8 +23,6 @@ import LibraryEditorV2 from './LibraryEditorV2'
  * Architektūra: pure client-side queries (Option A) — tinka <100 user'ių
  * etapui. Scale'inant >100 — migracija į server-side /api/admin endpoint'ą.
  */
-
-const WIDGET = 'bg-bone-50 rounded-2xl border border-bone-400/40 shadow-[0_1px_3px_rgba(28,58,42,0.06),0_4px_14px_rgba(28,58,42,0.05)]'
 
 function formatDate(iso) {
   if (!iso) return '—'
