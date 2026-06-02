@@ -52,7 +52,7 @@ import { saveCatalogWithParentServer } from './_lib/taxon-groups-server.js'
 import { saveUserPlantServer, isUidMember } from './_lib/user-plant-server.js'
 import admin from 'firebase-admin'
 import { adminFirestore, verifyAuthToken } from './_lib/firestore-admin.js'
-import { createHeroGen, forceAspect3x2, cropToThumb } from './_lib/heroGen.js'
+import { createHeroGen, finalizeHeroBuffers } from './_lib/heroGen.js'
 import { catalogDocId } from './_lib/catalog-server.js'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -264,11 +264,11 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
             referenceImage: refImg,
           })
 
-        // Sharp pipeline: enforce 3:2 landscape + crop to square thumb
-        const heroBuf = await forceAspect3x2(rawBuf)
-        const thumbBuf = await cropToThumb(heroBuf, 512)
-
+        // Sharp pipeline: 3:2 landscape + watermark (hero) + clean square thumb.
+        // 2026-06-02: finalizeHeroBuffers prideda watermark (vizualus + forensic
+        // LSB) ant hero PNG; thumb švarus. Žr. api/_lib/watermark.js.
         const slug = catalogDocId(latinName)
+        const { heroBuf, thumbBuf } = await finalizeHeroBuffers(rawBuf, { id: slug })
         const bucket = admin.storage().bucket('geliu-db.firebasestorage.app')
         const cacheBust = Date.now()
 

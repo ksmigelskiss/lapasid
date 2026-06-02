@@ -12,6 +12,7 @@
 // route iš Vercel runtime env (auto-injected).
 import sharp from 'sharp'
 import { parseLatinName } from '../../src/utils/latinName.js'
+import { applyVisibleMark, embedForensic } from './watermark.js'
 
 export const GATEWAY = 'https://ai-gateway.vercel.sh/v1'
 export const BRIEF_MODEL = 'anthropic/claude-sonnet-4.5'
@@ -100,6 +101,29 @@ export async function cropToThumb(buf, size = 512) {
     .resize(size, size, { fit: 'cover' })
     .webp({ quality: 88 })
     .toBuffer()
+}
+
+// ── Finalize: 3:2 hero (su watermark) + clean thumb ───────────────
+// VIENAS bendras finalize'as ABIEM hero gen keliam (generate-hero.js route +
+// save-plant.js parallel pipeline) → DRY, nė vienas negali „pamiršti" watermark'o.
+//
+// • heroBuf = 3:2 PNG su vizualiu „LapasID.lt" ženklu + forensic LSB ({v,id,t}).
+// • thumbBuf = SWARUS 512 WebP iš NE-watermark'into base'o (žr. watermark.js
+//   komentarą kodėl thumb be ženklo: center-crop nukirptų + lossy WebP naikina LSB).
+export async function finalizeHeroBuffers(rawBuf, { id, thumbSize = 512 } = {}) {
+  const base = await forceAspect3x2(rawBuf)              // 3:2 PNG (be ženklo)
+  const thumbBuf = await cropToThumb(base, thumbSize)     // švarus thumb iš base'o
+  // Watermark DEFENSYVIAI — jei fail'ina (pvz. ~visiškai transparent hero →
+  // insufficient opaque capacity), grąžinam NE-watermark'intą hero, NE 500.
+  // Apsauga > hero generavimas; geriau hero be ženklo nei jokio hero.
+  try {
+    const visible = await applyVisibleMark(base)         // + „LapasID.lt"
+    const heroBuf = await embedForensic(visible, { v: 1, id: id ?? null, t: Date.now() })
+    return { heroBuf, thumbBuf }
+  } catch (e) {
+    console.warn('[heroGen] watermark failed, serving unmarked hero:', e?.message)
+    return { heroBuf: base, thumbBuf }
+  }
 }
 
 // ── Pure: bg → transparent (flood-fill iš kraštų, sharp) ──────────

@@ -98,55 +98,37 @@ Tikslas: ne paversti tai impossible'iniu (PWA + JS bundle = visada reverse-engin
 
 ---
 
-### A3 · Watercolor watermark'inimas (~1h)
+### A3 · Watercolor watermark'inimas ✅ DONE (2026-06-02)
 
-**Tikslas:** Visa generuojama iliustracija turi LapasID brand markeris kampe. Casual reposters automatiškai cite'ina šaltinį, scientific copy detection veikia.
+**Tikslas:** Generuojama iliustracija turi LapasID brand markerį + nematomą forensic
+sluoksnį. Casual reposters cite'ina šaltinį; provenance įrodoma net nukirpus matomą ženklą.
 
-**Du variantai:**
+**IMPLEMENTUOTA — 3 sluoksniai per `sharp` (NE Gemini prompt'as).** Originali
+rekomendacija buvo A3a (Gemini prompt) — **atmesta**, nes generatyvūs modeliai
+nepatikimai renderina tekstą (iškraipo, ne ten deda, kas kartą kitaip; įkepta į meną
+→ nekeičiama, neseka). `sharp` jau pipeline'e → server-side composite tikslus + pigus.
 
-**A3a — Subtle visible watermark (rekomenduoju)**
+**`api/_lib/watermark.js`:**
+- **Vizualus** — `applyVisibleMark(png)`: „LapasID.lt" SVG composite bottom-right,
+  opacity 0.30, dydis ~3% pločio, white stroke legibility'ui. (a1 stilius, user pasirinko.)
+- **EXIF** — `© LapasID — lapasid.lt` metadata (`withMetadata`, best-effort, ~238B chunk).
+- **Forensic LSB** — `embedForensic(png, {v,id,t})`: catalog ID + timestamp įmaišytas į
+  opaque pikselių žemiausius bitus. `extractForensic(png)` skaito atgal (leak-check).
+  MAGIC+LEN+JSON header. Survive'ina PNG re-save; NE JPEG/WebP re-compress (LSB limitas).
 
-Modifikuoti `api/_lib/heroGen.js` STYLE_BASE prompt'ą Gemini'ui:
+**Integracija — `finalizeHeroBuffers(rawBuf,{id})` `heroGen.js`'e** (vienas DRY
+orchestratorius ABIEM keliam: `generate-hero.js` + `save-plant.js`):
+- hero PNG = 3:2 + vizualus + forensic; **thumb = ŠVARUS** (center-crop nukirptų ženklą,
+  lossy WebP naikina LSB, ~150px kortelėj būtų triukšmas). Defensyvus try/catch — jei
+  watermark fail'ina, grąžina ne-watermark'intą hero (apsauga > generavimas).
 
-```js
-const STYLE_BASE = `Soft watercolor botanical illustration on warm cream paper.
-... (esama formatting'a) ...
+**Backfill — `scripts/watermark-backfill.mjs`** (esamiems 99 hero'jams):
+- `--dry-run` → /tmp/wm/ + roundtrip verify; LIVE → overwrite Storage + bump
+  `heroIllustration ?v=` (immutable cache busting). Idempotent (skip jau-markint'us),
+  aspect PRESERVE (NE re-pad). Verifikuota: forensic+EXIF roundtrip iš disko ✓.
 
-WATERMARK: Include a small, subtle "lapasid.lt" text in muted grey (#888),
-2-3% canvas height, positioned bottom-right corner with 10% margin from edges.
-Should be visible but not distracting from the plant illustration.`
-```
-
-Pliusas: zero post-processing'o, Gemini'as įveda tiesiog. Cheap.
-Minusas: Galima nukirpti su cropping'u. Bet visada lieka pirminiame URL'e.
-
-**A3b — Post-processing'o watermark (sharp)**
-
-Po `forceAspect3x2()` ir `transparentizeBg()`, prieš `heroFile.save()`:
-
-```js
-import sharp from 'sharp'
-const watermarkSvg = `<svg width="200" height="40"...>
-  <text x="10" y="28" font-family="...">lapasid.lt</text>
-</svg>`
-heroBuf = await sharp(heroBuf)
-  .composite([{ input: Buffer.from(watermarkSvg), gravity: 'southeast' }])
-  .toBuffer()
-```
-
-Pliusas: tiksli kontrolė pozicijos, dydžio, opacity.
-Minusas: tik visible, ne invisible. Vis tiek nukirpamas crop'u.
-
-**A3c — Steganographic watermark (overkill šitam stage'ui)**
-
-Embed'inti unique UID į pixel LSB'us, kad galėtum identify'inti, kuris user'is download'ino. Šiandien overkill, palieku Phase C.
-
-**Rekomendacija:** A3a (Gemini prompt'o pakeitimas). Greitas, pigus, hidden in artistic style.
-
-**Veiksmai:**
-1. Update STYLE_BASE konstantą `heroGen.js`
-2. Regen sample augalui, verify watercolor turi watermark
-3. Optional: per `Atnaujinti foto` admin'as gali re-gen'ti esamus augalus
+**Forensic (A3c „overkill") ĮTRAUKTAS** — user: „daugėjant images bus sunkiau" (užkepam
+dabar kol katalogas mažas, backfill pigus). Per-USER serve-time stego lieka Phase C.
 
 ---
 

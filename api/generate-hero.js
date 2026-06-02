@@ -13,7 +13,7 @@
 // (Sonnet vision + Gemini image). Vercel funkcijos turi OIDC token auto-injected.
 // Jei ne — reikės AI Gateway API key env var.
 import admin from 'firebase-admin'
-import { createHeroGen, forceAspect3x2, cropToThumb } from './_lib/heroGen.js'
+import { createHeroGen, finalizeHeroBuffers } from './_lib/heroGen.js'
 import { catalogDocId } from './_lib/catalog-server.js'
 import { verifyAuthToken } from './_lib/firestore-admin.js'
 
@@ -87,8 +87,9 @@ export default async function handler(req, res) {
 
     // 2026-06-01: enforce 3:2 landscape aspect (safety net jei Gemini negens
     // tiksliai) + generate thumb 1:1 webp widget'ams (PlantCard).
-    const heroBuf = await forceAspect3x2(rawBuf)
-    const thumbBuf = await cropToThumb(heroBuf, 512)
+    // 2026-06-02: finalizeHeroBuffers prideda watermark (vizualus + forensic LSB)
+    // ant hero PNG; thumb lieka švarus. Žr. api/_lib/watermark.js.
+    const { heroBuf, thumbBuf } = await finalizeHeroBuffers(rawBuf, { id })
 
     const cacheBust = Date.now()
     const heroFilename = `catalog/${id}/hero-illus.png`
