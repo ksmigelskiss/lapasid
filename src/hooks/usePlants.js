@@ -165,7 +165,7 @@ export function usePlants(collectionId, viewerToken = null) {
   // Suliejame `meta` + `subPlants` į lokalų state'ą. Bendras kelias
   // tiek real-time onSnapshot listener'iui (Etapas B), tiek vienkartiniam
   // syncFromRemote (pull-to-refresh / viewer polling).
-  const applySnapshot = useCallback((meta, subPlants, fromCache = false) => {
+  const applySnapshot = useCallback((meta, subPlants, fromCache = false, hasPendingWrites = false) => {
     const cid = colIdRef.current
     if (!cid) return
 
@@ -187,13 +187,18 @@ export function usePlants(collectionId, viewerToken = null) {
     const plants = [...byId.values()].map(sp => {
       const local = pending.get(sp.id)
       if (!local) return sp
-      const confirmed =
+      const matches =
         sp.image === local.image &&
         (sp.imageThumb ?? null) === (local.imageThumb ?? null) &&
         sp.useHistoryPhoto === local.useHistoryPhoto &&
         (sp.timeline?.length ?? 0) === (local.timeline?.length ?? 0)
-      if (confirmed) { pending.delete(sp.id); return sp }
-      return local  // dar nepatvirtinta → laikom optimistinį local'ą
+      // Drop pending TIK kai serveris PATVIRTINO (!hasPendingWrites) IR sutampa.
+      // Ant latency-comp snapshot'o (hasPendingWrites:true) NEdrop'inam — kitaip
+      // vėlesnis stale snapshot'as nuplautų (drop-too-early bug).
+      const serverConfirmed = !hasPendingWrites && matches
+      console.log('[pg]', { id: sp.id, name: sp.lietuviškas, hpw: hasPendingWrites, matches, serverConfirmed, spImg: String(sp.image ?? '').slice(-14), locImg: String(local.image ?? '').slice(-14) })
+      if (serverConfirmed) { pending.delete(sp.id); return sp }
+      return local  // dar nepatvirtinta serverio → laikom optimistinį local'ą
     })
     // Brand-new pending augalai (dar ne snapshot'e) → optimistiškai
     for (const [id, local] of pending) {
@@ -294,6 +299,7 @@ export function usePlants(collectionId, viewerToken = null) {
     let currentMeta      = null
     let currentSubPlants = null
     let currentFromCache = false
+    let currentHasPending = false
     let metaLoaded       = false
     let plantsLoaded     = false
 
@@ -301,7 +307,7 @@ export function usePlants(collectionId, viewerToken = null) {
     // antraip pirmasis snapshot'as overwrite'intų state'ą be plants/meta dalies.
     const tryApply = () => {
       if (metaLoaded && plantsLoaded) {
-        applySnapshot(currentMeta, currentSubPlants, currentFromCache)
+        applySnapshot(currentMeta, currentSubPlants, currentFromCache, currentHasPending)
       }
     }
 
@@ -318,9 +324,10 @@ export function usePlants(collectionId, viewerToken = null) {
     const unsubPlants = onSnapshot(
       fsCol(db, 'collections', cid, 'plants'),
       snap => {
-        currentSubPlants = snap.docs.map(d => d.data())
-        currentFromCache = snap.metadata.fromCache
-        plantsLoaded     = true
+        currentSubPlants  = snap.docs.map(d => d.data())
+        currentFromCache   = snap.metadata.fromCache
+        currentHasPending  = snap.metadata.hasPendingWrites
+        plantsLoaded      = true
         tryApply()
       },
       e => console.warn('[snapshot] plants error:', e)
