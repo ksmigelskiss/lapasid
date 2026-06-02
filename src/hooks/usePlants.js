@@ -454,11 +454,13 @@ export function usePlants(collectionId, viewerToken = null) {
 
   const updateImage = useCallback((id, image, fromHistory = false, imageThumb = null) => {
     // 2026-06-01 — dual upload: image (900px) + imageThumb (240px). Plant
-    // doc'e abu URL'ai. Dashboard kortelės skaitys imageThumb (jei ne null);
-    // PlantDetail hero skaito image. Backward-compat: jei imageThumb=null,
-    // NEpridedam į patch (esamos plant.imageThumb reikšmės nepakeisim).
-    const patch = { image, ...(fromHistory ? {} : { useHistoryPhoto: false }) }
-    if (imageThumb !== null) patch.imageThumb = imageThumb
+    // doc'e abu URL'ai. Dashboard kortelės skaito imageThumb; PlantDetail hero
+    // skaito image.
+    // 2026-06-02 — imageThumb VISADA rašomas LOCKSTEP su image (net null), kad
+    // widget'as niekada nerodytų stale thumb'o priklausančio KITAM image (bug:
+    // renkant istorijos/galerijos foto image keisdavosi, imageThumb likdavo
+    // senas). null → PlantImage fallback'ina į pilną image (teisingas turinys).
+    const patch = { image, imageThumb, ...(fromHistory ? {} : { useHistoryPhoto: false }) }
     updatePlant(id, patch)
   }, [updatePlant])
 

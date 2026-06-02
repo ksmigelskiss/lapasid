@@ -5,6 +5,7 @@ import Navigation from './components/Navigation'
 import DeathModal from './components/DeathModal'
 import DeleteModal from './components/DeleteModal'
 import DuplicateBuyModal from './components/DuplicateBuyModal'
+import WelcomePhotoSheet from './components/WelcomePhotoSheet'
 import Dashboard from './pages/Dashboard'
 import { usePlants } from './hooks/usePlants'
 import { useAuth } from './hooks/useAuth'
@@ -18,7 +19,8 @@ import PendingApprovalScreen from './components/PendingApprovalScreen'
 import BrandLoader from './components/brand/BrandLoader'
 import DiscoveryToast from './components/DiscoveryToast'
 import T4Icon from './components/brand/T4Icon'
-import { fetchBestPhoto, uploadImage, uploadImageWithThumb } from './utils/imageService'
+import { fetchBestPhoto, uploadImage, uploadImageWithThumb, resizeImage } from './utils/imageService'
+import { makeId, today } from './utils/plantTransform'
 import { subscribeCatalog, resolvePlantView } from './utils/catalog'
 
 // ChunkLoadError (senas SW aptarnauja seną HTML su naujais chunk hash'ais) → force reload.
@@ -128,6 +130,7 @@ export default function App() {
   const [deathTarget, setDeathTarget]       = useState(null)
   const [deleteTarget, setDeleteTarget]     = useState(null)
   const [buyConfirmTarget, setBuyConfirmTarget] = useState(null)
+  const [photoPromptTarget, setPhotoPromptTarget] = useState(null)  // augalas ką tik pateko į dashboard → siūlom nufotografuoti
   const [detailPlant, setDetailPlant]   = useState(null)
 
   // usePlants visada kviečiamas (hooks taisyklės), bet veikia tik kai collectionId žinomas
@@ -264,6 +267,21 @@ export default function App() {
     }
   }
 
+  // 2026-06-02 — Welcome photo: ką tik į dashboard patekęs augalas → foto į
+  // timeline kaip pirma istorijos nuotrauka → auto tampa hero/widget
+  // (addTimelineEvent useHistoryPhoto sync). „Vėliau" → lieka watercolor.
+  const handleWelcomePhoto = async (file) => {
+    const target = photoPromptTarget
+    setPhotoPromptTarget(null)
+    if (!file || !target) return
+    try {
+      const imageUrl = await resizeImage(file)
+      await addTimelineEventWithUpload(target.id, { id: makeId(), type: 'photo', date: today(), imageUrl })
+    } catch (err) {
+      console.warn('[welcome-photo] failed', err)
+    }
+  }
+
   const handleDashboardAction = (action, plant) => {
     if (action === 'died')   setDeathTarget(plant)
     if (action === 'delete') setDeleteTarget({ plant, section: 'auginama' })
@@ -279,10 +297,11 @@ export default function App() {
         moveToDashboard(plant.id)
         closeDetail()
         setTab('dashboard')
+        setPhotoPromptTarget(plant)
       }
       return
     }
-    if (action === 'tryAgain'){ moveToDashboard(plant.id); setTab('dashboard') }
+    if (action === 'tryAgain'){ moveToDashboard(plant.id); setTab('dashboard'); setPhotoPromptTarget(plant) }
     if (action === 'wantAgain'){ updatePlant(plant.id, { kategorija: 'nori' }); setTab('biblioteka') }
     if (action === 'delete')  setDeleteTarget({ plant, section: 'library' })
   }
@@ -602,12 +621,17 @@ export default function App() {
             onUzrasaiSave={(id, uzrasai) => updateUzrasai(id, uzrasai)}
             onStatusChange={(id, status, meta) => updateStatus(id, status, meta)}
             onUpdateNames={(id, patch) => updatePlant(id, patch)}
-            onImageSave={async (id, url, fromHistory = false) => {
-              // 2026-06-01 — dual upload: full + thumb (Dashboard kortelėms).
-              // uploadImageWithThumb passthrough'ina Storage/external URL'us (no
-              // thumb gen). Data URL atveju — generate'ina thumb + upload'ina abu.
-              const { url: uploadedUrl, thumbUrl } = await uploadImageWithThumb(url, id)
-              updateImage(id, uploadedUrl ?? url, fromHistory, thumbUrl)
+            onImageSave={async (id, url, fromHistory = false, presetThumb = null) => {
+              // 2026-06-02 — istorijos foto JAU turi imageUrlThumb → naudojam
+              // tiesiogiai (skip re-upload, kuris hosted URL'ams grąžindavo
+              // thumbUrl=null → palikdavo stale imageThumb → widget rodydavo seną).
+              // Nauja foto (data URL) → uploadImageWithThumb generuoja thumb.
+              if (presetThumb) {
+                updateImage(id, url, fromHistory, presetThumb)
+              } else {
+                const { url: uploadedUrl, thumbUrl } = await uploadImageWithThumb(url, id)
+                updateImage(id, uploadedUrl ?? url, fromHistory, thumbUrl)
+              }
             }}
             onSaveChat={(id, msgs) => updateChat(id, msgs.map(({ imageUrl, ...m }) => m))}
             onSaveToZinynas={addToZinynas}
@@ -653,7 +677,11 @@ export default function App() {
               onAddToDashboard={plant => {
                 // 2026-06-01: NEBE-uždarom modal'ą / NEswitch'inam tab'ą ČIA —
                 // SearchModal'as kontroliuoja per EnrichmentProgress flow'ą.
-                addToDashboard(plant)
+                const added = addToDashboard(plant)
+                // 2026-06-02: welcome-photo prompt'as — rodomas tik kai SearchModal
+                // užsidaro (gate'inta !showSearch render'e), tad nekonfliktuoja su
+                // EnrichmentProgress view'u.
+                setPhotoPromptTarget(added ?? plant)
                 if (!plant.laistymasIntervalas) {
                   showDiscoveryToast('+1 AI užklausa gauta. Ačiū už indėlį!')
                 }
@@ -674,7 +702,7 @@ export default function App() {
                 setSearchInitialQuery('')
                 openDetail(plant, plant.kategorija === 'istorija' ? 'istorija' : plant.kategorija === 'nori' ? 'nori' : 'auginama')
               }}
-              onPromote={id => { moveToDashboard(id); setShowSearch(false); setSearchInitialQuery(''); setTab('dashboard') }}
+              onPromote={id => { const p = library.find(x => x.id === id) ?? dashboard.find(x => x.id === id); moveToDashboard(id); setShowSearch(false); setSearchInitialQuery(''); setTab('dashboard'); if (p) setPhotoPromptTarget(p) }}
               onUpdatePlant={(id, patch) => { updatePlant(id, patch); setShowSearch(false); setSearchInitialQuery('') }}
             />
           </Suspense>
@@ -712,15 +740,31 @@ export default function App() {
             key="buy-confirm"
             plant={buyConfirmTarget.plant}
             onAddAnother={() => {
-              moveToDashboard(buyConfirmTarget.plant.id)
+              const p = buyConfirmTarget.plant
+              moveToDashboard(p.id)
               setBuyConfirmTarget(null)
               setTab('dashboard')
+              setPhotoPromptTarget(p)
             }}
             onViewExisting={() => {
               openDetail(buyConfirmTarget.existing, 'auginama')
               setBuyConfirmTarget(null)
             }}
             onClose={() => setBuyConfirmTarget(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 2026-06-02 — Welcome photo prompt: augalas ką tik pateko į dashboard.
+          Gate'inta !showSearch — kad nekonfliktuotų su SearchModal/EnrichmentProgress
+          (search-direct flow'e prompt'as laukia kol search užsidaro). */}
+      <AnimatePresence>
+        {photoPromptTarget && !showSearch && (
+          <WelcomePhotoSheet
+            key="welcome-photo"
+            plant={photoPromptTarget}
+            onCapture={handleWelcomePhoto}
+            onClose={() => setPhotoPromptTarget(null)}
           />
         )}
       </AnimatePresence>

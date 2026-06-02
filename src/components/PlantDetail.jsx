@@ -71,7 +71,7 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
   // selectedPhoto — pasirinkta thumb, dar nepatvirtinta. fromHistory tracking'as
   // kad onSave gautų teisingą second-arg flag'ą (timeline event source vs
   // search-time gallery).
-  const [selected, setSelected] = useState(null)  // { url, fromHistory } | null
+  const [selected, setSelected] = useState(null)  // { url, fromHistory, thumb } | null
 
   const isDesktop = useIsDesktop()
   const host = useDetailHost()
@@ -85,16 +85,16 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
 
   const handleSave = () => {
     if (!selected) return
-    onSave(selected.url, selected.fromHistory)
+    onSave(selected.url, selected.fromHistory, selected.thumb ?? null)
     onClose()
   }
 
-  const PhotoThumb = ({ url, fromHistory, keyHint }) => {
+  const PhotoThumb = ({ url, fromHistory, thumb, keyHint }) => {
     const isSelected = selected?.url === url
     return (
       <button
         key={keyHint ?? url}
-        onClick={() => setSelected({ url, fromHistory })}
+        onClick={() => setSelected({ url, fromHistory, thumb })}
         className={`relative aspect-square rounded-2xl overflow-hidden border-2 transition-all ${
           isSelected
             ? 'border-forest-600 ring-2 ring-forest-600/30'
@@ -181,7 +181,7 @@ function PhotoSheet({ plant, onClose, onSave, onToggleHistoryPhoto }) {
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {historyPhotos.map(e => (
-                  <PhotoThumb key={`h-${e.id}`} url={e.imageUrl} fromHistory />
+                  <PhotoThumb key={`h-${e.id}`} url={e.imageUrl} thumb={e.imageUrlThumb} fromHistory />
                 ))}
               </div>
             </div>
@@ -2129,7 +2129,7 @@ export default function PlantDetail({
             key="photo-sheet"
             plant={plant}
             onClose={() => setShowPhoto(false)}
-            onSave={(url, fromHistory = false) => { onImageSave?.(plant.id, url, fromHistory); setShowPhoto(false) }}
+            onSave={(url, fromHistory = false, thumb = null) => { onImageSave?.(plant.id, url, fromHistory, thumb); setShowPhoto(false) }}
             onToggleHistoryPhoto={() => onUpdateNames?.(plant.id, { useHistoryPhoto: plant.useHistoryPhoto !== false ? false : true })}
           />
         )}
