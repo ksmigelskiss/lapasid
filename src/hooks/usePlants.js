@@ -236,7 +236,6 @@ export function usePlants(collectionId, viewerToken = null) {
           const byId = new Map(safe.plants.map(p => [p.id, p]))
           snap.docChanges().forEach(ch => {
             const d = ch.doc.data()
-            if (d.kategorija === 'auginama') console.log(`[dc] ${ch.type} ${d.lietuviškas} img="${String(d.image ?? 'NULL').slice(-14)}" pend=${snap.metadata.hasPendingWrites}`)
             if (ch.type === 'removed') byId.delete(d.id)
             else byId.set(d.id, d)  // added | modified
           })

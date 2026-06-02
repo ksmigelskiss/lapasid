@@ -30,6 +30,11 @@ const PERSONAL_STATE_FIELDS = new Set([
   'status', 'komentaras', 'uzrasai', 'data_prideta',
   'timeline', 'chat', 'zonaId', 'pirkinys', 'diedDate', 'deathReason',
   'lesson', 'useHistoryPhoto', 'photos',
+  // 2026-06-02 — KRITIŠKA (švarus foto modelis): image/imageThumb = user foto.
+  // fromAIResult grąžina image=null → be šito serverio enrichment write (merge)
+  // PERRAŠYDAVO user'io ką tik įkeltą foto į null → widget watercolor kol refresh.
+  // Tai buvo TIKROJI „nauja foto dingsta" priežastis (ne render, o server clobber).
+  'image', 'imageThumb',
 ])
 
 /**
