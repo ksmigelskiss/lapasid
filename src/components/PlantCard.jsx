@@ -207,17 +207,20 @@ const PlantCard = memo(function PlantCard({
   // PIRMA, jei catalog turi heroIllustration IR user neturi savo asmeninės
   // foto override. Kitaip — plant.image (real foto). Personal-photo flow
   // (užklausa nufotografuoti) = vėliau; kol kas iliustracija default visiems.
-  const useHero  = !!heroIllustration && !imgError
+  // Memorial — istorija augalai (miręs / removed): widget VISADA grįžta į watercolor
+  // (B&W memorial), NET jei turi user foto — reali foto lieka tik detail hero'e
+  // (gyva atmintis). Iš kategorijos, ne section (section čia gali būt 'history').
+  const isHistory = plant.kategorija === 'istorija'
+  const histHero  = isHistory ? heroThumbFor(plant.lotyniskas) : null
   // 2026-06-01: widget'as krauna heroThumb (1:1 WebP, ~512px, ~10× mažesnis
   // file vs full PNG hero). Backward compat: heroThumbFor() grąžina full
   // heroIllustration jei thumb dar nesugeneruotas (legacy entries iki 2026-06-01).
-  const heroSrc  = useHero ? (heroThumbFor(plant.lotyniskas) || heroIllustration) : plant.image
+  const useHero  = isHistory ? !!histHero : (!!heroIllustration && !imgError)
+  const heroSrc  = isHistory ? (histHero || plant.image)
+                 : (useHero ? (heroThumbFor(plant.lotyniskas) || heroIllustration) : plant.image)
   const hasImage = heroSrc && !imgError
 
-  // Memorial — istorija augalai (miręs / removed): paveikslas B&W (grayscale) +
-  // top-left forest-800 badge (Ghost mirusiems + data YY-MM). Signalas „nebėra"
-  // be dominavimo. Iš kategorijos, ne section (section čia gali būt 'history').
-  const isHistory    = plant.kategorija === 'istorija'
+  // Memorial badge: top-left forest-800 pill (Ghost mirusiems + data YY-MM).
   const isDied       = plant.historyKind === 'died' || (!plant.historyKind && !!plant.diedDate)
   const memorialDate = plant.diedDate || plant.removedDate
   const memorialYM   = memorialDate ? String(memorialDate).slice(2, 7) : null   // YYYY-MM-DD → YY-MM
