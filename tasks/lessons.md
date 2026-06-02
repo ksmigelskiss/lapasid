@@ -284,3 +284,20 @@ Catalog heroes (heroGen) JAU turėjo `cacheControl: 'public, max-age=31536000, i
 - **Flat-string log'ai, ne object'ai.** `console.log('[x]', {obj})` truncatina (`…`) — kritinis laukas pasislepia. `console.log(\`[x] field="${val}"\`)` — visada matosi.
 - **Target'ink konkretų entity, ne visus.** Hardcoded filtras (Filodendras) praleido kalankės testą → tuščias logas. Logink plačiai arba paklausk kurį testuoja.
 - **Daug priežasčių vienam simptomui.** „Foto dingsta" buvo 3 atskiri bug'ai (server + 2 render). Sutvarkius vieną, simptomas liko → atrodė „nepataisyta". Reikia atskirti sluoksnius (data layer ground-truth log VS render layer log).
+
+---
+
+## N+8: NESPĖLIOK kai lengva pasitikrinti (UI dizaino iteracijos)
+
+**Data:** 2026-06-02
+**Trigger:** Memorial (mirusio augalo) kortelės dizainas. Per kelias iteracijas spėliojau kortelės bg spalvą, image fit, badge stilių — user'is du kartus pataisė: „overthinkini" ir „niekada nespėliok jei lengva pasitikrinti, daug laiko laimėsime."
+
+**Kas atsitiko:**
+- Generavau CSS preview su SPĖTA bg spalva (`bone #f1ebdd`), object-cover, 3:2 — kai realus PlantCard naudoja `bg-bone-50 #fefdfa`, `object-contain p-1`, `aspect-square`. Preview neatitiko realybės → user'is matė „dėžę"/artefaktus, kurių app'e nebūtų (arba būtų kitokie).
+- Nuėjau į halo-trim / server-reprocess rabbit-hole spręsti „pilkos dėžės", kai tikras sprendimas buvo trivialus: user'io pasiūlytas „desaturate visą card" + perskaityti REALŲ widget bg.
+
+**Rules:**
+- **Prieš generuojant preview/mockup, PERSKAITYK realų komponentą** (bg spalva, fit, badge spec). Grep tikslias reikšmes (`bg-bone-50`, `object-contain`, `h-[20px]`, `rounded-full px-2`). Spėjimas → preview neatitinka realybės → fantominiai bug'ai → iteracijų švaistymas.
+- **Pernaudok esamą design-system elementą, ne kurk naują.** Ghost badge JAU egzistavo PlantCard'e (`bg-black/55 rounded-full h-[20px]`). „Native" variantas = mažiausiai netvarkos, dažnai user'io preferuojamas.
+- **Kai užklimpsti į reprocess/heavy fix, sustok ir paklausk „ar yra trivialus CSS/1-eilutės kelias?"** Halo „dėžė" sprendėsi vienu `filter` ant viso card, ne 99 paveikslų reprocess'u.
+- **Verify-don't-guess pigus UI darbe:** vienas `grep` komponente < kelios preview iteracijos. Tas pats principas kaip self-check grep po Explore fan-out (N+7).
