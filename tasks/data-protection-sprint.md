@@ -223,6 +223,39 @@ const visiblePlants = library.filter(p => !p.refFrozen && !p._honeypot)
 
 ---
 
+### A7 · plant-image (Brave proxy) abuse hardening ⚠️ TRACKED iš Block 1 (2026-06-02)
+
+**Kontekstas:** `/api/plant-image` (Brave Image Search proxy) yra PUBLIC + be auth.
+Cost-abuse rizika: anonim'as gali sudeginti Brave 2000/mėn free tier'ą unikaliomis
+užklausomis. Audit'as (P0-8) siūlė „Bearer token + rate limit".
+
+**KODĖL ATIDĖTA Block 1 metu (NE bandaid — sąmoningas scoping):**
+Gilesnė analizė atskleidė **auth vs cache įtampą**. plant-image turi Vercel edge
+cache 30d (`s-maxage=2592000`) — populiarūs augalai cache'inami, pakartotinės
+užklausos NEmokamos Brave kvotai. Tai esminė cost-apsauga.
+  - Pridėjus `Authorization: Bearer` header'į → shared CDN cache'ai dažnai
+    NEcache'ina auth'intų request'ų → KIEKVIENA legit paieška kerta Brave →
+    DAUGIAU kvotos sudeginama. Atvirkščias efektas.
+  - Origin/Referer check (be auth header'io) → same-origin GET dažnai NEsiunčia
+    nei Origin nei Referer (referrer-policy) → arba lūžta legit, arba trivialiai
+    apeinama curl'u. **Tai būtų bandaid.**
+
+**TEISINGAS SPRENDIMAS (public-release prep metu):**
+Edge-level rate limiting, kuris NEpaliečia cache + NEpaliečia client'o:
+  - **Vercel Firewall / BotID** (config-level, prieš function, edge) — IDEALU,
+    bet gali reikalauti ne-Hobby tier'o (patikrinti planą)
+  - ARBA Firestore per-IP/per-UID counter su trumpu TTL (latency, bet robust)
+
+**4 client callsite'ai** (jei vis tiek eitume auth keliu — NErekomenduoju dėl cache):
+`previewParallelFetch.js:125`, `SearchModal.jsx:964` + `:1017`,
+`LibraryEditorV2.jsx:2489`. previewParallelFetch yra pure util — token per opts param.
+
+**Statusas:** demo stage'e cost-abuse rizika maža (mažai user'ių, cache mitigation,
+graceful iNat/Wiki fallback jei kvota išsemta). Daryti public-release prep metu su
+tinkamu edge rate-limit setup'u. **Auth header — NE, dėl cache regresijos.**
+
+---
+
 ### Phase A — Suvestinė
 
 **Effort total:** ~3-5h kodas + 2h legal + 15min manual Console

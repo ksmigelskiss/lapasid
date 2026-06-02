@@ -1,0 +1,51 @@
+rules_version = '2';
+
+// ──────────────────────────────────────────────────────────────────────
+// Firebase Storage rules — lapasid (geliu-db projektas)
+// ──────────────────────────────────────────────────────────────────────
+//
+// 2026-06-02 (Block 1 / storage.rules) — anksčiau storage.rules NEegzistavo
+// repo'jyje (security audit flagino kaip gap'ą). Šis failas — paruoštas
+// ruleset'as. DEPLOY: rankiniu būdu per Firebase Console → Storage → Rules
+// (tas pats manual flow kaip firestore.rules, nes nėra firebase.json CLI deploy).
+//
+// ⚠️ PRIEŠ DEPLOY — verify:
+//   1. User foto upload (PlantDetail → Pakeisti nuotrauką → įkelti) veikia
+//   2. User foto display kortelėse veikia
+//   3. Admin „Atnaujinti foto" (hero gen) veikia (server admin SDK bypass'ina)
+//   Jei kuris lūžta po deploy'o — revert į ankstesnes Console taisykles.
+//
+// Access modelis:
+//   • catalog/{slug}/*  — hero iliustracijos + thumb'ai. Rašo TIK serveris
+//     (generate-hero / save-plant / rehost-image per admin SDK, kuris
+//     BYPASS'ina šias taisykles). Client niekada nerašo čia. Read public
+//     (hero images vis tiek makePublic()). → read: public, write: false.
+//   • plants/{plantId}/* — user augalų foto. Client upload'ina (authed user).
+//     LIMITACIJA: path neturi colId, tad rule NEGALI verifikuoti, ar user
+//     valdo plantId (reikėtų colId reverse-lookup, neįmanoma Storage rule'e).
+//     Geriausias praktinis lygis — auth != null. Future: jei path keisis į
+//     collections/{colId}/plants/{plantId}/*, galima members check per
+//     firestore.get().
+//   • Visi kiti path'ai — default DENY (uždaro „open storage" gap'ą).
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Hero iliustracijos — server-only write, public read
+    match /catalog/{allPaths=**} {
+      allow read:  if true;
+      allow write: if false;   // server admin SDK bypass'ina; client blokuotas
+    }
+
+    // User augalų foto — authed upload + read
+    match /plants/{plantId}/{allPaths=**} {
+      allow read:  if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    // Default deny — bet koks kitas path'as
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

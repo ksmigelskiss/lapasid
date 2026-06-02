@@ -224,3 +224,22 @@ Catalog heroes (heroGen) JAU turėjo `cacheControl: 'public, max-age=31536000, i
 **Rule:** Visiems Storage upload'ams setting'inti EXPLICIT `cacheControl` metadata, net jei feature'as ne performance-driven. Default'as „1 hour" tinka log files'ams, NETINKA media assets'ams. Path uniqueness (timestamp filename'e) garantuoja immutability.
 
 **Future watchlist:** kiekvieną `uploadBytes()` call'ą code review'inti dėl metadata.
+
+---
+
+## N+5. Centralizuotas init turi turėti VISĄ config — double-init footgun
+
+**Data:** 2026-06-02
+**Trigger:** P0-1 JWT fix'as (verifyAuthToken į firestore-admin.js) sukėlė 500 ant `/api/rehost-image` + `/api/generate-hero` (foto rehost + hero gen lūžo). 3 break/fix ciklai prod'e prieš pagaunant.
+
+**Du sluoksniai (abu reikėjo):**
+1. **storageBucket missing** — verifyAuthToken triggerina firestore-admin.js `initAdmin()` PIRMA (auth check eina prieš storage usage). Tas init'as neturėjo `storageBucket`. rehost-image + generate-hero naudoja `admin.storage().bucket()` (default bucket) → nesukonfigūruotas → potencialus crash.
+2. **Double-init crash (tikroji 500 priežastis)** — rehost-image + generate-hero lokalūs `initAdmin` guard'ai tikrino TIK savo modulio flag'ą (`_initialized` / `_init`), NE `admin.apps.length`. Po to kai verifyAuthToken jau init'ino global app, jų init'as savo flag mato `false` → `admin.initializeApp()` ANTRĄ kartą → „default app already exists" throw → 500.
+
+**Rule 1:** Kai centralizuoji init'ą (auth, db, storage), shared init'as turi turėti **VISĄ config'ą, kuriuo bet kuris consumer'is remiasi** (čia: storageBucket). Naujasis „pirmasis init'as" su nepilna config tyliai sulaužo consumer'ius, kurie tikėjosi pilno config'o.
+
+**Rule 2:** Visi lokalūs `admin.initializeApp` guard'ai turi tikrinti **global state** (`admin.apps.length > 0`), ne tik savo modulio flag'ą. Skirtingi moduliai turi atskirus flag'us, bet dalinasi vienu global `admin.apps`.
+
+**Pattern ateičiai:** geriausia — visiškai centralizuoti (vienas `adminApp()` helper'is, visi consumer'iai importuoja jį, jokio lokalaus init'o). Minimal fix — apps.length guard visur. Patikrinti: `grep -rln "admin.initializeApp" api/` + ar kiekvienas turi apps.length guard.
+
+**Meta-lesson:** security-logic pakeitimas (auth) gali turėti netiesioginių side-effect'ų per shared init order'į. Deploy'inant tokius — verify VISUS endpoint'us, kurie naudoja tą patį shared modulį, ne tik tuos, kuriuos tiesiogiai keitei.
