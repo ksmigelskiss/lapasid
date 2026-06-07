@@ -12,7 +12,11 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // 2026-06-03 — 'prompt' (buvo 'autoUpdate'). autoUpdate + skipWaiting tyliai
+      // perimdavo SW + reload'indavo puslapį KAS deploy → su dažnais deploy'ais =
+      // „nuolat persikrauna" pojūtis + prarasta UI būsena viduryje darbo. 'prompt' →
+      // naujas SW LAUKIA, parodom „Atnaujinti" toast'ą (UpdatePrompt.jsx), user valdo kada.
+      registerType: 'prompt',
       devOptions: { enabled: false },
       includeAssets: [
         'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-180.png',
@@ -38,13 +42,16 @@ export default defineConfig({
       workbox: {
         // Cache app shell + static assets
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        // Firebase, Anthropic, image APIs — network-first so data stays fresh
+        // 2026-06-03 — navigateFallback NEtaiko /api/* (kad SW neserve'intų app
+        // shell'o index.html funkcijų navigacijai).
+        navigateFallbackDenylist: [/^\/api\//],
+        // 2026-06-03 — firestore.googleapis.com SĄMONINGAI NEcache'inamas.
+        // Firestore Listen (onSnapshot) streaming kanalo apvyniojimas Workbox'u
+        // (buvo NetworkFirst, 5s timeout) korumpuoja SDK listener target state
+        // → b815 „Unexpected state" crash flood + laužo live snapshot'us (stale
+        // listener bug, dėl kurio buvo išjungta IndexedDB persistence). Žinomas
+        // anti-pattern: Listen kanalas niekada per SW cache. Tik Storage + image API.
         runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/firestore\.googleapis\.com\//,
-            handler: 'NetworkFirst',
-            options: { cacheName: 'firestore', networkTimeoutSeconds: 5 },
-          },
           {
             urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\//,
             handler: 'CacheFirst',

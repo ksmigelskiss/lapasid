@@ -1,7 +1,9 @@
 import { initializeApp } from 'firebase/app'
 import {
   initializeFirestore,
-  memoryLocalCache,
+  persistentLocalCache,
+  persistentSingleTabManager,
+  CACHE_SIZE_UNLIMITED,
   getFirestore,
 } from 'firebase/firestore'
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider, setPersistence, browserLocalPersistence, signInAnonymously as _signInAnonymously, updateProfile } from 'firebase/auth'
@@ -18,21 +20,28 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 
-// 2026-06-02 — MEMORY cache (anksčiau persistentLocalCache + IndexedDB multi-tab).
-// IndexedDB persistence sugadindavo (multi-tab lock contention + „database
-// connection is closing" klaidos ypač po cache clear) → onSnapshot listener'is
-// serveuodavo STALE cached duomenis: nauja foto/write nepasiekdavo UI live, tik
-// page reload (fresh server read) parodydavo. Memory cache:
-//   • write'ai atsispindi iškart (in-memory latency compensation),
-//   • listener'is fresh iš serverio (jokio stale IDB cache),
-//   • jokio IDB corruption / „connection closing" klaidų.
-// Kaina: nėra cross-session offline cache (app re-fetch'ina load'e per onSnapshot)
-// + offline write queue (app online-first: auth/AI/catalog reikia tinklo).
+// 2026-06-03 — PERSISTENT IndexedDB cache (single-tab). GRĄŽINTA po to, kai
+// 2026-06-02 buvo perjungta į memoryLocalCache dėl „stale listener" bug'o
+// (onSnapshot serveuodavo seną cache, fresh server snapshot'as nepasiekdavo UI,
+// tik page reload parodydavo). TIKROJI to bug'o priežastis NEBUVO IndexedDB —
+// Service Worker cache'ino `firestore.googleapis.com` Listen stream'ą
+// (NetworkFirst, 5s timeout nutraukdavo/perleisdavo stream'ą) → live server
+// snapshot'as nepasiekdavo → listener'is likdavo užstrigęs ant cache. Plius
+// multi-tab manager → „connection closing" lock'ai. Abu ištaisyti:
+//   • vite.config.js — pašalintas SW firestore.googleapis.com caching (b815 + stream fix)
+//   • čia — `persistentSingleTabManager` (ne multi-tab) → jokio lock contention
+// Dabar geriausia iš abiejų: cold start INSTANT iš IndexedDB (offline-capable,
+// duomenys lieka telefone, neperkrauna), o live snapshot'ai veikia (SW nebelaužo).
 let _db
 try {
-  _db = initializeFirestore(app, { localCache: memoryLocalCache() })
+  _db = initializeFirestore(app, {
+    localCache: persistentLocalCache({
+      tabManager: persistentSingleTabManager(undefined),
+      cacheSizeBytes: CACHE_SIZE_UNLIMITED,
+    }),
+  })
 } catch (e) {
-  console.warn('[firestore] cache init failed, falling back:', e)
+  console.warn('[firestore] persistent cache init failed, falling back to memory:', e)
   _db = getFirestore(app)
 }
 export const db = _db
@@ -45,6 +54,13 @@ facebookProvider.addScope('email')
 // Explicit localStorage persistence — apsaugo nuo redirect session praradimo mobile.
 // (Match'ina geliu-db, kur tas pats nustatymas veikia iOS PWA'e.)
 setPersistence(auth, browserLocalPersistence).catch(() => {})
+
+// 2026-06-03 — iOS PWA eviction resistance. iOS/WebKit ištrina standalone PWA
+// IndexedDB + CacheStorage po ~7 dienų be naudojimo. persist() paprašo „durable"
+// storage → mažina tikimybę, kad cache (Firestore IDB + image cache) bus išvalytas.
+if (typeof navigator !== 'undefined') {
+  navigator.storage?.persist?.().catch(() => {})
+}
 
 export const signInAnonymously = () => _signInAnonymously(auth)
 export { updateProfile }

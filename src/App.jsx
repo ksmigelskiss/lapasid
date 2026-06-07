@@ -15,6 +15,7 @@ import DesktopHeader from './components/desktop/DesktopHeader'
 import MobileHeader from './components/MobileHeader'
 import { DetailHostProvider } from './contexts/DetailHostContext'
 import LoginScreen from './components/LoginScreen'
+import UpdatePrompt from './components/UpdatePrompt'
 import PendingApprovalScreen from './components/PendingApprovalScreen'
 import BrandLoader from './components/brand/BrandLoader'
 import DiscoveryToast from './components/DiscoveryToast'
@@ -555,6 +556,7 @@ export default function App() {
 
   return (
     <DetailHostProvider>
+      <UpdatePrompt />
       {isDesktop ? (
         <DesktopLayout
           header={desktopHeader}
