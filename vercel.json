@@ -27,6 +27,7 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/vision", "destination": "/vision.html" },
-    { "source": "/((?!api/|vision\\.html|screenshots/).*)", "destination": "/index.html" }
+    { "source": "/vision/doc", "destination": "/vision-doc.html" },
+    { "source": "/((?!api/|vision\\.html|vision-doc\\.html|vision/doc|screenshots/).*)", "destination": "/index.html" }
   ]
 }

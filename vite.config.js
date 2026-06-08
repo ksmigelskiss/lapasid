@@ -42,10 +42,11 @@ export default defineConfig({
       workbox: {
         // Cache app shell + static assets
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        // 2026-06-08 — vision.html + screenshots NEprecache'inami: kitaip SW serv'intų
-        // juos iš cache APLENKDAMAS Basic Auth middleware (slaptažodžio apėjimas).
-        // Taip jie visada eina per tinklą → Vercel → gate'as.
-        globIgnores: ['vision.html', 'screenshots/**'],
+        // 2026-06-08/09 — vision.html (viešas gate), vision-doc.html (apsaugotas dokumentas)
+        // + screenshots NEprecache'inami: kitaip SW serv'intų juos iš cache APLENKDAMAS
+        // cookie middleware (slaptažodžio apėjimas). Taip jie visada eina per tinklą →
+        // Vercel → gate'as. vision-doc.html ypač kritiškas — tai turinys už auth.
+        globIgnores: ['vision.html', 'vision-doc.html', 'screenshots/**'],
         // navigateFallback NEtaiko /api/*, /vision*, /screenshots/* — kitaip SW
         // serv'intų cached app shell'į (index.html → dashboard) šioms navigacijoms
         // ir užklausa nepasiektų Vercel (rewrite į vision.html + Basic Auth middleware).
