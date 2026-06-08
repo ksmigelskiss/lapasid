@@ -108,6 +108,124 @@
     color: var(--bone);
   }
 
+  /* ---------- LANGUAGE GATE — first-visit threshold ---------- */
+  /* Avant-garde editorial slenkstis: rodomas TIK per pirmą apsilankymą.
+     Pasirinkus kalbą → localStorage → kiti apsilankymai eina tiesiai į doc'ą
+     (gate-resolved → display:none, jokio flash). „Durys, ne siena": bone + mark
+     + labai subtilus forest/terracotta blush, du dideli žodžiai, hairlines. */
+  #lang-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    background: var(--bone);
+    background-image:
+      radial-gradient(120% 80% at 50% -8%, rgba(63,107,84,0.10), transparent 60%),
+      radial-gradient(90% 60% at 100% 112%, rgba(184,106,58,0.07), transparent 55%);
+    opacity: 1;
+    transition: opacity 0.55s ease, visibility 0.55s ease;
+  }
+  body.gate-resolved #lang-gate { display: none; }   /* returning visitor — niekada nepaint'inam */
+  body.gate-open { overflow: hidden; }               /* pirmas apsilankymas — užrakinam scroll */
+  #lang-gate.is-dismissed { opacity: 0; visibility: hidden; pointer-events: none; }
+
+  .gate-inner {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .gate-mark { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+  .gate-mark svg { width: 34px; height: 34px; }
+  .gate-mark .wordmark { font-weight: 600; font-size: 21px; letter-spacing: -0.035em; color: var(--forest-800); }
+  .gate-mark .wordmark .id { opacity: 0.55; font-weight: 400; }
+
+  .gate-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--forest-500);
+    margin-bottom: 34px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .gate-eyebrow::before, .gate-eyebrow::after {
+    content: ""; width: 28px; height: 1px; background: var(--rule);
+  }
+
+  .gate-choices { width: 100%; border-top: 1px solid var(--rule); }
+  .gate-choice {
+    width: 100%;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    border: 0; border-bottom: 1px solid var(--rule);
+    background: transparent; cursor: pointer;
+    padding: 26px 24px;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.25s ease;
+  }
+  .gate-choice .word {
+    font-size: clamp(38px, 9vw, 72px);
+    font-weight: 500; letter-spacing: -0.04em; line-height: 1;
+    color: var(--forest-800);
+    transition: color 0.25s ease;
+  }
+  .gate-choice .tail {
+    position: absolute; right: 24px; top: 50%;
+    transform: translateY(-50%) translateX(-6px);
+    font-size: 26px; line-height: 1; color: var(--forest-400);
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .gate-choice:hover, .gate-choice:focus-visible {
+    background: var(--bone-50); outline: none;
+  }
+  .gate-choice:hover .word, .gate-choice:focus-visible .word { color: var(--forest-900); }
+  .gate-choice:hover .tail, .gate-choice:focus-visible .tail {
+    opacity: 1; transform: translateY(-50%) translateX(0);
+  }
+
+  .gate-hint {
+    margin-top: 34px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--forest-400);
+  }
+
+  /* Stagger-rise įėjimas — tik jei vartotojas neprašė mažiau judesio. */
+  @media (prefers-reduced-motion: no-preference) {
+    body.gate-open .gate-mark,
+    body.gate-open .gate-eyebrow,
+    body.gate-open .gate-choice,
+    body.gate-open .gate-hint {
+      opacity: 0;
+      animation: gate-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    body.gate-open .gate-mark { animation-delay: 0.05s; }
+    body.gate-open .gate-eyebrow { animation-delay: 0.15s; }
+    body.gate-open .gate-choices .gate-choice:nth-child(1) { animation-delay: 0.25s; }
+    body.gate-open .gate-choices .gate-choice:nth-child(2) { animation-delay: 0.35s; }
+    body.gate-open .gate-hint { animation-delay: 0.50s; }
+  }
+  @keyframes gate-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    #lang-gate { padding: 32px 18px; }
+    .gate-mark { margin-bottom: 30px; }
+    .gate-eyebrow { margin-bottom: 26px; }
+    .gate-choice { padding: 22px 16px; }
+    .gate-choice .tail { right: 14px; font-size: 22px; }
+    .gate-hint { margin-top: 26px; }
+  }
+
   .mono {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-feature-settings: normal;
@@ -1327,17 +1445,58 @@
 <body class="lang-en">
 
 <script>
-  // Apply saved language preference before render to avoid flash.
+  // Apply saved language preference + decide first-visit gate BEFORE render (no flash).
+  // Sinchroninis: kai parser'is pasiekia #lang-gate, body jau turi reikiamą klasę →
+  // returning visitor'iui gate niekada nepaint'inamas (display:none).
   (function() {
     try {
       var saved = localStorage.getItem('lapasid_lang');
-      if (saved === 'lt') {
+      if (saved === 'lt' || saved === 'en') {
         document.body.classList.remove('lang-en');
-        document.body.classList.add('lang-lt');
+        document.body.classList.add('lang-' + saved);
+        document.body.classList.add('gate-resolved');  // kalba jau pasirinkta — praleidžiam slenkstį
+      } else {
+        document.body.classList.add('gate-open');       // pirmas apsilankymas — rodom kalbos slenkstį
       }
-    } catch (e) {}
+    } catch (e) {
+      document.body.classList.add('gate-open');          // localStorage blokuotas — saugus default
+    }
   })();
 </script>
+
+<!-- Pirmo apsilankymo kalbos slenkstis — avant-garde editorial pasirinkimas prieš skaitant. -->
+<div id="lang-gate" role="dialog" aria-modal="true" aria-label="Choose language · Pasirinkite kalbą">
+  <div class="gate-inner">
+    <div class="gate-mark">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="16" y="54" width="4" height="50" rx="1" fill="#1c3a2a"/>
+        <rect x="24" y="54" width="2" height="50" rx="1" fill="#1c3a2a"/>
+        <rect x="30" y="54" width="6" height="50" rx="1" fill="#1c3a2a"/>
+        <rect x="40" y="54" width="3" height="50" rx="1" fill="#1c3a2a"/>
+        <rect x="47" y="54" width="5" height="50" rx="1" fill="#1c3a2a"/>
+        <rect x="56" y="54" width="2" height="50" rx="1" fill="#1c3a2a"/>
+        <rect x="62" y="34" width="4" height="70" rx="1" fill="#1c3a2a"/>
+        <rect x="72" y="54" width="3" height="50" rx="1" fill="#1c3a2a"/>
+        <rect x="79" y="54" width="6" height="50" rx="1" fill="#1c3a2a"/>
+        <rect x="89" y="54" width="2" height="50" rx="1" fill="#1c3a2a"/>
+        <rect x="95" y="54" width="4" height="50" rx="1" fill="#1c3a2a"/>
+        <path d="M64 30 C 62 12 80 2 106 0 C 102 20 88 32 68 34 C 66 34 64 32 64 30 Z" fill="#1c3a2a"/>
+        <path d="M62 34 C 56 32 46 32 40 36 C 44 42 54 42 60 38 Z" fill="#1c3a2a"/>
+      </svg>
+      <span class="wordmark">Lapas<span class="id">ID</span></span>
+    </div>
+    <div class="gate-eyebrow">Product Vision · 2026</div>
+    <div class="gate-choices">
+      <button type="button" class="gate-choice" data-lang="lt" lang="lt">
+        <span class="word">Lietuvių</span><span class="tail" aria-hidden="true">→</span>
+      </button>
+      <button type="button" class="gate-choice" data-lang="en" lang="en">
+        <span class="word">English</span><span class="tail" aria-hidden="true">→</span>
+      </button>
+    </div>
+    <div class="gate-hint">Pasirink kalbą · Choose language</div>
+  </div>
+</div>
 
 <nav>
   <div class="wrap">
@@ -2216,19 +2375,38 @@
 
 <script>
   (function() {
-    function setLang(lang) {
+    function setLang(lang, persist) {
       document.body.classList.remove('lang-en', 'lang-lt');
       document.body.classList.add('lang-' + lang);
-      try { localStorage.setItem('lapasid_lang', lang); } catch (e) {}
+      if (persist !== false) {
+        try { localStorage.setItem('lapasid_lang', lang); } catch (e) {}
+      }
       document.querySelectorAll('.lang-toggle button').forEach(function(btn) {
         btn.classList.toggle('active', btn.dataset.lang === lang);
       });
     }
+
+    // Nav toggle — eksplicitinis pasirinkimas, visada įrašom.
     document.querySelectorAll('.lang-toggle button').forEach(function(btn) {
       btn.addEventListener('click', function() { setLang(btn.dataset.lang); });
     });
+
+    // Pirmo apsilankymo kalbos slenkstis: pasirinkus — įrašom + švelnus fade į doc'ą.
+    var gate = document.getElementById('lang-gate');
+    document.querySelectorAll('#lang-gate .gate-choice').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        setLang(btn.dataset.lang);                      // įrašo pasirinkimą (persist)
+        if (gate) {
+          gate.classList.add('is-dismissed');           // fade out
+          document.body.classList.remove('gate-open');  // atrakinam scroll
+        }
+      });
+    });
+
+    // Atspindim dabartinę kalbą BE įrašymo — kad neužfiksuotume pasirinkimo,
+    // kurio vartotojas dar nepadarė (kitaip reload prie atviro slenksčio jį praleistų).
     var current = document.body.classList.contains('lang-lt') ? 'lt' : 'en';
-    setLang(current);
+    setLang(current, false);
   })();
 </script>
 
