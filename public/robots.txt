@@ -6,10 +6,13 @@
 #          (3) PALIKTI indexable viešus augalų pasus (/p/*) — jie skirti dalintis.
 # NB: jokio blanket <meta noindex> index.html'e — tai SPA, noindex nukirstų ir /p/* pasus.
 
-# ── Įprasti search engine'ai: leidžiam, bet ne admin/api ──
+# ── Įprasti search engine'ai: leidžiam, bet ne admin/api/vision ──
 User-agent: *
 Disallow: /admin
 Disallow: /api/
+Disallow: /vision
+Disallow: /vision.html
+Disallow: /screenshots/
 
 # ── AI training / LLM scraper'iai: visiškas draudimas ──
 User-agent: GPTBot
