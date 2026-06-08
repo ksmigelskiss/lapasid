@@ -42,9 +42,11 @@ export default defineConfig({
       workbox: {
         // Cache app shell + static assets
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        // 2026-06-03 — navigateFallback NEtaiko /api/* (kad SW neserve'intų app
-        // shell'o index.html funkcijų navigacijai).
-        navigateFallbackDenylist: [/^\/api\//],
+        // navigateFallback NEtaiko /api/*, /vision*, /screenshots/* — kitaip SW
+        // serv'intų cached app shell'į (index.html → dashboard) šioms navigacijoms
+        // ir užklausa nepasiektų Vercel (rewrite į vision.html + Basic Auth middleware).
+        // 2026-06-08 — pridėta /vision + /screenshots (vizijos doc'as buvo „šešėliuojamas").
+        navigateFallbackDenylist: [/^\/api\//, /^\/vision/, /^\/screenshots\//],
         // 2026-06-03 — firestore.googleapis.com SĄMONINGAI NEcache'inamas.
         // Firestore Listen (onSnapshot) streaming kanalo apvyniojimas Workbox'u
         // (buvo NetworkFirst, 5s timeout) korumpuoja SDK listener target state
