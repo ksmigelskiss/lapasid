@@ -268,6 +268,10 @@
   .logo svg { width: 36px; height: 36px; }
   .logo .wordmark { font-weight: 600; font-size: 22px; letter-spacing: -0.035em; color: var(--forest-800); }
   .logo .wordmark .id { opacity: 0.55; font-weight: 400; }
+  /* Nav logo = slenksčio replay trigger (kartą-matytas gate'as pasiekiamas vėl). */
+  nav .logo { cursor: pointer; transition: opacity 0.2s ease; }
+  nav .logo:hover { opacity: 0.7; }
+  nav .logo:focus-visible { outline: 2px solid var(--forest-400); outline-offset: 4px; border-radius: 4px; }
   .navmeta { display: flex; gap: 20px; align-items: center; font-size: 13px; color: var(--forest-500); }
   .navmeta .tag {
     font-family: 'JetBrains Mono', monospace;
@@ -2402,6 +2406,28 @@
         }
       });
     });
+
+    // Re-open the gate on demand — paspaudus nav LapasID logo. Vienkartinis slenkstis
+    // lieka be trinties skaitytojui, bet ceremonija pasiekiama kada nori.
+    var navLogo = document.querySelector('nav .logo');
+    function replayGate() {
+      if (!gate) return;
+      document.body.classList.remove('gate-resolved');  // grįžusiam visitor'iui (display:none) — vėl rodom
+      gate.classList.remove('is-dismissed');
+      void gate.offsetWidth;                            // reflow → restart'inam entrance animaciją
+      document.body.classList.add('gate-open');         // scroll lock + animacija
+      window.scrollTo({ top: 0 });
+    }
+    if (navLogo) {
+      navLogo.setAttribute('role', 'button');
+      navLogo.setAttribute('tabindex', '0');
+      navLogo.setAttribute('aria-label', 'Keisti kalbą · Change language');
+      navLogo.setAttribute('title', 'Keisti kalbą · Change language');
+      navLogo.addEventListener('click', replayGate);
+      navLogo.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); replayGate(); }
+      });
+    }
 
     // Atspindim dabartinę kalbą BE įrašymo — kad neužfiksuotume pasirinkimo,
     // kurio vartotojas dar nepadarė (kitaip reload prie atviro slenksčio jį praleistų).
