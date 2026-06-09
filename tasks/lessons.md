@@ -317,3 +317,18 @@ Catalog heroes (heroGen) JAU turėjo `cacheControl: 'public, max-age=31536000, i
 - **LQIP/progressive image bug'ai matosi TIK necached atvejais** (lėtas full) — testuok su švariu cache / retai matytu augalu, ne tik ką žiūrėtu (browser cache slepia).
 
 **Meta:** ši klasė bug'ų (stale closure / unstable deps) — viena dažniausių React. Kai effect „kartais neveikia", pirma tikrink deps stabilumą + cleanup timing.
+
+---
+
+## N+10: reliatyvūs keliai + „pretty URL" rewrite = tylus img lūžimas; testuok REZOLVINTĄ URL, ne spėtą
+
+**Data:** 2026-06-09
+**Trigger:** Vision doc'o screenshot'ai nesirodė (broken-image, paskui „nerodo, jokios console klaidos"). PIRMA misdiagnozavau — apkaltinau auth cookie / SameSite ir „atrišau" `/screenshots/*` nuo middleware. Nepadėjo, nes tikrinau NE TĄ URL.
+
+**Root cause:** dokumente `<img src="./screenshots/X.png">` (RELIATYVUS), o doc serv'inamas „gražiu" URL `/vision/doc` (per vercel rewrite į `/vision-doc.html`). Naršyklė `./screenshots/` rezolvina reliatyviai nuo `/vision/` → `/vision/screenshots/X.png`, kuris neegzistuoja → SPA catch-all grąžina `index.html` (**200 `text/html`**). `<img>` gauna HTML vietoj PNG → tyliai nesirenderina. **200 (ne 404) → jokios console klaidos, jokio failed-resource — tik tuščia.**
+
+**Rules:**
+- **Kai embed'intas resursas (img/script/link) tyliai nesikrauna, tikrink REZOLVINTĄ URL** (DevTools → Network arba `document.querySelector('img').currentSrc`), ne spėtą absoliutų. Reliatyvus `./` rezolvinasi nuo PUSLAPIO URL, ne nuo domeno šaknies.
+- **„Pretty URL" su subdirektorija (`/vision/doc`) + reliatyvūs keliai = mina.** Puslapiams, serv'inamiems per rewrite po subpath'u, VISADA naudok absoliučius kelius (`/screenshots/`, ne `./screenshots/`). Base URL nebėra šaknis.
+- **200 `text/html` vietoj turto = „nerodo, jokios klaidos".** Jei img/fetch tyliai tuščias be 404 — pirma įtark, kad SPA catch-all grąžina shell'į. Patikrink `curl -w "%{content_type}"` TIKSLAUS URL, kurio prašo puslapis.
+- **Verify-don't-guess (N+8) galioja ir debug'inant:** testavau `/screenshots/X.png` (absoliutų), bet puslapis prašė `/vision/screenshots/X.png` (reliatyvaus). Tikrinau ne tą URL → klaidinga teorija (cookie) → veltui iteracija. Pirma nustatyk, ką puslapis IŠ TIKRŲJŲ requestina.
