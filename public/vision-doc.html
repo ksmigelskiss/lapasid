@@ -334,6 +334,20 @@
     .hero-visual img { width: min(72vw, 290px); }
   }
 
+  /* Mascot cameo — Augalas + Sodininkas (atkurta iš brand Animus standalone kaip inline SVG). */
+  .mascot-cameo { display: flex; align-items: center; gap: 16px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--rule-soft); }
+  .mascot-pair { display: flex; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+  .mascot-svg { width: 54px; height: 54px; color: var(--forest-700); display: block; overflow: visible; }
+  .mascot-cap { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.13em; line-height: 1.55; color: var(--forest-500); }
+  @media (prefers-reduced-motion: no-preference) {
+    .mascot-svg .m-char { transform-box: fill-box; transform-origin: 50% 100%; animation: m-breathe 3.6s ease-in-out infinite; }
+    .mascot-pair .mascot-svg:nth-child(2) .m-char { animation-delay: -1.8s; }
+  }
+  @keyframes m-breathe {
+    0%, 100% { transform: translateY(0) scaleY(1); }
+    50%      { transform: translateY(-1.5px) scaleY(1.025); }
+  }
+
   /* ---------- SECTION HEAD ---------- */
   .section-head { margin-bottom: 64px; max-width: 78ch; }
   .section-head .eyebrow {
@@ -1826,6 +1840,13 @@
         <div class="cap-label mono-caps mono-caps-accent"><span class="t-en">Desktop · AI Chat</span><span class="t-lt">Stalinis · AI pokalbis</span></div>
         <div class="cap-ttl"><span class="t-en">Talk to the plant. Or to the gardener.</span><span class="t-lt">Kalbėk su augalu. Arba su sodininku.</span></div>
         <div class="cap-desc"><span class="t-en">Two personas, one chat surface. Plant mode answers as <em>the plant itself</em> ("Aglaonema 'Orange Star'" greeting the owner). Gardener mode answers with context on the whole collection. Both save to the personal knowledge base.</span><span class="t-lt">Du personažai, vienas pokalbio paviršius. Augalo režimas atsako kaip <em>pats augalas</em> („Aglaonema 'Orange Star'" sveikina savininką). Sodininko režimas atsako turėdamas visos kolekcijos kontekstą. Abu išsaugomi asmeninėje žinių bazėje.</span></div>
+        <div class="mascot-cameo">
+          <div class="mascot-pair">
+            <svg viewBox="0 0 240 240" fill="currentColor" class="mascot-svg" aria-hidden="true"><g><rect x="58" y="196" width="124" height="10" rx="2" opacity="0.55"></rect><path d="M 64 206 L 176 206 L 166 226 L 74 226 Z" opacity="0.35"></path></g><g class="m-char"><path d="M 120 52 C 82 52 64 96 64 138 C 64 178 88 200 120 200 C 152 200 176 178 176 138 C 176 96 158 52 120 52 Z"></path><rect x="118.5" y="22" width="3" height="34" rx="1.2"></rect><path d="M 121 26 C 119 14 132 4 152 2 C 149 16 138 26 124 27 C 122 27 121 26 121 26 Z"></path><path d="M 119 30 C 113 28 105 30 102 34 C 106 38 114 38 118 34 Z"></path><circle cx="116" cy="106" r="6" fill="#f1ebdd"></circle></g></svg>
+            <svg viewBox="0 0 240 240" fill="currentColor" class="mascot-svg" aria-hidden="true"><g><rect x="40" y="216" width="160" height="2" rx="1" opacity="0.55"></rect></g><g class="m-char"><path d="M 120 46 C 72 46 50 96 50 144 C 50 188 80 216 120 216 C 160 216 190 188 190 144 C 190 96 168 46 120 46 Z"></path><path d="M 62 162 C 42 158 22 170 18 188 C 22 196 36 198 50 192 C 62 186 68 176 68 168 C 68 164 66 162 62 162 Z"></path><path d="M 178 162 C 198 158 218 170 222 188 C 218 196 204 198 190 192 C 178 186 172 176 172 168 C 172 164 174 162 178 162 Z"></path><circle cx="120" cy="106" r="6" fill="#f1ebdd"></circle></g></svg>
+          </div>
+          <span class="mascot-cap"><span class="t-en">Plant · Gardener — two AI characters, one visual language</span><span class="t-lt">Augalas · Sodininkas — du AI personažai, viena vizualinė kalba</span></span>
+        </div>
       </div>
       <div class="live-shot span-5">
         <div class="frame"><img src="/screenshots/zinynas-knowledge.jpg" alt="Žinyno žinių bazė su orų prognoze ir priežiūros šilumine schema"></div>
