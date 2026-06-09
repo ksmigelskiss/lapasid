@@ -321,6 +321,18 @@
     font-size: 13.5px; color: var(--forest-500);
   }
   .hero .meta strong { color: var(--forest-800); font-weight: 600; display: block; margin-top: 2px; }
+  /* Hero two-column: tekstas kairėje, realus handheld telefonas dešinėje. */
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .hero-visual { justify-self: end; }
+  .hero-visual img {
+    display: block; width: clamp(240px, 25vw, 348px); height: auto;
+    border-radius: 24px; box-shadow: var(--shadow-lg);
+  }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-visual { justify-self: center; order: 2; }
+    .hero-visual img { width: min(72vw, 290px); }
+  }
 
   /* ---------- SECTION HEAD ---------- */
   .section-head { margin-bottom: 64px; max-width: 78ch; }
@@ -1536,6 +1548,8 @@
 
 <section class="hero">
   <div class="wrap">
+    <div class="hero-grid">
+    <div class="hero-copy">
     <div class="eyebrow mono-caps"><span class="t-en">A product vision document</span><span class="t-lt">Produkto vizijos dokumentas</span></div>
     <h1><span class="t-en">The consumer <em>safety layer</em> for every plant.</span><span class="t-lt">Vartotojui skirtas <em>saugumo sluoksnis</em> kiekvienam augalui.</span></h1>
     <p class="lede"><span class="t-en">LapasID is not another plant app. It is a verified, transferable safety layer for every plant — built on top of the EU Plant Health Law, extended with academy-grade toxicity data, readable from an NFC tag, a QR code, a web URL, or inside a personal collection. The app is one of many surfaces. The passport is the product. The marketplace is the outcome.</span><span class="t-lt">LapasID nėra dar viena augalų programėlė. Tai patvirtintas, perduodamas saugumo sluoksnis kiekvienam augalui — pastatytas ant ES Augalų sveikatos teisės pagrindo, papildytas akademinio lygio toksiškumo duomenimis, nuskaitomas iš NFC žymos, QR kodo, viešo interneto adreso ar asmeninėje kolekcijoje. Programėlė yra tik vienas iš daugelio paviršių. Augalo pasas yra produktas. Prekyvietė yra rezultatas.</span></p>
@@ -1545,6 +1559,11 @@
       <div><span class="t-en">Live</span><span class="t-lt">Veikianti versija</span><strong>lapasid.lt</strong></div>
       <div><span class="t-en">Status</span><span class="t-lt">Statusas</span><strong><span class="t-en">MVP in production · catalog &amp; passport in build</span><span class="t-lt">MVP gamyboje · katalogas ir pasas kuriami</span></strong></div>
     </div>
+    </div><!-- /.hero-copy -->
+    <div class="hero-visual">
+      <img src="/screenshots/hero-handheld.jpg" width="1200" height="1600" alt="LapasID programėlė telefone — Aglaonema 'Orange Star' augalo pasas su toksiškumo įspėjimu">
+    </div>
+    </div><!-- /.hero-grid -->
   </div>
 </section>
 
