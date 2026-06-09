@@ -294,8 +294,8 @@
     content: ""; width: 40px; height: 1px; background: var(--forest-500); opacity: 0.6;
   }
   .hero h1 {
-    font-size: clamp(48px, 7.5vw, 104px);
-    line-height: 1.0;
+    font-size: clamp(42px, 6.3vw, 88px);
+    line-height: 1.02;
     font-weight: 600;
     letter-spacing: -0.04em;
     color: var(--forest-900);
@@ -317,23 +317,40 @@
     text-wrap: pretty;
   }
   .hero .meta {
-    display: flex; gap: 36px; flex-wrap: wrap;
+    display: flex; gap: clamp(28px, 3vw, 48px); flex-wrap: wrap;
+    margin-top: 48px;
     padding-top: 28px;
     border-top: 1px solid var(--rule);
     font-size: 13.5px; color: var(--forest-500);
   }
   .hero .meta strong { color: var(--forest-800); font-weight: 600; display: block; margin-top: 2px; }
   /* Hero two-column: tekstas kairėje, realus handheld telefonas dešinėje. */
-  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(28px, 4vw, 56px); align-items: center; }
-  .hero-visual { justify-self: end; }
-  .hero-visual img {
-    display: block; width: clamp(220px, 23vw, 312px); height: auto;
-    border-radius: 24px; box-shadow: var(--shadow-lg);
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) clamp(330px, 32vw, 408px); gap: clamp(28px, 4vw, 48px); align-items: stretch; }
+  /* Telefonas konteineryje, kuris lygiuojasi su tekstu (top/bottom) + blur į šonus. */
+  .hero-visual {
+    position: relative; overflow: hidden;
+    border-radius: 20px; border: 1px solid var(--rule-soft);
+    background: var(--bone-50);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 380px;
+  }
+  .hero-visual-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: url(/screenshots/hero-handheld.webp) center/cover;
+    transform: scale(1.4); filter: blur(40px) saturate(1.05); opacity: 0.5;
+  }
+  .hero-visual::after {
+    content: ""; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(180deg, rgba(241,235,221,0.55), rgba(241,235,221,0.10) 30%, rgba(241,235,221,0.10) 70%, rgba(241,235,221,0.55));
+  }
+  .hero-phone {
+    position: relative; z-index: 2;
+    height: 100%; width: auto; max-width: 100%;
+    object-fit: contain; display: block;
   }
   @media (max-width: 900px) {
     .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-    .hero-visual { justify-self: center; order: 2; }
-    .hero-visual img { width: min(72vw, 290px); }
+    .hero-visual { order: 2; width: 100%; max-width: 340px; margin: 0 auto; min-height: 440px; }
   }
 
   /* Mascot cameo — Augalas + Sodininkas (atkurta iš brand Animus standalone kaip inline SVG). */
@@ -1569,17 +1586,18 @@
     <div class="eyebrow mono-caps"><span class="t-en">A product vision document</span><span class="t-lt">Produkto vizijos dokumentas</span></div>
     <h1><span class="t-en">The consumer <em>safety layer</em> for every plant.</span><span class="t-lt">Vartotojui skirtas <em>saugumo sluoksnis</em> kiekvienam augalui.</span></h1>
     <p class="lede"><span class="t-en">LapasID is not another plant app. It is a verified, transferable safety layer for every plant — built on top of the EU Plant Health Law, extended with academy-grade toxicity data, readable from an NFC tag, a QR code, a web URL, or inside a personal collection. The app is one of many surfaces. The passport is the product. The marketplace is the outcome.</span><span class="t-lt">LapasID nėra dar viena augalų programėlė. Tai patvirtintas, perduodamas saugumo sluoksnis kiekvienam augalui — pastatytas ant ES Augalų sveikatos teisės pagrindo, papildytas akademinio lygio toksiškumo duomenimis, nuskaitomas iš NFC žymos, QR kodo, viešo interneto adreso ar asmeninėje kolekcijoje. Programėlė yra tik vienas iš daugelio paviršių. Augalo pasas yra produktas. Prekyvietė yra rezultatas.</span></p>
+    </div><!-- /.hero-copy -->
+    <div class="hero-visual">
+      <div class="hero-visual-bg" aria-hidden="true"></div>
+      <img class="hero-phone" src="/screenshots/hero-handheld.webp" width="1000" height="1333" alt="LapasID programėlė telefone — Aglaonema 'Orange Star' augalo pasas su toksiškumo įspėjimu">
+    </div>
+    </div><!-- /.hero-grid -->
     <div class="meta">
       <div><span class="t-en">Native market</span><span class="t-lt">Pirminė rinka</span><strong><span class="t-en">Lithuania</span><span class="t-lt">Lietuva</span></strong></div>
       <div><span class="t-en">Stack</span><span class="t-lt">Technologijos</span><strong>React 18 · Firebase · Anthropic Claude · Gemini</strong></div>
       <div><span class="t-en">Live</span><span class="t-lt">Veikianti versija</span><strong>lapasid.lt</strong></div>
       <div><span class="t-en">Status</span><span class="t-lt">Statusas</span><strong><span class="t-en">MVP in production · catalog &amp; passport in build</span><span class="t-lt">MVP gamyboje · katalogas ir pasas kuriami</span></strong></div>
     </div>
-    </div><!-- /.hero-copy -->
-    <div class="hero-visual">
-      <img src="/screenshots/hero-handheld.jpg" width="1200" height="1600" alt="LapasID programėlė telefone — Aglaonema 'Orange Star' augalo pasas su toksiškumo įspėjimu">
-    </div>
-    </div><!-- /.hero-grid -->
   </div>
 </section>
 
