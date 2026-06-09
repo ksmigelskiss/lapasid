@@ -301,6 +301,7 @@
     color: var(--forest-900);
     max-width: 16ch;
     margin-bottom: 32px;
+    text-wrap: balance;
   }
   .hero h1 em {
     font-style: normal;
@@ -311,8 +312,9 @@
     font-size: 20px;
     line-height: 1.55;
     color: var(--forest-700);
-    max-width: 64ch;
+    max-width: 60ch;
     margin-bottom: 44px;
+    text-wrap: pretty;
   }
   .hero .meta {
     display: flex; gap: 36px; flex-wrap: wrap;
@@ -322,10 +324,10 @@
   }
   .hero .meta strong { color: var(--forest-800); font-weight: 600; display: block; margin-top: 2px; }
   /* Hero two-column: tekstas kairėje, realus handheld telefonas dešinėje. */
-  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(28px, 4vw, 56px); align-items: center; }
   .hero-visual { justify-self: end; }
   .hero-visual img {
-    display: block; width: clamp(240px, 25vw, 348px); height: auto;
+    display: block; width: clamp(220px, 23vw, 312px); height: auto;
     border-radius: 24px; box-shadow: var(--shadow-lg);
   }
   @media (max-width: 900px) {
