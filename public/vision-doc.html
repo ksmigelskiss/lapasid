@@ -326,27 +326,21 @@
   .hero .meta strong { color: var(--forest-800); font-weight: 600; display: block; margin-top: 2px; }
   /* Hero two-column: tekstas kairėje, realus handheld telefonas dešinėje. */
   .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) clamp(330px, 32vw, 408px); gap: clamp(28px, 4vw, 48px); align-items: stretch; }
-  /* Telefonas konteineryje, kuris lygiuojasi su tekstu (top/bottom) + blur į šonus. */
+  /* Foto konteineris — brand Tier-2 elevation (bone-50 kortelė, kaip PlantCard / .frame),
+     forest-tinted shadow (brandbook frost), 1px rule-soft border. Jokio blur — ne brand pattern. */
   .hero-visual {
-    position: relative; overflow: hidden;
-    border-radius: 20px; border: 1px solid var(--rule-soft);
+    overflow: hidden;
+    border-radius: 16px;
     background: var(--bone-50);
+    border: 1px solid var(--rule-soft);
+    box-shadow: 0 6px 28px rgba(28, 58, 42, 0.08);
     display: flex; align-items: center; justify-content: center;
     min-height: 380px;
   }
-  .hero-visual-bg {
-    position: absolute; inset: 0; z-index: 0;
-    background: url(/screenshots/hero-handheld.webp) center/cover;
-    transform: scale(1.4); filter: blur(40px) saturate(1.05); opacity: 0.5;
-  }
-  .hero-visual::after {
-    content: ""; position: absolute; inset: 0; z-index: 1;
-    background: linear-gradient(180deg, rgba(241,235,221,0.55), rgba(241,235,221,0.10) 30%, rgba(241,235,221,0.10) 70%, rgba(241,235,221,0.55));
-  }
   .hero-phone {
-    position: relative; z-index: 2;
-    height: 100%; width: auto; max-width: 100%;
-    object-fit: contain; display: block;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    display: block;
   }
   @media (max-width: 900px) {
     .hero-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -1588,7 +1582,6 @@
     <p class="lede"><span class="t-en">LapasID is not another plant app. It is a verified, transferable safety layer for every plant — built on top of the EU Plant Health Law, extended with academy-grade toxicity data, readable from an NFC tag, a QR code, a web URL, or inside a personal collection. The app is one of many surfaces. The passport is the product. The marketplace is the outcome.</span><span class="t-lt">LapasID nėra dar viena augalų programėlė. Tai patvirtintas, perduodamas saugumo sluoksnis kiekvienam augalui — pastatytas ant ES Augalų sveikatos teisės pagrindo, papildytas akademinio lygio toksiškumo duomenimis, nuskaitomas iš NFC žymos, QR kodo, viešo interneto adreso ar asmeninėje kolekcijoje. Programėlė yra tik vienas iš daugelio paviršių. Augalo pasas yra produktas. Prekyvietė yra rezultatas.</span></p>
     </div><!-- /.hero-copy -->
     <div class="hero-visual">
-      <div class="hero-visual-bg" aria-hidden="true"></div>
       <img class="hero-phone" src="/screenshots/hero-handheld.webp" width="1000" height="1333" alt="LapasID programėlė telefone — Aglaonema 'Orange Star' augalo pasas su toksiškumo įspėjimu">
     </div>
     </div><!-- /.hero-grid -->
