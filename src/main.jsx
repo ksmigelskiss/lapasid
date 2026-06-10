@@ -5,6 +5,9 @@ import './assets/mascot/mascot.css'
 import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import BrandLoader from './components/brand/BrandLoader.jsx'
+import { initSentry } from './utils/sentry.js'
+
+initSentry()
 
 const PlantPassportPage = lazy(() => import('./pages/PlantPassportPage.jsx'))
 const LoaderPlayground = lazy(() => import('./dev/LoaderPlayground.jsx'))

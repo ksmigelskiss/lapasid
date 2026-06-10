@@ -8,6 +8,8 @@ export default defineConfig({
   // negautų pre-fix rezultatų po prompt/logikos pakeitimo.
   define: {
     __BUILD_ID__: JSON.stringify(String(Date.now())),
+    // Sentry release tag — Vercel build'e = commit SHA, lokaliai 'dev'.
+    __APP_COMMIT__: JSON.stringify(process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? 'dev'),
   },
   plugins: [
     react(),
