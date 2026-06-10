@@ -3,11 +3,11 @@ import { motion, useDragControls, useMotionValue, animate } from 'framer-motion'
 
 // ── Status transition sheets ───────────────────────────────────
 
-function sheetDaysBetween(isoA, isoB) {
+export function sheetDaysBetween(isoA, isoB) {
   return Math.round((new Date(isoA + 'T00:00:00') - new Date(isoB + 'T00:00:00')) / 86400000)
 }
 
-function computeRecoverySummary(timeline, fromStatus) {
+export function computeRecoverySummary(timeline, fromStatus) {
   // Find most recent statusChange that started the sick/quarantine period
   const startEvent = timeline.find(e =>
     e.type === 'statusChange' && ['sick', 'quarantine'].includes(e.toStatus)
