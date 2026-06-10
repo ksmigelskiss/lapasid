@@ -242,7 +242,7 @@ className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-trans
 
 ## Full-screen sheet pattern (PRIVALOMA)
 
-Visiems augalo kortelės-tipo modal'ams (PlantDetail, CareWateringSheet, panašiems): **full-screen iki viršaus + drag handle + hero**. Reference: [PlantDetail.jsx](src/components/PlantDetail.jsx) ir [CareWateringSheet (Dashboard.jsx)](src/pages/Dashboard.jsx).
+Visiems augalo kortelės-tipo modal'ams (PlantDetail, CareWateringSheet, panašiems): **full-screen iki viršaus + drag handle + hero**. Reference: [PlantDetail.jsx](src/components/plant-detail/PlantDetail.jsx) ir [CareWateringSheet (Dashboard.jsx)](src/pages/Dashboard.jsx).
 
 ### Skelet'as
 

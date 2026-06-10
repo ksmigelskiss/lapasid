@@ -1,86 +1,66 @@
-# PlantDetail.jsx refaktoras (planuotas, dar ne padarytas)
+# PlantDetail.jsx refaktoras — ✅ BAIGTA (2026-06-10)
 
-**Statusas:** ⏸ atidėtas. Bus daromas po to, kai įsitikinsim, kad praeitas refactor (Dashboard.jsx + extracted CareWateringSheet) produkcijoje veikia gerai (`5394dda` commit, 2026-05).
+**Statusas:** ✅ įgyvendinta per 7 fazes, kiekviena — atskiras commit'as su `npm run build` + push į main.
+Commit'ai: `41d31d7` (dead code) → `50ed7b9` (move) → `12243fe` (PhotoSheet) → `4233e3d` (StatusSheet) → `2e7d753` (Notes) → `84c1148` (SafetyStrip) → `66812d8` (ProfileContent).
 
-**Kontekstas:** PlantDetail.jsx yra 1455 eilučių — net didesnis nei Dashboard.jsx buvo prieš refaktorą. Junk kodo (nenaudojamo) NĖRA, bet architektūriškai netvarka — daug skirtingų konceptų sumaišyti vienam faile (3 modaliniai sheet'ai, 2 tab content komponentai, 1 export'inta sub-komponenta, daug helper'ių).
-
----
-
-## Dabartinė vidaus struktūra
-
-| Linijos | Komponentas | Dydis | Kas tai |
-|---------|-------------|-------|---------|
-| 20-29 | `DotScore` | 10 | Mažas vizualinis (palikti) |
-| 30-39 | `Stars` | 10 | Mažas (palikti) |
-| 40-45 | `fmtDate` | 6 | Util |
-| 46-217 | `PhotoSheet` | **170** | **Atskiras modal'as** nuotraukų valdymui |
-| 218-226 | `Section` | 10 | Wrapper (palikti) |
-| 227-241 | `InfoRow` | 15 | Wrapper (palikti) |
-| 242-322 | `PassportSection` | 80 | NFC pass valdymas |
-| 323-574 | `ProfileContent` | **250** | **JAU exportinta** — naudojama SearchModal.jsx |
-| 575-628 | `NoteCard` | 55 | Užrašo card |
-| 629-640 | `mkNoteId`, `noteToday`, `loadNotes` | 15 | Utils |
-| 641-742 | `NotesContent` | 100 | **Atskiras tab content** |
-| 743-780 | `TabBar` | 40 | Tab navigation (palikti) |
-| 781-799 | `sheetDaysBetween`, `computeRecoverySummary` | 20 | Utils |
-| 800-831 | `BottomSheet` | 30 | Wrapper |
-| 832-975 | `StatusTransitionSheet` | **145** | **Atskiras modal'as** sick/quarantine perėjimams |
-| 976-end | `PlantDetail` (main) | **480** | Layout + state + navigation |
-
-**Patikrinta:** `ProfileContent` eksportintas iš PlantDetail ir naudojamas `src/components/SearchModal.jsx:8` (paieškos rezultatų rendering'ui). Tai stiprus argumentas išskirti į top-level failą.
+**Kontekstas:** failas refaktoro metu buvo **2289 eil.** (ne 1455, kaip rašyta sename plane — užaugo su hero galerija/zoom, HeroSafetyStrip, action menu, desktop panel). Pastaba: senas plano teiginys „ProfileContent naudojama SearchModal.jsx" nebegaliojo — tas importas buvo miręs (pakeistas Phase1SlimPreview) ir ištrintas 0 fazėje kartu su cikliniu importu (PlantDetail ↔ SearchModal per TOOL_*).
 
 ---
 
-## Refaktoro planas (priority order)
+## Galutinis layout'as
 
-### Etapas 1 — didžiausias ROI (3 commit'ai)
+```
+src/components/plant-detail/
+├── PlantDetail.jsx            912 eil.  default — orkestratorius (state, effects,
+│                              toolbar, hero galerija+zoom, sub-modalų hostingas,
+│                              privatus TabBar)
+├── ProfileContent.jsx         673 eil.  named { ProfileContent }
+│                              privatūs: DotScore, Stars, Section, safeStringValue,
+│                              InfoRow, CareRow, SkeletonLines, PassportSection
+├── PhotoSheet.jsx             200 eil.  default
+├── NotesContent.jsx           207 eil.  default + named { loadNotes, mkNoteId, noteToday }
+│                              privatūs: extractNoteTitle, extractNoteBody, NoteCard
+├── StatusTransitionSheet.jsx  197 eil.  default
+│                              privatūs: BottomSheet, computeRecoverySummary, sheetDaysBetween
+└── HeroSafetyStrip.jsx        118 eil.  default
+```
 
-| Komponentas | Naujas failas | Eilutės sumažės iš PlantDetail |
-|-------------|---------------|-------------------------------|
-| PhotoSheet | `src/components/PlantDetail/PhotoSheet.jsx` | −170 |
-| StatusTransitionSheet | `src/components/PlantDetail/StatusTransitionSheet.jsx` | −145 |
-| ProfileContent | `src/components/ProfileContent.jsx` (top-level — naudojama dviejose vietose) | −250 |
+Main: 2289 → 912 eil. (−60%). Importų pasikeitimai už folderio ribų:
+- `App.jsx:50` — lazy path → `./components/plant-detail/PlantDetail`
+- `admin/LibraryEditorV2.jsx:41` — `ProfileContent` iš `../plant-detail/ProfileContent`
+- `SearchModal.jsx` — miręs `ProfileContent` importas ištrintas (ciklas nutrauktas)
 
-**Po Etapo 1:** PlantDetail.jsx 1455 → ~890 eilučių (−565 / 39%).
+ProfileContent liko folderyje (ne top-level, kaip siūlė senas planas) — realūs
+vartotojai tik PlantDetail + admin preview, dual-usage argumentas nebegaliojo.
 
-### Etapas 2 — vidutinis ROI
+## Kas SĄMONINGAI neskaldyta (ir kodėl)
 
-| Komponentas | Naujas failas | Eilutės |
-|-------------|---------------|---------|
-| NotesContent + NoteCard | `src/components/PlantDetail/NotesContent.jsx` | −155 |
-| PassportSection | `src/components/PlantDetail/PassportSection.jsx` | −80 |
+- **TabBar** — 35 eil., vienas vartotojas, tab state gyvena main'e. Laikytasi seno
+  principo „tab navigation palikti šalia".
+- **Toolbar** — reikėtų ~12 props su 5 state setters, kurių skaitytojai
+  (reset-on-close / reset-on-plant / ESC effects) privalo likti main'e.
+  Grynas skaldymas dėl skaldymo.
+- **HeroSection** (galerija + long-press zoom + collapse) — ~235 eil. tankiausios
+  interakcijų logikos (movement-cancel, vibrate, zoom portal, collapse hysteresis)
+  be funkcinės naudos iškėlus. Vertinti iš naujo, jei main vėl augs.
+- **Hooks (useHeroLongPress / usePlantNamesFetch / useDragToClose)** — po vieną
+  vartotoją; drag thresholds skiriasi (main 120 vs BottomSheet 100) — parametrizacija
+  būtų indirekcija be naudos. `src/hooks/useLongPress.js` NEunifikuotas — kita semantika
+  (hero: 10px movement-cancel, 450ms, position tracking).
 
-**Po Etapo 2:** PlantDetail.jsx ~890 → ~655 eilučių (−235).
+## Verifikacija
 
-### Etapas 3 — smulkmenos (gali ir nedaryti)
+- Kiekviena fazė: `npm run build` žalias prieš commit.
+- Po 6 fazės: dev serveris, švari konsolė, visi 6 moduliai + SearchModal +
+  LibraryEditorV2 užkrauti runtime per dynamic import — visi exports teisingi.
+- Galutiniai grep'ai: senų `components/PlantDetail` kelių nuorodų src/ nėra;
+  main lucide importas suplonėjo iki 10 realiai naudojamų ikonų; `auth`,
+  `ensureArray`, `getEnrichmentFailureReason`, `getFertilizingSummary`,
+  `PlantSavybesPills`, `BrandLoader`, `ForecastCards` iš main dingo.
 
-| Helper | Vieta |
-|--------|-------|
-| `fmtDate`, `sheetDaysBetween` | `src/utils/dateHelpers.js` (jei tokio nėra — sukurti) |
-| `computeRecoverySummary` | `src/utils/plantRecovery.js` (specifinis domenui) |
-| `mkNoteId`, `noteToday`, `loadNotes` | Greičiausiai liks NotesContent failo viršuje |
+## Principas (paliekamas ateičiai)
 
----
-
-## Ką NEDARYTI
-
-- ❌ `TabBar`, `Section`, `InfoRow`, `Stars`, `DotScore` — naudojami tik PlantDetail viduje, smulkūs (10–40 eilučių). Extract'as nepadarys aiškumo, tik daugiau failų.
-- ❌ `BottomSheet` — naudojamas tik StatusTransitionSheet'e. Jei extract'inam StatusTransitionSheet, BottomSheet'as keliauja kartu.
-- ❌ Pagrindinis `PlantDetail` komponentas (~480 eilučių po Etapo 1) — vientisas concern (state + tabs + navigation + main render). Skaldyti tik dėl skaldymo blogai.
-
----
-
-## Sprendimo principas (priminimas iš ankstesnio refaktoro)
-
-> „Svarus pagrindas" reiškia ne minimalūs failai, o **aiškios atskirtys**. Komponentai, kurie yra vienos koncepcijos vienetai (modal'as, tab content, savarankiški UI blokai) — į savus failus. Maži wrappers (`Section`, `InfoRow`) ir glaudžiai susijusi tab navigation — palikti šalia.
-
----
-
-## Kai grįši prie šito
-
-1. Pirma įsitikinti, kad Dashboard refactor (`5394dda`) produkcijoje veikia be issue'ų
-2. Pradėti nuo Etapo 1, vienas extract per commit
-3. Po kiekvieno commit'o `npm run build` patikrinimas
-4. Po Etapo 1 — pažiūrėti realybėje ar geriau, ar tęsti su Etapu 2
-
-**Failo mood:** PlantDetail.jsx yra didžiausia frontendo „karbonkė", bet ji dirba. Refaktoras = aiškumo investicija, ne bug fix. Galima daryti per kelias sesijas.
+> „Švarus pagrindas" reiškia ne minimalūs failai, o **aiškios atskirtys**.
+> Komponentai, kurie yra vienos koncepcijos vienetai (modal'as, tab content,
+> savarankiški UI blokai) — į savus failus. Maži wrappers ir glaudžiai susijusi
+> navigacija — palikti šalia. Skaldyti tik dėl skaldymo blogai.

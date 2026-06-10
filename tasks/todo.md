@@ -4,6 +4,7 @@ Nuoseklus planas. **Principas: užbaigti vieną subsistemą prieš pereinant pri
 kitos.** Šokinėjimas nuo temos prie temos sustabdytas.
 
 ## Statusas
+- ✅ **PlantDetail refaktoras** (2026-06-10, `41d31d7`…`66812d8`) — monolitas 2289→912 eil., dekompozicija į `src/components/plant-detail/` (PhotoSheet, StatusTransitionSheet, NotesContent, HeroSafetyStrip, ProfileContent). Detalės: `tasks/plant-detail-refactor.md`
 - ✅ Hero drawing pipeline (Gemini restyle + Sonnet vision gate + sharp transparentize) — katalogo seed **79/79** (offline batch)
 - ✅ Drawing kokybės debug — Ficus houseplant fix, globalus no-text fix; Calathea/Dracaena/Senecio priimtini
 - 🔜 **Phase A** — produkcinė integracija (žemiau)

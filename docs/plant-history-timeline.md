@@ -4,7 +4,7 @@ _Po 2026-05 redesign'o pagal Brandbook v1.0. Šis failas — atmintinė. Jei rei
 
 **Source files:**
 - `src/components/PlantTimeline.jsx` — timeline'as + visi event komponentai
-- `src/components/PlantDetail.jsx` — hero swap + tab integration
+- `src/components/plant-detail/PlantDetail.jsx` — hero swap + tab integration
 - `src/components/brand/BarcodeLifeline.jsx` — care chart hero zonai
 
 ---
