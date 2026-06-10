@@ -47,7 +47,7 @@ function lazyWithRetry(factory) {
 }
 
 const SearchModal = lazyWithRetry(() => import('./components/SearchModal'))
-const PlantDetail = lazyWithRetry(() => import('./components/PlantDetail'))
+const PlantDetail = lazyWithRetry(() => import('./components/plant-detail/PlantDetail'))
 const ProfileSheet = lazyWithRetry(() => import('./components/ProfileSheet'))
 const Biblioteka  = lazyWithRetry(() => import('./pages/Biblioteka'))
 const AdminPanel  = lazyWithRetry(() => import('./components/admin/AdminPanel'))
