@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 export default defineConfig({
   // Build ID (timestamp per `vite build`) — response cache deploy-versijos
@@ -13,6 +14,8 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    // Bundle kompozicijos analizė: ANALYZE=1 npm run build → bundle-stats.html
+    ...(process.env.ANALYZE ? [visualizer({ filename: 'bundle-stats.html', gzipSize: true })] : []),
     VitePWA({
       // 2026-06-03 — 'prompt' (buvo 'autoUpdate'). autoUpdate + skipWaiting tyliai
       // perimdavo SW + reload'indavo puslapį KAS deploy → su dažnais deploy'ais =
