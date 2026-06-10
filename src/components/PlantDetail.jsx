@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate } from 'framer-motion'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
-import { X, Camera, Image as ImageIcon, Search, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Skull, Snowflake, MapPin, ChevronLeft, ChevronRight, ChevronDown, Share2, Copy, Check, Link2, User, Cat, Apple, BadgeCheck, HeartPlus, Palette } from 'lucide-react'
+import { X, Camera, Image as ImageIcon, Sun, Droplets, Thermometer, Wind, Flower2, RefreshCw, Star, Bookmark, Globe, MessageCircle, Pencil, Trash2, Loader2, MoreHorizontal, Leaf, Snowflake, MapPin, ChevronLeft, ChevronRight, ChevronDown, Share2, Copy, Check, Link2, User, Cat, Apple, BadgeCheck, HeartPlus, Palette } from 'lucide-react'
 import { doc, setDoc } from 'firebase/firestore'
 import { db, auth } from '../utils/firebase'
 import { ZonePicker } from './ZoneManager'
@@ -12,20 +12,18 @@ import BarcodeLifeline from './brand/BarcodeLifeline'
 import PlantSavybesPills, { PlantSafetyCallout } from './brand/PlantSavybesPills'
 import PlantImage from './brand/PlantImage'
 import BrandLoader from './brand/BrandLoader'
-import { TOOL_PREVIEW, TOOL_DETAILS, PLANT_SYSTEM } from './SearchModal'
 import { ensureArray, makeId, today } from '../utils/plantTransform'
 import { getPlantEnrichmentState, getEnrichmentFailureReason } from '../utils/plantState'
-import { getWateringForecast } from '../utils/wateringForecast'
 import { getFertilizingSummary } from '../utils/fertilizingForecast'
 import { heroIllustrationFor, heroThumbFor, heroIsDefaultFor } from '../utils/catalog'
 import { fetchPlantNames } from '../utils/plantNames'
-import { fetchPhotos, resizeImage } from '../utils/imageService'
+import { resizeImage } from '../utils/imageService'
 import { getPlantMood } from '../utils/plantMood'
 import PlantChat from './PlantChat'
 import { PlantAvatar } from './icons/ChatIcons'
 import { WateringCard, FertilizingCard, DormancyCard } from './ForecastCards'
-import { StatusButton, StatusMenu, STATUS_ICON } from './StatusPicker'
-import { STATUS_OPTIONS, getStatusMeta } from '../constants/plant'
+import { StatusMenu, STATUS_ICON } from './StatusPicker'
+import { getStatusMeta } from '../constants/plant'
 
 // ── Small helpers ──────────────────────────────────────────────
 
@@ -48,12 +46,6 @@ function Stars({ value, max = 5 }) {
     </div>
   )
 }
-
-function fmtDate(str) {
-  if (!str) return '—'
-  return new Date(str).toLocaleDateString('lt-LT', { month: 'short', day: 'numeric' })
-}
-
 
 function PhotoSheet({ plant, onClose, onSave, onCapture, onRevert, onToggleHistoryPhoto }) {
   // Step 6u — PhotoSheet rewrite. Unified design po stack-on-top chaos'o:
@@ -589,7 +581,6 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
   // Listener'is auto-updates plant doc'ą kai server'is baigia (su nauju
   // phase2CompletedAt + naujais aprasymas/care/narrative laukais).
   const [retrying, setRetrying] = useState(false)
-  const [showActionMenu, setShowActionMenu] = useState(false)
 
   const reEnrichPlant = async () => {
     const idToken = await auth.currentUser?.getIdToken().catch(() => null)

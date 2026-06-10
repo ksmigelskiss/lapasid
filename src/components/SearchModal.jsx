@@ -242,7 +242,6 @@ if (typeof window !== 'undefined') {
 import { taxonGroupDocId, saveTaxonGroup, getTaxonGroup, mergeWithSeries, saveCatalogWithSpeciesParent, MAX_BULK_BATCH, CATALOG_SCHEMA_VERSION } from '../utils/taxonGroups'
 import { triggerHeroGen } from '../utils/plantAI'
 import { plantFuzzyScore, findMatchedSynonym } from '../utils/fuzzySearch'
-import { ProfileContent } from './PlantDetail'
 import PlantSavybesPills from './brand/PlantSavybesPills'
 import { auth } from '../utils/firebase'
 import PaywallSheet from './PaywallSheet'
