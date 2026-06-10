@@ -332,3 +332,23 @@ Catalog heroes (heroGen) JAU turėjo `cacheControl: 'public, max-age=31536000, i
 - **„Pretty URL" su subdirektorija (`/vision/doc`) + reliatyvūs keliai = mina.** Puslapiams, serv'inamiems per rewrite po subpath'u, VISADA naudok absoliučius kelius (`/screenshots/`, ne `./screenshots/`). Base URL nebėra šaknis.
 - **200 `text/html` vietoj turto = „nerodo, jokios klaidos".** Jei img/fetch tyliai tuščias be 404 — pirma įtark, kad SPA catch-all grąžina shell'į. Patikrink `curl -w "%{content_type}"` TIKSLAUS URL, kurio prašo puslapis.
 - **Verify-don't-guess (N+8) galioja ir debug'inant:** testavau `/screenshots/X.png` (absoliutų), bet puslapis prašė `/vision/screenshots/X.png` (reliatyvaus). Tikrinau ne tą URL → klaidinga teorija (cookie) → veltui iteracija. Pirma nustatyk, ką puslapis IŠ TIKRŲJŲ requestina.
+
+---
+
+## N+11: mirror failai keičiami TIK kartu; stem-regex + trailing \b = dead pattern; apsauginiai komentarai — ne dekoracija
+
+**Data:** 2026-06-10
+**Trigger:** Pirmas vitest paleidimas (naujai įdiegti duomenų testai) — 3 deriveToxicity testai krito. Pasirodė ne testo klaida, o reali prod regresija: „nausea/vomiting/irritation/poisonous" PFAF tekstai grąžindavo null severity → toksiškumas tyliai numetamas (under-report, pavojingoji kryptis).
+
+**Root cause (grandinė iš trijų klaidų):**
+1. `3eb3081` (2026-05-29, peržiūrėta kartu) pašalino trailing `\b` iš severity regex'o ir paliko NB komentarą KODĖL.
+2. `c3db196` perrašė tą regex'ą (severity≠tipas refaktoras) — netyčia grąžino `\b` IR ištrynė apsauginį komentarą. Niekas nepastebėjo, nes klaida tyli: stem-kamienai (`nause`, `seizur`, `convuls`, `irritat`, `poison`) su trailing `\b` nematch'ina JOKIO anglų kalbos žodžio — pattern'as miręs, bet kodas „veikia".
+3. Server mirror (`api/_lib/deriveToxicity-server.js`) buvo sąžiningai suvienodintas su client'u — KARTU SU BUG'U. Mirror discipline veikė, bet kopijavo regresiją.
+
+**Fix:** `921311e` — `\b` nuimtas nuo 3 stem-regex'ų abiejuose failuose, NB komentaras grąžintas, regresijos testai prikalti (nausea/vomiting/seizures/irritation + „mildew ≠ mild" guard).
+
+**Rules:**
+- **Stem-prefiksas (ne pilnas žodis) + trailing `\b` = dead pattern.** Jei regex'e kamienas kaip `irritat`/`nause` — trailing `\b` jį užmuša. Keisdamas regex'ą, kiekvienam kamienui paklausk: ar egzistuoja žodis, kuris baigiasi ČIA?
+- **Apsauginis komentaras prie kodo („NB: NĖRA X, nes Y") trinamas TIK sąmoningai** — jei refaktorinant komentaras dingsta kartu su apsauga, regresija garantuota. Komentaras prie regex'o = jo specifikacija.
+- **MIRROR failai (client/server deriveToxicity ir pan.) keičiami tik vienu commit'u ir diff'inami tarpusavyje** (`diff <(sed -n 'Xp' client) <(sed -n 'Yp' server)`). Mirror sinchronizacija be turinio peržiūros tiražuoja klaidas.
+- **Safety-critical heuristikos privalo turėti testus su realiais šaltinio tekstais** — tyli null/fallthrough klaida nematoma nei build'e, nei konsolėj, nei UI (badge tiesiog nerodomas). Testas — vienintelis ankstyvas signalas.

@@ -257,6 +257,13 @@ tinkamu edge rate-limit setup'u. **Auth header — NE, dėl cache regresijos.**
 
 **Tikslas:** Pakeisti paradigm'ą iš „client gauna visą catalog'ą per Firestore SDK" į „client klausia server'io kiekvieno reikalingo augalo". Attack surface'as susitraukia 95%.
 
+> **Perf duomenys Phase B naudai (bundle diagnozė 2026-06-10, žr. `docs/quality-infra.md`):**
+> firebase šeima = ~60% index bundle'o (firestore 813KB + core 249KB + storage 77KB) —
+> B proxy ją numestų iš kliento. Plius P0-10: `pfaf.json` **21MB** + `pre-db.json` **7.8MB**
+> emituojami į dist ir fetch'inami kliento; vartotojai 3 (`deriveToxicity`, `preDb`,
+> `buildPlantRagContext`) su skirtingais laukų poreikiais → „slim JSON" netrivialu,
+> teisingas fix = server-side derivation (čia, Phase B).
+
 **Architektūrinis pakeitimas (didelis):**
 
 ```

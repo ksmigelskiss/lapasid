@@ -1,96 +1,94 @@
-# Gėlių DB
+# LapasID
 
-Asmeninė augalų kolekcijos valdymo PWA lietuvių kalba.
+Augalų kolekcijos valdymo PWA lietuvių kalba — kolekcija, priežiūros prognozės,
+AI paieška su autoritetingu katalogu ir augalo pasas (QR/NFC).
+
+Produkcija: **[lapasid.lt](https://www.lapasid.lt)**
 
 ## Funkcijos
 
-- **Augalų kolekcija** — augalų valdymas su nuotraukomis, statusais (sveikas / dėmesio / karantinas), zonų priskyrimo sistema
-- **Priežiūros seansas** — grupinio laistymo ir tręšimo žurnalas pagal zonas su karantino atskyrimu; long press ant tile rodo padidintą nuotrauką
-- **Prognozės** — laistymo, tręšimo ir žiemojimo perspėjimai su sezoniškumu; ikonos ant augalo kortelių
-- **AI paieška** — augalų paieška per Claude API su automatiškai sugeneruota priežiūros informacija (2 fazės); nuotraukų identifikavimas iš kameros
-- **Istorija** — augalo gyvavimo įvykių laiko juosta (laistymas, tręšimas, persodinimas, nuotraukos)
-- **AI pokalbis** — pokalbis su Claude apie konkretų augalą, visą kolekciją arba žinyno įrašą
-- **Žinynas** — asmeninių augalininkystės įrašų enciklopedija su žvaigždutėmis
-- **Biblioteka** — visi augalai (auginami, norimi, mirę) su filtravimo ir rikiavimo galimybėmis
-- **PWA** — veikia offline, instaliuojamas į telefono ekraną, Workbox caching
+- **Kolekcija** — augalai su nuotraukomis, statusais (sveikas / dėmesio / karantinas),
+  zonomis; multi-user kolekcijos su rolėmis (owner / member / viewer) ir pakvietimais
+- **Priežiūra** — laistymo / tręšimo / žiemojimo prognozės (kategorijų lentelės +
+  istorijos blend), priežiūros seansai pagal zonas, care reward sistema
+- **AI paieška** — dvifazė (preview + enrichment) per Claude API; foto identifikavimas;
+  derminis toksiškumas iš ASPCA/PFAF šaltinių (nepriklausomai nuo AI)
+- **Katalogas** — globalus rūšių katalogas su watercolor hero iliustracijomis
+  (Gemini pipeline + watermark), admin redaktorius (LibraryEditorV2) su live preview
+- **Augalo pasas** — vieša `/p/{plantId}` kortelė QR/NFC žymai
+- **Istorija** — augalo gyvavimo timeline (laistymas, tręšimas, persodinimas, foto,
+  ligos/pasveikimai); mirusių augalų memorial vaizdas
+- **AI pokalbiai** — apie konkretų augalą, kolekciją ar žinyno įrašą (streaming)
+- **Desktop layout** — split-panel režimas ≥1024px; mobile — bottom-sheet UI
+- **PWA** — offline, instaliuojama, Workbox precache
 
 ## Tech stack
 
 | Sritis | Technologija |
 |--------|-------------|
-| UI | React 18 + Vite |
-| Stilius | Tailwind CSS v3 |
-| Animacijos | Framer Motion |
-| Ikonos | Lucide React |
-| AI | Anthropic Claude API (claude-sonnet-4-6) |
-| Duomenys | Firebase Firestore + Firebase Storage |
-| Nuotraukos | iNaturalist API + Wikipedia API |
+| UI | React 18 + Vite, Tailwind CSS, Framer Motion, Lucide |
+| Duomenys | Firebase Firestore + Storage; Google/Facebook OAuth |
+| AI | Anthropic Claude API (`claude-sonnet-4-6`) per `api/` serverless |
+| Backend | Vercel serverless functions (`api/`) — auth-verified Firestore admin |
+| Nuotraukos | iNaturalist + Wikipedia + Brave (per `api/plant-image` proxy) |
+| Testai | Vitest (duomenų logikos util'ai) |
+| CI | GitHub Actions — test + build ant kiekvieno push |
+| Monitoring | Sentry (env-gated per `VITE_SENTRY_DSN`) |
 | PWA | vite-plugin-pwa + Workbox |
 
-## Projekto struktūra
+## Struktūra (folderių lygiu)
 
 ```
+api/                  # Vercel serverless: claude proxy, save-plant, generate-hero,
+│                     # plant-image, rehost-image, passport, viewer; _lib/ = server utils
+│                     # (deriveToxicity-server MIRROR'ina src/utils/deriveToxicity!)
+data/                 # Šaltinių duomenys: pfaf.json, pre-db.json, aspca-*, lt-names
+scripts/              # Build/migracijų skriptai (prebuild: species-lt-names)
 src/
 ├── components/
-│   ├── PlantCard.jsx          # Augalo kortelė su laistymo/tręšimo ikonomis
-│   ├── PlantDetail.jsx        # Augalo detalės modalas (eksportuoja ProfileContent)
-│   ├── PlantTimeline.jsx      # Įvykių laiko juosta
-│   ├── AddEventSheet.jsx      # Įvykio pridėjimo forma (FAB + sheet)
-│   ├── PlantChat.jsx          # AI pokalbis su augalu
-│   ├── CollectionChat.jsx     # AI pokalbis su kolekcija
-│   ├── ZinynasChat.jsx        # AI pokalbis su žinyno įrašu
-│   ├── ForecastCards.jsx      # Laistymo/tręšimo/žiemojimo kortelės
-│   ├── StatusPicker.jsx       # Augalo statuso mygtukas ir meniu
-│   ├── WateringSession.jsx    # Priežiūros seansas (laistymas + tręšimas)
-│   ├── ZoneManager.jsx        # Zonų valdymas ir parinkimas
-│   ├── SearchModal.jsx        # AI augalų paieška
-│   ├── DeathModal.jsx         # Augalo mirties fiksavimas
-│   ├── DeleteModal.jsx        # Ištrynimo patvirtinimas
-│   ├── PinGate.jsx            # PIN apsauga
-│   └── Navigation.jsx         # Apatinė navigacija
-├── pages/
-│   ├── Dashboard.jsx          # Pagrindinis vaizdas (auginami augalai)
-│   ├── Biblioteka.jsx         # Visa kolekcija (auginama + nori + istorija)
-│   └── Zinynas.jsx            # Asmeninė enciklopedija
-├── hooks/
-│   ├── usePlants.js           # Pagrindinis state valdymas (Firestore sync)
-│   ├── useChatStream.js       # Bendras Anthropic streaming hook visiems chat'ams
-│   ├── usePullToRefresh.js    # Pull-to-refresh gestas
-│   └── useLongPress.js        # Ilgo paspaudimo gestas
-├── utils/
-│   ├── imageService.js        # Nuotraukų paieška, dydžio keitimas, įkėlimas į Storage
-│   ├── plantTransform.js      # AI rezultato → augalo modelio konvertavimas + makeId/today
-│   ├── plantNames.js          # Lietuviškų pavadinimų fetchinimas (iNat + GBIF)
-│   ├── wateringForecast.js    # Laistymo prognozė
-│   ├── fertilizingForecast.js # Tręšimo prognozė
-│   ├── dormancyForecast.js    # Žiemojimo prognozė
-│   ├── plantMood.js           # Augalo nuotaikos logika (kortelės spalva)
-│   ├── collectionChatContext.js # System prompt kolekcijos chat'ui
-│   ├── plantChatContext.js    # System prompt augalo chat'ui
-│   ├── firebase.js            # Firebase init + auth + Firestore + Storage
-│   └── pinLock.js             # PIN logika (localStorage)
+│   ├── plant-detail/ # PlantDetail + ProfileContent + PhotoSheet + NotesContent
+│   │                 # + StatusTransitionSheet + HeroSafetyStrip (refaktoras 2026-06-10)
+│   ├── admin/        # AdminPanel, LibraryEditorV2 (katalogo redaktorius)
+│   ├── brand/        # PlantImage (LQIP), BrandLoader, Mascot, savybes pills, T4 ženklai
+│   ├── desktop/      # DesktopLayout, RightPanel (split-panel host)
+│   ├── widgets/      # Care chart/heatmap, weather, shop
+│   └── *.jsx         # SearchModal, PlantTimeline, PlantChat, ZoneManager, ...
+├── pages/            # Dashboard, Biblioteka, Wishlist, History, Zinynas, PlantPassportPage
+├── hooks/            # usePlants (Firestore sync), useAuth, useChatStream, ...
+├── utils/            # Forecast'ai, deriveToxicity, catalog (F1 overlay), plantTransform, ...
 └── constants/
-    └── plant.js               # KATEGORIJA, STATUS konstantos ir STATUS_OPTIONS
+tasks/                # Darbo dokumentai: planai, auditai, lessons.md
+docs/                 # Veikimo aprašai (timeline, savybes, quality-infra, mascot)
 ```
 
-## Aplinkos kintamieji
-
-Sukurkite `.env.local` failą su:
-
-```
-VITE_ANTHROPIC_API_KEY=...
-VITE_FB_EMAIL=...
-VITE_FB_PASSWORD=...
-```
+Firestore (aukštu lygiu): `collections/{id}` (+ `plants` subcollection), `users`,
+`catalog` (globalus, F1 reference overlay), `taxonGroups`, `invites`, `plant-passports`.
 
 ## Paleidimas
 
 ```bash
 npm install
-npm run dev
+npm run dev          # localhost:3000
+npm test             # vitest — duomenų logikos testai
+ANALYZE=1 npm run build   # + bundle-stats.html kompozicijos analizė
 ```
 
-## Deploy
+Lokaliai reikia `.env.local` (žr. `.env.example`). Pilnas produkcijos env sąrašas —
+Vercel projekte (`vercel env ls`): Firebase service account, `ANTHROPIC_API_KEY`,
+`BRAVE_API_KEY`, `GOOGLE_CLIENT_*`, `VITE_SENTRY_DSN` ir kt.
 
-Projektas automatiškai deployinamas į Vercel iš `master` branch.  
-Produkcija: **augalai.crazyeuropean.eu**
+## Deploy ir kokybė
+
+- Deploy: push į `main` → Vercel auto-deploy į **lapasid.lt**
+- CI (GitHub Actions) lygiagrečiai leidžia testus + build — aliarmas per ~40s,
+  jei kažkas sulūžo (žr. `docs/quality-infra.md`)
+- Klaidos prod'e — Sentry dashboard'e su commit'o žyme
+- Vercel preview deploy'ai NEtinka verifikacijai (OAuth callback tik prod) —
+  verifikacija lokaliai: build + dev server console
+
+## Dokumentacija
+
+- `docs/quality-infra.md` — testai, CI, Sentry, bundle analizė
+- `docs/plant-history-timeline.md`, `docs/plant-savybes-logic.md`, `docs/care-rewards.md`
+- `tasks/` — planai, auditai ir `lessons.md` (klaidų pamokos — skaityk prieš didelius darbus)
+- `DESIGN.md` — spalvų/komponentų sistema (privaloma naujiems UI)

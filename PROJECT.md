@@ -1,186 +1,74 @@
-# Gėlių DB — Projekto aprašymas
+# LapasID — projekto aprašymas
 
-Asmeninis augalų kolekcijos valdymo PWA. Lietuviška sąsaja.
+Augalų kolekcijos valdymo PWA lietuvių kalba. Multi-user, su globaliu rūšių
+katalogu ir AI enrichment pipeline'u. Funkcijos ir folderių struktūra — `README.md`.
 
-## Technologijos
-
-| Technologija | Versija / pastabos |
-|---|---|
-| React 18 + Vite | Frontend framework |
-| Tailwind CSS | Stiliai + semantiniai spalvų tokenai |
-| Framer Motion | Animacijos, drag gestai |
-| Firebase Firestore | Duomenų saugykla + sinchronizacija |
-| Firebase Auth | Email/password autentifikacija (fone) |
-| Firebase Storage | Nuotraukų saugojimas (Blaze plan) |
-| vite-plugin-pwa + Workbox | PWA, offline caching, service worker |
-| Lucide React | Ikonų biblioteka |
+_Atnaujinta 2026-06-10. Domeno logikos detalėms source of truth — kodas ir `docs/`;
+čia tik architektūrinis žemėlapis._
 
 ## Išoriniai servisai
 
-| Servisas | Kam naudojamas | Pastabos |
+| Servisas | Kam | Pastabos |
 |---|---|---|
-| **Anthropic Claude API** | Augalų paieška, visi chat asistentai | `claude-sonnet-4-6` |
-| **Firebase Firestore** | Duomenų sinchronizacija tarp įrenginių | Projektas: `geliu-db` |
-| **Firebase Storage** | Vartotojo nuotraukų saugojimas | `plants/{plantId}/{timestamp}.jpg` |
-| **Firebase Auth** | Fono prisijungimas prie Firestore | Email: augalai@geliu.lt |
-| **iNaturalist API** | Augalų nuotraukos, lietuviški pavadinimai, taxon ID | Nemokamai, be rakto |
-| **GBIF API** | Papildomi liaudies pavadinimai (lt, en) | Nemokamai, be rakto |
-| **Wikipedia API** | Nuotraukų fallback | Nemokamai, be rakto |
-| **Vercel** | Hosting | Free Hobby tier, auto-deploy iš GitHub |
-| **Cloudflare** | DNS, domenų valdymas | Domenas: augalai.crazyeuropean.eu |
-| **GitHub** | Source code | github.com/ksmigelskiss/geliu-db |
+| **Anthropic Claude API** | Paieška (2 fazės), chat'ai, vision identifikavimas | `claude-sonnet-4-6`; TIK per `api/` serverless (raktas niekada klientui) |
+| **Firebase Firestore** | Duomenys + realtime sync | Klientas: OAuth-gated SDK; serveris: admin SDK su `verifyIdToken` |
+| **Firebase Storage** | Vartotojų nuotraukos | `storage.rules` version-controlled repo'jyje |
+| **Firebase Auth** | Google + Facebook OAuth | OAuth callback veikia TIK prod (lapasid.lt) — ne preview |
+| **Brave Search API** | Augalų foto discovery | Per `api/plant-image` proxy (kvotų apsauga — žr. data-protection A7) |
+| **iNaturalist / GBIF / Wikipedia** | LT pavadinimai, taxon ID, foto fallback | Nemokami, be raktų |
+| **Gemini** | Watercolor hero iliustracijos | `api/_lib/heroGen.js` pipeline + watermark |
+| **Sentry** | Klaidos prod'e | Env-gated; žr. `docs/quality-infra.md` |
+| **Vercel** | Hosting + serverless | Auto-deploy iš `main`; prod: **lapasid.lt** |
+| **GitHub** | Kodas + CI | github.com/ksmigelskiss/lapasid; Actions: test+build ant push |
 
 ## Environment kintamieji
 
-```
-VITE_ANTHROPIC_API_KEY   — Anthropic API raktas
-VITE_FB_EMAIL            — Firebase Auth email
-VITE_FB_PASSWORD         — Firebase Auth slaptažodis
-```
+**Kliento (VITE_, įkepa build metu):** `VITE_SENTRY_DSN`, `VITE_USE_MOCK_USER`,
+`VITE_USE_SERVERSIDE_SAVE`. Visi neprivalomi — žr. `.env.example`. Firebase kliento
+config — kode (`src/utils/firebase.js`), saugomas Console referrer restrictions.
 
-Lokaliai: `.env.local` (gitignore'intas)  
-Produkcijoje: Vercel → Settings → Environment Variables
+**Serverio (tik Vercel env, į klientą nepatenka):** `ANTHROPIC_API_KEY`,
+`BRAVE_API_KEY`, `FIREBASE_SERVICE_ACCOUNT` / `FIREBASE_PRIVATE_KEY` /
+`FIREBASE_CLIENT_EMAIL`, `GOOGLE_CLIENT_ID/SECRET`, `AI_GATEWAY_API_KEY`,
+`VISION_PASSWORD`. Pilnas sąrašas: `vercel env ls`.
 
-## Firebase struktūra
-
-```
-Firestore
-└── users/
-    └── HdAOoLtEzUXqU2px2h3YmzLygCp1/
-        └── { plants: [...], zinynas: [...] }
-
-Storage
-└── plants/
-    └── {plantId}/
-        └── {timestamp}.jpg   ← vartotojo nufotografuotos/pasirinktos nuotraukos
-```
-
-Security rules: read/write tik autentifikuotam vartotojui su atitinkamu UID.
-
-## Duomenų sinchronizacija
-
-- Paleidus app: nuskaitoma iš Firestore (laimi prieš localStorage)
-- Kiekvienas pakeitimas: išsaugoma į localStorage (iš karto) + Firestore (fone)
-- Pull-to-refresh: tempiant puslapį žemyn Dashboard ir Biblioteka ekranuose
-- Grįžus iš fono: automatiškai sinchronizuojama su Firestore
-
-## PWA / Offline
-
-Naudojamas `vite-plugin-pwa` su Workbox:
-
-| Resursas | Strategija | Cache |
-|---|---|---|
-| JS, CSS, HTML, ikonos | Precache (build metu) | Visada atnaujinama per deploy |
-| Firebase Storage nuotraukos | CacheFirst | 30 dienų, max 200 įrašų |
-| iNaturalist / Wikipedia nuotraukos | CacheFirst | 60 dienų, max 300 įrašų |
-| Firestore API | NetworkFirst | 5s timeout, fallback į cache |
-
-## Pagrindiniai failai
+## Firestore struktūra (aukštu lygiu)
 
 ```
-src/
-├── App.jsx                          — Root komponentas, routing, modalų state
-├── hooks/
-│   ├── usePlants.js                 — Visi augalų duomenys + Firestore sync
-│   ├── useChatStream.js             — Bendras Anthropic streaming hook (PlantChat, CollectionChat, ZinynasChat)
-│   ├── usePullToRefresh.js          — Pull-to-refresh gestas (touch events)
-│   └── useLongPress.js              — Ilgo paspaudimo gestas
-├── components/
-│   ├── PlantDetail.jsx              — Augalo detalės lapas (+ ProfileContent export)
-│   ├── PlantCard.jsx                — Augalo kortelė tinklelyje su laistymo/tręšimo ikonomis
-│   ├── PlantTimeline.jsx            — Augalo istorija
-│   ├── AddEventSheet.jsx            — FAB + įvykio pridėjimo forma (iškirpta iš PlantTimeline)
-│   ├── PlantChat.jsx                — Individualaus augalo AI asistentas
-│   ├── SearchModal.jsx              — AI paieška (dvifazė: preview + details; foto identifikavimas)
-│   ├── WateringSession.jsx          — Priežiūros seansas (laistymas + tręšimas pagal zonas; long press preview)
-│   ├── CollectionChat.jsx           — Kolekcijos AI asistentas (Dashboard + Biblioteka)
-│   ├── ZinynasChat.jsx              — Žinyno AI asistentas
-│   ├── ForecastCards.jsx            — Laistymo/tręšimo/žiemojimo prognozės kortelės
-│   ├── ZoneManager.jsx              — Zonų valdymas (CRUD, reorder) + ZoneManagerSheet
-│   ├── StatusPicker.jsx             — Augalo statuso mygtukas + meniu (atsidaro aukštyn)
-│   ├── DeathModal.jsx               — Augalo mirties fiksavimas (priežastis + pamoka)
-│   ├── DeleteModal.jsx              — Ištrynimo patvirtinimas
-│   ├── PinGate.jsx                  — PIN apsauga (hardcoded 1957, 30d localStorage)
-│   └── Navigation.jsx               — Apatinė navigacija
-├── pages/
-│   ├── Dashboard.jsx                — Auginama kolekcija (zonų grupavimas, priežiūros seansas)
-│   ├── Biblioteka.jsx               — Visa biblioteka (auginama + nori + istorija)
-│   └── Zinynas.jsx                  — Žinių bazė su žvaigždutėmis
-└── utils/
-    ├── firebase.js                  — Firebase init + auth + Firestore + Storage
-    ├── imageService.js              — Nuotraukų paieška (iNat/Wikipedia), resize, Storage upload
-    ├── plantTransform.js            — AI rezultato → augalo modelio konvertavimas; makeId(), today()
-    ├── plantNames.js                — Lietuviškų pavadinimų fetchinimas (iNat + GBIF)
-    ├── plantMood.js                 — Augalo nuotaikos logika (kortelės spalva/ikonos)
-    ├── dormancyForecast.js          — Žiemos miego prognozė
-    ├── wateringForecast.js          — Laistymo prognozė (intervalDays, isOverdue, nextDate)
-    ├── fertilizingForecast.js       — Tręšimo prognozė (intervalDays, isOverdue)
-    ├── collectionChatContext.js     — System prompt generavimas kolekcijos chat'ui
-    ├── plantChatContext.js          — System prompt generavimas augalo chat'ui
-    └── pinLock.js                   — PIN logika (localStorage, 30d expiry)
+collections/{collectionId}        — kolekcija (members, rolės: owner/member/viewer)
+└── plants/{plantId}              — augalai (timeline, uzrasai, zonos, statusai)
+users/{uid}                       — vartotojo meta (isAdmin, ...)
+catalog/{slug}                    — GLOBALUS rūšių katalogas (F1 reference overlay)
+taxonGroups/{id}                  — rūšių/serijų grupavimas (species, genus-care)
+invites/{code}                    — pakvietimai į kolekcijas
+plant-passports/{plantId}         — viešos paso kortelės (/p/{id})
 ```
 
-## AI paieška — dvifazė
+## Domeno modelis (trumpai)
 
-1. **Phase 1** (`claude-sonnet-4-6`, max 1024 tokens) — greitas preview: pavadinimas, statistikos, aprašymas, įdomybės. Rodoma iš karto (~2–4s). Tuo pat metu fetchinamos nuotraukos ir lietuviški pavadinimai (iNat/GBIF).
-2. **Phase 2** (`claude-sonnet-4-6`, max 2048 tokens) — išsami priežiūros informacija (laistymas, tręšimas, substratai, problemos...). Triggerinamas tik paspaudus išsaugojimo mygtuką.
+- `kategorija`: `auginama` | `nori` (grynas wishlist) | `istorija` (buvę augalai,
+  `historyKind`: died / removed). Gyvavimo ciklo logika: `src/hooks/usePlants.js`
+  (markAsDied, markAsRemoved, regrowPlant=fork).
+- `status`: `healthy` | `sick` | `quarantine` (+ `numire` perėjimas → istorija).
+  Perėjimų UI: `src/components/plant-detail/StatusTransitionSheet.jsx`.
+- Prognozės: kategorijų lentelės + istorijos blend — `src/utils/wateringForecast.js`,
+  `fertilizingForecast.js` (testuota, žr. `docs/quality-infra.md`).
 
-Foto paieška: kamera arba galerija → base64 → Phase 1 su image bloku.
+## Architektūros kertiniai sprendimai
 
-## AI chat asistentai
+- **F1 reference overlay** (`src/utils/catalog.js`) — katalogo pataisymai pasiekia
+  visus user augalus realtime per `resolvePlantView`, be denormalizacijos. Miręs
+  augalas (`refFrozen`) — įšaldytas snapshot.
+- **Derminis toksiškumas** (`src/utils/deriveToxicity.js`) — NEPRIKLAUSOMAI nuo AI,
+  tiesiai iš ASPCA/PFAF šaltinių (AI nepatikimas safety laukams). Client ir server
+  kopijos — **MIRROR, keičiamos tik kartu** (žr. `tasks/lessons.md` N+11).
+- **Foto modelis** — `plant.image` = TIK asmeninė user foto; katalogo watercolor
+  hero (`heroThumb`/`heroIllustration`) visais kitais atvejais. Žr. backbone docs.
+- **Deploy modelis** — push į `main` → prod, be staging (OAuth preview neveikia).
+  Saugos tinklas: CI aliarmas (~40s) + Sentry. Žr. `docs/quality-infra.md`.
 
-Visi naudoja bendrą `useChatStream` hook'ą:
+## PWA
 
-| Komponentas | Kontekstas | max_tokens |
-|---|---|---|
-| `PlantChat` | Konkretus augalas + jo istorija | 300 |
-| `CollectionChat` | Visa kolekcija + statistikos | 400 |
-| `ZinynasChat` | Žinyno įrašas + kiti įrašai | 400 |
-
-Modelis: `claude-haiku-4-5` chat'ui (greitas, pigus), `claude-sonnet-4-6` paieškai.
-
-> **Pastaba:** Faktiškai SearchModal naudoja `claude-sonnet-4-6` tiesiai, o chat'ai — per `useChatStream` su `claude-sonnet-4-6` (reikia patikrinti ar pakeista į haiku).
-
-## Nuotraukų tvarka
-
-1. Vartotojo nuotrauka (Camera arba PhotoLibrary) → resize (max 1200px, 0.85 kokybė) → Firebase Storage → URL išsaugomas augale
-2. iNaturalist nuotraukos (per `fetchPhotos`)
-3. Wikimedia fallback (per `fetchBestPhoto`)
-
-`uploadImage()` automatiškai atpažįsta `data:` URL (uploada į Storage) vs išorinį URL (grąžina nepakeistą).
-
-## Augalo kategorijos
-
-| `kategorija` | Reiškia | Kur rodoma |
-|---|---|---|
-| `auginama` | Aktyviai auginamas | Dashboard + Biblioteka |
-| `nori` | Norų sąraše | Biblioteka |
-| `istorija` | Mirė arba atiduota | Biblioteka (filtras: Mirę) |
-
-## Augalo statusai
-
-| `status` | Reiškia | Spalva |
-|---|---|---|
-| `healthy` | Sveikas | Žalia |
-| `sick` | Dėmesio | Oranžinė |
-| `quarantine` | Karantinas | Raudona |
-| `numire` | Numirė | Pilka |
-
-Karantino augalai `WateringSession` rodomi atskiroje grupėje su raudonu fonu.
-
-## Priežiūros seansas (WateringSession)
-
-- Grupuoja augalus pagal zonas (+ karantinas atskirai)
-- Tile paspaudimas — pažymi/atžymi
-- Tile long press (250ms) — rodo padidintą nuotrauką (PlantPreview overlay)
-- **Laistyti** — įrašo `watering` įvykį pažymėtiems augalams
-- **Tręšti** — įrašo ir `watering`, ir `fertilizing` įvykius
-
-## Biblioteka — filtravimas
-
-- Tagų filtrai (AND logika): **Visi** / **Nauji** (nori) / Pirkinys / Mirę / Su užrašais
-- Rikiavimas: Pridėta / A–Z / Šviesa / Vanduo / Sunkumas
-
-## PIN apsauga
-
-Hardcoded PIN: `1957`. Atrakinus — įrenginys prisimenamas 30 dienų (`localStorage`). Kiekvienas įrenginys valdomas atskirai.
+`vite-plugin-pwa` + Workbox, `registerType: 'prompt'` (ne autoUpdate — kad SW
+tyliai nepakeistų bundle'o po deploy'aus). Cache strategijos — `vite.config.js`
+(source of truth).
