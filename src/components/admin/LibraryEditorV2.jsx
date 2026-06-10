@@ -38,7 +38,7 @@ import {
   Image as ImageIcon, Type, BookOpen, Droplet, Skull, Tag, Info, Loader2,
   Palette,
 } from 'lucide-react'
-import { ProfileContent } from '../plant-detail/PlantDetail'
+import { ProfileContent } from '../plant-detail/ProfileContent'
 import PlantImage from '../brand/PlantImage'
 import { TAXON_GROUP_TYPES } from '../../utils/taxonGroups'
 import { parseLatinName } from '../../utils/latinName'
