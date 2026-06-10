@@ -133,8 +133,14 @@ function derivePfafSeverity(hazardsText) {
 
   // SEVERITY ≠ TIPAS (2026-05-29, MIRROR client): sunkumas ir tipas — atskiros
   // ašys. Dirginimas gali būti VIDUTINIS (Euphorbia), ne automatiškai silpnas.
+  // NB: stem-regex'uose NĖRA trailing \b — kamienai (nause/seizur/convuls/
+  // irritat/poison) turi match'inti žodžių formas („nausea", „vomiting",
+  // „irritation", „poisonous"). Su \b jie NIEKADA nematch'ina (nėra tokių
+  // žodžių) → severity null → PFAF toxicity tyliai numetama (under-report).
+  // Šitas \b bug'as taisytas 3eb3081, regresavo c3db196 — neprigrąžinti.
+  // SILPNAS regex'as \b PASILIEKA sąmoningai („mild" ≠ „mildew").
   let baseSeverity = null
-  if (/\b(paraly[sz]|vomit|nause|burning|diarrho?e|severe|cardiac|nerve|seizur|convuls)\b/.test(text)) {
+  if (/\b(paraly[sz]|vomit|nause|burning|diarrho?e|severe|cardiac|nerve|seizur|convuls)/.test(text)) {
     baseSeverity = 'vidutinis'
   }
   // SILPNAS — TIK eksplicitiškai švelnu.
@@ -143,10 +149,10 @@ function derivePfafSeverity(hazardsText) {
   }
   // Dirginimas/kontaktas/latex be „mild" → vidutinis (dirginantis). De-escalation
   // (žemiau) nuleidžia į silpnas oksalato dietiniam caution'ui.
-  else if (/\b(irritat|rash|skin contact|topical|latex|sap|blister)\b/.test(text)) {
+  else if (/\b(irritat|rash|skin contact|topical|latex|sap|blister)/.test(text)) {
     baseSeverity = 'vidutinis'
   }
-  else if (/\b(toxic|poison|hazard|harmful)\b/.test(text)) {
+  else if (/\b(toxic|poison|hazard|harmful)/.test(text)) {
     baseSeverity = 'vidutinis'
   } else {
     return null

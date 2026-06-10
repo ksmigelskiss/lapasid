@@ -140,7 +140,7 @@ async function loadAspcaGenusMap() {
 
 // ── Severity heuristic iš PFAF knownHazards textą ─────────────
 
-function derivePfafSeverity(hazardsText) {
+export function derivePfafSeverity(hazardsText) {
   if (!hazardsText || typeof hazardsText !== 'string') return null
   const text = hazardsText.toLowerCase()
 
@@ -173,8 +173,14 @@ function derivePfafSeverity(hazardsText) {
   // SEVERITY ≠ TIPAS (2026-05-29): sunkumas (silpnas/vidutinis/stiprus) ir tipas
   // (dirginantis/toksiskas) — atskiros ašys. Dirginimas gali būti VIDUTINIS
   // (Euphorbia pieno sultys realiai dirgina), ne automatiškai silpnas.
+  // NB: stem-regex'uose NĖRA trailing \b — kamienai (nause/seizur/convuls/
+  // irritat/poison) turi match'inti žodžių formas („nausea", „vomiting",
+  // „irritation", „poisonous"). Su \b jie NIEKADA nematch'ina (nėra tokių
+  // žodžių) → severity null → PFAF toxicity tyliai numetama (under-report).
+  // Šitas \b bug'as taisytas 3eb3081, regresavo c3db196 — neprigrąžinti.
+  // SILPNAS regex'as \b PASILIEKA sąmoningai („mild" ≠ „mildew").
   let baseSeverity = null
-  if (/\b(paraly[sz]|vomit|nause|burning|diarrho?e|severe|cardiac|nerve|seizur|convuls)\b/.test(text)) {
+  if (/\b(paraly[sz]|vomit|nause|burning|diarrho?e|severe|cardiac|nerve|seizur|convuls)/.test(text)) {
     baseSeverity = 'vidutinis'
   }
   // SILPNAS — TIK eksplicitiškai švelnu (mild/minor/slight/trivial).
@@ -183,10 +189,10 @@ function derivePfafSeverity(hazardsText) {
   }
   // Dirginimas/kontaktas/latex BE „mild" modifikatoriaus → vidutinis (dirginantis).
   // De-escalation (žemiau) nuleidžia į silpnas oksalato dietiniam caution'ui.
-  else if (/\b(irritat|rash|skin contact|topical|latex|sap|blister)\b/.test(text)) {
+  else if (/\b(irritat|rash|skin contact|topical|latex|sap|blister)/.test(text)) {
     baseSeverity = 'vidutinis'
   }
-  else if (/\b(toxic|poison|hazard|harmful)\b/.test(text)) {
+  else if (/\b(toxic|poison|hazard|harmful)/.test(text)) {
     baseSeverity = 'vidutinis'
   } else {
     return null
@@ -233,7 +239,7 @@ function derivePfafSeverity(hazardsText) {
 //    (local irritation only)
 // 3. severity='vidutinis' — mixed bag, naudoti text pattern priority:
 //    systemic > irritation > allergy > default toksiskas
-function derivePfafTipas(hazardsText, severity) {
+export function derivePfafTipas(hazardsText, severity) {
   if (severity === 'stiprus') return 'toksiskas'
   if (severity === 'silpnas') return 'dirginantis'
   if (!hazardsText || typeof hazardsText !== 'string') return 'toksiskas'
