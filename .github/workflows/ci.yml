@@ -1,0 +1,21 @@
+# CI — vartų sargas push'ams tiesiai į main (prod be staging).
+# Krenta testai ar build → žinai per ~2 min, dar prieš vartotoją.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
