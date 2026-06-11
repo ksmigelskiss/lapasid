@@ -40,3 +40,21 @@ Sintezatorius skaito viską → 2-3 koherentiškos galutinės strategijos (wedge
 ## Commit discipline
 
 Po kiekvieno fazės žingsnio: git add tasks/konsiliumas-2026-06/ && commit && push. Jei radai nesucommit'intų failų — commit'ink pirmiausia.
+
+## ATNAUJINIMAS po 3 fazės (2026-06-11)
+
+3 fazė ✅ — 4 redteam raportai (20-redteam-*.md). Esminiai poslinkiai 4 fazei:
+- S1+S2 hibridas SUNKIAI SUŽEISTAS: realus scan rate <0,5-2% (ne 14-38%), seller WTP = kategorijos klaida (privalomas POS vs diskrecinis ženklas), „antro QR problema" (importas atvažiuos su Plantbeeb QR), S1 SEO fabrikas = deindeksavimo profilis, reali LT B2C Y1 eilutė €0,5-2K (ne €20-35K).
+- **S3 (kolekcinė provenance) — IŠĖJO SUSTIPRĖJUSI iš visų atakų** (nėra antro QR, moka pirkėjas, NFC ekonomika įrodyta). Atlaikiusieji keliai konverguoja į S3+Stripe.
+- deathReason: PRIEŠTARA tarp raportų — wargame išsaugojo kaip ACQUISITION turtą (niekas nerenka), aklosios-zonos nužudė kaip MOAT (N aritmetika: reikia 43-96 mirčių/rūšiai; Planta Graveyard jau egzistuoja). 4 fazė privalo sutaikyti: feature+acquisition story TAIP, B2B dataset NE.
+- S5 kodeksas krito (valstybė negali endorsinti komercinio; lieka vienašalis gidas ≤2 val./sav.).
+- Testų eilė pasikeitė: seller offer-sheets PRIEŠ Stripe testą; Stripe testas — binarinis egzistencijos, ne A/B (n per mažas).
+- Acquisition kaip outcome įvardintas pirmąkart (Plantbeeb LT-data tiekėjo kelias; Decorum/RFH = EU Costa atitikmuo).
+
+## 🔴 URGENT veiksmas kodui (PRIEŠ bet ką kito kitoje sesijoje)
+
+**firestore.rules:86 — catalog WRITE atviras bet kuriam authed user.** Redteam + PLD 2024/2853 kontekstas (software griežtoji atsakomybė nuo 2026-12): „saugumo" produkte bet kas gali perrašyti „toksiškas"→„saugus". Fix: write tik isAdmin. Deploy — Firebase Console (manual, kaip storage.rules). Žinoma vulnerabilitė iš catalog-vision-2026-06-02.md:161 — dabar su atsakomybės dimensija.
+
+## 4 fazės užduotis (naujame lange — pilnam biudžetui)
+
+Sintezatorius skaito 11-sinteze.md + 4 redteam → 2-3 galutinės strategijos su redteam korekcijomis (S3 svoris aukštyn, S1+S2 su perrašyta ekonomika, acquisition outcome) → teisėjai pagal kalibraciją → founder'iui diskusijai. + Founder'io užsakymas: precedentų tekstai (žr. aukščiau).
