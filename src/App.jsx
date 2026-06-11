@@ -405,10 +405,19 @@ export default function App() {
     if (showLogin) {
       return <LoginScreen onSignInGoogle={signInGoogle} onSignInFacebook={signInFacebook} error={authError} />
     }
-    return (
+    // Vieša biblioteka su tuo pačiu desktop split-panel layout'u kaip app'as:
+    // RightPanel (widget'ai + portal target) — PublicPlantCard atsidaro šone.
+    const publicLib = (
       <Suspense fallback={<div className="fixed inset-0 bg-app flex items-center justify-center"><BrandLoader /></div>}>
         <PublicLibrary onLogin={() => setShowLogin(true)} />
       </Suspense>
+    )
+    return (
+      <DetailHostProvider>
+        {isDesktop ? (
+          <DesktopLayout plantsForChart={[]}>{publicLib}</DesktopLayout>
+        ) : publicLib}
+      </DetailHostProvider>
     )
   }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Search } from 'lucide-react'
-import PlantImage from '../components/brand/PlantImage'
+import PlantCard from '../components/PlantCard'
 import PublicPlantCard from '../components/PublicPlantCard'
 
 /**
@@ -35,10 +35,6 @@ export default function PublicLibrary({ onLogin }) {
       .then(d => { if (d.entry) setSelected(d.entry) })
       .catch(() => {})
   }
-
-  const isToxic = (e) =>
-    (Array.isArray(e.savybes?.pavojai) && e.savybes.pavojai.length > 0) ||
-    e.savybes?.pavojingumas?.yra === true
 
   return (
     <div className="flex flex-col h-full bg-app">
@@ -79,22 +75,15 @@ export default function PublicLibrary({ onLogin }) {
         ) : (
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
             {entries.map(e => (
-              <button key={e.slug} onClick={() => openCard(e.slug)} className="text-left group">
-                <div className="relative aspect-square rounded-2xl overflow-hidden bg-bone-50 border border-bone-400/40">
-                  <PlantImage
-                    url={e.heroIllustration ?? e.image}
-                    thumbUrl={e.heroThumb}
-                    size="card"
-                    alt={e.lietuviškas}
-                    className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform"
-                  />
-                  {isToxic(e) && (
-                    <span className="absolute top-1.5 left-1.5 inline-flex items-center justify-center w-5 h-5 rounded-full bg-terracotta-200 text-terracotta-700 text-[11px]" title="Toksiškas">⚠</span>
-                  )}
-                </div>
-                <p className="mt-1.5 text-sm font-medium text-forest-800 truncate">{e.lietuviškas}</p>
-                {e.lotyniskas && <p className="text-xs italic text-forest-400 truncate">{e.lotyniskas}</p>}
-              </button>
+              // PlantCard adapteris: catalog entry + id (PlantCard'ui privalomas).
+              // Hazard pill, akvarelė, vardai — iš PlantCard (shared dizainas).
+              <PlantCard
+                key={e.slug}
+                plant={{ id: e.slug, ...e }}
+                section="nori"
+                onTap={() => openCard(e.slug)}
+                heroIllustration={e.heroIllustration ?? e.image}
+              />
             ))}
           </div>
         )}
