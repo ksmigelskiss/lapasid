@@ -59,3 +59,12 @@ Po kiekvieno fazės žingsnio: git add tasks/konsiliumas-2026-06/ && commit && p
 NE „dar 2-3 strategijos", o SPRENDIMO RĖMAS: 3 realūs žaidimai (mažas-pelningas saugumu-vedamas augalų / variklis-pivotas / kill+toliau), kas kiekvieną patvirtina/žudo, ką founder duomenys jau sako. Founder kartelė = pelningas-laiko-atžvilgiu + mylimas + naudingas visuomenei (NE venture). Pagrindinė gija: 32-founder-market-fit (toksiškumo missija + užkampio parduotuvės). Šalia: S3 provenance, 31-demand-signal. + precedentų tekstai (žr. žemiau).
 
 Sintezatorius skaito 11-sinteze.md + 4 redteam → 2-3 galutinės strategijos su redteam korekcijomis (S3 svoris aukštyn, S1+S2 su perrašyta ekonomika, acquisition outcome) → teisėjai pagal kalibraciją → founder'iui diskusijai. + Founder'io užsakymas: precedentų tekstai (žr. aukščiau).
+
+## ⚠️ VERCEL 12-FUNKCIJŲ LUBOS (2026-06-11)
+Hobby planas = MAX 12 serverless funkcijų (api/*.js be _ prefikso). Pridėjus 13-ą
+(api/catalog/public.js) → Vercel deploy ERROR (build OK, deploy fail ties „Deploying outputs").
+CI (GitHub Actions) to NEpagauna — jis tik test+build, ne Vercel deploy.
+Fix: pašalintas api/dev-toxicity-test.js (dev tool). DABAR ESAM TIES 12 = PILNOS LUBOS.
+→ Bet kuris naujas endpoint'as (pvz. data-protection /api/catalog proxy Phase B) vėl muš limitą.
+   Tada: konsoliduoti funkcijas ARBA upgrade Vercel planą.
+PAMOKA: keičiant api/ funkcijų skaičių, po push'o TIKRINTI `vercel ls` (ne tik CI).
