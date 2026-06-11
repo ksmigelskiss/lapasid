@@ -107,3 +107,22 @@ app'as — tab'as norintiems daugiau (2 segmentas), verslo vizija — atskirai (
 1. Ar pradinio HERO tonas geras („Ar šis augalas saugus tavo namams?") — ar nori švelnesnio/kitokio?
 2. Vision doc lieka gated kaip dabar, ar darom viešą be skaičių?
 3. Ar viešoje bibliotekoje rodom ir „nori/auginu" funkcijas (CTA į app), ar laikom švariai informacinę?
+
+---
+
+## F. FOUNDER'IO SPRENDIMAI (2026-06-11, patvirtinta)
+
+1. **Licencijos viešam paviršiui — ATIDĖTA sąmoningai.** Puslapis „viešas", bet nereklamuojamas —
+   kol kas tik parodymui einant kalbėti su akademija. Visi laukai galiausiai bus akademijos
+   peržiūrimi/koreguojami — dabartinis turinys = preliminarus juodraštis, svorį įgaus po
+   „Patvirtinta X" badge. (Licencijų valymas lieka TRACKED — privalomas PRIEŠ realų reklamavimą.)
+2. **Matomumo sistema — KONFIGŪRUOJAMA.** Turi būti lengva keisti eigoje, kurios sekcijos matomos
+   be registracijos. ŠIAI MINUTEI viešai: vardas (LT+lot) + akvarelė + toksiškumas/savybes +
+   HN 75 + **įdomybės**. BE priežiūros (care) sekcijų.
+3. **Disclaimer be telefono numerio** — numeriai gali keistis; pridėsim po partnerystės.
+4. **Vision doc — iš esmės PERRAŠOMAS.** V1 buvo app-centrinis; dabar pagrindas = bazė/biblioteka.
+   App eina į galą / atskirą sekciją kaip antraeilis. „Paliekama iš V1" sąrašas keliauja į app skiltį.
+5. **Augalo paso naratyvas IŠLIEKA** — šūkis „Pasas augalui — ramybė namuose" lieka brand'o linija.
+6. **Vision doc lieka GATED.**
+7. **Viešoje bibliotekoje JOKIO nori/auginu** kol dirbam su baze. Kortelėje tik: info + visos
+   embed ir print galimybės. Embed/print — dabar tik PAGRINDAS (techninis); dizaino pass'as atskirai.
