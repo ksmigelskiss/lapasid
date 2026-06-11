@@ -55,6 +55,7 @@ Po kiekvieno fazės žingsnio: git add tasks/konsiliumas-2026-06/ && commit && p
 
 **firestore.rules:86 — catalog WRITE atviras bet kuriam authed user.** Redteam + PLD 2024/2853 kontekstas (software griežtoji atsakomybė nuo 2026-12): „saugumo" produkte bet kas gali perrašyti „toksiškas"→„saugus". Fix: write tik isAdmin. Deploy — Firebase Console (manual, kaip storage.rules). Žinoma vulnerabilitė iš catalog-vision-2026-06-02.md:161 — dabar su atsakomybės dimensija.
 
-## 4 fazės užduotis (naujame lange — pilnam biudžetui)
+## 4 fazės užduotis (naujame lange) — STATYTI ANT 32-founder-market-fit.md!
+NE „dar 2-3 strategijos", o SPRENDIMO RĖMAS: 3 realūs žaidimai (mažas-pelningas saugumu-vedamas augalų / variklis-pivotas / kill+toliau), kas kiekvieną patvirtina/žudo, ką founder duomenys jau sako. Founder kartelė = pelningas-laiko-atžvilgiu + mylimas + naudingas visuomenei (NE venture). Pagrindinė gija: 32-founder-market-fit (toksiškumo missija + užkampio parduotuvės). Šalia: S3 provenance, 31-demand-signal. + precedentų tekstai (žr. žemiau).
 
 Sintezatorius skaito 11-sinteze.md + 4 redteam → 2-3 galutinės strategijos su redteam korekcijomis (S3 svoris aukštyn, S1+S2 su perrašyta ekonomika, acquisition outcome) → teisėjai pagal kalibraciją → founder'iui diskusijai. + Founder'io užsakymas: precedentų tekstai (žr. aukščiau).
