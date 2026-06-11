@@ -52,6 +52,7 @@ const ProfileSheet = lazyWithRetry(() => import('./components/ProfileSheet'))
 const Biblioteka  = lazyWithRetry(() => import('./pages/Biblioteka'))
 const AdminPanel  = lazyWithRetry(() => import('./components/admin/AdminPanel'))
 const Zinynas     = lazyWithRetry(() => import('./pages/Zinynas'))
+const PublicLibrary = lazyWithRetry(() => import('./pages/PublicLibrary'))
 
 export default function App() {
   const {
@@ -386,7 +387,10 @@ export default function App() {
     }
   }, [tab, closeAllDesktopModals])
 
+  const [showLogin, setShowLogin] = useState(false)
+
   // ── Auth gate ─────────────────────────────────────────────────
+  // Neprisijungęs mato viešą biblioteką (1 segmentas); „Prisijungti" → LoginScreen.
   if (authLoading) {
     return (
       <div className="fixed inset-0 bg-app flex flex-col items-center justify-center gap-4">
@@ -398,7 +402,14 @@ export default function App() {
     )
   }
   if (!user && !viewerToken) {
-    return <LoginScreen onSignInGoogle={signInGoogle} onSignInFacebook={signInFacebook} error={authError} />
+    if (showLogin) {
+      return <LoginScreen onSignInGoogle={signInGoogle} onSignInFacebook={signInFacebook} error={authError} />
+    }
+    return (
+      <Suspense fallback={<div className="fixed inset-0 bg-app flex items-center justify-center"><BrandLoader /></div>}>
+        <PublicLibrary onLogin={() => setShowLogin(true)} />
+      </Suspense>
+    )
   }
 
   // Pending admin approval — naujas user'is dar nepatvirtintas.

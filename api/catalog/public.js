@@ -23,7 +23,7 @@ import { adminFirestore } from '../_lib/firestore-admin.js'
 // dregme, substratas, persodinimas, ziemojimas, dauginimas, problemos
 // (care sekcijos + licencijų rizika).
 const PUBLIC_FIELDS = [
-  'lietuviškas', 'lotyniškas', 'sinonimai', 'englishNames',
+  'lietuviškas', 'lotyniskas', 'sinonimai', 'englishNames',
   'heroIllustration', 'heroThumb', 'image',
   'savybes',      // toksiškumas / valgomumas / vaistinis — saugumo šerdis
   'idomybes',     // įdomybės
@@ -31,7 +31,7 @@ const PUBLIC_FIELDS = [
 
 // Grid sąrašui užtenka mažiau (lengvas payload).
 const LIST_FIELDS = [
-  'lietuviškas', 'lotyniškas', 'heroThumb', 'heroIllustration', 'image', 'savybes',
+  'lietuviškas', 'lotyniskas', 'heroThumb', 'heroIllustration', 'image', 'savybes',
 ]
 
 // ── In-memory module cache (katalogas mažas ~100-300 įrašų, retai keičiasi) ──
@@ -64,7 +64,7 @@ function norm(s) {
 
 function matches(entry, q) {
   const hay = [
-    entry.lietuviškas, entry.lotyniškas,
+    entry.lietuviškas, entry.lotyniskas,
     ...(Array.isArray(entry.sinonimai) ? entry.sinonimai : []),
     ...(Array.isArray(entry.englishNames) ? entry.englishNames : []),
   ].map(norm).join(' ')
