@@ -5,14 +5,33 @@
     "saltinis": "docs/toksiskumo-klasifikacija.md (research-grade, NE toksikologo verifikuota)",
     "patikimumas": "~85-90%, laukia toksikologo patikros (akademijos partnerystė)",
     "enumai": {
-      "mechanizmo_tipas": ["lokalus_dirgiklis", "sisteminis", "fototoksinis"],
-      "sunkumo_lubos": ["silpnas", "vidutinis", "sunkus", "mirtinas"],
-      "rusies_jautrumas_reiksme": ["nera", "silpnas", "vidutinis", "sunkus", "mirtinas", null],
-      "patikimumas": ["AUKSTAS", "VIDUTINIS", "ZEMAS"]
+      "mechanizmo_tipas": [
+        "lokalus_dirgiklis",
+        "sisteminis",
+        "fototoksinis"
+      ],
+      "sunkumo_lubos": [
+        "silpnas",
+        "vidutinis",
+        "sunkus",
+        "mirtinas"
+      ],
+      "rusies_jautrumas_reiksme": [
+        "nera",
+        "silpnas",
+        "vidutinis",
+        "sunkus",
+        "mirtinas",
+        null
+      ],
+      "patikimumas": [
+        "AUKSTAS",
+        "VIDUTINIS",
+        "ZEMAS"
+      ]
     },
     "pastaba": "rusies_jautrumas: 'nera' = netoksiška šiai rūšiai; null = nepakanka duomenų (NE 'saugu'). aprasymai pildomi atskiru konvejeriu."
   },
-
   "ca_oxalate_insoluble": {
     "vardas_lt": "Netirpūs kalcio oksalatai (rafidės)",
     "vardas_en": "Insoluble calcium oxalate raphides",
@@ -21,14 +40,26 @@
     "sunkumo_lubos": "vidutinis",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "silpnas", "suo": "silpnas", "paukstis": "vidutinis", "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "silpnas",
+      "kate": "silpnas",
+      "suo": "silpnas",
+      "paukstis": "vidutinis",
+      "grauzikas": null
+    },
     "simptomai_lt": "Momentinis burnos/lūpų deginimas, seilėtekis, gleivinės patinimas, rijimo sutrikimas; kontaktinis dermatitas; akių dirginimas. Praeina per valandas.",
     "medikui_lt": "Simptominis; antidoto nėra. Burnos skalavimas, šaltis. 112 jei ryklės patinimas/dusulys (reta).",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Paėmęs tokio augalo gabalėlį į burną, vaikas gali pajusti lūpų ir burnos deginimą, pagausėjusį seilėtekį, gleivinės paburkimą — nemalonu, bet beveik visada lengva ir praeina per kelias valandas. Stiprus deginimas paprastai pats sustabdo vaiką nuo didesnio kiekio. Praskalaukite burną, duokite ko nors vėsaus atsigerti ir nurimkite: tokie augalai labai dažni ir rimtų pasekmių sukelia retai. Pagalbos kreipkitės tik tuo retu atveju, jei pradeda tinti ryklė ar darosi sunku kvėpuoti.",
+      "suauge_zmones": "Sąlytis su sultimis ar lapais gali padirginti odą bei akis, o įsidėjus į burną — sukelti momentinį deginimą, seilėtekį ir trumpalaikį rijimo nemalonumą. Tai vietinis dirgiklis, ne sisteminis nuodas: simptomai lieka burnoje ir praeina per kelias valandas. Genėdami plaukite rankas ir nesitrinkite akių; prarijus — praskalaukite burną ir gerkite vėsų skystį. Į medikus kreipkitės tik retu atveju, jei tinsta ryklė ar trinka kvėpavimas.",
+      "gyvunai": "Katėms ir šunims tai paprastai lengvas vietinis dirginimas: deginimas burnoje, seilėtekis, letenos braukimas per snukį, kartais vėmimas — nemalonu, bet retai pavojinga ir dažniausiai praeina savaime. Paukščiai jautresni, nes jiems gali patinti ryklė, todėl jų kvėpavimą stebėkite atidžiau. Pašalinkite augalo likučius iš snukio ir leiskite atsigerti vėsaus vandens. Į veterinarą kreipkitės, jei augintinis nustoja ėsti, smarkiai seilėjasi ilgiau nei kelias valandas arba (ypač paukštis) sunkiai kvėpuoja."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://www.poison.org/articles/dieffenbachia-and-philodendron-202", "https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals"]
+    "saltiniai": [
+      "https://www.poison.org/articles/dieffenbachia-and-philodendron-202",
+      "https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals"
+    ]
   },
-
   "ca_oxalate_soluble": {
     "vardas_lt": "Tirpūs oksalatai",
     "vardas_en": "Soluble oxalates",
@@ -37,14 +68,25 @@
     "sunkumo_lubos": "sunkus",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "vidutinis", "suo": "vidutinis", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "silpnas",
+      "kate": "vidutinis",
+      "suo": "vidutinis",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "GI dirginimas; prie absorbcijos — hipokalcemija (silpnumas, tetanija, traukuliai); ūmus inkstų nepakankamumas dideliais kiekiais.",
     "medikui_lt": "Ca papildymas, hidratacija, inkstų funkcijos stebėjimas. Specifinio antidoto nėra.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Nukandęs lapelio ar paėmęs sulčių į burną, vaikas dažniausiai pajus tik burnos ir pilvuko dirginimą — gali pykinti, paskaudėti pilvą. Rimčiau susirūpinti verta tik tuomet, jei vaikas suvalgytų tikrai didelį kiekį, nes šie oksalatai gali įsisavinti į kraują ir paveikti kalcio pusiausvyrą bei inkstus. Tokie kiekiai nuo vieno kąsnio retai pasiekiami, tad nedidelis paragavimas — ne nelaimė. Praskalaukite burną, duokite atsigerti, o pastebėję silpnumą, raumenų trūkčiojimą ar didelį suvalgytą kiekį, kreipkitės į Apsinuodijimų kontrolės biurą (visą parą).",
+      "suauge_zmones": "Tvarkant augalą sultys ir sotys gali padirginti odą bei burną, todėl po genėjimo verta nusiplauti rankas ir nesitrinti akių. Paragavus ar netyčia suvalgius nedidelį kiekį, simptomai paprastai lieka virškinimo lygmenyje — pykinimas, vėmimas, pilvo dieglys. Pavojus tampa rimtas tik prarijus didelį kiekį: oksalatai gali įsisavinti į kraują, sumažinti kalcio kiekį (silpnumas, raumenų spazmai) ir apkrauti inkstus. Specifinio priešnuodžio nėra, tad gausiai prarijus ar pajutus silpnumą kreipkitės pagalbos.",
+      "gyvunai": "Katėms ir šunims jautrumas panašus, vidutinis: dažniausiai tai vėmimas, seilėtekis ir viduriavimas. Skirtingai nei netirpūs oksalatai, šie gali įsisavinti į kraują, todėl suėdus didesnį kiekį galimas kalcio sumažėjimas ir inkstų apkrova — stebėkite, ar gyvūnas nepasidaro silpnas, drebantis. Apie paukščius ir graužikus patikimų duomenų trūksta, tad jiems geriau augalo neprileisti. Pastebėję gausų suėdimą, vėmimą ar silpnumą, skambinkite į artimiausią budinčią veterinarijos kliniką."
+    },
     "patikimumas": "VIDUTINIS",
-    "saltiniai": ["https://www.sciencedirect.com/topics/pharmacology-toxicology-and-pharmaceutical-science/oxalis"]
+    "saltiniai": [
+      "https://www.sciencedirect.com/topics/pharmacology-toxicology-and-pharmaceutical-science/oxalis"
+    ]
   },
-
   "saponins": {
     "vardas_lt": "Saponinai",
     "vardas_en": "Saponins",
@@ -53,14 +95,26 @@
     "sunkumo_lubos": "silpnas",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "silpnas", "suo": "silpnas", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "silpnas",
+      "kate": "silpnas",
+      "suo": "silpnas",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "Pykinimas, vėmimas, viduriavimas, pilvo dieglys. Per os blogai absorbuojasi → praktiškai tik GI.",
     "medikui_lt": "Simptominis, hidratacija. Antidoto nėra. Klinikinis sunkumas dažnai pervertinamas.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Paragavęs tokio augalo lapelio, vaikas blogiausiu atveju pajus pykinimą, vėmimą ar laisvą vidurių pasileidimą — saponinai dirgina virškinimą, bet per burną beveik nepasisavinami. Tai vienas švelnesnių augalų, todėl didelio nerimo nereikia. Duokite atsigerti ir stebėkite: simptomai paprastai praeina savaime. Su gydytoju pasitarkite tik tuomet, jei vėmimas ar viduriavimas kartojasi, o vaikas darosi mieguistas ar netenka skysčių.",
+      "suauge_zmones": "Suaugusiajam šie augalai pavojaus praktiškai nekelia: daugiausia, ką gali sukelti prarytas didesnis kiekis, yra pykinimas, vėmimas, pilvo diegimas ar viduriavimas. Saponinai virškinamajame trakte beveik neabsorbuojami, todėl poveikis lieka vietinis ir laikinas, o jų pavojingumas dažnai būna pervertinamas. Tvarkant augalą jokių ypatingų atsargumo priemonių nereikia. Užtenka gerti daugiau skysčių; medikų pagalbos prireikia tik išskirtiniais atvejais.",
+      "gyvunai": "Katėms ir šunims tai lengvas virškinimo dirgiklis: pagraužus lapų dažniausiai pasireiškia vėmimas, viduriavimas, seilėtekis, kartais sumažėja apetitas. Pavojingiausia ne pati medžiaga, o galimas skysčių netekimas, jei vėmimas ar viduriavimas užsitęsia. Patraukite augalą iš pasiekiamos vietos, pasiūlykite vandens ir stebėkite. Į veterinarą kreipkitės, jei vėmimas ar viduriavimas trunka ilgiau nei parą arba augintinis tampa apatiškas — pats apsinuodijimas paprastai būna nesunkus."
+    },
     "patikimumas": "VIDUTINIS",
-    "saltiniai": ["https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/yucca", "https://www.mdpi.com/2072-6651/15/5/346"]
+    "saltiniai": [
+      "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/yucca",
+      "https://www.mdpi.com/2072-6651/15/5/346"
+    ]
   },
-
   "cardiac_glycosides": {
     "vardas_lt": "Kardiakiniai (širdies) glikozidai",
     "vardas_en": "Cardiac glycosides (cardenolides/bufadienolides)",
@@ -69,14 +123,26 @@
     "sunkumo_lubos": "mirtinas",
     "doze_priklausomas": true,
     "antidotas": "DigiFab (digoksinui specifiniai Fab fragmentai)",
-    "rusies_jautrumas": { "zmogus": "mirtinas", "kate": "mirtinas", "suo": "mirtinas", "paukstis": "sunkus", "grauzikas": "sunkus" },
+    "rusies_jautrumas": {
+      "zmogus": "mirtinas",
+      "kate": "mirtinas",
+      "suo": "mirtinas",
+      "paukstis": "sunkus",
+      "grauzikas": "sunkus"
+    },
     "simptomai_lt": "Pykinimas, vėmimas, viduriavimas; silpnumas; spalvų matymo pokyčiai; gyvybei pavojingos aritmijos, AV blokada, bradikardija. Vanduo (kuriame plūduriavo lapai) irgi toksiškas.",
     "medikui_lt": "Aktyvuota anglis, K+ korekcija, EKG monitoringas. ANTIDOTAS: DigiFab.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Šie augalai (oleandras, pakalnutė, kalankė, rusmenė) veikia širdį, todėl į juos žiūrime rimtai. Trumpas prisilietimas prie sveikos odos pavojaus nekelia, bet jei vaikas nukąstų ar pažiaustų lapą ar žiedą — o ypač jei išgertų vandens, kuriame mirko lapai — tai jau svarbu. Galimi pykinimas, vėmimas, silpnumas, o didesni kiekiai sutrikdo širdies ritmą. Nelaukite simptomų: jei vaikas ką nors prarijo, iškart kreipkitės į Apsinuodijimų kontrolės biurą ar gydytojus.",
+      "suauge_zmones": "Augalas toksiškas, jei prarytas; pavojų lemia poveikis širdžiai, ne dirginimas. Tvarkydami ir genėdami mūvėkite pirštines ir venkite sulčių patekimo į burną ar akis — paprastas sąlytis su sveika oda nepavojingas, tačiau po darbo nusiplaukite rankas ir nelaikykite augalo dalių prie maisto. Net vanduo, kuriame stovėjo skintos šakelės, yra toksiškas, todėl jo negerkite ir nepalikite pasiekiamoje vietoje. Prarijus galimi pykinimas, vėmimas, silpnumas, spalvų matymo pokyčiai ir pavojingi širdies ritmo sutrikimai — tokiu atveju nedelsdami kreipkitės pagalbos (yra specifinis priešnuodis).",
+      "gyvunai": "Pavojinga visiems augintiniams: katėms, šunims, taip pat paukščiams ir graužikams. Toksinas veikia širdį, todėl rizika rimta net suvalgius nedidelį kiekį bet kurios augalo dalies — pavojingas ir vanduo iš vazos, kuriame mirko lapai. Galimi vėmimas, viduriavimas, silpnumas ir gyvybei pavojingi širdies ritmo sutrikimai. Jei matėte ar įtariate, kad augintinis ėdė šio augalo, nelaukite simptomų — iškart skambinkite į veterinarijos kliniką."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://calpoison.org/content/naturally-occurring-cardiac-glycoside-poisoning", "https://www.petpoisonhelpline.com/poison/cardiac-glycosides/"]
+    "saltiniai": [
+      "https://calpoison.org/content/naturally-occurring-cardiac-glycoside-poisoning",
+      "https://www.petpoisonhelpline.com/poison/cardiac-glycosides/"
+    ]
   },
-
   "tropane_alkaloids": {
     "vardas_lt": "Tropano alkaloidai (antikolinerginiai)",
     "vardas_en": "Tropane alkaloids",
@@ -85,14 +151,25 @@
     "sunkumo_lubos": "sunkus",
     "doze_priklausomas": true,
     "antidotas": "Fizostigminas (atrinktais sunkiais atvejais)",
-    "rusies_jautrumas": { "zmogus": "sunkus", "kate": "sunkus", "suo": "sunkus", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "sunkus",
+      "kate": "sunkus",
+      "suo": "sunkus",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "Antikolinerginis toksidromas: midriazė, sausa karšta oda, tachikardija, šlapimo susilaikymas, deliriumas, haliucinacijos. Sunkiais atvejais hipertermija, traukuliai.",
     "medikui_lt": "Palaikomasis; benzodiazepinai ažitacijai; antidotas fizostigminas sunkiam deliriumui.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Šie augalai (pavyzdžiui, durnaropės, brugmansija) vaikams rimti — net nedidelis prarytas kiekis gali pakenkti. Jei vaikas tik palietė, didelio pavojaus paprastai nėra, bet rankas reikia nuplauti ir saugoti, kad nepatrintų akių. Jei vaikas įsidėjo augalo dalį į burną ar prarijo, gali atsirasti išsiplėtę vyzdžiai, paraudusi sausa oda, padažnėjęs pulsas, mieguistumas ar keistas elgesys — tokiu atveju nedelsdami kreipkitės į Apsinuodijimų kontrolės biurą arba skubią pagalbą.",
+      "suauge_zmones": "Pagrindinis pavojus kyla prarijus: pasireiškia vadinamasis antikolinerginis sindromas (išsiplėtę vyzdžiai, sausa karšta oda, padažnėjęs širdies plakimas, sąmyšis, haliucinacijos), o sunkiais atvejais — perkaitimas ir traukuliai. Tvarkydami augalą mūvėkite pirštines, nelieskite veido bei akių, o po darbo nusiplaukite rankas. Šie augalai nėra skirti vartoti jokia forma; pajutę išvardytus simptomus po sąlyčio kreipkitės pagalbos.",
+      "gyvunai": "Katėms ir šunims tropano alkaloidai pavojingi taip pat rimtai kaip žmonėms — prarijus gali išsiplėsti vyzdžiai, padažnėti pulsas, atsirasti susijaudinimas ar dezorientacija. Apie poveikį paukščiams ir graužikams patikimų duomenų nepakanka, tad jiems augalą atsargumo dėlei laikykite nepasiekiamą. Jei augintinis kramtė ar prarijo augalo, nedelsdami skambinkite į veterinarijos kliniką."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://calpoison.org/content/anticholinergic-plants"]
+    "saltiniai": [
+      "https://calpoison.org/content/anticholinergic-plants"
+    ]
   },
-
   "glycoalkaloids": {
     "vardas_lt": "Glikoalkaloidai (solaninas)",
     "vardas_en": "Glycoalkaloids (solanine)",
@@ -101,14 +178,25 @@
     "sunkumo_lubos": "vidutinis",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "vidutinis", "kate": "vidutinis", "suo": "vidutinis", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "vidutinis",
+      "kate": "vidutinis",
+      "suo": "vidutinis",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "GI (pykinimas, vėmimas, dieglys, viduriavimas), neurologiniai (galvos skausmas, mieguistumas), kartais antikolinerginiai bruožai.",
     "medikui_lt": "Palaikomasis, hidratacija. Antidoto nėra.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Palietęs ar įsidėjęs į burną tokio augalo dalelę (pavyzdžiui, neprinokusią uogą ar lapą), vaikas greičiausiai pajus negalavimą skrandyje — gali pykinti, paskaudėti pilvą, suskysti viduriai. Kartais prisideda galvos skausmas ar mieguistumas. Tai nemalonu, bet paprastai praeina ir mirtinai pavojinga nelaikoma. Duokite atsigerti, stebėkite vaiką, o jei simptomai ryškūs ar suvalgyta nemažai, kreipkitės į Apsinuodijimų kontrolės biurą (visą parą).",
+      "suauge_zmones": "Tvarkyti augalą saugu — pavojų kelia prarijimas, ypač neprinokusių dalių. Suvalgius simptomai daugiausia virškinimo: pykinimas, vėmimas, dieglys, viduriavimas, kartais galvos skausmas ar mieguistumas, retkarčiais antikolinerginiai požymiai (sausa burna, padažnėjęs pulsas). Sunkumas vidutinis ir priklauso nuo kiekio: nedidelis paragavimas pavojaus nekelia, didesnis kiekis reikalauja dėmesio. Specifinio priešnuodžio nėra; gausiau prarijus ar ryškėjant simptomams kreipkitės pagalbos.",
+      "gyvunai": "Katėms ir šunims jautrumas panašus ir vidutinis — suėdus dažniausiai pasireiškia vėmimas, viduriavimas, pilvo dieglys, kartais mieguistumas. Tai nemalonu, bet paprastai ne gyvybei pavojinga, o sunkumas priklauso nuo suėsto kiekio. Apie paukščius ir graužikus patikimų duomenų trūksta, tad jiems augalą laikykite nepasiekiamą. Pastebėję gausų suėdimą ar ryškius simptomus, skambinkite į budinčią veterinarijos kliniką."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6321755/"]
+    "saltiniai": [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6321755/"
+    ]
   },
-
   "amaryllidaceae_alkaloids": {
     "vardas_lt": "Amarilio alkaloidai (lycorine)",
     "vardas_en": "Amaryllidaceae alkaloids (lycorine)",
@@ -117,14 +205,26 @@
     "sunkumo_lubos": "silpnas",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "vidutinis", "suo": "vidutinis", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "silpnas",
+      "kate": "vidutinis",
+      "suo": "vidutinis",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "Pykinimas, vėmimas, viduriavimas, seilėtekis, pilvo skausmas. Sunkiais atvejais hipotenzija. Toksinai koncentruoti SVOGŪNĖLYJE.",
     "medikui_lt": "Palaikomasis, rehidratacija. Antidoto nėra. Mechanizmas tik dalinai žinomas.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Narcizuose, amarilyje ir klivijoje esančios medžiagos, jas paragavus, dažniausiai sukelia tik vidurių sutrikimą — pykinimą, vėmimą, pagausėjusį seilėjimą. Tai nemalonu, bet retai būna rimta, todėl panikuoti nereikia: nuvalykite vaiko burną, duokite atsigerti ir stebėkite savijautą. Daugiausia veikliųjų medžiagų yra svogūnėlyje, tad jį laikykite vaikui nepasiekiamą; jei vėmimas stiprus ar nesiliauja, pasitarkite su gydytoju.",
+      "suauge_zmones": "Suaugusiajam šie augalai kelia nedidelį pavojų — pagrindinis poveikis prarijus yra virškinimo: pykinimas, vėmimas, viduriavimas, pilvo skausmas, retais sunkiais atvejais kraujospūdžio kritimas. Sodinant ar dalijant svogūnėlius gali padirginti odą, todėl pravartu mūvėti pirštines, ypač turint daug medžiagos. Daugiausia alkaloidų sukaupta svogūnėlyje, ne lapuose; suvalgius didesnį kiekį ir blogai pasijutus verta pasikonsultuoti.",
+      "gyvunai": "Katėms ir šunims poveikis vidutinis — dažniausiai vėmimas, viduriavimas, seilėtekis ir pilvo skausmas, retai kas rimtesnio. Apie paukščius ir graužikus patikimų duomenų trūksta, todėl jiems augalą, o ypač svogūnėlius, laikykite nepasiekiamus. Jei augintinis prarijo nemažai (ypač svogūnėlio) arba ilgai vemia ir silpsta, kreipkitės į veterinarą."
+    },
     "patikimumas": "VIDUTINIS",
-    "saltiniai": ["https://www.petpoisonhelpline.com/poison/amaryllis/", "https://en.wikipedia.org/wiki/Lycorine"]
+    "saltiniai": [
+      "https://www.petpoisonhelpline.com/poison/amaryllis/",
+      "https://en.wikipedia.org/wiki/Lycorine"
+    ]
   },
-
   "colchicine": {
     "vardas_lt": "Kolchicinas",
     "vardas_en": "Colchicine",
@@ -133,14 +233,26 @@
     "sunkumo_lubos": "mirtinas",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "mirtinas", "kate": "mirtinas", "suo": "mirtinas", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "mirtinas",
+      "kate": "mirtinas",
+      "suo": "mirtinas",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "Fazinis kursas: GI 24h (vėmimas, viduriavimas), tada daugiaorganinis nepakankamumas 48-96h (rabdomiolizė, leukopenija, šokas). Koncentruota GUMBUOSE/sėklose.",
     "medikui_lt": "Intensyvus palaikomasis; specifinio antidoto klinikai nėra. Ankstyva GI dekontaminacija.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Šie augalai (pavyzdžiui, gloriozos, čemerinės) vaikams labai pavojingi — kolchicinas net mažais kiekiais gali sukelti sunkų apsinuodijimą. Daugiausia jo yra gumbuose ir sėklose, todėl tokius augalus geriausia auginti visai vaikui nepasiekiamoje vietoje. Jei įtariate, kad vaikas ką nors prarijo, nelaukite simptomų — iškart skambinkite į Apsinuodijimų kontrolės biurą arba skubią pagalbą; ankstyvas veiksmas čia svarbiausias.",
+      "suauge_zmones": "Kolchicinas yra vienas pavojingiausių augalų toksinų — apsinuodijimas vystosi fazėmis: pirmąją parą atsiranda virškinimo simptomai (vėmimas, viduriavimas), o vėliau (per 2–4 paras) gali būti pažeisti keli organai iš karto. Specifinio priešnuodžio praktikoje nėra, todėl lemiamas dalykas — kuo ankstesnė medicinos pagalba. Daugiausia medžiagos yra gumbuose ir sėklose; šių augalų jokia forma nevartokite, o įtarę prarijimą kreipkitės nedelsdami, dar nelaukdami blogos savijautos.",
+      "gyvunai": "Katėms ir šunims kolchicinas gali būti mirtinas — pavojus rimtas net nuo nedidelio kiekio, ypač sukandus gumbą ar sėklas. Apie paukščius ir graužikus patikimų duomenų nepakanka, tad ir jiems šiuos augalus laikykite visiškai nepasiekiamus. Jei įtariate, kad augintinis kramtė ar prarijo augalo dalį, nelaukite simptomų ir iškart skambinkite į veterinarijos kliniką."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://www.ncbi.nlm.nih.gov/books/NBK548068/", "https://pmc.ncbi.nlm.nih.gov/articles/PMC2429836/"]
+    "saltiniai": [
+      "https://www.ncbi.nlm.nih.gov/books/NBK548068/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC2429836/"
+    ]
   },
-
   "aconitine": {
     "vardas_lt": "Akonitinas (diterpeno alkaloidai)",
     "vardas_en": "Aconitine (diterpenoid alkaloids)",
@@ -149,14 +261,25 @@
     "sunkumo_lubos": "mirtinas",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "mirtinas", "kate": "mirtinas", "suo": "mirtinas", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "mirtinas",
+      "kate": "mirtinas",
+      "suo": "mirtinas",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "Momentinis lūpų/burnos/gerklės deginimas, tirpimas; parestezijos; vėmimas; ventrikulinės aritmijos, hipotenzija, šokas.",
     "medikui_lt": "Palaikomasis, EKG monitoringas, atropinas bradikardijai, amiodaronas/flekainidas aritmijoms. Specifinio antidoto nėra.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Kurpeliai (akonitai) ir pentiniai vaikams labai pavojingi — akonitinas veikia greitai ir gali pakenkti net mažais kiekiais. Būdingas ankstyvas požymis paragavus — lūpų ir burnos deginimas bei tirpimas. Tokius augalus geriausia auginti vaikui visai nepasiekiamoje vietoje, o įtarus, kad vaikas ką nors prarijo, nedelsiant skambinti į Apsinuodijimų kontrolės biurą arba skubią pagalbą.",
+      "suauge_zmones": "Akonitinas pavojingas net per odą ir prarijus — pirmieji požymiai būna lūpų, burnos ir gerklės deginimas bei tirpimas, odos dilgčiojimas, vėmimas, o sunkiais atvejais — pavojingi širdies ritmo sutrikimai ir kraujospūdžio kritimas. Genėdami ar persodindami būtinai mūvėkite pirštines ir venkite sąlyčio su veidu bei žaizdomis, nes medžiaga prasiskverbia ir per nepažeistą odą. Šių augalų jokia forma nevartokite; pajutę tirpimą ar deginimą po sąlyčio kreipkitės pagalbos nedelsdami.",
+      "gyvunai": "Katėms ir šunims akonitinas gali būti mirtinas — pavojingi tiek prarijimas, tiek galimi širdies ritmo sutrikimai. Apie paukščius ir graužikus patikimų duomenų trūksta, todėl ir jiems šiuos augalus laikykite nepasiekiamus. Jei įtariate, kad augintinis kramtė ar prarijo augalo dalį, nedelsdami skambinkite į veterinarijos kliniką — laikas čia svarbus."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC5419964/"]
+    "saltiniai": [
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC5419964/"
+    ]
   },
-
   "pyrrolizidine_alkaloids": {
     "vardas_lt": "Pirolizidino alkaloidai",
     "vardas_en": "Pyrrolizidine alkaloids",
@@ -165,14 +288,25 @@
     "sunkumo_lubos": "sunkus",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "sunkus", "kate": "sunkus", "suo": "sunkus", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "sunkus",
+      "kate": "sunkus",
+      "suo": "sunkus",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "LĖTINIS/kaupiamasis (ne ūmus): kepenų sinusoidinės obstrukcijos sindromas — hepatomegalija, ascitas, gelta. Pavojus = pakartotinė ekspozicija (arbatos), ne vienkartinis prarijimas.",
     "medikui_lt": "Palaikomasis, hepatologinė priežiūra. Antidoto nėra. Kambariniams MAŽAI aktualu.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Šių augalų pavojus vaikams kitoks nei daugelio kitų: žala kepenims kaupiasi po pakartotinio vartojimo, o ne nuo vieno atsitiktinio paragavimo. Praktiškai tai reiškia, kad jei vaikas vienąkart palietė ar įsidėjo lapelį į burną, didelio nerimo nereikia — nuvalykite burną ir stebėkite. Tikroji rizika kiltų, jei augalas būtų reguliariai vartojamas (pavyzdžiui, naminėse arbatose), todėl tokių žolelių neduokite vaikams gerti, o kilus abejonių pasitarkite su gydytoju.",
+      "suauge_zmones": "Pirolizidino alkaloidai kenkia kepenims, bet poveikis lėtinis ir kaupiamasis — pavojus kyla nuo pakartotinos ekspozicijos (pavyzdžiui, reguliariai geriant tam tikras žoleles ar arbatas), o ne nuo vienkartinio atsitiktinio prarijimo. Augalą tvarkyti įprastai saugu; svarbiausia — nevartoti jo viduje kaip vaistažolės be patikimo žinojimo. Jei ilgesnį laiką vartojote tokių žolelių ir atsiranda nuovargis, gelta ar diskomfortas dešinėje paširdyje, kreipkitės į gydytoją.",
+      "gyvunai": "Kambariniams augintiniams ši grupė aktuali mažai — žala kepenims atsiranda tik nuo ilgalaikio, pakartotinio rijimo, o ne nuo vienkartinio kąsnio. Atsitiktinai pakramčius augalo paprastai didelio pavojaus nėra, bet neleiskite augintiniui nuolat graužti tų pačių augalų. Apie rūšių skirtumus tarp kačių, šunų, paukščių ir graužikų patikimų duomenų trūksta; jei pastebite užsitęsusį silpnumą, vėmimą ar geltą, pasitarkite su veterinaru."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC8540779/"]
+    "saltiniai": [
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC8540779/"
+    ]
   },
-
   "diterpene_esters": {
     "vardas_lt": "Diterpeno esteriai / forboliai (latex)",
     "vardas_en": "Diterpene esters / phorbols",
@@ -181,14 +315,26 @@
     "sunkumo_lubos": "vidutinis",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "vidutinis", "kate": "vidutinis", "suo": "vidutinis", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "vidutinis",
+      "kate": "vidutinis",
+      "suo": "vidutinis",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "Odos deginimas, eritema, edema, pūslės; AKYS — sunkus konjunktyvitas, keratitas (gali grėsti regėjimui); prarijus — burnos/GI dirginimas. Pieniškame latekse.",
     "medikui_lt": "Gausus akių/odos plovimas; oftalmologo konsultacija akių ekspozicijai. Antidoto nėra. (Poinsetija — rizika PERVERTINTA, tik lengvas dirginimas.)",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Šių augalų pieniškos sultys (lateksas) dirgina odą ir burną, bet daugiausia dėmesio skirkite akims: patekusios į akį jos gali sukelti stiprų skausmą ir paraudimą. Jei vaikas palietė sultis, nuplaukite odą ir rankas, o patekus į akis — gausiai praskalaukite akį vandeniu ir kreipkitės į medikus. Prarijus poveikis paprastai lengvas — burnos ir pilvuko dirginimas; plačiai žinomos poinsetijos pavojus stipriai perdėtas, ji sukelia tik nedidelį dirginimą. Tad labiausiai verta saugotis akių, o ne prarijimo.",
+      "suauge_zmones": "Svarbiausia saugotis pieniškų sulčių: ant odos jos gali sukelti deginimą, paraudimą, kartais pūsleles, o patekusios į akis — stiprų konjunktyvitą, reikalaujantį rimto dėmesio. Genėdami mūvėkite pirštines, nelieskite veido ir akių, o po darbo nusiplaukite rankas. Patekus į akis gausiai skalaukite vandeniu ir kreipkitės į oftalmologą; prarijus poveikis paprastai apsiriboja burnos ir virškinimo dirginimu. Dėl poinsetijos nerimauti neverta — jos rizika perdėta, sukeliamas tik lengvas dirginimas.",
+      "gyvunai": "Katėms ir šunims pieniškos sultys dažniausiai dirgina burną ir virškinimą — atsiranda seilėtekis, vėmimas, kartais odos paraudimas sąlyčio vietoje. Rimtesnė rizika kyla, jei sultys patenka į augintinio akis, todėl po sąlyčio gausiai praskalaukite akį ir snukį. Nuvalykite likusias sultis nuo kailio, kad gyvūnas jų nenusilaižytų. Į veterinarą kreipkitės, jei pažeistos akys, augintinis smarkiai seilėjasi ar vemia — apsinuodijimas paprastai būna vidutinio sunkumo ir gerai praeina."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC6420095/", "https://www.ncbi.nlm.nih.gov/sites/books/NBK574526/"]
+    "saltiniai": [
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC6420095/",
+      "https://www.ncbi.nlm.nih.gov/sites/books/NBK574526/"
+    ]
   },
-
   "grayanotoxins": {
     "vardas_lt": "Grayanotoksinai",
     "vardas_en": "Grayanotoxins",
@@ -197,14 +343,25 @@
     "sunkumo_lubos": "vidutinis",
     "doze_priklausomas": true,
     "antidotas": "Atropinas (bradikardijai; paprastai pakanka)",
-    "rusies_jautrumas": { "zmogus": "vidutinis", "kate": "vidutinis", "suo": "vidutinis", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "vidutinis",
+      "kate": "vidutinis",
+      "suo": "vidutinis",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "Svaigulys, hipotenzija, bradikardija/AV blokada, pykinimas, seilėtekis, silpnumas. Greita pradžia, praeina per 24h.",
     "medikui_lt": "IV skysčiai + atropinas. Mirtys modernioje literatūroje praktiškai neaprašytos.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Rododendruose ir azalijose esanti medžiaga gali laikinai paveikti širdies ritmą ir kraujospūdį, bet rimtam apsinuodijimui reikia suvalgyti nemažai augalo. Trumpas prisilietimas ar atsitiktinis žiedo paragavimas didelio pavojaus paprastai nekelia. Suvalgęs lapų ar žiedų, vaikas gali pajusti pykinimą, seilėtekį, svaigulį ar silpnumą, bet tai dažniausiai praeina per parą. Vis dėlto, jei vaikas prarijo daugiau ar nerimaujate, paskambinkite į Apsinuodijimų kontrolės biurą ir pasitarkite.",
+      "suauge_zmones": "Pagrindinė rizika kyla prarijus augalo dalių ar iš jų pagaminto produkto (pavyzdžiui, medaus iš šių augalų), o ne tvarkant juos rankomis — sąlytis su oda pavojaus beveik nekelia. Suvalgius galimi svaigulys, pykinimas, seilėtekis, kraujospūdžio kritimas ir sulėtėjęs širdies ritmas, tačiau simptomai prasideda greitai ir paprastai praeina per parą. Modernioje literatūroje mirtys praktiškai neaprašytos, todėl be reikalo nuogąstauti neverta. Jei prarijote augalo ir blogai jaučiatės, kreipkitės pagalbos — gydoma sėkmingai.",
+      "gyvunai": "Aktualu katėms ir šunims, suėdusiems lapų ar žiedų; poveikis vidutinis, ne mirtinas. Galimi seilėtekis, vėmimas, silpnumas, svaigulys ir sulėtėjęs širdies ritmas, bet simptomai dažniausiai praeina per parą, o gydymas veiksmingas. Apie paukščius ir graužikus duomenų nepakanka, todėl jiems geriau šio augalo neprileisti. Jei augintinis paėdė rododendro ar azalijos ir tapo silpnas ar vangus, kreipkitės į veterinarą."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC3404272/"]
+    "saltiniai": [
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC3404272/"
+    ]
   },
-
   "cyanogenic_glycosides": {
     "vardas_lt": "Cianogeniniai glikozidai",
     "vardas_en": "Cyanogenic glycosides",
@@ -213,14 +370,25 @@
     "sunkumo_lubos": "mirtinas",
     "doze_priklausomas": true,
     "antidotas": "Hidroksokobalaminas; natrio tiosulfatas",
-    "rusies_jautrumas": { "zmogus": "mirtinas", "kate": "sunkus", "suo": "sunkus", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "mirtinas",
+      "kate": "sunkus",
+      "suo": "sunkus",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "Dusulys, silpnumas, svaigulys, vėmimas, dezorientacija, traukuliai, cianozė, koma. Priklauso nuo kramtymo (sėklos pažeidimo) — sveika praryta sėkla dažnai nepavojinga.",
     "medikui_lt": "ANTIDOTAS: hidroksokobalaminas. O2, palaikomasis.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Šie junginiai būna kai kuriuose kauliukuose ir sėklose. Svarbiausia žinoti: vientisa, nesukramtyta praryta sėkla dažniausiai nepavojinga — toksinas išsiskiria tik kramtant, kai sėkla pažeidžiama. Jei vaikas paėmė ją į rankas ar tik aplaižė, jaudintis nereikia. Įsitikinkite, ar nieko nesukramtė ir neprarijo, o jei abejojate — kreipkitės į Apsinuodijimų kontrolės biurą.",
+      "suauge_zmones": "Pavojų lemia ne lietimas, o sukramtymas: vientisą sėklą ar kauliuką organizmas dažnai pašalina nepažeistą. Tvarkant, genint ar ruošiant vaisius pakanka įprasto rūpestingumo — sąlytis su oda apsinuodijimo nesukelia. Rizika kyla tik suvalgius didesnį kiekį sutrintų ar sukramtytų sėklų; tuomet galimas dusulys, silpnumas, svaigulys, ir kreiptis reikia nedelsiant.",
+      "gyvunai": "Katėms ir šunims tai vertinama kaip sunkaus laipsnio pavojus, o paukščiams ir graužikams patikimų duomenų trūksta. Esmė ta pati kaip žmonėms — apsinuodijama tik sukramtytomis sėklomis, ne praeinant pro augalą. Jei augintinis sugraužė sėklų ir atsirado dusulys, silpnumas, vėmimas ar dezorientacija, tai skubu — iškart kreipkitės į visą parą veikiančią veterinarijos kliniką, nes gydymui yra priešnuodis."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2016.4424"]
+    "saltiniai": [
+      "https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2016.4424"
+    ]
   },
-
   "toxalbumins": {
     "vardas_lt": "Toksalbuminai / lektinai",
     "vardas_en": "Toxalbumins / lectins (RIP type 2)",
@@ -229,14 +397,25 @@
     "sunkumo_lubos": "mirtinas",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "mirtinas", "kate": "mirtinas", "suo": "mirtinas", "paukstis": null, "grauzikas": "mirtinas" },
+    "rusies_jautrumas": {
+      "zmogus": "mirtinas",
+      "kate": "mirtinas",
+      "suo": "mirtinas",
+      "paukstis": null,
+      "grauzikas": "mirtinas"
+    },
     "simptomai_lt": "Pilvo skausmas, vėmimas, viduriavimas, GI kraujavimas; sunkiais atvejais šokas, daugiaorganinis nepakankamumas. Latentinis periodas (kelios valandos). PASTABA: prarijus dažniausiai išgyvenama (~98%) jei sėkla nesukramtyta; injekcija/inhaliacija kur kas pavojingesnė.",
     "medikui_lt": "Agresyvi palaikomoji terapija, skysčiai, GI dekontaminacija. Specifinio antidoto nėra.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Šių augalų sėklos vertinamos kaip rimtas pavojus, todėl jas geriausia laikyti vaikui nepasiekiamai. Vis dėlto svarbu žinoti raminantį faktą: net prarijus sveiką, nesukramtytą sėklą, didžioji dauguma (apie 98 proc.) atvejų baigiasi gerai, nes kietas sėklos apvalkalas neleidžia toksinui išsiskirti. Pavojus realus tik tada, jei sėkla sukramtoma. Jei vaikas ką nors sukramtė ar prarijo, nedelsdami kreipkitės į Apsinuodijimų kontrolės biurą.",
+      "suauge_zmones": "Lemiamas dalykas — ar sėkla buvo sukramtyta: nepažeistas kietas apvalkalas paprastai apsaugo, todėl prarijus sveiką sėklą dažniausiai išgyvenama. Tvarkant augalą ar sėklas sąlytis su oda apsinuodijimo nesukelia. Apsinuodijimo požymiai (pilvo skausmas, vėmimas, viduriavimas) gali pasirodyti ne iškart, o po kelių valandų, todėl sukramčius sėklų reikia kreiptis ir stebėti būklę, net jei iš pradžių savijauta gera.",
+      "gyvunai": "Šis pavojus vertinamas kaip sunkus visoms augintinių rūšims — katėms, šunims ir graužikams; paukščiams patikimų duomenų trūksta. Kaip ir žmonėms, riziką lemia sėklos sukramtymas, o ne vien sąlytis. Simptomai (vėmimas, viduriavimas, pilvo skausmas) gali vėluoti kelias valandas, todėl įtarę, kad augintinis sukramtė sėklų, nelaukite jų atsiradimo — kreipkitės į visą parą veikiančią veterinarijos kliniką."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC7700980/"]
+    "saltiniai": [
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC7700980/"
+    ]
   },
-
   "furocoumarins": {
     "vardas_lt": "Furokumarinai (fototoksinai)",
     "vardas_en": "Furocoumarins / psoralens",
@@ -245,14 +424,25 @@
     "sunkumo_lubos": "vidutinis",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "vidutinis", "kate": null, "suo": null, "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "vidutinis",
+      "kate": null,
+      "suo": null,
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "Po 12-36h po ekspozicijos + saulės: aiškiai apibrėžta eritema, pūslės, edema, vėliau hiperpigmentacija (fitofotodermatitas). Reikalinga UVA šviesa.",
     "medikui_lt": "Plovimas, vengti saulės, simptominis (steroidai sunkesniems). Antidoto nėra.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Šių augalų sultys ant odos pavojingos tik kartu su saule: jose esančios medžiagos suaktyvėja nuo saulės UVA spindulių ir po pusės–pirmos paros gali sukelti aiškiai apibrėžtą paraudimą ar pūsles, panašias į nudegimą. Tamsoje ar be saulės pačios sultys odos nepažeidžia. Jei vaikas prisilietė prie sulčių, nuplaukite odą ir tą dieną saugokite ją nuo saulės — to dažniausiai pakanka problemai išvengti. Jei vis dėlto atsiranda paraudimas ar pūslelės, pasitarkite su gydytoju.",
+      "suauge_zmones": "Rizika kyla ne nuo prarijimo, o nuo odos sąlyčio su sultimis kartu su saulės šviesa: po 12–36 valandų gali atsirasti ryškiai apibrėžta eritema, pūslės, vėliau — pigmentacija (fitofotodermatitas). Reakcijai būtina UVA šviesa, todėl be saulės sultys odos nepažeidžia. Genėdami mūvėkite pirštines, o atsitiktinai užsitepę sultis nuplaukite odą ir kelias dienas saugokite ją nuo saulės. Atsiradus pūslėms ar stipriam paraudimui kreipkitės į medikus — sunkesniems atvejams gali prireikti vietinio gydymo.",
+      "gyvunai": "Apie šios klasės poveikį gyvūnams patikimų duomenų nepakanka, todėl tiksliai pasakyti, kaip ji veikia katę, šunį ar paukštį, negalima — tai duomenų spraga, o ne įrodymas, kad saugu. Žmonėms žinomas pavojus yra fototoksinis: odos sąlytis su sultimis kartu su saule sukelia nudegimą primenantį pažeidimą, todėl panašus poveikis teoriškai įmanomas ir ant menkiau apaugusios augintinio odos. Apribokite augintinio sąlytį su perlaužtu augalu ir jo sultimis. Pastebėję odos paraudimą, pūsleles ar elgesio pokyčius, pasitarkite su veterinaru."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://emedicine.medscape.com/article/1119566-overview"]
+    "saltiniai": [
+      "https://emedicine.medscape.com/article/1119566-overview"
+    ]
   },
-
   "cycasin": {
     "vardas_lt": "Cikazinas",
     "vardas_en": "Cycasin",
@@ -261,14 +451,26 @@
     "sunkumo_lubos": "mirtinas",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "sunkus", "kate": "sunkus", "suo": "mirtinas", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "sunkus",
+      "kate": "sunkus",
+      "suo": "mirtinas",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "Ūmi kepenų nekrozė (vėmimas, gelta, kepenų nepakankamumas) + neurotoksiškumas (BMAA). Sėklos/riešutai toksiškiausi. Sago palmė nėra tikra palmė.",
     "medikui_lt": "Palaikomasis, hepatologinė priežiūra, GI dekontaminacija. Antidoto nėra. ASPCA: ~2.4 proc. mirštamumas šunims.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Šis junginys yra sago „palmėje\", kuri iš tikrųjų nėra palmė, o visas augalas, ypač sėklos ir riešutai, yra rimtai nuodingas. Toksiškiausios yra sėklos, todėl jas geriausia laikyti vaikui nepasiekiamai. Jei vaikas ką nors įsidėjo į burną ar prarijo augalo dalį, ypač sėklą, tai rimta — nedelsdami skambinkite į Apsinuodijimų kontrolės biurą.",
+      "suauge_zmones": "Žmogui tai vertinama kaip sunkaus laipsnio pavojus, pažeidžiantis kepenis; toksiškiausios yra sėklos ir riešutai. Trumpas sąlytis tvarkant augalą nėra pagrindinė rizika — pavojus kyla prarijus augalo dalį, ypač sėklą. Apsinuodijus pasireiškia vėmimas, gelta ir kepenų pažeidimo požymiai; specifinio priešnuodžio nėra, todėl prarijus reikia kreiptis nedelsiant.",
+      "gyvunai": "Šunims tai vertinama kaip mirtinas pavojus (ASPCA duomenimis, apie 2,4 proc. mirštamumas), katėms — sunkus; paukščiams ir graužikams patikimų duomenų trūksta. Toksinas pažeidžia kepenis, o toksiškiausios yra sėklos. Net mažas suėstas kiekis gali būti pavojingas, todėl įtarę, kad augintinis ką nors nukando nuo sago „palmės\", elkitės skubiai — iškart kreipkitės į visą parą veikiančią veterinarijos kliniką, nes priešnuodžio nėra ir svarbi ankstyva pagalba."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://www.cliniciansbrief.com/article/sago-palm-toxicosis-dogs", "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/sago-palm"]
+    "saltiniai": [
+      "https://www.cliniciansbrief.com/article/sago-palm-toxicosis-dogs",
+      "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/sago-palm"
+    ]
   },
-
   "anthraquinones": {
     "vardas_lt": "Antrachinonai (aloinas)",
     "vardas_en": "Anthraquinones (aloin)",
@@ -277,14 +479,25 @@
     "sunkumo_lubos": "silpnas",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "silpnas", "suo": "silpnas", "paukstis": null, "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "silpnas",
+      "kate": "silpnas",
+      "suo": "silpnas",
+      "paukstis": null,
+      "grauzikas": null
+    },
     "simptomai_lt": "Viduriavimas, vėmimas (vidurius laisvinantis efektas). Geltonas latekso sluoksnis po lapo žieve — NE skaidrus gelis (gelis saugus).",
     "medikui_lt": "Simptominis, hidratacija. Antidoto nėra.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Pavojinga ne visa augalo dalis, o tik geltonas kartus latekso sluoksnis po lapo žievele — skaidrus vidinis gelis (toks pat kaip kosmetikoje) yra saugus. Suvalgęs lapo su tuo geltonu sluoksniu, vaikas greičiausiai pajus laisvą vidurių pasileidimą ar vėmimą, nes ši medžiaga laisvina vidurius. Tai vienas švelnesnių augalų, didelio nerimo nereikia. Duokite atsigerti ir stebėkite, o jei viduriavimas užsitęsia — pasitarkite su gydytoju.",
+      "suauge_zmones": "Dirgina geltonas lateksas tarp lapo žievelės ir skaidraus gelio; pats vidinis gelis nekenksmingas. Prarijus geltonojo sluoksnio galimas viduriavimas ar vėmimas — tai vidurius laisvinantis, o ne sisteminis nuodingas poveikis, todėl pavojus nedidelis. Ruošdami lapus nuvalykite geltoną sultį, jei nenorite šio efekto. Pakanka gerti daugiau skysčių; medikų pagalbos paprastai neprireikia.",
+      "gyvunai": "Katėms ir šunims prikandus lapo su geltonu lateksu būdingiausi simptomai — viduriavimas ir vėmimas, nes medžiaga laisvina vidurius; skaidrus gelis pavojaus nekelia. Apsinuodijimas paprastai lengvas, o didžiausia rizika — skysčių netekimas, jei viduriavimas užsitęsia. Patraukite augalą iš pasiekiamos vietos ir pasiūlykite vandens. Į veterinarą kreipkitės, jei viduriavimas ar vėmimas kartojasi ilgiau nei parą arba augintinis tampa apatiškas."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8294304/"]
+    "saltiniai": [
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8294304/"
+    ]
   },
-
   "lily_nephrotoxin": {
     "vardas_lt": "Lelijų nefrotoksinas",
     "vardas_en": "Lily nephrotoxin (Lilium/Hemerocallis)",
@@ -293,14 +506,26 @@
     "sunkumo_lubos": "mirtinas",
     "doze_priklausomas": false,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "mirtinas", "suo": "silpnas", "paukstis": null, "grauzikas": "nera" },
+    "rusies_jautrumas": {
+      "zmogus": "silpnas",
+      "kate": "mirtinas",
+      "suo": "silpnas",
+      "paukstis": null,
+      "grauzikas": "nera"
+    },
     "simptomai_lt": "TIK KATĖMS: inkstų kanalėlių nekrozė. Net vanduo/žiedadulkės/lapelio dalelė. Vėmimas, vėliau ūmus inkstų nepakankamumas per <3 paras. Tikslus toksinas NEŽINOMAS.",
     "medikui_lt": "KATEI: skambink vet DABAR — 18h langas; po jo inkstų pažaida gali būti negrįžtama. Šuniui = lengvas GI. Tik tikrosios Lilium/Hemerocallis (ne Spathiphyllum/Convallaria 'lelijos').",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Tikrosioms lelijoms (Lilium, vienadienėms) būdingas toksinas pavojingas tik katėms — žmogui, taip pat ir vaikui, jis vertinamas kaip silpnas. Jei mažylis palietė žiedą ar įsidėjo lapelio dalelę į burną, sunkaus apsinuodijimo grėsmės nėra; gali tik trumpam padirginti burną. Vis dėlto praskalaukite burnytę, pasiūlykite atsigerti ir stebėkite. Jei neramina vėmimas ar nuolatinė bloga savijauta, kreipkitės į gydytoją arba Apsinuodijimų biurą (visą parą).",
+      "suauge_zmones": "Suaugusiam žmogui šis augalas sukelia tik nedidelį dirginimą — toksinas pavojingas paukščiams ir, svarbiausia, katėms, o ne žmonėms. Genėti, perstatyti ar tvarkyti lelijas galite ramiai, tik po darbo nusiplaukite rankas. Atsitiktinai prarijus augalo dalelę rimto pavojaus nekyla, tačiau jei pasireikštų užsitęsęs pykinimas ar vėmimas, pasitarkite su gydytoju arba Apsinuodijimų biuru. Atminkite: kambarinės „lelijos\" (skėtenė, gegužraibė) nėra tikrosios lelijos ir veikia kitaip.",
+      "gyvunai": "Čia rūšis lemia viską: tikrosios lelijos (Lilium) ir vienadienės (Hemerocallis) katėms yra mirtinai pavojingos — net vanduo iš vazos, žiedadulkės ar mažytė lapelio dalelė gali sukelti inkstų pažaidą; pradžioje vemiama, vėliau per kelias paras vystosi ūmus inkstų nepakankamumas. Tikslus toksinas nežinomas, tad nelaukite simptomų: jei katė turėjo sąlytį su augalu, skambinkite veterinarui tuoj pat — gydymo langas tik apie 18 valandų. Šunims tai sukelia tik lengvą virškinimo dirginimą, o graužikai laikomi atspariais. Patikrinkite, ar tai tikrai Lilium arba Hemerocallis, o ne panašiai vadinama skėtenė ar pakalnutė — jos veikia visai kitaip."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://www.aspcapro.org/resource/how-spot-which-lilies-are-dangerous-cats-plan-treatment", "https://www.fda.gov/animal-veterinary/animal-health-literacy/lovely-lilies-and-curious-cats-dangerous-combination"]
+    "saltiniai": [
+      "https://www.aspcapro.org/resource/how-spot-which-lilies-are-dangerous-cats-plan-treatment",
+      "https://www.fda.gov/animal-veterinary/animal-health-literacy/lovely-lilies-and-curious-cats-dangerous-combination"
+    ]
   },
-
   "persin": {
     "vardas_lt": "Persinas (avokadas)",
     "vardas_en": "Persin (avocado)",
@@ -309,11 +534,23 @@
     "sunkumo_lubos": "mirtinas",
     "doze_priklausomas": true,
     "antidotas": null,
-    "rusies_jautrumas": { "zmogus": "nera", "kate": "silpnas", "suo": "silpnas", "paukstis": "mirtinas", "grauzikas": null },
+    "rusies_jautrumas": {
+      "zmogus": "nera",
+      "kate": "silpnas",
+      "suo": "silpnas",
+      "paukstis": "mirtinas",
+      "grauzikas": null
+    },
     "simptomai_lt": "PAUKŠČIAMS (narveliniams): skysčio kaupimasis aplink širdį/plaučius, miokardo nekrozė → staigi mirtis, dažnai be ankstesnių simptomų. Šunys/katės santykinai atsparūs. Lapai toksiškiausi.",
     "medikui_lt": "PAUKŠČIUI: skambink vet DABAR. Antidoto nėra.",
-    "aprasymai": {},
+    "aprasymai": {
+      "vaikai": "Avokado persinas žmonėms nėra toksiškas — vaikui jis pavojaus nekelia, o ir augintiniams žinduoliams poveikis silpnas. Jei vaikas palietė lapą ar paragavo avokado, dėl persino jaudintis nereikia (tik atminkite įprastą užspringimo kaušteliu riziką). Jokio specialaus veiksmo nereikia. Vis dėlto namuose laikomus paukščius nuo avokado saugokite — jiems jis pavojingas.",
+      "suauge_zmones": "Suaugusiam žmogui avokadas ir jo augalo dalys saugūs — persinas žmonėms netoksiškas, tad tvarkyti, genėti ar liesti lapus galima be jokio nerimo. Šunims ir katėms poveikis silpnas. Vienintelis svarbus dalykas — narveliniai paukščiai: jiems persinas pavojingas, todėl avokado ir jo augalo nelaikykite paukščiui pasiekiamoje vietoje.",
+      "gyvunai": "Rūšies skirtumas čia esminis: narveliniams paukščiams avokadas (persinas) mirtinai pavojingas — aplink širdį ir plaučius kaupiasi skystis, pažeidžiamas miokardas, gali ištikti staigi mirtis, dažnai net be ankstesnių požymių. Toksiškiausi yra lapai. Šunys ir katės santykinai atsparūs (poveikis silpnas). Jei paukštis lietė ar kapojo avokadą, nedelsdami skambinkite veterinarui — priešnuodžio nėra, todėl svarbiausia prevencija: laikykite avokadą atokiau nuo paukščių."
+    },
     "patikimumas": "AUKSTAS",
-    "saltiniai": ["https://www.merckvetmanual.com/toxicology/food-hazards/avocado-persea-spp-toxicosis-in-animals"]
+    "saltiniai": [
+      "https://www.merckvetmanual.com/toxicology/food-hazards/avocado-persea-spp-toxicosis-in-animals"
+    ]
   }
 }
