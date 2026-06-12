@@ -10,6 +10,7 @@ import { dirname, join } from 'node:path'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const data = JSON.parse(readFileSync(join(__dirname, '../../data/toxin-classes.json'), 'utf-8'))
 const { _meta, ...classes } = data
+const genusMap = JSON.parse(readFileSync(join(__dirname, '../../data/genus-toxin-map.json'), 'utf-8'))
 
 const MECHANISM = ['lokalus_dirgiklis', 'sisteminis', 'fototoksinis']
 const CEILING = ['silpnas', 'vidutinis', 'sunkus', 'mirtinas']
@@ -74,4 +75,28 @@ describe('toxin-classes.json — struktūra', () => {
       })
     })
   }
+})
+
+describe('genus-toxin-map.json — referencinis vientisumas', () => {
+  const genera = Object.keys(genusMap).filter(k => k !== '_meta')
+
+  it('turi gentis', () => {
+    expect(genera.length).toBeGreaterThanOrEqual(50)
+  })
+
+  it('visos klases[].id rodo į esamą toxin-class', () => {
+    const validIds = new Set(Object.keys(classes))
+    for (const g of genera) {
+      for (const k of (genusMap[g].klases ?? [])) {
+        expect(validIds, `${g} → ${k.id}`).toContain(k.id)
+      }
+    }
+  })
+
+  it('kiekviena gentis turi saugus(bool) + tier(1-3)', () => {
+    for (const g of genera) {
+      expect(typeof genusMap[g].saugus, `${g}.saugus`).toBe('boolean')
+      expect([1, 2, 3], `${g}.tier`).toContain(genusMap[g].tier)
+    }
+  })
 })
