@@ -35,3 +35,24 @@ ne faktas.
 - Zonų saugumo lygiai (zonos yra; + tipo laukas + konflikto check'as priskiriant)
 - Namų profilis (3 klausimai onboardinge/nustatymuose)
 - Kolekcijos saugumo ataskaita (derive iš esamų savybes × profilis)
+
+## ⭐ STIPRIAUSIA IDĖJA: medikų toksiškumo kortelė (founder, 2026-06-12)
+Generuojama kortelė, kurią parodai poison-control/ER medikui apsinuodijimo metu: augalo tapatybė
+(LT+lot+sinonimai) + ESAMI TOKSIKANTAI (pvz. kalcio oksalato rafidės, saponinai, kardiakiniai
+glikozidai, alkaloidai) + paveiktos sistemos + šaltiniai.
+
+KODĖL GENUINELY (ne pritempta):
+- Poison control #1 problema = AUGALO IDENTIFIKACIJA. LapasID jau identifikuotas augalas → tiksli
+  rūšis + žinomi toksikantai medikui = sutaupo kritinį laiką. Tai paso „emergency" panaudojimas.
+- Niekas to nedaro (PictureThis ir kt. = „toxic" ir tiek). Tikras diferenciatorius.
+
+VIENINTELĖ TIKRA SPRAGA: dabartiniai savybes turi tipas/severity/target, BET NE compound-level
+toksikantų pavadinimus (nėra „contains aconitine"). Reikia papildomo duomenų sluoksnio per rūšį.
+Tai accuracy-critical → BŪTENT čia akademijos/toksikologo verifikacija tampa nepakeičiama.
+
+STRATEGINIS FIT: ši kortelė = deliverable, kuriam REIKIA eksperto patikros → sustiprina akademijos
+partnerystės case (33-akademijos-partnerystes-planas): toksikologas verifikuoja compound duomenis,
+kortelė gauna „Patvirtinta [toksikologas]" antspaudą. Liability riba laikoma: INFORMACIJA + šaltiniai
++ „parodyk poison control, jie patars gydymą" — NE app diagnozė/patarimas.
+
+→ Konsiliumas (45-*) tai įvertins per pediatro/vet/liability/build lęšius sintezėje.
