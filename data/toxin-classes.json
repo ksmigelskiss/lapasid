@@ -1,0 +1,319 @@
+{
+  "_meta": {
+    "versija": "0.1-draft",
+    "sukurta": "2026-06-12",
+    "saltinis": "docs/toksiskumo-klasifikacija.md (research-grade, NE toksikologo verifikuota)",
+    "patikimumas": "~85-90%, laukia toksikologo patikros (akademijos partnerystė)",
+    "enumai": {
+      "mechanizmo_tipas": ["lokalus_dirgiklis", "sisteminis", "fototoksinis"],
+      "sunkumo_lubos": ["silpnas", "vidutinis", "sunkus", "mirtinas"],
+      "rusies_jautrumas_reiksme": ["nera", "silpnas", "vidutinis", "sunkus", "mirtinas", null],
+      "patikimumas": ["AUKSTAS", "VIDUTINIS", "ZEMAS"]
+    },
+    "pastaba": "rusies_jautrumas: 'nera' = netoksiška šiai rūšiai; null = nepakanka duomenų (NE 'saugu'). aprasymai pildomi atskiru konvejeriu."
+  },
+
+  "ca_oxalate_insoluble": {
+    "vardas_lt": "Netirpūs kalcio oksalatai (rafidės)",
+    "vardas_en": "Insoluble calcium oxalate raphides",
+    "mechanizmo_tipas": "lokalus_dirgiklis",
+    "organas": null,
+    "sunkumo_lubos": "vidutinis",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "silpnas", "suo": "silpnas", "paukstis": "vidutinis", "grauzikas": null },
+    "simptomai_lt": "Momentinis burnos/lūpų deginimas, seilėtekis, gleivinės patinimas, rijimo sutrikimas; kontaktinis dermatitas; akių dirginimas. Praeina per valandas.",
+    "medikui_lt": "Simptominis; antidoto nėra. Burnos skalavimas, šaltis. 112 jei ryklės patinimas/dusulys (reta).",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://www.poison.org/articles/dieffenbachia-and-philodendron-202", "https://www.merckvetmanual.com/toxicology/poisonous-plants/houseplants-and-ornamentals-toxic-to-animals"]
+  },
+
+  "ca_oxalate_soluble": {
+    "vardas_lt": "Tirpūs oksalatai",
+    "vardas_en": "Soluble oxalates",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "inkstai",
+    "sunkumo_lubos": "sunkus",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "vidutinis", "suo": "vidutinis", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "GI dirginimas; prie absorbcijos — hipokalcemija (silpnumas, tetanija, traukuliai); ūmus inkstų nepakankamumas dideliais kiekiais.",
+    "medikui_lt": "Ca papildymas, hidratacija, inkstų funkcijos stebėjimas. Specifinio antidoto nėra.",
+    "aprasymai": {},
+    "patikimumas": "VIDUTINIS",
+    "saltiniai": ["https://www.sciencedirect.com/topics/pharmacology-toxicology-and-pharmaceutical-science/oxalis"]
+  },
+
+  "saponins": {
+    "vardas_lt": "Saponinai",
+    "vardas_en": "Saponins",
+    "mechanizmo_tipas": "lokalus_dirgiklis",
+    "organas": null,
+    "sunkumo_lubos": "silpnas",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "silpnas", "suo": "silpnas", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "Pykinimas, vėmimas, viduriavimas, pilvo dieglys. Per os blogai absorbuojasi → praktiškai tik GI.",
+    "medikui_lt": "Simptominis, hidratacija. Antidoto nėra. Klinikinis sunkumas dažnai pervertinamas.",
+    "aprasymai": {},
+    "patikimumas": "VIDUTINIS",
+    "saltiniai": ["https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/yucca", "https://www.mdpi.com/2072-6651/15/5/346"]
+  },
+
+  "cardiac_glycosides": {
+    "vardas_lt": "Kardiakiniai (širdies) glikozidai",
+    "vardas_en": "Cardiac glycosides (cardenolides/bufadienolides)",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "sirdis",
+    "sunkumo_lubos": "mirtinas",
+    "doze_priklausomas": true,
+    "antidotas": "DigiFab (digoksinui specifiniai Fab fragmentai)",
+    "rusies_jautrumas": { "zmogus": "mirtinas", "kate": "mirtinas", "suo": "mirtinas", "paukstis": "sunkus", "grauzikas": "sunkus" },
+    "simptomai_lt": "Pykinimas, vėmimas, viduriavimas; silpnumas; spalvų matymo pokyčiai; gyvybei pavojingos aritmijos, AV blokada, bradikardija. Vanduo (kuriame plūduriavo lapai) irgi toksiškas.",
+    "medikui_lt": "Aktyvuota anglis, K+ korekcija, EKG monitoringas. ANTIDOTAS: DigiFab.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://calpoison.org/content/naturally-occurring-cardiac-glycoside-poisoning", "https://www.petpoisonhelpline.com/poison/cardiac-glycosides/"]
+  },
+
+  "tropane_alkaloids": {
+    "vardas_lt": "Tropano alkaloidai (antikolinerginiai)",
+    "vardas_en": "Tropane alkaloids",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "nervai",
+    "sunkumo_lubos": "sunkus",
+    "doze_priklausomas": true,
+    "antidotas": "Fizostigminas (atrinktais sunkiais atvejais)",
+    "rusies_jautrumas": { "zmogus": "sunkus", "kate": "sunkus", "suo": "sunkus", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "Antikolinerginis toksidromas: midriazė, sausa karšta oda, tachikardija, šlapimo susilaikymas, deliriumas, haliucinacijos. Sunkiais atvejais hipertermija, traukuliai.",
+    "medikui_lt": "Palaikomasis; benzodiazepinai ažitacijai; antidotas fizostigminas sunkiam deliriumui.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://calpoison.org/content/anticholinergic-plants"]
+  },
+
+  "glycoalkaloids": {
+    "vardas_lt": "Glikoalkaloidai (solaninas)",
+    "vardas_en": "Glycoalkaloids (solanine)",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "virskinimas",
+    "sunkumo_lubos": "vidutinis",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "vidutinis", "kate": "vidutinis", "suo": "vidutinis", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "GI (pykinimas, vėmimas, dieglys, viduriavimas), neurologiniai (galvos skausmas, mieguistumas), kartais antikolinerginiai bruožai.",
+    "medikui_lt": "Palaikomasis, hidratacija. Antidoto nėra.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6321755/"]
+  },
+
+  "amaryllidaceae_alkaloids": {
+    "vardas_lt": "Amarilio alkaloidai (lycorine)",
+    "vardas_en": "Amaryllidaceae alkaloids (lycorine)",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "virskinimas",
+    "sunkumo_lubos": "silpnas",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "vidutinis", "suo": "vidutinis", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "Pykinimas, vėmimas, viduriavimas, seilėtekis, pilvo skausmas. Sunkiais atvejais hipotenzija. Toksinai koncentruoti SVOGŪNĖLYJE.",
+    "medikui_lt": "Palaikomasis, rehidratacija. Antidoto nėra. Mechanizmas tik dalinai žinomas.",
+    "aprasymai": {},
+    "patikimumas": "VIDUTINIS",
+    "saltiniai": ["https://www.petpoisonhelpline.com/poison/amaryllis/", "https://en.wikipedia.org/wiki/Lycorine"]
+  },
+
+  "colchicine": {
+    "vardas_lt": "Kolchicinas",
+    "vardas_en": "Colchicine",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "daugiaorganinis",
+    "sunkumo_lubos": "mirtinas",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "mirtinas", "kate": "mirtinas", "suo": "mirtinas", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "Fazinis kursas: GI 24h (vėmimas, viduriavimas), tada daugiaorganinis nepakankamumas 48-96h (rabdomiolizė, leukopenija, šokas). Koncentruota GUMBUOSE/sėklose.",
+    "medikui_lt": "Intensyvus palaikomasis; specifinio antidoto klinikai nėra. Ankstyva GI dekontaminacija.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://www.ncbi.nlm.nih.gov/books/NBK548068/", "https://pmc.ncbi.nlm.nih.gov/articles/PMC2429836/"]
+  },
+
+  "aconitine": {
+    "vardas_lt": "Akonitinas (diterpeno alkaloidai)",
+    "vardas_en": "Aconitine (diterpenoid alkaloids)",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "sirdis",
+    "sunkumo_lubos": "mirtinas",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "mirtinas", "kate": "mirtinas", "suo": "mirtinas", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "Momentinis lūpų/burnos/gerklės deginimas, tirpimas; parestezijos; vėmimas; ventrikulinės aritmijos, hipotenzija, šokas.",
+    "medikui_lt": "Palaikomasis, EKG monitoringas, atropinas bradikardijai, amiodaronas/flekainidas aritmijoms. Specifinio antidoto nėra.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC5419964/"]
+  },
+
+  "pyrrolizidine_alkaloids": {
+    "vardas_lt": "Pirolizidino alkaloidai",
+    "vardas_en": "Pyrrolizidine alkaloids",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "kepenys",
+    "sunkumo_lubos": "sunkus",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "sunkus", "kate": "sunkus", "suo": "sunkus", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "LĖTINIS/kaupiamasis (ne ūmus): kepenų sinusoidinės obstrukcijos sindromas — hepatomegalija, ascitas, gelta. Pavojus = pakartotinė ekspozicija (arbatos), ne vienkartinis prarijimas.",
+    "medikui_lt": "Palaikomasis, hepatologinė priežiūra. Antidoto nėra. Kambariniams MAŽAI aktualu.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC8540779/"]
+  },
+
+  "diterpene_esters": {
+    "vardas_lt": "Diterpeno esteriai / forboliai (latex)",
+    "vardas_en": "Diterpene esters / phorbols",
+    "mechanizmo_tipas": "lokalus_dirgiklis",
+    "organas": null,
+    "sunkumo_lubos": "vidutinis",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "vidutinis", "kate": "vidutinis", "suo": "vidutinis", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "Odos deginimas, eritema, edema, pūslės; AKYS — sunkus konjunktyvitas, keratitas (gali grėsti regėjimui); prarijus — burnos/GI dirginimas. Pieniškame latekse.",
+    "medikui_lt": "Gausus akių/odos plovimas; oftalmologo konsultacija akių ekspozicijai. Antidoto nėra. (Poinsetija — rizika PERVERTINTA, tik lengvas dirginimas.)",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC6420095/", "https://www.ncbi.nlm.nih.gov/sites/books/NBK574526/"]
+  },
+
+  "grayanotoxins": {
+    "vardas_lt": "Grayanotoksinai",
+    "vardas_en": "Grayanotoxins",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "sirdis",
+    "sunkumo_lubos": "vidutinis",
+    "doze_priklausomas": true,
+    "antidotas": "Atropinas (bradikardijai; paprastai pakanka)",
+    "rusies_jautrumas": { "zmogus": "vidutinis", "kate": "vidutinis", "suo": "vidutinis", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "Svaigulys, hipotenzija, bradikardija/AV blokada, pykinimas, seilėtekis, silpnumas. Greita pradžia, praeina per 24h.",
+    "medikui_lt": "IV skysčiai + atropinas. Mirtys modernioje literatūroje praktiškai neaprašytos.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC3404272/"]
+  },
+
+  "cyanogenic_glycosides": {
+    "vardas_lt": "Cianogeniniai glikozidai",
+    "vardas_en": "Cyanogenic glycosides",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "lasteline_respiracija",
+    "sunkumo_lubos": "mirtinas",
+    "doze_priklausomas": true,
+    "antidotas": "Hidroksokobalaminas; natrio tiosulfatas",
+    "rusies_jautrumas": { "zmogus": "mirtinas", "kate": "sunkus", "suo": "sunkus", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "Dusulys, silpnumas, svaigulys, vėmimas, dezorientacija, traukuliai, cianozė, koma. Priklauso nuo kramtymo (sėklos pažeidimo) — sveika praryta sėkla dažnai nepavojinga.",
+    "medikui_lt": "ANTIDOTAS: hidroksokobalaminas. O2, palaikomasis.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2016.4424"]
+  },
+
+  "toxalbumins": {
+    "vardas_lt": "Toksalbuminai / lektinai",
+    "vardas_en": "Toxalbumins / lectins (RIP type 2)",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "daugiaorganinis",
+    "sunkumo_lubos": "mirtinas",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "mirtinas", "kate": "mirtinas", "suo": "mirtinas", "paukstis": null, "grauzikas": "mirtinas" },
+    "simptomai_lt": "Pilvo skausmas, vėmimas, viduriavimas, GI kraujavimas; sunkiais atvejais šokas, daugiaorganinis nepakankamumas. Latentinis periodas (kelios valandos). PASTABA: prarijus dažniausiai išgyvenama (~98%) jei sėkla nesukramtyta; injekcija/inhaliacija kur kas pavojingesnė.",
+    "medikui_lt": "Agresyvi palaikomoji terapija, skysčiai, GI dekontaminacija. Specifinio antidoto nėra.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://pmc.ncbi.nlm.nih.gov/articles/PMC7700980/"]
+  },
+
+  "furocoumarins": {
+    "vardas_lt": "Furokumarinai (fototoksinai)",
+    "vardas_en": "Furocoumarins / psoralens",
+    "mechanizmo_tipas": "fototoksinis",
+    "organas": null,
+    "sunkumo_lubos": "vidutinis",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "vidutinis", "kate": null, "suo": null, "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "Po 12-36h po ekspozicijos + saulės: aiškiai apibrėžta eritema, pūslės, edema, vėliau hiperpigmentacija (fitofotodermatitas). Reikalinga UVA šviesa.",
+    "medikui_lt": "Plovimas, vengti saulės, simptominis (steroidai sunkesniems). Antidoto nėra.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://emedicine.medscape.com/article/1119566-overview"]
+  },
+
+  "cycasin": {
+    "vardas_lt": "Cikazinas",
+    "vardas_en": "Cycasin",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "kepenys",
+    "sunkumo_lubos": "mirtinas",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "sunkus", "kate": "sunkus", "suo": "mirtinas", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "Ūmi kepenų nekrozė (vėmimas, gelta, kepenų nepakankamumas) + neurotoksiškumas (BMAA). Sėklos/riešutai toksiškiausi. Sago palmė nėra tikra palmė.",
+    "medikui_lt": "Palaikomasis, hepatologinė priežiūra, GI dekontaminacija. Antidoto nėra. ASPCA: ~2.4 proc. mirštamumas šunims.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://www.cliniciansbrief.com/article/sago-palm-toxicosis-dogs", "https://www.aspca.org/pet-care/aspca-poison-control/toxic-and-non-toxic-plants/sago-palm"]
+  },
+
+  "anthraquinones": {
+    "vardas_lt": "Antrachinonai (aloinas)",
+    "vardas_en": "Anthraquinones (aloin)",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "virskinimas",
+    "sunkumo_lubos": "silpnas",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "silpnas", "suo": "silpnas", "paukstis": null, "grauzikas": null },
+    "simptomai_lt": "Viduriavimas, vėmimas (vidurius laisvinantis efektas). Geltonas latekso sluoksnis po lapo žieve — NE skaidrus gelis (gelis saugus).",
+    "medikui_lt": "Simptominis, hidratacija. Antidoto nėra.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8294304/"]
+  },
+
+  "lily_nephrotoxin": {
+    "vardas_lt": "Lelijų nefrotoksinas",
+    "vardas_en": "Lily nephrotoxin (Lilium/Hemerocallis)",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "inkstai",
+    "sunkumo_lubos": "mirtinas",
+    "doze_priklausomas": false,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "silpnas", "kate": "mirtinas", "suo": "silpnas", "paukstis": null, "grauzikas": "nera" },
+    "simptomai_lt": "TIK KATĖMS: inkstų kanalėlių nekrozė. Net vanduo/žiedadulkės/lapelio dalelė. Vėmimas, vėliau ūmus inkstų nepakankamumas per <3 paras. Tikslus toksinas NEŽINOMAS.",
+    "medikui_lt": "KATEI: skambink vet DABAR — 18h langas; po jo inkstų pažaida gali būti negrįžtama. Šuniui = lengvas GI. Tik tikrosios Lilium/Hemerocallis (ne Spathiphyllum/Convallaria 'lelijos').",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://www.aspcapro.org/resource/how-spot-which-lilies-are-dangerous-cats-plan-treatment", "https://www.fda.gov/animal-veterinary/animal-health-literacy/lovely-lilies-and-curious-cats-dangerous-combination"]
+  },
+
+  "persin": {
+    "vardas_lt": "Persinas (avokadas)",
+    "vardas_en": "Persin (avocado)",
+    "mechanizmo_tipas": "sisteminis",
+    "organas": "sirdis",
+    "sunkumo_lubos": "mirtinas",
+    "doze_priklausomas": true,
+    "antidotas": null,
+    "rusies_jautrumas": { "zmogus": "nera", "kate": "silpnas", "suo": "silpnas", "paukstis": "mirtinas", "grauzikas": null },
+    "simptomai_lt": "PAUKŠČIAMS (narveliniams): skysčio kaupimasis aplink širdį/plaučius, miokardo nekrozė → staigi mirtis, dažnai be ankstesnių simptomų. Šunys/katės santykinai atsparūs. Lapai toksiškiausi.",
+    "medikui_lt": "PAUKŠČIUI: skambink vet DABAR. Antidoto nėra.",
+    "aprasymai": {},
+    "patikimumas": "AUKSTAS",
+    "saltiniai": ["https://www.merckvetmanual.com/toxicology/food-hazards/avocado-persea-spp-toxicosis-in-animals"]
+  }
+}
