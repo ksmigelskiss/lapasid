@@ -54,6 +54,12 @@ const AdminPanel  = lazyWithRetry(() => import('./components/admin/AdminPanel'))
 const Zinynas     = lazyWithRetry(() => import('./pages/Zinynas'))
 const PublicLibrary = lazyWithRetry(() => import('./pages/PublicLibrary'))
 
+// Vieša biblioteka ĮJUNGTA tik lokaliame dev'e (redagavimui). Prod build'e —
+// senasis login puslapis, kol biblioteka paruošta. Publikuoti: Vercel env
+// VITE_PUBLIC_LIBRARY=1 (be kodo keitimo).
+const PUBLIC_LIBRARY_ENABLED =
+  import.meta.env.DEV || import.meta.env.VITE_PUBLIC_LIBRARY === '1'
+
 export default function App() {
   const {
     user, collectionId, role, ownCollectionId, allCollections,
@@ -402,7 +408,7 @@ export default function App() {
     )
   }
   if (!user && !viewerToken) {
-    if (showLogin) {
+    if (showLogin || !PUBLIC_LIBRARY_ENABLED) {
       return <LoginScreen onSignInGoogle={signInGoogle} onSignInFacebook={signInFacebook} error={authError} />
     }
     // Vieša biblioteka su tuo pačiu desktop split-panel layout'u kaip app'as:
