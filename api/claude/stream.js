@@ -15,14 +15,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'messages array required' })
   }
 
-  // Auth tikrinimas + limito patikrinimas
+  // Auth tikrinimas — PRIVALOMAS VISOMS užklausoms (K1 fix 2026-11-03).
+  // Žr. api/claude.js — auth iškeltas iš `if (limitType)`, kad endpoint'as
+  // nebūtų atviras neautentifikuotas Anthropic relay'us.
   const idToken = req.headers.authorization?.replace('Bearer ', '')
-  let uid = null
-  if (limitType) {
-    if (!idToken) return res.status(401).json({ error: 'Unauthorized' })
-    uid = await verifyAuthToken(idToken)
-    if (!uid) return res.status(401).json({ error: 'Invalid token' })
+  if (!idToken) return res.status(401).json({ error: 'Unauthorized' })
+  const uid = await verifyAuthToken(idToken)
+  if (!uid) return res.status(401).json({ error: 'Invalid token' })
 
+  // Limito patikrinimas — tik kai limitType nurodytas.
+  if (limitType) {
     const user = await fsGet('users', uid, idToken)
     const hit  = checkLimit(user, limitType)
     if (hit) {
