@@ -32,3 +32,8 @@ data/batch-catalog-checkpoint.json
 # POC hero image samples — large PNGs, regenerable via poc-hero-samples.mjs
 poc-samples/
 bundle-stats.html
+
+# Duomenų atsarginės kopijos (skriptai jas kuria lokaliai; istorija — git)
+data/*.backup.*
+data/*.json.backup.*
+data/*-backup.json
