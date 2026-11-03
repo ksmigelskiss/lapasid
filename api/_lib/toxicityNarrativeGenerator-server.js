@@ -23,6 +23,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { NARRATIVE_TOOL, TRANSLATOR_SYSTEM } from '../../src/utils/toxicityNarrativePrompts.js'
 import { VOICE_PERSONA } from '../../src/utils/plantVoicePersona.js'
+import { CLAUDE_MODELS, EPHEMERAL_CACHE } from './aiModels.js'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -78,10 +79,16 @@ export async function generateToxicityNarrativeServer({ latinName, ltName, deriv
 
   try {
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: CLAUDE_MODELS.sonnet,
       max_tokens: 600,
       temperature: 0.3,
-      system: [VOICE_PERSONA, '', TRANSLATOR_SYSTEM].join('\n'),
+      // Sistemos prompt'as (VOICE_PERSONA + TRANSLATOR_SYSTEM) yra STABILUS
+      // tarp visų augalų — žymim cache_control, kad pasikartojantys call'ai
+      // (batch, re-enrich) skaitytų prefiksą iš cache. User message'as
+      // (per-plant) lieka PO breakpoint'o → necache'inamas. Žr. AI_REVIEW.md §3.
+      system: [
+        { type: 'text', text: [VOICE_PERSONA, '', TRANSLATOR_SYSTEM].join('\n'), cache_control: EPHEMERAL_CACHE },
+      ],
       tools: [NARRATIVE_TOOL],
       tool_choice: { type: 'tool', name: 'toxicity_narrative' },
       messages: [{ role: 'user', content: userMessage }],

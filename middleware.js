@@ -24,13 +24,10 @@ export const config = {
   matcher: ['/vision/doc', '/vision-doc.html'],
 }
 
-const PEPPER = 'lapasid-vision-v1'
-
-async function tokenFor(password) {
-  const data = new TextEncoder().encode(PEPPER + ':' + password)
-  const buf  = await crypto.subtle.digest('SHA-256', data)
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('')
-}
+// PEPPER + tokenFor centralizuoti api/_lib/visionAuth.js — tas pats algoritmas
+// kaip api/vision-unlock.js (naudoja tik Web API → Edge-suderinamas).
+// PASTABA (deploy): šis Edge middleware import'as tikrintinas Vercel preview'e.
+import { tokenFor } from './api/_lib/visionAuth.js'
 
 function readCookie(request, name) {
   const raw = request.headers.get('cookie') || ''

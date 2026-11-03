@@ -8,6 +8,9 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'node',
-    include: ['src/**/*.test.{js,jsx}'],
+    // src/** — grynų duomenų util'ų testai (forecasts, toxicity, notes, transform).
+    // api/** — serverless funkcijų grynoji logika (auth limitai, token verifikacija,
+    //          vision cookie algoritmas). Žr. docs/AI_REVIEW.md §6.
+    include: ['src/**/*.test.{js,jsx}', 'api/**/*.test.{js,mjs}'],
   },
 })

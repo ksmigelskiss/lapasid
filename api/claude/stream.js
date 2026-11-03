@@ -3,6 +3,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { fsGet, fsIncrement, checkLimit } from '../_firestore.js'
 import { verifyAuthToken } from '../_lib/firestore-admin.js'
+import { CLAUDE_MODELS } from '../_lib/aiModels.js'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -39,7 +40,7 @@ export default async function handler(req, res) {
 
   try {
     const stream = await client.messages.stream({
-      model:      'claude-sonnet-4-6',
+      model:      CLAUDE_MODELS.sonnet,
       max_tokens: maxTokens ?? 400,
       ...(system ? { system } : {}),
       messages,
