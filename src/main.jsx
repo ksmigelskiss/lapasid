@@ -10,6 +10,7 @@ import { initSentry } from './utils/sentry.js'
 initSentry()
 
 const PlantPassportPage = lazy(() => import('./pages/PlantPassportPage.jsx'))
+const ToxCardPage = lazy(() => import('./pages/ToxCardPage.jsx'))
 const LoaderPlayground = lazy(() => import('./dev/LoaderPlayground.jsx'))
 const LoginScreenDemo = lazy(() => import('./dev/LoginScreenDemo.jsx'))
 const PlantExport = lazy(() => import('./dev/PlantExport.jsx'))
@@ -18,6 +19,9 @@ const MascotPlayground = lazy(() => import('./dev/MascotPlayground.jsx'))
 
 // Augalo paso URL: /p/{plantId} → PlantPassportPage (be pilno app)
 const passportMatch = window.location.pathname.match(/^\/p\/([^/]+)\/?$/)
+
+// Toksikologinės kortelės URL: /t/{plantId} → ToxCardPage (viešas, medikui/vet)
+const toxCardMatch = window.location.pathname.match(/^\/t\/([^/]+)\/?$/)
 
 // Dev playground: tik mock'inime režime (`VITE_USE_MOCK_USER=true`) + ?playground=loaders|login.
 // Lazy chunk'as — neateina į produkcijos bundle'ą be šio flag'o.
@@ -53,6 +57,10 @@ createRoot(document.getElementById('root')).render(
     ) : passportMatch ? (
       <Suspense fallback={devFallback}>
         <PlantPassportPage plantId={passportMatch[1]} />
+      </Suspense>
+    ) : toxCardMatch ? (
+      <Suspense fallback={devFallback}>
+        <ToxCardPage plantId={toxCardMatch[1]} />
       </Suspense>
     ) : (
       <ErrorBoundary>

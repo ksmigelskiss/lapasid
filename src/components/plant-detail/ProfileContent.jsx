@@ -4,6 +4,7 @@ import { doc, setDoc } from 'firebase/firestore'
 import { db, auth } from '../../utils/firebase'
 import PlantImage from '../brand/PlantImage'
 import PlantSavybesPills, { PlantSafetyCallout } from '../brand/PlantSavybesPills'
+import HouseholdRiskSection from '../sauga/HouseholdRiskSection'
 import BrandLoader from '../brand/BrandLoader'
 import { ensureArray } from '../../utils/plantTransform'
 import { getPlantEnrichmentState, getEnrichmentFailureReason } from '../../utils/plantState'
@@ -198,7 +199,7 @@ function PassportSection({ plant, collectionId, onToggle }) {
 
 // ── Profile tab content ────────────────────────────────────────
 
-export function ProfileContent({ plant: rawPlant, section, onAction, onClose, collectionId, onTogglePassport, onUpdateNames, className }) {
+export function ProfileContent({ plant: rawPlant, section, onAction, onClose, collectionId, onTogglePassport, onUpdateNames, household, onOpenCard, onOpenProfile, className }) {
   // LEGACY READ-TIME SAFETY NET — kai kurie SENI catalog/plant įrašai
   // (saved'inti prieš normalizeAIResponse boundary refaktorą) turi array
   // laukus kaip JSON-string'us. Naujieji save'ai per fetchDetails →
@@ -414,6 +415,18 @@ export function ProfileContent({ plant: rawPlant, section, onAction, onClose, co
       {/* ── Savybes pill'ai (granuliariai toksiškumas + valgomumas + vaistinis).
             Narrative suppressed kai stiprus žmonėms case — eina į callout. ── */}
       <PlantSavybesPills plant={plant} />
+
+      {/* ── Namų rizika — personalizuotas toksiškumo vertinimas pagal namų
+            profilį + toksikologinė kortelė. Rodom auginamiems ir „nori"
+            (pre-buy signalas). Istorijai (mirę) — nereikia. ── */}
+      {(section === 'auginama' || section === 'nori') && (
+        <HouseholdRiskSection
+          plant={plant}
+          household={household}
+          onOpenCard={onOpenCard}
+          onOpenProfile={onOpenProfile}
+        />
+      )}
 
       {/* ── Quick stats — editorial table (mono caps label + Bricolage value). ── */}
       <div className="divide-y divide-bone-400/30">
