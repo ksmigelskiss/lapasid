@@ -1,9 +1,11 @@
 // Firestore REST API helpers — naudojami api/ serverless funkcijose
-// Nereikia Firebase Admin SDK — naudojame vartotojo ID tokeną
+// Skaitymui naudojamas vartotojo ID token'as; aiUsage skaitiklio didinimas —
+// admin SDK (žr. fsIncrement, K4 fix).
+import admin from 'firebase-admin'
+import { adminFirestore } from './_lib/firestore-admin.js'
 
 const PROJECT   = 'geliu-db'
 const FS_BASE   = `https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents`
-const FS_COMMIT = `https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents:commit`
 
 // Konvertuoja Firestore REST formato reikšmę į JavaScript reikšmę
 function parseValue(v) {
@@ -35,22 +37,27 @@ export async function fsGet(collection, id, idToken) {
   } catch { return null }
 }
 
-// Padidina skaičiaus lauką per 1 (atomic server-side increment)
-export async function fsIncrement(collection, id, fieldPath, idToken) {
+// Padidina skaičiaus lauką per 1 (atomic server-side increment).
+//
+// 2026-11-03 (K4 fix) — anksčiau rašyta per Firestore REST su VARTOTOJO ID
+// token'u, tad skaitiklio write'as priklausė nuo security rules. Kadangi
+// vartotojas turi pilną rašymą į savo users/{uid} doc'ą, jis galėjo paprasčiausiai
+// nunulinti `aiUsage` (arba nusistatyti beta/subscription) ir apeiti AI limitus.
+// Dabar naudojamas ADMIN SDK (serverio credentials), kuris apeina rules ir
+// nepriklauso nuo kliento teisių. Kartu su firestore.rules pakeitimu (klientui
+// uždrausta rašyti aiUsage/beta/subscription) limitų nebegalima apeiti iš kliento.
+//
+// idToken parametras paliktas suderinamumui su esamais kvietikliais — nenaudojamas.
+export async function fsIncrement(collection, id, fieldPath, _idToken) {
   try {
-    await fetch(FS_COMMIT, {
-      method:  'POST',
-      headers: { Authorization: `Bearer ${idToken}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        writes: [{
-          transform: {
-            document: `projects/${PROJECT}/databases/(default)/documents/${collection}/${id}`,
-            fieldTransforms: [{ fieldPath, increment: { integerValue: '1' } }],
-          },
-        }],
-      }),
-    })
-  } catch {}
+    // fieldPath formatas „aiUsage.<type>" — update() interpretuoja tašką kaip
+    // įdėtinio (nested) lauko kelią; increment sukuria lauką jei jo nėra.
+    await adminFirestore()
+      .collection(collection).doc(id)
+      .update({ [fieldPath]: admin.firestore.FieldValue.increment(1) })
+  } catch (e) {
+    console.warn('[fsIncrement] admin increment failed:', e?.message)
+  }
 }
 
 // 2026-06-02 (P0-1 security) — `uidFromToken` PAŠALINTA. Ji tik base64-decode'ino

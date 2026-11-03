@@ -22,10 +22,38 @@ service cloud.firestore {
     // Admin'as — read'as (vartotojų sąrašas) + write'as (toggle
     // isAdmin / beta / subscription / approved per AdminPanel) +
     // delete (reject pending users'ams ir soft delete vartotojams).
+    //
+    // 2026-11-03 (K2 fix) — PRIVILEGIJUOTI LAUKAI apsaugoti. Anksčiau self-write
+    // buvo neribotas → bet kuris vartotojas galėjo pasirašyti `isAdmin: true`
+    // (eskalacija iki admin, visų vartotojų duomenų skaitymas) arba
+    // `beta`/`subscription`/`aiUsage` (AI limitų apėjimas). Dabar pats vartotojas
+    // gali rašyti SAVO doc'ą, BET NEGALI keisti/nustatyti šių laukų — jie
+    // nustatomi TIK admin'o (per AdminPanel, isAdmin branch) arba serverio (admin SDK).
+    // `approved` sąmoningai NEribojamas — reikalingas invite auto-approve flow'ui.
+    function userProtectedFields() {
+      return ['isAdmin', 'beta', 'subscription', 'aiUsage'];
+    }
+
     match /users/{uid} {
-      allow read, write, delete: if request.auth != null && (
+      allow read, delete: if request.auth != null && (
         request.auth.uid == uid ||
         isAdmin()
+      );
+
+      allow create: if request.auth != null && (
+        isAdmin() ||
+        (
+          request.auth.uid == uid &&
+          !request.resource.data.keys().hasAny(userProtectedFields())
+        )
+      );
+
+      allow update: if request.auth != null && (
+        isAdmin() ||
+        (
+          request.auth.uid == uid &&
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(userProtectedFields())
+        )
       );
     }
 

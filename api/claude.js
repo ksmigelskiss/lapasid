@@ -15,16 +15,19 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'messages array required' })
   }
 
-  // Auth tikrinimas + limito patikrinimas (tik kai limitType nurodytas).
-  // 2026-06-02 — uid hoist'intas į handler scope, kad inkrement'o block'as
-  // (po success) reuse'intų verified UID be antro verifyIdToken call'o.
+  // Auth tikrinimas — PRIVALOMAS VISOMS užklausoms.
+  // 2026-11-03 (K1 fix) — anksčiau auth + limitas buvo tikrinami TIK kai klientas
+  // atsiųsdavo `limitType`. Kadangi `limitType` yra kliento kontroliuojamas, jį
+  // praleidus endpoint'as tapdavo ATVIRU, neautentifikuotu Anthropic relay'umi
+  // (nekontroliuojami kaštai + jailbreak proxy). Dabar galiojantis Firebase ID
+  // token'as privalomas nepriklausomai nuo `limitType`.
   const idToken = req.headers.authorization?.replace('Bearer ', '')
-  let uid = null
-  if (limitType) {
-    if (!idToken) return res.status(401).json({ error: 'Unauthorized' })
-    uid = await verifyAuthToken(idToken)
-    if (!uid)   return res.status(401).json({ error: 'Invalid token' })
+  if (!idToken) return res.status(401).json({ error: 'Unauthorized' })
+  const uid = await verifyAuthToken(idToken)
+  if (!uid) return res.status(401).json({ error: 'Invalid token' })
 
+  // Limito patikrinimas — tik kai limitType nurodytas.
+  if (limitType) {
     const user = await fsGet('users', uid, idToken)
     const hit  = checkLimit(user, limitType)
     if (hit) {
