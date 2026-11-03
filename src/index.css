@@ -65,3 +65,33 @@
     display: none;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   Toksikologinės kortelės spausdinimas (ToxCardSheet).
+   Spausdinant rodom TIK `.toxcard-print` medį; likusi programa
+   paslepiama. `.toxcard-no-print` elementai (mygtukai) nespausdinami.
+   ───────────────────────────────────────────────────────────── */
+@media print {
+  html, body { background: #fff !important; }
+  /* Nuimam mobile kolonos apribojimą ir overflow clip'ą spausdinant. */
+  #root { max-width: none !important; overflow: visible !important; }
+
+  body * { visibility: hidden !important; }
+  .toxcard-print, .toxcard-print * { visibility: visible !important; }
+
+  .toxcard-print {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+    z-index: 2147483647 !important;
+  }
+  .toxcard-no-print { display: none !important; }
+
+  /* Kortelės blokai nelūžta per puslapio kraštą netvarkingai. */
+  .toxcard-sheet .rounded-2xl { break-inside: avoid; }
+
+  @page { margin: 1.4cm; }
+}

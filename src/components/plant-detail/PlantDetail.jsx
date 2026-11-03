@@ -25,6 +25,7 @@ import StatusTransitionSheet from './StatusTransitionSheet'
 import NotesContent, { mkNoteId, noteToday, loadNotes } from './NotesContent'
 import HeroSafetyStrip from './HeroSafetyStrip'
 import { ProfileContent } from './ProfileContent'
+import ToxCardSheet from '../sauga/ToxCardSheet'
 
 // ── Tab bar ────────────────────────────────────────────────────
 
@@ -92,6 +93,8 @@ export default function PlantDetail({
   role = 'owner',
   isAdmin = false,
   collectionId = null,
+  household = null,
+  onOpenHouseholdProfile,
 }) {
   // Desktop split panel: render'inam į RightPanel'ą per createPortal,
   //   ne fullscreen overlay'ų. Mobile (<1024px) lieka kaip buvo.
@@ -167,6 +170,8 @@ export default function PlantDetail({
   // turi gyventi čia (ne ProfileContent'e, kur prieš tai klaidingai
   // padariau — krašu „showActionMenu is not defined" runtime error'as).
   const [showActionMenu, setShowActionMenu] = useState(false)
+  // Toksikologinės kortelės overlay'us (medikui / veterinarui).
+  const [showToxCard, setShowToxCard]       = useState(false)
 
   // 2026-06-01 — re-enrich helpers (reEnrichPlant + handleMenuReEnrich*)
   // PAŠALINTI. Funkcijos perkeltos į admin panel (LibraryEditorV2 sticky
@@ -187,6 +192,7 @@ export default function PlantDetail({
       setShowChat(false)
       setPendingStatus(null)
       setAddingType(null)
+      setShowToxCard(false)
     }
   }, [visible])
 
@@ -197,6 +203,7 @@ export default function PlantDetail({
     setShowChat(false)
     setPendingStatus(null)
     setAddingType(null)
+    setShowToxCard(false)
   }, [plant.id])
 
   // ESC keyboard shortcut — uždaryti PlantDetail desktop'e. JEI atvertas sub-modal'as
@@ -715,6 +722,9 @@ export default function PlantDetail({
                   collectionId={collectionId}
                   onTogglePassport={role !== 'viewer' && role !== 'member' ? togglePassport : null}
                   onUpdateNames={onUpdateNames}
+                  household={household}
+                  onOpenCard={() => setShowToxCard(true)}
+                  onOpenProfile={onOpenHouseholdProfile}
                 />
               </motion.div>
             )}
@@ -841,6 +851,14 @@ export default function PlantDetail({
           />
         )}
       </AnimatePresence>
+
+      {showToxCard && (
+        <ToxCardSheet
+          plant={plant}
+          household={household}
+          onClose={() => setShowToxCard(false)}
+        />
+      )}
 
       <AnimatePresence>
         {pendingStatus && (

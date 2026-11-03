@@ -152,7 +152,12 @@ export default function App() {
     zinynas, addToZinynas, deleteFromZinynas, toggleZinynasStarred, updateZinynasTitle,
     updateUzrasai,
     zones, addZone, updateZone, deleteZone, reorderZones, movePlantToZone,
+    settings, updateSettings,
   } = usePlants(collectionId, viewerToken)
+
+  // Namų profilis (vaikai / gyvūnai) — kolekcijos settings. Naudojamas namų
+  // rizikos personalizacijai (resolveToxinProfile) PlantDetail'e.
+  const household = settings?.household ?? null
 
   // Reference modelis (kortelės) — perdengiam plant'ų sąrašus LIVE catalog
   // reikšmėmis prieš paduodant į Dashboard/Biblioteka. heroMapV deps → recompute
@@ -633,6 +638,8 @@ export default function App() {
             ownCollectionId={ownCollectionId}
             allCollections={allCollections}
             isAdmin={isAdmin}
+            settings={settings}
+            onUpdateSettings={updateSettings}
             onSignOut={signOut}
             onSwitchCollection={(id) => { switchCollection(id); setShowProfile(false) }}
             onRenameCollection={renameCollection}
@@ -682,6 +689,8 @@ export default function App() {
             role={role}
             isAdmin={isAdmin}
             collectionId={collectionId}
+            household={household}
+            onOpenHouseholdProfile={() => { closeDetail(); setShowProfile(true) }}
           />
         </Suspense>
       )}

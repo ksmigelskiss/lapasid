@@ -7,6 +7,7 @@ import { QRCodeSVG } from 'qrcode.react'
 import { db } from '../utils/firebase'
 import { useIsDesktop } from '../hooks/useIsDesktop'
 import { useDetailHost } from '../contexts/DetailHostContext'
+import HouseholdProfileEditor from './HouseholdProfileEditor'
 
 // Sukuria invite tokeną Firestore'e, grąžina URL su role
 async function generateInviteLink(collectionId, uid, role = 'member') {
@@ -99,7 +100,7 @@ export async function acceptInvite(uid, token, inviteData, userProfile = {}) {
   return colId
 }
 
-export default function ProfileSheet({ user, collectionId, role = 'owner', ownCollectionId, allCollections = [], isAdmin = false, onSignOut, onClose, onSwitchCollection, onRenameCollection, onOpenAdmin }) {
+export default function ProfileSheet({ user, collectionId, role = 'owner', ownCollectionId, allCollections = [], isAdmin = false, settings = {}, onUpdateSettings, onSignOut, onClose, onSwitchCollection, onRenameCollection, onOpenAdmin }) {
   // Desktop split panel: portaliuojam į RightPanel container'į.
   const isDesktop = useIsDesktop()
   const host = useDetailHost()
@@ -319,6 +320,16 @@ export default function ProfileSheet({ user, collectionId, role = 'owner', ownCo
               </div>
             )
           })()}
+
+          {/* Namų profilis — rizikos personalizacijai (vaikai / gyvūnai).
+              Viewer rolė — tik skaitymas (negali keisti kolekcijos settings). */}
+          {role !== 'viewer' && (
+            <HouseholdProfileEditor
+              household={settings.household}
+              onSave={(h) => onUpdateSettings?.({ household: h })}
+              readOnly={false}
+            />
+          )}
 
           {/* Nariai + prižiūrėtojų nuorodos — vienas sąrašas */}
           {hasPeople && (
