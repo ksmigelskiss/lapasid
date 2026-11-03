@@ -41,6 +41,7 @@ import { buildPlantRagContextServer } from '../api/_lib/buildPlantRagContext-ser
 import { deriveToxicityFromSourcesServer } from '../api/_lib/deriveToxicity-server.js'
 import { generateToxicityNarrativeServer } from '../api/_lib/toxicityNarrativeGenerator-server.js'
 import { saveCatalogWithParentServer } from '../api/_lib/taxon-groups-server.js'
+import { CLAUDE_MODELS, EPHEMERAL_CACHE } from '../api/_lib/aiModels.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const CURATED_PATH = join(__dirname, '..', 'data', 'curated-300.json')
@@ -121,13 +122,18 @@ async function fetchINatPhoto(latinName) {
 
 // ── Phase 2 AI call (mirror api/save-plant.js processPlant) ──
 async function callAIPhase2(latinName, ltName, ragContext) {
-  const groundedSystem = [
+  // CACHING (žr. docs/AI_REVIEW.md §3): batch'e stabilus prefiksas (VOICE_PERSONA
+  // + PLANT_SYSTEM + RAG_PRIORITY) + TOOL_DETAILS schema kartojasi kiekvienam iš
+  // ~274 augalų → cache_control grąžina didžiausią svertą būtent čia. Kintamas
+  // tik ragContext (per-plant), todėl eina atskiru bloku po breakpoint'o.
+  const cachedSystemPrefix = [
     VOICE_PERSONA,
     '',
     PLANT_SYSTEM,
     '',
     RAG_PRIORITY_INSTRUCTION,
-    '',
+  ].join('\n')
+  const volatileSystemSuffix = [
     ragContext,
     '',
     LT_CLIMATE_CONTEXT,
@@ -138,10 +144,13 @@ async function callAIPhase2(latinName, ltName, ragContext) {
   const userMsg = `Pateik PILNĄ info apie augalą "${latinName}" (${ltName || latinName}). Privaloma užpildyti VISUS plant_details laukus pagal schema. Stilius — VOICE_PERSONA „Sodininkas friend" LT.`
 
   const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
+    model: CLAUDE_MODELS.sonnet,
     max_tokens: 3000,
     temperature: 0.3,
-    system: groundedSystem,
+    system: [
+      { type: 'text', text: cachedSystemPrefix, cache_control: EPHEMERAL_CACHE },
+      { type: 'text', text: volatileSystemSuffix },
+    ],
     tools: [TOOL_DETAILS],
     tool_choice: { type: 'tool', name: 'plant_details' },
     messages: [{ role: 'user', content: userMsg }],

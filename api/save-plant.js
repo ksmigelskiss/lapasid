@@ -54,6 +54,7 @@ import admin from 'firebase-admin'
 import { adminFirestore, verifyAuthToken } from './_lib/firestore-admin.js'
 import { createHeroGen, finalizeHeroBuffers } from './_lib/heroGen.js'
 import { catalogDocId } from './_lib/catalog-server.js'
+import { CLAUDE_MODELS, EPHEMERAL_CACHE } from './_lib/aiModels.js'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -323,13 +324,20 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
     // Grounded system: VOICE_PERSONA + PLANT_SYSTEM + RAG priority + verified facts + LT climate + vet links
     // VOICE_PERSONA (Step 6l) prepend'inta — shared LT „Sodininkas" friend
     // persona visiems AI calls, kad output'as skaitytųsi vienodu balsu.
-    const groundedSystem = [
+    // CACHING (žr. docs/AI_REVIEW.md §3): stabilus prefiksas (VOICE_PERSONA +
+    // PLANT_SYSTEM + RAG_PRIORITY_INSTRUCTION) IR tool schema (TOOL_DETAILS,
+    // render'inama prieš system) yra IDENTIŠKI tarp visų augalų → žymim
+    // cache_control, kad batch / re-enrich call'ai skaitytų prefiksą iš cache
+    // (~10× pigiau cached tokenams). Teksto turinys ir TVARKA nepakitę —
+    // tik įterptas cache breakpoint'as PRIEŠ kintamą rag.context (per-plant).
+    const cachedSystemPrefix = [
       VOICE_PERSONA,
       '',
       PLANT_SYSTEM,
       '',
       RAG_PRIORITY_INSTRUCTION,
-      '',
+    ].join('\n')
+    const volatileSystemSuffix = [
       rag.context,
       '',
       LT_CLIMATE_CONTEXT,
@@ -339,10 +347,13 @@ async function processPlant({ uid, latinName, name, baseResult, colId, plantId, 
 
     const aiStart = Date.now()
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-6',
+      model: CLAUDE_MODELS.sonnet,
       max_tokens: 3000,
       temperature: 0.3,
-      system: groundedSystem,
+      system: [
+        { type: 'text', text: cachedSystemPrefix, cache_control: EPHEMERAL_CACHE },
+        { type: 'text', text: volatileSystemSuffix },
+      ],
       tools: [TOOL_DETAILS],
       tool_choice: { type: 'tool', name: 'plant_details' },
       messages: [{

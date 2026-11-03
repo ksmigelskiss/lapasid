@@ -8,14 +8,11 @@
 // KRITIŠKA: PEPPER + token algoritmas TURI tiksliai sutapti su middleware.js.
 // Fail-closed: VISION_PASSWORD nenustatytas → 503 (niekada atsitiktinai atviras).
 
-const PEPPER  = 'lapasid-vision-v1'
-const MAX_AGE = 60 * 60 * 24 * 7   // 7 dienos
+// PEPPER + tokenFor centralizuoti api/_lib/visionAuth.js — bendri su middleware.js,
+// kad algoritmas NIEKADA nedrift'intų tarp uždėjimo ir tikrinimo.
+import { tokenFor } from './_lib/visionAuth.js'
 
-async function tokenFor(password) {
-  const data = new TextEncoder().encode(PEPPER + ':' + password)
-  const buf  = await crypto.subtle.digest('SHA-256', data)
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('')
-}
+const MAX_AGE = 60 * 60 * 24 * 7   // 7 dienos
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'method' })

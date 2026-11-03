@@ -13,10 +13,13 @@
 import sharp from 'sharp'
 import { parseLatinName } from '../../src/utils/latinName.js'
 import { applyVisibleMark, embedForensic } from './watermark.js'
+import { GATEWAY_MODELS } from './aiModels.js'
 
 export const GATEWAY = 'https://ai-gateway.vercel.sh/v1'
-export const BRIEF_MODEL = 'anthropic/claude-sonnet-4.5'
-export const IMAGE_MODEL = 'google/gemini-3-pro-image'
+// Modelių slug'ai centralizuoti api/_lib/aiModels.js (GATEWAY_MODELS).
+// PASTABA: brief slug'as ('anthropic/claude-sonnet-4.5') pasenęs — žr. AI_REVIEW.md §3.
+export const BRIEF_MODEL = GATEWAY_MODELS.brief
+export const IMAGE_MODEL = GATEWAY_MODELS.image
 
 // Bendras stiliaus suffix'as — IDENTIŠKAS restyle + text→img keliams → vientisas
 // stilius. Cream #fefdfa (vėliau transparentize), 3:2 landscape, augalas centered
